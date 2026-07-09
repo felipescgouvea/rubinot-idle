@@ -455,6 +455,7 @@ function doHuntTick() {
     currentMonster = spawnMonster(G.activeZone);
     addLog(`${currentMonster.icon} <span class="log-info">${currentMonster.name} apareceu!</span>`);
     renderMonsterDisplay();
+    return; // o monstro aparece neste tick; o combate começa no próximo
   }
 
   const zone = ZONES[G.activeZone];
@@ -526,8 +527,9 @@ function doHuntTick() {
     if (lootLine.length > 0) addLog(`<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
 
     gainXp(xpGained);
+    const killedId = currentMonster.defKey;
     currentMonster = null;
-    renderMonsterDisplay();
+    renderMonsterDisplay(false, killedId);
     renderLoot();
     renderKillCounters();
     renderHeaderStats();
@@ -597,11 +599,55 @@ function startRegen() {
   }, 2000);
 }
 
-// ---- MONSTER DISPLAY ----
+// ---- MONSTER DISPLAY (sprites oficiais do Tibia via TibiaWiki) ----
 
-function renderMonsterDisplay(hit = false) {
+const SPRITE_BASE = 'https://tibia.fandom.com/wiki/Special:FilePath/';
+
+// bosses exclusivos do RubinOT não existem no Tibia — usam sprites temáticos
+const SPRITE_OVERRIDE = {
+  lothlorien: 'Elf_Arcanist.gif',
+  executioner: 'Orc_Warlord.gif',
+  morgul: 'Spectre.gif',
+  corrupted_one: 'Blightwalker.gif',
+  nzoth: 'World_Devourer.gif',
+};
+
+function monsterSpriteUrl(monsterId) {
+  const file = SPRITE_OVERRIDE[monsterId] || (MONSTERS[monsterId].name.replace(/ /g, '_') + '.gif');
+  return SPRITE_BASE + file;
+}
+
+function monsterSpriteImg(monsterId, cls = '') {
+  const m = MONSTERS[monsterId];
+  // fallback para o emoji se o sprite não carregar
+  return `<img src="${monsterSpriteUrl(monsterId)}" alt="${m.name}" class="${cls}"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${m.icon}</span>'" />`;
+}
+
+function renderMonsterDisplay(hit = false, killed = null) {
   const el = document.getElementById('monster-display');
   if (!el) return;
+  // monstro recém-morto continua visível (mesmo em hit kill) até o próximo spawn
+  if (!currentMonster && killed) {
+    // se o morto já está na tela, só acinzenta in-place (preserva o <img> carregado)
+    if (el.dataset.monsterId === killed && el.querySelector('.monster-sprite-wrap')) {
+      el.querySelector('.monster-sprite-wrap').classList.add('dead');
+      el.querySelector('.monster-hp-fill').style.width = '0%';
+      el.querySelector('.monster-hp-label').textContent = `0 / ${el.querySelector('.monster-hp-label').textContent.split('/')[1].trim()}`;
+      el.querySelector('.monster-name').textContent = `☠️ ${MONSTERS[killed].name}`;
+      return;
+    }
+    el.dataset.monsterId = killed;
+    el.innerHTML = `
+      <div class="monster-sprite-wrap dead">${monsterSpriteImg(killed, 'monster-sprite')}</div>
+      <div class="monster-name">☠️ ${MONSTERS[killed].name}</div>
+      <div class="monster-hp-track">
+        <div class="monster-hp-fill" style="width:0%"></div>
+        <div class="monster-hp-label">0 / ${MONSTERS[killed].hp}</div>
+      </div>
+    `;
+    return;
+  }
   if (!currentMonster) {
     el.innerHTML = G.hunting
       ? '<div class="monster-empty">Procurando próxima criatura…</div>'
@@ -609,8 +655,20 @@ function renderMonsterDisplay(hit = false) {
     return;
   }
   const pct = Math.max(0, Math.round((currentMonster.hp / currentMonster.maxHp) * 100));
+  // atualiza in-place quando é o mesmo monstro — recriar o <img> a cada tick
+  // impedia o sprite de terminar de carregar
+  if (el.dataset.monsterId === currentMonster.defKey && el.querySelector('.monster-hp-fill')) {
+    el.querySelector('.monster-hp-fill').style.width = pct + '%';
+    el.querySelector('.monster-hp-label').textContent = `${Math.max(0, currentMonster.hp)} / ${currentMonster.maxHp}`;
+    el.querySelector('.monster-name').textContent = currentMonster.name;
+    const wrap = el.querySelector('.monster-sprite-wrap');
+    wrap.classList.remove('dead');
+    if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
+    return;
+  }
+  el.dataset.monsterId = currentMonster.defKey;
   el.innerHTML = `
-    <div class="monster-icon${hit ? ' hit' : ''}">${currentMonster.icon}</div>
+    <div class="monster-sprite-wrap${hit ? ' hit' : ''}">${monsterSpriteImg(currentMonster.defKey, 'monster-sprite')}</div>
     <div class="monster-name">${currentMonster.name}</div>
     <div class="monster-hp-track">
       <div class="monster-hp-fill" style="width:${pct}%"></div>

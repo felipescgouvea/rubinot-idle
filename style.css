@@ -353,17 +353,23 @@ body {
   text-align: center;
   box-shadow: inset 0 1px 0 #ffffff66, 0 1px 4px #00000022;
 }
-#monster-display .monster-icon {
-  font-size: 3.2rem;
-  filter: drop-shadow(0 3px 5px #00000044);
-  animation: monster-idle 2.2s ease-in-out infinite;
+.monster-sprite-wrap {
   display: inline-block;
+  animation: monster-idle 2.2s ease-in-out infinite;
+  min-height: 64px;
 }
+.monster-sprite {
+  height: 64px;
+  image-rendering: pixelated; /* mantém o pixel art do Tibia nítido */
+  filter: drop-shadow(0 3px 5px #00000044);
+  font-size: 3.2rem; /* fallback emoji */
+}
+.monster-sprite-wrap.dead .monster-sprite { filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044); }
 @keyframes monster-idle {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-4px) scale(1.03); }
 }
-#monster-display .monster-icon.hit { animation: monster-hit 0.25s ease; }
+.monster-sprite-wrap.hit { animation: monster-hit 0.25s ease; }
 @keyframes monster-hit {
   0% { transform: translateX(0); filter: drop-shadow(0 0 10px #d84343cc) brightness(1.6); }
   30% { transform: translateX(-6px); }
