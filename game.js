@@ -102,11 +102,11 @@ const MONSTERS = {
 
 const ITEMS = {
   bones:          { name: 'Ossos', icon: '🦴', type: 'misc', sell: 1 },
-  troll_club:     { name: 'Clava de Troll', icon: '🪵', type: 'weapon', atk: 5, sell: 50, rare: false },
+  troll_club:     { name: 'Clava de Troll', icon: '🪵', type: 'weapon', weaponType: 'club', atk: 5, sell: 50, rare: false },
   rat_tail:       { name: 'Rabo de Rato', icon: '🐭', type: 'misc', sell: 2 },
   minotaur_horn:  { name: 'Chifre Minotauro', icon: '📯', type: 'misc', sell: 80 },
   chain_armor:    { name: 'Armadura de Correntes', icon: '⛓️', type: 'armor', def: 8, sell: 300, rare: false },
-  guardian_halberd:{ name: 'Alabarda Guardiã', icon: '🗡️', type: 'weapon', atk: 22, sell: 800, rare: true },
+  guardian_halberd:{ name: 'Alabarda Guardiã', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 22, sell: 800, rare: true },
   amazon_armor:   { name: 'Amazon Armor', icon: '🥊', type: 'armor', def: 12, sell: 500, rare: true },
   cheese:         { name: 'Cheese', icon: '🧀', type: 'food', heal: 10, sell: 2 },
   meat:           { name: 'Meat', icon: '🍖', type: 'food', heal: 20, sell: 3 },
@@ -114,7 +114,7 @@ const ITEMS = {
   orc_tooth:      { name: 'Orc Tooth', icon: '🦷', type: 'misc', sell: 15 },
   studded_armor:  { name: 'Studded Armor', icon: '🦺', type: 'armor', def: 5, sell: 90 },
   cyclops_toe:    { name: 'Cyclops Toe', icon: '🦶', type: 'misc', sell: 55 },
-  halberd:        { name: 'Halberd', icon: '🗡️', type: 'weapon', atk: 15, sell: 400 },
+  halberd:        { name: 'Halberd', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 15, sell: 400 },
   spider_silk:    { name: 'Spider Silk', icon: '🕸️', type: 'misc', sell: 100 },
   spider_fangs:   { name: 'Spider Fangs', icon: '🦷', type: 'misc', sell: 10 },
   knight_armor:   { name: 'Knight Armor', icon: '🛡️', type: 'armor', def: 14, sell: 5000, rare: true },
@@ -126,7 +126,7 @@ const ITEMS = {
   medusa_shield:  { name: 'Medusa Shield', icon: '🛡️', type: 'shield', def: 33, sell: 9000, rare: true },
   strand_of_medusa_hair: { name: 'Strand of Medusa Hair', icon: '〰️', type: 'misc', sell: 600 },
   behemoth_claw:  { name: 'Behemoth Claw', icon: '🪝', type: 'misc', sell: 2000 },
-  giant_sword:    { name: 'Giant Sword', icon: '⚔️', type: 'weapon', atk: 46, sell: 17000, rare: true },
+  giant_sword:    { name: 'Giant Sword', icon: '⚔️', type: 'weapon', weaponType: 'sword', atk: 46, sell: 17000, rare: true },
   crystal_coin:   { name: 'Crystal Coin', icon: '💠', type: 'currency', sell: 10000 },
   magic_plate_armor: { name: 'Magic Plate Armor', icon: '✨', type: 'armor', def: 17, sell: 45000, rare: true },
   dragon_scale_legs: { name: 'Dragon Scale Legs', icon: '🦵', type: 'legs', def: 10, sell: 30000, rare: true },
@@ -135,16 +135,16 @@ const ITEMS = {
   elvish_talisman:{ name: 'Elvish Talisman', icon: '🔮', type: 'misc', sell: 30 },
   scarab_coin:    { name: 'Scarab Coin', icon: '🪙', type: 'currency', sell: 100 },
   mutated_flesh:  { name: 'Mutated Flesh', icon: '🥩', type: 'misc', sell: 8 },
-  ice_rapier:     { name: 'Ice Rapier', icon: '🧊', type: 'weapon', atk: 30, sell: 8000, rare: true },
-  skull_staff:    { name: 'Skull Staff', icon: '💀', type: 'weapon', atk: 35, magic: 12, sell: 12000, rare: true },
+  ice_rapier:     { name: 'Ice Rapier', icon: '🧊', type: 'weapon', weaponType: 'sword', atk: 30, sell: 8000, rare: true },
+  skull_staff:    { name: 'Skull Staff', icon: '💀', type: 'weapon', weaponType: 'magic', atk: 35, magic: 12, sell: 12000, rare: true },
   vampire_dust:   { name: 'Vampire Dust', icon: '🌫️', type: 'misc', sell: 100 },
   strange_helmet: { name: 'Strange Helmet', icon: '🪖', type: 'helmet', def: 15, sell: 6000, rare: true },
   hellhound_slobber: { name: 'Hellhound Slobber', icon: '💧', type: 'misc', sell: 500 },
   // --- Itens exclusivos dos bosses RubinOT ---
   rubini_shard:   { name: 'Rubini Shard', icon: '💎', type: 'currency', sell: 5000, rare: true },
-  lothlorien_bow: { name: 'Lothlorien Bow', icon: '🏹', type: 'weapon', atk: 55, sell: 60000, rare: true },
-  executioner_axe:{ name: 'Executioner Axe', icon: '🪓', type: 'weapon', atk: 60, sell: 70000, rare: true },
-  morgul_blade:   { name: 'Morgul Blade', icon: '🗡️', type: 'weapon', atk: 65, magic: 10, sell: 85000, rare: true },
+  lothlorien_bow: { name: 'Lothlorien Bow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 55, sell: 60000, rare: true },
+  executioner_axe:{ name: 'Executioner Axe', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 60, sell: 70000, rare: true },
+  morgul_blade:   { name: 'Morgul Blade', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 65, magic: 10, sell: 85000, rare: true },
   corrupted_heart:{ name: 'Corrupted Heart', icon: '🩸', type: 'misc', sell: 25000, rare: true },
   nzoth_tentacle: { name: 'Tentacle of N\'Zoth', icon: '🦑', type: 'misc', sell: 40000, rare: true },
   power_bolt:     { name: 'Dardo Poderoso', icon: '🏹', type: 'ammo', atk: 3, sell: 5, qty: 10 },
@@ -152,14 +152,14 @@ const ITEMS = {
   gold_coin:      { name: 'Moeda de Ouro', icon: '🪙', type: 'currency', sell: 1 },
   dragon_scale:   { name: 'Escama de Dragão', icon: '🐉', type: 'misc', sell: 200 },
   dragon_ham:     { name: 'Presunto de Dragão', icon: '🍖', type: 'food', heal: 120, sell: 150 },
-  dragonbone_staff:{ name: 'Cajado Osso de Dragão', icon: '🪄', type: 'weapon', atk: 40, magic: 15, sell: 5000, rare: true },
+  dragonbone_staff:{ name: 'Cajado Osso de Dragão', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 40, magic: 15, sell: 5000, rare: true },
   dragon_lord_scale:{ name: 'Escama Lorde Dragão', icon: '🔴', type: 'misc', sell: 800 },
   royal_helmet:   { name: 'Elmo Real', icon: '👑', type: 'helmet', def: 20, atk: 5, sell: 8000, rare: true },
   life_crystal:   { name: 'Cristal de Vida', icon: '💎', type: 'misc', sell: 400 },
   demon_dust:     { name: 'Pó de Demônio', icon: '✨', type: 'misc', sell: 500 },
   demon_shield:   { name: 'Escudo Demoníaco', icon: '😈', type: 'shield', def: 30, sell: 15000, rare: true },
   platinum_coin:  { name: 'Moeda de Platina', icon: '⚪', type: 'currency', sell: 100 },
-  titan_axe:      { name: 'Machado Titã', icon: '🪓', type: 'weapon', atk: 70, sell: 30000, rare: true },
+  titan_axe:      { name: 'Machado Titã', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 70, sell: 30000, rare: true },
   juggernaut_trophy:{ name: 'Troféu Juggernaut', icon: '🏆', type: 'misc', sell: 3000 },
   lich_trophy:    { name: 'Troféu Lich', icon: '💀', type: 'misc', sell: 1500 },
   death_ring:     { name: 'Anel da Morte', icon: '💍', type: 'ring', def: 5, magic: 10, sell: 12000, rare: true },
@@ -168,7 +168,42 @@ const ITEMS = {
   void_crystal:   { name: 'Cristal do Vazio', icon: '🌀', type: 'misc', sell: 2000 },
   tentacle_piece: { name: 'Tentáculo de N\'Zoth', icon: '🦑', type: 'misc', sell: 500 },
   void_essence:   { name: 'Essência do Vazio', icon: '⚫', type: 'misc', sell: 5000 },
-  abyssal_blade:  { name: 'Lâmina Abissal', icon: '🗡️', type: 'weapon', atk: 90, magic: 20, sell: 100000, rare: true },
+  abyssal_blade:  { name: 'Lâmina Abissal', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 90, magic: 20, sell: 100000, rare: true },
+
+  // --- Kit inicial por vocação (entregue automaticamente ao escolher a vocação) ---
+  dagger:         { name: 'Dagger', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 6, sell: 6 },
+  bow:            { name: 'Bow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 7, sell: 20 },
+  wand_of_vortex: { name: 'Wand of Vortex', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 3, sell: 400 },
+  snakebite_rod:  { name: 'Snakebite Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 3, sell: 400 },
+  wooden_shield:  { name: 'Wooden Shield', icon: '🛡️', type: 'shield', def: 3, sell: 8 },
+  leather_armor:  { name: 'Leather Armor', icon: '🥋', type: 'armor', def: 3, sell: 6 },
+  leather_legs:   { name: 'Leather Legs', icon: '🦵', type: 'legs', def: 2, sell: 6 },
+  robe:           { name: 'Robe', icon: '👘', type: 'armor', def: 3, sell: 15 },
+
+  // --- Poções (curam HP/mana ao usar — não ocupam slot de equipamento) ---
+  health_potion:        { name: 'Health Potion', icon: '🧪', type: 'potion', heal: 60, sell: 25 },
+  strong_health_potion: { name: 'Strong Health Potion', icon: '🧪', type: 'potion', heal: 150, sell: 60 },
+  great_health_potion:  { name: 'Great Health Potion', icon: '🧪', type: 'potion', heal: 300, sell: 130 },
+  ultimate_health_potion:{ name: 'Ultimate Health Potion', icon: '🧪', type: 'potion', heal: 500, sell: 260 },
+  mana_potion:          { name: 'Mana Potion', icon: '🔵', type: 'potion', mana: 60, sell: 25 },
+  strong_mana_potion:   { name: 'Strong Mana Potion', icon: '🔵', type: 'potion', mana: 150, sell: 60 },
+  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 300, sell: 130 },
+
+  // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
+  ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
+  intense_healing_rune: { name: 'Intense Healing Rune', icon: '📜', type: 'rune', heal: 150, sell: 70 },
+  sudden_death_rune:    { name: 'Sudden Death Rune', icon: '📜', type: 'rune', dmg: 320, sell: 200 },
+  explosion_rune:       { name: 'Explosion Rune', icon: '📜', type: 'rune', dmg: 140, sell: 60 },
+  avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, sell: 90 },
+};
+
+// Kit inicial por vocação — entregue e equipado automaticamente na 1ª escolha de vocação,
+// como o equipamento que o RubinOT dá ao personagem recém-criado.
+const STARTER_KITS = {
+  knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', boots: 'leather_boots' },
+  paladin:  { weapon: 'bow',           armor: 'leather_armor', legs: 'leather_legs',    boots: 'leather_boots' },
+  sorcerer: { weapon: 'wand_of_vortex',armor: 'robe',                                    boots: 'leather_boots' },
+  druid:    { weapon: 'snakebite_rod', armor: 'robe',                                    boots: 'leather_boots' },
 };
 
 // Linked Tasks: cadeia SEQUENCIAL por sala (como no RubinOT — completar uma task
@@ -290,29 +325,56 @@ function spellAvailable(id) {
   return s && G.vocation && s.voc.includes(G.vocation) && G.level >= s.level;
 }
 
-// ---- SHOP (Rubini Store, como o Ctrl+S do RubinOT) ----
+// ---- SHOP: três lojas distintas, como NPCs de Tibia ----
+// shop: 'rubini' (Rubini Store — boosts/outfits/supply, em RC ou gold),
+//       'equipment' (Loja de Equipamentos — armas/armaduras, em gold),
+//       'magic' (Loja de Artigos Mágicos — poções/runas, em gold).
 const SHOP_ITEMS = [
-  // Boosts temporários (Rubini Coins)
-  { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, desc: '+50% de XP por 30 minutos de caçada.' },
-  { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, desc: '+15% de chance de loot por 30 minutos.' },
-  { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, desc: '+30% de gold por 30 minutos.' },
-  // Suprimentos (gold)
-  { id: 'refill',     name: 'Supply Completo', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', desc: 'Restaura HP e mana instantaneamente.' },
-  // Equipamentos (gold) — preço = 4x o valor de venda
-  { id: 'buy_halberd',      name: 'Halberd',          icon: '🗡️', currency: 'gold', price: 1600,   type: 'item', itemId: 'halberd' },
-  { id: 'buy_chain_armor',  name: 'Chain Armor',      icon: '⛓️', currency: 'gold', price: 1200,   type: 'item', itemId: 'chain_armor' },
-  { id: 'buy_knight_armor', name: 'Knight Armor',     icon: '🛡️', currency: 'gold', price: 20000,  type: 'item', itemId: 'knight_armor' },
-  { id: 'buy_giant_sword',  name: 'Giant Sword',      icon: '⚔️', currency: 'gold', price: 68000,  type: 'item', itemId: 'giant_sword' },
-  { id: 'buy_royal_helmet', name: 'Royal Helmet',     icon: '👑', currency: 'gold', price: 32000,  type: 'item', itemId: 'royal_helmet' },
-  { id: 'buy_demon_shield', name: 'Demon Shield',     icon: '😈', currency: 'gold', price: 60000,  type: 'item', itemId: 'demon_shield' },
-  { id: 'buy_mpa',          name: 'Magic Plate Armor',icon: '✨', currency: 'gold', price: 180000, type: 'item', itemId: 'magic_plate_armor' },
-  { id: 'buy_plate_legs',   name: 'Plate Legs',       icon: '🦵', currency: 'gold', price: 460,    type: 'item', itemId: 'plate_legs' },
-  { id: 'buy_boh',          name: 'Boots of Haste',   icon: '👢', currency: 'gold', price: 120000, type: 'item', itemId: 'boots_of_haste' },
-  // Outfits cosméticos (Rubini Coins) — trocam o ícone do personagem
-  { id: 'outfit_royal',   name: 'Outfit Royal',    icon: '🤴', currency: 'rubini', price: 200, type: 'outfit', desc: 'Outfit cosmético de realeza.' },
-  { id: 'outfit_demon',   name: 'Outfit Demon',    icon: '👹', currency: 'rubini', price: 300, type: 'outfit', desc: 'Outfit demoníaco exclusivo.' },
-  { id: 'outfit_reaper',  name: 'Outfit Reaper',   icon: '💀', currency: 'rubini', price: 300, type: 'outfit', desc: 'Outfit sombrio do ceifador.' },
-  { id: 'outfit_pirate',  name: 'Outfit Pirate',   icon: '🏴‍☠️', currency: 'rubini', price: 150, type: 'outfit', desc: 'Outfit pirata dos sete mares.' },
+  // Rubini Store — Boosts temporários (Rubini Coins)
+  { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, shop: 'rubini', desc: '+50% de XP por 30 minutos de caçada.' },
+  { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, shop: 'rubini', desc: '+15% de chance de loot por 30 minutos.' },
+  { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, shop: 'rubini', desc: '+30% de gold por 30 minutos.' },
+  // Rubini Store — Suprimentos (gold)
+  { id: 'refill',     name: 'Supply Completo', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', shop: 'rubini', desc: 'Restaura HP e mana instantaneamente.' },
+  // Rubini Store — Outfits cosméticos (Rubini Coins) — trocam a aparência do personagem.
+  // "sprite" tenta carregar a arte real do Tibia (TibiaWiki); sem sucesso, cai no ícone.
+  { id: 'outfit_royal',   name: 'Outfit Royal',    icon: '🤴', currency: 'rubini', price: 200, type: 'outfit', shop: 'rubini', sprite: 'Noble.gif', desc: 'Outfit cosmético de realeza.' },
+  { id: 'outfit_demon',   name: 'Outfit Demon',    icon: '👹', currency: 'rubini', price: 300, type: 'outfit', shop: 'rubini', sprite: 'Demon.gif', desc: 'Outfit demoníaco exclusivo.' },
+  { id: 'outfit_reaper',  name: 'Outfit Reaper',   icon: '💀', currency: 'rubini', price: 300, type: 'outfit', shop: 'rubini', sprite: 'Grim_Reaper.gif', desc: 'Outfit sombrio do ceifador.' },
+  { id: 'outfit_pirate',  name: 'Outfit Pirate',   icon: '🏴‍☠️', currency: 'rubini', price: 150, type: 'outfit', shop: 'rubini', sprite: 'Pirate_Mate.gif', desc: 'Outfit pirata dos sete mares.' },
+
+  // Loja de Equipamentos (gold) — preço = 4x o valor de venda do item
+  { id: 'buy_dagger',       name: 'Dagger',           icon: '🗡️', currency: 'gold', price: 24,     type: 'item', itemId: 'dagger', shop: 'equipment' },
+  { id: 'buy_bow',          name: 'Bow',              icon: '🏹', currency: 'gold', price: 80,     type: 'item', itemId: 'bow', shop: 'equipment' },
+  { id: 'buy_wand_vortex',  name: 'Wand of Vortex',   icon: '🪄', currency: 'gold', price: 1600,   type: 'item', itemId: 'wand_of_vortex', shop: 'equipment' },
+  { id: 'buy_snakebite_rod',name: 'Snakebite Rod',    icon: '🪄', currency: 'gold', price: 1600,   type: 'item', itemId: 'snakebite_rod', shop: 'equipment' },
+  { id: 'buy_wooden_shield',name: 'Wooden Shield',    icon: '🛡️', currency: 'gold', price: 32,     type: 'item', itemId: 'wooden_shield', shop: 'equipment' },
+  { id: 'buy_leather_armor',name: 'Leather Armor',    icon: '🥋', currency: 'gold', price: 24,     type: 'item', itemId: 'leather_armor', shop: 'equipment' },
+  { id: 'buy_leather_legs', name: 'Leather Legs',     icon: '🦵', currency: 'gold', price: 24,     type: 'item', itemId: 'leather_legs', shop: 'equipment' },
+  { id: 'buy_robe',         name: 'Robe',             icon: '👘', currency: 'gold', price: 60,     type: 'item', itemId: 'robe', shop: 'equipment' },
+  { id: 'buy_halberd',      name: 'Halberd',          icon: '🗡️', currency: 'gold', price: 1600,   type: 'item', itemId: 'halberd', shop: 'equipment' },
+  { id: 'buy_chain_armor',  name: 'Chain Armor',      icon: '⛓️', currency: 'gold', price: 1200,   type: 'item', itemId: 'chain_armor', shop: 'equipment' },
+  { id: 'buy_knight_armor', name: 'Knight Armor',     icon: '🛡️', currency: 'gold', price: 20000,  type: 'item', itemId: 'knight_armor', shop: 'equipment' },
+  { id: 'buy_giant_sword',  name: 'Giant Sword',      icon: '⚔️', currency: 'gold', price: 68000,  type: 'item', itemId: 'giant_sword', shop: 'equipment' },
+  { id: 'buy_royal_helmet', name: 'Royal Helmet',     icon: '👑', currency: 'gold', price: 32000,  type: 'item', itemId: 'royal_helmet', shop: 'equipment' },
+  { id: 'buy_demon_shield', name: 'Demon Shield',     icon: '😈', currency: 'gold', price: 60000,  type: 'item', itemId: 'demon_shield', shop: 'equipment' },
+  { id: 'buy_mpa',          name: 'Magic Plate Armor',icon: '✨', currency: 'gold', price: 180000, type: 'item', itemId: 'magic_plate_armor', shop: 'equipment' },
+  { id: 'buy_plate_legs',   name: 'Plate Legs',       icon: '🦵', currency: 'gold', price: 460,    type: 'item', itemId: 'plate_legs', shop: 'equipment' },
+  { id: 'buy_boh',          name: 'Boots of Haste',   icon: '👢', currency: 'gold', price: 120000, type: 'item', itemId: 'boots_of_haste', shop: 'equipment' },
+
+  // Loja de Artigos Mágicos (gold) — poções e runas, preço = 4x o valor de venda
+  { id: 'buy_health_potion',        name: 'Health Potion',          icon: '🧪', currency: 'gold', price: 100,  type: 'item', itemId: 'health_potion', shop: 'magic' },
+  { id: 'buy_strong_health_potion', name: 'Strong Health Potion',   icon: '🧪', currency: 'gold', price: 240,  type: 'item', itemId: 'strong_health_potion', shop: 'magic' },
+  { id: 'buy_great_health_potion',  name: 'Great Health Potion',    icon: '🧪', currency: 'gold', price: 520,  type: 'item', itemId: 'great_health_potion', shop: 'magic' },
+  { id: 'buy_ultimate_health_potion',name: 'Ultimate Health Potion',icon: '🧪', currency: 'gold', price: 1040, type: 'item', itemId: 'ultimate_health_potion', shop: 'magic' },
+  { id: 'buy_mana_potion',          name: 'Mana Potion',            icon: '🔵', currency: 'gold', price: 100,  type: 'item', itemId: 'mana_potion', shop: 'magic' },
+  { id: 'buy_strong_mana_potion',   name: 'Strong Mana Potion',     icon: '🔵', currency: 'gold', price: 240,  type: 'item', itemId: 'strong_mana_potion', shop: 'magic' },
+  { id: 'buy_great_mana_potion',    name: 'Great Mana Potion',      icon: '🔵', currency: 'gold', price: 520,  type: 'item', itemId: 'great_mana_potion', shop: 'magic' },
+  { id: 'buy_intense_healing_rune', name: 'Intense Healing Rune',   icon: '📜', currency: 'gold', price: 280,  type: 'item', itemId: 'intense_healing_rune', shop: 'magic' },
+  { id: 'buy_ultimate_healing_rune',name: 'Ultimate Healing Rune',  icon: '📜', currency: 'gold', price: 720,  type: 'item', itemId: 'ultimate_healing_rune', shop: 'magic' },
+  { id: 'buy_explosion_rune',       name: 'Explosion Rune',         icon: '📜', currency: 'gold', price: 240,  type: 'item', itemId: 'explosion_rune', shop: 'magic' },
+  { id: 'buy_avalanche_rune',       name: 'Avalanche Rune',         icon: '📜', currency: 'gold', price: 360,  type: 'item', itemId: 'avalanche_rune', shop: 'magic' },
+  { id: 'buy_sudden_death_rune',    name: 'Sudden Death Rune',      icon: '📜', currency: 'gold', price: 800,  type: 'item', itemId: 'sudden_death_rune', shop: 'magic' },
 ];
 
 function boostActive(kind) {
@@ -433,8 +495,18 @@ function getMaxMana() {
   return v.baseMana + (G.level - 1) * v.manaPerLevel;
 }
 
-// Dano segue a skill da vocação, como no Tibia:
-// knight = Sword Fighting; paladin = Distance; mages = Magic Level.
+// Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
+// segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
+// mágica, tipo rod/wand), o golpe é desarmado e treina Fist Fighting, como no Tibia.
+function equippedWeaponSkill() {
+  const weapon = G.equipment.weapon ? ITEMS[G.equipment.weapon] : null;
+  const wt = weapon && weapon.weaponType;
+  if (wt === 'sword' || wt === 'axe' || wt === 'club' || wt === 'distance') return wt;
+  return 'fist';
+}
+
+// Dano segue a skill realmente treinada, como no Tibia:
+// mages = Magic Level; demais vocações = skill da arma equipada (ou Fist, desarmado).
 function getAtk() {
   if (!G.vocation) return 0;
   const eq = equipBonus().atk || 0;
@@ -443,16 +515,20 @@ function getAtk() {
   if (voc.attackSkill === 'magic') {
     return Math.floor(G.sk.magic.lv * 3 + G.level * 0.8 + eq + eqMagic * 1.5);
   }
-  if (voc.attackSkill === 'distance') {
+  const skillId = equippedWeaponSkill();
+  if (skillId === 'distance') {
     return Math.floor(G.sk.distance.lv * 2.2 + G.level + eq);
   }
-  return Math.floor(G.sk.sword.lv * 2 + G.level * 1.5 + eq);
+  return Math.floor(G.sk[skillId].lv * 2 + G.level * 1.5 + eq);
 }
 
+// Defesa: o bônus de Shielding só se aplica com um escudo equipado — sem escudo,
+// a skill não tem onde "encostar" (como no Tibia, ela melhora a defesa do escudo).
 function getDef() {
   if (!G.vocation) return 0;
   const eq = equipBonus().def || 0;
-  return Math.floor(G.sk.shielding.lv * 1.2 + eq);
+  const shieldBonus = G.equipment.shield ? Math.floor(G.sk.shielding.lv * 1.2) : 0;
+  return shieldBonus + eq;
 }
 
 function getMagic() {
@@ -522,6 +598,55 @@ function calcDamage(atk, def) {
   return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));
 }
 
+// Paga XP/gold/loot pela morte da criatura atual — usado tanto por um golpe normal
+// quanto por uma runa de ataque usada manualmente, para que nenhuma via de dano
+// "sonegue" a recompensa da morte.
+function resolveMonsterKill(zone, rtc) {
+  const boosts = boostMods();
+  let goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMult() * rtc.goldMult * boosts.gold);
+  goldGained = Math.max(0, goldGained - Math.floor(goldGained * rtc.goldTax));
+  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMult() * rtc.xpMult * boosts.xp);
+
+  G.gold += goldGained;
+  G.totalGoldEarned += goldGained;
+  G.totalKills++;
+
+  // Task tracking
+  if (G.activeTask && G.activeTask.monster === currentMonster.defKey) {
+    G.taskKills[G.activeTask.monster] = (G.taskKills[G.activeTask.monster] || 0) + 1;
+  }
+  // Kill counters per zone
+  G.killCounters = G.killCounters || {};
+  G.killCounters[currentMonster.defKey] = (G.killCounters[currentMonster.defKey] || 0) + 1;
+
+  // Battle Pass XP
+  G.bpXp += Math.floor(xpGained * 0.01);
+  checkBpTier();
+
+  addLog(`<span class="log-kill">💀 ${currentMonster.name} morreu!</span> +${xpGained} XP, +${goldGained} 💰`);
+
+  // Loot
+  const lootLine = [];
+  currentMonster.loot.forEach(([itemId, chance]) => {
+    if (Math.random() < chance + rtc.lootBonus + boosts.loot) {
+      addItemToInventory(itemId);
+      const item = ITEMS[itemId];
+      lootLine.push(`${item.icon} ${item.name}`);
+    }
+  });
+  if (lootLine.length > 0) addLog(`<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
+
+  gainXp(xpGained);
+  const killedId = currentMonster.defKey;
+  currentMonster = null;
+  renderMonsterDisplay(false, killedId);
+  renderLoot();
+  renderKillCounters();
+  renderHeaderStats();
+  renderInventory();
+  checkTaskProgress();
+}
+
 function doHuntTick() {
   if (!G.hunting || !G.activeZone) return;
 
@@ -547,8 +672,9 @@ function doHuntTick() {
     addLog(`<span class="log-xp">🗣️ "${atkSpell.words}"</span>`);
   }
   if (voc.attackSkill !== 'magic') {
-    // treino da skill de arma por golpe (knight: sword; paladin: distance)
-    trainSkill(voc.attackSkill, 1 * voc.weaponMult);
+    // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
+    // sobe (sword só treina com espada equipada, axe só com machado, etc.)
+    trainSkill(equippedWeaponSkill(), 1 * voc.weaponMult);
   } else if (!atkSpell && G.mana >= 8) {
     // mage sem spell selecionada: golpe arcano básico
     playerDmg = Math.floor(playerDmg * 1.3);
@@ -561,58 +687,16 @@ function doHuntTick() {
   renderMonsterDisplay(true);
 
   if (currentMonster.hp <= 0) {
-    // Kill
-    const boosts = boostMods();
-    let goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMult() * rtc.goldMult * boosts.gold);
-    goldGained = Math.max(0, goldGained - Math.floor(goldGained * rtc.goldTax));
-    const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMult() * rtc.xpMult * boosts.xp);
-
-    G.gold += goldGained;
-    G.totalGoldEarned += goldGained;
-    G.totalKills++;
-
-    // Task tracking
-    if (G.activeTask && G.activeTask.monster === currentMonster.defKey) {
-      G.taskKills[G.activeTask.monster] = (G.taskKills[G.activeTask.monster] || 0) + 1;
-    }
-    // Kill counters per zone
-    G.killCounters = G.killCounters || {};
-    G.killCounters[currentMonster.defKey] = (G.killCounters[currentMonster.defKey] || 0) + 1;
-
-    // Battle Pass XP
-    G.bpXp += Math.floor(xpGained * 0.01);
-    checkBpTier();
-
-    addLog(`<span class="log-kill">💀 ${currentMonster.name} morreu!</span> +${xpGained} XP, +${goldGained} 💰`);
-
-    // Loot
-    const lootLine = [];
-    currentMonster.loot.forEach(([itemId, chance]) => {
-      if (Math.random() < chance + rtc.lootBonus + boosts.loot) {
-        addItemToInventory(itemId);
-        const item = ITEMS[itemId];
-        lootLine.push(`${item.icon} ${item.name}`);
-      }
-    });
-    if (lootLine.length > 0) addLog(`<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
-
-    gainXp(xpGained);
-    const killedId = currentMonster.defKey;
-    currentMonster = null;
-    renderMonsterDisplay(false, killedId);
-    renderLoot();
-    renderKillCounters();
-    renderHeaderStats();
-    renderInventory();
-    checkTaskProgress();
+    resolveMonsterKill(zone, rtc);
     return;
   }
 
-  // Monster attacks player (defender treina Shielding, como no Tibia)
+  // Monster attacks player (defender treina Shielding, como no Tibia — só com escudo equipado)
   const monsterDmg = calcDamage(currentMonster.atk, getDef());
   G.hp = Math.max(0, G.hp - monsterDmg);
-  trainSkill('shielding', 1 * voc.shieldMult);
+  if (G.equipment.shield) trainSkill('shielding', 1 * voc.shieldMult);
   addLog(`🩸 ${currentMonster.name} causou <span class="log-dmg">${monsterDmg}</span> de dano em você.`);
+  renderPlayerBattleSide(true);
 
   // RTC Smart Healing: usa a spell de cura selecionada na aba Spells
   const healSpell = G.spells.heal && spellAvailable(G.spells.heal) ? SPELLS[G.spells.heal] : SPELLS.exura;
@@ -693,6 +777,62 @@ function monsterSpriteImg(monsterId, cls = '') {
   // fallback para o emoji se o sprite não carregar
   return `<img src="${monsterSpriteUrl(monsterId)}" alt="${m.name}" class="${cls}"
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${m.icon}</span>'" />`;
+}
+
+// ---- PLAYER PORTRAIT (sprite oficial do Tibia via TibiaWiki, com fallback ao ícone) ----
+
+// Melhor esforço: página da vocação/outfit no TibiaWiki. Se o arquivo não existir,
+// o onerror abaixo cai de volta pro ícone — igual ao SPRITE_OVERRIDE dos bosses.
+const VOCATION_SPRITE = { knight: 'Knight.gif', paladin: 'Paladin.gif', sorcerer: 'Sorcerer.gif', druid: 'Druid.gif' };
+
+function playerSpriteFile() {
+  if (G.outfit) {
+    const outfitDef = SHOP_ITEMS.find(s => s.type === 'outfit' && s.icon === G.outfit);
+    if (outfitDef && outfitDef.sprite) return outfitDef.sprite;
+  }
+  return G.vocation ? VOCATION_SPRITE[G.vocation] : null;
+}
+
+function playerFallbackIcon() {
+  return G.outfit || (G.vocation ? VOCATIONS[G.vocation].icon : '🧑');
+}
+
+function playerPortraitImg(cls = '') {
+  const file = playerSpriteFile();
+  const icon = playerFallbackIcon();
+  if (!file) return `<span class="${cls}">${icon}</span>`;
+  return `<img src="${SPRITE_BASE + file}" alt="Você" class="${cls}"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${icon}</span>'" />`;
+}
+
+// Espelha o lado do monstro (renderMonsterDisplay): mesmo tratamento de troca de
+// sprite só quando muda, hit-flash e estado "morto" — sem recriar a <img> a cada tick.
+function renderPlayerBattleSide(hit = false) {
+  const wrap = document.getElementById('player-sprite-wrap');
+  if (!wrap) return;
+
+  if (!G.vocation) {
+    wrap.innerHTML = '<span class="player-sprite-fallback">🧑</span>';
+    wrap.classList.remove('dead', 'hit');
+    document.getElementById('player-battle-name').textContent = '—';
+    document.getElementById('player-hp-fill').style.width = '0%';
+    document.getElementById('player-hp-label').textContent = '--/--';
+    return;
+  }
+
+  const wantFile = playerSpriteFile() || 'none:' + playerFallbackIcon();
+  if (wrap.dataset.sprite !== wantFile) {
+    wrap.dataset.sprite = wantFile;
+    wrap.innerHTML = playerPortraitImg('player-sprite');
+  }
+  if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
+  wrap.classList.toggle('dead', G.hp <= 0);
+
+  const maxHp = getMaxHp();
+  const pct = Math.max(0, Math.round((G.hp / maxHp) * 100));
+  document.getElementById('player-battle-name').textContent = `${VOCATIONS[G.vocation].name} — Lv ${G.level}`;
+  document.getElementById('player-hp-fill').style.width = pct + '%';
+  document.getElementById('player-hp-label').textContent = `${Math.max(0, G.hp)}/${maxHp}`;
 }
 
 function renderMonsterDisplay(hit = false, killed = null) {
@@ -828,10 +968,18 @@ function selectVocation(voc) {
   const v = VOCATIONS[voc];
   G.hp = v.baseHp;
   G.mana = v.baseMana;
+  // kit inicial da vocação, como o equipamento entregue a um personagem recém-criado no RubinOT
+  const kit = STARTER_KITS[voc] || {};
+  Object.entries(kit).forEach(([slot, itemId]) => {
+    addItemToInventory(itemId);
+    G.equipment[slot] = itemId;
+  });
   renderCharPanel();
+  renderEquipmentSlots();
+  renderInventory();
   startRegen();
   saveGame();
-  notify(`Vocação ${v.name} escolhida!`, 'success');
+  notify(`Vocação ${v.name} escolhida! Kit inicial equipado.`, 'success');
 }
 
 // ---- ZONE ----
@@ -911,18 +1059,61 @@ function renderInventory() {
 function openItemModal(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
-  const stats = ['atk','def','magic','heal'].filter(s => item[s]).map(s => `<span>${s.toUpperCase()} +${item[s]}</span>`).join(' | ');
+  const stats = ['atk','def','magic','heal','mana','dmg'].filter(s => item[s]).map(s => `<span>${s.toUpperCase()} +${item[s]}</span>`).join(' | ');
   const isEquippable = ['weapon','armor','shield','helmet','ring','legs','boots'].includes(item.type);
+  const isConsumable = ['potion','rune','food'].includes(item.type);
   const equipped = Object.values(G.equipment).includes(itemId);
   openModal(`
     <h3>${item.icon} ${item.name}</h3>
     <p>${item.type} — Qtd: ${qty}</p>
     <div class="item-detail-stats">${stats}</div>
     <p style="margin-top:8px; color:#6272a4; font-size:12px">Venda: ${item.sell} 💰</p>
+    ${isConsumable ? `<button onclick="useItem('${itemId}')" style="margin-top:8px;background:#3a7bd5;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Usar</button>` : ''}
     ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Equipar</button>` : ''}
     ${equipped ? `<button onclick="unequipItem('${itemId}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Desequipar</button>` : ''}
     <button onclick="sellItem('${itemId}')" style="margin-top:6px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Vender (${item.sell} 💰)</button>
   `);
+}
+
+// Consome poção/runa/comida do inventário. Poções e comida curam HP/mana na hora;
+// runas de ataque (com "dmg") só funcionam com uma criatura em combate — como usar
+// uma runa mirando o alvo em Tibia — e runas de cura restauram HP a qualquer momento.
+function useItem(itemId) {
+  const item = ITEMS[itemId];
+  const qty = G.inventory[itemId] || 0;
+  if (!item || qty <= 0 || !G.vocation) return;
+
+  let killedByRune = false;
+  if (item.dmg) {
+    if (!currentMonster) { notify('Sem criatura em combate para mirar a runa.', 'error'); return; }
+    currentMonster.hp -= item.dmg;
+    addLog(`📜 <span class="log-dmg">Você usou ${item.name}: ${item.dmg} de dano em ${currentMonster.name}.</span>`);
+    if (currentMonster.hp <= 0) killedByRune = true;
+  }
+  if (item.heal) {
+    const before = G.hp;
+    G.hp = Math.min(getMaxHp(), G.hp + item.heal);
+    addLog(`${item.icon} <span class="log-heal">Você usou ${item.name}: +${G.hp - before} HP.</span>`);
+  }
+  if (item.mana) {
+    const before = G.mana;
+    G.mana = Math.min(getMaxMana(), G.mana + item.mana);
+    addLog(`${item.icon} <span class="log-heal">Você usou ${item.name}: +${G.mana - before} mana.</span>`);
+  }
+
+  G.inventory[itemId]--;
+  if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
+  closeModal();
+  renderInventory();
+  renderBars();
+  renderHeaderStats();
+
+  if (killedByRune) {
+    resolveMonsterKill(ZONES[G.activeZone], rtcMods());
+  } else {
+    renderMonsterDisplay();
+  }
+  saveGame();
 }
 
 function equipItem(itemId) {
@@ -1044,6 +1235,7 @@ function renderBars() {
   document.getElementById('hp-text').textContent = `${G.hp}/${maxHp}`;
   document.getElementById('mana-text').textContent = `${G.mana}/${maxMana}`;
   document.getElementById('xp-text').textContent = xpPct + '%';
+  renderPlayerBattleSide();
 }
 
 function renderHeaderStats() {
@@ -1162,9 +1354,18 @@ function cancelTask() {
 function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');
   const voc = G.vocation ? VOC_TRAINING[G.vocation] : null;
-  const vocName = G.vocation ? VOCATIONS[G.vocation].name : '—';
+  const isMage = voc && voc.attackSkill === 'magic';
+  const weaponSkillId = voc && !isMage ? equippedWeaponSkill() : null;
+  const weaponItem = G.equipment.weapon ? ITEMS[G.equipment.weapon] : null;
+
   pts.innerHTML = G.vocation
-    ? `<strong>Skills sobem por uso, como no Tibia.</strong> Sua vocação (<span>${vocName}</span>) treina <span>${TIBIA_SKILLS[voc.attackSkill].name}</span> ao atacar, Shielding ao ser atingida e Magic Level ao gastar mana.`
+    ? `<strong>Skills sobem por uso, como no Tibia — só treina o que você realmente usa.</strong> ` +
+      (isMage
+        ? `Sua vocação gasta mana para atacar/curar, treinando <span>Magic Level</span>.`
+        : weaponSkillId === 'fist'
+          ? `Você está desarmado (ou com uma arma sem skill corpo-a-corpo/distância): treinando <span>Fist Fighting</span>. Equipe uma arma para treinar a skill dela.`
+          : `Com <span>${weaponItem ? weaponItem.name : ''}</span> equipada, você treina <span>${TIBIA_SKILLS[weaponSkillId].name}</span> ao atacar.`) +
+      ` Shielding só sobe com um escudo equipado; Magic Level sobe ao gastar mana em qualquer vocação.`
     : 'Escolha uma vocação para começar a treinar.';
 
   const grid = document.getElementById('skills-grid');
@@ -1172,13 +1373,20 @@ function renderSkillsPanel() {
     const sk = G.sk[id];
     const needed = triesForNext(id, sk.lv);
     const pct = Math.min(100, Math.round((sk.tries / needed) * 100));
-    const isPrimary = voc && (voc.attackSkill === id || id === 'shielding' || (id === 'magic' && voc.magicMult >= 0.35));
+    const isPrimary = voc && (
+      (id === 'shielding' && !!G.equipment.shield) ||
+      (id === 'magic' && (isMage || voc.magicMult >= 0.35)) ||
+      (!isMage && id === weaponSkillId)
+    );
+    const reasonInactive = id === 'shielding' && voc && !G.equipment.shield ? 'Equipe um escudo para treinar'
+      : (!isMage && ['fist','club','sword','axe','distance'].includes(id) && id !== weaponSkillId) ? 'Equipe a arma correspondente para treinar'
+      : 'Não treinada pela sua vocação';
     return `<div class="skill-card" ${isPrimary ? 'style="border-color:var(--gold-dim)"' : ''}>
       <div class="skill-card-header">
         <span class="skill-card-name">${s.icon} ${s.name}</span>
         <span class="skill-card-level">${sk.lv}</span>
       </div>
-      <div class="skill-card-desc">${isPrimary ? '⭐ Treinada pela sua vocação' : 'Não treinada pela sua vocação'}</div>
+      <div class="skill-card-desc">${isPrimary ? '⭐ Treinando agora' : reasonInactive}</div>
       <div class="task-progress-bar-track"><div class="task-progress-bar" style="width:${pct}%"></div></div>
       <div class="skill-card-cost">${Math.floor(sk.tries)} / ${needed} para o próximo nível (${pct}%)</div>
     </div>`;
@@ -1375,15 +1583,45 @@ function shopPriceLabel(s) {
   return s.currency === 'rubini' ? `${s.price} 💎 RC` : `${formatNum(s.price)} 💰`;
 }
 
+// Três NPCs/lojas distintas, como em Tibia: Rubini Store (RC), Loja de Equipamentos
+// (gold) e Loja de Artigos Mágicos (gold). Cada uma é um bloco visualmente separado.
+const SHOPS = [
+  { key: 'rubini', title: '💎 Rubini Store', subtitle: 'Boosts, supply e outfits — como o Ctrl+S do RubinOT.', sub: [
+      { title: '⚡ Boosts & Suprimentos', filter: s => s.type === 'boost' || s.type === 'refill' },
+      { title: '👕 Outfits', filter: s => s.type === 'outfit' },
+    ]},
+  { key: 'equipment', title: '⚔️ Loja de Equipamentos', subtitle: 'Armas e armaduras clássicas de Tibia, pagas em gold.', sub: [
+      { title: '', filter: () => true },
+    ]},
+  { key: 'magic', title: '🧪 Loja de Artigos Mágicos', subtitle: 'Poções e runas, pagas em gold.', sub: [
+      { title: '🧪 Poções', filter: s => ITEMS[s.itemId] && ITEMS[s.itemId].type === 'potion' },
+      { title: '📜 Runas', filter: s => ITEMS[s.itemId] && ITEMS[s.itemId].type === 'rune' },
+    ]},
+];
+
+function renderShopCard(s) {
+  const balance = s.currency === 'rubini' ? G.rubini : G.gold;
+  const canAfford = balance >= s.price;
+  const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
+  const wearing = owned && G.outfit === s.icon;
+  const item = s.itemId ? ITEMS[s.itemId] : null;
+  const statLine = item ? ['atk','def','magic','heal','mana','dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
+  return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
+    <div class="skill-card-header">
+      <span class="skill-card-name">${s.icon} ${s.name}</span>
+      <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
+    </div>
+    <div class="skill-card-desc">${s.desc || statLine || ''}</div>
+    <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')"
+      ${(!canAfford && !owned) ? 'disabled' : ''}>
+      ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : canAfford ? 'Comprar' : 'Saldo insuficiente'}
+    </button>
+  </div>`;
+}
+
 function renderShopPanel() {
   const el = document.getElementById('shop-content');
   if (!el) return;
-
-  const groups = [
-    { title: '⚡ Boosts', filter: s => s.type === 'boost' || s.type === 'refill' },
-    { title: '⚔️ Equipamentos', filter: s => s.type === 'item' },
-    { title: '👕 Outfits', filter: s => s.type === 'outfit' },
-  ];
 
   const activeBoosts = ['xp', 'loot', 'gold'].filter(boostActive).map(k => {
     const mins = Math.ceil((G.boosts[k] - Date.now()) / 60000);
@@ -1391,35 +1629,28 @@ function renderShopPanel() {
   });
 
   el.innerHTML = `
-    <div id="skill-points-display" style="margin: 0 0 12px !important">
+    <div id="skill-points-display" style="margin: 0 0 14px !important">
       <strong>Seu saldo:</strong> <span>${formatNum(G.gold)} 💰 gold</span> · <span>${formatNum(G.rubini)} 💎 Rubini Coins</span>
       ${activeBoosts.length ? `<br/><strong>Boosts ativos:</strong> <span>${activeBoosts.join(' · ')}</span>` : ''}
       <br/><span class="muted" style="font-size:11px">Ganhe Rubini Coins completando tasks e vencendo na Arena.</span>
     </div>
-    ${groups.map(g => `
-      <h4 style="margin: 12px 0 8px !important">${g.title}</h4>
-      <div id="skills-grid" style="margin: 0 0 8px !important">
-      ${SHOP_ITEMS.filter(g.filter).map(s => {
-        const balance = s.currency === 'rubini' ? G.rubini : G.gold;
-        const canAfford = balance >= s.price;
-        const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
-        const wearing = owned && G.outfit === s.icon;
-        const item = s.itemId ? ITEMS[s.itemId] : null;
-        const statLine = item ? ['atk','def','magic'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
-        return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
-          <div class="skill-card-header">
-            <span class="skill-card-name">${s.icon} ${s.name}</span>
-            <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
-          </div>
-          <div class="skill-card-desc">${s.desc || statLine || ''}</div>
-          <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')"
-            ${(!canAfford && !owned) ? 'disabled' : ''}>
-            ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : canAfford ? 'Comprar' : 'Saldo insuficiente'}
-          </button>
-        </div>`;
-      }).join('')}
-      </div>
-    `).join('')}`;
+    ${SHOPS.map(shop => {
+      const shopItems = SHOP_ITEMS.filter(s => s.shop === shop.key);
+      return `
+      <div class="shop-npc-block">
+        <h3 style="margin:0 0 2px !important">${shop.title}</h3>
+        <p class="muted" style="margin:0 0 10px !important;font-size:12px">${shop.subtitle}</p>
+        ${shop.sub.map(sub => {
+          const items = shopItems.filter(sub.filter);
+          if (!items.length) return '';
+          return `
+          ${sub.title ? `<h4 style="margin: 10px 0 8px !important">${sub.title}</h4>` : ''}
+          <div id="skills-grid" style="margin: 0 0 8px !important">
+            ${items.map(renderShopCard).join('')}
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('')}`;
 }
 
 function buyShopItem(id) {
@@ -1589,6 +1820,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (t === 'rtc') renderRtcPanel();
     if (t === 'spells') renderSpellsPanel();
     if (t === 'shop') renderShopPanel();
+    if (t === 'market') renderMarketPanel();
     if (t === 'highscores') renderHighscoresPanel();
   });
 });
@@ -1646,6 +1878,7 @@ applyOfflineProgress();
 renderCharPanel();
 renderHeaderStats();
 renderMonsterDisplay();
+renderPlayerBattleSide();
 renderEquipmentSlots();
 document.body.dataset.tab = 'hunt';
 checkWorldUnlocks();

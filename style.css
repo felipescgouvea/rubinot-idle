@@ -27,6 +27,7 @@
   --gold: #b8860b;
   --gold-bright: #f1c40f;
   --gold-soft: #d4a017;
+  --gold-dim: #a9884f;
   --green-1: #2e7d32;
   --green-2: #1b5e20;
   --green-3: #0d3d0d;
@@ -390,13 +391,71 @@ body {
 }
 .kill-pill span { color: var(--navy-1); font-weight: 700; }
 
-/* ---- monstro atual ---- */
-#monster-display {
+/* ---- cena de batalha: jogador x monstro lado a lado ---- */
+#battle-scene {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 12px 14px !important;
+}
+.battle-vs-sep {
+  align-self: center;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: var(--gold);
+  filter: drop-shadow(0 1px 2px #00000044);
+}
+#player-battle-side {
+  flex: 1;
+  min-width: 0;
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 14px;
-  margin: 12px 14px !important;
+  text-align: center;
+  box-shadow: inset 0 1px 0 #ffffff66, 0 1px 4px #00000022;
+}
+.player-sprite-wrap {
+  display: inline-block;
+  animation: monster-idle 2.2s ease-in-out infinite;
+  min-height: 64px;
+}
+.player-sprite {
+  height: 64px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 5px #00000044);
+}
+.player-sprite-fallback, .player-sprite-wrap span { font-size: 3.2rem; }
+.player-sprite-wrap.dead .player-sprite,
+.player-sprite-wrap.dead span { filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044); }
+.player-sprite-wrap.hit { animation: monster-hit 0.25s ease; }
+.player-battle-name { font-family: var(--serif); font-size: 13px; color: var(--navy-2); letter-spacing: 1px; margin: 6px 0; font-weight: 700; }
+.player-hp-track {
+  height: 16px;
+  background: #d9c9a3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  box-shadow: inset 0 1px 3px #00000033;
+  margin-top: 6px;
+  position: relative;
+}
+.player-hp-fill { height: 100%; border-radius: 8px; background: linear-gradient(180deg, #3fae54, var(--hp-c)); transition: width 0.2s ease; }
+.player-hp-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px #000000aa;
+}
+
+/* ---- monstro atual ---- */
+#monster-display {
+  flex: 1;
+  min-width: 0;
+  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 14px;
+  margin: 0 !important;
   text-align: center;
   box-shadow: inset 0 1px 0 #ffffff66, 0 1px 4px #00000022;
 }
@@ -574,6 +633,27 @@ body {
   transition: filter 0.15s;
 }
 .skill-upgrade-btn:hover { filter: brightness(1.15); }
+
+/* ============ SHOP: 3 lojas separadas ============ */
+.shop-npc-block {
+  background: linear-gradient(180deg, #f5ead0, var(--parch-2));
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 12px 0 4px;
+  margin: 0 14px 16px !important;
+  box-shadow: 0 1px 4px #00000022;
+}
+.shop-npc-block h3 {
+  background: none !important;
+  border-bottom: 1px solid var(--gold-dim);
+  color: var(--navy-2) !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  padding: 0 14px 8px !important;
+  font-size: 14px !important;
+}
+.shop-npc-block p.muted { padding: 0 14px; }
+.shop-npc-block h4 { padding: 0 14px; color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
 
 /* ============ ARENA ============ */
 #arena-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 11px; margin: 12px 14px !important; }

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
   <div id="app">
@@ -36,6 +36,7 @@
       <button class="tab" data-tab="spells">🗣️ Spells</button>
       <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="shop">🛒 Shop</button>
+      <button class="tab" data-tab="market">🏪 Mercado</button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
     </nav>
 
@@ -46,9 +47,20 @@
       <section id="tab-hunt" class="panel active">
         <div class="panel-left">
           <div class="card" id="hunt-zone-card">
-            <h3>Zona de Caça</h3>
-            <div id="monster-display">
-              <div class="monster-empty">Escolha sua vocação e inicie uma caçada…</div>
+            <h3>⚔️ Batalha</h3>
+            <div id="battle-scene">
+              <div id="player-battle-side">
+                <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
+                <div class="player-battle-name" id="player-battle-name">—</div>
+                <div class="player-hp-track">
+                  <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
+                  <div class="player-hp-label" id="player-hp-label">--/--</div>
+                </div>
+              </div>
+              <div class="battle-vs-sep">⚔️</div>
+              <div id="monster-display">
+                <div class="monster-empty">Escolha sua vocação e inicie uma caçada…</div>
+              </div>
             </div>
           </div>
           <div class="card" id="combat-log-card">
@@ -187,9 +199,18 @@
       <!-- SHOP -->
       <section id="tab-shop" class="panel">
         <div class="card full-card">
-          <h3>🛒 Rubini Store</h3>
-          <p class="muted">Boosts, equipamentos e outfits — como a loja Ctrl+S do RubinOT. Boosts são pagos em Rubini Coins; equipamentos em gold.</p>
+          <h3>🛒 Lojas</h3>
+          <p class="muted">Rubini Store, Loja de Equipamentos e Loja de Artigos Mágicos — cada uma como um NPC diferente do RubinOT.</p>
           <div id="shop-content"></div>
+        </div>
+      </section>
+
+      <!-- MARKET -->
+      <section id="tab-market" class="panel">
+        <div class="card full-card">
+          <h3>🏪 Mercado — Comércio entre Jogadores</h3>
+          <p class="muted">Anuncie itens do seu inventário e compre o que outros jogadores estão vendendo, em gold.</p>
+          <div id="market-content"></div>
         </div>
       </section>
 
@@ -233,7 +254,7 @@
     <div id="notif-area"></div>
   </div>
 
-  <script src="game.js?v=9"></script>
-  <script src="multiplayer.js?v=9"></script>
+  <script src="game.js?v=10"></script>
+  <script src="multiplayer.js?v=10"></script>
 </body>
 </html>
