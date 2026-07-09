@@ -1638,6 +1638,7 @@ applyOfflineProgress();
 renderCharPanel();
 renderHeaderStats();
 renderMonsterDisplay();
+renderEquipmentSlots();
 checkWorldUnlocks();
 startRegen();
 addLog('<span class="log-info">⚔️ Bem-vindo ao Rubinot Idle! Escolha sua vocação para começar.</span>');

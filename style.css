@@ -240,6 +240,44 @@ body {
   text-shadow: 0 1px 2px #00000088;
 }
 
+/* ============ BARRA DE EQUIPAMENTO (sempre visível) ============ */
+#equipment-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 14px 0;
+  padding: 8px 14px;
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #00000033, inset 0 1px 0 #ffffff55;
+  overflow-x: auto;
+}
+.equipment-bar-label {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--navy-2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#equipment-bar #equipment-slots {
+  display: flex;
+  gap: 8px;
+  margin: 0 !important;
+  flex: 1;
+}
+#equipment-bar .equip-slot {
+  min-height: 58px;
+  min-width: 92px;
+  padding: 6px;
+  flex-shrink: 0;
+}
+#equipment-bar .equip-slot-icon { font-size: 18px; }
+#equipment-bar .equip-slot-item { font-size: 9.5px; }
+
 /* ============ PANELS ============ */
 #panels { padding: 14px; }
 .panel { display: none; gap: 14px; }

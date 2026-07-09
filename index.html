@@ -39,6 +39,12 @@
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
     </nav>
 
+    <!-- EQUIPAMENTO (sempre visível) -->
+    <div id="equipment-bar">
+      <div class="equipment-bar-label">⚔️ Equipamento</div>
+      <div id="equipment-slots"></div>
+    </div>
+
     <!-- PANELS -->
     <main id="panels">
 
@@ -157,9 +163,7 @@
       <section id="tab-inventory" class="panel">
         <div class="card full-card">
           <h3>🎒 Inventário</h3>
-          <div id="equipment-slots"></div>
-          <hr/>
-          <h4>Itens</h4>
+          <p class="muted">Clique num item para equipar, vender ou ver detalhes. O que estiver equipado aparece na barra fixa acima.</p>
           <div id="inventory-grid"></div>
         </div>
       </section>
