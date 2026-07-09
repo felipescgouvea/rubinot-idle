@@ -957,18 +957,19 @@ function sellItem(itemId) {
 }
 
 function renderEquipmentSlots() {
-  const area = document.getElementById('equipment-slots');
-  if (!area) return;
+  const areas = document.querySelectorAll('.equipment-slots');
+  if (!areas.length) return;
   const slots = ['weapon','armor','shield','helmet','ring'];
   const labels = { weapon:'Arma', armor:'Armadura', shield:'Escudo', helmet:'Elmo', ring:'Anel' };
-  area.innerHTML = slots.map(slot => {
+  const html = slots.map(slot => {
     const itemId = G.equipment[slot];
     const item = itemId ? ITEMS[itemId] : null;
     return `<div class="equip-slot ${item ? 'filled' : ''}" onclick="${item ? `openItemModal('${itemId}')` : ''}">
       <div class="equip-slot-name">${labels[slot]}</div>
-      ${item ? `<div class="equip-slot-icon">${item.icon}</div><div class="equip-slot-item">${item.name}</div>` : '<div style="color:#6272a4;font-size:11px;margin-top:10px">Vazio</div>'}
+      ${item ? `<div class="equip-slot-icon">${item.icon}</div><div class="equip-slot-item">${item.name}</div>` : '<div style="color:#8a6f4d;font-size:11px;margin-top:10px">Vazio</div>'}
     </div>`;
   }).join('');
+  areas.forEach(a => { a.innerHTML = html; });
 }
 
 function renderLoot() {
@@ -1571,6 +1572,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+    document.body.dataset.tab = tab.dataset.tab;
     // Render on switch
     const t = tab.dataset.tab;
     if (t === 'tasks') renderTasksPanel();
@@ -1639,6 +1641,7 @@ renderCharPanel();
 renderHeaderStats();
 renderMonsterDisplay();
 renderEquipmentSlots();
+document.body.dataset.tab = 'hunt';
 checkWorldUnlocks();
 startRegen();
 addLog('<span class="log-info">⚔️ Bem-vindo ao Rubinot Idle! Escolha sua vocação para começar.</span>');

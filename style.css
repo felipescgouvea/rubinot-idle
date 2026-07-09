@@ -241,6 +241,16 @@ body {
 }
 
 /* ============ BARRA DE EQUIPAMENTO (sempre visível) ============ */
+/* na aba Caçada o equipamento aparece como card acima do personagem — a barra some */
+body[data-tab="hunt"] #equipment-bar { display: none; }
+
+#equip-card .equipment-slots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 12px 14px !important;
+}
+
 #equipment-bar {
   display: flex;
   align-items: center;
