@@ -66,7 +66,7 @@ const MONSTERS = {
   scarab:        { name: 'Scarab', icon: '🪲', hp: 320, atk: 28, def: 12, xp: 120, gold: [8,25],  loot: [['scarab_coin',0.3],['meat',0.4]] },
   mutated_human: { name: 'Mutated Human', icon: '🧟', hp: 240, atk: 25, def: 8,  xp: 150, gold: [10,28], loot: [['mutated_flesh',0.5],['studded_armor',0.04]] },
   frost_dragon:  { name: 'Frost Dragon', icon: '🧊', hp: 1800,atk: 115,def: 35, xp: 2100,gold: [90,190], loot: [['ice_rapier',0.02],['dragon_scale',0.4],['life_crystal',0.3]] },
-  warlock:       { name: 'Warlock', icon: '🧙', hp: 3500,atk: 145,def: 40, xp: 4000,gold: [140,280],loot: [['skull_staff',0.03],['demon_dust',0.3],['crystal_coin',0.03]] },
+  warlock:       { name: 'Warlock', icon: '🧙', hp: 3500,atk: 145,def: 40, xp: 4000,gold: [140,280],loot: [['skull_staff',0.03],['demon_dust',0.3],['crystal_coin',0.03],['boots_of_haste',0.004]] },
   bonebeast:     { name: 'Bonebeast', icon: '🦴', hp: 515, atk: 60, def: 22, xp: 580, gold: [30,80],  loot: [['bones',0.9],['plate_legs',0.03]] },
   banshee:       { name: 'Banshee', icon: '👤', hp: 1000,atk: 85, def: 28, xp: 900, gold: [50,120], loot: [['life_crystal',0.2],['death_ring',0.01]] },
   vampire:       { name: 'Vampire', icon: '🧛', hp: 475, atk: 55, def: 20, xp: 305, gold: [25,70],  loot: [['vampire_dust',0.4],['strange_helmet',0.01]] },
@@ -75,7 +75,7 @@ const MONSTERS = {
   hellhound:     { name: 'Hellhound', icon: '🐕', hp: 7500,atk: 185,def: 50, xp: 6800,gold: [180,380],loot: [['hellhound_slobber',0.3],['demon_dust',0.5],['crystal_coin',0.08]] },
   plaguesmith:   { name: 'Plaguesmith', icon: '🔨', hp: 8250,atk: 175,def: 55, xp: 3555,gold: [160,340],loot: [['behemoth_claw',0.2],['giant_sword',0.008],['platinum_coin',0.7]] },
   rotworm:       { name: 'Rotworm', icon: '🪱', hp: 35,  atk: 6,  def: 2,  xp: 18,  gold: [1,5],   loot: [['meat',0.7],['worm_dirt',0.5]] },
-  troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 7,  def: 3,  xp: 25,  gold: [2,6],   loot: [['bones',0.9],['troll_club',0.1]] },
+  troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 7,  def: 3,  xp: 25,  gold: [2,6],   loot: [['bones',0.9],['troll_club',0.1],['leather_boots',0.12]] },
   orc:           { name: 'Orc', icon: '🗡️', hp: 70,  atk: 10, def: 4,  xp: 35,  gold: [3,8],   loot: [['orc_tooth',0.5],['studded_armor',0.06]] },
   cyclops:       { name: 'Cyclops', icon: '🗿', hp: 260, atk: 30, def: 10, xp: 150, gold: [10,30], loot: [['cyclops_toe',0.4],['halberd',0.04]] },
   minotaur:      { name: 'Minotaur', icon: '🐂', hp: 120, atk: 18, def: 6,  xp: 80,  gold: [5,15],  loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
@@ -118,7 +118,9 @@ const ITEMS = {
   spider_silk:    { name: 'Spider Silk', icon: '🕸️', type: 'misc', sell: 100 },
   spider_fangs:   { name: 'Spider Fangs', icon: '🦷', type: 'misc', sell: 10 },
   knight_armor:   { name: 'Knight Armor', icon: '🛡️', type: 'armor', def: 14, sell: 5000, rare: true },
-  plate_legs:     { name: 'Plate Legs', icon: '🦵', type: 'misc', sell: 115 },
+  plate_legs:     { name: 'Plate Legs', icon: '🦵', type: 'legs', def: 7, sell: 115 },
+  leather_boots:  { name: 'Leather Boots', icon: '🥾', type: 'boots', def: 1, sell: 8 },
+  boots_of_haste: { name: 'Boots of Haste', icon: '👢', type: 'boots', def: 0, spd: 0.3, sell: 30000, rare: true },
   hydra_head:     { name: 'Hydra Head', icon: '🐍', type: 'misc', sell: 600 },
   hydra_egg:      { name: 'Hydra Egg', icon: '🥚', type: 'misc', sell: 500, rare: true },
   medusa_shield:  { name: 'Medusa Shield', icon: '🛡️', type: 'shield', def: 33, sell: 9000, rare: true },
@@ -127,7 +129,7 @@ const ITEMS = {
   giant_sword:    { name: 'Giant Sword', icon: '⚔️', type: 'weapon', atk: 46, sell: 17000, rare: true },
   crystal_coin:   { name: 'Crystal Coin', icon: '💠', type: 'currency', sell: 10000 },
   magic_plate_armor: { name: 'Magic Plate Armor', icon: '✨', type: 'armor', def: 17, sell: 45000, rare: true },
-  dragon_scale_legs: { name: 'Dragon Scale Legs', icon: '🦵', type: 'misc', sell: 30000, rare: true },
+  dragon_scale_legs: { name: 'Dragon Scale Legs', icon: '🦵', type: 'legs', def: 10, sell: 30000, rare: true },
   goblin_ear:     { name: 'Goblin Ear', icon: '👂', type: 'misc', sell: 5 },
   dwarven_ring:   { name: 'Dwarven Ring', icon: '💍', type: 'ring', def: 2, magic: 2, sell: 2000, rare: true },
   elvish_talisman:{ name: 'Elvish Talisman', icon: '🔮', type: 'misc', sell: 30 },
@@ -304,6 +306,8 @@ const SHOP_ITEMS = [
   { id: 'buy_royal_helmet', name: 'Royal Helmet',     icon: '👑', currency: 'gold', price: 32000,  type: 'item', itemId: 'royal_helmet' },
   { id: 'buy_demon_shield', name: 'Demon Shield',     icon: '😈', currency: 'gold', price: 60000,  type: 'item', itemId: 'demon_shield' },
   { id: 'buy_mpa',          name: 'Magic Plate Armor',icon: '✨', currency: 'gold', price: 180000, type: 'item', itemId: 'magic_plate_armor' },
+  { id: 'buy_plate_legs',   name: 'Plate Legs',       icon: '🦵', currency: 'gold', price: 460,    type: 'item', itemId: 'plate_legs' },
+  { id: 'buy_boh',          name: 'Boots of Haste',   icon: '👢', currency: 'gold', price: 120000, type: 'item', itemId: 'boots_of_haste' },
   // Outfits cosméticos (Rubini Coins) — trocam o ícone do personagem
   { id: 'outfit_royal',   name: 'Outfit Royal',    icon: '🤴', currency: 'rubini', price: 200, type: 'outfit', desc: 'Outfit cosmético de realeza.' },
   { id: 'outfit_demon',   name: 'Outfit Demon',    icon: '👹', currency: 'rubini', price: 300, type: 'outfit', desc: 'Outfit demoníaco exclusivo.' },
@@ -393,7 +397,7 @@ const DEFAULT_STATE = () => ({
   outfit: null,
   outfitsOwned: [],
   inventory: {},
-  equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null },
+  equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },
   activeZone: null,
   hunting: false,
   taskKills: {},
@@ -459,7 +463,7 @@ function getMagic() {
 function getSpd() {
   if (!G.vocation) return 1;
   const v = VOCATIONS[G.vocation];
-  return +(v.baseSpd * rtcMods().spdMult).toFixed(2);
+  return +((v.baseSpd + (equipBonus().spd || 0)) * rtcMods().spdMult).toFixed(2);
 }
 
 function equipBonus() {
@@ -468,7 +472,7 @@ function equipBonus() {
     if (!itemId) return;
     const item = ITEMS[itemId];
     if (!item) return;
-    ['atk','def','magic','hp'].forEach(stat => {
+    ['atk','def','magic','hp','spd'].forEach(stat => {
       if (item[stat]) totals[stat] = (totals[stat] || 0) + item[stat];
     });
   });
@@ -908,7 +912,7 @@ function openItemModal(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   const stats = ['atk','def','magic','heal'].filter(s => item[s]).map(s => `<span>${s.toUpperCase()} +${item[s]}</span>`).join(' | ');
-  const isEquippable = ['weapon','armor','shield','helmet','ring'].includes(item.type);
+  const isEquippable = ['weapon','armor','shield','helmet','ring','legs','boots'].includes(item.type);
   const equipped = Object.values(G.equipment).includes(itemId);
   openModal(`
     <h3>${item.icon} ${item.name}</h3>
@@ -959,12 +963,13 @@ function sellItem(itemId) {
 function renderEquipmentSlots() {
   const areas = document.querySelectorAll('.equipment-slots');
   if (!areas.length) return;
-  const slots = ['weapon','armor','shield','helmet','ring'];
-  const labels = { weapon:'Arma', armor:'Armadura', shield:'Escudo', helmet:'Elmo', ring:'Anel' };
+  // ordem/posições do inventário clássico do Tibia (elmo em cima, arma na mão…)
+  const slots = ['helmet','weapon','armor','shield','ring','legs','boots'];
+  const labels = { weapon:'Arma', armor:'Armadura', shield:'Escudo', helmet:'Elmo', ring:'Anel', legs:'Calças', boots:'Botas' };
   const html = slots.map(slot => {
     const itemId = G.equipment[slot];
     const item = itemId ? ITEMS[itemId] : null;
-    return `<div class="equip-slot ${item ? 'filled' : ''}" onclick="${item ? `openItemModal('${itemId}')` : ''}">
+    return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}" onclick="${item ? `openItemModal('${itemId}')` : ''}">
       <div class="equip-slot-name">${labels[slot]}</div>
       ${item ? `<div class="equip-slot-icon">${item.icon}</div><div class="equip-slot-item">${item.name}</div>` : '<div style="color:#8a6f4d;font-size:11px;margin-top:10px">Vazio</div>'}
     </div>`;
@@ -1611,6 +1616,7 @@ function loadGame() {
       if (!G.spells) G.spells = { attack: null, heal: null };
       if (!G.boosts) G.boosts = {};
       if (!G.outfitsOwned) G.outfitsOwned = [];
+      if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
       if (G.spells.attack && !spellAvailable(G.spells.attack)) G.spells.attack = null;
       if (G.spells.heal && !spellAvailable(G.spells.heal)) G.spells.heal = null;
       // Clamp hp/mana to max on load

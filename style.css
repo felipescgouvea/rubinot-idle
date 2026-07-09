@@ -244,12 +244,42 @@ body {
 /* na aba Caçada o equipamento aparece como card acima do personagem — a barra some */
 body[data-tab="hunt"] #equipment-bar { display: none; }
 
+/* layout do inventário clássico do Tibia: elmo em cima, arma/armadura/escudo
+   no meio, anel + calças embaixo, botas na base */
 #equip-card .equipment-slots {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(3, 76px);
+  grid-template-rows: repeat(4, 68px);
+  grid-template-areas:
+    ".      helmet ."
+    "weapon armor  shield"
+    "ring   legs   ."
+    ".      boots  .";
+  gap: 6px;
+  justify-content: center;
   margin: 12px 14px !important;
 }
+#equip-card .slot-helmet { grid-area: helmet; }
+#equip-card .slot-weapon { grid-area: weapon; }
+#equip-card .slot-armor  { grid-area: armor; }
+#equip-card .slot-shield { grid-area: shield; }
+#equip-card .slot-ring   { grid-area: ring; }
+#equip-card .slot-legs   { grid-area: legs; }
+#equip-card .slot-boots  { grid-area: boots; }
+#equip-card .equip-slot {
+  min-height: 0;
+  padding: 5px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #e3d2a8, #d4c193);
+  box-shadow: inset 0 2px 5px #00000022;
+}
+#equip-card .equip-slot.filled { background: #fdf4d7; }
+#equip-card .equip-slot-name { font-size: 7.5px; margin-bottom: 2px; }
+#equip-card .equip-slot-icon { font-size: 22px; }
+#equip-card .equip-slot-item { font-size: 8px; line-height: 1.2; }
 
 #equipment-bar {
   display: flex;
