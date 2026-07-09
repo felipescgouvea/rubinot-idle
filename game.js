@@ -1088,13 +1088,25 @@ function renderArenaPanel() {
     `;
 }
 
-function startArenaBattle() {
-  const names = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
-  const enemyName = names[Math.floor(Math.random() * names.length)];
-  const enemyLevel = G.level + Math.floor(Math.random() * 5) - 2;
-  const enemyPts = Math.max(0, G.arenaPoints + Math.floor(Math.random() * 30) - 15);
-  const enemyAtk = getAtk() * (0.7 + Math.random() * 0.6);
-  const enemyHp = getMaxHp() * (0.8 + Math.random() * 0.4);
+async function startArenaBattle() {
+  // tenta um oponente REAL do ranking global; sem ninguém por perto, cai num bot
+  let enemyName, enemyLevel, enemyPts, isReal = false;
+  const real = typeof fetchArenaOpponent === 'function' ? await fetchArenaOpponent() : null;
+  if (real) {
+    enemyName = real.name;
+    enemyLevel = real.level;
+    enemyPts = real.arena_points;
+    isReal = true;
+  } else {
+    const names = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
+    enemyName = names[Math.floor(Math.random() * names.length)] + ' (NPC)';
+    enemyLevel = G.level + Math.floor(Math.random() * 5) - 2;
+    enemyPts = Math.max(0, G.arenaPoints + Math.floor(Math.random() * 30) - 15);
+  }
+  // stats do oponente derivados do level dele (real ou NPC)
+  const levelRatio = Math.max(0.5, Math.min(1.6, enemyLevel / Math.max(1, G.level)));
+  const enemyAtk = getAtk() * (0.75 + Math.random() * 0.3) * levelRatio;
+  const enemyHp = getMaxHp() * (0.85 + Math.random() * 0.3) * levelRatio;
 
   document.getElementById('arena-enemy-name').textContent = `⚔️ ${enemyName}`;
   document.getElementById('arena-enemy-info').textContent = `Lv ${enemyLevel} — ${enemyPts} pts`;
@@ -1107,7 +1119,7 @@ function startArenaBattle() {
   let wins = 0, losses = 0;
   let playerHp = getMaxHp(), eHp = enemyHp;
 
-  addALog(`<span style="color:var(--purple)">⚔️ Arena: Você vs ${enemyName}</span>`);
+  addALog(`<span style="color:var(--arcane)">⚔️ Arena: Você vs ${enemyName}${isReal ? ' <strong>(jogador real!)</strong>' : ''}</span>`);
 
   for (let round = 1; round <= 2; round++) {
     playerHp = getMaxHp(); eHp = enemyHp;
@@ -1297,6 +1309,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (t === 'worlds') renderWorldsPanel();
     if (t === 'battlepass') renderBattlePassPanel();
     if (t === 'rtc') renderRtcPanel();
+    if (t === 'highscores') renderHighscoresPanel();
   });
 });
 
