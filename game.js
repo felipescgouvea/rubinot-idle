@@ -39,20 +39,41 @@ const VOCATIONS = {
 
 const ZONES = {
   rotworm_cave:  { name: 'Caverna de Rotworms', icon: '🪱', minLevel: 1,  worldReq: 'auroria', monsters: ['rotworm', 'cave_rat'], goldMult: 1.0, xpMult: 1.0 },
-  troll_cave:    { name: 'Caverna dos Trolls', icon: '🟤', minLevel: 4,  worldReq: 'auroria', monsters: ['troll', 'orc'], goldMult: 1.2, xpMult: 1.2 },
-  cyclops_camp:  { name: 'Acampamento Cyclops', icon: '🗿', minLevel: 8,  worldReq: 'auroria', monsters: ['cyclops', 'minotaur'], goldMult: 1.5, xpMult: 1.4 },
+  goblin_village:{ name: 'Vila Goblin', icon: '👺', minLevel: 3,  worldReq: 'auroria', monsters: ['goblin', 'troll'], goldMult: 1.1, xpMult: 1.1 },
+  dwarf_mines:   { name: 'Minas dos Dwarfs', icon: '⛏️', minLevel: 6,  worldReq: 'auroria', monsters: ['dwarf', 'orc'], goldMult: 1.3, xpMult: 1.25 },
+  elf_woods:     { name: 'Bosque Élfico', icon: '🧝', minLevel: 10, worldReq: 'auroria', monsters: ['elf', 'dworc'], goldMult: 1.4, xpMult: 1.35 },
+  cyclops_camp:  { name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'minotaur'], goldMult: 1.5, xpMult: 1.4 },
   amazon_camp:   { name: 'Acampamento Amazona', icon: '🏹', minLevel: 15, worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6 },
+  scarab_desert: { name: 'Deserto dos Scarabs', icon: '🪲', minLevel: 18, worldReq: 'auroria', monsters: ['scarab', 'mutated_human'], goldMult: 2.0, xpMult: 1.8 },
   spider_lair:   { name: 'Ninho de Giant Spiders', icon: '🕷️', minLevel: 22, worldReq: 'spectrum', monsters: ['giant_spider', 'tarantula'], goldMult: 2.2, xpMult: 2.0 },
   dragon_lair:   { name: 'Covil dos Dragões', icon: '🔥', minLevel: 30, worldReq: 'bellum',  monsters: ['dragon', 'dragon_lord'], goldMult: 3.0, xpMult: 2.5 },
-  lich_lair:     { name: 'Cripta dos Liches', icon: '☠️', minLevel: 40, worldReq: 'elysian', monsters: ['lich', 'undead_dragon'], goldMult: 4.0, xpMult: 3.5 },
-  demon_fortress:{ name: 'Fortaleza Demoníaca', icon: '💀', minLevel: 50, worldReq: 'elysian', monsters: ['demon', 'behemoth', 'juggernaut'], goldMult: 5.0, xpMult: 4.0 },
+  frost_peak:    { name: 'Pico Congelado', icon: '🧊', minLevel: 35, worldReq: 'bellum',  monsters: ['frost_dragon', 'warlock'], goldMult: 3.5, xpMult: 3.0 },
+  undead_crypt:  { name: 'Cripta Profana', icon: '🦴', minLevel: 40, worldReq: 'elysian', monsters: ['bonebeast', 'banshee', 'vampire'], goldMult: 3.8, xpMult: 3.3 },
+  lich_lair:     { name: 'Cripta dos Liches', icon: '☠️', minLevel: 48, worldReq: 'elysian', monsters: ['lich', 'grim_reaper', 'undead_dragon'], goldMult: 4.0, xpMult: 3.5 },
   hydra_swamp:   { name: 'Pântano das Hydras', icon: '🐍', minLevel: 45, worldReq: 'solarian', monsters: ['hydra', 'medusa'], goldMult: 4.2, xpMult: 3.8 },
+  demon_fortress:{ name: 'Fortaleza Demoníaca', icon: '💀', minLevel: 55, worldReq: 'elysian', monsters: ['demon', 'fury', 'hellhound'], goldMult: 5.0, xpMult: 4.0 },
+  hell_gate:     { name: 'Portão do Inferno', icon: '🔥', minLevel: 60, worldReq: 'mystian', monsters: ['juggernaut', 'plaguesmith', 'behemoth'], goldMult: 6.0, xpMult: 5.0 },
   boss_sanctum:  { name: 'Santuário dos Bosses', icon: '🌀', minLevel: 70, worldReq: 'mystian', monsters: ['lothlorien', 'executioner', 'morgul', 'corrupted_one', 'nzoth'], goldMult: 8.0, xpMult: 6.0 },
 };
 
 const MONSTERS = {
   // --- Bestiário clássico de Tibia (o mundo do RubinOT) ---
   cave_rat:      { name: 'Cave Rat', icon: '🐀', hp: 15,  atk: 3,  def: 1,  xp: 8,   gold: [0,2],   loot: [['cheese',0.4],['rat_tail',0.7]] },
+  goblin:        { name: 'Goblin', icon: '👺', hp: 25,  atk: 5,  def: 2,  xp: 12,  gold: [1,4],   loot: [['goblin_ear',0.5],['bones',0.3]] },
+  dwarf:         { name: 'Dwarf', icon: '⛏️', hp: 90,  atk: 12, def: 5,  xp: 45,  gold: [3,10],  loot: [['dwarven_ring',0.02],['studded_armor',0.05]] },
+  elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 14, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]] },
+  dworc:         { name: 'Dworc Voodoomaster', icon: '🌀', hp: 85,  atk: 13, def: 4,  xp: 40,  gold: [2,8],   loot: [['orc_tooth',0.4],['spider_fangs',0.2]] },
+  scarab:        { name: 'Scarab', icon: '🪲', hp: 320, atk: 28, def: 12, xp: 120, gold: [8,25],  loot: [['scarab_coin',0.3],['meat',0.4]] },
+  mutated_human: { name: 'Mutated Human', icon: '🧟', hp: 240, atk: 25, def: 8,  xp: 150, gold: [10,28], loot: [['mutated_flesh',0.5],['studded_armor',0.04]] },
+  frost_dragon:  { name: 'Frost Dragon', icon: '🧊', hp: 1800,atk: 115,def: 35, xp: 2100,gold: [90,190], loot: [['ice_rapier',0.02],['dragon_scale',0.4],['life_crystal',0.3]] },
+  warlock:       { name: 'Warlock', icon: '🧙', hp: 3500,atk: 145,def: 40, xp: 4000,gold: [140,280],loot: [['skull_staff',0.03],['demon_dust',0.3],['crystal_coin',0.03]] },
+  bonebeast:     { name: 'Bonebeast', icon: '🦴', hp: 515, atk: 60, def: 22, xp: 580, gold: [30,80],  loot: [['bones',0.9],['plate_legs',0.03]] },
+  banshee:       { name: 'Banshee', icon: '👤', hp: 1000,atk: 85, def: 28, xp: 900, gold: [50,120], loot: [['life_crystal',0.2],['death_ring',0.01]] },
+  vampire:       { name: 'Vampire', icon: '🧛', hp: 475, atk: 55, def: 20, xp: 305, gold: [25,70],  loot: [['vampire_dust',0.4],['strange_helmet',0.01]] },
+  grim_reaper:   { name: 'Grim Reaper', icon: '⚰️', hp: 3900,atk: 155,def: 45, xp: 5500,gold: [150,320],loot: [['demon_dust',0.5],['death_ring',0.03],['crystal_coin',0.05]] },
+  fury:          { name: 'Fury', icon: '😡', hp: 4100,atk: 165,def: 42, xp: 4500,gold: [150,300],loot: [['demon_dust',0.4],['titan_axe',0.005],['platinum_coin',0.6]] },
+  hellhound:     { name: 'Hellhound', icon: '🐕', hp: 7500,atk: 185,def: 50, xp: 6800,gold: [180,380],loot: [['hellhound_slobber',0.3],['demon_dust',0.5],['crystal_coin',0.08]] },
+  plaguesmith:   { name: 'Plaguesmith', icon: '🔨', hp: 8250,atk: 175,def: 55, xp: 3555,gold: [160,340],loot: [['behemoth_claw',0.2],['giant_sword',0.008],['platinum_coin',0.7]] },
   rotworm:       { name: 'Rotworm', icon: '🪱', hp: 35,  atk: 6,  def: 2,  xp: 18,  gold: [1,5],   loot: [['meat',0.7],['worm_dirt',0.5]] },
   troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 7,  def: 3,  xp: 25,  gold: [2,6],   loot: [['bones',0.9],['troll_club',0.1]] },
   orc:           { name: 'Orc', icon: '🗡️', hp: 70,  atk: 10, def: 4,  xp: 35,  gold: [3,8],   loot: [['orc_tooth',0.5],['studded_armor',0.06]] },
@@ -107,6 +128,16 @@ const ITEMS = {
   crystal_coin:   { name: 'Crystal Coin', icon: '💠', type: 'currency', sell: 10000 },
   magic_plate_armor: { name: 'Magic Plate Armor', icon: '✨', type: 'armor', def: 17, sell: 45000, rare: true },
   dragon_scale_legs: { name: 'Dragon Scale Legs', icon: '🦵', type: 'misc', sell: 30000, rare: true },
+  goblin_ear:     { name: 'Goblin Ear', icon: '👂', type: 'misc', sell: 5 },
+  dwarven_ring:   { name: 'Dwarven Ring', icon: '💍', type: 'ring', def: 2, magic: 2, sell: 2000, rare: true },
+  elvish_talisman:{ name: 'Elvish Talisman', icon: '🔮', type: 'misc', sell: 30 },
+  scarab_coin:    { name: 'Scarab Coin', icon: '🪙', type: 'currency', sell: 100 },
+  mutated_flesh:  { name: 'Mutated Flesh', icon: '🥩', type: 'misc', sell: 8 },
+  ice_rapier:     { name: 'Ice Rapier', icon: '🧊', type: 'weapon', atk: 30, sell: 8000, rare: true },
+  skull_staff:    { name: 'Skull Staff', icon: '💀', type: 'weapon', atk: 35, magic: 12, sell: 12000, rare: true },
+  vampire_dust:   { name: 'Vampire Dust', icon: '🌫️', type: 'misc', sell: 100 },
+  strange_helmet: { name: 'Strange Helmet', icon: '🪖', type: 'helmet', def: 15, sell: 6000, rare: true },
+  hellhound_slobber: { name: 'Hellhound Slobber', icon: '💧', type: 'misc', sell: 500 },
   // --- Itens exclusivos dos bosses RubinOT ---
   rubini_shard:   { name: 'Rubini Shard', icon: '💎', type: 'currency', sell: 5000, rare: true },
   lothlorien_bow: { name: 'Lothlorien Bow', icon: '🏹', type: 'weapon', atk: 55, sell: 60000, rare: true },
@@ -138,12 +169,33 @@ const ITEMS = {
   abyssal_blade:  { name: 'Lâmina Abissal', icon: '🗡️', type: 'weapon', atk: 90, magic: 20, sell: 100000, rare: true },
 };
 
+// Linked Tasks: cadeia SEQUENCIAL por sala (como no RubinOT — completar uma task
+// desbloqueia a próxima). Lista da Lothlorien's Room confirmada na wiki/comunidade;
+// demais salas seguem a progressão de bestiário do servidor.
 const TASK_ROOMS = [
-  { id: 'lothlorien', name: "Lothlorien's Room", icon: '🌲', monsters: ['rotworm','troll','orc','amazon'], required: 100 },
-  { id: 'executioner', name: "Executioner's Room", icon: '🪓', monsters: ['cyclops','minotaur','valkyrie'], required: 200 },
-  { id: 'morgul', name: "Morgul's Room", icon: '👻', monsters: ['lich','undead_dragon','giant_spider'], required: 150 },
-  { id: 'corrupted', name: "Corrupted's Room", icon: '🩸', monsters: ['dragon','dragon_lord','demon','hydra'], required: 300 },
-  { id: 'nzoth', name: "N'Zoth's Room", icon: '🌀', monsters: ['lothlorien','executioner','morgul','corrupted_one','nzoth'], required: 50 },
+  { id: 'lothlorien', name: "Lothlorien's Room", icon: '🌲', minLevel: 8, tasks: [
+    { m: 'goblin', n: 150 }, { m: 'troll', n: 200 }, { m: 'rotworm', n: 300 },
+    { m: 'minotaur', n: 300 }, { m: 'dwarf', n: 300 }, { m: 'elf', n: 300 },
+    { m: 'dworc', n: 400 }, { m: 'scarab', n: 400 }, { m: 'cyclops', n: 500 },
+    { m: 'mutated_human', n: 500 },
+  ]},
+  { id: 'executioner', name: "Executioner's Room", icon: '🪓', minLevel: 50, tasks: [
+    { m: 'giant_spider', n: 500 }, { m: 'dragon', n: 500 }, { m: 'dragon_lord', n: 600 },
+    { m: 'frost_dragon', n: 600 }, { m: 'warlock', n: 700 }, { m: 'hydra', n: 700 },
+    { m: 'medusa', n: 800 }, { m: 'behemoth', n: 800 },
+  ]},
+  { id: 'morgul', name: "Morgul's Room", icon: '👻', minLevel: 100, tasks: [
+    { m: 'bonebeast', n: 600 }, { m: 'banshee', n: 600 }, { m: 'vampire', n: 700 },
+    { m: 'lich', n: 700 }, { m: 'grim_reaper', n: 800 }, { m: 'undead_dragon', n: 900 },
+  ]},
+  { id: 'corrupted', name: "Corrupted's Room", icon: '🩸', minLevel: 150, tasks: [
+    { m: 'fury', n: 800 }, { m: 'hellhound', n: 800 }, { m: 'plaguesmith', n: 900 },
+    { m: 'demon', n: 1000 }, { m: 'juggernaut', n: 1200 },
+  ]},
+  { id: 'nzoth', name: "N'Zoth's Room", icon: '🌀', minLevel: 250, tasks: [
+    { m: 'lothlorien', n: 30 }, { m: 'executioner', n: 30 }, { m: 'morgul', n: 40 },
+    { m: 'corrupted_one', n: 40 }, { m: 'nzoth', n: 50 },
+  ]},
 ];
 
 const WORLDS = [
@@ -155,16 +207,92 @@ const WORLDS = [
   { id: 'mystian',  name: 'Mystian',  icon: '🌀', type: 'Retro PvP',   reqLevel: 60, bonus: '+40% XP +30% Gold', players: 1800, unlocked: false },
 ];
 
-const SKILLS_DEF = [
-  { id: 'vitality',    name: 'Vitalidade',    icon: '❤️', desc: '+20 HP máximo por nível.',   maxLevel: 20, baseCost: 1, costMult: 1.5, effect: (lv) => ({ maxHp: lv * 20 }) },
-  { id: 'might',       name: 'Força',         icon: '💪', desc: '+3 ATK por nível.',           maxLevel: 20, baseCost: 1, costMult: 1.5, effect: (lv) => ({ atk: lv * 3 }) },
-  { id: 'fortitude',   name: 'Resistência',   icon: '🛡️', desc: '+2 DEF por nível.',          maxLevel: 20, baseCost: 1, costMult: 1.5, effect: (lv) => ({ def: lv * 2 }) },
-  { id: 'channeling',  name: 'Canalização',   icon: '🔮', desc: '+5 Mana máximo por nível.',  maxLevel: 20, baseCost: 1, costMult: 1.5, effect: (lv) => ({ maxMana: lv * 5 }) },
-  { id: 'speed',       name: 'Velocidade',    icon: '⚡', desc: '+0.1 SPD por nível.',         maxLevel: 10, baseCost: 2, costMult: 2.0, effect: (lv) => ({ spd: lv * 0.1 }) },
-  { id: 'loot_luck',   name: 'Sorte de Loot', icon: '🍀', desc: '+5% chance de loot por nível.',maxLevel: 10, baseCost: 2, costMult: 2.0, effect: (lv) => ({ lootBonus: lv * 0.05 }) },
-  { id: 'gold_mastery',name: 'Mestre do Ouro',icon: '💰', desc: '+10% gold por nível.',       maxLevel: 10, baseCost: 2, costMult: 2.0, effect: (lv) => ({ goldBonus: lv * 0.1 }) },
-  { id: 'xp_boost',    name: 'Bônus de XP',   icon: '⭐', desc: '+8% XP por nível.',          maxLevel: 10, baseCost: 3, costMult: 2.5, effect: (lv) => ({ xpBonus: lv * 0.08 }) },
+// Skills no estilo Tibia: sobem POR USO, não por pontos.
+// Cada vocação treina sua skill primária ao atacar; Shielding treina ao ser atingido;
+// Magic Level sobe conforme mana gasta. Multiplicadores por vocação seguem o Tibia
+// (knight treina melee rápido e magia devagar; mage o oposto).
+const TIBIA_SKILLS = {
+  magic:     { name: 'Magic Level',      icon: '🔮', base: 0 },
+  fist:      { name: 'Fist Fighting',    icon: '👊', base: 10 },
+  club:      { name: 'Club Fighting',    icon: '🏏', base: 10 },
+  sword:     { name: 'Sword Fighting',   icon: '⚔️', base: 10 },
+  axe:       { name: 'Axe Fighting',     icon: '🪓', base: 10 },
+  distance:  { name: 'Distance Fighting',icon: '🏹', base: 10 },
+  shielding: { name: 'Shielding',        icon: '🛡️', base: 10 },
+};
+
+// [skill primária de ataque, multiplicador de treino melee/dist, mult. de treino mágico]
+const VOC_TRAINING = {
+  knight:   { attackSkill: 'sword',    weaponMult: 1.0, magicMult: 0.1, shieldMult: 1.0 },
+  paladin:  { attackSkill: 'distance', weaponMult: 0.9, magicMult: 0.35, shieldMult: 0.9 },
+  sorcerer: { attackSkill: 'magic',    weaponMult: 0.3, magicMult: 1.0, shieldMult: 0.6 },
+  druid:    { attackSkill: 'magic',    weaponMult: 0.3, magicMult: 1.0, shieldMult: 0.6 },
+};
+
+function defaultSkills() {
+  const sk = {};
+  Object.entries(TIBIA_SKILLS).forEach(([id, s]) => { sk[id] = { lv: s.base, tries: 0 }; });
+  return sk;
+}
+
+// tentativas necessárias para subir a skill (curva exponencial à la Tibia, encurtada pra idle)
+function triesForNext(skillId, lv) {
+  if (skillId === 'magic') return Math.floor(60 * Math.pow(1.35, lv));       // mana gasta
+  return Math.floor(35 * Math.pow(1.22, lv - 10));                            // golpes/defesas
+}
+
+function trainSkill(skillId, amount) {
+  if (!G.vocation) return;
+  const sk = G.sk[skillId];
+  if (!sk) return;
+  sk.tries += amount;
+  const needed = triesForNext(skillId, sk.lv);
+  if (sk.tries >= needed) {
+    sk.tries -= needed;
+    sk.lv++;
+    const def = TIBIA_SKILLS[skillId];
+    addLog(`<span class="log-xp">📈 Você avançou em ${def.name} (nível ${sk.lv}).</span>`);
+    notify(`${def.icon} ${def.name} → ${sk.lv}!`, 'success');
+    renderCharInfo();
+  }
+}
+
+// ---- RTC (Rubinot Custom Client) ----
+// Configurações do client custom. Cada uma tem prós e contras reais —
+// dá pra melhorar OU piorar o desempenho do personagem conforme o ajuste.
+const RTC_SETTINGS = [
+  { id: 'autoLoot', name: 'Auto Loot', icon: '🎒', type: 'toggle', default: true,
+    desc: 'Coleta automática de loot. LIGADO: +12% de chance de loot, mas taxa de 5% sobre o gold coletado. DESLIGADO: sem taxa, loot manual normal.' },
+  { id: 'smartHeal', name: 'Smart Healing', icon: '💊', type: 'toggle', default: true,
+    desc: 'Cura automática abaixo de 40% de HP gastando 30 de mana. Evita mortes, mas consome mana que seria usada em dano (mages sentem mais).' },
+  { id: 'graphics', name: 'Modo Gráfico', icon: '🖥️', type: 'select', default: 'equilibrado',
+    options: ['performance', 'equilibrado', 'qualidade'],
+    desc: 'PERFORMANCE: +10% velocidade de ataque, -10% XP (efeitos desligados). QUALIDADE: -10% velocidade, +10% XP. EQUILIBRADO: neutro.' },
+  { id: 'latency', name: 'Latência (Ping)', icon: '📡', type: 'select', default: 'baixa',
+    options: ['baixa', 'media', 'alta'],
+    desc: 'Simula sua conexão. BAIXA: +5% de dano. MÉDIA: neutro. ALTA: -15% de dano (ataques atrasam).' },
+  { id: 'analyzer', name: 'Hunt Analyzer', icon: '📊', type: 'toggle', default: false,
+    desc: 'Overlay de análise de caçada. LIGADO: +8% XP (você otimiza a rota), mas -8% gold (foco em XP, não em loot).' },
 ];
+
+function defaultRtc() {
+  const rtc = {};
+  RTC_SETTINGS.forEach(s => { rtc[s.id] = s.default; });
+  return rtc;
+}
+
+function rtcMods() {
+  const r = G.rtc || defaultRtc();
+  return {
+    lootBonus: r.autoLoot ? 0.12 : 0,
+    goldTax: r.autoLoot ? 0.05 : 0,
+    smartHeal: !!r.smartHeal,
+    spdMult: r.graphics === 'performance' ? 1.10 : r.graphics === 'qualidade' ? 0.90 : 1,
+    xpMult: (r.graphics === 'performance' ? 0.90 : r.graphics === 'qualidade' ? 1.10 : 1) * (r.analyzer ? 1.08 : 1),
+    dmgMult: r.latency === 'baixa' ? 1.05 : r.latency === 'alta' ? 0.85 : 1,
+    goldMult: r.analyzer ? 0.92 : 1,
+  };
+}
 
 const XP_TABLE = Array.from({ length: 100 }, (_, i) => Math.floor(100 * Math.pow(i + 1, 1.8)));
 
@@ -172,11 +300,11 @@ const ARENA_DIVISIONS = ['Bronze', 'Prata', 'Ouro', 'Platina', 'Diamante', 'Mest
 
 const BP_REWARDS = [
   { tier: 1,  icon: '💰', name: '500 Gold', type: 'gold', amount: 500 },
-  { tier: 3,  icon: '⭐', name: '+2 Pts Skill', type: 'skillpts', amount: 2 },
+  { tier: 3,  icon: '💰', name: '1000 Gold', type: 'gold', amount: 1000 },
   { tier: 5,  icon: '💎', name: '50 Rubini Coins', type: 'rubini', amount: 50 },
   { tier: 7,  icon: '🗡️', name: 'Espada Sazonal', type: 'item', itemId: 'guardian_halberd' },
   { tier: 10, icon: '💰', name: '2000 Gold', type: 'gold', amount: 2000 },
-  { tier: 12, icon: '⭐', name: '+5 Pts Skill', type: 'skillpts', amount: 5 },
+  { tier: 12, icon: '💎', name: '100 Rubini Coins', type: 'rubini', amount: 100 },
   { tier: 15, icon: '💎', name: '200 Rubini Coins', type: 'rubini', amount: 200 },
   { tier: 18, icon: '🛡️', name: 'Armadura Sazonal', type: 'item', itemId: 'amazon_armor' },
   { tier: 20, icon: '👑', name: 'Elmo Real', type: 'item', itemId: 'royal_helmet' },
@@ -192,8 +320,8 @@ const DEFAULT_STATE = () => ({
   rubini: 0,
   hp: 0,
   mana: 0,
-  skillPoints: 5,
-  skills: {},
+  sk: defaultSkills(),
+  rtc: defaultRtc(),
   inventory: {},
   equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null },
   activeZone: null,
@@ -221,60 +349,47 @@ function getMaxHp() {
   if (!G.vocation) return 100;
   const v = VOCATIONS[G.vocation];
   const base = v.baseHp + (G.level - 1) * v.hpPerLevel;
-  const bonus = skillBonus().maxHp || 0;
   const eqBonus = equipBonus().hp || 0;
-  return base + bonus + eqBonus;
+  return base + eqBonus;
 }
 
 function getMaxMana() {
   if (!G.vocation) return 100;
   const v = VOCATIONS[G.vocation];
-  const base = v.baseMana + (G.level - 1) * v.manaPerLevel;
-  const bonus = skillBonus().maxMana || 0;
-  return base + bonus;
+  return v.baseMana + (G.level - 1) * v.manaPerLevel;
 }
 
+// Dano segue a skill da vocação, como no Tibia:
+// knight = Sword Fighting; paladin = Distance; mages = Magic Level.
 function getAtk() {
   if (!G.vocation) return 0;
-  const v = VOCATIONS[G.vocation];
-  const base = v.baseAtk + (G.level - 1) * v.atkPerLevel;
-  const sb = skillBonus().atk || 0;
   const eq = equipBonus().atk || 0;
-  return base + sb + eq;
+  const eqMagic = equipBonus().magic || 0;
+  const voc = VOC_TRAINING[G.vocation];
+  if (voc.attackSkill === 'magic') {
+    return Math.floor(G.sk.magic.lv * 3 + G.level * 0.8 + eq + eqMagic * 1.5);
+  }
+  if (voc.attackSkill === 'distance') {
+    return Math.floor(G.sk.distance.lv * 2.2 + G.level + eq);
+  }
+  return Math.floor(G.sk.sword.lv * 2 + G.level * 1.5 + eq);
 }
 
 function getDef() {
   if (!G.vocation) return 0;
-  const v = VOCATIONS[G.vocation];
-  const base = v.baseDef;
-  const sb = skillBonus().def || 0;
   const eq = equipBonus().def || 0;
-  return base + sb + eq;
+  return Math.floor(G.sk.shielding.lv * 1.2 + eq);
 }
 
 function getMagic() {
   if (!G.vocation) return 0;
-  const v = VOCATIONS[G.vocation];
-  const eq = equipBonus().magic || 0;
-  return v.baseMgc + eq;
+  return G.sk.magic.lv;
 }
 
 function getSpd() {
   if (!G.vocation) return 1;
   const v = VOCATIONS[G.vocation];
-  return +(v.baseSpd + (skillBonus().spd || 0)).toFixed(2);
-}
-
-function skillBonus() {
-  const totals = {};
-  SKILLS_DEF.forEach(s => {
-    const lv = G.skills[s.id] || 0;
-    if (lv > 0) {
-      const fx = s.effect(lv);
-      Object.entries(fx).forEach(([k, v]) => { totals[k] = (totals[k] || 0) + v; });
-    }
-  });
-  return totals;
+  return +(v.baseSpd * rtcMods().spdMult).toFixed(2);
 }
 
 function equipBonus() {
@@ -330,7 +445,7 @@ function spawnMonster(zoneId) {
 
 function calcDamage(atk, def) {
   const base = Math.max(1, atk - Math.floor(def * 0.6));
-  return Math.floor(base * (0.8 + Math.random() * 0.4));
+  return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));
 }
 
 function doHuntTick() {
@@ -343,21 +458,26 @@ function doHuntTick() {
   }
 
   const zone = ZONES[G.activeZone];
-  const sb = skillBonus();
-  const xpBonus = sb.xpBonus || 0;
-  const goldBonus = sb.goldBonus || 0;
-  const lootBonus = sb.lootBonus || 0;
+  const rtc = rtcMods();
+  const voc = VOC_TRAINING[G.vocation];
 
   // Player attacks monster
-  let playerDmg = calcDamage(getAtk() + getMagic(), currentMonster.def);
-  // Vocation magic bonus
-  if (G.vocation === 'sorcerer' || G.vocation === 'druid') {
+  let playerDmg = calcDamage(getAtk(), currentMonster.def);
+  // Mages gastam mana pra potencializar (e treinam Magic Level com a mana gasta)
+  if (voc.attackSkill === 'magic') {
     const manaCost = 8;
     if (G.mana >= manaCost) {
       playerDmg = Math.floor(playerDmg * 1.6);
       G.mana = Math.max(0, G.mana - manaCost);
+      trainSkill('magic', manaCost * voc.magicMult);
     }
+  } else {
+    // treino da skill de arma por golpe (knight: sword; paladin: distance)
+    trainSkill(voc.attackSkill, 1 * voc.weaponMult);
+    // mana residual também treina ML devagar (como no Tibia)
+    if (G.mana >= 2) { G.mana -= 2; trainSkill('magic', 2 * voc.magicMult); }
   }
+  playerDmg = Math.max(1, Math.floor(playerDmg * rtc.dmgMult));
   currentMonster.hp -= playerDmg;
   addLog(`⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
   renderMonsterDisplay(true);
@@ -372,8 +492,9 @@ function doHuntTick() {
 
   if (currentMonster.hp <= 0) {
     // Kill
-    const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMult() * (1 + goldBonus));
-    const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMult() * (1 + xpBonus));
+    let goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMult() * rtc.goldMult);
+    goldGained = Math.max(0, goldGained - Math.floor(goldGained * rtc.goldTax));
+    const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMult() * rtc.xpMult);
 
     G.gold += goldGained;
     G.totalGoldEarned += goldGained;
@@ -396,7 +517,7 @@ function doHuntTick() {
     // Loot
     const lootLine = [];
     currentMonster.loot.forEach(([itemId, chance]) => {
-      if (Math.random() < chance + lootBonus) {
+      if (Math.random() < chance + rtc.lootBonus) {
         addItemToInventory(itemId);
         const item = ITEMS[itemId];
         lootLine.push(`${item.icon} ${item.name}`);
@@ -415,10 +536,20 @@ function doHuntTick() {
     return;
   }
 
-  // Monster attacks player
+  // Monster attacks player (defender treina Shielding, como no Tibia)
   const monsterDmg = calcDamage(currentMonster.atk, getDef());
   G.hp = Math.max(0, G.hp - monsterDmg);
+  trainSkill('shielding', 1 * voc.shieldMult);
   addLog(`🩸 ${currentMonster.name} causou <span class="log-dmg">${monsterDmg}</span> de dano em você.`);
+
+  // RTC Smart Healing: auto-cura abaixo de 40% HP gastando mana
+  if (rtc.smartHeal && G.hp > 0 && G.hp < getMaxHp() * 0.4 && G.mana >= 30) {
+    const heal = Math.floor(getMaxHp() * 0.25);
+    G.hp = Math.min(getMaxHp(), G.hp + heal);
+    G.mana -= 30;
+    trainSkill('magic', 30 * voc.magicMult);
+    addLog(`💊 <span class="log-heal">[RTC] Smart Healing: +${heal} HP</span> (-30 mana)`);
+  }
 
   if (G.hp <= 0) {
     addLog(`<span class="log-kill">💔 Você morreu! Retornando ao templo...</span>`);
@@ -437,7 +568,6 @@ function gainXp(amount) {
   while (G.level < 100 && G.xp >= XP_TABLE[G.level - 1]) {
     G.xp -= XP_TABLE[G.level - 1];
     G.level++;
-    G.skillPoints += 3;
     G.hp = getMaxHp();
     G.mana = getMaxMana();
     addLog(`<span class="log-xp">🎉 LEVEL UP! Você chegou ao nível ${G.level}!</span>`);
@@ -508,9 +638,9 @@ function applyOfflineProgress() {
   const scaleFactor = 1 + (G.level - 1) * 0.05;
   const killsPerMin = 6; // ritmo offline reduzido (~metade do ativo)
   const kills = Math.floor((cappedSec / 60) * killsPerMin);
-  const sb = skillBonus();
-  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMult() * (1 + (sb.xpBonus || 0)) * 0.5);
-  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMult() * (1 + (sb.goldBonus || 0)) * 0.5);
+  const rtc = rtcMods();
+  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMult() * rtc.xpMult * 0.5);
+  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMult() * rtc.goldMult * 0.5);
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -763,7 +893,7 @@ function renderCharInfo() {
   document.getElementById('char-level').textContent = G.level;
   document.getElementById('char-xp').textContent = G.xp;
   document.getElementById('char-xp-next').textContent = XP_TABLE[G.level - 1] || '---';
-  document.getElementById('stat-atk').textContent = getAtk() + getMagic();
+  document.getElementById('stat-atk').textContent = getAtk();
   document.getElementById('stat-def').textContent = getDef();
   document.getElementById('stat-spd').textContent = getSpd().toFixed(1);
   document.getElementById('stat-magic').textContent = getMagic();
@@ -803,37 +933,46 @@ function formatNum(n) {
 
 // ---- TASKS ----
 
+// Uma task só desbloqueia quando a anterior da cadeia foi completa ≥1x (Linked!).
+function isTaskUnlocked(room, index) {
+  if (G.level < room.minLevel) return false;
+  if (index === 0) return true;
+  const prev = room.tasks[index - 1];
+  return (G.taskCompletion[prev.m] || 0) >= 1;
+}
+
 function renderTasksPanel() {
   const roomsEl = document.getElementById('task-rooms');
-  roomsEl.innerHTML = TASK_ROOMS.map(room => `
-    <div class="task-room">
-      <h4>${room.icon} ${room.name}</h4>
-      ${room.monsters.map(mId => {
-        const m = MONSTERS[mId];
-        const kills = G.taskKills[mId] || 0;
-        const required = room.required;
-        const done = (G.taskCompletion[mId] || 0);
-        const isActive = G.activeTask?.monster === mId;
-        const pct = Math.min(100, Math.round((kills / required) * 100));
-        return `<div class="task-entry">
-          <span class="task-name">${m.icon} ${m.name} (${kills}/${required})</span>
-          <span class="task-status">${done}x completo</span>
-          <button class="task-btn ${isActive ? 'done' : ''}" onclick="startTask('${mId}', ${required})" ${isActive ? 'disabled' : ''}>
-            ${isActive ? '✓ Ativo' : 'Iniciar'}
+  roomsEl.innerHTML = TASK_ROOMS.map(room => {
+    const roomLocked = G.level < room.minLevel;
+    return `
+    <div class="task-room" ${roomLocked ? 'style="opacity:0.55"' : ''}>
+      <h4>${room.icon} ${room.name} ${roomLocked ? `— 🔒 Lv ${room.minLevel}+` : ''}</h4>
+      ${room.tasks.map((t, i) => {
+        const m = MONSTERS[t.m];
+        const kills = G.taskKills[t.m] || 0;
+        const done = (G.taskCompletion[t.m] || 0);
+        const isActive = G.activeTask?.monster === t.m;
+        const unlocked = isTaskUnlocked(room, i);
+        return `<div class="task-entry" ${!unlocked ? 'style="opacity:0.45"' : ''}>
+          <span class="task-name">${i + 1}. ${m.icon} ${m.name} (${kills}/${t.n})</span>
+          <span class="task-status">${done > 0 ? `${done}x ✅` : done === 0 && unlocked ? '<span style="color:#8fc47a">1ª vez: 2x prêmio</span>' : ''}</span>
+          <button class="task-btn ${isActive ? 'done' : ''}" onclick="startTask('${t.m}', ${t.n})" ${isActive || !unlocked ? 'disabled' : ''}>
+            ${isActive ? '✓ Ativa' : unlocked ? 'Iniciar' : '🔒'}
           </button>
         </div>`;
       }).join('')}
     </div>
-  `).join('');
+  `; }).join('');
 
   renderActiveTask();
 }
 
 function startTask(monsterId, required) {
-  if (G.activeTask) { notify('Cancele a tarefa atual primeiro.', 'error'); return; }
+  if (G.activeTask) { notify('Só uma task ativa por vez (como no RubinOT). Cancele a atual primeiro.', 'error'); return; }
   G.activeTask = { monster: monsterId, required, started: Date.now() };
   G.taskKills[monsterId] = G.taskKills[monsterId] || 0;
-  notify(`Tarefa iniciada: matar ${required}x ${MONSTERS[monsterId].name}`, 'success');
+  notify(`Task iniciada: ${required}x ${MONSTERS[monsterId].name}`, 'success');
   renderTasksPanel();
   saveGame();
 }
@@ -843,13 +982,18 @@ function checkTaskProgress() {
   const { monster, required } = G.activeTask;
   const kills = G.taskKills[monster] || 0;
   if (kills >= required) {
+    const firstTime = (G.taskCompletion[monster] || 0) === 0;
     G.taskCompletion[monster] = (G.taskCompletion[monster] || 0) + 1;
-    const bonus = required * 5;
-    const xpBonus = required * 20;
-    G.gold += bonus;
-    gainXp(xpBonus);
-    G.rubini += 10;
-    notify(`✅ Tarefa completa! +${bonus} 💰, +${xpBonus} XP, +10 RC`, 'success');
+    // Recompensa exclusiva de 1ª vez (verde) vs repetível (vermelha), como no RubinOT
+    const mult = firstTime ? 2 : 1;
+    const goldReward = required * 5 * mult;
+    const xpReward = required * 20 * mult;
+    const rcReward = firstTime ? 25 : 10;
+    G.gold += goldReward;
+    gainXp(xpReward);
+    G.rubini += rcReward;
+    notify(`${firstTime ? '🟢 1ª VEZ! ' : '🔴 '}Task completa! +${goldReward} 💰, +${xpReward} XP, +${rcReward} RC`, 'success');
+    addLog(`<span class="${firstTime ? 'log-heal' : 'log-loot'}">📜 Task ${MONSTERS[monster].name} completa${firstTime ? ' (bônus de primeira vez!)' : ''} — próxima task da sala desbloqueada.</span>`);
     G.taskKills[monster] = 0;
     G.activeTask = null;
     renderTasksPanel();
@@ -886,42 +1030,28 @@ function cancelTask() {
 
 function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');
-  pts.innerHTML = `<strong>Pontos de Habilidade disponíveis: <span style="color:var(--accent)">${G.skillPoints}</span></strong> (Ganhe 3 por level up)`;
+  const voc = G.vocation ? VOC_TRAINING[G.vocation] : null;
+  const vocName = G.vocation ? VOCATIONS[G.vocation].name : '—';
+  pts.innerHTML = G.vocation
+    ? `<strong>Skills sobem por uso, como no Tibia.</strong> Sua vocação (<span>${vocName}</span>) treina <span>${TIBIA_SKILLS[voc.attackSkill].name}</span> ao atacar, Shielding ao ser atingida e Magic Level ao gastar mana.`
+    : 'Escolha uma vocação para começar a treinar.';
 
   const grid = document.getElementById('skills-grid');
-  grid.innerHTML = SKILLS_DEF.map(s => {
-    const lv = G.skills[s.id] || 0;
-    const cost = Math.ceil(s.baseCost * Math.pow(s.costMult, lv));
-    const maxed = lv >= s.maxLevel;
-    const canAfford = G.skillPoints >= cost;
-    const fx = s.effect(lv);
-    const fxText = Object.entries(fx).map(([k, v]) => `+${typeof v === 'number' ? (v % 1 ? v.toFixed(2) : v) : v} ${k}`).join(', ');
-    return `<div class="skill-card">
+  grid.innerHTML = Object.entries(TIBIA_SKILLS).map(([id, s]) => {
+    const sk = G.sk[id];
+    const needed = triesForNext(id, sk.lv);
+    const pct = Math.min(100, Math.round((sk.tries / needed) * 100));
+    const isPrimary = voc && (voc.attackSkill === id || id === 'shielding' || (id === 'magic' && voc.magicMult >= 0.35));
+    return `<div class="skill-card" ${isPrimary ? 'style="border-color:var(--gold-dim)"' : ''}>
       <div class="skill-card-header">
         <span class="skill-card-name">${s.icon} ${s.name}</span>
-        <span class="skill-card-level">Lv ${lv}/${s.maxLevel}</span>
+        <span class="skill-card-level">${sk.lv}</span>
       </div>
-      <div class="skill-card-desc">${s.desc}</div>
-      ${lv > 0 ? `<div class="skill-card-cost" style="color:var(--green)">Atual: ${fxText}</div>` : ''}
-      <div class="skill-card-cost">Próximo: ${maxed ? 'MAX' : `${cost} pts`}</div>
-      <button class="skill-upgrade-btn" onclick="upgradeSkill('${s.id}')" ${maxed || !canAfford ? 'disabled' : ''}>
-        ${maxed ? '✓ Máximo' : canAfford ? `Melhorar (${cost} pts)` : `Insuficiente (${cost} pts)`}
-      </button>
+      <div class="skill-card-desc">${isPrimary ? '⭐ Treinada pela sua vocação' : 'Não treinada pela sua vocação'}</div>
+      <div class="task-progress-bar-track"><div class="task-progress-bar" style="width:${pct}%"></div></div>
+      <div class="skill-card-cost">${Math.floor(sk.tries)} / ${needed} para o próximo nível (${pct}%)</div>
     </div>`;
   }).join('');
-}
-
-function upgradeSkill(id) {
-  const s = SKILLS_DEF.find(x => x.id === id);
-  const lv = G.skills[id] || 0;
-  const cost = Math.ceil(s.baseCost * Math.pow(s.costMult, lv));
-  if (G.skillPoints < cost || lv >= s.maxLevel) return;
-  G.skillPoints -= cost;
-  G.skills[id] = lv + 1;
-  renderSkillsPanel();
-  renderCharInfo();
-  notify(`${s.name} melhorada para nível ${lv + 1}!`, 'success');
-  saveGame();
 }
 
 // ---- ARENA ----
@@ -1090,10 +1220,63 @@ function claimBpReward(tier) {
   G.bpClaimed.push(tier);
   if (r.type === 'gold') { G.gold += r.amount; notify(`+${r.amount} 💰 coletado!`, 'success'); }
   if (r.type === 'rubini') { G.rubini += r.amount; notify(`+${r.amount} Rubini Coins!`, 'success'); }
-  if (r.type === 'skillpts') { G.skillPoints += r.amount; notify(`+${r.amount} pontos de habilidade!`, 'success'); }
   if (r.type === 'item') { addItemToInventory(r.itemId); notify(`Item recebido: ${ITEMS[r.itemId]?.name}!`, 'success'); }
   renderBattlePassPanel();
   renderHeaderStats();
+  saveGame();
+}
+
+// ---- RTC PANEL ----
+
+function renderRtcPanel() {
+  const el = document.getElementById('rtc-settings');
+  if (!el) return;
+  const mods = rtcMods();
+  const summary = [
+    mods.lootBonus > 0 ? `+${Math.round(mods.lootBonus * 100)}% loot` : null,
+    mods.goldTax > 0 ? `-${Math.round(mods.goldTax * 100)}% taxa gold` : null,
+    mods.smartHeal ? 'auto-heal' : null,
+    mods.spdMult !== 1 ? `${mods.spdMult > 1 ? '+' : ''}${Math.round((mods.spdMult - 1) * 100)}% vel. ataque` : null,
+    mods.xpMult !== 1 ? `${mods.xpMult > 1 ? '+' : ''}${Math.round((mods.xpMult - 1) * 100)}% XP` : null,
+    mods.dmgMult !== 1 ? `${mods.dmgMult > 1 ? '+' : ''}${Math.round((mods.dmgMult - 1) * 100)}% dano` : null,
+    mods.goldMult !== 1 ? `${Math.round((mods.goldMult - 1) * 100)}% gold` : null,
+  ].filter(Boolean).join(' · ') || 'configuração neutra';
+
+  el.innerHTML = `
+    <div id="skill-points-display" style="margin-bottom:14px">
+      <strong>🖥️ Efeitos ativos do RTC:</strong> <span style="color:var(--gold-bright)">${summary}</span>
+    </div>
+    <div id="skills-grid">
+    ${RTC_SETTINGS.map(s => {
+      const val = G.rtc[s.id];
+      let control;
+      if (s.type === 'toggle') {
+        control = `<button class="skill-upgrade-btn" onclick="setRtc('${s.id}', ${!val})" style="${val ? '' : 'background:var(--panel-3);border-color:var(--border);color:var(--ink-faint)'}">
+          ${val ? '✅ LIGADO — clique p/ desligar' : '⬜ DESLIGADO — clique p/ ligar'}
+        </button>`;
+      } else {
+        control = `<div style="display:flex;gap:6px">${s.options.map(o =>
+          `<button class="task-btn ${val === o ? 'done' : ''}" onclick="setRtc('${s.id}', '${o}')" style="flex:1;text-transform:capitalize">${o}</button>`
+        ).join('')}</div>`;
+      }
+      return `<div class="skill-card">
+        <div class="skill-card-header">
+          <span class="skill-card-name">${s.icon} ${s.name}</span>
+        </div>
+        <div class="skill-card-desc">${s.desc}</div>
+        ${control}
+      </div>`;
+    }).join('')}
+    </div>`;
+}
+
+function setRtc(id, value) {
+  G.rtc[id] = value;
+  // velocidade de ataque muda → reinicia o loop de caçada com o novo intervalo
+  if (G.hunting) { stopHunt(); startHunt(); }
+  renderRtcPanel();
+  renderCharInfo();
+  notify(`RTC: ${RTC_SETTINGS.find(s => s.id === id).name} atualizado.`, 'info');
   saveGame();
 }
 
@@ -1113,6 +1296,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (t === 'inventory') renderInventory();
     if (t === 'worlds') renderWorldsPanel();
     if (t === 'battlepass') renderBattlePassPanel();
+    if (t === 'rtc') renderRtcPanel();
   });
 });
 
@@ -1133,6 +1317,9 @@ function loadGame() {
       // migração: zona/tarefa de versões antigas do bestiário
       if (G.activeZone && !ZONES[G.activeZone]) G.activeZone = null;
       if (G.activeTask && !MONSTERS[G.activeTask.monster]) G.activeTask = null;
+      // migração: sistema antigo de pontos de skill → skills de treino Tibia
+      if (!G.sk || !G.sk.magic) G.sk = defaultSkills();
+      if (!G.rtc) G.rtc = defaultRtc();
       // Clamp hp/mana to max on load
       if (G.vocation) {
         G.hp = Math.min(G.hp, getMaxHp());
