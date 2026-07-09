@@ -288,6 +288,41 @@ function spellAvailable(id) {
   return s && G.vocation && s.voc.includes(G.vocation) && G.level >= s.level;
 }
 
+// ---- SHOP (Rubini Store, como o Ctrl+S do RubinOT) ----
+const SHOP_ITEMS = [
+  // Boosts temporários (Rubini Coins)
+  { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, desc: '+50% de XP por 30 minutos de caçada.' },
+  { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, desc: '+15% de chance de loot por 30 minutos.' },
+  { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, desc: '+30% de gold por 30 minutos.' },
+  // Suprimentos (gold)
+  { id: 'refill',     name: 'Supply Completo', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', desc: 'Restaura HP e mana instantaneamente.' },
+  // Equipamentos (gold) — preço = 4x o valor de venda
+  { id: 'buy_halberd',      name: 'Halberd',          icon: '🗡️', currency: 'gold', price: 1600,   type: 'item', itemId: 'halberd' },
+  { id: 'buy_chain_armor',  name: 'Chain Armor',      icon: '⛓️', currency: 'gold', price: 1200,   type: 'item', itemId: 'chain_armor' },
+  { id: 'buy_knight_armor', name: 'Knight Armor',     icon: '🛡️', currency: 'gold', price: 20000,  type: 'item', itemId: 'knight_armor' },
+  { id: 'buy_giant_sword',  name: 'Giant Sword',      icon: '⚔️', currency: 'gold', price: 68000,  type: 'item', itemId: 'giant_sword' },
+  { id: 'buy_royal_helmet', name: 'Royal Helmet',     icon: '👑', currency: 'gold', price: 32000,  type: 'item', itemId: 'royal_helmet' },
+  { id: 'buy_demon_shield', name: 'Demon Shield',     icon: '😈', currency: 'gold', price: 60000,  type: 'item', itemId: 'demon_shield' },
+  { id: 'buy_mpa',          name: 'Magic Plate Armor',icon: '✨', currency: 'gold', price: 180000, type: 'item', itemId: 'magic_plate_armor' },
+  // Outfits cosméticos (Rubini Coins) — trocam o ícone do personagem
+  { id: 'outfit_royal',   name: 'Outfit Royal',    icon: '🤴', currency: 'rubini', price: 200, type: 'outfit', desc: 'Outfit cosmético de realeza.' },
+  { id: 'outfit_demon',   name: 'Outfit Demon',    icon: '👹', currency: 'rubini', price: 300, type: 'outfit', desc: 'Outfit demoníaco exclusivo.' },
+  { id: 'outfit_reaper',  name: 'Outfit Reaper',   icon: '💀', currency: 'rubini', price: 300, type: 'outfit', desc: 'Outfit sombrio do ceifador.' },
+  { id: 'outfit_pirate',  name: 'Outfit Pirate',   icon: '🏴‍☠️', currency: 'rubini', price: 150, type: 'outfit', desc: 'Outfit pirata dos sete mares.' },
+];
+
+function boostActive(kind) {
+  return G.boosts && G.boosts[kind] && G.boosts[kind] > Date.now();
+}
+
+function boostMods() {
+  return {
+    xp: boostActive('xp') ? 1.5 : 1,
+    loot: boostActive('loot') ? 0.15 : 0,
+    gold: boostActive('gold') ? 1.3 : 1,
+  };
+}
+
 // ---- RTC (Rubinot Custom Client) ----
 // Configurações do client custom. Cada uma tem prós e contras reais —
 // dá pra melhorar OU piorar o desempenho do personagem conforme o ajuste.
@@ -354,6 +389,9 @@ const DEFAULT_STATE = () => ({
   sk: defaultSkills(),
   rtc: defaultRtc(),
   spells: { attack: null, heal: null },
+  boosts: {},
+  outfit: null,
+  outfitsOwned: [],
   inventory: {},
   equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null },
   activeZone: null,
@@ -520,9 +558,10 @@ function doHuntTick() {
 
   if (currentMonster.hp <= 0) {
     // Kill
-    let goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMult() * rtc.goldMult);
+    const boosts = boostMods();
+    let goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMult() * rtc.goldMult * boosts.gold);
     goldGained = Math.max(0, goldGained - Math.floor(goldGained * rtc.goldTax));
-    const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMult() * rtc.xpMult);
+    const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMult() * rtc.xpMult * boosts.xp);
 
     G.gold += goldGained;
     G.totalGoldEarned += goldGained;
@@ -545,7 +584,7 @@ function doHuntTick() {
     // Loot
     const lootLine = [];
     currentMonster.loot.forEach(([itemId, chance]) => {
-      if (Math.random() < chance + rtc.lootBonus) {
+      if (Math.random() < chance + rtc.lootBonus + boosts.loot) {
         addItemToInventory(itemId);
         const item = ITEMS[itemId];
         lootLine.push(`${item.icon} ${item.name}`);
@@ -974,7 +1013,7 @@ function renderCharPanel() {
 function renderCharInfo() {
   if (!G.vocation) return;
   const v = VOCATIONS[G.vocation];
-  document.getElementById('char-voc-icon').textContent = v.icon;
+  document.getElementById('char-voc-icon').textContent = G.outfit || v.icon;
   document.getElementById('char-voc-name').textContent = v.name;
   document.getElementById('char-level').textContent = G.level;
   document.getElementById('char-xp').textContent = G.xp;
@@ -1324,6 +1363,100 @@ function claimBpReward(tier) {
   saveGame();
 }
 
+// ---- SHOP PANEL ----
+
+function shopPriceLabel(s) {
+  return s.currency === 'rubini' ? `${s.price} 💎 RC` : `${formatNum(s.price)} 💰`;
+}
+
+function renderShopPanel() {
+  const el = document.getElementById('shop-content');
+  if (!el) return;
+
+  const groups = [
+    { title: '⚡ Boosts', filter: s => s.type === 'boost' || s.type === 'refill' },
+    { title: '⚔️ Equipamentos', filter: s => s.type === 'item' },
+    { title: '👕 Outfits', filter: s => s.type === 'outfit' },
+  ];
+
+  const activeBoosts = ['xp', 'loot', 'gold'].filter(boostActive).map(k => {
+    const mins = Math.ceil((G.boosts[k] - Date.now()) / 60000);
+    return `${k.toUpperCase()} (${mins}min restantes)`;
+  });
+
+  el.innerHTML = `
+    <div id="skill-points-display" style="margin: 0 0 12px !important">
+      <strong>Seu saldo:</strong> <span>${formatNum(G.gold)} 💰 gold</span> · <span>${formatNum(G.rubini)} 💎 Rubini Coins</span>
+      ${activeBoosts.length ? `<br/><strong>Boosts ativos:</strong> <span>${activeBoosts.join(' · ')}</span>` : ''}
+      <br/><span class="muted" style="font-size:11px">Ganhe Rubini Coins completando tasks e vencendo na Arena.</span>
+    </div>
+    ${groups.map(g => `
+      <h4 style="margin: 12px 0 8px !important">${g.title}</h4>
+      <div id="skills-grid" style="margin: 0 0 8px !important">
+      ${SHOP_ITEMS.filter(g.filter).map(s => {
+        const balance = s.currency === 'rubini' ? G.rubini : G.gold;
+        const canAfford = balance >= s.price;
+        const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
+        const wearing = owned && G.outfit === s.icon;
+        const item = s.itemId ? ITEMS[s.itemId] : null;
+        const statLine = item ? ['atk','def','magic'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
+        return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
+          <div class="skill-card-header">
+            <span class="skill-card-name">${s.icon} ${s.name}</span>
+            <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
+          </div>
+          <div class="skill-card-desc">${s.desc || statLine || ''}</div>
+          <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')"
+            ${(!canAfford && !owned) ? 'disabled' : ''}>
+            ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : canAfford ? 'Comprar' : 'Saldo insuficiente'}
+          </button>
+        </div>`;
+      }).join('')}
+      </div>
+    `).join('')}`;
+}
+
+function buyShopItem(id) {
+  const s = SHOP_ITEMS.find(x => x.id === id);
+  if (!s) return;
+
+  // outfit já comprado = vestir/tirar
+  if (s.type === 'outfit' && G.outfitsOwned.includes(s.id)) {
+    G.outfit = G.outfit === s.icon ? null : s.icon;
+    renderShopPanel();
+    renderCharInfo();
+    saveGame();
+    return;
+  }
+
+  const balance = s.currency === 'rubini' ? G.rubini : G.gold;
+  if (balance < s.price) { notify('Saldo insuficiente.', 'error'); return; }
+  if (s.currency === 'rubini') G.rubini -= s.price; else G.gold -= s.price;
+
+  if (s.type === 'boost') {
+    const now = Date.now();
+    const base = boostActive(s.boost) ? G.boosts[s.boost] : now;
+    G.boosts[s.boost] = base + s.minutes * 60000; // acumula tempo
+    notify(`${s.icon} ${s.name} ativado por ${s.minutes} min!`, 'success');
+  } else if (s.type === 'refill') {
+    G.hp = getMaxHp();
+    G.mana = getMaxMana();
+    notify('🧪 HP e mana restaurados!', 'success');
+  } else if (s.type === 'item') {
+    addItemToInventory(s.itemId);
+    notify(`${s.icon} ${ITEMS[s.itemId].name} comprado! Veja no inventário.`, 'success');
+  } else if (s.type === 'outfit') {
+    G.outfitsOwned.push(s.id);
+    G.outfit = s.icon;
+    notify(`${s.icon} Outfit adquirido e equipado!`, 'success');
+  }
+
+  renderShopPanel();
+  renderHeaderStats();
+  renderCharInfo();
+  saveGame();
+}
+
 // ---- SPELLS PANEL ----
 
 function renderSpellsPanel() {
@@ -1448,6 +1581,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (t === 'battlepass') renderBattlePassPanel();
     if (t === 'rtc') renderRtcPanel();
     if (t === 'spells') renderSpellsPanel();
+    if (t === 'shop') renderShopPanel();
     if (t === 'highscores') renderHighscoresPanel();
   });
 });
@@ -1473,6 +1607,8 @@ function loadGame() {
       if (!G.sk || !G.sk.magic) G.sk = defaultSkills();
       if (!G.rtc) G.rtc = defaultRtc();
       if (!G.spells) G.spells = { attack: null, heal: null };
+      if (!G.boosts) G.boosts = {};
+      if (!G.outfitsOwned) G.outfitsOwned = [];
       if (G.spells.attack && !spellAvailable(G.spells.attack)) G.spells.attack = null;
       if (G.spells.heal && !spellAvailable(G.spells.heal)) G.spells.heal = null;
       // Clamp hp/mana to max on load
