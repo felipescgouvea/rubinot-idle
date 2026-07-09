@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=8" />
+  <link rel="stylesheet" href="style.css?v=9" />
 </head>
 <body>
   <div id="app">
@@ -38,12 +38,6 @@
       <button class="tab" data-tab="shop">🛒 Shop</button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
     </nav>
-
-    <!-- EQUIPAMENTO (sempre visível) -->
-    <div id="equipment-bar">
-      <div class="equipment-bar-label">⚔️ Equipamento</div>
-      <div class="equipment-slots"></div>
-    </div>
 
     <!-- PANELS -->
     <main id="panels">
@@ -167,7 +161,7 @@
       <section id="tab-inventory" class="panel">
         <div class="card full-card">
           <h3>🎒 Inventário</h3>
-          <p class="muted">Clique num item para equipar, vender ou ver detalhes. O que estiver equipado aparece na barra fixa acima.</p>
+          <p class="muted">Clique num item para equipar, vender ou ver detalhes. O que estiver equipado aparece no card Equipamento da aba Caçada.</p>
           <div id="inventory-grid"></div>
         </div>
       </section>
@@ -239,7 +233,7 @@
     <div id="notif-area"></div>
   </div>
 
-  <script src="game.js?v=8"></script>
-  <script src="multiplayer.js?v=8"></script>
+  <script src="game.js?v=9"></script>
+  <script src="multiplayer.js?v=9"></script>
 </body>
 </html>
