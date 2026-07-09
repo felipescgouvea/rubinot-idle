@@ -10,7 +10,7 @@
   <div id="app">
     <!-- HEADER -->
     <header id="header">
-      <div class="logo">⚔️ Rubinot Idle</div>
+      <div class="logo"><img src="logo.webp" alt="RubinOT" class="logo-img" /><span class="logo-sub">IDLE</span></div>
       <div id="header-stats">
         <span class="stat-pill">Lv <span id="hdr-level">1</span></span>
         <span class="stat-pill">💰 <span id="hdr-gold">0</span></span>
@@ -33,6 +33,7 @@
       <button class="tab" data-tab="inventory">🎒 Inventário</button>
       <button class="tab" data-tab="worlds">🌍 Mundos</button>
       <button class="tab" data-tab="battlepass">🎖️ Battle Pass</button>
+      <button class="tab" data-tab="spells">🗣️ Spells</button>
       <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
     </nav>
@@ -177,6 +178,15 @@
           <h3>🎖️ Battle Pass — Temporada Atual</h3>
           <div id="bp-progress-area"></div>
           <div id="bp-rewards-track"></div>
+        </div>
+      </section>
+
+      <!-- SPELLS -->
+      <section id="tab-spells" class="panel">
+        <div class="card full-card">
+          <h3>🗣️ Spells — Magias da Vocação</h3>
+          <p class="muted">Selecione qual magia o RTC vai castar automaticamente na caçada (ataque) e no Smart Healing (cura), como no client do RubinOT.</p>
+          <div id="spells-content"></div>
         </div>
       </section>
 

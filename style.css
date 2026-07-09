@@ -138,16 +138,25 @@ body {
 }
 
 .logo {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 150px;
+}
+.logo-img {
+  height: 46px;
+  filter: drop-shadow(0 2px 4px #00000066);
+}
+.logo-sub {
   font-family: var(--serif);
-  font-size: 1.25rem;
+  font-size: 0.85rem;
   font-weight: 900;
-  letter-spacing: 2.5px;
-  min-width: 185px;
+  letter-spacing: 3px;
   background: linear-gradient(180deg, #ffe9a3 15%, var(--gold-bright) 45%, var(--gold) 85%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 2px #00000088);
+  padding-bottom: 4px;
 }
 
 #header-stats { display: flex; gap: 7px; flex-wrap: wrap; flex: 1; }

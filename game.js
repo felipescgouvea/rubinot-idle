@@ -257,6 +257,37 @@ function trainSkill(skillId, amount) {
   }
 }
 
+// ---- SPELLS (magias reais do Tibia, por vocação) ----
+// O RTC auto-casta a spell de ataque e usa a de cura no Smart Healing.
+const SPELLS = {
+  // universais
+  exura:            { name: 'Light Healing', words: 'exura', icon: '✨', voc: ['knight','paladin','sorcerer','druid'], level: 9,  mana: 20,  type: 'heal',   power: 0.15 },
+  // knight
+  exura_ico:        { name: 'Wound Cleansing', words: 'exura ico', icon: '🩹', voc: ['knight'], level: 10, mana: 40,  type: 'heal',   power: 0.30 },
+  exori:            { name: 'Berserk', words: 'exori', icon: '💢', voc: ['knight'], level: 35, mana: 115, type: 'attack', power: 1.6 },
+  exori_gran:       { name: 'Fierce Berserk', words: 'exori gran', icon: '💥', voc: ['knight'], level: 90, mana: 340, type: 'attack', power: 2.4 },
+  // paladin
+  exori_con:        { name: 'Ethereal Spear', words: 'exori con', icon: '🔱', voc: ['paladin'], level: 23, mana: 25,  type: 'attack', power: 1.4 },
+  exori_san:        { name: 'Divine Missile', words: 'exori san', icon: '☄️', voc: ['paladin'], level: 40, mana: 20,  type: 'attack', power: 1.7 },
+  exura_san:        { name: 'Divine Healing', words: 'exura san', icon: '🙏', voc: ['paladin'], level: 35, mana: 160, type: 'heal',   power: 0.45 },
+  // sorcerer
+  exori_flam:       { name: 'Flame Strike', words: 'exori flam', icon: '🔥', voc: ['sorcerer','druid'], level: 12, mana: 20, type: 'attack', power: 1.4 },
+  exori_vis:        { name: 'Energy Strike', words: 'exori vis', icon: '⚡', voc: ['sorcerer'], level: 12, mana: 20,  type: 'attack', power: 1.45 },
+  exori_gran_vis:   { name: 'Strong Energy Strike', words: 'exori gran vis', icon: '🌩️', voc: ['sorcerer'], level: 80, mana: 60, type: 'attack', power: 2.2 },
+  exevo_gran_mas_vis:{ name: "Hell's Core", words: 'exevo gran mas vis', icon: '☢️', voc: ['sorcerer'], level: 60, mana: 600, type: 'attack', power: 3.2 },
+  // druid
+  exori_frigo:      { name: 'Ice Strike', words: 'exori frigo', icon: '❄️', voc: ['druid'], level: 12, mana: 20, type: 'attack', power: 1.45 },
+  exori_gran_frigo: { name: 'Strong Ice Strike', words: 'exori gran frigo', icon: '🧊', voc: ['druid'], level: 80, mana: 60, type: 'attack', power: 2.2 },
+  exevo_gran_mas_frio:{ name: 'Eternal Winter', words: 'exevo gran mas frio', icon: '🌨️', voc: ['druid'], level: 60, mana: 600, type: 'attack', power: 3.2 },
+  exura_gran:       { name: 'Intense Healing', words: 'exura gran', icon: '💚', voc: ['sorcerer','druid'], level: 20, mana: 70, type: 'heal', power: 0.35 },
+  exura_vita:       { name: 'Ultimate Healing', words: 'exura vita', icon: '💖', voc: ['sorcerer','druid'], level: 30, mana: 160, type: 'heal', power: 0.60 },
+};
+
+function spellAvailable(id) {
+  const s = SPELLS[id];
+  return s && G.vocation && s.voc.includes(G.vocation) && G.level >= s.level;
+}
+
 // ---- RTC (Rubinot Custom Client) ----
 // Configurações do client custom. Cada uma tem prós e contras reais —
 // dá pra melhorar OU piorar o desempenho do personagem conforme o ajuste.
@@ -322,6 +353,7 @@ const DEFAULT_STATE = () => ({
   mana: 0,
   sk: defaultSkills(),
   rtc: defaultRtc(),
+  spells: { attack: null, heal: null },
   inventory: {},
   equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null },
   activeZone: null,
@@ -464,32 +496,27 @@ function doHuntTick() {
 
   // Player attacks monster
   let playerDmg = calcDamage(getAtk(), currentMonster.def);
-  // Mages gastam mana pra potencializar (e treinam Magic Level com a mana gasta)
-  if (voc.attackSkill === 'magic') {
-    const manaCost = 8;
-    if (G.mana >= manaCost) {
-      playerDmg = Math.floor(playerDmg * 1.6);
-      G.mana = Math.max(0, G.mana - manaCost);
-      trainSkill('magic', manaCost * voc.magicMult);
-    }
-  } else {
+  // RTC auto-cast: spell de ataque selecionada na aba Spells
+  const atkSpell = G.spells.attack && spellAvailable(G.spells.attack) ? SPELLS[G.spells.attack] : null;
+  if (atkSpell && G.mana >= atkSpell.mana) {
+    playerDmg = Math.floor(playerDmg * atkSpell.power);
+    G.mana -= atkSpell.mana;
+    trainSkill('magic', atkSpell.mana * voc.magicMult);
+    addLog(`<span class="log-xp">🗣️ "${atkSpell.words}"</span>`);
+  }
+  if (voc.attackSkill !== 'magic') {
     // treino da skill de arma por golpe (knight: sword; paladin: distance)
     trainSkill(voc.attackSkill, 1 * voc.weaponMult);
-    // mana residual também treina ML devagar (como no Tibia)
-    if (G.mana >= 2) { G.mana -= 2; trainSkill('magic', 2 * voc.magicMult); }
+  } else if (!atkSpell && G.mana >= 8) {
+    // mage sem spell selecionada: golpe arcano básico
+    playerDmg = Math.floor(playerDmg * 1.3);
+    G.mana -= 8;
+    trainSkill('magic', 8 * voc.magicMult);
   }
   playerDmg = Math.max(1, Math.floor(playerDmg * rtc.dmgMult));
   currentMonster.hp -= playerDmg;
   addLog(`⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
   renderMonsterDisplay(true);
-
-  // Druid self-heal chance
-  if (G.vocation === 'druid' && Math.random() < 0.25 && G.mana >= 15) {
-    const heal = Math.floor(getMagic() * 0.8);
-    G.hp = Math.min(getMaxHp(), G.hp + heal);
-    G.mana -= 15;
-    addLog(`🌿 Você se curou em <span class="log-heal">${heal}</span> HP.`);
-  }
 
   if (currentMonster.hp <= 0) {
     // Kill
@@ -544,13 +571,14 @@ function doHuntTick() {
   trainSkill('shielding', 1 * voc.shieldMult);
   addLog(`🩸 ${currentMonster.name} causou <span class="log-dmg">${monsterDmg}</span> de dano em você.`);
 
-  // RTC Smart Healing: auto-cura abaixo de 40% HP gastando mana
-  if (rtc.smartHeal && G.hp > 0 && G.hp < getMaxHp() * 0.4 && G.mana >= 30) {
-    const heal = Math.floor(getMaxHp() * 0.25);
+  // RTC Smart Healing: usa a spell de cura selecionada na aba Spells
+  const healSpell = G.spells.heal && spellAvailable(G.spells.heal) ? SPELLS[G.spells.heal] : SPELLS.exura;
+  if (rtc.smartHeal && G.hp > 0 && G.hp < getMaxHp() * 0.4 && spellAvailable(G.spells.heal || 'exura') && G.mana >= healSpell.mana) {
+    const heal = Math.floor(getMaxHp() * healSpell.power);
     G.hp = Math.min(getMaxHp(), G.hp + heal);
-    G.mana -= 30;
-    trainSkill('magic', 30 * voc.magicMult);
-    addLog(`💊 <span class="log-heal">[RTC] Smart Healing: +${heal} HP</span> (-30 mana)`);
+    G.mana -= healSpell.mana;
+    trainSkill('magic', healSpell.mana * voc.magicMult);
+    addLog(`💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`);
   }
 
   if (G.hp <= 0) {
@@ -1296,6 +1324,55 @@ function claimBpReward(tier) {
   saveGame();
 }
 
+// ---- SPELLS PANEL ----
+
+function renderSpellsPanel() {
+  const el = document.getElementById('spells-content');
+  if (!el) return;
+  if (!G.vocation) { el.innerHTML = '<p class="muted">Escolha uma vocação para ver suas magias.</p>'; return; }
+
+  const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(G.vocation));
+  const atkSel = G.spells.attack, healSel = G.spells.heal;
+
+  el.innerHTML = `
+    <div id="skill-points-display" style="margin: 0 0 12px !important">
+      <strong>RTC Auto-Cast:</strong>
+      ataque = <span>${atkSel ? `${SPELLS[atkSel].icon} "${SPELLS[atkSel].words}"` : 'nenhuma'}</span> ·
+      cura (Smart Healing) = <span>${healSel ? `${SPELLS[healSel].icon} "${SPELLS[healSel].words}"` : 'exura (padrão)'}</span>
+    </div>
+    <div id="skills-grid" style="margin: 0 !important">
+    ${mySpells.map(([id, s]) => {
+      const unlocked = G.level >= s.level;
+      const selected = (s.type === 'attack' && atkSel === id) || (s.type === 'heal' && healSel === id);
+      return `<div class="skill-card" style="${selected ? 'border: 2px solid var(--gold); background:#fdf4d7;' : ''} ${!unlocked ? 'opacity:0.55' : ''}">
+        <div class="skill-card-header">
+          <span class="skill-card-name">${s.icon} ${s.name}</span>
+          <span class="skill-card-level" style="font-size:11px">"${s.words}"</span>
+        </div>
+        <div class="skill-card-desc">
+          ${s.type === 'attack' ? `⚔️ Dano ×${s.power}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`}
+          · 🔵 ${s.mana} mana · Nível ${s.level}+
+        </div>
+        <button class="skill-upgrade-btn" onclick="selectSpell('${id}')" ${!unlocked ? 'disabled' : ''}
+          style="${selected ? 'background: linear-gradient(180deg, #c9a227, #8f6f2e); border-color:#6e5522;' : ''}">
+          ${!unlocked ? `🔒 Requer nível ${s.level}` : selected ? '✅ Selecionada no RTC — clique p/ remover' : s.type === 'attack' ? 'Usar como ataque' : 'Usar como cura'}
+        </button>
+      </div>`;
+    }).join('')}
+    </div>`;
+}
+
+function selectSpell(id) {
+  const s = SPELLS[id];
+  if (!s || !spellAvailable(id)) return;
+  const slot = s.type; // 'attack' | 'heal'
+  G.spells[slot] = G.spells[slot] === id ? null : id;
+  renderSpellsPanel();
+  renderRtcPanel();
+  notify(G.spells[slot] ? `RTC vai castar "${s.words}" automaticamente.` : `"${s.words}" removida do RTC.`, 'info');
+  saveGame();
+}
+
 // ---- RTC PANEL ----
 
 function renderRtcPanel() {
@@ -1312,9 +1389,12 @@ function renderRtcPanel() {
     mods.goldMult !== 1 ? `${Math.round((mods.goldMult - 1) * 100)}% gold` : null,
   ].filter(Boolean).join(' · ') || 'configuração neutra';
 
+  const atkS = G.spells?.attack ? SPELLS[G.spells.attack] : null;
+  const healS = G.spells?.heal ? SPELLS[G.spells.heal] : null;
   el.innerHTML = `
     <div id="skill-points-display" style="margin-bottom:14px">
-      <strong>🖥️ Efeitos ativos do RTC:</strong> <span style="color:var(--gold-bright)">${summary}</span>
+      <strong>🖥️ Efeitos ativos do RTC:</strong> <span>${summary}</span><br/>
+      <strong>🗣️ Auto-cast (aba Spells):</strong> <span>${atkS ? `"${atkS.words}"` : 'sem spell de ataque'} · ${healS ? `"${healS.words}"` : 'cura padrão (exura)'}</span>
     </div>
     <div id="skills-grid">
     ${RTC_SETTINGS.map(s => {
@@ -1367,6 +1447,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (t === 'worlds') renderWorldsPanel();
     if (t === 'battlepass') renderBattlePassPanel();
     if (t === 'rtc') renderRtcPanel();
+    if (t === 'spells') renderSpellsPanel();
     if (t === 'highscores') renderHighscoresPanel();
   });
 });
@@ -1391,6 +1472,9 @@ function loadGame() {
       // migração: sistema antigo de pontos de skill → skills de treino Tibia
       if (!G.sk || !G.sk.magic) G.sk = defaultSkills();
       if (!G.rtc) G.rtc = defaultRtc();
+      if (!G.spells) G.spells = { attack: null, heal: null };
+      if (G.spells.attack && !spellAvailable(G.spells.attack)) G.spells.attack = null;
+      if (G.spells.heal && !spellAvailable(G.spells.heal)) G.spells.heal = null;
       // Clamp hp/mana to max on load
       if (G.vocation) {
         G.hp = Math.min(G.hp, getMaxHp());
