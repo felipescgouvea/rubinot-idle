@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js';
-import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js';
-import { on, EVENTS } from '../shared/eventBus.js';
-import { itemIconImg } from './shared.js';
+import { G } from '../application/gameStore.js?v=11';
+import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=11';
+import { on, EVENTS } from '../shared/eventBus.js?v=11';
+import { itemIconImg } from './shared.js?v=11';
 
 export function renderBattlePassPanel() {
   const xpInTier = G.bpXp % BP_XP_PER_TIER;

@@ -1,13 +1,13 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js';
-import { SPRITE_BASE, outfitSpriteFile } from '../infrastructure/tibiaSprites.js';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js';
-import { on, EVENTS } from '../shared/eventBus.js';
-import { formatNum } from './shared.js';
-import { renderZonePicker } from './huntPanel.js';
+import { G } from '../application/gameStore.js?v=11';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=11';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=11';
+import { SPRITE_BASE, outfitSpriteFile } from '../infrastructure/tibiaSprites.js?v=11';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=11';
+import { on, EVENTS } from '../shared/eventBus.js?v=11';
+import { formatNum } from './shared.js?v=11';
+import { renderZonePicker } from './huntPanel.js?v=11';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).

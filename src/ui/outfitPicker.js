@@ -1,10 +1,10 @@
 // Tela de aparência, como a do próprio Tibia: escolher gênero e navegar pela
 // galeria de outfits reais, comprando os que ainda não tem.
-import { G } from '../application/gameStore.js';
-import { OUTFITS } from '../domain/outfits.js';
-import { outfitSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js';
-import { on, EVENTS } from '../shared/eventBus.js';
-import { openModal } from './shared.js';
+import { G } from '../application/gameStore.js?v=11';
+import { OUTFITS } from '../domain/outfits.js?v=11';
+import { outfitSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=11';
+import { on, EVENTS } from '../shared/eventBus.js?v=11';
+import { openModal } from './shared.js?v=11';
 
 function outfitCardSprite(outfitId, gender) {
   const file = outfitSpriteFile(outfitId, gender);

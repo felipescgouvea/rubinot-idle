@@ -3,20 +3,20 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js';
-import { ZONES } from '../domain/bestiary.js';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js';
-import { computeRtcMods, computeBoostMods } from '../domain/shopCatalog.js';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js';
-import { ITEMS } from '../domain/items.js';
-import { MONSTERS } from '../domain/bestiary.js';
-import { emit, EVENTS } from '../shared/eventBus.js';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js';
-import { trainSkill } from './skillUseCases.js';
-import { addItemToInventory } from './inventoryCore.js';
-import { checkBpTier } from './battlePassUseCases.js';
+import { G } from './gameStore.js?v=11';
+import { ZONES } from '../domain/bestiary.js?v=11';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=11';
+import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=11';
+import { computeRtcMods, computeBoostMods } from '../domain/shopCatalog.js?v=11';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=11';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=11';
+import { ITEMS } from '../domain/items.js?v=11';
+import { MONSTERS } from '../domain/bestiary.js?v=11';
+import { emit, EVENTS } from '../shared/eventBus.js?v=11';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=11';
+import { trainSkill } from './skillUseCases.js?v=11';
+import { addItemToInventory } from './inventoryCore.js?v=11';
+import { checkBpTier } from './battlePassUseCases.js?v=11';
 
 let huntInterval = null;
 let regenInterval = null;
