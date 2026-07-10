@@ -349,7 +349,7 @@ body {
 
 /* ============ CAÇADA ============ */
 #hunt-controls { display: flex; gap: 9px; margin: 12px 0; }
-#zone-picker, input[type="text"] {
+input[type="text"] {
   flex: 1;
   background: #fdf6e3;
   border: 1px solid var(--line-soft);
@@ -359,7 +359,52 @@ body {
   font-size: 12px;
   font-family: var(--body);
 }
-#zone-picker:focus, input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shadow: 0 0 0 2px #1e579922; }
+input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shadow: 0 0 0 2px #1e579922; }
+
+/* barra clicável que abre o painel de escolha de zona (ui/zonePicker.js) */
+#zone-current-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #fdf6e3;
+  border: 1px solid var(--line-soft);
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-family: var(--body);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+#zone-current-bar:hover { border-color: var(--gold); }
+#zone-current-icon { font-size: 15px; }
+#zone-current-name { flex: 1; font-weight: 600; }
+.zone-current-change { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ---- galeria de zonas (dentro do modal) ---- */
+.zone-picker-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.zone-card {
+  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.zone-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
+.zone-card.locked { opacity: 0.55; }
+.zone-card-icon { font-size: 1.8rem; filter: drop-shadow(0 2px 3px #00000033); }
+.zone-card-name { font-family: var(--serif); font-size: 12px; color: var(--navy-2); font-weight: 700; margin-top: 4px; }
+.zone-card-monsters { font-size: 9.5px; color: var(--ink-soft); margin: 4px 0; line-height: 1.4; }
+.zone-card-mults { font-size: 9.5px; color: var(--ink-faint); margin-bottom: 6px; }
+.zone-card-req { font-size: 10.5px; color: var(--red-hot); font-weight: 700; padding: 6px 0; }
 
 #hunt-toggle {
   background: linear-gradient(180deg, var(--green-1) 0%, var(--green-2) 50%, var(--green-3) 100%);
@@ -878,7 +923,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   border: 2px solid var(--gold);
   border-radius: 8px;
   padding: 20px;
-  max-width: 420px;
+  max-width: 480px;
   width: 90%;
   box-shadow: 0 10px 40px #00000088;
 }

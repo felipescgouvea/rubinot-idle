@@ -12,7 +12,7 @@ import { emit, EVENTS } from './shared/eventBus.js?v=11';
 import { saveGame } from './application/saveGameUseCase.js?v=11';
 import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=11';
 import { selectVocation } from './application/characterUseCases.js?v=11';
-import { toggleHunt, selectZone, startRegen } from './application/huntUseCases.js?v=11';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=11';
 import { equipItem, unequipItem, sellItem, useItem } from './application/inventoryUseCases.js?v=11';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=11';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=11';
@@ -39,6 +39,7 @@ import { wireRtcPanelEvents } from './ui/rtcPanel.js?v=11';
 import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=11';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=11';
 import { openOutfitPicker, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=11';
+import { openZonePicker, pickZone } from './ui/zonePicker.js?v=11';
 import { wireTabs } from './ui/tabs.js?v=11';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
@@ -61,7 +62,7 @@ wireOutfitPickerEvents();
 // HTML é gerado como string e usa onclick inline — não há outra forma de ligar
 // eventos a conteúdo que nem existe no DOM ainda no momento em que o módulo carrega.
 Object.assign(window, {
-  saveGame, confirmReset, selectVocation, toggleHunt, selectZone, closeModal,
+  saveGame, confirmReset, selectVocation, toggleHunt, closeModal,
   openItemModal, equipItem, unequipItem, sellItem, useItem,
   startTask, cancelTask,
   startArenaBattle: handleArenaBattleClick,
@@ -73,6 +74,7 @@ Object.assign(window, {
   registerPlayerName, refreshHighscoresClick,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,
   openOutfitPicker, setOutfitGender, selectOutfit, buyOutfit,
+  openZonePicker, pickZone,
 });
 
 // ---- init ----

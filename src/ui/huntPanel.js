@@ -72,28 +72,39 @@ export function renderMonsterDisplay(hit = false, killed = null) {
   `;
 }
 
+// Só escolhe uma zona padrão quando a atual deixou de ser válida (troca de
+// mundo, save antigo, primeira vez) — preserva a escolha manual do jogador
+// entre level-ups (a versão anterior resetava pra 1ª zona toda vez).
+function pickDefaultZoneIfNeeded() {
+  const current = ZONES[G.activeZone];
+  const stillValid = current && current.worldReq === G.currentWorld && G.level >= current.minLevel;
+  if (stillValid) return;
+  const valid = Object.entries(ZONES).find(([, z]) => z.worldReq === G.currentWorld && G.level >= z.minLevel);
+  G.activeZone = valid ? valid[0] : null;
+}
+
 export function renderZonePicker() {
-  const picker = document.getElementById('zone-picker');
-  if (!picker) return;
-  picker.innerHTML = '';
-  Object.entries(ZONES).forEach(([id, z]) => {
-    if (z.worldReq !== G.currentWorld) return;
-    const opt = document.createElement('option');
-    opt.value = id;
-    opt.textContent = `${z.icon} ${z.name} (Lv${z.minLevel}+)`;
-    opt.disabled = G.level < z.minLevel;
-    picker.appendChild(opt);
-  });
-  // auto-select first valid
-  const valid = Object.entries(ZONES).find(([id, z]) => z.worldReq === G.currentWorld && G.level >= z.minLevel);
-  if (valid) { picker.value = valid[0]; G.activeZone = valid[0]; }
+  pickDefaultZoneIfNeeded();
+
+  const zone = ZONES[G.activeZone];
+  const iconEl = document.getElementById('zone-current-icon');
+  const nameEl = document.getElementById('zone-current-name');
+  const titleEl = document.getElementById('battle-card-title');
+  if (iconEl && nameEl) {
+    iconEl.textContent = zone ? zone.icon : '🗺️';
+    nameEl.textContent = zone ? zone.name : 'Escolher zona de caça…';
+  }
+  if (titleEl) {
+    titleEl.textContent = zone ? `⚔️ Batalha — ${zone.icon} ${zone.name}` : '⚔️ Batalha';
+  }
   renderZoneTheme();
 }
 
 // Cada dungeon tinge o fundo da cena de batalha com sua própria paleta (ver
 // ZONES[id].theme) — sem zona ativa, cai no tom pergaminho padrão via as
-// variáveis-fallback já definidas em style.css.
-export function renderZoneTheme() {
+// variáveis-fallback já definidas em style.css. Chamada direto por
+// renderZonePicker() acima; não precisa de evento próprio.
+function renderZoneTheme() {
   const scene = document.getElementById('battle-scene');
   if (!scene) return;
   const zone = ZONES[G.activeZone];
@@ -151,7 +162,6 @@ function renderOfflineProgressModal({ zoneName, zoneIcon, hours, minutes, kills,
 export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed } = {}) => renderMonsterDisplay(hit, killed));
   on(EVENTS.ZONE_PICKER, renderZonePicker);
-  on(EVENTS.ZONE_THEME, renderZoneTheme);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);
   on(EVENTS.HUNT_BUTTON, renderHuntButton);

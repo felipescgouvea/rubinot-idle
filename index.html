@@ -47,7 +47,7 @@
       <section id="tab-hunt" class="panel active">
         <div class="panel-left">
           <div class="card" id="hunt-zone-card">
-            <h3>⚔️ Batalha</h3>
+            <h3 id="battle-card-title">⚔️ Batalha</h3>
             <div id="battle-scene">
               <div id="player-battle-side">
                 <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
@@ -127,7 +127,11 @@
                 <div class="stat-box"><div class="stat-val" id="stat-magic">0</div><div class="stat-lbl">MGC</div></div>
               </div>
               <div id="hunt-controls">
-                <select id="zone-picker" onchange="selectZone(this.value)"></select>
+                <div id="zone-current-bar" onclick="openZonePicker()">
+                  <span id="zone-current-icon">🗺️</span>
+                  <span id="zone-current-name">Escolher zona de caça…</span>
+                  <span class="zone-current-change">Trocar ▾</span>
+                </div>
                 <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
               </div>
               <div id="kill-counters"></div>

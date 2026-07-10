@@ -28,7 +28,7 @@ export function getCurrentMonster() {
 
 export function selectZone(zoneId) {
   G.activeZone = zoneId;
-  emit(EVENTS.ZONE_THEME);
+  emit(EVENTS.ZONE_PICKER); // atualiza a barra de zona atual + o tema visual
   if (G.hunting) { stopHunt(); startHunt(); }
 }
 

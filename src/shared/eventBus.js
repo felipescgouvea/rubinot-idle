@@ -34,7 +34,6 @@ export const EVENTS = {
   LOOT: 'loot',
   KILL_COUNTERS: 'killCounters',
   ZONE_PICKER: 'zonePicker',
-  ZONE_THEME: 'zoneTheme',
   HUNT_BUTTON: 'huntButton',
   TASKS_PANEL: 'tasksPanel',
   ACTIVE_TASK: 'activeTask',
