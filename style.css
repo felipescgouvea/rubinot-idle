@@ -309,6 +309,7 @@ body {
 #char-info { padding: 0 14px 14px; }
 .char-header { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
 .char-voc-big { font-size: 2.6rem; filter: drop-shadow(0 2px 3px #00000033); }
+canvas.char-voc-big { width: 40px; height: 40px; image-rendering: pixelated; }
 .char-name-line { font-family: var(--serif); font-size: 14px; letter-spacing: 0.5px; color: var(--navy-2); }
 .char-level-line { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
 
@@ -479,6 +480,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   min-height: 64px;
 }
 .player-sprite {
+  width: 64px;
   height: 64px;
   image-rendering: pixelated;
   filter: drop-shadow(0 3px 5px #00000044);
@@ -1027,6 +1029,54 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .outfit-card-sprite-fallback { font-size: 2rem; }
 .outfit-card-name { font-family: var(--serif); font-size: 12px; color: var(--navy-2); font-weight: 700; margin-top: 4px; }
 .outfit-card-price { font-size: 10.5px; color: var(--ink-faint); margin: 2px 0 6px; }
+
+.outfit-picker-sep { border: none; border-top: 1px solid var(--line-soft); margin: 16px 0; }
+.outfit-customize-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.outfit-preview-wrap {
+  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.outfit-preview-canvas { width: 96px; height: 96px; image-rendering: pixelated; filter: drop-shadow(0 3px 5px #00000044); }
+.outfit-preview-fallback { font-size: 4rem; }
+.outfit-addon-toggles { display: flex; flex-direction: column; gap: 8px; }
+.outfit-addon-toggle { display: flex; align-items: center; gap: 6px; font-family: var(--serif); font-size: 13px; color: var(--navy-2); cursor: pointer; }
+.outfit-addon-toggle input { width: 16px; height: 16px; cursor: pointer; }
+
+.outfit-color-channels { display: flex; gap: 6px; margin-bottom: 8px; }
+.color-channel-btn {
+  flex: 1;
+  padding: 6px 4px;
+  border: 2px solid var(--line-soft);
+  border-radius: 6px;
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-shadow: 0 1px 2px #ffffffaa;
+  cursor: pointer;
+}
+.color-channel-btn.active { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold) inset; }
+.outfit-color-grid {
+  display: grid;
+  grid-template-columns: repeat(19, 1fr);
+  gap: 2px;
+  max-height: 130px;
+  overflow-y: auto;
+}
+.color-swatch {
+  aspect-ratio: 1;
+  border: 1px solid #00000033;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0;
+  min-width: 14px;
+}
+.color-swatch:hover { outline: 2px solid var(--gold); outline-offset: 1px; }
 
 /* ============ NOTIFICAÇÕES ============ */
 #notif-area {

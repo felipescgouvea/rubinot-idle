@@ -1,7 +1,7 @@
-import { G } from './gameStore.js?v=13';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=13';
-import { emit, EVENTS } from '../shared/eventBus.js?v=13';
-import { saveGame } from './saveGameUseCase.js?v=13';
+import { G } from './gameStore.js?v=14';
+import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=14';
+import { emit, EVENTS } from '../shared/eventBus.js?v=14';
+import { saveGame } from './saveGameUseCase.js?v=14';
 
 export function selectSpell(id) {
   const s = SPELLS[id];

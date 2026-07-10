@@ -3,8 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=13';
-import { createDefaultRtc } from './shopCatalog.js?v=13';
+import { createDefaultSkills } from './character.js?v=14';
+import { createDefaultRtc } from './shopCatalog.js?v=14';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=14';
 
 export function createDefaultState() {
   return {
@@ -22,6 +23,9 @@ export function createDefaultState() {
     outfit: null,
     outfitGender: 'male',
     outfitsOwned: [],
+    outfitAddon1: false,
+    outfitAddon2: false,
+    outfitColors: { ...DEFAULT_OUTFIT_COLORS },
     inventory: {},
     equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },
     activeZone: null,

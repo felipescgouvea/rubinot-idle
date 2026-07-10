@@ -1,6 +1,7 @@
 // Outfits reais do Tibia, escolhíveis livremente (como na tela de aparência
-// do próprio jogo) — id em minúsculas corresponde 1:1 ao nome do outfit no
-// TibiaWiki (ver infrastructure/tibiaSprites.js: outfitSpriteFile).
+// do próprio jogo) — id em minúsculas corresponde ao looktype do outfit no
+// cliente real (sprites e templates de recoloração ficam em assets/outfits/,
+// ver infrastructure/outfitAssets.js e outfitRenderer.js).
 // Os 4 marcados como "free" são os clássicos disponíveis desde a criação do
 // personagem; os demais são cosméticos comprados com Rubini Coins, uma vez só.
 export const OUTFITS = [

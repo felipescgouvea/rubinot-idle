@@ -14,15 +14,6 @@ export const SPRITE_OVERRIDE = {
   nzoth: 'World_Devourer.gif',
 };
 
-// Outfits: convenção confirmada do TibiaWiki (via API de busca de arquivos)
-// é "Outfit_{Nome}_{Male|Female}.gif" — ex.: Outfit_Knight_Male.gif,
-// Outfit_Druid_Female.gif. Nome do outfit vem de domain/outfits.js.
-export function outfitSpriteFile(outfitId, gender) {
-  const name = outfitId.charAt(0).toUpperCase() + outfitId.slice(1);
-  const genderPart = gender === 'female' ? 'Female' : 'Male';
-  return `Outfit_${name}_${genderPart}.gif`;
-}
-
 export function monsterSpriteFile(monsterId, monster) {
   return SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
 }

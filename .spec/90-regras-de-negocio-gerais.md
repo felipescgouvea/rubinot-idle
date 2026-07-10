@@ -38,7 +38,8 @@ Toda sprite usada no jogo (criatura, item, cenário) deve vir de uma fonte real 
 - **Como aplicar:** sprites de criaturas já seguem esta regra, carregadas diretamente de uma fonte oficial de Tibia. Ao adicionar sprites novas (itens, cenários, efeitos), a mesma fonte/critério deve ser usado.
 - **Pendência de conformidade identificada:**
   - Os 5 bosses exclusivos do RubinOT usam, hoje, sprites de **outras criaturas do Tibia** como substituição temporária (ex.: o boss "Lothlorien" usa a sprite de "Elf Arcanist"), porque o boss em si não tem sprite própria disponível na fonte usada. Isso não é a sprite real da criatura retratada — é um placeholder e deve ser tratado como tal até haver uma sprite correta disponível.
-  - Ícones de itens de equipamento, moedas, habilidades e outfits **não usam sprites do jogo hoje** — usam emojis genéricos (ver Regra 4, que trata especificamente disso).
+  - Ícones de moedas, habilidades, magias, ajustes de RTC e mundos ainda usam emojis genéricos (ver Regra 4).
+- **Resolvido:** ícones de itens de equipamento usam sprites reais extraídas do TibiaWiki. Outfits (incluindo cor por região e addons) usam sprites reais extraídas do cliente oficial do Tibia, recoloridas por região com o mesmo algoritmo do jogo original — ver [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
 
 ### Regra 3 — Toda mecânica deve existir em Tibia/RubinOT
 
@@ -53,7 +54,8 @@ Todo sistema, fórmula ou comportamento de jogo novo deve ter um equivalente rea
 Todo ícone de interface (itens, slots de equipamento, moedas, skills, magias, configurações de RTC, mundos, outfits) deve usar arte extraída do Tibia ou do RubinOT — nunca emojis genéricos nem ícones de bibliotecas de terceiros.
 
 - **Por quê:** mesmo motivo da Regra 2 — a identidade visual do jogo deve parecer "o jogo de verdade", não uma interface genérica de jogo idle com emojis.
-- **Pendência de conformidade identificada:** hoje, **apenas as sprites das criaturas na tela de caçada** usam arte real do Tibia. Praticamente todo o restante da interface — ícones de itens, moedas (gold, Rubini Coins), skills, magias, ajustes de RTC, mundos e outfits — usa emojis Unicode genéricos como substituto. Aplicar esta regra por completo exige adotar uma fonte de ícones do jogo (por exemplo, sprites de itens do TibiaWiki) para substituir os emojis atuais nesses pontos.
+- **Resolvido:** sprites de criaturas, ícones de itens de equipamento e outfits (com cor e addons reais) já usam arte extraída do Tibia.
+- **Pendência de conformidade identificada:** ícones de moedas (gold, Rubini Coins), skills, magias, ajustes de RTC e mundos ainda usam emojis Unicode genéricos como substituto. Aplicar esta regra por completo a esses pontos exige adotar a mesma fonte de ícones do jogo (sprites do TibiaWiki) já usada para itens e outfits.
 
 ## Como tratar pendências de conformidade
 

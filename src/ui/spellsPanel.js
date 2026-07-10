@@ -1,6 +1,6 @@
-import { G } from '../application/gameStore.js?v=13';
-import { SPELLS } from '../domain/spells.js?v=13';
-import { on, EVENTS } from '../shared/eventBus.js?v=13';
+import { G } from '../application/gameStore.js?v=14';
+import { SPELLS } from '../domain/spells.js?v=14';
+import { on, EVENTS } from '../shared/eventBus.js?v=14';
 
 export function renderSpellsPanel() {
   const el = document.getElementById('spells-content');

@@ -1,18 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=13';
-import { createDefaultState } from '../domain/gameState.js?v=13';
-import { createDefaultSkills } from '../domain/character.js?v=13';
-import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=13';
-import { isSpellAvailable } from '../domain/spells.js?v=13';
-import { findOutfit } from '../domain/outfits.js?v=13';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=13';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=13';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=13';
-import { emit, EVENTS } from '../shared/eventBus.js?v=13';
-import { getMaxHp, getMaxMana } from './stats.js?v=13';
-import { gainXp } from './huntUseCases.js?v=13';
-import { checkBpTier } from './battlePassUseCases.js?v=13';
+import { G, replaceState } from './gameStore.js?v=14';
+import { createDefaultState } from '../domain/gameState.js?v=14';
+import { createDefaultSkills } from '../domain/character.js?v=14';
+import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=14';
+import { isSpellAvailable } from '../domain/spells.js?v=14';
+import { findOutfit } from '../domain/outfits.js?v=14';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=14';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=14';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=14';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=14';
+import { emit, EVENTS } from '../shared/eventBus.js?v=14';
+import { getMaxHp, getMaxMana } from './stats.js?v=14';
+import { gainXp } from './huntUseCases.js?v=14';
+import { checkBpTier } from './battlePassUseCases.js?v=14';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -35,6 +36,7 @@ export function loadGame() {
   // coisa que não bater com o catálogo novo simplesmente reseta pro padrão.
   G.outfitsOwned = G.outfitsOwned.filter(id => findOutfit(id));
   if (G.outfit && !findOutfit(G.outfit)) G.outfit = null;
+  if (!G.outfitColors) G.outfitColors = { ...DEFAULT_OUTFIT_COLORS };
   if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
   if (G.spells.attack && !isSpellAvailable(G.spells.attack, G.vocation, G.level)) G.spells.attack = null;
   if (G.spells.heal && !isSpellAvailable(G.spells.heal, G.vocation, G.level)) G.spells.heal = null;

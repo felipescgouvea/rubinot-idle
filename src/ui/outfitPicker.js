@@ -1,15 +1,84 @@
-// Tela de aparência, como a do próprio Tibia: escolher gênero e navegar pela
-// galeria de outfits reais, comprando os que ainda não tem.
-import { G } from '../application/gameStore.js?v=13';
-import { OUTFITS } from '../domain/outfits.js?v=13';
-import { outfitSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=13';
-import { on, EVENTS } from '../shared/eventBus.js?v=13';
-import { openModal } from './shared.js?v=13';
+// Tela de aparência, como a do próprio Tibia: gênero, galeria de outfits
+// reais (comprar/vestir) e, para o outfit atual, os mesmos controles de
+// customização do jogo real — 2 addons (toggle) e cor por região (cabeça,
+// corpo, pernas, pés) escolhida na paleta oficial de 133 cores — com preview
+// ao vivo, recolorido de verdade por região (ver infrastructure/outfitRenderer.js).
+import { G } from '../application/gameStore.js?v=14';
+import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=14';
+import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=14';
+import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=14';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=14';
+import { on, EVENTS } from '../shared/eventBus.js?v=14';
+import { openModal } from './shared.js?v=14';
+
+// Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
+// parte do save (não é uma decisão de jogo, é só onde o clique da paleta vai).
+let activeColorChannel = 'head';
+
+const CHANNEL_LABEL = { head: 'Cabeça', body: 'Corpo', legs: 'Pernas', feet: 'Pés' };
+
+function currentOutfitId() {
+  return G.outfit || (G.vocation ? VOCATION_DEFAULT_OUTFIT[G.vocation] : null);
+}
 
 function outfitCardSprite(outfitId, gender) {
-  const file = outfitSpriteFile(outfitId, gender);
-  return `<img src="${spriteUrl(file)}" alt="${outfitId}" class="outfit-card-sprite"
+  const src = outfitAssetPath(outfitId, gender, 1);
+  return `<img src="${src}" alt="${outfitId}" class="outfit-card-sprite" style="image-rendering:pixelated"
     onerror="this.outerHTML='<span class=&quot;outfit-card-sprite-fallback&quot;>❓</span>'" />`;
+}
+
+function colorChannelButtons(colors) {
+  return Object.keys(CHANNEL_LABEL).map(ch => `
+    <button class="color-channel-btn ${activeColorChannel === ch ? 'active' : ''}"
+      style="background:#${colors[ch]}" onclick="setActiveColorChannel('${ch}')"
+      title="${CHANNEL_LABEL[ch]}">${CHANNEL_LABEL[ch]}</button>
+  `).join('');
+}
+
+function colorPaletteGrid() {
+  return `<div class="outfit-color-grid">
+    ${TIBIA_COLOR_PALETTE.map(hex => `<button class="color-swatch" style="background:#${hex}" onclick="setOutfitColor('${activeColorChannel}', '${hex}')"></button>`).join('')}
+  </div>`;
+}
+
+function customizeSection() {
+  const outfitId = currentOutfitId();
+  if (!outfitId) return '';
+  const colors = G.outfitColors;
+  return `
+    <hr class="outfit-picker-sep" />
+    <h3 style="margin-bottom:10px">🎨 Customizar Aparência</h3>
+    <div class="outfit-customize-row">
+      <div class="outfit-preview-wrap">
+        <canvas id="outfit-preview-canvas" width="64" height="64" class="outfit-preview-canvas"></canvas>
+      </div>
+      <div class="outfit-addon-toggles">
+        <label class="outfit-addon-toggle">
+          <input type="checkbox" ${G.outfitAddon1 ? 'checked' : ''} onchange="toggleOutfitAddon(1)" /> Addon 1
+        </label>
+        <label class="outfit-addon-toggle">
+          <input type="checkbox" ${G.outfitAddon2 ? 'checked' : ''} onchange="toggleOutfitAddon(2)" /> Addon 2
+        </label>
+      </div>
+    </div>
+    <div class="outfit-color-channels">${colorChannelButtons(colors)}</div>
+    ${colorPaletteGrid()}
+  `;
+}
+
+function mountPreviewCanvas() {
+  const canvas = document.getElementById('outfit-preview-canvas');
+  const outfitId = currentOutfitId();
+  if (!canvas || !outfitId) return;
+  renderOutfitToCanvas(canvas, {
+    outfitId,
+    gender: G.outfitGender || 'male',
+    addon1: G.outfitAddon1,
+    addon2: G.outfitAddon2,
+    colors: G.outfitColors,
+  }).then(ok => {
+    if (!ok) canvas.replaceWith(Object.assign(document.createElement('span'), { className: 'outfit-preview-fallback', textContent: '❓' }));
+  });
 }
 
 export function renderOutfitPicker() {
@@ -36,11 +105,19 @@ export function renderOutfitPicker() {
         </div>`;
       }).join('')}
     </div>
+    ${customizeSection()}
   `;
   openModal(html);
+  mountPreviewCanvas();
 }
 
 export function openOutfitPicker() {
+  renderOutfitPicker();
+}
+
+export function setActiveColorChannel(channel) {
+  if (!CHANNEL_LABEL[channel]) return;
+  activeColorChannel = channel;
   renderOutfitPicker();
 }
 

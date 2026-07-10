@@ -1,13 +1,13 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=13';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=13';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=13';
-import { SPRITE_BASE, outfitSpriteFile } from '../infrastructure/tibiaSprites.js?v=13';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=13';
-import { on, EVENTS } from '../shared/eventBus.js?v=13';
-import { formatNum } from './shared.js?v=13';
-import { renderZonePicker } from './huntPanel.js?v=13';
+import { G } from '../application/gameStore.js?v=14';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=14';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=14';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=14';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=14';
+import { on, EVENTS } from '../shared/eventBus.js?v=14';
+import { formatNum } from './shared.js?v=14';
+import { renderZonePicker } from './huntPanel.js?v=14';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -15,21 +15,47 @@ function currentOutfitId() {
   return G.outfit || (G.vocation ? VOCATION_DEFAULT_OUTFIT[G.vocation] : null);
 }
 
-function playerSpriteFile() {
-  const outfitId = currentOutfitId();
-  return outfitId ? outfitSpriteFile(outfitId, G.outfitGender || 'male') : null;
-}
-
 function playerFallbackIcon() {
   return G.vocation ? VOCATIONS[G.vocation].icon : '🧑';
 }
 
-function playerPortraitImg(cls = '') {
-  const file = playerSpriteFile();
+// Assinatura do visual atual — muda só quando outfit/gênero/addons/cores
+// mudam. Usada pra não re-renderizar o canvas (recolorir é async) a cada
+// tick de combate, só quando a aparência de fato muda.
+function playerOutfitSignature() {
+  const outfitId = currentOutfitId();
+  if (!outfitId) return null;
+  const c = G.outfitColors;
+  return [outfitId, G.outfitGender || 'male', G.outfitAddon1 ? 1 : 0, G.outfitAddon2 ? 1 : 0, c.head, c.body, c.legs, c.feet].join('|');
+}
+
+// Monta (ou reaproveita) o <canvas> recolorido do personagem dentro de
+// `container`. `cls` estiliza tanto o canvas quanto o fallback de emoji.
+function mountPlayerPortrait(container, cls) {
+  if (!container) return;
+  const outfitId = currentOutfitId();
   const icon = playerFallbackIcon();
-  if (!file) return `<span class="${cls}">${icon}</span>`;
-  return `<img src="${SPRITE_BASE + file}" alt="Você" class="${cls}"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${icon}</span>'" />`;
+  if (!outfitId) {
+    container.innerHTML = `<span class="${cls}">${icon}</span>`;
+    delete container.dataset.sprite;
+    return;
+  }
+  const sig = playerOutfitSignature();
+  if (container.dataset.sprite === sig) return;
+  container.dataset.sprite = sig;
+  container.innerHTML = `<canvas class="${cls}"></canvas>`;
+  const canvas = container.querySelector('canvas');
+  renderOutfitToCanvas(canvas, {
+    outfitId,
+    gender: G.outfitGender || 'male',
+    addon1: G.outfitAddon1,
+    addon2: G.outfitAddon2,
+    colors: G.outfitColors,
+  }).then(ok => {
+    if (!ok && container.dataset.sprite === sig) {
+      container.innerHTML = `<span class="${cls}">${icon}</span>`;
+    }
+  });
 }
 
 export function renderCharPanel() {
@@ -49,7 +75,7 @@ export function renderCharPanel() {
 export function renderCharInfo() {
   if (!G.vocation) return;
   const v = VOCATIONS[G.vocation];
-  document.getElementById('char-voc-icon').innerHTML = playerPortraitImg('char-voc-big');
+  mountPlayerPortrait(document.getElementById('char-voc-icon'), 'char-voc-big');
   document.getElementById('char-voc-name').textContent = v.name;
   document.getElementById('char-level').textContent = G.level;
   document.getElementById('char-xp').textContent = G.xp;
@@ -103,11 +129,7 @@ export function renderPlayerBattleSide(hit = false) {
     return;
   }
 
-  const wantFile = playerSpriteFile() || 'none:' + playerFallbackIcon();
-  if (wrap.dataset.sprite !== wantFile) {
-    wrap.dataset.sprite = wantFile;
-    wrap.innerHTML = playerPortraitImg('player-sprite');
-  }
+  mountPlayerPortrait(wrap, 'player-sprite');
   if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
   wrap.classList.toggle('dead', G.hp <= 0);
 
