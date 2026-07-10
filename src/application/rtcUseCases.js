@@ -1,8 +1,8 @@
-import { G } from './gameStore.js?v=11';
-import { RTC_SETTINGS } from '../domain/shopCatalog.js?v=11';
-import { emit, EVENTS } from '../shared/eventBus.js?v=11';
-import { stopHunt, startHunt } from './huntUseCases.js?v=11';
-import { saveGame } from './saveGameUseCase.js?v=11';
+import { G } from './gameStore.js?v=12';
+import { RTC_SETTINGS } from '../domain/shopCatalog.js?v=12';
+import { emit, EVENTS } from '../shared/eventBus.js?v=12';
+import { stopHunt, startHunt } from './huntUseCases.js?v=12';
+import { saveGame } from './saveGameUseCase.js?v=12';
 
 export function setRtc(id, value) {
   G.rtc[id] = value;

@@ -4,43 +4,43 @@
 // dinamicamente via innerHTML) precisa chamar via onclick/onchange, e
 // dispara a sequência de inicialização do jogo.
 
-import { G } from './application/gameStore.js?v=11';
-import { VOCATIONS } from './domain/character.js?v=11';
-import { emit, EVENTS } from './shared/eventBus.js?v=11';
+import { G } from './application/gameStore.js?v=12';
+import { VOCATIONS } from './domain/character.js?v=12';
+import { emit, EVENTS } from './shared/eventBus.js?v=12';
 
 // application
-import { saveGame } from './application/saveGameUseCase.js?v=11';
-import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=11';
-import { selectVocation } from './application/characterUseCases.js?v=11';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=11';
-import { equipItem, unequipItem, sellItem, useItem } from './application/inventoryUseCases.js?v=11';
-import { startTask, cancelTask } from './application/taskUseCases.js?v=11';
-import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=11';
-import { claimBpReward } from './application/battlePassUseCases.js?v=11';
-import { buyShopItem } from './application/shopUseCases.js?v=11';
-import { setRtc } from './application/rtcUseCases.js?v=11';
-import { selectSpell } from './application/spellUseCases.js?v=11';
-import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=11';
-import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=11';
-import { setOutfitGender, selectOutfit, buyOutfit } from './application/outfitUseCases.js?v=11';
+import { saveGame } from './application/saveGameUseCase.js?v=12';
+import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=12';
+import { selectVocation } from './application/characterUseCases.js?v=12';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=12';
+import { equipItem, unequipItem, sellItem, useItem } from './application/inventoryUseCases.js?v=12';
+import { startTask, cancelTask } from './application/taskUseCases.js?v=12';
+import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=12';
+import { claimBpReward } from './application/battlePassUseCases.js?v=12';
+import { buyShopItem } from './application/shopUseCases.js?v=12';
+import { setRtc } from './application/rtcUseCases.js?v=12';
+import { selectSpell } from './application/spellUseCases.js?v=12';
+import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=12';
+import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=12';
+import { setOutfitGender, selectOutfit, buyOutfit } from './application/outfitUseCases.js?v=12';
 
 // ui
-import { closeModal, wireSharedEvents } from './ui/shared.js?v=11';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents } from './ui/characterPanel.js?v=11';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=11';
-import { renderEquipmentSlots, openItemModal, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=11';
-import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=11';
-import { handleArenaBattleClick } from './ui/arenaPanel.js?v=11';
-import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=11';
-import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=11';
-import { wireShopPanelEvents } from './ui/shopPanel.js?v=11';
-import { wireSpellsPanelEvents } from './ui/spellsPanel.js?v=11';
-import { wireRtcPanelEvents } from './ui/rtcPanel.js?v=11';
-import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=11';
-import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=11';
-import { openOutfitPicker, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=11';
-import { openZonePicker, pickZone } from './ui/zonePicker.js?v=11';
-import { wireTabs } from './ui/tabs.js?v=11';
+import { closeModal, wireSharedEvents } from './ui/shared.js?v=12';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents } from './ui/characterPanel.js?v=12';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=12';
+import { renderEquipmentSlots, openItemModal, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=12';
+import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=12';
+import { handleArenaBattleClick } from './ui/arenaPanel.js?v=12';
+import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=12';
+import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=12';
+import { wireShopPanelEvents } from './ui/shopPanel.js?v=12';
+import { wireSpellsPanelEvents } from './ui/spellsPanel.js?v=12';
+import { wireRtcPanelEvents } from './ui/rtcPanel.js?v=12';
+import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=12';
+import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=12';
+import { openOutfitPicker, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=12';
+import { openZonePicker, pickZone } from './ui/zonePicker.js?v=12';
+import { wireTabs } from './ui/tabs.js?v=12';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();

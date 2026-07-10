@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js?v=11';
-import { RTC_SETTINGS, computeRtcMods } from '../domain/shopCatalog.js?v=11';
-import { SPELLS } from '../domain/spells.js?v=11';
-import { on, EVENTS } from '../shared/eventBus.js?v=11';
+import { G } from '../application/gameStore.js?v=12';
+import { RTC_SETTINGS, computeRtcMods } from '../domain/shopCatalog.js?v=12';
+import { SPELLS } from '../domain/spells.js?v=12';
+import { on, EVENTS } from '../shared/eventBus.js?v=12';
 
 export function renderRtcPanel() {
   const el = document.getElementById('rtc-settings');
