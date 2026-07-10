@@ -1,6 +1,7 @@
 import { G } from '../application/gameStore.js';
 import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js';
 import { on, EVENTS } from '../shared/eventBus.js';
+import { itemIconImg } from './shared.js';
 
 export function renderBattlePassPanel() {
   const xpInTier = G.bpXp % BP_XP_PER_TIER;
@@ -22,7 +23,7 @@ export function renderBattlePassPanel() {
     const available = G.bpTier >= r.tier && !claimed;
     return `<div class="bp-reward ${claimed ? 'claimed' : ''} ${available ? 'available' : ''}">
       <div class="bp-reward-tier">Tier ${r.tier}</div>
-      <div class="bp-reward-icon">${r.icon}</div>
+      <div class="bp-reward-icon">${r.type === 'item' ? itemIconImg(r.itemId) : r.icon}</div>
       <div class="bp-reward-name">${r.name}</div>
       <button class="bp-claim-btn" onclick="claimBpReward(${r.tier})" ${!available ? 'disabled' : ''}>
         ${claimed ? '✓' : available ? 'Coletar' : '🔒'}

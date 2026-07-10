@@ -2,7 +2,7 @@ import { G } from '../application/gameStore.js';
 import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js';
 import { ITEMS } from '../domain/items.js';
 import { on, EVENTS } from '../shared/eventBus.js';
-import { formatNum } from './shared.js';
+import { formatNum, itemIconImg } from './shared.js';
 
 function shopPriceLabel(s) {
   return s.currency === 'rubini' ? `${s.price} 💎 RC` : `${formatNum(s.price)} 💰`;
@@ -15,9 +15,10 @@ function renderShopCard(s) {
   const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const statLine = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
+  const iconHtml = s.itemId ? itemIconImg(s.itemId) : s.icon;
   return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
     <div class="skill-card-header">
-      <span class="skill-card-name">${s.icon} ${s.name}</span>
+      <span class="skill-card-name">${iconHtml} ${s.name}</span>
       <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
     </div>
     <div class="skill-card-desc">${s.desc || statLine || ''}</div>

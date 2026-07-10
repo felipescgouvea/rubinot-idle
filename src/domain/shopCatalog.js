@@ -1,9 +1,11 @@
 // Catálogo das 3 lojas (Rubini Store, Loja de Equipamentos, Loja de Artigos
 // Mágicos) e as configurações do RTC (Rubinot Custom Client).
 
-// shop: 'rubini' (Rubini Store — boosts/outfits/supply, em RC ou gold),
+// shop: 'rubini' (Rubini Store — boosts/supply, em RC ou gold),
 //       'equipment' (Loja de Equipamentos — armas/armaduras, em gold),
 //       'magic' (Loja de Artigos Mágicos — poções/runas, em gold).
+// Outfits não ficam mais aqui — viraram uma tela de aparência própria (ver
+// domain/outfits.js e ui/outfitPicker.js), igual à do Tibia de verdade.
 export const SHOP_ITEMS = [
   // Rubini Store — Boosts temporários (Rubini Coins)
   { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, shop: 'rubini', desc: '+50% de XP por 30 minutos de caçada.' },
@@ -11,12 +13,6 @@ export const SHOP_ITEMS = [
   { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, shop: 'rubini', desc: '+30% de gold por 30 minutos.' },
   // Rubini Store — Suprimentos (gold)
   { id: 'refill',     name: 'Supply Completo', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', shop: 'rubini', desc: 'Restaura HP e mana instantaneamente.' },
-  // Rubini Store — Outfits cosméticos (Rubini Coins) — trocam a aparência do personagem.
-  // "sprite" tenta carregar a arte real do Tibia (TibiaWiki); sem sucesso, cai no ícone.
-  { id: 'outfit_royal',   name: 'Outfit Royal',    icon: '🤴', currency: 'rubini', price: 200, type: 'outfit', shop: 'rubini', sprite: 'Noble.gif', desc: 'Outfit cosmético de realeza.' },
-  { id: 'outfit_demon',   name: 'Outfit Demon',    icon: '👹', currency: 'rubini', price: 300, type: 'outfit', shop: 'rubini', sprite: 'Demon.gif', desc: 'Outfit demoníaco exclusivo.' },
-  { id: 'outfit_reaper',  name: 'Outfit Reaper',   icon: '💀', currency: 'rubini', price: 300, type: 'outfit', shop: 'rubini', sprite: 'Grim_Reaper.gif', desc: 'Outfit sombrio do ceifador.' },
-  { id: 'outfit_pirate',  name: 'Outfit Pirate',   icon: '🏴‍☠️', currency: 'rubini', price: 150, type: 'outfit', shop: 'rubini', sprite: 'Pirate_Mate.gif', desc: 'Outfit pirata dos sete mares.' },
 
   // Loja de Equipamentos (gold) — preço = 4x o valor de venda do item
   { id: 'buy_dagger',       name: 'Dagger',           icon: '🗡️', currency: 'gold', price: 24,     type: 'item', itemId: 'dagger', shop: 'equipment' },
@@ -54,9 +50,8 @@ export const SHOP_ITEMS = [
 
 // As três "lojas/NPCs" e como cada uma agrupa seus itens na tela.
 export const SHOPS = [
-  { key: 'rubini', title: '💎 Rubini Store', subtitle: 'Boosts, supply e outfits — como o Ctrl+S do RubinOT.', sub: [
+  { key: 'rubini', title: '💎 Rubini Store', subtitle: 'Boosts e supply — como o Ctrl+S do RubinOT. Outfits agora ficam na tela de Aparência (botão 👕 no card do personagem).', sub: [
       { title: '⚡ Boosts & Suprimentos', filter: s => s.type === 'boost' || s.type === 'refill' },
-      { title: '👕 Outfits', filter: s => s.type === 'outfit' },
     ]},
   { key: 'equipment', title: '⚔️ Loja de Equipamentos', subtitle: 'Armas e armaduras clássicas de Tibia, pagas em gold.', sub: [
       { title: '', filter: () => true },

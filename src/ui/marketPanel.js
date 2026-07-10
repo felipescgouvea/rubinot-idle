@@ -1,7 +1,7 @@
 import { G } from '../application/gameStore.js';
 import { ITEMS } from '../domain/items.js';
 import { on, EVENTS } from '../shared/eventBus.js';
-import { formatNum, escapeHtml } from './shared.js';
+import { formatNum, escapeHtml, itemIconImg } from './shared.js';
 import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js';
 import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js';
 
@@ -70,7 +70,7 @@ export async function renderMarketPanel() {
     const item = ITEMS[l.item_id];
     return `<div class="skill-card" style="margin-bottom:8px">
       <div class="skill-card-header">
-        <span class="skill-card-name">${item?.icon || '?'} ${item?.name || l.item_id} x${l.qty}</span>
+        <span class="skill-card-name">${item ? itemIconImg(l.item_id) : '?'} ${item?.name || l.item_id} x${l.qty}</span>
         <span class="skill-card-level" style="font-size:11px">${formatNum(l.price_per_unit)} 💰/un</span>
       </div>
       <button class="skill-upgrade-btn" style="background:linear-gradient(180deg,#c0392b,#7b241c);border-color:#7b241c" onclick="cancelMyListing('${l.id}', '${l.item_id}', ${l.qty})">Cancelar anúncio</button>
@@ -84,7 +84,7 @@ export async function renderMarketPanel() {
         ${others.map(l => {
           const item = ITEMS[l.item_id];
           return `<tr>
-            <td>${item?.icon || '?'} ${item?.name || l.item_id}</td>
+            <td>${item ? itemIconImg(l.item_id) : '?'} ${item?.name || l.item_id}</td>
             <td>${l.qty}</td>
             <td>${formatNum(l.price_per_unit)} 💰</td>
             <td>${formatNum(l.price_per_unit * l.qty)} 💰</td>

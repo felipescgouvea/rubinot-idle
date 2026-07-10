@@ -28,6 +28,7 @@ export function getCurrentMonster() {
 
 export function selectZone(zoneId) {
   G.activeZone = zoneId;
+  emit(EVENTS.ZONE_THEME);
   if (G.hunting) { stopHunt(); startHunt(); }
 }
 

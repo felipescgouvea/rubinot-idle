@@ -3,7 +3,7 @@
 import { G } from '../application/gameStore.js';
 import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES } from '../domain/items.js';
 import { on, EVENTS } from '../shared/eventBus.js';
-import { openModal } from './shared.js';
+import { openModal, itemIconImg } from './shared.js';
 
 export function renderInventory() {
   const grid = document.getElementById('inventory-grid');
@@ -15,7 +15,7 @@ export function renderInventory() {
     if (!item) return;
     const div = document.createElement('div');
     div.className = `inv-item${item.rare ? ' rare' : ''}`;
-    div.innerHTML = `<div class="item-qty">${qty}</div><div class="item-icon">${item.icon}</div><div class="item-name">${item.name}</div>`;
+    div.innerHTML = `<div class="item-qty">${qty}</div><div class="item-icon">${itemIconImg(id, 'item-icon')}</div><div class="item-name">${item.name}</div>`;
     div.onclick = () => openItemModal(id);
     grid.appendChild(div);
   });
@@ -31,7 +31,7 @@ export function openItemModal(itemId) {
   const isConsumable = CONSUMABLE_TYPES.includes(item.type);
   const equipped = Object.values(G.equipment).includes(itemId);
   openModal(`
-    <h3>${item.icon} ${item.name}</h3>
+    <h3>${itemIconImg(itemId)} ${item.name}</h3>
     <p>${item.type} — Qtd: ${qty}</p>
     <div class="item-detail-stats">${stats}</div>
     <p style="margin-top:8px; color:#6272a4; font-size:12px">Venda: ${item.sell} 💰</p>
@@ -52,7 +52,7 @@ export function renderEquipmentSlots() {
     const item = itemId ? ITEMS[itemId] : null;
     return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}" onclick="${item ? `openItemModal('${itemId}')` : ''}">
       <div class="equip-slot-name">${labels[slot]}</div>
-      ${item ? `<div class="equip-slot-icon">${item.icon}</div><div class="equip-slot-item">${item.name}</div>` : '<div style="color:#8a6f4d;font-size:11px;margin-top:10px">Vazio</div>'}
+      ${item ? `<div class="equip-slot-icon">${itemIconImg(itemId, 'equip-slot-icon')}</div><div class="equip-slot-item">${item.name}</div>` : '<div style="color:#8a6f4d;font-size:11px;margin-top:10px">Vazio</div>'}
     </div>`;
   }).join('');
   areas.forEach(a => { a.innerHTML = html; });

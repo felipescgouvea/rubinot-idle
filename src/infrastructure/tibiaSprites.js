@@ -14,12 +14,38 @@ export const SPRITE_OVERRIDE = {
   nzoth: 'World_Devourer.gif',
 };
 
-// Melhor esforço: página da vocação no TibiaWiki. Sem sucesso, cai no ícone
-// (mesmo tratamento do SPRITE_OVERRIDE acima).
-export const VOCATION_SPRITE = { knight: 'Knight.gif', paladin: 'Paladin.gif', sorcerer: 'Sorcerer.gif', druid: 'Druid.gif' };
+// Outfits: convenção confirmada do TibiaWiki (via API de busca de arquivos)
+// é "Outfit_{Nome}_{Male|Female}.gif" — ex.: Outfit_Knight_Male.gif,
+// Outfit_Druid_Female.gif. Nome do outfit vem de domain/outfits.js.
+export function outfitSpriteFile(outfitId, gender) {
+  const name = outfitId.charAt(0).toUpperCase() + outfitId.slice(1);
+  const genderPart = gender === 'female' ? 'Female' : 'Male';
+  return `Outfit_${name}_${genderPart}.gif`;
+}
 
 export function monsterSpriteFile(monsterId, monster) {
   return SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
+}
+
+// Itens cujo id não deriva o nome real do arquivo no TibiaWiki (o id ficou
+// em inglês mas diferente do nome oficial do item).
+const ITEM_SPRITE_OVERRIDE = {
+  worm_dirt: 'Lump_of_Dirt.gif',
+};
+
+// Toda entrada de ITEMS usa um id em inglês (mesmo quando o "name" exibido ao
+// jogador está em português) — então dá pra derivar o nome de arquivo do
+// TibiaWiki diretamente do id, sem precisar de uma tabela manual por item.
+// Preposições curtas ficam minúsculas (convenção do wiki: "Boots_of_Haste.gif").
+const LOWERCASE_WORDS = new Set(['of', 'the', 'and']);
+function idToTibiaFilename(id) {
+  return id.split('_')
+    .map((word, i) => (i > 0 && LOWERCASE_WORDS.has(word)) ? word : word.charAt(0).toUpperCase() + word.slice(1))
+    .join('_') + '.gif';
+}
+
+export function itemSpriteFile(itemId) {
+  return ITEM_SPRITE_OVERRIDE[itemId] || idToTibiaFilename(itemId);
 }
 
 export function spriteUrl(file) {

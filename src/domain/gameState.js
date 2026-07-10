@@ -20,6 +20,7 @@ export function createDefaultState() {
     spells: { attack: null, heal: null },
     boosts: {},
     outfit: null,
+    outfitGender: 'male',
     outfitsOwned: [],
     inventory: {},
     equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },

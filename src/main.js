@@ -22,6 +22,7 @@ import { setRtc } from './application/rtcUseCases.js';
 import { selectSpell } from './application/spellUseCases.js';
 import { registerPlayerName, submitScore } from './application/highscoresUseCases.js';
 import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js';
+import { setOutfitGender, selectOutfit, buyOutfit } from './application/outfitUseCases.js';
 
 // ui
 import { closeModal, wireSharedEvents } from './ui/shared.js';
@@ -37,6 +38,7 @@ import { wireSpellsPanelEvents } from './ui/spellsPanel.js';
 import { wireRtcPanelEvents } from './ui/rtcPanel.js';
 import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js';
+import { openOutfitPicker, wireOutfitPickerEvents } from './ui/outfitPicker.js';
 import { wireTabs } from './ui/tabs.js';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
@@ -52,6 +54,7 @@ wireSpellsPanelEvents();
 wireRtcPanelEvents();
 wireHighscoresPanelEvents();
 wireMarketPanelEvents();
+wireOutfitPickerEvents();
 
 // ---- superfície pública pro HTML (estático e gerado via innerHTML) ----
 // É basicamente a "view" do padrão MVC exposta como funções soltas, porque o
@@ -69,6 +72,7 @@ Object.assign(window, {
   setRtc,
   registerPlayerName, refreshHighscoresClick,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,
+  openOutfitPicker, setOutfitGender, selectOutfit, buyOutfit,
 });
 
 // ---- init ----

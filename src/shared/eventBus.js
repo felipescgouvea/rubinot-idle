@@ -34,6 +34,7 @@ export const EVENTS = {
   LOOT: 'loot',
   KILL_COUNTERS: 'killCounters',
   ZONE_PICKER: 'zonePicker',
+  ZONE_THEME: 'zoneTheme',
   HUNT_BUTTON: 'huntButton',
   TASKS_PANEL: 'tasksPanel',
   ACTIVE_TASK: 'activeTask',
@@ -46,6 +47,7 @@ export const EVENTS = {
   MARKET_PANEL: 'marketPanel',
   HIGHSCORES_PANEL: 'highscoresPanel',
   OFFLINE_PROGRESS: 'offlineProgress',
+  OUTFIT_PICKER: 'outfitPicker',
   // eventos "de domínio" internos à application, usados para evitar imports
   // circulares entre casos de uso de áreas diferentes (ex.: caçada não
   // precisa saber que tasks existem, só anuncia "matei uma criatura X")

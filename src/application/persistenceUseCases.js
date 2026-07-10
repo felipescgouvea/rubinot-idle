@@ -5,6 +5,7 @@ import { createDefaultState } from '../domain/gameState.js';
 import { createDefaultSkills } from '../domain/character.js';
 import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js';
 import { isSpellAvailable } from '../domain/spells.js';
+import { findOutfit } from '../domain/outfits.js';
 import { ZONES, MONSTERS } from '../domain/bestiary.js';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js';
 import { loadRawState, clearState } from '../infrastructure/storage.js';
@@ -28,6 +29,12 @@ export function loadGame() {
   if (!G.spells) G.spells = { attack: null, heal: null };
   if (!G.boosts) G.boosts = {};
   if (!G.outfitsOwned) G.outfitsOwned = [];
+  if (!G.outfitGender) G.outfitGender = 'male';
+  // migração: outfits antigos eram identificados por emoji/id de item de loja;
+  // o sistema novo usa os ids reais do Tibia (ver domain/outfits.js) — qualquer
+  // coisa que não bater com o catálogo novo simplesmente reseta pro padrão.
+  G.outfitsOwned = G.outfitsOwned.filter(id => findOutfit(id));
+  if (G.outfit && !findOutfit(G.outfit)) G.outfit = null;
   if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
   if (G.spells.attack && !isSpellAvailable(G.spells.attack, G.vocation, G.level)) G.spells.attack = null;
   if (G.spells.heal && !isSpellAvailable(G.spells.heal, G.vocation, G.level)) G.spells.heal = null;

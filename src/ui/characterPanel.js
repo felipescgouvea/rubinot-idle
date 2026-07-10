@@ -2,23 +2,26 @@
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
 import { G } from '../application/gameStore.js';
 import { VOCATIONS, XP_TABLE } from '../domain/character.js';
-import { SHOP_ITEMS } from '../domain/shopCatalog.js';
-import { SPRITE_BASE, VOCATION_SPRITE } from '../infrastructure/tibiaSprites.js';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js';
+import { SPRITE_BASE, outfitSpriteFile } from '../infrastructure/tibiaSprites.js';
 import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js';
 import { on, EVENTS } from '../shared/eventBus.js';
 import { formatNum } from './shared.js';
 import { renderZonePicker } from './huntPanel.js';
 
+// Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
+// ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
+function currentOutfitId() {
+  return G.outfit || (G.vocation ? VOCATION_DEFAULT_OUTFIT[G.vocation] : null);
+}
+
 function playerSpriteFile() {
-  if (G.outfit) {
-    const outfitDef = SHOP_ITEMS.find(s => s.type === 'outfit' && s.icon === G.outfit);
-    if (outfitDef && outfitDef.sprite) return outfitDef.sprite;
-  }
-  return G.vocation ? VOCATION_SPRITE[G.vocation] : null;
+  const outfitId = currentOutfitId();
+  return outfitId ? outfitSpriteFile(outfitId, G.outfitGender || 'male') : null;
 }
 
 function playerFallbackIcon() {
-  return G.outfit || (G.vocation ? VOCATIONS[G.vocation].icon : '🧑');
+  return G.vocation ? VOCATIONS[G.vocation].icon : '🧑';
 }
 
 function playerPortraitImg(cls = '') {
@@ -46,7 +49,7 @@ export function renderCharPanel() {
 export function renderCharInfo() {
   if (!G.vocation) return;
   const v = VOCATIONS[G.vocation];
-  document.getElementById('char-voc-icon').textContent = G.outfit || v.icon;
+  document.getElementById('char-voc-icon').innerHTML = playerPortraitImg('char-voc-big');
   document.getElementById('char-voc-name').textContent = v.name;
   document.getElementById('char-level').textContent = G.level;
   document.getElementById('char-xp').textContent = G.xp;

@@ -7,7 +7,7 @@ import { MONSTERS } from '../domain/bestiary.js';
 import { ITEMS } from '../domain/items.js';
 import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js';
 import { on, EVENTS } from '../shared/eventBus.js';
-import { openModal } from './shared.js';
+import { openModal, itemIconImg } from './shared.js';
 import { getCurrentMonster } from '../application/huntUseCases.js';
 
 function monsterSpriteImg(monsterId, cls = '') {
@@ -87,6 +87,23 @@ export function renderZonePicker() {
   // auto-select first valid
   const valid = Object.entries(ZONES).find(([id, z]) => z.worldReq === G.currentWorld && G.level >= z.minLevel);
   if (valid) { picker.value = valid[0]; G.activeZone = valid[0]; }
+  renderZoneTheme();
+}
+
+// Cada dungeon tinge o fundo da cena de batalha com sua própria paleta (ver
+// ZONES[id].theme) — sem zona ativa, cai no tom pergaminho padrão via as
+// variáveis-fallback já definidas em style.css.
+export function renderZoneTheme() {
+  const scene = document.getElementById('battle-scene');
+  if (!scene) return;
+  const zone = ZONES[G.activeZone];
+  if (zone && zone.theme) {
+    scene.style.setProperty('--zone-color-1', zone.theme[0]);
+    scene.style.setProperty('--zone-color-2', zone.theme[1]);
+  } else {
+    scene.style.removeProperty('--zone-color-1');
+    scene.style.removeProperty('--zone-color-2');
+  }
 }
 
 export function renderKillCounters() {
@@ -108,7 +125,7 @@ export function renderLoot() {
   const items = Object.entries(G.inventory).slice(-12);
   area.innerHTML = items.map(([id, qty]) => {
     const item = ITEMS[id];
-    return `<div class="loot-item ${item?.rare ? 'rare' : ''}" title="${item?.name}">${item?.icon || '?'} x${qty}</div>`;
+    return `<div class="loot-item ${item?.rare ? 'rare' : ''}" title="${item?.name}">${item ? itemIconImg(id) : '?'} x${qty}</div>`;
   }).join('');
 }
 
@@ -134,6 +151,7 @@ function renderOfflineProgressModal({ zoneName, zoneIcon, hours, minutes, kills,
 export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed } = {}) => renderMonsterDisplay(hit, killed));
   on(EVENTS.ZONE_PICKER, renderZonePicker);
+  on(EVENTS.ZONE_THEME, renderZoneTheme);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);
   on(EVENTS.HUNT_BUTTON, renderHuntButton);

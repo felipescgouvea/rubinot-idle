@@ -1,23 +1,27 @@
 // Bestiário e zonas de caça — dados puros do jogo, sem sprite/URL (isso é
 // infraestrutura, ver src/infrastructure/tibiaSprites.js) e sem DOM.
 
+// "theme" [cor de cima, cor de baixo] dá um cenário próprio pra cada dungeon
+// na cena de batalha — sem depender de imagem hotlinkada (nenhuma fonte
+// confiável de screenshot por zona), então é uma paleta de gradiente coerente
+// com o bioma/clima de cada uma.
 export const ZONES = {
-  rotworm_cave:  { name: 'Caverna de Rotworms', icon: '🪱', minLevel: 1,  worldReq: 'auroria', monsters: ['rotworm', 'cave_rat'], goldMult: 1.0, xpMult: 1.0 },
-  goblin_village:{ name: 'Vila Goblin', icon: '👺', minLevel: 3,  worldReq: 'auroria', monsters: ['goblin', 'troll'], goldMult: 1.1, xpMult: 1.1 },
-  dwarf_mines:   { name: 'Minas dos Dwarfs', icon: '⛏️', minLevel: 6,  worldReq: 'auroria', monsters: ['dwarf', 'orc'], goldMult: 1.3, xpMult: 1.25 },
-  elf_woods:     { name: 'Bosque Élfico', icon: '🧝', minLevel: 10, worldReq: 'auroria', monsters: ['elf', 'dworc'], goldMult: 1.4, xpMult: 1.35 },
-  cyclops_camp:  { name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'minotaur'], goldMult: 1.5, xpMult: 1.4 },
-  amazon_camp:   { name: 'Acampamento Amazona', icon: '🏹', minLevel: 15, worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6 },
-  scarab_desert: { name: 'Deserto dos Scarabs', icon: '🪲', minLevel: 18, worldReq: 'auroria', monsters: ['scarab', 'mutated_human'], goldMult: 2.0, xpMult: 1.8 },
-  spider_lair:   { name: 'Ninho de Giant Spiders', icon: '🕷️', minLevel: 22, worldReq: 'spectrum', monsters: ['giant_spider', 'tarantula'], goldMult: 2.2, xpMult: 2.0 },
-  dragon_lair:   { name: 'Covil dos Dragões', icon: '🔥', minLevel: 30, worldReq: 'bellum',  monsters: ['dragon', 'dragon_lord'], goldMult: 3.0, xpMult: 2.5 },
-  frost_peak:    { name: 'Pico Congelado', icon: '🧊', minLevel: 35, worldReq: 'bellum',  monsters: ['frost_dragon', 'warlock'], goldMult: 3.5, xpMult: 3.0 },
-  undead_crypt:  { name: 'Cripta Profana', icon: '🦴', minLevel: 40, worldReq: 'elysian', monsters: ['bonebeast', 'banshee', 'vampire'], goldMult: 3.8, xpMult: 3.3 },
-  lich_lair:     { name: 'Cripta dos Liches', icon: '☠️', minLevel: 48, worldReq: 'elysian', monsters: ['lich', 'grim_reaper', 'undead_dragon'], goldMult: 4.0, xpMult: 3.5 },
-  hydra_swamp:   { name: 'Pântano das Hydras', icon: '🐍', minLevel: 45, worldReq: 'solarian', monsters: ['hydra', 'medusa'], goldMult: 4.2, xpMult: 3.8 },
-  demon_fortress:{ name: 'Fortaleza Demoníaca', icon: '💀', minLevel: 55, worldReq: 'elysian', monsters: ['demon', 'fury', 'hellhound'], goldMult: 5.0, xpMult: 4.0 },
-  hell_gate:     { name: 'Portão do Inferno', icon: '🔥', minLevel: 60, worldReq: 'mystian', monsters: ['juggernaut', 'plaguesmith', 'behemoth'], goldMult: 6.0, xpMult: 5.0 },
-  boss_sanctum:  { name: 'Santuário dos Bosses', icon: '🌀', minLevel: 70, worldReq: 'mystian', monsters: ['lothlorien', 'executioner', 'morgul', 'corrupted_one', 'nzoth'], goldMult: 8.0, xpMult: 6.0 },
+  rotworm_cave:  { name: 'Caverna de Rotworms', icon: '🪱', minLevel: 1,  worldReq: 'auroria', monsters: ['rotworm', 'cave_rat'], goldMult: 1.0, xpMult: 1.0, theme: ['#5a4a35', '#2e2419'] },
+  goblin_village:{ name: 'Vila Goblin', icon: '👺', minLevel: 3,  worldReq: 'auroria', monsters: ['goblin', 'troll'], goldMult: 1.1, xpMult: 1.1, theme: ['#5c6b3a', '#33401f'] },
+  dwarf_mines:   { name: 'Minas dos Dwarfs', icon: '⛏️', minLevel: 6,  worldReq: 'auroria', monsters: ['dwarf', 'orc'], goldMult: 1.3, xpMult: 1.25, theme: ['#6b5a44', '#3a2f22'] },
+  elf_woods:     { name: 'Bosque Élfico', icon: '🧝', minLevel: 10, worldReq: 'auroria', monsters: ['elf', 'dworc'], goldMult: 1.4, xpMult: 1.35, theme: ['#3f7052', '#1e3d2b'] },
+  cyclops_camp:  { name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'minotaur'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'] },
+  amazon_camp:   { name: 'Acampamento Amazona', icon: '🏹', minLevel: 15, worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6, theme: ['#5e7d3f', '#2e4a1f'] },
+  scarab_desert: { name: 'Deserto dos Scarabs', icon: '🪲', minLevel: 18, worldReq: 'auroria', monsters: ['scarab', 'mutated_human'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'] },
+  spider_lair:   { name: 'Ninho de Giant Spiders', icon: '🕷️', minLevel: 22, worldReq: 'spectrum', monsters: ['giant_spider', 'tarantula'], goldMult: 2.2, xpMult: 2.0, theme: ['#4a3a5c', '#1c1526'] },
+  dragon_lair:   { name: 'Covil dos Dragões', icon: '🔥', minLevel: 30, worldReq: 'bellum',  monsters: ['dragon', 'dragon_lord'], goldMult: 3.0, xpMult: 2.5, theme: ['#a53d2b', '#4a1810'] },
+  frost_peak:    { name: 'Pico Congelado', icon: '🧊', minLevel: 35, worldReq: 'bellum',  monsters: ['frost_dragon', 'warlock'], goldMult: 3.5, xpMult: 3.0, theme: ['#6fa3c9', '#294a63'] },
+  undead_crypt:  { name: 'Cripta Profana', icon: '🦴', minLevel: 40, worldReq: 'elysian', monsters: ['bonebeast', 'banshee', 'vampire'], goldMult: 3.8, xpMult: 3.3, theme: ['#5a5560', '#211f28'] },
+  lich_lair:     { name: 'Cripta dos Liches', icon: '☠️', minLevel: 48, worldReq: 'elysian', monsters: ['lich', 'grim_reaper', 'undead_dragon'], goldMult: 4.0, xpMult: 3.5, theme: ['#4a3a63', '#1a1424'] },
+  hydra_swamp:   { name: 'Pântano das Hydras', icon: '🐍', minLevel: 45, worldReq: 'solarian', monsters: ['hydra', 'medusa'], goldMult: 4.2, xpMult: 3.8, theme: ['#3c6b5e', '#173a30'] },
+  demon_fortress:{ name: 'Fortaleza Demoníaca', icon: '💀', minLevel: 55, worldReq: 'elysian', monsters: ['demon', 'fury', 'hellhound'], goldMult: 5.0, xpMult: 4.0, theme: ['#7a1f1f', '#2b0a0a'] },
+  hell_gate:     { name: 'Portão do Inferno', icon: '🔥', minLevel: 60, worldReq: 'mystian', monsters: ['juggernaut', 'plaguesmith', 'behemoth'], goldMult: 6.0, xpMult: 5.0, theme: ['#a52a1f', '#1f0a08'] },
+  boss_sanctum:  { name: 'Santuário dos Bosses', icon: '🌀', minLevel: 70, worldReq: 'mystian', monsters: ['lothlorien', 'executioner', 'morgul', 'corrupted_one', 'nzoth'], goldMult: 8.0, xpMult: 6.0, theme: ['#6b4a9c', '#2a1a42'] },
 };
 
 export const MONSTERS = {
