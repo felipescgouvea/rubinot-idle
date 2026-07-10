@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=15';
-import { ITEMS } from './items.js?v=15';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=16';
+import { ITEMS } from './items.js?v=16';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -73,10 +73,10 @@ export function computeMagic({ skills }) {
   return skills.magic.lv;
 }
 
-export function computeSpd({ vocation, equipment, rtcSpdMult }) {
+export function computeSpd({ vocation, equipment }) {
   if (!vocation) return 1;
   const v = VOCATIONS[vocation];
-  return +((v.baseSpd + (computeEquipBonus(equipment).spd || 0)) * rtcSpdMult).toFixed(2);
+  return +(v.baseSpd + (computeEquipBonus(equipment).spd || 0)).toFixed(2);
 }
 
 export function calcDamage(atk, def) {

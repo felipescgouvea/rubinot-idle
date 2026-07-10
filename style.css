@@ -675,10 +675,12 @@ img.tibia-icon {
   font-size: 12px;
 }
 #skill-points-display span, #skill-points-display strong span { color: var(--navy-1); }
-#skills-grid, #rtc-settings > #skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 11px; margin: 0 14px 14px !important; }
+#skills-grid, .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 11px; margin: 0 14px 14px !important; }
 #rtc-settings { margin: 12px 14px 14px !important; }
-#rtc-settings #skills-grid { margin: 0 !important; }
+#rtc-settings .skills-grid { margin: 0 0 8px !important; }
 #rtc-settings > div:first-child { margin: 0 0 12px !important; }
+#rtc-settings h4 { font-family: var(--serif); color: var(--navy-2); }
+#rtc-settings h5 { font-family: var(--serif); color: var(--navy-1); font-size: 13px; font-weight: 700; }
 .skill-card {
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
   border: 1px solid var(--line-soft);

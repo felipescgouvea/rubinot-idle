@@ -3,20 +3,20 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=15';
-import { ZONES } from '../domain/bestiary.js?v=15';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=15';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=15';
-import { computeRtcMods, computeBoostMods } from '../domain/shopCatalog.js?v=15';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=15';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=15';
-import { ITEMS } from '../domain/items.js?v=15';
-import { MONSTERS } from '../domain/bestiary.js?v=15';
-import { emit, EVENTS } from '../shared/eventBus.js?v=15';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=15';
-import { trainSkill } from './skillUseCases.js?v=15';
-import { addItemToInventory } from './inventoryCore.js?v=15';
-import { checkBpTier } from './battlePassUseCases.js?v=15';
+import { G } from './gameStore.js?v=16';
+import { ZONES } from '../domain/bestiary.js?v=16';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=16';
+import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=16';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=16';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=16';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=16';
+import { ITEMS } from '../domain/items.js?v=16';
+import { MONSTERS } from '../domain/bestiary.js?v=16';
+import { emit, EVENTS } from '../shared/eventBus.js?v=16';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=16';
+import { trainSkill } from './skillUseCases.js?v=16';
+import { addItemToInventory } from './inventoryCore.js?v=16';
+import { checkBpTier } from './battlePassUseCases.js?v=16';
 
 let huntInterval = null;
 let regenInterval = null;
@@ -66,36 +66,44 @@ export function doHuntTick() {
   }
 
   const zone = ZONES[G.activeZone];
-  const rtc = computeRtcMods(G.rtc);
   const voc = VOC_TRAINING[G.vocation];
 
   // Player attacks monster
   let playerDmg = calcDamage(getAtk(), currentMonster.def);
-  // RTC auto-cast: spell de ataque selecionada na aba Spells
-  const atkSpell = G.spells.attack && isSpellAvailable(G.spells.attack, G.vocation, G.level) ? SPELLS[G.spells.attack] : null;
-  if (atkSpell && G.mana >= atkSpell.mana) {
-    playerDmg = Math.floor(playerDmg * atkSpell.power);
-    G.mana -= atkSpell.mana;
-    trainSkill('magic', atkSpell.mana * voc.magicMult);
-    emit(EVENTS.LOG, `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`);
+  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && (G.inventory[G.rtc.attackRune] || 0) > 0) {
+    // Ataque automático por runa (RTC): substitui o golpe normal, não treina skill —
+    // é um item pré-carregado, não uma habilidade viva do personagem.
+    const rune = ITEMS[G.rtc.attackRune];
+    playerDmg = rune.dmg;
+    G.inventory[G.rtc.attackRune]--;
+    if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
+    emit(EVENTS.LOG, `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`);
+    emit(EVENTS.INVENTORY);
+  } else {
+    const atkSpell = G.rtc.attackType === 'spell' && G.rtc.attackSpell && isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level) ? SPELLS[G.rtc.attackSpell] : null;
+    if (atkSpell && G.mana >= atkSpell.mana) {
+      playerDmg = Math.floor(playerDmg * atkSpell.power);
+      G.mana -= atkSpell.mana;
+      trainSkill('magic', atkSpell.mana * voc.magicMult);
+      emit(EVENTS.LOG, `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`);
+    }
+    if (voc.attackSkill !== 'magic') {
+      // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
+      // sobe (sword só treina com espada equipada, axe só com machado, etc.)
+      trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
+    } else if (!atkSpell && G.mana >= 8) {
+      // mage sem spell selecionada: golpe arcano básico
+      playerDmg = Math.floor(playerDmg * 1.3);
+      G.mana -= 8;
+      trainSkill('magic', 8 * voc.magicMult);
+    }
   }
-  if (voc.attackSkill !== 'magic') {
-    // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
-    // sobe (sword só treina com espada equipada, axe só com machado, etc.)
-    trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
-  } else if (!atkSpell && G.mana >= 8) {
-    // mage sem spell selecionada: golpe arcano básico
-    playerDmg = Math.floor(playerDmg * 1.3);
-    G.mana -= 8;
-    trainSkill('magic', 8 * voc.magicMult);
-  }
-  playerDmg = Math.max(1, Math.floor(playerDmg * rtc.dmgMult));
   currentMonster.hp -= playerDmg;
   emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
   emit(EVENTS.MONSTER_DISPLAY, { hit: true });
 
   if (currentMonster.hp <= 0) {
-    resolveMonsterKill(zone, rtc);
+    resolveMonsterKill(zone);
     return;
   }
 
@@ -106,14 +114,29 @@ export function doHuntTick() {
   emit(EVENTS.LOG, `🩸 ${currentMonster.name} causou <span class="log-dmg">${monsterDmg}</span> de dano em você.`);
   emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true });
 
-  // RTC Smart Healing: usa a spell de cura selecionada na aba Spells
-  const healSpell = G.spells.heal && isSpellAvailable(G.spells.heal, G.vocation, G.level) ? SPELLS[G.spells.heal] : SPELLS.exura;
-  if (rtc.smartHeal && G.hp > 0 && G.hp < getMaxHp() * 0.4 && isSpellAvailable(G.spells.heal || 'exura', G.vocation, G.level) && G.mana >= healSpell.mana) {
+  // RTC — Spell Healing: cura automática por magia, sempre ativa (spell configurada
+  // na própria aba RTC, ou exura como padrão) ao cruzar o limiar de % de HP definido.
+  const hpPct = (G.hp / getMaxHp()) * 100;
+  const healSpellId = G.rtc.healSpell || 'exura';
+  const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
+  if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana) {
     const heal = Math.floor(getMaxHp() * healSpell.power);
     G.hp = Math.min(getMaxHp(), G.hp + heal);
     G.mana -= healSpell.mana;
     trainSkill('magic', healSpell.mana * voc.magicMult);
     emit(EVENTS.LOG, `💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`);
+  }
+
+  // RTC — Potion Healing: cura automática por poção do inventário, independente da
+  // spell — normalmente um limiar mais baixo, de emergência (ver domain/rtcConfig.js).
+  if (G.rtc.healPotion && G.hp > 0 && ((G.hp / getMaxHp()) * 100) < G.rtc.healPotionThreshold && (G.inventory[G.rtc.healPotion] || 0) > 0) {
+    const potion = ITEMS[G.rtc.healPotion];
+    const before = G.hp;
+    G.hp = Math.min(getMaxHp(), G.hp + potion.heal);
+    G.inventory[G.rtc.healPotion]--;
+    if (G.inventory[G.rtc.healPotion] <= 0) delete G.inventory[G.rtc.healPotion];
+    emit(EVENTS.LOG, `${potion.icon} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`);
+    emit(EVENTS.INVENTORY);
   }
 
   if (G.hp <= 0) {
@@ -131,11 +154,10 @@ export function doHuntTick() {
 // Paga XP/gold/loot pela morte da criatura atual — usado tanto por um golpe normal
 // (doHuntTick) quanto por uma runa de ataque usada manualmente (inventoryUseCases),
 // para que nenhuma via de dano "sonegue" a recompensa da morte.
-export function resolveMonsterKill(zone, rtc) {
+export function resolveMonsterKill(zone) {
   const boosts = computeBoostMods(G.boosts, Date.now());
-  let goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * rtc.goldMult * boosts.gold);
-  goldGained = Math.max(0, goldGained - Math.floor(goldGained * rtc.goldTax));
-  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * rtc.xpMult * boosts.xp);
+  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold);
+  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp);
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -154,7 +176,7 @@ export function resolveMonsterKill(zone, rtc) {
   // Loot
   const lootLine = [];
   currentMonster.loot.forEach(([itemId, chance]) => {
-    if (Math.random() < chance + rtc.lootBonus + boosts.loot) {
+    if (Math.random() < chance + boosts.loot) {
       addItemToInventory(itemId);
       const item = ITEMS[itemId];
       lootLine.push(`${item.icon} ${item.name}`);

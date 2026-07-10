@@ -2,7 +2,7 @@
 // throttle de "1x por minuto" e a decisão de quando reenviar vivem em
 // application/highscoresUseCases.js).
 
-import { rpcRequest, selectRequest } from './supabaseClient.js?v=15';
+import { rpcRequest, selectRequest } from './supabaseClient.js?v=16';
 
 export async function submitScoreRequest(payload) {
   try {

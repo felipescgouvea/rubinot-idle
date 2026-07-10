@@ -3,9 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=15';
-import { createDefaultRtc } from './shopCatalog.js?v=15';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=15';
+import { createDefaultSkills } from './character.js?v=16';
+import { createDefaultRtc } from './rtcConfig.js?v=16';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=16';
 
 export function createDefaultState() {
   return {
@@ -18,7 +18,6 @@ export function createDefaultState() {
     mana: 0,
     sk: createDefaultSkills(),
     rtc: createDefaultRtc(),
-    spells: { attack: null, heal: null },
     boosts: {},
     outfit: null,
     outfitGender: 'male',

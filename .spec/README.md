@@ -15,7 +15,7 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 - [11-cacada-e-combate.md](11-cacada-e-combate.md) — zonas de caça e o loop de combate automático.
 - [12-bestiario.md](12-bestiario.md) — o catálogo de criaturas e suas regras de loot.
 - [13-skills.md](13-skills.md) — evolução de habilidades por uso, ao estilo Tibia.
-- [14-spells-e-rtc.md](14-spells-e-rtc.md) — magias automáticas e as configurações de cliente (RTC) com trade-offs reais.
+- [14-spells-e-rtc.md](14-spells-e-rtc.md) — o RTC: ataque automático por magia ou runa, cura automática por magia e por poção.
 
 ## Itens & Economia
 

@@ -62,43 +62,6 @@ export const SHOPS = [
     ]},
 ];
 
-// ---- RTC (Rubinot Custom Client) ----
-// Configurações do client custom. Cada uma tem prós e contras reais —
-// dá pra melhorar OU piorar o desempenho do personagem conforme o ajuste.
-export const RTC_SETTINGS = [
-  { id: 'autoLoot', name: 'Auto Loot', icon: '🎒', type: 'toggle', default: true,
-    desc: 'Coleta automática de loot. LIGADO: +12% de chance de loot, mas taxa de 5% sobre o gold coletado. DESLIGADO: sem taxa, loot manual normal.' },
-  { id: 'smartHeal', name: 'Smart Healing', icon: '💊', type: 'toggle', default: true,
-    desc: 'Cura automática abaixo de 40% de HP gastando 30 de mana. Evita mortes, mas consome mana que seria usada em dano (mages sentem mais).' },
-  { id: 'graphics', name: 'Modo Gráfico', icon: '🖥️', type: 'select', default: 'equilibrado',
-    options: ['performance', 'equilibrado', 'qualidade'],
-    desc: 'PERFORMANCE: +10% velocidade de ataque, -10% XP (efeitos desligados). QUALIDADE: -10% velocidade, +10% XP. EQUILIBRADO: neutro.' },
-  { id: 'latency', name: 'Latência (Ping)', icon: '📡', type: 'select', default: 'baixa',
-    options: ['baixa', 'media', 'alta'],
-    desc: 'Simula sua conexão. BAIXA: +5% de dano. MÉDIA: neutro. ALTA: -15% de dano (ataques atrasam).' },
-  { id: 'analyzer', name: 'Hunt Analyzer', icon: '📊', type: 'toggle', default: false,
-    desc: 'Overlay de análise de caçada. LIGADO: +8% XP (você otimiza a rota), mas -8% gold (foco em XP, não em loot).' },
-];
-
-export function createDefaultRtc() {
-  const rtc = {};
-  RTC_SETTINGS.forEach(s => { rtc[s.id] = s.default; });
-  return rtc;
-}
-
-export function computeRtcMods(rtc) {
-  const r = rtc || createDefaultRtc();
-  return {
-    lootBonus: r.autoLoot ? 0.12 : 0,
-    goldTax: r.autoLoot ? 0.05 : 0,
-    smartHeal: !!r.smartHeal,
-    spdMult: r.graphics === 'performance' ? 1.10 : r.graphics === 'qualidade' ? 0.90 : 1,
-    xpMult: (r.graphics === 'performance' ? 0.90 : r.graphics === 'qualidade' ? 1.10 : 1) * (r.analyzer ? 1.08 : 1),
-    dmgMult: r.latency === 'baixa' ? 1.05 : r.latency === 'alta' ? 0.85 : 1,
-    goldMult: r.analyzer ? 0.92 : 1,
-  };
-}
-
 export function isBoostActive(boosts, kind, now) {
   return !!(boosts && boosts[kind] && boosts[kind] > now);
 }

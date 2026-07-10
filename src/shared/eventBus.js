@@ -41,7 +41,6 @@ export const EVENTS = {
   WORLDS_PANEL: 'worldsPanel',
   BATTLE_PASS_PANEL: 'battlePassPanel',
   SHOP_PANEL: 'shopPanel',
-  SPELLS_PANEL: 'spellsPanel',
   RTC_PANEL: 'rtcPanel',
   MARKET_PANEL: 'marketPanel',
   HIGHSCORES_PANEL: 'highscoresPanel',

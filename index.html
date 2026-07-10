@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=15" />
+  <link rel="stylesheet" href="style.css?v=16" />
 </head>
 <body>
   <div id="app">
@@ -27,14 +27,13 @@
     <!-- TABS -->
     <nav id="tabs">
       <button class="tab active" data-tab="hunt">🗺️ Caçada</button>
+      <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="tasks">📜 Tarefas</button>
       <button class="tab" data-tab="skills">⚡ Skills</button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="inventory">🎒 Inventário</button>
       <button class="tab" data-tab="worlds">🌍 Mundos</button>
       <button class="tab" data-tab="battlepass">🎖️ Battle Pass</button>
-      <button class="tab" data-tab="spells">🗣️ Spells</button>
-      <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="shop">🛒 Shop</button>
       <button class="tab" data-tab="market">🏪 Mercado</button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
@@ -126,6 +125,15 @@
         </div>
       </section>
 
+      <!-- RTC -->
+      <section id="tab-rtc" class="panel">
+        <div class="card full-card">
+          <h3>🖥️ RTC — Rubinot Custom Client</h3>
+          <p class="muted">Configure o ataque e a cura automáticos da caçada, como no RTCaster real do RubinOT.</p>
+          <div id="rtc-settings"></div>
+        </div>
+      </section>
+
       <!-- TASKS -->
       <section id="tab-tasks" class="panel">
         <div class="card full-card">
@@ -201,29 +209,11 @@
         </div>
       </section>
 
-      <!-- SPELLS -->
-      <section id="tab-spells" class="panel">
-        <div class="card full-card">
-          <h3>🗣️ Spells — Magias da Vocação</h3>
-          <p class="muted">Selecione qual magia o RTC vai castar automaticamente na caçada (ataque) e no Smart Healing (cura), como no client do RubinOT.</p>
-          <div id="spells-content"></div>
-        </div>
-      </section>
-
       <!-- HIGHSCORES -->
       <section id="tab-highscores" class="panel">
         <div class="card full-card">
           <h3>🏆 Highscores — Ranking Global</h3>
           <div id="highscores-content"></div>
-        </div>
-      </section>
-
-      <!-- RTC -->
-      <section id="tab-rtc" class="panel">
-        <div class="card full-card">
-          <h3>🖥️ RTC — Rubinot Custom Client</h3>
-          <p class="muted">Configure o client customizado. Cada ajuste tem prós e contras reais no desempenho do seu personagem — otimize com sabedoria.</p>
-          <div id="rtc-settings"></div>
         </div>
       </section>
 
@@ -273,6 +263,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=15"></script>
+  <script type="module" src="src/main.js?v=16"></script>
 </body>
 </html>

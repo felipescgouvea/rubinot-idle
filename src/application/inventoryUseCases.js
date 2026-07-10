@@ -1,13 +1,12 @@
-import { G } from './gameStore.js?v=15';
-import { ITEMS } from '../domain/items.js?v=15';
-import { ZONES } from '../domain/bestiary.js?v=15';
-import { computeRtcMods } from '../domain/shopCatalog.js?v=15';
-import { emit, EVENTS } from '../shared/eventBus.js?v=15';
-import { getMaxHp, getMaxMana } from './stats.js?v=15';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=15';
-import { saveGame } from './saveGameUseCase.js?v=15';
+import { G } from './gameStore.js?v=16';
+import { ITEMS } from '../domain/items.js?v=16';
+import { ZONES } from '../domain/bestiary.js?v=16';
+import { emit, EVENTS } from '../shared/eventBus.js?v=16';
+import { getMaxHp, getMaxMana } from './stats.js?v=16';
+import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=16';
+import { saveGame } from './saveGameUseCase.js?v=16';
 
-export { addItemToInventory } from './inventoryCore.js?v=15';
+export { addItemToInventory } from './inventoryCore.js?v=16';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
@@ -78,7 +77,7 @@ export function useItem(itemId) {
   emit(EVENTS.HEADER_STATS);
 
   if (killedByRune) {
-    resolveMonsterKill(ZONES[G.activeZone], computeRtcMods(G.rtc));
+    resolveMonsterKill(ZONES[G.activeZone]);
   } else {
     emit(EVENTS.MONSTER_DISPLAY, {});
   }

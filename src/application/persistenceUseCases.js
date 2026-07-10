@@ -1,19 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=15';
-import { createDefaultState } from '../domain/gameState.js?v=15';
-import { createDefaultSkills } from '../domain/character.js?v=15';
-import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=15';
-import { isSpellAvailable } from '../domain/spells.js?v=15';
-import { findOutfit } from '../domain/outfits.js?v=15';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=15';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=15';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=15';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=15';
-import { emit, EVENTS } from '../shared/eventBus.js?v=15';
-import { getMaxHp, getMaxMana } from './stats.js?v=15';
-import { gainXp } from './huntUseCases.js?v=15';
-import { checkBpTier } from './battlePassUseCases.js?v=15';
+import { G, replaceState } from './gameStore.js?v=16';
+import { createDefaultState } from '../domain/gameState.js?v=16';
+import { createDefaultSkills } from '../domain/character.js?v=16';
+import { createDefaultRtc } from '../domain/rtcConfig.js?v=16';
+import { isSpellAvailable } from '../domain/spells.js?v=16';
+import { findOutfit } from '../domain/outfits.js?v=16';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=16';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=16';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=16';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=16';
+import { emit, EVENTS } from '../shared/eventBus.js?v=16';
+import { getMaxHp, getMaxMana } from './stats.js?v=16';
+import { gainXp } from './huntUseCases.js?v=16';
+import { checkBpTier } from './battlePassUseCases.js?v=16';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -26,8 +26,16 @@ export function loadGame() {
   if (G.activeTask && !MONSTERS[G.activeTask.monster]) G.activeTask = null;
   // migração: sistema antigo de pontos de skill → skills de treino Tibia
   if (!G.sk || !G.sk.magic) G.sk = createDefaultSkills();
-  if (!G.rtc) G.rtc = createDefaultRtc();
-  if (!G.spells) G.spells = { attack: null, heal: null };
+  // migração: RTC ganhou ataque (spell/runa) e cura por poção — saves antigos têm só
+  // os ajustes antigos (autoLoot/graphics/etc., já removidos) ou nenhum rtc ainda.
+  G.rtc = { ...createDefaultRtc(), ...G.rtc };
+  // migração: seleção de spell de ataque/cura morava em G.spells (aba "Spells",
+  // removida) — agora mora dentro do próprio G.rtc, junto do resto da automação.
+  if (G.spells) {
+    if (G.spells.attack && !G.rtc.attackSpell) { G.rtc.attackType = 'spell'; G.rtc.attackSpell = G.spells.attack; }
+    if (G.spells.heal && !G.rtc.healSpell) G.rtc.healSpell = G.spells.heal;
+    delete G.spells;
+  }
   if (!G.boosts) G.boosts = {};
   if (!G.outfitsOwned) G.outfitsOwned = [];
   if (!G.outfitGender) G.outfitGender = 'male';
@@ -38,8 +46,8 @@ export function loadGame() {
   if (G.outfit && !findOutfit(G.outfit)) G.outfit = null;
   if (!G.outfitColors) G.outfitColors = { ...DEFAULT_OUTFIT_COLORS };
   if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
-  if (G.spells.attack && !isSpellAvailable(G.spells.attack, G.vocation, G.level)) G.spells.attack = null;
-  if (G.spells.heal && !isSpellAvailable(G.spells.heal, G.vocation, G.level)) G.spells.heal = null;
+  if (G.rtc.attackSpell && !isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level)) { G.rtc.attackType = null; G.rtc.attackSpell = null; }
+  if (G.rtc.healSpell && !isSpellAvailable(G.rtc.healSpell, G.vocation, G.level)) G.rtc.healSpell = null;
   // Clamp hp/mana to max on load
   if (G.vocation) {
     G.hp = Math.min(G.hp, getMaxHp());
@@ -64,9 +72,8 @@ export function applyOfflineProgress() {
   const scaleFactor = 1 + (G.level - 1) * 0.05;
   const killsPerMin = 6; // ritmo offline reduzido (~metade do ativo)
   const kills = Math.floor((cappedSec / 60) * killsPerMin);
-  const rtc = computeRtcMods(G.rtc);
-  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMultiplier(G.currentWorld) * rtc.xpMult * 0.5);
-  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMultiplier(G.currentWorld) * rtc.goldMult * 0.5);
+  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMultiplier(G.currentWorld) * 0.5);
+  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMultiplier(G.currentWorld) * 0.5);
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;

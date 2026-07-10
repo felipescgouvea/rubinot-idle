@@ -9,7 +9,7 @@ Estas regras já são seguidas pelo jogo hoje, mesmo sem terem sido escritas ant
 1. **Fidelidade a Tibia é o princípio de design central.** Nomes de criaturas, palavras mágicas das spells, vocações, sistema de skills por uso e sprites de criaturas replicam o Tibia oficial.
    **Por quê:** o jogo existe para dar aos fãs de Tibia/RubinOT uma versão idle nostálgica de um universo que já conhecem — não uma fantasia genérica.
 2. **Conteúdo exclusivo do RubinOT convive com o conteúdo do Tibia oficial.** As Linked Tasks e seus 5 bosses finais (Lothlorien, Executioner, Morgul, The Corrupted, N'Zoth) refletem um sistema real e exclusivo do servidor RubinOT, não do Tibia original.
-3. **Nenhum ajuste de conveniência é gratuito.** Toda configuração do RTC troca um benefício por uma perda real (ver [14-spells-e-rtc.md](14-spells-e-rtc.md)).
+3. **O RTC replica o RTCaster real do RubinOT** — ataque automático (uma magia OU uma runa) e cura automática (uma magia E uma poção, cada uma com seu próprio limiar de % de HP), na segunda aba do jogo (ver [14-spells-e-rtc.md](14-spells-e-rtc.md)).
 4. **A progressão nunca trava de forma permanente.** Level cap existe (100), mas sempre há conteúdo acessível para o nível atual do personagem.
 5. **Apenas uma tarefa ativa por vez**, e a primeira conclusão de cada task vale o dobro da recompensa.
 6. **Criaturas escalam com o nível do personagem dentro da mesma zona**, para que uma zona continue relevante por mais tempo em vez de ficar obsoleta rapidamente.
@@ -38,8 +38,8 @@ Toda sprite usada no jogo (criatura, item, cenário) deve vir de uma fonte real 
 - **Como aplicar:** sprites de criaturas já seguem esta regra, carregadas diretamente de uma fonte oficial de Tibia. Ao adicionar sprites novas (itens, cenários, efeitos), a mesma fonte/critério deve ser usado.
 - **Pendência de conformidade identificada:**
   - Os 5 bosses exclusivos do RubinOT usam, hoje, sprites de **outras criaturas do Tibia** como substituição temporária (ex.: o boss "Lothlorien" usa a sprite de "Elf Arcanist"), porque o boss em si não tem sprite própria disponível na fonte usada. Isso não é a sprite real da criatura retratada — é um placeholder e deve ser tratado como tal até haver uma sprite correta disponível.
-  - Ícones de moedas, habilidades, magias, ajustes de RTC e mundos ainda usam emojis genéricos (ver Regra 4).
-- **Resolvido:** ícones de itens de equipamento usam sprites reais extraídas do TibiaWiki. Outfits (incluindo cor por região e addons) usam sprites reais extraídas do cliente oficial do Tibia, recoloridas por região com o mesmo algoritmo do jogo original — ver [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
+  - Ícones de moedas, habilidades, magias e mundos ainda usam emojis genéricos (ver Regra 4).
+- **Resolvido:** ícones de itens de equipamento (incluindo runas e poções usadas no RTC) usam sprites reais extraídas do TibiaWiki. Outfits (incluindo cor por região e addons) usam sprites reais extraídas do cliente oficial do Tibia, recoloridas por região com o mesmo algoritmo do jogo original — ver [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
 
 ### Regra 3 — Toda mecânica deve existir em Tibia/RubinOT
 
