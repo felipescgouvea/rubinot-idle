@@ -1,13 +1,13 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=14';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=14';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=14';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=14';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=14';
-import { on, EVENTS } from '../shared/eventBus.js?v=14';
-import { formatNum } from './shared.js?v=14';
-import { renderZonePicker } from './huntPanel.js?v=14';
+import { G } from '../application/gameStore.js?v=15';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=15';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=15';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=15';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=15';
+import { on, EVENTS } from '../shared/eventBus.js?v=15';
+import { formatNum } from './shared.js?v=15';
+import { renderZonePicker } from './huntPanel.js?v=15';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -17,6 +17,15 @@ function currentOutfitId() {
 
 function playerFallbackIcon() {
   return G.vocation ? VOCATIONS[G.vocation].icon : '🧑';
+}
+
+// Cor da barra de vida por faixa: verde cheia, laranja pela metade, vermelha
+// quando cai muito — mesmas 3 faixas usadas nos dois lugares que mostram a
+// vida do jogador (card de personagem e cena de batalha).
+function applyHpState(el, pct) {
+  if (!el) return;
+  el.classList.remove('hp-state-high', 'hp-state-mid', 'hp-state-low');
+  el.classList.add(pct > 50 ? 'hp-state-high' : pct > 25 ? 'hp-state-mid' : 'hp-state-low');
 }
 
 // Assinatura do visual atual — muda só quando outfit/gênero/addons/cores
@@ -94,7 +103,9 @@ export function renderBars() {
   const manaPct = Math.round((G.mana / maxMana) * 100);
   const xpPct = G.level < 100 ? Math.round((G.xp / XP_TABLE[G.level - 1]) * 100) : 100;
 
-  document.getElementById('hp-bar').style.width = hpPct + '%';
+  const hpBar = document.getElementById('hp-bar');
+  hpBar.style.width = hpPct + '%';
+  applyHpState(hpBar, hpPct);
   document.getElementById('mana-bar').style.width = manaPct + '%';
   document.getElementById('xp-bar').style.width = xpPct + '%';
   document.getElementById('hp-text').textContent = `${G.hp}/${maxHp}`;
@@ -136,7 +147,9 @@ export function renderPlayerBattleSide(hit = false) {
   const maxHp = getMaxHp();
   const pct = Math.max(0, Math.round((G.hp / maxHp) * 100));
   document.getElementById('player-battle-name').textContent = `${VOCATIONS[G.vocation].name} — Lv ${G.level}`;
-  document.getElementById('player-hp-fill').style.width = pct + '%';
+  const hpFill = document.getElementById('player-hp-fill');
+  hpFill.style.width = pct + '%';
+  applyHpState(hpFill, pct);
   document.getElementById('player-hp-label').textContent = `${Math.max(0, G.hp)}/${maxHp}`;
 }
 

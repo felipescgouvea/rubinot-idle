@@ -1,19 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=14';
-import { createDefaultState } from '../domain/gameState.js?v=14';
-import { createDefaultSkills } from '../domain/character.js?v=14';
-import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=14';
-import { isSpellAvailable } from '../domain/spells.js?v=14';
-import { findOutfit } from '../domain/outfits.js?v=14';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=14';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=14';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=14';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=14';
-import { emit, EVENTS } from '../shared/eventBus.js?v=14';
-import { getMaxHp, getMaxMana } from './stats.js?v=14';
-import { gainXp } from './huntUseCases.js?v=14';
-import { checkBpTier } from './battlePassUseCases.js?v=14';
+import { G, replaceState } from './gameStore.js?v=15';
+import { createDefaultState } from '../domain/gameState.js?v=15';
+import { createDefaultSkills } from '../domain/character.js?v=15';
+import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=15';
+import { isSpellAvailable } from '../domain/spells.js?v=15';
+import { findOutfit } from '../domain/outfits.js?v=15';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=15';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=15';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=15';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=15';
+import { emit, EVENTS } from '../shared/eventBus.js?v=15';
+import { getMaxHp, getMaxMana } from './stats.js?v=15';
+import { gainXp } from './huntUseCases.js?v=15';
+import { checkBpTier } from './battlePassUseCases.js?v=15';
 
 export function loadGame() {
   const parsed = loadRawState();

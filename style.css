@@ -333,6 +333,11 @@ canvas.char-voc-big { width: 40px; height: 40px; image-rendering: pixelated; }
 }
 .hp-bar { background: linear-gradient(180deg, #e74c3c, var(--hp-c)); }
 .mana-bar { background: linear-gradient(180deg, #3d7ec9, var(--mana-c)); }
+/* Estado da vida por faixa — sobrescreve o gradiente fixo acima (ver
+   renderBars/renderPlayerBattleSide, que aplicam a classe conforme o %). */
+.hp-bar.hp-state-high, .player-hp-fill.hp-state-high { background: linear-gradient(180deg, #7ed957, #2e8b2e); }
+.hp-bar.hp-state-mid, .player-hp-fill.hp-state-mid { background: linear-gradient(180deg, #ffb347, #cc7a1a); }
+.hp-bar.hp-state-low, .player-hp-fill.hp-state-low { background: linear-gradient(180deg, #ff6b5b, #a52a1f); }
 .xp-bar { background: linear-gradient(180deg, var(--gold-bright), var(--xp-c)); }
 .bar-row span { width: 82px; font-size: 10.5px; color: var(--ink-soft); text-align: right; font-weight: 600; }
 
@@ -476,7 +481,6 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 .player-sprite-wrap {
   display: inline-block;
-  animation: monster-idle 2.2s ease-in-out infinite;
   min-height: 64px;
 }
 .player-sprite {
