@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
   <div id="app">
@@ -46,26 +46,21 @@
       <!-- HUNT -->
       <section id="tab-hunt" class="panel active">
         <div class="panel-left">
-          <div class="card" id="hunt-zone-card">
-            <h3 id="battle-card-title">⚔️ Batalha</h3>
-            <div id="battle-scene">
-              <div id="player-battle-side">
-                <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
-                <div class="player-battle-name" id="player-battle-name">—</div>
-                <div class="player-hp-track">
-                  <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
-                  <div class="player-hp-label" id="player-hp-label">--/--</div>
-                </div>
+          <div class="card" id="hunt-status-card">
+            <h3>🗺️ Caçada</h3>
+            <div id="hunt-status-body">
+              <div id="zone-current-bar" onclick="openZonePicker()">
+                <span id="zone-current-icon">🗺️</span>
+                <span id="zone-current-name">Escolher zona de caça…</span>
+                <span class="zone-current-change">Trocar ▾</span>
               </div>
-              <div class="battle-vs-sep">⚔️</div>
-              <div id="monster-display">
-                <div class="monster-empty">Escolha sua vocação e inicie uma caçada…</div>
-              </div>
+              <button id="hunt-status-battle-btn" class="btn-blue" onclick="openBattleModal()">⚔️ Ver Batalha</button>
+              <div id="kill-counters"></div>
             </div>
           </div>
-          <div class="card" id="combat-log-card">
-            <h3>Log de Combate</h3>
-            <div id="combat-log"></div>
+          <div class="card" id="loot-card" style="display:none">
+            <h3>Loot Recente</h3>
+            <div id="loot-display"></div>
           </div>
         </div>
         <div class="panel-right">
@@ -126,20 +121,7 @@
                 <div class="stat-box"><div class="stat-val" id="stat-spd">0</div><div class="stat-lbl">SPD</div></div>
                 <div class="stat-box"><div class="stat-val" id="stat-magic">0</div><div class="stat-lbl">MGC</div></div>
               </div>
-              <div id="hunt-controls">
-                <div id="zone-current-bar" onclick="openZonePicker()">
-                  <span id="zone-current-icon">🗺️</span>
-                  <span id="zone-current-name">Escolher zona de caça…</span>
-                  <span class="zone-current-change">Trocar ▾</span>
-                </div>
-                <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
-              </div>
-              <div id="kill-counters"></div>
             </div>
-          </div>
-          <div class="card" id="loot-card" style="display:none">
-            <h3>Loot Recente</h3>
-            <div id="loot-display"></div>
           </div>
         </div>
       </section>
@@ -255,10 +237,42 @@
       </div>
     </div>
 
+    <!-- MODAL DE BATALHA — separado do genérico de propósito: os elementos aqui
+         dentro (sprite do jogador/monstro, log) são atualizados in-place a cada
+         tick de combate; se vivessem no innerHTML regenerado do modal genérico,
+         cada abertura recriaria as <img> e o sprite nunca terminaria de carregar. -->
+    <div id="battle-modal-overlay" style="display:none" onclick="closeBattleModal()">
+      <div id="battle-modal-box" onclick="event.stopPropagation()">
+        <div class="battle-modal-header">
+          <h3 id="battle-card-title">⚔️ Batalha</h3>
+          <button class="battle-modal-close-x" onclick="closeBattleModal()">✕</button>
+        </div>
+        <div id="battle-scene">
+          <div id="player-battle-side">
+            <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
+            <div class="player-battle-name" id="player-battle-name">—</div>
+            <div class="player-hp-track">
+              <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
+              <div class="player-hp-label" id="player-hp-label">--/--</div>
+            </div>
+          </div>
+          <div class="battle-vs-sep">⚔️</div>
+          <div id="monster-display">
+            <div class="monster-empty">Escolha sua vocação e inicie uma caçada…</div>
+          </div>
+        </div>
+        <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
+        <div class="card" id="combat-log-card">
+          <h3>Log de Combate</h3>
+          <div id="combat-log"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- NOTIFICATION -->
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=12"></script>
+  <script type="module" src="src/main.js?v=13"></script>
 </body>
 </html>

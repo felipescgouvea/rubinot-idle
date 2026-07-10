@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=12';
-import { ITEMS } from '../domain/items.js?v=12';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=12';
+import { on, EVENTS } from '../shared/eventBus.js?v=13';
+import { ITEMS } from '../domain/items.js?v=13';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=13';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg/playerPortraitImg). `cls` deve ser a

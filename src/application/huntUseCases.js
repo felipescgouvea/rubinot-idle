@@ -3,20 +3,20 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=12';
-import { ZONES } from '../domain/bestiary.js?v=12';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=12';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=12';
-import { computeRtcMods, computeBoostMods } from '../domain/shopCatalog.js?v=12';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=12';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=12';
-import { ITEMS } from '../domain/items.js?v=12';
-import { MONSTERS } from '../domain/bestiary.js?v=12';
-import { emit, EVENTS } from '../shared/eventBus.js?v=12';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=12';
-import { trainSkill } from './skillUseCases.js?v=12';
-import { addItemToInventory } from './inventoryCore.js?v=12';
-import { checkBpTier } from './battlePassUseCases.js?v=12';
+import { G } from './gameStore.js?v=13';
+import { ZONES } from '../domain/bestiary.js?v=13';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=13';
+import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=13';
+import { computeRtcMods, computeBoostMods } from '../domain/shopCatalog.js?v=13';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=13';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=13';
+import { ITEMS } from '../domain/items.js?v=13';
+import { MONSTERS } from '../domain/bestiary.js?v=13';
+import { emit, EVENTS } from '../shared/eventBus.js?v=13';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=13';
+import { trainSkill } from './skillUseCases.js?v=13';
+import { addItemToInventory } from './inventoryCore.js?v=13';
+import { checkBpTier } from './battlePassUseCases.js?v=13';
 
 let huntInterval = null;
 let regenInterval = null;

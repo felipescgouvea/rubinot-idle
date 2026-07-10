@@ -1,18 +1,18 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=12';
-import { createDefaultState } from '../domain/gameState.js?v=12';
-import { createDefaultSkills } from '../domain/character.js?v=12';
-import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=12';
-import { isSpellAvailable } from '../domain/spells.js?v=12';
-import { findOutfit } from '../domain/outfits.js?v=12';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=12';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=12';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=12';
-import { emit, EVENTS } from '../shared/eventBus.js?v=12';
-import { getMaxHp, getMaxMana } from './stats.js?v=12';
-import { gainXp } from './huntUseCases.js?v=12';
-import { checkBpTier } from './battlePassUseCases.js?v=12';
+import { G, replaceState } from './gameStore.js?v=13';
+import { createDefaultState } from '../domain/gameState.js?v=13';
+import { createDefaultSkills } from '../domain/character.js?v=13';
+import { createDefaultRtc, computeRtcMods } from '../domain/shopCatalog.js?v=13';
+import { isSpellAvailable } from '../domain/spells.js?v=13';
+import { findOutfit } from '../domain/outfits.js?v=13';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=13';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=13';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=13';
+import { emit, EVENTS } from '../shared/eventBus.js?v=13';
+import { getMaxHp, getMaxMana } from './stats.js?v=13';
+import { gainXp } from './huntUseCases.js?v=13';
+import { checkBpTier } from './battlePassUseCases.js?v=13';
 
 export function loadGame() {
   const parsed = loadRawState();

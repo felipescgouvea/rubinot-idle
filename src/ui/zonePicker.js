@@ -1,10 +1,11 @@
 // Painel de escolha de zona de caça: um card por dungeon do mundo atual, com
 // criaturas, multiplicadores e o requisito de nível — em vez do <select>
 // escondido de antes. Mesmo padrão do seletor de outfit (ver outfitPicker.js).
-import { G } from '../application/gameStore.js?v=12';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=12';
-import { selectZone } from '../application/huntUseCases.js?v=12';
-import { openModal, closeModal } from './shared.js?v=12';
+import { G } from '../application/gameStore.js?v=13';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=13';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=13';
+import { openModal, closeModal } from './shared.js?v=13';
+import { openBattleModal } from './battleModal.js?v=13';
 
 function zoneCard(id, z) {
   const locked = G.level < z.minLevel;
@@ -36,7 +37,13 @@ export function openZonePicker() {
   renderZonePickerModal();
 }
 
+// Escolher uma dungeon já entra nela: seleciona a zona, começa a caçar (se
+// ainda não estava) e abre o modal de batalha — "escolher a dungeon" e
+// "entrar na dungeon" são a mesma ação, como o jogador pediu.
 export function pickZone(zoneId) {
-  selectZone(zoneId);
+  const wasHunting = G.hunting;
+  selectZone(zoneId); // se já estava caçando, isso reinicia sozinho na zona nova
+  if (!wasHunting) startHunt();
   closeModal();
+  openBattleModal();
 }

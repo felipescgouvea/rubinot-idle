@@ -1,9 +1,9 @@
 // Inventário, modal de detalhe do item e os slots de equipamento no card da
 // Caçada — os três ficam juntos porque compartilham o mesmo modelo de item.
-import { G } from '../application/gameStore.js?v=12';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES } from '../domain/items.js?v=12';
-import { on, EVENTS } from '../shared/eventBus.js?v=12';
-import { openModal, itemIconImg } from './shared.js?v=12';
+import { G } from '../application/gameStore.js?v=13';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES } from '../domain/items.js?v=13';
+import { on, EVENTS } from '../shared/eventBus.js?v=13';
+import { openModal, itemIconImg } from './shared.js?v=13';
 
 export function renderInventory() {
   const grid = document.getElementById('inventory-grid');

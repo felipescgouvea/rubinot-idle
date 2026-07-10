@@ -348,7 +348,6 @@ body {
 .stat-lbl { font-size: 9px; color: var(--ink-faint); margin-top: 2px; letter-spacing: 1.5px; font-weight: 600; }
 
 /* ============ CAÇADA ============ */
-#hunt-controls { display: flex; gap: 9px; margin: 12px 0; }
 input[type="text"] {
   flex: 1;
   background: #fdf6e3;
@@ -361,9 +360,12 @@ input[type="text"] {
 }
 input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shadow: 0 0 0 2px #1e579922; }
 
+/* ---- card compacto "Caçada" (panel-left): zona atual + entrar na batalha ---- */
+#hunt-status-body { padding: 14px; }
+#hunt-status-battle-btn { width: 100%; margin-top: 10px; }
+
 /* barra clicável que abre o painel de escolha de zona (ui/zonePicker.js) */
 #zone-current-bar {
-  flex: 1;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -407,14 +409,17 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .zone-card-req { font-size: 10.5px; color: var(--red-hot); font-weight: 700; padding: 6px 0; }
 
 #hunt-toggle {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 0 14px 14px;
   background: linear-gradient(180deg, var(--green-1) 0%, var(--green-2) 50%, var(--green-3) 100%);
   border: 1px solid var(--green-3);
   color: #fff;
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 1px;
-  padding: 7px 18px;
+  padding: 9px 18px;
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
@@ -425,7 +430,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 #hunt-toggle:hover { filter: brightness(1.15); }
 #hunt-toggle.stop { background: linear-gradient(180deg, #c94f3f, #a03225, #7e2418); border-color: #6e1e14; }
 
-#kill-counters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+#kill-counters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .kill-pill {
   background: #faf0d8;
   border: 1px solid var(--line-soft);
@@ -944,6 +949,59 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #modal-content p { font-size: 12px; line-height: 1.55; color: var(--ink-soft); }
 .item-detail-stats { margin-top: 10px; font-size: 11.5px; line-height: 1.9; color: var(--ink); }
 .item-detail-stats span { color: var(--navy-1); font-weight: 700; }
+
+/* ============ MODAL DE BATALHA ============ */
+/* separado do modal genérico de propósito — ver o comentário no index.html */
+#battle-modal-overlay {
+  position: fixed; inset: 0;
+  background: #0d2f5499;
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+#battle-modal-box {
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 0;
+  max-width: 640px;
+  width: 94%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px #00000088;
+}
+.battle-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  border-bottom: 2px solid var(--gold);
+  padding: 9px 16px;
+  border-radius: 6px 6px 0 0;
+}
+.battle-modal-header h3 {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px #00000088;
+}
+.battle-modal-close-x {
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  opacity: 0.8;
+}
+.battle-modal-close-x:hover { opacity: 1; }
+#battle-modal-box #battle-scene { margin: 14px !important; }
+#battle-modal-box #combat-log-card { margin: 0 14px 14px !important; }
 
 /* ============ SELETOR DE OUTFIT ============ */
 .outfit-gender-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
