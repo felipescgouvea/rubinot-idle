@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=24';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=24';
-import { ITEMS } from '../domain/items.js?v=24';
-import { on, EVENTS } from '../shared/eventBus.js?v=24';
-import { formatNum, itemIconImg } from './shared.js?v=24';
+import { G } from '../application/gameStore.js?v=25';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=25';
+import { ITEMS } from '../domain/items.js?v=25';
+import { on, EVENTS } from '../shared/eventBus.js?v=25';
+import { formatNum, itemIconImg } from './shared.js?v=25';
 
 function shopPriceLabel(s) {
   return s.currency === 'rubini' ? `${s.price} 💎 RC` : `${formatNum(s.price)} 💰`;

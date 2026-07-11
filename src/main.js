@@ -4,42 +4,42 @@
 // dinamicamente via innerHTML) precisa chamar via onclick/onchange, e
 // dispara a sequência de inicialização do jogo.
 
-import { G } from './application/gameStore.js?v=24';
-import { VOCATIONS } from './domain/character.js?v=24';
-import { emit, EVENTS } from './shared/eventBus.js?v=24';
+import { G } from './application/gameStore.js?v=25';
+import { VOCATIONS } from './domain/character.js?v=25';
+import { emit, EVENTS } from './shared/eventBus.js?v=25';
 
 // application
-import { saveGame } from './application/saveGameUseCase.js?v=24';
-import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=24';
-import { selectVocation } from './application/characterUseCases.js?v=24';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=24';
-import { equipItem, unequipItem, sellItem, useItem } from './application/inventoryUseCases.js?v=24';
-import { startTask, cancelTask } from './application/taskUseCases.js?v=24';
-import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=24';
-import { claimBpReward } from './application/battlePassUseCases.js?v=24';
-import { buyShopItem } from './application/shopUseCases.js?v=24';
-import { setRtcAttackSpell, setRtcAttackRune, setRtcHealSpell, setRtcHealPotion, setRtcThreshold } from './application/rtcUseCases.js?v=24';
-import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=24';
-import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=24';
-import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=24';
+import { saveGame } from './application/saveGameUseCase.js?v=25';
+import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=25';
+import { selectVocation } from './application/characterUseCases.js?v=25';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=25';
+import { equipItem, unequipItem, sellItem, useItem } from './application/inventoryUseCases.js?v=25';
+import { startTask, cancelTask } from './application/taskUseCases.js?v=25';
+import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=25';
+import { claimBpReward } from './application/battlePassUseCases.js?v=25';
+import { buyShopItem } from './application/shopUseCases.js?v=25';
+import { setRtcAttackSpell, setRtcAttackRune, setRtcHealSpell, setRtcHealPotion, setRtcThreshold } from './application/rtcUseCases.js?v=25';
+import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=25';
+import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=25';
+import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=25';
 
 // ui
-import { closeModal, wireSharedEvents } from './ui/shared.js?v=24';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents } from './ui/characterPanel.js?v=24';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=24';
-import { renderEquipmentSlots, openItemModal, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=24';
-import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=24';
-import { handleArenaBattleClick } from './ui/arenaPanel.js?v=24';
-import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=24';
-import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=24';
-import { wireShopPanelEvents } from './ui/shopPanel.js?v=24';
-import { wireRtcPanelEvents, setRtcSubTab } from './ui/rtcPanel.js?v=24';
-import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=24';
-import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=24';
-import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=24';
-import { openZonePicker, pickZone } from './ui/zonePicker.js?v=24';
-import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=24';
-import { wireTabs } from './ui/tabs.js?v=24';
+import { closeModal, wireSharedEvents } from './ui/shared.js?v=25';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents } from './ui/characterPanel.js?v=25';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=25';
+import { renderEquipmentSlots, openItemModal, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=25';
+import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=25';
+import { handleArenaBattleClick } from './ui/arenaPanel.js?v=25';
+import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=25';
+import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=25';
+import { wireShopPanelEvents } from './ui/shopPanel.js?v=25';
+import { wireRtcPanelEvents, setRtcSubTab } from './ui/rtcPanel.js?v=25';
+import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=25';
+import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=25';
+import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=25';
+import { openZonePicker, pickZone } from './ui/zonePicker.js?v=25';
+import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=25';
+import { wireTabs } from './ui/tabs.js?v=25';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();
@@ -73,6 +73,13 @@ Object.assign(window, {
   openOutfitPicker, setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor, setActiveColorChannel,
   openZonePicker, pickZone,
   openBattleModal, closeBattleModal,
+  // utilitário de console pro dono do jogo ajustar o próprio save manualmente
+  // (ex.: addGold(1000000000)) — não há UI pra isso de propósito
+  addGold: (amount) => {
+    G.gold += Math.floor(Number(amount) || 0);
+    emit(EVENTS.HEADER_STATS);
+    saveGame();
+  },
 });
 
 // ---- init ----
