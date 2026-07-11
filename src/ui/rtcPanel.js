@@ -4,18 +4,22 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=17';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=17';
-import { ITEMS } from '../domain/items.js?v=17';
-import { VOCATIONS } from '../domain/character.js?v=17';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=17';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=17';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=17';
-import { on, EVENTS } from '../shared/eventBus.js?v=17';
-import { itemIconImg } from './shared.js?v=17';
+import { G } from '../application/gameStore.js?v=18';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=18';
+import { ITEMS } from '../domain/items.js?v=18';
+import { VOCATIONS } from '../domain/character.js?v=18';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=18';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=18';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=18';
+import { on, EVENTS } from '../shared/eventBus.js?v=18';
+import { itemIconImg } from './shared.js?v=18';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);
+
+// Qual sub-aba do RTC está aberta — estado só de UI (igual ao RTCaster real,
+// que tem uma aba "RTCaster" pro ataque e outra "Healing" separada).
+let activeRtcTab = 'attack';
 
 function spellRow(id, s, selected, onclick) {
   const unlocked = G.level >= s.level;
@@ -90,7 +94,12 @@ export function renderRtcPanel() {
           <div><strong>💊 Cura automática:</strong> spell ${healSpellName} abaixo de ${G.rtc.healSpellThreshold}% · poção ${healPotionName} abaixo de ${G.rtc.healPotionThreshold}%</div>
         </div>
 
-        <h4>⚔️ Ataque Automático</h4>
+        <div class="rtc-subtabs">
+          <button class="rtc-subtab-btn ${activeRtcTab === 'attack' ? 'active' : ''}" onclick="setRtcSubTab('attack')">⚔️ RTCaster</button>
+          <button class="rtc-subtab-btn ${activeRtcTab === 'heal' ? 'active' : ''}" onclick="setRtcSubTab('heal')">💊 Healing</button>
+        </div>
+
+        ${activeRtcTab === 'attack' ? `
         <p class="muted">Escolha uma magia OU uma runa — o RTC usa automaticamente a cada golpe durante a caçada.</p>
         <h5>Magias de ataque</h5>
         <div class="rtc-rows">
@@ -100,10 +109,7 @@ export function renderRtcPanel() {
         <div class="rtc-rows">
           ${attackRunes.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg}`)).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
         </div>
-
-        <hr class="rtc-sep" />
-
-        <h4>💊 Cura Automática</h4>
+        ` : `
         <h5>Spell de Cura <span class="muted">— casta abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
         <div class="rtc-rows">
@@ -114,10 +120,17 @@ export function renderRtcPanel() {
         <div class="rtc-rows">
           ${HEAL_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}`)).join('')}
         </div>
+        `}
       </div>
     </div>
   `;
   mountPortrait();
+}
+
+export function setRtcSubTab(tab) {
+  if (tab !== 'attack' && tab !== 'heal') return;
+  activeRtcTab = tab;
+  renderRtcPanel();
 }
 
 export function wireRtcPanelEvents() {

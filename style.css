@@ -775,7 +775,17 @@ img.tibia-icon {
   width: 46px; background: #14171a; border: 1px solid #4a5058; color: #eef1f4;
   border-radius: 4px; padding: 3px 5px; font-size: 11px; text-align: center;
 }
-.rtc-sep { border: none; border-top: 1px solid #454b52; margin: 18px 0; }
+.rtc-subtabs { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid #454b52; padding-bottom: 10px; }
+.rtc-subtab-btn {
+  background: linear-gradient(180deg, #2b2f34, #1c1f22);
+  border: 1px solid #4a5058;
+  color: #b8c0c8;
+  font-family: var(--serif); font-size: 12px; font-weight: 700;
+  padding: 8px 16px; border-radius: 6px; cursor: pointer;
+  transition: filter 0.15s;
+}
+.rtc-subtab-btn:hover { filter: brightness(1.2); }
+.rtc-subtab-btn.active { background: linear-gradient(180deg, #4a3d1a, #2e260f); border-color: var(--gold-bright); color: #f1d98a; }
 
 /* ============ SHOP: 3 lojas separadas ============ */
 .shop-npc-block {
