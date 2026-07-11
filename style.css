@@ -584,7 +584,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
 .player-sprite-wrap {
   position: absolute;
-  left: 50%; top: 32%;
+  left: 50%; top: 26%;
   margin: -32px 0 0 -32px;
   width: 64px; height: 64px;
   z-index: 2;
@@ -637,7 +637,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    dungeon — sem card próprio (a cena agora é uma só). */
 #monster-display {
   position: absolute;
-  left: 50%; top: 50%;
+  left: 50%; top: 45%;
   transform: translateX(-50%);
   width: 100%;
   padding: 0 8px;
@@ -650,11 +650,14 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .monster-sprite-wrap {
   display: inline-block;
   animation: monster-idle 2.2s ease-in-out infinite;
-  min-height: 64px;
+  min-height: 52px;
 }
+/* tamanho PADRONIZADO do monstro no palco: caixa fixa 52x52 + object-fit
+   contain, pra todo bicho aparecer no mesmo tamanho (independente do sprite
+   nativo) e não dominar/encostar no boneco. */
 .monster-sprite {
-  width: 64px;
-  height: 64px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
   image-rendering: pixelated; /* mantém o pixel art do Tibia nítido */
   filter: drop-shadow(0 3px 5px #00000044);
@@ -747,7 +750,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   60% { transform: translateX(5px); }
   100% { transform: translateX(0); }
 }
-#monster-display .monster-name { font-family: var(--serif); font-size: 14px; color: var(--red-hot); letter-spacing: 1px; margin: 6px 0; font-weight: 700; }
+#monster-display .monster-name { font-family: var(--serif); font-size: 13px; color: #ff8a7a; text-shadow: 0 1px 3px #000000cc; letter-spacing: 1px; margin: 3px 0; font-weight: 700; }
 .monster-hp-track {
   height: 16px;
   background: #d9c9a3;
