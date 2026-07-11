@@ -17,11 +17,9 @@ export function outfitTemplatePath(outfitId, gender, addonIndex) {
   return `${BASE}${outfitId}-${gender}-${addonIndex}-template.png`;
 }
 
-// Sprite ANIMADO de caminhada do outfit (webp de 4 frames extraído do
-// TibiaWiki e self-hostado em assets/outfits-anim/) — usado na cena de batalha
-// pra o boneco andar de verdade. Vem com as cores padrão do Tibia (não dá pra
-// recolorir um webp animado no cliente); a recoloração por cor escolhida
-// continua no retrato do personagem (canvas, ver infrastructure/outfitRenderer.js).
-export function outfitAnimPath(outfitId, gender) {
-  return `assets/outfits-anim/${outfitId}-${gender}.webp`;
+// Atlas de CAMINHADA (base + template por quadro, direção frontal) usado pra
+// recolorir e animar o boneco com as cores do jogador — ver
+// infrastructure/outfitWalkRenderer.js.
+export function outfitWalkAtlasPath(outfitId, gender) {
+  return `assets/outfits-walk/${outfitId}-${gender}.png`;
 }

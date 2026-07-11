@@ -4,15 +4,15 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=42';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=42';
-import { ITEMS } from '../domain/items.js?v=42';
-import { VOCATIONS } from '../domain/character.js?v=42';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=42';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=42';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=42';
-import { on, EVENTS } from '../shared/eventBus.js?v=42';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=42';
+import { G } from '../application/gameStore.js?v=43';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=43';
+import { ITEMS } from '../domain/items.js?v=43';
+import { VOCATIONS } from '../domain/character.js?v=43';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=43';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=43';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=43';
+import { on, EVENTS } from '../shared/eventBus.js?v=43';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=43';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);

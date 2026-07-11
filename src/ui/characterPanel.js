@@ -1,14 +1,15 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=42';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=42';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=42';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=42';
-import { outfitAnimPath } from '../infrastructure/outfitAssets.js?v=42';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=42';
-import { on, EVENTS } from '../shared/eventBus.js?v=42';
-import { formatNum } from './shared.js?v=42';
-import { renderZonePicker } from './huntPanel.js?v=42';
+import { G } from '../application/gameStore.js?v=43';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=43';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=43';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=43';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=43';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=43';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=43';
+import { on, EVENTS } from '../shared/eventBus.js?v=43';
+import { formatNum } from './shared.js?v=43';
+import { renderZonePicker } from './huntPanel.js?v=43';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -68,23 +69,54 @@ function mountPlayerPortrait(container, cls) {
   });
 }
 
-// Monta o sprite ANIMADO de caminhada (webp de 4 frames) na cena de batalha —
-// o boneco andando de verdade. Recria a <img> só quando o outfit/gênero muda
-// (senão a animação reiniciaria a cada tick de combate). Cai no emoji da
-// vocação se o arquivo falhar. As cores custom continuam no retrato (canvas).
+// Anima a caminhada do boneco na cena de batalha COM as cores do jogador:
+// recolore os 8 quadros do atlas (ver infrastructure/outfitWalkRenderer.js) e
+// cicla-os num <canvas> por timer. Só reconstrói os quadros quando a aparência
+// muda (outfit/gênero/addons/cores); congela o quadro quando o jogador morre.
+let walkTimer = null;
+let walkFrames = [];
+let walkIdx = 0;
+
+function stopWalk() {
+  if (walkTimer) { clearInterval(walkTimer); walkTimer = null; }
+  walkFrames = [];
+}
+
 function mountPlayerWalkSprite(wrap) {
   const outfitId = currentOutfitId();
   const icon = playerFallbackIcon();
   if (!outfitId) {
-    if (wrap.dataset.walk !== 'none') { wrap.dataset.walk = 'none'; wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; }
+    if (wrap.dataset.walk !== 'none') { wrap.dataset.walk = 'none'; stopWalk(); wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; }
     return;
   }
   const gender = G.outfitGender || 'male';
-  const sig = `${outfitId}|${gender}`;
-  if (wrap.dataset.walk === sig) return;
+  const c = G.outfitColors || {};
+  const sig = [outfitId, gender, G.outfitAddon1 ? 1 : 0, G.outfitAddon2 ? 1 : 0, c.head, c.body, c.legs, c.feet].join('|');
+  if (wrap.dataset.walk === sig && wrap.querySelector('canvas.player-sprite')) return;
   wrap.dataset.walk = sig;
-  wrap.innerHTML = `<img class="player-sprite" src="${outfitAnimPath(outfitId, gender)}" alt="${outfitId}"
-    onerror="this.outerHTML='<span class=&quot;player-sprite&quot;>${icon}</span>'" />`;
+  stopWalk();
+  wrap.innerHTML = '<canvas class="player-sprite" width="64" height="64"></canvas>';
+  const canvas = wrap.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+
+  buildWalkFrames(outfitWalkAtlasPath(outfitId, gender), {
+    colors: G.outfitColors,
+    addon1: G.outfitAddon1,
+    addon2: G.outfitAddon2,
+  }).then(frames => {
+    if (wrap.dataset.walk !== sig) return; // aparência mudou enquanto carregava
+    if (!frames.length) { stopWalk(); wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; return; }
+    walkFrames = frames;
+    walkIdx = 0;
+    walkTimer = setInterval(() => {
+      if (!walkFrames.length || !document.body.contains(canvas)) return;
+      // congela no lugar quando morto (o CSS já acinzenta/tomba)
+      if (!wrap.classList.contains('dead')) walkIdx = (walkIdx + 1) % walkFrames.length;
+      ctx.clearRect(0, 0, 64, 64);
+      ctx.drawImage(walkFrames[walkIdx], 0, 0);
+    }, 110);
+  });
 }
 
 export function renderCharPanel() {
