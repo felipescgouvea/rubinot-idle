@@ -2,8 +2,8 @@
 // usa a de cura no Smart Healing (ver application/huntUseCases.js).
 
 export const SPELLS = {
-  // universais
-  exura:            { name: 'Light Healing', words: 'exura', icon: '✨', voc: ['knight','paladin','sorcerer','druid'], level: 9,  mana: 20,  type: 'heal',   power: 0.15 },
+  // universais (exceto knight, que tem a própria cura — exura ico, abaixo)
+  exura:            { name: 'Light Healing', words: 'exura', icon: '✨', voc: ['paladin','sorcerer','druid'], level: 9,  mana: 20,  type: 'heal',   power: 0.15 },
   // knight
   exura_ico:        { name: 'Wound Cleansing', words: 'exura ico', icon: '🩹', voc: ['knight'], level: 10, mana: 40,  type: 'heal',   power: 0.30 },
   exori:            { name: 'Berserk', words: 'exori', icon: '💢', voc: ['knight'], level: 35, mana: 115, type: 'attack', power: 1.6 },
@@ -28,4 +28,10 @@ export const SPELLS = {
 export function isSpellAvailable(spellId, vocation, level) {
   const s = SPELLS[spellId];
   return !!(s && vocation && s.voc.includes(vocation) && level >= s.level);
+}
+
+// Cura padrão quando o jogador não escolheu nenhuma no RTC — knight não tem
+// acesso a "exura" (usa a própria, exura ico), as demais vocações usam exura.
+export function defaultHealSpellId(vocation) {
+  return vocation === 'knight' ? 'exura_ico' : 'exura';
 }

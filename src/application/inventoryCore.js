@@ -2,7 +2,7 @@
 // battle pass e market — deixá-lo dentro de inventoryUseCases.js (que por
 // sua vez precisa chamar de volta a resolução de combate ao usar uma runa)
 // criaria import circular com metade do jogo.
-import { G } from './gameStore.js?v=16';
+import { G } from './gameStore.js?v=17';
 
 export function addItemToInventory(itemId) {
   G.inventory[itemId] = (G.inventory[itemId] || 0) + 1;

@@ -1,19 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=16';
-import { createDefaultState } from '../domain/gameState.js?v=16';
-import { createDefaultSkills } from '../domain/character.js?v=16';
-import { createDefaultRtc } from '../domain/rtcConfig.js?v=16';
-import { isSpellAvailable } from '../domain/spells.js?v=16';
-import { findOutfit } from '../domain/outfits.js?v=16';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=16';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=16';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=16';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=16';
-import { emit, EVENTS } from '../shared/eventBus.js?v=16';
-import { getMaxHp, getMaxMana } from './stats.js?v=16';
-import { gainXp } from './huntUseCases.js?v=16';
-import { checkBpTier } from './battlePassUseCases.js?v=16';
+import { G, replaceState } from './gameStore.js?v=17';
+import { createDefaultState } from '../domain/gameState.js?v=17';
+import { createDefaultSkills } from '../domain/character.js?v=17';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=17';
+import { isSpellAvailable } from '../domain/spells.js?v=17';
+import { findOutfit } from '../domain/outfits.js?v=17';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=17';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=17';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=17';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=17';
+import { emit, EVENTS } from '../shared/eventBus.js?v=17';
+import { getMaxHp, getMaxMana } from './stats.js?v=17';
+import { gainXp } from './huntUseCases.js?v=17';
+import { checkBpTier } from './battlePassUseCases.js?v=17';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -47,6 +47,7 @@ export function loadGame() {
   if (!G.outfitColors) G.outfitColors = { ...DEFAULT_OUTFIT_COLORS };
   if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
   if (G.rtc.attackSpell && !isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level)) { G.rtc.attackType = null; G.rtc.attackSpell = null; }
+  if (G.rtc.attackRune && !isRuneAvailableToVocation(G.rtc.attackRune, G.vocation)) { G.rtc.attackType = null; G.rtc.attackRune = null; }
   if (G.rtc.healSpell && !isSpellAvailable(G.rtc.healSpell, G.vocation, G.level)) G.rtc.healSpell = null;
   // Clamp hp/mana to max on load
   if (G.vocation) {

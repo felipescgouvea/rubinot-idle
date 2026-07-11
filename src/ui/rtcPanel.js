@@ -1,45 +1,61 @@
-// RTC (Rubinot Custom Client) — réplica do RTCaster real do RubinOT:
-// ataque automático (uma magia OU uma runa) e cura automática (uma magia E
-// uma poção, cada uma com seu próprio limiar de % de HP). Ver
-// domain/rtcConfig.js pro shape do estado e application/rtcUseCases.js
-// pelas ações.
-import { G } from '../application/gameStore.js?v=16';
-import { SPELLS } from '../domain/spells.js?v=16';
-import { ITEMS } from '../domain/items.js?v=16';
-import { on, EVENTS } from '../shared/eventBus.js?v=16';
-import { itemIconImg } from './shared.js?v=16';
+// RTC (Rubinot Custom Client) — réplica visual e funcional do RTCaster real
+// do RubinOT: painel escuro com retrato do personagem, ataque automático
+// (uma magia OU uma runa) e cura automática (uma magia E uma poção, cada
+// uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
+// sentido pra ela — ver domain/spells.js (voc por spell) e
+// domain/rtcConfig.js (runas por vocação).
+import { G } from '../application/gameStore.js?v=17';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=17';
+import { ITEMS } from '../domain/items.js?v=17';
+import { VOCATIONS } from '../domain/character.js?v=17';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=17';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=17';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=17';
+import { on, EVENTS } from '../shared/eventBus.js?v=17';
+import { itemIconImg } from './shared.js?v=17';
 
-const ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
+const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);
 
-const SELECTED_STYLE = 'border: 2px solid var(--gold); background:#fdf4d7;';
-
-function spellCard(id, s, selected, onclick) {
+function spellRow(id, s, selected, onclick) {
   const unlocked = G.level >= s.level;
-  return `<div class="skill-card" style="${selected ? SELECTED_STYLE : ''} ${!unlocked ? 'opacity:0.55' : ''}">
-    <div class="skill-card-header">
-      <span class="skill-card-name">${s.icon} ${s.name}</span>
-      <span class="skill-card-level" style="font-size:11px">"${s.words}"</span>
+  return `<div class="rtc-row ${selected ? 'selected' : ''} ${!unlocked ? 'locked' : ''}">
+    <span class="rtc-row-icon">${s.icon}</span>
+    <div class="rtc-row-info">
+      <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
+      <div class="rtc-row-desc">
+        ${s.type === 'attack' ? `⚔️ Dano ×${s.power}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · 🔵 ${s.mana} mana · Nível ${s.level}+
+      </div>
     </div>
-    <div class="skill-card-desc">
-      ${s.type === 'attack' ? `⚔️ Dano ×${s.power}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · 🔵 ${s.mana} mana · Nível ${s.level}+
-    </div>
-    <button class="skill-upgrade-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
-      ${!unlocked ? `🔒 Requer nível ${s.level}` : selected ? '✅ Selecionada — clique p/ remover' : 'Usar automaticamente'}
+    <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
+      ${!unlocked ? `🔒 Nível ${s.level}` : selected ? '✅ Ativa' : 'Usar'}
     </button>
   </div>`;
 }
 
-function itemCard(id, item, qty, selected, onclick, extraDesc) {
-  return `<div class="skill-card" style="${selected ? SELECTED_STYLE : ''}">
-    <div class="skill-card-header">
-      <span class="skill-card-name">${itemIconImg(id, 'item-icon')} ${item.name}</span>
+function itemRow(id, item, qty, selected, onclick, extraDesc) {
+  return `<div class="rtc-row ${selected ? 'selected' : ''}">
+    <span class="rtc-row-icon">${itemIconImg(id, 'item-icon')}</span>
+    <div class="rtc-row-info">
+      <div class="rtc-row-name">${item.name}</div>
+      <div class="rtc-row-desc">${extraDesc} · possui ${qty}</div>
     </div>
-    <div class="skill-card-desc">${extraDesc} · possui ${qty}</div>
-    <button class="skill-upgrade-btn" onclick="${onclick}('${id}')">
-      ${selected ? '✅ Selecionada — clique p/ remover' : 'Usar automaticamente'}
-    </button>
+    <button class="rtc-row-btn" onclick="${onclick}('${id}')">${selected ? '✅ Ativa' : 'Usar'}</button>
   </div>`;
+}
+
+function mountPortrait() {
+  const canvas = document.getElementById('rtc-portrait-canvas');
+  if (!canvas || !G.vocation) return;
+  const outfitId = G.outfit || VOCATION_DEFAULT_OUTFIT[G.vocation];
+  if (!outfitId) return;
+  renderOutfitToCanvas(canvas, {
+    outfitId,
+    gender: G.outfitGender || 'male',
+    addon1: G.outfitAddon1,
+    addon2: G.outfitAddon2,
+    colors: G.outfitColors,
+  }).catch(() => {});
 }
 
 export function renderRtcPanel() {
@@ -47,47 +63,61 @@ export function renderRtcPanel() {
   if (!el) return;
   if (!G.vocation) { el.innerHTML = '<p class="muted">Escolha uma vocação para configurar o RTC.</p>'; return; }
 
-  const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(G.vocation));
+  const voc = G.vocation;
+  const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
   const attackSpells = mySpells.filter(([, s]) => s.type === 'attack');
   const healSpells = mySpells.filter(([, s]) => s.type === 'heal');
+  const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
 
+  const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc);
   const atkSummary = G.rtc.attackType === 'spell' && G.rtc.attackSpell ? `"${SPELLS[G.rtc.attackSpell].words}"`
     : G.rtc.attackType === 'rune' && G.rtc.attackRune ? ITEMS[G.rtc.attackRune].name
     : 'nenhum (só ataque normal)';
-  const healSpellName = G.rtc.healSpell ? `"${SPELLS[G.rtc.healSpell].words}"` : '"exura" (padrão)';
+  const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : ' (padrão)'}`;
   const healPotionName = G.rtc.healPotion ? ITEMS[G.rtc.healPotion].name : 'nenhuma';
 
   el.innerHTML = `
-    <div id="skill-points-display" style="margin-bottom:14px">
-      <strong>⚔️ Ataque automático:</strong> <span>${atkSummary}</span><br/>
-      <strong>💊 Cura automática:</strong> <span>spell ${healSpellName} abaixo de ${G.rtc.healSpellThreshold}% · poção ${healPotionName} abaixo de ${G.rtc.healPotionThreshold}%</span>
-    </div>
+    <div class="rtc-console">
+      <div class="rtc-sidebar">
+        <div class="rtc-portrait"><canvas id="rtc-portrait-canvas" width="64" height="64"></canvas></div>
+        <div class="rtc-sidebar-name">${VOCATIONS[voc].name}</div>
+        <div class="rtc-sidebar-level">Level ${G.level}</div>
+        <div class="rtc-sidebar-status">Helper Status: Ativo ✔</div>
+      </div>
+      <div class="rtc-main">
+        <div class="rtc-summary">
+          <div><strong>⚔️ Ataque automático:</strong> ${atkSummary}</div>
+          <div><strong>💊 Cura automática:</strong> spell ${healSpellName} abaixo de ${G.rtc.healSpellThreshold}% · poção ${healPotionName} abaixo de ${G.rtc.healPotionThreshold}%</div>
+        </div>
 
-    <h4 style="margin:0 0 4px">⚔️ Ataque Automático</h4>
-    <p class="muted" style="margin:0 0 10px">Escolha uma magia OU uma runa — o RTC usa automaticamente a cada golpe durante a caçada.</p>
-    <h5 style="margin:0 0 6px">Magias de ataque</h5>
-    <div class="skills-grid">
-      ${attackSpells.map(([id, s]) => spellCard(id, s, G.rtc.attackType === 'spell' && G.rtc.attackSpell === id, 'setRtcAttackSpell')).join('') || '<p class="muted">Sua vocação não tem magias de ataque.</p>'}
-    </div>
-    <h5 style="margin:14px 0 6px">Runas de ataque</h5>
-    <div class="skills-grid">
-      ${ATTACK_RUNES.map(([id, item]) => itemCard(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg}`)).join('')}
-    </div>
+        <h4>⚔️ Ataque Automático</h4>
+        <p class="muted">Escolha uma magia OU uma runa — o RTC usa automaticamente a cada golpe durante a caçada.</p>
+        <h5>Magias de ataque</h5>
+        <div class="rtc-rows">
+          ${attackSpells.map(([id, s]) => spellRow(id, s, G.rtc.attackType === 'spell' && G.rtc.attackSpell === id, 'setRtcAttackSpell')).join('') || '<p class="muted">Sua vocação não tem magias de ataque.</p>'}
+        </div>
+        <h5>Runas de ataque</h5>
+        <div class="rtc-rows">
+          ${attackRunes.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg}`)).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
+        </div>
 
-    <hr class="outfit-picker-sep" />
+        <hr class="rtc-sep" />
 
-    <h4 style="margin:0 0 4px">💊 Cura Automática</h4>
-    <h5 style="margin:0 0 6px">Spell de Cura <span class="muted" style="font-weight:400">— casta abaixo de</span>
-      <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" style="width:48px" />% de HP</h5>
-    <div class="skills-grid">
-      ${healSpells.map(([id, s]) => spellCard(id, s, G.rtc.healSpell === id, 'setRtcHealSpell')).join('') || '<p class="muted">Sua vocação só tem "exura" (padrão, sempre disponível).</p>'}
-    </div>
-    <h5 style="margin:14px 0 6px">Poção de Cura <span class="muted" style="font-weight:400">— bebe abaixo de</span>
-      <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" style="width:48px" />% de HP</h5>
-    <div class="skills-grid">
-      ${HEAL_POTIONS.map(([id, item]) => itemCard(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}`)).join('')}
+        <h4>💊 Cura Automática</h4>
+        <h5>Spell de Cura <span class="muted">— casta abaixo de</span>
+          <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
+        <div class="rtc-rows">
+          ${healSpells.map(([id, s]) => spellRow(id, s, (G.rtc.healSpell || defaultHealSpellId(voc)) === id, 'setRtcHealSpell')).join('')}
+        </div>
+        <h5>Poção de Cura <span class="muted">— bebe abaixo de</span>
+          <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
+        <div class="rtc-rows">
+          ${HEAL_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}`)).join('')}
+        </div>
+      </div>
     </div>
   `;
+  mountPortrait();
 }
 
 export function wireRtcPanelEvents() {

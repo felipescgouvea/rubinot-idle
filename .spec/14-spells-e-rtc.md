@@ -19,11 +19,14 @@ Jogador, na aba RTC — a segunda aba do jogo, logo depois da Caçada, porque é
 ## Regras de negócio
 
 - **Toda magia tem palavras mágicas reais de Tibia** (ex.: "exura", "exori", "exevo gran mas vis"), nível mínimo de vocação e custo de mana fiéis à proporção de poder das magias originais.
+- **Cada vocação só vê, no RTC, o que faz sentido pra ela jogar:**
+  - **Knight** não usa magia de ataque genérica nem runas de ataque (sem investimento em magia, o dano delas seria irrisório) — ataca com a arma equipada, ou com suas próprias magias de combate corpo a corpo (Berserk / Fierce Berserk). Para cura, usa sua própria magia (Wound Cleansing), nunca "Light Healing" (exura) — e depende mais de poção do que o resto do elenco, como o "Knight de poção" clássico do Tibia.
+  - **Paladin, Sorcerer e Druid** têm acesso às magias de ataque e cura da própria vocação, e a todas as runas de ataque (Sudden Death, Explosion, Avalanche).
 - **Ataque automático é OU magia OU runa, nunca os dois.** Escolher uma runa desliga a magia de ataque automaticamente, e vice-versa — como no client real, onde as duas seções competem pelo mesmo golpe.
 - **Runa de ataque consome o item do inventário a cada uso.** Sem estoque da runa escolhida, a caçada volta ao ataque normal (arma equipada ou golpe arcano) até o jogador repor o estoque.
 - **Usar uma runa de ataque não treina nenhuma skill de combate** — é um item pronto, não uma habilidade exercitada em tempo real (diferente de atacar com arma ou magia, que treinam a skill correspondente).
-- **Cura por magia e cura por poção são independentes e podem disparar na mesma sequência de combate** — a poção existe justamente como rede de segurança para quando a magia não dá conta (sem mana, ou HP caindo rápido demais).
-- **Sem uma magia de cura selecionada, a cura automática usa "Light Healing" (exura) como padrão.**
+- **Cura por magia e cura por poção são independentes e podem disparar na mesma sequência de combate** — a poção existe justamente como rede de segurança para quando a magia não dá conta (sem mana, ou HP caindo rápido demais). Poções nunca são restritas por vocação — qualquer personagem bebe qualquer poção, como no Tibia real.
+- **Sem uma magia de cura selecionada, a cura automática usa a cura básica da própria vocação como padrão** ("exura" pra paladin/sorcerer/druid, "exura ico" pra knight).
 - **Sem uma poção de cura selecionada, não há cura automática por poção** — só a de magia.
 
 ## Comportamento esperado
@@ -37,3 +40,4 @@ Jogador, na aba RTC — a segunda aba do jogo, logo depois da Caçada, porque é
 - [ ] Selecionar uma runa de ataque remove a magia de ataque selecionada (e vice-versa).
 - [ ] A cura por magia e a cura por poção respeitam, cada uma, seu próprio limiar de % de HP configurado pelo jogador.
 - [ ] Ficar sem a runa/poção configurada no inventário não trava o combate — a caçada continua com o comportamento padrão até haver estoque de novo.
+- [ ] Knight nunca vê nem consegue selecionar "Light Healing" (exura) ou runas de ataque no RTC.

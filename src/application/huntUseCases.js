@@ -3,20 +3,21 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=16';
-import { ZONES } from '../domain/bestiary.js?v=16';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=16';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=16';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=16';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=16';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=16';
-import { ITEMS } from '../domain/items.js?v=16';
-import { MONSTERS } from '../domain/bestiary.js?v=16';
-import { emit, EVENTS } from '../shared/eventBus.js?v=16';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=16';
-import { trainSkill } from './skillUseCases.js?v=16';
-import { addItemToInventory } from './inventoryCore.js?v=16';
-import { checkBpTier } from './battlePassUseCases.js?v=16';
+import { G } from './gameStore.js?v=17';
+import { ZONES } from '../domain/bestiary.js?v=17';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=17';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=17';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=17';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=17';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=17';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=17';
+import { ITEMS } from '../domain/items.js?v=17';
+import { MONSTERS } from '../domain/bestiary.js?v=17';
+import { emit, EVENTS } from '../shared/eventBus.js?v=17';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=17';
+import { trainSkill } from './skillUseCases.js?v=17';
+import { addItemToInventory } from './inventoryCore.js?v=17';
+import { checkBpTier } from './battlePassUseCases.js?v=17';
 
 let huntInterval = null;
 let regenInterval = null;
@@ -70,7 +71,7 @@ export function doHuntTick() {
 
   // Player attacks monster
   let playerDmg = calcDamage(getAtk(), currentMonster.def);
-  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && (G.inventory[G.rtc.attackRune] || 0) > 0) {
+  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
     // Ataque automático por runa (RTC): substitui o golpe normal, não treina skill —
     // é um item pré-carregado, não uma habilidade viva do personagem.
     const rune = ITEMS[G.rtc.attackRune];
@@ -117,7 +118,7 @@ export function doHuntTick() {
   // RTC — Spell Healing: cura automática por magia, sempre ativa (spell configurada
   // na própria aba RTC, ou exura como padrão) ao cruzar o limiar de % de HP definido.
   const hpPct = (G.hp / getMaxHp()) * 100;
-  const healSpellId = G.rtc.healSpell || 'exura';
+  const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation);
   const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
   if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana) {
     const heal = Math.floor(getMaxHp() * healSpell.power);
