@@ -87,4 +87,14 @@ export function applySkillGain(skillState, skillId, amount) {
   return { sk: { ...skillState, [skillId]: next }, leveledUp, newLevel: next.lv };
 }
 
-export const XP_TABLE = Array.from({ length: 100 }, (_, i) => Math.floor(100 * Math.pow(i + 1, 1.8)));
+// Experiência TOTAL acumulada para alcançar um nível, pela fórmula oficial do
+// Tibia global: T(x) = (50/3)x³ − 100x² + (850/3)x − 200 (o /3 sempre resulta
+// inteiro). T(1)=0, T(2)=100, T(3)=200, T(8)=4200… idêntico ao Tibia real.
+export function tibiaTotalExp(level) {
+  return Math.round((50 * level ** 3 - 300 * level ** 2 + 850 * level - 600) / 3);
+}
+
+// XP_TABLE[i] = XP necessária para ir do nível (i+1) para (i+2), ou seja a
+// diferença de experiência total entre dois níveis consecutivos do Tibia.
+// Usado por gainXp() (ver application/huntUseCases.js) e pela barra de XP.
+export const XP_TABLE = Array.from({ length: 100 }, (_, i) => tibiaTotalExp(i + 2) - tibiaTotalExp(i + 1));
