@@ -29,5 +29,7 @@ export function createDefaultRtc() {
     healSpellThreshold: 40,  // % de HP pra castar a spell de cura
     healPotion: null,
     healPotionThreshold: 25, // % de HP pra beber a poção (mais tardia, de emergência)
+    manaPotion: null,
+    manaPotionThreshold: 30, // % de mana pra beber a poção de mana (repor pra castar)
   };
 }

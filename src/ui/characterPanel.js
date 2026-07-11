@@ -1,15 +1,15 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=58';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=58';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=58';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=58';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=58';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=58';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=58';
-import { on, EVENTS } from '../shared/eventBus.js?v=58';
-import { formatNum } from './shared.js?v=58';
-import { renderZonePicker } from './huntPanel.js?v=58';
+import { G } from '../application/gameStore.js?v=59';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=59';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=59';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=59';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=59';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=59';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=59';
+import { on, EVENTS } from '../shared/eventBus.js?v=59';
+import { formatNum } from './shared.js?v=59';
+import { renderZonePicker } from './huntPanel.js?v=59';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -204,6 +204,10 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
     document.getElementById('player-battle-name').textContent = '—';
     document.getElementById('player-hp-fill').style.width = '0%';
     document.getElementById('player-hp-label').textContent = '--/--';
+    document.getElementById('player-mana-fill').style.width = '0%';
+    document.getElementById('player-mana-label').textContent = '--/--';
+    document.getElementById('player-xp-fill').style.width = '0%';
+    document.getElementById('player-xp-label').textContent = '-- XP';
     return;
   }
 
@@ -220,6 +224,16 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
   hpFill.style.width = pct + '%';
   applyHpState(hpFill, pct);
   document.getElementById('player-hp-label').textContent = `${Math.max(0, G.hp)}/${maxHp}`;
+
+  // Mana e XP na janela de batalha (mesmas contas da barra de status do char).
+  const maxMana = getMaxMana();
+  const manaPct = Math.max(0, Math.round((G.mana / maxMana) * 100));
+  document.getElementById('player-mana-fill').style.width = manaPct + '%';
+  document.getElementById('player-mana-label').textContent = `${Math.max(0, G.mana)}/${maxMana}`;
+  const xpNext = XP_TABLE[G.level - 1];
+  const xpPct = (G.level < 100 && xpNext) ? Math.max(0, Math.round((G.xp / xpNext) * 100)) : 100;
+  document.getElementById('player-xp-fill').style.width = xpPct + '%';
+  document.getElementById('player-xp-label').textContent = (G.level < 100 && xpNext) ? `${G.xp}/${xpNext} XP` : 'MAX';
 }
 
 export function wireCharacterPanelEvents() {

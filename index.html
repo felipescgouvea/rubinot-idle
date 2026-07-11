@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=58" />
-  <link rel="stylesheet" href="style.css?v=58" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=59" />
+  <link rel="stylesheet" href="style.css?v=59" />
 </head>
 <body>
   <div id="app">
@@ -45,6 +45,12 @@
       <button class="tab" data-tab="admin">⚙️ Admin</button>
     </nav>
 
+    <!-- Boosted do Dia — colado logo abaixo do menu, alinhado à direita -->
+    <div class="card" id="boosted-card">
+      <h3>🔥 Boosted</h3>
+      <div id="boosted-body" class="boosted-body"></div>
+    </div>
+
     <!-- BARRA DE STATUS DO PERSONAGEM — fina e horizontal, visível em
          qualquer aba (não só na Caçada) assim que uma vocação é escolhida -->
     <div id="char-info" style="display:none">
@@ -79,13 +85,8 @@
       <button class="btn-small" onclick="openOutfitPicker()">👕 Outfit</button>
     </div>
 
-    <!-- Widgets fixos no canto (fora dos painéis, pra ficarem sempre no lugar):
-         Boosted do Dia (compacto, canto superior direito) e a janela da Bag
-         (inventário, abre à direita ao clicar com o botão direito no slot). -->
-    <div class="card" id="boosted-card">
-      <h3>🔥 Boosted</h3>
-      <div id="boosted-body" class="boosted-body"></div>
-    </div>
+    <!-- Janela da Bag (inventário, abre à direita ao clicar com o botão direito
+         no slot). O Boosted do Dia fica colado ao menu, logo abaixo das abas. -->
     <div class="card" id="backpack-inventory-card" style="display:none">
       <h3>🎒 Bag</h3>
       <p class="muted">Clique num item para equipar, vender ou ver detalhes. Botão direito na Bag fecha.</p>
@@ -321,6 +322,14 @@
             <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
             <div class="player-hp-label" id="player-hp-label">--/--</div>
           </div>
+          <div class="player-hp-track player-mana-track">
+            <div class="player-mana-fill" id="player-mana-fill" style="width:100%"></div>
+            <div class="player-hp-label" id="player-mana-label">--/--</div>
+          </div>
+          <div class="player-hp-track player-xp-track">
+            <div class="player-xp-fill" id="player-xp-fill" style="width:0%"></div>
+            <div class="player-hp-label" id="player-xp-label">-- XP</div>
+          </div>
         </div>
         <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma -->
         <div class="card" id="battle-list-card">
@@ -348,6 +357,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=58"></script>
+  <script type="module" src="src/main.js?v=59"></script>
 </body>
 </html>

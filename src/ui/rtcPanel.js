@@ -4,16 +4,16 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=58';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=58';
-import { ITEMS } from '../domain/items.js?v=58';
-import { VOCATIONS } from '../domain/character.js?v=58';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=58';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=58';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=58';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=58';
-import { on, EVENTS } from '../shared/eventBus.js?v=58';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=58';
+import { G } from '../application/gameStore.js?v=59';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=59';
+import { ITEMS } from '../domain/items.js?v=59';
+import { VOCATIONS } from '../domain/character.js?v=59';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=59';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=59';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=59';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=59';
+import { on, EVENTS } from '../shared/eventBus.js?v=59';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=59';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -23,6 +23,7 @@ function areaBadge(areaId) {
   return isAreaAttack(areaId) ? `💥 ${areaName(areaId)}` : `🎯 ${areaName('single')}`;
 }
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);
+const MANA_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.mana);
 
 // Qual sub-aba do RTC está aberta — estado só de UI (igual ao RTCaster real,
 // que tem uma aba "RTCaster" pro ataque e outra "Healing" separada).
@@ -86,6 +87,7 @@ export function renderRtcPanel() {
     : 'nenhum (só ataque normal)';
   const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : ' (padrão)'}`;
   const healPotionName = G.rtc.healPotion ? ITEMS[G.rtc.healPotion].name : 'nenhuma';
+  const manaPotionName = G.rtc.manaPotion ? ITEMS[G.rtc.manaPotion].name : 'nenhuma';
 
   el.innerHTML = `
     <div class="rtc-console">
@@ -99,6 +101,7 @@ export function renderRtcPanel() {
         <div class="rtc-summary">
           <div><strong>⚔️ Ataque automático:</strong> ${atkSummary}</div>
           <div><strong>💊 Cura automática:</strong> spell ${healSpellName} abaixo de ${G.rtc.healSpellThreshold}% · poção ${healPotionName} abaixo de ${G.rtc.healPotionThreshold}%</div>
+          <div><strong>🔵 Mana automática:</strong> poção ${manaPotionName} abaixo de ${G.rtc.manaPotionThreshold}% de mana</div>
         </div>
 
         <div class="rtc-subtabs">
@@ -126,6 +129,11 @@ export function renderRtcPanel() {
           <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
         <div class="rtc-rows">
           ${HEAL_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}`)).join('')}
+        </div>
+        <h5>Poção de Mana <span class="muted">— bebe abaixo de</span>
+          <input type="number" min="5" max="95" value="${G.rtc.manaPotionThreshold}" onchange="setRtcThreshold('manaPotionThreshold', this.value)" class="rtc-threshold-input" />% de mana</h5>
+        <div class="rtc-rows">
+          ${MANA_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.manaPotion === id, 'setRtcManaPotion', `${vitalIconImg('mana', 'inline-icon')} +${item.mana} mana`)).join('') || '<p class="muted">Nenhuma poção de mana no jogo.</p>'}
         </div>
         `}
       </div>

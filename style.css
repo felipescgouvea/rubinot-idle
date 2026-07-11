@@ -698,6 +698,9 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   position: relative;
 }
 .player-hp-fill { height: 100%; border-radius: 8px; background: linear-gradient(180deg, #3fae54, var(--hp-c)); transition: width 0.2s ease; }
+.player-mana-track, .player-xp-track { height: 13px; }
+.player-mana-fill { height: 100%; border-radius: 8px; background: linear-gradient(180deg, #4aa3e0, #1f5fa8); transition: width 0.2s ease; }
+.player-xp-fill { height: 100%; border-radius: 8px; background: linear-gradient(180deg, #f0c94a, #c9902a); transition: width 0.2s ease; }
 .player-hp-label {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -1673,12 +1676,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 
 /* ============ BOOSTED (widget compacto, canto superior direito) ============ */
 #boosted-card {
-  position: fixed;
-  top: 80px; right: 14px;
-  width: 188px;
-  z-index: 45;
-  box-shadow: 0 6px 22px #00000066;
-  margin: 0 !important;
+  width: 210px;
+  margin: 8px 14px 0 auto !important; /* colado ao menu, alinhado à direita */
+  box-shadow: 0 2px 8px #00000055;
 }
 #boosted-card h3 { padding: 5px 24px; font-size: 10px; letter-spacing: 1px; }
 #boosted-card h3::before, #boosted-card h3::after { font-size: 6px; }
