@@ -1,21 +1,21 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=39';
-import { createDefaultState } from '../domain/gameState.js?v=39';
-import { createDefaultSkills } from '../domain/character.js?v=39';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=39';
-import { isSpellAvailable } from '../domain/spells.js?v=39';
-import { findOutfit } from '../domain/outfits.js?v=39';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=39';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=39';
-import { isRelicId } from '../domain/items.js?v=39';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=39';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=39';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=39';
-import { emit, EVENTS } from '../shared/eventBus.js?v=39';
-import { getMaxHp, getMaxMana } from './stats.js?v=39';
-import { gainXp } from './huntUseCases.js?v=39';
-import { checkBpTier } from './battlePassUseCases.js?v=39';
+import { G, replaceState } from './gameStore.js?v=40';
+import { createDefaultState } from '../domain/gameState.js?v=40';
+import { createDefaultSkills } from '../domain/character.js?v=40';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=40';
+import { isSpellAvailable } from '../domain/spells.js?v=40';
+import { findOutfit } from '../domain/outfits.js?v=40';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=40';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=40';
+import { isRelicId } from '../domain/items.js?v=40';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=40';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=40';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=40';
+import { emit, EVENTS } from '../shared/eventBus.js?v=40';
+import { getMaxHp, getMaxMana } from './stats.js?v=40';
+import { gainXp } from './huntUseCases.js?v=40';
+import { checkBpTier } from './battlePassUseCases.js?v=40';
 
 export function loadGame() {
   const parsed = loadRawState();

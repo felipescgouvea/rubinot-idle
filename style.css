@@ -1533,8 +1533,11 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   border: 1px solid var(--line-soft);
 }
 .battle-list-entry.target { border-color: var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); box-shadow: 0 0 6px #d4a01755; }
-.battle-list-icon { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; flex: none; }
-.battle-list-sprite { max-width: 28px; max-height: 28px; image-rendering: pixelated; }
+.battle-list-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; }
+/* caixa FIXA + object-fit: contain padroniza o tamanho visual de todos os
+   sprites (mesma abordagem do sprite principal), independente das dimensões
+   nativas de cada gif — sem isso os monstros apareciam em tamanhos diferentes */
+.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; font-size: 26px; line-height: 1; text-align: center; }
 .battle-list-info { flex: 1; min-width: 0; }
 .battle-list-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .battle-list-hp-track { height: 7px; background: #00000033; border-radius: 3px; overflow: hidden; margin-top: 2px; border: 1px solid #00000022; }
