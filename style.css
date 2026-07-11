@@ -633,7 +633,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    baixo; para de rolar quando está lutando/parado. */
 #dungeon-stage {
   position: relative;
-  height: 230px;
+  height: 170px;
   border-radius: 8px;
   overflow: hidden;
   background: linear-gradient(180deg, var(--zone-color-1, #5a6b8a) 0%, var(--zone-color-2, #26344a) 100%);
@@ -656,7 +656,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
 .player-sprite-wrap {
   position: absolute;
-  left: 50%; top: 26%;
+  left: 50%; top: 50%;
   margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no palco */
   width: 54px; height: 54px; /* mesmo porte visual dos monstros (52px) */
   z-index: 2;
@@ -1669,8 +1669,24 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .battle-list-sprite { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; font-size: 26px; line-height: 1; text-align: center; }
 .battle-list-info { flex: 1; min-width: 0; }
 .battle-list-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.battle-list-hp-track { height: 7px; background: #00000033; border-radius: 3px; overflow: hidden; margin-top: 2px; border: 1px solid #00000022; }
-.battle-list-hp-fill { height: 100%; background: linear-gradient(180deg, #6ac06a, #3a9a3a); transition: width 0.2s; }
+/* Barra de vida da Battle List — mesmo estilo da que ficava na cena (16px,
+   vermelha, com o número da vida centralizado por cima). */
+.battle-list-hp-track {
+  position: relative;
+  height: 16px;
+  background: #d9c9a3;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 3px;
+  border: 1px solid var(--line-soft);
+  box-shadow: inset 0 1px 3px #00000033;
+}
+.battle-list-hp-fill { height: 100%; border-radius: 8px; background: linear-gradient(180deg, #e74c3c, var(--hp-c)); transition: width 0.2s ease; }
+.battle-list-hp-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px #000000aa;
+}
 
 /* ============ ABAS DO LOG DE COMBATE ============ */
 #combat-log-tabs { display: flex; gap: 4px; margin: 8px 14px 0 !important; flex-wrap: wrap; }
@@ -1692,20 +1708,21 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .inv-item.dragging { opacity: 0.4; cursor: grabbing; }
 .inv-item.drag-over { outline: 2px dashed var(--gold); outline-offset: 2px; background: #fffbe9; }
 
-/* ============ BOOSTED (widget compacto, canto superior direito) ============ */
+/* ============ BOOSTED (widget compacto, no cabeçalho ao lado do Reset) ====== */
 #boosted-card {
-  width: 210px;
-  margin: 8px 14px 0 auto !important; /* colado ao menu, alinhado à direita */
-  box-shadow: 0 2px 8px #00000055;
+  width: auto;
+  margin: 0 !important;
+  align-self: center;
+  box-shadow: 0 2px 6px #00000088;
 }
-#boosted-card h3 { padding: 5px 24px; font-size: 10px; letter-spacing: 1px; }
-#boosted-card h3::before, #boosted-card h3::after { font-size: 6px; }
-#boosted-card .boosted-body { gap: 6px; margin: 8px 8px !important; }
-#boosted-card .boosted-item { padding: 5px 2px; border-width: 1px; }
-#boosted-card .boosted-label { font-size: 7.5px; }
-#boosted-card .boosted-sprite { height: 34px; margin: 2px 0; }
-#boosted-card .boosted-sprite-img { max-height: 32px; max-width: 32px; }
-#boosted-card .boosted-name { font-size: 9px; line-height: 1.1; }
+#boosted-card h3 { padding: 2px 12px; font-size: 8px; letter-spacing: 1px; }
+#boosted-card h3::before, #boosted-card h3::after { font-size: 5px; }
+#boosted-card .boosted-body { display: flex; flex-direction: row; gap: 6px; margin: 4px 6px !important; }
+#boosted-card .boosted-item { padding: 3px 5px; border-width: 1px; }
+#boosted-card .boosted-label { font-size: 6.5px; }
+#boosted-card .boosted-sprite { height: 26px; margin: 1px 0; }
+#boosted-card .boosted-sprite-img { max-height: 24px; max-width: 24px; }
+#boosted-card .boosted-name { font-size: 8px; line-height: 1.05; }
 
 /* ============ BAG (janela do inventário abre fixa à direita) ============ */
 #backpack-inventory-card {
@@ -1720,7 +1737,6 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 }
 
 @media (max-width: 720px) {
-  #boosted-card { position: static; width: auto; margin: 10px !important; }
   #backpack-inventory-card { position: static; width: auto; max-height: none; margin: 10px !important; }
 }
 

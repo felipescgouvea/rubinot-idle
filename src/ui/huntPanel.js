@@ -1,15 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=61';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=61';
-import { MONSTERS } from '../domain/bestiary.js?v=61';
-import { cityName } from '../domain/cities.js?v=61';
-import { ITEMS } from '../domain/items.js?v=61';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=61';
-import { on, EVENTS } from '../shared/eventBus.js?v=61';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=61';
-import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=61';
+import { G } from '../application/gameStore.js?v=62';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=62';
+import { MONSTERS } from '../domain/bestiary.js?v=62';
+import { cityName } from '../domain/cities.js?v=62';
+import { ITEMS } from '../domain/items.js?v=62';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=62';
+import { on, EVENTS } from '../shared/eventBus.js?v=62';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=62';
+import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=62';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -197,7 +197,10 @@ export function renderBattleList() {
       <div class="battle-list-icon">${monsterSpriteImg(m.defKey, 'battle-list-sprite')}</div>
       <div class="battle-list-info">
         <div class="battle-list-name">${i === 0 ? '⚔️ ' : ''}${m.name}</div>
-        <div class="battle-list-hp-track"><div class="battle-list-hp-fill" style="width:${pct}%"></div></div>
+        <div class="battle-list-hp-track">
+          <div class="battle-list-hp-fill" style="width:${pct}%"></div>
+          <div class="battle-list-hp-label">${Math.max(0, m.hp)}/${m.maxHp}</div>
+        </div>
       </div>
     </div>`;
   }).join('');
