@@ -63,13 +63,15 @@ async function authFetch(path, { method = 'POST', body, token } = {}) {
 
 // Mensagem de erro amigável (em PT) a partir da resposta do GoTrue.
 function authError(json, status) {
+  const code = (json && json.error_code) || '';
   const msg = (json && (json.msg || json.error_description || json.error || json.message)) || '';
   const m = msg.toLowerCase();
+  if (code === 'over_email_send_rate_limit' || (m.includes('email') && m.includes('rate'))) return 'Limite de envio de e-mails de confirmação atingido. Aguarde alguns minutos e tente de novo.';
+  if (code === 'email_not_confirmed' || m.includes('not confirmed')) return 'Confirme seu e-mail pelo link enviado antes de entrar.';
   if (m.includes('invalid login')) return 'E-mail ou senha incorretos.';
   if (m.includes('already registered') || m.includes('already been registered') || status === 422) return 'Este e-mail já tem uma conta.';
   if (m.includes('password') && m.includes('least')) return 'A senha precisa ter pelo menos 6 caracteres.';
   if (m.includes('email') && m.includes('invalid')) return 'E-mail inválido.';
-  if (m.includes('not confirmed') || m.includes('confirm')) return 'Confirme seu e-mail antes de entrar.';
   if (m.includes('rate limit')) return 'Muitas tentativas. Aguarde um pouco e tente de novo.';
   return msg || 'Não foi possível completar a solicitação.';
 }
@@ -79,23 +81,54 @@ export function getSession() { return session || loadStoredSession(); }
 export function currentUser() { const s = getSession(); return s ? s.user : null; }
 export function isLoggedIn() { return !!(getSession() && getSession().access_token); }
 
-// Criar conta. Retorna { ok, needsConfirmation, error }. Se o projeto estiver
-// com "Confirm email" desligado, já vem uma sessão e o usuário entra na hora;
-// se estiver ligado, needsConfirmation=true e ele precisa confirmar por e-mail.
+// URL do próprio jogo, pra onde o link de confirmação deve retornar (precisa
+// estar na allowlist de Redirect URLs / Site URL do Supabase).
+function gameRedirectUrl() {
+  return location.origin + location.pathname;
+}
+
+// Criar conta. A conta só é ATIVADA depois que o usuário confirma o e-mail pelo
+// link enviado no cadastro. Retorna { ok, needsConfirmation, error }:
+//  - needsConfirmation:true  => e-mail de confirmação enviado; ainda não logou.
+//  - needsConfirmation:false => (só se o projeto estiver sem confirmação) já logou.
 export async function signUp(email, password) {
-  const { ok, status, json } = await authFetch('/auth/v1/signup', { body: { email, password } });
+  const path = '/auth/v1/signup?redirect_to=' + encodeURIComponent(gameRedirectUrl());
+  const { ok, status, json } = await authFetch(path, { body: { email, password } });
   if (!ok) return { ok: false, error: authError(json, status) };
   if (json && json.access_token) {
     storeSession(sessionFromTokenResponse(json));
     return { ok: true, needsConfirmation: false };
   }
-  // Sem token na resposta: o projeto exige confirmação de e-mail, mas o banco
-  // auto-confirma no cadastro (ver migração auto_confirm_email_on_signup), então
-  // o usuário já nasce confirmado — basta autenticar em seguida.
-  const si = await signIn(email, password);
-  if (si.ok) return { ok: true, needsConfirmation: false };
-  // Fallback: se por algum motivo ainda não deu, cai no fluxo de confirmação.
+  // Sem sessão: um e-mail de confirmação foi disparado. Não autentica ainda —
+  // o login só funciona após o clique no link (GoTrue barra "email_not_confirmed").
   return { ok: true, needsConfirmation: true };
+}
+
+// Reenvia o e-mail de confirmação (caso o usuário não tenha recebido).
+export async function resendConfirmation(email) {
+  const path = '/auth/v1/resend?redirect_to=' + encodeURIComponent(gameRedirectUrl());
+  const { ok, status, json } = await authFetch(path, { body: { type: 'signup', email } });
+  if (!ok) return { ok: false, error: authError(json, status) };
+  return { ok: true };
+}
+
+// Quando o usuário volta pelo link de confirmação, o GoTrue devolve os tokens no
+// fragmento da URL (#access_token=...&refresh_token=...). Captura, guarda a
+// sessão e limpa a URL. Retorna true se logou por aqui. Chamado no boot (main.js).
+export function consumeAuthRedirect() {
+  const hash = location.hash || '';
+  if (hash.indexOf('access_token') === -1) return false;
+  const params = new URLSearchParams(hash.slice(1));
+  const access_token = params.get('access_token');
+  if (!access_token) return false;
+  storeSession({
+    access_token,
+    refresh_token: params.get('refresh_token'),
+    expires_at: Math.floor(Date.now() / 1000) + (parseInt(params.get('expires_in'), 10) || 3600),
+    user: decodeJwtUser(access_token),
+  });
+  history.replaceState(null, '', location.origin + location.pathname + location.search);
+  return true;
 }
 
 export async function signIn(email, password) {

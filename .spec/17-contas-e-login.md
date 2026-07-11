@@ -19,9 +19,10 @@ Todo jogador. O login é **obrigatório**: o jogo só abre depois de criar uma c
 ## Comportamento esperado
 
 - Enquanto não há sessão ativa, uma **tela de login/cadastro cobre o jogo** e nada do jogo é jogável.
-- Ao entrar ou criar conta com sucesso, a tela some e o jogo carrega o progresso da conta.
-- O cadastro **já entra na hora** (sem etapa de confirmação de e-mail travando o acesso).
-- Mensagens de erro claras em português (e-mail/senha incorretos, e-mail já cadastrado, senha curta, etc.).
+- Ao **entrar** com sucesso, a tela some e o jogo carrega o progresso da conta.
+- Ao **criar conta**, um **e-mail de confirmação é enviado** e a tela mostra "confirme seu e-mail". A conta só é ativada (e o login só funciona) **depois que o usuário clica no link** de confirmação. Há opção de reenviar o e-mail.
+- Ao clicar no link de confirmação, o usuário **volta para o jogo já logado**.
+- Mensagens de erro claras em português (e-mail/senha incorretos, e-mail ainda não confirmado, e-mail já cadastrado, senha curta, etc.).
 - O cabeçalho mostra o e-mail logado e um botão para sair.
 - Ao sair, o jogo volta para a tela de login e não vaza o progresso do usuário anterior.
 - Se o jogador ficar sem internet momentaneamente, o jogo continua com o progresso local e volta a sincronizar quando possível.
@@ -38,15 +39,19 @@ Todo jogador. O login é **obrigatório**: o jogo só abre depois de criar uma c
 
 4. **Salvamento automático.** O progresso é salvo sozinho durante o jogo (localmente na hora e na nuvem logo em seguida), e também ao fechar/minimizar a aba, para não perder os últimos ganhos.
 
-5. **Senha mínima de 6 caracteres.**
+5. **Confirmação de e-mail obrigatória.** A conta só é ativada após o usuário confirmar o e-mail pelo link enviado no cadastro. Antes disso, o login é recusado.
+
+6. **Senha mínima de 6 caracteres.**
 
 6. **Login por Google fica para uma etapa futura** (o dono optou por começar só com e-mail/senha).
 
 ## Critérios de aceitação
 
 - [ ] Sem estar logado, o jogo não abre — aparece a tela de login/cadastro.
-- [ ] É possível criar conta com e-mail e senha e já entrar na sequência.
-- [ ] É possível entrar com uma conta existente.
+- [ ] Ao criar conta, um e-mail de confirmação é enviado e a conta só ativa após clicar no link.
+- [ ] Tentar entrar antes de confirmar o e-mail é recusado com mensagem clara.
+- [ ] É possível reenviar o e-mail de confirmação.
+- [ ] É possível entrar com uma conta já confirmada.
 - [ ] Entrar em outro dispositivo/navegador carrega o mesmo progresso.
 - [ ] O progresso salva sozinho durante o jogo.
 - [ ] Um jogador não consegue, de forma alguma, ler ou alterar o save de outro.

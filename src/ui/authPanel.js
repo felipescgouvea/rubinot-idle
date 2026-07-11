@@ -2,7 +2,7 @@
 // de usuário logado no cabeçalho. Fala com o Supabase via infrastructure/
 // authClient.js. Enquanto não há sessão válida, o #auth-gate cobre a tela toda
 // e o jogo não inicia.
-import { signIn, signUp, signOut, currentUser } from '../infrastructure/authClient.js?v=57';
+import { signIn, signUp, signOut, currentUser, resendConfirmation } from '../infrastructure/authClient.js?v=58';
 
 // Callback disparado quando o login/cadastro dá certo (main.js liga o boot do
 // jogo aqui, depois de puxar o save da nuvem).
@@ -74,6 +74,34 @@ function renderGate(mode) {
   });
 }
 
+// Tela de "confirme seu e-mail" — mostrada logo após o cadastro. A conta só
+// é ativada quando o usuário clica no link enviado; aqui ele pode reenviar o
+// e-mail ou voltar para entrar (depois de confirmar).
+function renderConfirmSent(email) {
+  const gate = document.getElementById('auth-gate');
+  gate.innerHTML = `
+    <div class="auth-card">
+      <div class="auth-logo"><img src="logo.webp" alt="RubinOT" class="auth-logo-img" /><span class="auth-logo-sub">IDLE</span></div>
+      <div class="auth-confirm-icon">📧</div>
+      <h3 class="auth-confirm-title">Confirme seu e-mail</h3>
+      <p class="auth-confirm-text">Enviamos um link de confirmação para<br><strong>${email}</strong>.<br>
+        Clique no link para ativar sua conta e entrar. (Confira também a caixa de spam.)</p>
+      <div id="auth-error" class="auth-msg"></div>
+      <button id="auth-resend" class="auth-submit" data-label="Reenviar e-mail">Reenviar e-mail</button>
+      <p class="auth-foot"><a href="#" data-mode="login">Já confirmei — entrar</a></p>
+    </div>
+  `;
+  gate.querySelector('[data-mode="login"]').addEventListener('click', (e) => { e.preventDefault(); renderGate('login'); });
+  gate.querySelector('#auth-resend').addEventListener('click', async () => {
+    const btn = document.getElementById('auth-resend');
+    btn.disabled = true; btn.textContent = 'Reenviando…';
+    const r = await resendConfirmation(email);
+    btn.disabled = false; btn.textContent = 'Reenviar e-mail';
+    if (r.ok) showInfo('E-mail reenviado. Confira sua caixa de entrada.');
+    else showError(r.error || 'Não foi possível reenviar agora.');
+  });
+}
+
 async function handleSubmit(mode) {
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value;
@@ -90,8 +118,7 @@ async function handleSubmit(mode) {
       const r = await signUp(email, password);
       if (!r.ok) { setBusy(false); showError(r.error); return; }
       if (r.needsConfirmation) {
-        setBusy(false);
-        showInfo('Conta criada! Confirme pelo link enviado ao seu e-mail e depois entre.');
+        renderConfirmSent(email); // conta só ativa após confirmar o e-mail
         return;
       }
       await finishSuccess();
