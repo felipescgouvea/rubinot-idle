@@ -3,8 +3,8 @@
 // módulo "persistence" mais encorpado (load/offline/reset) precisa chamar
 // gainXp/checkBpTier de outras camadas — se saveGame morasse junto, isso
 // criaria import circular entre metade dos casos de uso do jogo.
-import { G } from './gameStore.js?v=21';
-import { saveState } from '../infrastructure/storage.js?v=21';
+import { G } from './gameStore.js?v=22';
+import { saveState } from '../infrastructure/storage.js?v=22';
 
 export function saveGame() {
   G.lastSave = Date.now();

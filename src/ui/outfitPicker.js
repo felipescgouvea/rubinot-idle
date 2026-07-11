@@ -3,13 +3,13 @@
 // customização do jogo real — 2 addons (toggle) e cor por região (cabeça,
 // corpo, pernas, pés) escolhida na paleta oficial de 133 cores — com preview
 // ao vivo, recolorido de verdade por região (ver infrastructure/outfitRenderer.js).
-import { G } from '../application/gameStore.js?v=21';
-import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=21';
-import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=21';
-import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=21';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=21';
-import { on, EVENTS } from '../shared/eventBus.js?v=21';
-import { openModal } from './shared.js?v=21';
+import { G } from '../application/gameStore.js?v=22';
+import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=22';
+import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=22';
+import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=22';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=22';
+import { on, EVENTS } from '../shared/eventBus.js?v=22';
+import { openModal } from './shared.js?v=22';
 
 // Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
 // parte do save (não é uma decisão de jogo, é só onde o clique da paleta vai).
@@ -46,7 +46,6 @@ function customizeSection() {
   if (!outfitId) return '';
   const colors = G.outfitColors;
   return `
-    <hr class="outfit-picker-sep" />
     <h3 style="margin-bottom:10px">🎨 Customizar Aparência</h3>
     <div class="outfit-customize-row">
       <div class="outfit-preview-wrap">
@@ -86,26 +85,32 @@ export function renderOutfitPicker() {
   const gender = G.outfitGender || 'male';
 
   const html = `
-    <h3 style="margin-bottom:10px">👕 Escolher Outfit</h3>
     <div class="outfit-gender-toggle">
       <button class="task-btn ${gender === 'male' ? 'done' : ''}" onclick="setOutfitGender('male')">♂ Masculino</button>
       <button class="task-btn ${gender === 'female' ? 'done' : ''}" onclick="setOutfitGender('female')">♀ Feminino</button>
     </div>
-    <div class="outfit-gallery">
-      ${OUTFITS.map(o => {
-        const owned = o.free || G.outfitsOwned.includes(o.id);
-        const wearing = G.outfit === o.id;
-        return `<div class="outfit-card ${wearing ? 'wearing' : ''}">
-          <div class="outfit-card-sprite-wrap">${outfitCardSprite(o.id, gender)}</div>
-          <div class="outfit-card-name">${o.name}</div>
-          <div class="outfit-card-price">${o.free ? 'Grátis' : owned ? 'Possui' : `${o.price} 💎 RC`}</div>
-          <button class="skill-upgrade-btn" onclick="${owned ? `selectOutfit('${o.id}')` : `buyOutfit('${o.id}')`}">
-            ${wearing ? '✅ Vestindo' : owned ? 'Vestir' : 'Comprar'}
-          </button>
-        </div>`;
-      }).join('')}
+    <div class="outfit-picker-layout">
+      <div class="outfit-picker-col">
+        ${customizeSection()}
+      </div>
+      <div class="outfit-picker-col">
+        <h3 style="margin-bottom:10px">👕 Escolher Outfit</h3>
+        <div class="outfit-gallery">
+          ${OUTFITS.map(o => {
+            const owned = o.free || G.outfitsOwned.includes(o.id);
+            const wearing = G.outfit === o.id;
+            return `<div class="outfit-card ${wearing ? 'wearing' : ''}">
+              <div class="outfit-card-sprite-wrap">${outfitCardSprite(o.id, gender)}</div>
+              <div class="outfit-card-name">${o.name}</div>
+              <div class="outfit-card-price">${o.free ? 'Grátis' : owned ? 'Possui' : `${o.price} 💎 RC`}</div>
+              <button class="skill-upgrade-btn" onclick="${owned ? `selectOutfit('${o.id}')` : `buyOutfit('${o.id}')`}">
+                ${wearing ? '✅ Vestindo' : owned ? 'Vestir' : 'Comprar'}
+              </button>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
     </div>
-    ${customizeSection()}
   `;
   openModal(html);
   mountPreviewCanvas();

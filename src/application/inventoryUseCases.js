@@ -1,12 +1,12 @@
-import { G } from './gameStore.js?v=21';
-import { ITEMS } from '../domain/items.js?v=21';
-import { ZONES } from '../domain/bestiary.js?v=21';
-import { emit, EVENTS } from '../shared/eventBus.js?v=21';
-import { getMaxHp, getMaxMana } from './stats.js?v=21';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=21';
-import { saveGame } from './saveGameUseCase.js?v=21';
+import { G } from './gameStore.js?v=22';
+import { ITEMS } from '../domain/items.js?v=22';
+import { ZONES } from '../domain/bestiary.js?v=22';
+import { emit, EVENTS } from '../shared/eventBus.js?v=22';
+import { getMaxHp, getMaxMana } from './stats.js?v=22';
+import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=22';
+import { saveGame } from './saveGameUseCase.js?v=22';
 
-export { addItemToInventory } from './inventoryCore.js?v=21';
+export { addItemToInventory } from './inventoryCore.js?v=22';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
