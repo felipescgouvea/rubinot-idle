@@ -481,6 +481,26 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 .zone-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
 .zone-card.locked { opacity: 0.55; }
+/* Card de cidade (passo 1 do picker) */
+.city-card {
+  background: linear-gradient(180deg, #f6ead0, var(--parch-3));
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform .08s ease, border-color .08s ease, box-shadow .08s ease;
+}
+.city-card:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 4px 12px #0002; }
+.city-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
+.city-card.locked { opacity: 0.6; }
+.city-card-icon { font-size: 2.6rem; filter: drop-shadow(0 2px 3px #00000033); }
+.city-card-blurb { font-size: 11px; color: var(--ink-soft); line-height: 1.35; margin-top: 4px; min-height: 30px; }
+.city-card-meta { font-size: 11px; font-weight: 700; color: var(--navy-2); margin-top: 8px; }
+.zone-current-city { color: var(--ink-soft); font-weight: 700; }
 
 /* ---- Zona Bônus do Dia (Boosted Zone, como o Boosted Creature de Tibia) ---- */
 .zone-boosted-badge {

@@ -1,8 +1,10 @@
 # Mundos
 
+> **Nota:** desde a introdução das [cidades](16-cidades-e-hunts.md), o mundo deixou de decidir **onde** o jogador caça — a navegação das caçadas passou a ser por cidade. O mundo permanece apenas como um **bônus de fundo** de XP/Gold (uma escolha estratégica passiva), não mais como um filtro de acesso às caçadas.
+
 ## Objetivo
 
-Reproduzir o conceito de múltiplos servidores (mundos) de Rubinot, cada um com sua identidade de PvP e seus próprios bônus, dando ao jogador uma escolha estratégica de onde caçar.
+Reproduzir o conceito de múltiplos servidores (mundos) de Rubinot, cada um com sua identidade de PvP e seus próprios bônus, dando ao jogador uma escolha estratégica de bônus passivo de XP/Gold.
 
 ## Quem usa
 

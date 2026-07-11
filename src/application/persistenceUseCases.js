@@ -1,22 +1,22 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=53';
-import { createDefaultState } from '../domain/gameState.js?v=53';
-import { createDefaultSkills } from '../domain/character.js?v=53';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=53';
-import { isSpellAvailable } from '../domain/spells.js?v=53';
-import { findOutfit } from '../domain/outfits.js?v=53';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=53';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=53';
-import { isRelicId } from '../domain/items.js?v=53';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=53';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=53';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=53';
-import { emit, EVENTS } from '../shared/eventBus.js?v=53';
-import { getMaxHp, getMaxMana } from './stats.js?v=53';
-import { gainXp } from './huntUseCases.js?v=53';
-import { checkBpTier } from './battlePassUseCases.js?v=53';
-import { getXpRate, getGoldRate, getZoneMultiplier } from './adminUseCases.js?v=53';
+import { G, replaceState } from './gameStore.js?v=55';
+import { createDefaultState } from '../domain/gameState.js?v=55';
+import { createDefaultSkills } from '../domain/character.js?v=55';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=55';
+import { isSpellAvailable } from '../domain/spells.js?v=55';
+import { findOutfit } from '../domain/outfits.js?v=55';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=55';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=55';
+import { isRelicId } from '../domain/items.js?v=55';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=55';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=55';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=55';
+import { emit, EVENTS } from '../shared/eventBus.js?v=55';
+import { getMaxHp, getMaxMana } from './stats.js?v=55';
+import { gainXp } from './huntUseCases.js?v=55';
+import { checkBpTier } from './battlePassUseCases.js?v=55';
+import { getXpRate, getGoldRate, getZoneMultiplier } from './adminUseCases.js?v=55';
 
 export function loadGame() {
   const parsed = loadRawState();

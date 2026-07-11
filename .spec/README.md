@@ -17,6 +17,7 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 - [13-skills.md](13-skills.md) — evolução de habilidades por uso, ao estilo Tibia.
 - [14-spells-e-rtc.md](14-spells-e-rtc.md) — o RTC: ataque automático por magia ou runa, cura automática por magia e por poção.
 - [15-areas-de-ataque.md](15-areas-de-ataque.md) — alcance de área de cada ataque: alvo único vs. área (onda, explosão, 3x3), fiel ao Tibia.
+- [16-cidades-e-hunts.md](16-cidades-e-hunts.md) — navegação das caçadas por cidade de Tibia; o mundo virou só um bônus de fundo.
 
 ## Itens & Economia
 

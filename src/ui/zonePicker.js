@@ -1,16 +1,53 @@
-// Painel de escolha de zona de caça: um card por dungeon do mundo atual, com
-// criaturas, multiplicadores e o requisito de nível — em vez do <select>
-// escondido de antes. Mesmo padrão do seletor de outfit (ver outfitPicker.js).
-import { G } from '../application/gameStore.js?v=53';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=53';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=53';
-import { getZoneMultiplier } from '../application/adminUseCases.js?v=53';
-import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=53';
-import { openBattleModal } from './battleModal.js?v=53';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=53';
+// Seleção de caçada em DOIS passos: primeiro o jogador escolhe uma CIDADE
+// (ver domain/cities.js), depois vê as hunts daquela cidade. As cidades
+// substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
+// de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
+import { G } from '../application/gameStore.js?v=55';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=55';
+import { CITIES } from '../domain/cities.js?v=55';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=55';
+import { getZoneMultiplier } from '../application/adminUseCases.js?v=55';
+import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=55';
+import { openBattleModal } from './battleModal.js?v=55';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=55';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
+}
+
+// Qual cidade está aberta no picker (null = mostrando a grade de cidades).
+let openCityId = null;
+
+// Zonas de uma cidade, em ordem de nível.
+function zonesOfCity(cityId) {
+  return Object.entries(ZONES)
+    .filter(([, z]) => z.city === cityId)
+    .sort((a, b) => a[1].minLevel - b[1].minLevel);
+}
+
+function unlockedCount(cityId) {
+  const zs = zonesOfCity(cityId);
+  const n = zs.filter(([id]) => isZoneUnlocked(id, G.level, G.currentWorld, G.defeatedZoneBosses)).length;
+  return { unlocked: n, total: zs.length };
+}
+
+function cityCard(city) {
+  const zs = zonesOfCity(city.id);
+  if (zs.length === 0) return '';
+  const minLv = Math.min(...zs.map(([, z]) => z.minLevel));
+  const maxLv = Math.max(...zs.map(([, z]) => z.minLevel));
+  const { unlocked, total } = unlockedCount(city.id);
+  const hasBoosted = zs.some(([id]) => id === boostedZoneForDate(todayStr()));
+  const hasActive = zs.some(([id]) => id === G.activeZone);
+  const allLocked = unlocked === 0;
+  return `<div class="city-card ${hasActive ? 'active' : ''} ${allLocked ? 'locked' : ''}" title="${city.blurb}"
+      onclick="openCity('${city.id}')">
+    ${hasBoosted ? '<div class="zone-boosted-badge" title="Tem a Zona Bônus do Dia">🔥 Bônus do Dia</div>' : ''}
+    <div class="city-card-icon">${city.icon}</div>
+    <div class="zone-card-name">${city.name}</div>
+    <div class="city-card-blurb">${city.blurb}</div>
+    <div class="city-card-meta">🗺️ ${total} hunts · 🔓 ${unlocked} · ⚔️ Lv ${minLv}–${maxLv}</div>
+  </div>`;
 }
 
 function zoneCard(id, z) {
@@ -23,12 +60,14 @@ function zoneCard(id, z) {
   const monsterIcons = z.monsters.map(mId => monsterSpriteImg(mId, 'zone-card-monster-icon')).join('');
   const bossZoneName = bossLocked ? (ZONES[z.requiresBossOf]?.name || z.requiresBossOf) : '';
   const lockTitle = levelLocked ? `Nível mínimo: ${z.minLevel}` : bossLocked ? `Derrote o boss de ${bossZoneName} primeiro` : monsterTitle;
+  const xpM = getZoneMultiplier(id, 'xp', z.xpMult);
+  const goldM = getZoneMultiplier(id, 'gold', z.goldMult);
   return `<div class="zone-card ${active ? 'active' : ''} ${locked ? 'locked' : ''}" title="${lockTitle}">
     ${isBoostedToday ? '<div class="zone-boosted-badge" title="Zona Bônus do Dia: +50% XP/Gold">🔥 Bônus do Dia</div>' : ''}
     <div class="zone-card-icon">${zoneIconImg(z, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${z.name}</div>
     <div class="zone-card-monster-row">${monsterIcons}</div>
-    <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${getZoneMultiplier(id, 'xp', z.xpMult)} ${goldIconImg('inline-icon')}×${getZoneMultiplier(id, 'gold', z.goldMult)}</div>
+    <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${xpM} ${goldIconImg('inline-icon')}×${goldM}</div>
     ${locked
       ? `<div class="zone-card-req">${levelLocked ? `🔒 Lv ${z.minLevel}` : `🔒 Boss: ${bossZoneName}`}</div>`
       : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? '✅ Caçando' : 'Caçar aqui'}</button>`}
@@ -37,16 +76,48 @@ function zoneCard(id, z) {
 
 export function renderZonePickerModal() {
   if (!G.vocation) return;
-  const zonesInWorld = Object.entries(ZONES).filter(([, z]) => z.worldReq === G.currentWorld);
+
+  if (!openCityId) {
+    // Passo 1: grade de cidades.
+    openModal(`
+      <h3 style="margin-bottom:4px">🏙️ Escolher Cidade</h3>
+      <p class="muted" style="margin-bottom:10px">Escolha uma cidade para ver suas caçadas.</p>
+      <div class="zone-picker-gallery">
+        ${CITIES.map(cityCard).join('')}
+      </div>
+    `);
+    return;
+  }
+
+  // Passo 2: hunts da cidade escolhida.
+  const city = CITIES.find(c => c.id === openCityId);
+  const zs = zonesOfCity(openCityId);
   openModal(`
-    <h3 style="margin-bottom:10px">🗺️ Escolher Zona de Caça</h3>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <button class="btn-small" onclick="backToCities()">← Cidades</button>
+      <h3 style="margin:0">${city ? city.icon + ' ' + city.name : 'Cidade'}</h3>
+    </div>
+    <p class="muted" style="margin-bottom:10px">${city ? city.blurb : ''}</p>
     <div class="zone-picker-gallery">
-      ${zonesInWorld.map(([id, z]) => zoneCard(id, z)).join('')}
+      ${zs.map(([id, z]) => zoneCard(id, z)).join('')}
     </div>
   `);
 }
 
 export function openZonePicker() {
+  // Sempre abre na grade de CIDADES — o jogador escolhe a cidade primeiro e só
+  // então vê as hunts dela (fluxo pedido: "selecionar a cidade → abrir as hunts").
+  openCityId = null;
+  renderZonePickerModal();
+}
+
+export function openCity(cityId) {
+  openCityId = cityId;
+  renderZonePickerModal();
+}
+
+export function backToCities() {
+  openCityId = null;
   renderZonePickerModal();
 }
 

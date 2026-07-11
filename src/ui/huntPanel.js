@@ -1,14 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=53';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=53';
-import { MONSTERS } from '../domain/bestiary.js?v=53';
-import { ITEMS } from '../domain/items.js?v=53';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=53';
-import { on, EVENTS } from '../shared/eventBus.js?v=53';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=53';
-import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=53';
+import { G } from '../application/gameStore.js?v=55';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=55';
+import { MONSTERS } from '../domain/bestiary.js?v=55';
+import { cityName } from '../domain/cities.js?v=55';
+import { ITEMS } from '../domain/items.js?v=55';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=55';
+import { on, EVENTS } from '../shared/eventBus.js?v=55';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=55';
+import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=55';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -114,7 +115,8 @@ export function renderZonePicker() {
   const titleEl = document.getElementById('battle-card-title');
   if (iconEl && nameEl) {
     iconEl.innerHTML = zone ? zoneIconImg(zone, 'zone-current-icon-img') : '🗺️';
-    nameEl.innerHTML = (zone ? zone.name : 'Escolher zona de caça…') + boostedBadge;
+    const cityPrefix = zone && zone.city ? `<span class="zone-current-city">${cityName(zone.city)}</span> · ` : '';
+    nameEl.innerHTML = (zone ? cityPrefix + zone.name : 'Escolher cidade de caça…') + boostedBadge;
   }
   if (titleEl) {
     titleEl.innerHTML = zone ? `⚔️ Batalha — ${zoneIconImg(zone, 'zone-current-icon-img')} ${zone.name}${boostedBadge}` : '⚔️ Batalha';
