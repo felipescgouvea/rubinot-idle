@@ -1617,9 +1617,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* ============ BAG (janela do inventário abre fixa à direita) ============ */
 #backpack-inventory-card {
   position: fixed;
-  top: 180px; right: 14px;
+  top: 214px; right: 14px; /* abaixo do widget Boosted (que termina ~199px) */
   width: 320px; max-width: calc(100vw - 28px);
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 232px);
   overflow-y: auto;
   z-index: 60;
   box-shadow: 0 10px 34px #00000077;
