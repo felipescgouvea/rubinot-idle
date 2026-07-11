@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=27';
-import { ZONES } from '../domain/bestiary.js?v=27';
-import { MONSTERS } from '../domain/bestiary.js?v=27';
-import { ITEMS } from '../domain/items.js?v=27';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=27';
-import { on, EVENTS } from '../shared/eventBus.js?v=27';
-import { openModal, itemIconImg } from './shared.js?v=27';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { ZONES } from '../domain/bestiary.js?v=28';
+import { MONSTERS } from '../domain/bestiary.js?v=28';
+import { ITEMS } from '../domain/items.js?v=28';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=28';
+import { on, EVENTS } from '../shared/eventBus.js?v=28';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=28';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=28';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -161,8 +161,8 @@ function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes,
     <p>Seu personagem continuou caçando em <strong>${zoneIcon} ${zoneName}</strong> por <strong>${hours}h ${minutes}min</strong>.</p>
     <div class="item-detail-stats">
       💀 Criaturas abatidas: <span>${kills.toLocaleString()}</span><br/>
-      ⭐ Experiência ganha: <span>${xpGained.toLocaleString()}</span><br/>
-      💰 Gold coletado: <span>${goldGained.toLocaleString()}</span>
+      ${vitalIconImg('xp', 'inline-icon')} Experiência ganha: <span>${xpGained.toLocaleString()}</span><br/>
+      ${goldIconImg('inline-icon')} Gold coletado: <span>${goldGained.toLocaleString()}</span>
     </div>
   `);
 }

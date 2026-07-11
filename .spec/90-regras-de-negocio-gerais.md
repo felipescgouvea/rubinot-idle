@@ -38,8 +38,9 @@ Toda sprite usada no jogo (criatura, item, cenário) deve vir de uma fonte real 
 - **Como aplicar:** sprites de criaturas já seguem esta regra, carregadas diretamente de uma fonte oficial de Tibia. Ao adicionar sprites novas (itens, cenários, efeitos), a mesma fonte/critério deve ser usado.
 - **Pendência de conformidade identificada:**
   - Os 5 bosses exclusivos do RubinOT usam, hoje, sprites de **outras criaturas do Tibia** como substituição temporária (ex.: o boss "Lothlorien" usa a sprite de "Elf Arcanist"), porque o boss em si não tem sprite própria disponível na fonte usada. Isso não é a sprite real da criatura retratada — é um placeholder e deve ser tratado como tal até haver uma sprite correta disponível.
-  - Ícones de moedas, habilidades, magias e mundos ainda usam emojis genéricos (ver Regra 4).
-- **Resolvido:** ícones de itens de equipamento (incluindo runas e poções usadas no RTC) usam sprites reais extraídas do TibiaWiki. Outfits (incluindo cor por região e addons) usam sprites reais extraídas do cliente oficial do Tibia, recoloridas por região com o mesmo algoritmo do jogo original — ver [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
+  - Ícones de mundos ainda usam emojis genéricos (ver Regra 4) — "Mundos" é um sistema próprio deste jogo idle sem equivalente literal em Tibia (ver Regra 3), então não há um ícone real óbvio pra usar.
+  - "Rubini Coin" é uma moeda premium fictícia deste jogo (não existe em Tibia nem, até onde essa especificação confirma, no RubinOT) — usa a sprite real de Tibia Coin (a moeda premium oficial) como analogia visual mais próxima, já que não existe uma sprite real da própria "Rubini Coin".
+- **Resolvido:** ícones de itens de equipamento (incluindo runas e poções usadas no RTC), moedas (Gold Coin), skills (as 7 do Tibia real) e magias (uma sprite por spell) usam arte extraída do TibiaWiki. Outfits (incluindo cor por região e addons) usam sprites reais extraídas do cliente oficial do Tibia, recoloridas por região com o mesmo algoritmo do jogo original — ver [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
 
 ### Regra 3 — Toda mecânica deve existir em Tibia/RubinOT
 
@@ -54,8 +55,12 @@ Todo sistema, fórmula ou comportamento de jogo novo deve ter um equivalente rea
 Todo ícone de interface (itens, slots de equipamento, moedas, skills, magias, configurações de RTC, mundos, outfits) deve usar arte extraída do Tibia ou do RubinOT — nunca emojis genéricos nem ícones de bibliotecas de terceiros.
 
 - **Por quê:** mesmo motivo da Regra 2 — a identidade visual do jogo deve parecer "o jogo de verdade", não uma interface genérica de jogo idle com emojis.
-- **Resolvido:** sprites de criaturas, ícones de itens de equipamento e outfits (com cor e addons reais) já usam arte extraída do Tibia. Ícones de zona de caça (galeria de escolha e barra da zona atual) usam a sprite real do monstro principal da zona (o primeiro do elenco), em vez de um emoji temático — mesma fonte já usada pras criaturas.
-- **Pendência de conformidade identificada:** ícones de moedas (gold, Rubini Coins), skills, magias, ajustes de RTC e mundos ainda usam emojis Unicode genéricos como substituto. Aplicar esta regra por completo a esses pontos exige adotar a mesma fonte de ícones do jogo (sprites do TibiaWiki) já usada para itens, outfits e zonas.
+- **Resolvido:** sprites de criaturas, ícones de itens de equipamento e outfits (com cor e addons reais) já usam arte extraída do Tibia. Ícones de zona de caça (galeria de escolha e barra da zona atual) usam a sprite real do monstro principal da zona (o primeiro do elenco), em vez de um emoji temático. Ícones de vitais (HP, Mana, XP), moedas (Gold Coin, Rubini Coin ≈ Tibia Coin), as 7 skills de combate e as magias (uma sprite por spell) usam a mesma fonte real (TibiaWiki).
+- **Pendência de conformidade identificada:**
+  - Ícones de mundos ainda usam emoji — sem correspondência real óbvia (ver Regra 3).
+  - Ícones de Loot Boost e Supply Completo (Rubini Store) ainda usam emoji — não há sprite real de Tibia representando "chance de loot" ou "recarga instantânea" como conceito abstrato.
+  - Notificações toast (o aviso que aparece e some no canto da tela) ainda mostram emoji em vez de sprite — tecnicamente só suportam texto puro, não HTML/imagem, então não têm como exibir uma sprite sem uma mudança maior nesse mecanismo.
+  - Ícones de navegação/interface genéricos (abas, botões, marcadores de status como 🔒/✅/⚔️) não foram trocados — representam ações da interface, não uma criatura/item/magia específica do jogo, então ficam fora do escopo desta regra até haver uma decisão explícita do dono do produto sobre estender a regra também a esse tipo de ícone.
 
 ## Como tratar pendências de conformidade
 

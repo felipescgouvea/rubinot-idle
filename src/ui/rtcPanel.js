@@ -4,15 +4,15 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=27';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=27';
-import { ITEMS } from '../domain/items.js?v=27';
-import { VOCATIONS } from '../domain/character.js?v=27';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=27';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=27';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=27';
-import { on, EVENTS } from '../shared/eventBus.js?v=27';
-import { itemIconImg } from './shared.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=28';
+import { ITEMS } from '../domain/items.js?v=28';
+import { VOCATIONS } from '../domain/character.js?v=28';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=28';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=28';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=28';
+import { on, EVENTS } from '../shared/eventBus.js?v=28';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=28';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);
@@ -24,11 +24,11 @@ let activeRtcTab = 'attack';
 function spellRow(id, s, selected, onclick) {
   const unlocked = G.level >= s.level;
   return `<div class="rtc-row ${selected ? 'selected' : ''} ${!unlocked ? 'locked' : ''}">
-    <span class="rtc-row-icon">${s.icon}</span>
+    <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
       <div class="rtc-row-desc">
-        ${s.type === 'attack' ? `⚔️ Dano ×${s.power}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · 🔵 ${s.mana} mana · Nível ${s.level}+
+        ${s.type === 'attack' ? `⚔️ Dano ×${s.power}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · Nível ${s.level}+
       </div>
     </div>
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>

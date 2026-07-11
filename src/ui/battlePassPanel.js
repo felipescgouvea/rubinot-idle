@@ -1,7 +1,14 @@
-import { G } from '../application/gameStore.js?v=27';
-import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=27';
-import { on, EVENTS } from '../shared/eventBus.js?v=27';
-import { itemIconImg } from './shared.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=28';
+import { on, EVENTS } from '../shared/eventBus.js?v=28';
+import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=28';
+
+function bpRewardIcon(r) {
+  if (r.type === 'item') return itemIconImg(r.itemId);
+  if (r.type === 'gold') return goldIconImg();
+  if (r.type === 'rubini') return rubiniIconImg();
+  return r.icon;
+}
 
 export function renderBattlePassPanel() {
   const xpInTier = G.bpXp % BP_XP_PER_TIER;
@@ -23,7 +30,7 @@ export function renderBattlePassPanel() {
     const available = G.bpTier >= r.tier && !claimed;
     return `<div class="bp-reward ${claimed ? 'claimed' : ''} ${available ? 'available' : ''}">
       <div class="bp-reward-tier">Tier ${r.tier}</div>
-      <div class="bp-reward-icon">${r.type === 'item' ? itemIconImg(r.itemId) : r.icon}</div>
+      <div class="bp-reward-icon">${bpRewardIcon(r)}</div>
       <div class="bp-reward-name">${r.name}</div>
       <button class="bp-claim-btn" onclick="claimBpReward(${r.tier})" ${!available ? 'disabled' : ''}>
         ${claimed ? '✓' : available ? 'Coletar' : '🔒'}

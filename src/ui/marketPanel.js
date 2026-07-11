@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=27';
-import { ITEMS } from '../domain/items.js?v=27';
-import { on, EVENTS } from '../shared/eventBus.js?v=27';
-import { formatNum, escapeHtml, itemIconImg } from './shared.js?v=27';
-import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=27';
-import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { ITEMS } from '../domain/items.js?v=28';
+import { on, EVENTS } from '../shared/eventBus.js?v=28';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=28';
+import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=28';
+import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=28';
 
 export async function renderMarketPanel() {
   const el = document.getElementById('market-content');
@@ -30,8 +30,8 @@ export async function renderMarketPanel() {
 
   el.innerHTML = `
     <div id="skill-points-display" style="margin: 0 0 14px !important">
-      <strong>Carteira do Market:</strong> <span>${wallet === null ? '— (offline)' : formatNum(wallet) + ' 💰'}</span> ·
-      <strong>Gold do personagem:</strong> <span>${formatNum(G.gold)} 💰</span>
+      <strong>Carteira do Market:</strong> <span>${wallet === null ? '— (offline)' : formatNum(wallet) + ' ' + goldIconImg('inline-icon')}</span> ·
+      <strong>Gold do personagem:</strong> <span>${formatNum(G.gold)} ${goldIconImg('inline-icon')}</span>
       <br/><span class="muted" style="font-size:11px">Deposite gold do personagem na carteira do Market para poder comprar; ao vender, o gold cai na carteira — saque quando quiser.</span>
       <div style="display:flex; gap:8px; margin-top:8px; max-width:420px">
         <input id="mk-deposit-amount" type="number" min="1" placeholder="Quantidade" style="flex:1" />
@@ -71,7 +71,7 @@ export async function renderMarketPanel() {
     return `<div class="skill-card" style="margin-bottom:8px">
       <div class="skill-card-header">
         <span class="skill-card-name">${item ? itemIconImg(l.item_id) : '?'} ${item?.name || l.item_id} x${l.qty}</span>
-        <span class="skill-card-level" style="font-size:11px">${formatNum(l.price_per_unit)} 💰/un</span>
+        <span class="skill-card-level" style="font-size:11px">${formatNum(l.price_per_unit)} ${goldIconImg('inline-icon')}/un</span>
       </div>
       <button class="skill-upgrade-btn" style="background:linear-gradient(180deg,#c0392b,#7b241c);border-color:#7b241c" onclick="cancelMyListing('${l.id}', '${l.item_id}', ${l.qty})">Cancelar anúncio</button>
     </div>`;
@@ -86,8 +86,8 @@ export async function renderMarketPanel() {
           return `<tr>
             <td>${item ? itemIconImg(l.item_id) : '?'} ${item?.name || l.item_id}</td>
             <td>${l.qty}</td>
-            <td>${formatNum(l.price_per_unit)} 💰</td>
-            <td>${formatNum(l.price_per_unit * l.qty)} 💰</td>
+            <td>${formatNum(l.price_per_unit)} ${goldIconImg('inline-icon')}</td>
+            <td>${formatNum(l.price_per_unit * l.qty)} ${goldIconImg('inline-icon')}</td>
             <td>${escapeHtml(l.seller_name)}</td>
             <td><button class="btn-blue" onclick="buyMarketListing('${l.id}', ${l.qty})">Comprar tudo</button></td>
           </tr>`;

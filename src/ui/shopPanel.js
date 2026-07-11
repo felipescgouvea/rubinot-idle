@@ -1,11 +1,22 @@
-import { G } from '../application/gameStore.js?v=27';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=27';
-import { ITEMS } from '../domain/items.js?v=27';
-import { on, EVENTS } from '../shared/eventBus.js?v=27';
-import { formatNum, itemIconImg } from './shared.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=28';
+import { ITEMS } from '../domain/items.js?v=28';
+import { on, EVENTS } from '../shared/eventBus.js?v=28';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=28';
 
 function shopPriceLabel(s) {
-  return s.currency === 'rubini' ? `${s.price} 💎 RC` : `${formatNum(s.price)} 💰`;
+  return s.currency === 'rubini' ? `${s.price} ${rubiniIconImg('inline-icon')} RC` : `${formatNum(s.price)} ${goldIconImg('inline-icon')}`;
+}
+
+// Boosts (xp/gold) não são um item de inventário — não têm itemId pra usar
+// itemIconImg — mas o conceito ainda tem um ícone real (vitals/moeda).
+// Loot Boost e Supply Completo ficam com o emoji: não há sprite real de
+// Tibia pra "chance de loot" ou "recarga instantânea" como conceito.
+function shopIconHtml(s) {
+  if (s.itemId) return itemIconImg(s.itemId);
+  if (s.boost === 'xp') return vitalIconImg('xp');
+  if (s.boost === 'gold') return goldIconImg();
+  return s.icon;
 }
 
 function renderShopCard(s) {
@@ -15,7 +26,7 @@ function renderShopCard(s) {
   const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const statLine = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
-  const iconHtml = s.itemId ? itemIconImg(s.itemId) : s.icon;
+  const iconHtml = shopIconHtml(s);
   return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
     <div class="skill-card-header">
       <span class="skill-card-name">${iconHtml} ${s.name}</span>
@@ -41,7 +52,7 @@ export function renderShopPanel() {
 
   el.innerHTML = `
     <div id="skill-points-display" style="margin: 0 0 14px !important">
-      <strong>Seu saldo:</strong> <span>${formatNum(G.gold)} 💰 gold</span> · <span>${formatNum(G.rubini)} 💎 Rubini Coins</span>
+      <strong>Seu saldo:</strong> <span>${formatNum(G.gold)} ${goldIconImg('inline-icon')} gold</span> · <span>${formatNum(G.rubini)} ${rubiniIconImg('inline-icon')} Rubini Coins</span>
       ${activeBoosts.length ? `<br/><strong>Boosts ativos:</strong> <span>${activeBoosts.join(' · ')}</span>` : ''}
       <br/><span class="muted" style="font-size:11px">Ganhe Rubini Coins completando tasks e vencendo na Arena.</span>
     </div>

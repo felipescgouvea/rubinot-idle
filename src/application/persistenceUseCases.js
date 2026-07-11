@@ -1,19 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=27';
-import { createDefaultState } from '../domain/gameState.js?v=27';
-import { createDefaultSkills } from '../domain/character.js?v=27';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=27';
-import { isSpellAvailable } from '../domain/spells.js?v=27';
-import { findOutfit } from '../domain/outfits.js?v=27';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=27';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=27';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=27';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=27';
-import { emit, EVENTS } from '../shared/eventBus.js?v=27';
-import { getMaxHp, getMaxMana } from './stats.js?v=27';
-import { gainXp } from './huntUseCases.js?v=27';
-import { checkBpTier } from './battlePassUseCases.js?v=27';
+import { G, replaceState } from './gameStore.js?v=28';
+import { createDefaultState } from '../domain/gameState.js?v=28';
+import { createDefaultSkills } from '../domain/character.js?v=28';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=28';
+import { isSpellAvailable } from '../domain/spells.js?v=28';
+import { findOutfit } from '../domain/outfits.js?v=28';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=28';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=28';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=28';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=28';
+import { emit, EVENTS } from '../shared/eventBus.js?v=28';
+import { getMaxHp, getMaxMana } from './stats.js?v=28';
+import { gainXp } from './huntUseCases.js?v=28';
+import { checkBpTier } from './battlePassUseCases.js?v=28';
 
 export function loadGame() {
   const parsed = loadRawState();

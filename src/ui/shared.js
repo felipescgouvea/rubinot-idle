@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=27';
-import { ITEMS } from '../domain/items.js?v=27';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=27';
+import { on, EVENTS } from '../shared/eventBus.js?v=28';
+import { ITEMS } from '../domain/items.js?v=28';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=28';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -16,6 +16,38 @@ export function itemIconImg(itemId, cls = '') {
   const file = itemSpriteFile(itemId);
   return `<img src="${spriteUrl(file)}" alt="${item.name}" class="${cls} tibia-icon"
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${item.icon}</span>'" />`;
+}
+
+// Mesmo padrão gracioso de fallback, pros demais tipos de ícone "de conteúdo
+// do jogo" (skill, magia, vital, moeda) — sempre sprite real primeiro, emoji
+// só como contingência se a imagem falhar ao carregar.
+export function skillIconImg(skillId, fallbackEmoji, cls = '') {
+  const file = skillIconFile(skillId);
+  if (!file) return `<span class="${cls}">${fallbackEmoji}</span>`;
+  return `<img src="${spriteUrl(file)}" alt="${skillId}" class="${cls} tibia-icon"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${fallbackEmoji}</span>'" />`;
+}
+
+export function spellIconImg(spellName, fallbackEmoji, cls = '') {
+  const file = spellIconFile(spellName);
+  return `<img src="${spriteUrl(file)}" alt="${spellName}" class="${cls} tibia-icon"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${fallbackEmoji}</span>'" />`;
+}
+
+export function vitalIconImg(kind, cls = '') {
+  const file = VITAL_ICON_FILES[kind];
+  const fallback = kind === 'hp' ? '❤️' : kind === 'mana' ? '🔵' : '⭐';
+  return `<img src="${spriteUrl(file)}" alt="${kind}" class="${cls} tibia-icon"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${fallback}</span>'" />`;
+}
+
+export function goldIconImg(cls = '') {
+  return itemIconImg('gold_coin', cls);
+}
+
+export function rubiniIconImg(cls = '') {
+  return `<img src="${spriteUrl(RUBINI_COIN_FILE)}" alt="Rubini Coin" class="${cls} tibia-icon"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>💎</span>'" />`;
 }
 
 export function formatNum(n) {

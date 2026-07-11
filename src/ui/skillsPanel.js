@@ -1,9 +1,10 @@
 // Aba Skills. Só re-renderiza ao trocar de aba (o treino em si acontece
 // silenciosamente durante a caçada — ver application/skillUseCases.js).
-import { G } from '../application/gameStore.js?v=27';
-import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=27';
-import { ITEMS } from '../domain/items.js?v=27';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=28';
+import { ITEMS } from '../domain/items.js?v=28';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=28';
+import { skillIconImg } from './shared.js?v=28';
 
 export function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');
@@ -37,7 +38,7 @@ export function renderSkillsPanel() {
       : 'Não treinada pela sua vocação';
     return `<div class="skill-card" ${isPrimary ? 'style="border-color:var(--gold-dim)"' : ''}>
       <div class="skill-card-header">
-        <span class="skill-card-name">${s.icon} ${s.name}</span>
+        <span class="skill-card-name">${skillIconImg(id, s.icon)} ${s.name}</span>
         <span class="skill-card-level">${sk.lv}</span>
       </div>
       <div class="skill-card-desc">${isPrimary ? '⭐ Treinando agora' : reasonInactive}</div>

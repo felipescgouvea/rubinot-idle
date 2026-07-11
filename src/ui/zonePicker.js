@@ -1,12 +1,12 @@
 // Painel de escolha de zona de caça: um card por dungeon do mundo atual, com
 // criaturas, multiplicadores e o requisito de nível — em vez do <select>
 // escondido de antes. Mesmo padrão do seletor de outfit (ver outfitPicker.js).
-import { G } from '../application/gameStore.js?v=27';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=27';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=27';
-import { openModal, closeModal } from './shared.js?v=27';
-import { openBattleModal } from './battleModal.js?v=27';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=27';
+import { G } from '../application/gameStore.js?v=28';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=28';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=28';
+import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=28';
+import { openBattleModal } from './battleModal.js?v=28';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=28';
 
 function zoneCard(id, z) {
   const locked = G.level < z.minLevel;
@@ -17,7 +17,7 @@ function zoneCard(id, z) {
     <div class="zone-card-icon">${zoneIconImg(z, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${z.name}</div>
     <div class="zone-card-monster-row">${monsterIcons}</div>
-    <div class="zone-card-mults">⭐×${z.xpMult} 💰×${z.goldMult}</div>
+    <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${z.xpMult} ${goldIconImg('inline-icon')}×${z.goldMult}</div>
     ${locked
       ? `<div class="zone-card-req">🔒 Lv ${z.minLevel}</div>`
       : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? '✅ Caçando' : 'Caçar aqui'}</button>`}

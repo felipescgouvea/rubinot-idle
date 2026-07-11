@@ -42,3 +42,37 @@ export function itemSpriteFile(itemId) {
 export function spriteUrl(file) {
   return SPRITE_BASE + file;
 }
+
+// Ícones de skill: arquivo real do Tibia (nome não deriva do id da skill,
+// por isso é uma tabela em vez de convenção — ver domain/character.js).
+const SKILL_ICON_FILES = {
+  magic: 'Magic_Level_Icon.png',
+  fist: 'Fist_Fighting_Icon.png',
+  club: 'Club_Fighting_Icon.png',
+  sword: 'Sword_Fighting_Icon.png',
+  axe: 'Axe_Fighting_Icon.png',
+  distance: 'Distance_Fighting_Icon.png',
+  shielding: 'Shielding_Icon.png',
+};
+export function skillIconFile(skillId) {
+  return SKILL_ICON_FILES[skillId];
+}
+
+// Ícone de magia: cada spell tem sua própria sprite no TibiaWiki, nomeada
+// pelo nome em inglês da magia (ex.: "Light Healing" -> Light_Healing.gif).
+export function spellIconFile(spellName) {
+  return spellName.replace(/ /g, '_') + '.gif';
+}
+
+// Vitais do personagem (HP/Mana/XP) — sprites reais da janela de status do Tibia.
+export const VITAL_ICON_FILES = {
+  hp: 'Hit_Points_Icon.gif',
+  mana: 'Mana_Icon.gif',
+  xp: 'Experience_Icon.gif',
+};
+
+// Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin
+// é moeda premium exclusiva deste jogo idle — não existe em Tibia/RubinOT,
+// então usa a sprite real mais próxima em conceito (Tibia Coin, a moeda
+// premium oficial) em vez de um emoji genérico.
+export const RUBINI_COIN_FILE = 'Tibia_Coin.gif';

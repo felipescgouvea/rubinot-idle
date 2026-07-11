@@ -798,6 +798,8 @@ img.tibia-icon {
 .rtc-row.selected { border-color: var(--gold-bright); background: linear-gradient(180deg, #3a3420, #2b2712); }
 .rtc-row.locked { opacity: 0.5; }
 .rtc-row-icon { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
+.rtc-row-icon-img { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; }
+.inline-icon { height: 12px; width: auto; vertical-align: -0.15em; image-rendering: pixelated; }
 .rtc-row-info { flex: 1; min-width: 0; }
 .rtc-row-name { color: #eef1f4; font-family: var(--serif); font-size: 12px; font-weight: 700; }
 .rtc-row-name em { color: #9aa3ad; font-style: normal; font-size: 10.5px; margin-left: 6px; }
