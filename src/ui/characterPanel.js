@@ -1,13 +1,13 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=30';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=30';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=30';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=30';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=30';
-import { on, EVENTS } from '../shared/eventBus.js?v=30';
-import { formatNum } from './shared.js?v=30';
-import { renderZonePicker } from './huntPanel.js?v=30';
+import { G } from '../application/gameStore.js?v=31';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=31';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=31';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=31';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=31';
+import { on, EVENTS } from '../shared/eventBus.js?v=31';
+import { formatNum } from './shared.js?v=31';
+import { renderZonePicker } from './huntPanel.js?v=31';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -129,13 +129,13 @@ export function renderHeaderStats() {
 // Espelha o lado do monstro (huntPanel.renderMonsterDisplay): mesmo tratamento
 // de troca de sprite só quando muda, hit-flash e estado "morto" — sem recriar
 // a <img> a cada tick (senão o sprite nunca termina de carregar).
-export function renderPlayerBattleSide(hit = false) {
+export function renderPlayerBattleSide(hit = false, attacking = false) {
   const wrap = document.getElementById('player-sprite-wrap');
   if (!wrap) return;
 
   if (!G.vocation) {
     wrap.innerHTML = '<span class="player-sprite-fallback">🧑</span>';
-    wrap.classList.remove('dead', 'hit');
+    wrap.classList.remove('dead', 'hit', 'attacking');
     document.getElementById('player-battle-name').textContent = '—';
     document.getElementById('player-hp-fill').style.width = '0%';
     document.getElementById('player-hp-label').textContent = '--/--';
@@ -144,6 +144,7 @@ export function renderPlayerBattleSide(hit = false) {
 
   mountPlayerPortrait(wrap, 'player-sprite');
   if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
+  if (attacking) { wrap.classList.remove('attacking'); void wrap.offsetWidth; wrap.classList.add('attacking'); }
   wrap.classList.toggle('dead', G.hp <= 0);
 
   const maxHp = getMaxHp();
@@ -160,5 +161,5 @@ export function wireCharacterPanelEvents() {
   on(EVENTS.CHAR_INFO, renderCharInfo);
   on(EVENTS.BARS, renderBars);
   on(EVENTS.HEADER_STATS, renderHeaderStats);
-  on(EVENTS.PLAYER_BATTLE_SIDE, ({ hit } = {}) => renderPlayerBattleSide(hit));
+  on(EVENTS.PLAYER_BATTLE_SIDE, ({ hit, attacking } = {}) => renderPlayerBattleSide(hit, attacking));
 }

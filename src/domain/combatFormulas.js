@@ -4,24 +4,25 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=30';
-import { ITEMS } from './items.js?v=30';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=31';
+import { resolveEquippedItem } from './items.js?v=31';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
 // mágica, tipo rod/wand), o golpe é desarmado e treina Fist Fighting, como no Tibia.
-export function equippedWeaponSkillId(equipment) {
-  const weapon = equipment.weapon ? ITEMS[equipment.weapon] : null;
+// `relics` é opcional (G.relics) — precisa pra resolver a arma quando o slot
+// guarda o id de uma Relíquia em vez de um itemId comum (ver domain/items.js).
+export function equippedWeaponSkillId(equipment, relics) {
+  const weapon = resolveEquippedItem(equipment.weapon, relics);
   const wt = weapon && weapon.weaponType;
   if (wt === 'sword' || wt === 'axe' || wt === 'club' || wt === 'distance') return wt;
   return 'fist';
 }
 
-export function computeEquipBonus(equipment) {
+export function computeEquipBonus(equipment, relics) {
   const totals = {};
-  Object.values(equipment).forEach(itemId => {
-    if (!itemId) return;
-    const item = ITEMS[itemId];
+  Object.values(equipment).forEach(slotValue => {
+    const item = resolveEquippedItem(slotValue, relics);
     if (!item) return;
     ['atk', 'def', 'magic', 'hp', 'spd'].forEach(stat => {
       if (item[stat]) totals[stat] = (totals[stat] || 0) + item[stat];
@@ -30,11 +31,11 @@ export function computeEquipBonus(equipment) {
   return totals;
 }
 
-export function computeMaxHp({ vocation, level, equipment }) {
+export function computeMaxHp({ vocation, level, equipment, relics }) {
   if (!vocation) return 100;
   const v = VOCATIONS[vocation];
   const base = v.baseHp + (level - 1) * v.hpPerLevel;
-  const eqBonus = computeEquipBonus(equipment).hp || 0;
+  const eqBonus = computeEquipBonus(equipment, relics).hp || 0;
   return base + eqBonus;
 }
 
@@ -46,15 +47,15 @@ export function computeMaxMana({ vocation, level }) {
 
 // Dano segue a skill realmente treinada, como no Tibia:
 // mages = Magic Level; demais vocações = skill da arma equipada (ou Fist, desarmado).
-export function computeAtk({ vocation, level, skills, equipment }) {
+export function computeAtk({ vocation, level, skills, equipment, relics }) {
   if (!vocation) return 0;
-  const eq = computeEquipBonus(equipment).atk || 0;
-  const eqMagic = computeEquipBonus(equipment).magic || 0;
+  const eq = computeEquipBonus(equipment, relics).atk || 0;
+  const eqMagic = computeEquipBonus(equipment, relics).magic || 0;
   const voc = VOC_TRAINING[vocation];
   if (voc.attackSkill === 'magic') {
     return Math.floor(skills.magic.lv * 3 + level * 0.8 + eq + eqMagic * 1.5);
   }
-  const skillId = equippedWeaponSkillId(equipment);
+  const skillId = equippedWeaponSkillId(equipment, relics);
   if (skillId === 'distance') {
     return Math.floor(skills.distance.lv * 2.2 + level + eq);
   }
@@ -63,8 +64,8 @@ export function computeAtk({ vocation, level, skills, equipment }) {
 
 // Defesa: o bônus de Shielding só se aplica com um escudo equipado — sem escudo,
 // a skill não tem onde "encostar" (como no Tibia, ela melhora a defesa do escudo).
-export function computeDef({ skills, equipment }) {
-  const eq = computeEquipBonus(equipment).def || 0;
+export function computeDef({ skills, equipment, relics }) {
+  const eq = computeEquipBonus(equipment, relics).def || 0;
   const shieldBonus = equipment.shield ? Math.floor(skills.shielding.lv * 1.2) : 0;
   return shieldBonus + eq;
 }
@@ -73,10 +74,10 @@ export function computeMagic({ skills }) {
   return skills.magic.lv;
 }
 
-export function computeSpd({ vocation, equipment }) {
+export function computeSpd({ vocation, equipment, relics }) {
   if (!vocation) return 1;
   const v = VOCATIONS[vocation];
-  return +(v.baseSpd + (computeEquipBonus(equipment).spd || 0)).toFixed(2);
+  return +(v.baseSpd + (computeEquipBonus(equipment, relics).spd || 0)).toFixed(2);
 }
 
 export function calcDamage(atk, def) {

@@ -1,11 +1,12 @@
-import { G } from './gameStore.js?v=30';
-import { ITEMS } from '../domain/items.js?v=30';
-import { ZONES } from '../domain/bestiary.js?v=30';
-import { emit, EVENTS } from '../shared/eventBus.js?v=30';
-import { getMaxHp, getMaxMana } from './stats.js?v=30';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=30';
-import { saveGame } from './saveGameUseCase.js?v=30';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=30';
+import { G } from './gameStore.js?v=31';
+import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=31';
+import { ZONES } from '../domain/bestiary.js?v=31';
+import { RARITY_TIERS } from '../domain/rarity.js?v=31';
+import { emit, EVENTS } from '../shared/eventBus.js?v=31';
+import { getMaxHp, getMaxMana } from './stats.js?v=31';
+import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=31';
+import { saveGame } from './saveGameUseCase.js?v=31';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=31';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -13,7 +14,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=30';
+export { addItemToInventory } from './inventoryCore.js?v=31';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
@@ -25,13 +26,59 @@ export function equipItem(itemId) {
   saveGame();
 }
 
+// Desequipa tanto um itemId comum quanto o id de uma Relíquia (formato
+// "relic_<n>") — resolveEquippedItem() é o único ponto que sabe diferenciar
+// os dois formatos (ver domain/items.js), então este caso de uso continua
+// igual pros dois casos: só descobre em qual slot.type mexer.
 export function unequipItem(itemId) {
-  const item = ITEMS[itemId];
+  const item = resolveEquippedItem(itemId, G.relics);
+  if (!item) return;
   G.equipment[item.type] = null;
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: `${item.name} desequipado.` });
+  saveGame();
+}
+
+// Equipar uma Relíquia (ver domain/gameState.js: G.relics) — mesmo padrão de
+// equipItem, mas o valor guardado no slot é o id da relíquia, não o itemId.
+export function equipRelic(relicId) {
+  const relic = (G.relics || []).find(r => r.id === relicId);
+  if (!relic) return;
+  const base = ITEMS[relic.itemId];
+  if (!base) return;
+  G.equipment[base.type] = relicId;
+  const tier = RARITY_TIERS[relic.rarity];
+  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.INVENTORY);
+  emit(EVENTS.CHAR_INFO);
+  emit(EVENTS.NOTIFY, { msg: `${base.name} (${tier.name}) equipado!`, type: 'success' });
+  saveGame();
+}
+
+// Vender uma Relíquia é definitivo — some de G.relics e paga em gold, com um
+// preço maior que o item base (a raridade conta pra mais que o dobro do peso
+// do bônus no preço final, pra recompensar quem preferir vender uma relíquia
+// que não precisa em vez de guardar).
+export function sellRelic(relicId) {
+  const idx = (G.relics || []).findIndex(r => r.id === relicId);
+  if (idx === -1) return;
+  const relic = G.relics[idx];
+  const base = ITEMS[relic.itemId];
+  if (!base) return;
+  const price = Math.round(base.sell * (1 + relic.bonusPct * 2));
+  // se a relíquia vendida estava equipada, o slot não pode continuar
+  // apontando pra um id que não existe mais
+  if (G.equipment[base.type] === relicId) G.equipment[base.type] = null;
+  G.relics.splice(idx, 1);
+  G.gold += price;
+  const tier = RARITY_TIERS[relic.rarity];
+  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.INVENTORY);
+  emit(EVENTS.HEADER_STATS);
+  emit(EVENTS.CHAR_INFO);
+  emit(EVENTS.NOTIFY, { msg: `Vendida relíquia ${base.name} (${tier.name}) por ${price} 💰`, type: 'success' });
   saveGame();
 }
 

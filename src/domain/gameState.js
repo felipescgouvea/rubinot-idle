@@ -3,9 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=30';
-import { createDefaultRtc } from './rtcConfig.js?v=30';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=30';
+import { createDefaultSkills } from './character.js?v=31';
+import { createDefaultRtc } from './rtcConfig.js?v=31';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=31';
 
 export function createDefaultState() {
   return {
@@ -27,6 +27,13 @@ export function createDefaultState() {
     outfitColors: { ...DEFAULT_OUTFIT_COLORS },
     inventory: {},
     equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },
+    // Relíquias: itens dropados por boss com um modificador de raridade (ver
+    // domain/rarity.js) — instâncias únicas, nunca empilhadas, separadas do
+    // inventário normal empilhável (G.inventory). Um slot de G.equipment pode
+    // guardar o id de uma relíquia (formato "relic_<n>") em vez de um itemId
+    // comum — ver domain/items.js: isRelicId/resolveEquippedItem.
+    relics: [],
+    relicSeq: 0,
     activeZone: null,
     // ids de zona cujo boss (ZONES[id].boss) já morreu ≥1x — gate de progressão
     // (ver domain/bestiary.js: isZoneUnlocked / requiresBossOf). Migração pra

@@ -1,17 +1,21 @@
 // Aba Skills. Só re-renderiza ao trocar de aba (o treino em si acontece
 // silenciosamente durante a caçada — ver application/skillUseCases.js).
-import { G } from '../application/gameStore.js?v=30';
-import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=30';
-import { ITEMS } from '../domain/items.js?v=30';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=30';
-import { skillIconImg } from './shared.js?v=30';
+import { G } from '../application/gameStore.js?v=31';
+import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=31';
+import { resolveEquippedItem } from '../domain/items.js?v=31';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=31';
+import { skillIconImg } from './shared.js?v=31';
 
 export function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');
   const voc = G.vocation ? VOC_TRAINING[G.vocation] : null;
   const isMage = voc && voc.attackSkill === 'magic';
   const weaponSkillId = voc && !isMage ? getEquippedWeaponSkillId() : null;
-  const weaponItem = G.equipment.weapon ? ITEMS[G.equipment.weapon] : null;
+  // resolveEquippedItem() cobre tanto uma arma comum quanto uma Relíquia
+  // equipada no slot de arma (ver domain/items.js) — sem isso, uma arma-relíquia
+  // ficaria com nome vazio aqui (e, pior, sem isso em combatFormulas.js, seria
+  // tratada como desarmada).
+  const weaponItem = resolveEquippedItem(G.equipment.weapon, G.relics);
 
   pts.innerHTML = G.vocation
     ? `<strong>Skills sobem por uso, como no Tibia — só treina o que você realmente usa.</strong> ` +

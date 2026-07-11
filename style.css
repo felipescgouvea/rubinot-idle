@@ -594,6 +594,18 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   font-size: 3.2rem; /* fallback emoji */
 }
 .monster-sprite-wrap.dead .monster-sprite { filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044); }
+.monster-sprite-wrap.dying { animation: monster-death 0.5s ease forwards; }
+@keyframes monster-death {
+  0% { transform: scale(1) rotate(0); opacity: 1; filter: drop-shadow(0 3px 5px #00000044); }
+  40% { transform: scale(1.18) rotate(-10deg); opacity: 0.9; filter: brightness(2.2) drop-shadow(0 0 14px #ffffffcc); }
+  100% { transform: scale(0.75) rotate(15deg) translateY(12px); opacity: 0.45; filter: grayscale(1) drop-shadow(0 3px 5px #00000044); }
+}
+.player-sprite-wrap.attacking { animation: player-attack 0.3s ease; }
+@keyframes player-attack {
+  0% { transform: translateX(0) rotate(0); }
+  35% { transform: translateX(10px) rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 8px #f1c40fcc); }
+  100% { transform: translateX(0) rotate(0); }
+}
 @keyframes monster-idle {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-4px) scale(1.03); }
@@ -962,6 +974,13 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .inv-item .item-qty { position: absolute; top: 3px; right: 5px; font-size: 9.5px; color: var(--navy-1); font-weight: 700; }
 .inv-item.rare { border-color: #8e44ad; }
 .inv-item.epic { border-color: var(--gold); }
+
+/* ============ RELÍQUIAS (itens com modificador de raridade, drop exclusivo
+   de boss — ver domain/rarity.js) — mesma grade/card do inventário normal,
+   com borda/glow 2px na cor da raridade em vez da borda fina padrão. ============ */
+#relics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; margin: 8px 14px 14px !important; }
+.inv-item.relic-item { border-width: 2px; }
+.relic-tier-badge { font-size: 8px; font-weight: 700; margin-top: 3px; letter-spacing: 0.5px; }
 
 /* ============ MUNDOS ============ */
 #worlds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 12px 14px 14px !important; }

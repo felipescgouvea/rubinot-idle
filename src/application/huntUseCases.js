@@ -3,31 +3,51 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=30';
-import { ZONES, boostedZoneForDate } from '../domain/bestiary.js?v=30';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=30';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=30';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=30';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=30';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=30';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=30';
-import { ITEMS } from '../domain/items.js?v=30';
-import { MONSTERS } from '../domain/bestiary.js?v=30';
-import { emit, EVENTS } from '../shared/eventBus.js?v=30';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=30';
-import { trainSkill } from './skillUseCases.js?v=30';
-import { addItemToInventory } from './inventoryCore.js?v=30';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=30';
+import { G } from './gameStore.js?v=31';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS } from '../domain/bestiary.js?v=31';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=31';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=31';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=31';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=31';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=31';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=31';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=31';
+import { MONSTERS } from '../domain/bestiary.js?v=31';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=31';
+import { emit, EVENTS } from '../shared/eventBus.js?v=31';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=31';
+import { trainSkill } from './skillUseCases.js?v=31';
+import { addItemToInventory } from './inventoryCore.js?v=31';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=31';
 
 let huntInterval = null;
 let regenInterval = null;
 let currentMonster = null;
+// Modo "só o boss" do Boss Rush (ver application/bossRushUseCases.js): quando
+// ligado, spawnMonsterInstance só sorteia zone.boss em vez do elenco normal
+// da zona — nunca muda o desenho da caçada comum, só restringe o pool de
+// spawn. Fica de fora do save de propósito: é um modo de sessão, não de save
+// (o jogador nunca "salva" estando em Boss Rush).
+let bossOnly = false;
 
 export function getCurrentMonster() {
   return currentMonster;
 }
 
+export function isBossOnlyHunt() {
+  return bossOnly;
+}
+
+// Só quem sai explicitamente do Boss Rush (ver bossRushUseCases.js) ou troca
+// de zona pelo seletor normal deve chamar isto — startHunt()/stopHunt() por
+// si só NÃO mexem na flag, pra pausar/retomar (toggleHunt) durante um Boss
+// Rush continuar restrito ao boss em vez de "vazar" pro elenco normal da zona.
+export function setBossOnlyMode(v) {
+  bossOnly = !!v;
+}
+
 export function selectZone(zoneId) {
+  bossOnly = false; // escolher uma zona pelo seletor normal sempre sai do Boss Rush
   G.activeZone = zoneId;
   emit(EVENTS.ZONE_PICKER); // atualiza a barra de zona atual + o tema visual
   if (G.hunting) { stopHunt(); startHunt(); }
@@ -44,7 +64,9 @@ export function startHunt() {
   if (G.level < zone.minLevel) { emit(EVENTS.NOTIFY, { msg: `Nível mínimo: ${zone.minLevel}`, type: 'error' }); return; }
   G.hunting = true;
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
-  emit(EVENTS.LOG, `<span class="log-info">🗺️ Entrando em ${zone.icon} ${zone.name}...</span>`);
+  emit(EVENTS.LOG, bossOnly
+    ? `<span class="log-info">💀 Boss Rush: desafiando ${zone.icon} ${zone.name}...</span>`
+    : `<span class="log-info">🗺️ Entrando em ${zone.icon} ${zone.name}...</span>`);
   huntInterval = setInterval(doHuntTick, Math.max(400, 1200 / getSpd()));
 }
 
@@ -60,7 +82,12 @@ export function doHuntTick() {
   if (!G.hunting || !G.activeZone) return;
 
   if (!currentMonster) {
-    currentMonster = spawnMonsterInstance(ZONES[G.activeZone], MONSTERS, G.level);
+    const zone = ZONES[G.activeZone];
+    // Boss Rush: restringe o pool de spawn só ao boss da zona, sem tocar em
+    // spawnMonsterInstance (a caçada comum continua sorteando o elenco
+    // inteiro normalmente) — ver setBossOnlyMode()/bossRushUseCases.js.
+    const spawnZone = bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
+    currentMonster = spawnMonsterInstance(spawnZone, MONSTERS, G.level);
     emit(EVENTS.LOG, `${currentMonster.icon} <span class="log-info">${currentMonster.name} apareceu!</span>`);
     emit(EVENTS.MONSTER_DISPLAY, {});
     return; // o monstro aparece neste tick; o combate começa no próximo
@@ -101,6 +128,7 @@ export function doHuntTick() {
   }
   currentMonster.hp -= playerDmg;
   emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
+  emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
   emit(EVENTS.MONSTER_DISPLAY, { hit: true });
 
   if (currentMonster.hp <= 0) {
@@ -195,6 +223,33 @@ export function resolveMonsterKill(zone) {
     }
   });
   if (lootLine.length > 0) emit(EVENTS.LOG, `<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
+
+  // Relíquia (raridade) — cai SÓ de boss (ver domain/bestiary.js:
+  // BOSS_MONSTER_IDS), com uma chance pequena por cima do loot normal acima.
+  // Funciona igual num kill de caçada comum (zona cujo boss aparece no
+  // elenco) e num kill de Boss Rush (ver bossRushUseCases.js) — os dois
+  // passam por aqui.
+  if (BOSS_MONSTER_IDS.has(currentMonster.defKey) && Math.random() < 0.10) {
+    const equippablePool = currentMonster.loot
+      .map(([id]) => id)
+      .filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
+    const pool = equippablePool.length > 0
+      ? equippablePool
+      : Object.keys(ITEMS).filter(id => EQUIPPABLE_TYPES.includes(ITEMS[id].type));
+    if (pool.length > 0) {
+      const itemId = pool[Math.floor(Math.random() * pool.length)];
+      const rarity = rollRarityTier();
+      const tier = RARITY_TIERS[rarity];
+      G.relicSeq = (G.relicSeq || 0) + 1;
+      G.relics = G.relics || [];
+      G.relics.push({ id: 'relic_' + G.relicSeq, itemId, rarity, bonusPct: tier.bonusPct });
+      const item = ITEMS[itemId];
+      const pct = Math.round(tier.bonusPct * 100);
+      emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">💎 Relíquia ${tier.name}: ${item.name} +${pct}%! (drop de boss)</span>`);
+      emit(EVENTS.NOTIFY, { msg: `💎 Relíquia ${tier.name}: ${item.name} +${pct}%!`, type: 'success' });
+      emit(EVENTS.INVENTORY);
+    }
+  }
 
   gainXp(xpGained);
   const killedId = currentMonster.defKey;

@@ -1,4 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
+import { primaryStatKeyForItem } from './rarity.js?v=31';
 
 export const ITEMS = {
   bones:          { name: 'Ossos', icon: '🦴', type: 'misc', sell: 1 },
@@ -131,3 +132,31 @@ export const STARTER_KITS = {
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ring', 'legs', 'boots'];
 export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ring', 'legs', 'boots'];
 export const CONSUMABLE_TYPES = ['potion', 'rune', 'food'];
+
+// Um valor de slot de equipamento (G.equipment[slot]) pode ser um itemId comum
+// (chave direta de ITEMS) OU o id de uma Relíquia (G.relics — ver
+// domain/gameState.js), no formato "relic_<n>". Esta função é o único critério
+// usado no jogo inteiro pra distinguir os dois formatos.
+export function isRelicId(id) {
+  return typeof id === 'string' && id.startsWith('relic_');
+}
+
+// Resolve o item "efetivo" equipado num slot: um itemId comum vira
+// ITEMS[itemId] direto; o id de uma Relíquia vira uma cópia do item base com
+// o stat principal reforçado pelo bônus de raridade (ver domain/rarity.js).
+// `relics` é passada explicitamente (em vez de ler G direto) pra manter esta
+// função pura — quem chama passa G.relics (ver application/stats.js).
+// Ponto único de resolução: todo cálculo de stat/skill que hoje lê
+// ITEMS[equipment[slot]] deve passar por aqui em vez de duplicar o
+// if (isRelicId(...)) em cada lugar.
+export function resolveEquippedItem(slotValue, relics) {
+  if (!slotValue) return null;
+  if (!isRelicId(slotValue)) return ITEMS[slotValue] || null;
+  const relic = (relics || []).find(r => r.id === slotValue);
+  if (!relic) return null;
+  const base = ITEMS[relic.itemId];
+  if (!base) return null;
+  const statKey = primaryStatKeyForItem(base);
+  if (!statKey) return { ...base };
+  return { ...base, [statKey]: Math.round(base[statKey] * (1 + relic.bonusPct)) };
+}

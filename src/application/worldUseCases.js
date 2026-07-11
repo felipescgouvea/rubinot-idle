@@ -1,13 +1,14 @@
-import { G } from './gameStore.js?v=30';
-import { WORLDS } from '../domain/progression.js?v=30';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=30';
-import { stopHunt } from './huntUseCases.js?v=30';
-import { saveGame } from './saveGameUseCase.js?v=30';
+import { G } from './gameStore.js?v=31';
+import { WORLDS } from '../domain/progression.js?v=31';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=31';
+import { stopHunt, setBossOnlyMode } from './huntUseCases.js?v=31';
+import { saveGame } from './saveGameUseCase.js?v=31';
 
 export function selectWorld(worldId) {
   const world = WORLDS.find(w => w.id === worldId);
   if (!world || G.level < world.reqLevel) return;
   if (G.hunting) stopHunt(); // já zera o monstro/intervalo de caçada em curso
+  setBossOnlyMode(false); // trocar de mundo sempre sai do Boss Rush (o boss pertence a uma zona de um mundo específico)
   G.currentWorld = worldId;
   emit(EVENTS.WORLDS_PANEL);
   emit(EVENTS.ZONE_PICKER);

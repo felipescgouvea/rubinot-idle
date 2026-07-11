@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=30" />
+  <link rel="stylesheet" href="style.css?v=31" />
 </head>
 <body>
   <div id="app">
@@ -31,6 +31,7 @@
       <button class="tab" data-tab="tasks">📜 Tarefas</button>
       <button class="tab" data-tab="skills">⚡ Skills</button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
+      <button class="tab" data-tab="bossrush">💀 Boss Rush</button>
       <button class="tab" data-tab="inventory">🎒 Inventário</button>
       <button class="tab" data-tab="worlds">🌍 Mundos</button>
       <button class="tab" data-tab="battlepass">🎖️ Battle Pass</button>
@@ -169,12 +170,25 @@
         </div>
       </section>
 
+      <!-- BOSS RUSH -->
+      <section id="tab-bossrush" class="panel">
+        <div class="card full-card">
+          <h3>💀 Boss Rush</h3>
+          <p class="muted">Desafie diretamente o boss de qualquer zona que você já desbloqueou — sem os monstros comuns dela pelo caminho.</p>
+          <div id="bossrush-stop-area" style="padding:0 14px 8px"></div>
+          <div id="bossrush-grid"></div>
+        </div>
+      </section>
+
       <!-- INVENTORY -->
       <section id="tab-inventory" class="panel">
         <div class="card full-card">
           <h3>🎒 Inventário</h3>
           <p class="muted">Clique num item para equipar, vender ou ver detalhes. O que estiver equipado aparece no card Equipamento da aba Caçada.</p>
           <div id="inventory-grid"></div>
+          <h3 style="margin-top:6px">💎 Relíquias</h3>
+          <p class="muted">Itens com modificador de raridade, exclusivos de drop de boss (Caçada ou Boss Rush). Clique numa relíquia para equipar, vender ou ver detalhes.</p>
+          <div id="relics-grid"></div>
         </div>
       </section>
 
@@ -271,6 +285,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=30"></script>
+  <script type="module" src="src/main.js?v=31"></script>
 </body>
 </html>

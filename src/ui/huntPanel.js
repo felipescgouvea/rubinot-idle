@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=30';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=30';
-import { MONSTERS } from '../domain/bestiary.js?v=30';
-import { ITEMS } from '../domain/items.js?v=30';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=30';
-import { on, EVENTS } from '../shared/eventBus.js?v=30';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=30';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=30';
+import { G } from '../application/gameStore.js?v=31';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=31';
+import { MONSTERS } from '../domain/bestiary.js?v=31';
+import { ITEMS } from '../domain/items.js?v=31';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=31';
+import { on, EVENTS } from '../shared/eventBus.js?v=31';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=31';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=31';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -33,7 +33,9 @@ export function renderMonsterDisplay(hit = false, killed = null) {
   if (!currentMonster && killed) {
     // se o morto já está na tela, só acinzenta in-place (preserva o <img> carregado)
     if (el.dataset.monsterId === killed && el.querySelector('.monster-sprite-wrap')) {
-      el.querySelector('.monster-sprite-wrap').classList.add('dead');
+      const wrap = el.querySelector('.monster-sprite-wrap');
+      if (!wrap.classList.contains('dead')) { wrap.classList.remove('dying'); void wrap.offsetWidth; wrap.classList.add('dying'); }
+      wrap.classList.add('dead');
       el.querySelector('.monster-hp-fill').style.width = '0%';
       el.querySelector('.monster-hp-label').textContent = `0 / ${el.querySelector('.monster-hp-label').textContent.split('/')[1].trim()}`;
       el.querySelector('.monster-name').textContent = `☠️ ${MONSTERS[killed].name}`;

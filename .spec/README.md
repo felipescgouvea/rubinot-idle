@@ -19,7 +19,7 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 
 ## Itens & Economia
 
-- [20-itens-e-equipamento.md](20-itens-e-equipamento.md) — inventário, slots de equipamento e itens.
+- [20-itens-e-equipamento.md](20-itens-e-equipamento.md) — inventário, slots de equipamento, itens e Relíquias (drop de raridade exclusivo de boss).
 - [21-loja.md](21-loja.md) — as 4 lojas do jogo: Rubini Store, Loja de Equipamentos, Loja de Artigos Mágicos e a Loja Premium (dinheiro real).
 
 ## Progressão & Competição
@@ -29,6 +29,7 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 - [32-mundos.md](32-mundos.md) — os mundos de Rubinot e seus bônus.
 - [33-battle-pass.md](33-battle-pass.md) — progressão sazonal por tiers.
 - [34-highscores.md](34-highscores.md) — ranking global entre jogadores.
+- [35-boss-rush.md](35-boss-rush.md) — desafiar um boss já desbloqueado direto, sem os monstros comuns da zona.
 
 ## Persistência
 

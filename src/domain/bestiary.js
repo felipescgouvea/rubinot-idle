@@ -190,6 +190,12 @@ export const MONSTERS = {
   ferumbras:           { name: 'Ferumbras', icon: '👑', hp: 1200000, atk: 1150, def: 270, xp: 1000000, gold: [8000,10500], loot: [['boots_of_haste',0.006],['magic_plate_armor',0.02],['crystal_coin',1.3],['titan_axe',0.03]] },
 };
 
+// Definição única de "o que conta como boss" no jogo inteiro — reaproveitada
+// tanto pra Relíquias (só caem de boss, ver application/huntUseCases.js)
+// quanto pro Boss Rush (ver application/bossRushUseCases.js). Não duplicar
+// essa lista em nenhum outro lugar: o boss de cada zona já é ZONES[id].boss.
+export const BOSS_MONSTER_IDS = new Set(Object.values(ZONES).map(z => z.boss));
+
 // Uma zona com requiresBossOf só abre depois que o boss da zona anterior da
 // cadeia morreu ≥1x (ver ZONES[id].requiresBossOf/.boss) — em cima do gate de
 // nível/mundo que já existia. Pura o bastante pra usar tanto na UI (zonePicker,
