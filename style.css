@@ -1595,3 +1595,38 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .inv-item { cursor: grab; }
 .inv-item.dragging { opacity: 0.4; cursor: grabbing; }
 .inv-item.drag-over { outline: 2px dashed var(--gold); outline-offset: 2px; background: #fffbe9; }
+
+/* ============ BOOSTED (widget compacto, canto superior direito) ============ */
+#boosted-card {
+  position: fixed;
+  top: 80px; right: 14px;
+  width: 188px;
+  z-index: 45;
+  box-shadow: 0 6px 22px #00000066;
+  margin: 0 !important;
+}
+#boosted-card h3 { padding: 5px 24px; font-size: 10px; letter-spacing: 1px; }
+#boosted-card h3::before, #boosted-card h3::after { font-size: 6px; }
+#boosted-card .boosted-body { gap: 6px; margin: 8px 8px !important; }
+#boosted-card .boosted-item { padding: 5px 2px; border-width: 1px; }
+#boosted-card .boosted-label { font-size: 7.5px; }
+#boosted-card .boosted-sprite { height: 34px; margin: 2px 0; }
+#boosted-card .boosted-sprite-img { max-height: 32px; max-width: 32px; }
+#boosted-card .boosted-name { font-size: 9px; line-height: 1.1; }
+
+/* ============ BAG (janela do inventário abre fixa à direita) ============ */
+#backpack-inventory-card {
+  position: fixed;
+  top: 180px; right: 14px;
+  width: 320px; max-width: calc(100vw - 28px);
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  z-index: 60;
+  box-shadow: 0 10px 34px #00000077;
+  margin: 0 !important;
+}
+
+@media (max-width: 720px) {
+  #boosted-card { position: static; width: auto; margin: 10px !important; }
+  #backpack-inventory-card { position: static; width: auto; max-height: none; margin: 10px !important; }
+}

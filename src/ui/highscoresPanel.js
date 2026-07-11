@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js?v=44';
-import { on, EVENTS } from '../shared/eventBus.js?v=44';
-import { escapeHtml, notify } from './shared.js?v=44';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=44';
+import { G } from '../application/gameStore.js?v=45';
+import { on, EVENTS } from '../shared/eventBus.js?v=45';
+import { escapeHtml, notify } from './shared.js?v=45';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=45';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 

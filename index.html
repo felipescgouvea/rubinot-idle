@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=44" />
-  <link rel="stylesheet" href="style.css?v=44" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=45" />
+  <link rel="stylesheet" href="style.css?v=45" />
 </head>
 <body>
   <div id="app">
@@ -77,6 +77,19 @@
       <button class="btn-small" onclick="openOutfitPicker()">👕 Outfit</button>
     </div>
 
+    <!-- Widgets fixos no canto (fora dos painéis, pra ficarem sempre no lugar):
+         Boosted do Dia (compacto, canto superior direito) e a janela da Bag
+         (inventário, abre à direita ao clicar com o botão direito no slot). -->
+    <div class="card" id="boosted-card">
+      <h3>🔥 Boosted</h3>
+      <div id="boosted-body" class="boosted-body"></div>
+    </div>
+    <div class="card" id="backpack-inventory-card" style="display:none">
+      <h3>🎒 Bag</h3>
+      <p class="muted">Clique num item para equipar, vender ou ver detalhes. Botão direito na Bag fecha.</p>
+      <div id="inventory-grid"></div>
+    </div>
+
     <!-- PANELS -->
     <main id="panels">
 
@@ -95,10 +108,6 @@
               <div id="kill-counters"></div>
             </div>
           </div>
-          <div class="card" id="boosted-card">
-            <h3>🔥 Boosted do Dia</h3>
-            <div id="boosted-body" class="boosted-body"></div>
-          </div>
           <div class="card" id="loot-card" style="display:none">
             <h3>Loot Recente</h3>
             <div id="loot-display"></div>
@@ -108,13 +117,6 @@
           <div class="card" id="equip-card">
             <h3>⚔️ Equipamento</h3>
             <div class="equipment-slots"></div>
-          </div>
-          <!-- Inventário (mochila) — some do header e aparece aqui embaixo do
-               Equipamento ao clicar com o botão direito no slot da Mochila. -->
-          <div class="card" id="backpack-inventory-card" style="display:none">
-            <h3>🎒 Mochila</h3>
-            <p class="muted">Clique num item para equipar, vender ou ver detalhes. Botão direito na mochila fecha esta janela.</p>
-            <div id="inventory-grid"></div>
           </div>
           <div class="card" id="char-card">
             <div id="vocation-select" class="vocation-grid">
@@ -333,6 +335,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=44"></script>
+  <script type="module" src="src/main.js?v=45"></script>
 </body>
 </html>

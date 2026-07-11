@@ -1,12 +1,12 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=44';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=44';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=44';
-import { on, EVENTS } from '../shared/eventBus.js?v=44';
-import { saveGame } from '../application/saveGameUseCase.js?v=44';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=44';
+import { G } from '../application/gameStore.js?v=45';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=45';
+import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=45';
+import { on, EVENTS } from '../shared/eventBus.js?v=45';
+import { saveGame } from '../application/saveGameUseCase.js?v=45';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=45';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -154,27 +154,27 @@ export function renderEquipmentSlots() {
         : `<div class="equip-slot-ghost">${SLOT_PLACEHOLDER[slot]}</div>`}
     </div>`;
   }).join('');
-  // Slot da Mochila (Backpack) — guarda um item de verdade (o "bag" inicial do
-  // Tibia, ver G.backpack), mas funciona como container: clicar com o botão
-  // direito abre/fecha o inventário embaixo do card de Equipamento (ver
-  // toggleBackpack / index.html). Clique esquerdo faz o mesmo, por conveniência.
+  // Slot da Bag — guarda um item de verdade (o "bag" inicial do Tibia, ver
+  // G.backpack) e funciona como container: botão direito abre/fecha a janela do
+  // inventário (que abre à direita — ver toggleBackpack / index.html). Clique
+  // esquerdo faz o mesmo, por conveniência.
   const bagId = G.backpack || 'bag';
   const bagName = (ITEMS[bagId] && ITEMS[bagId].name) || 'Bag';
-  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="${bagName} — botão direito abre/fecha a mochila"
+  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="${bagName} — botão direito abre/fecha a Bag"
       onclick="toggleBackpack()" oncontextmenu="event.preventDefault(); toggleBackpack(); return false;">
       <div class="equip-slot-icon">${itemIconImg(bagId, 'equip-slot-icon')}</div>
     </div>`;
   areas.forEach(a => { a.innerHTML = html + backpackHtml; });
 }
 
-// Abre/fecha o card de inventário que fica embaixo do Equipamento (aba
-// Caçada). Renderiza o inventário ao abrir pra refletir o estado atual.
+// Abre/fecha a janela da Bag (inventário), que aparece fixa à direita da tela.
+// Renderiza o inventário ao abrir pra refletir o estado atual.
 export function toggleBackpack() {
   const card = document.getElementById('backpack-inventory-card');
   if (!card) return;
   const willShow = card.style.display === 'none' || !card.style.display;
   card.style.display = willShow ? 'block' : 'none';
-  if (willShow) { renderInventory(); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  if (willShow) renderInventory();
 }
 
 export function wireInventoryAndEquipmentEvents() {
