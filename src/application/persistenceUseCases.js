@@ -1,19 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=28';
-import { createDefaultState } from '../domain/gameState.js?v=28';
-import { createDefaultSkills } from '../domain/character.js?v=28';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=28';
-import { isSpellAvailable } from '../domain/spells.js?v=28';
-import { findOutfit } from '../domain/outfits.js?v=28';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=28';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=28';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=28';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=28';
-import { emit, EVENTS } from '../shared/eventBus.js?v=28';
-import { getMaxHp, getMaxMana } from './stats.js?v=28';
-import { gainXp } from './huntUseCases.js?v=28';
-import { checkBpTier } from './battlePassUseCases.js?v=28';
+import { G, replaceState } from './gameStore.js?v=30';
+import { createDefaultState } from '../domain/gameState.js?v=30';
+import { createDefaultSkills } from '../domain/character.js?v=30';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=30';
+import { isSpellAvailable } from '../domain/spells.js?v=30';
+import { findOutfit } from '../domain/outfits.js?v=30';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=30';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=30';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=30';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=30';
+import { emit, EVENTS } from '../shared/eventBus.js?v=30';
+import { getMaxHp, getMaxMana } from './stats.js?v=30';
+import { gainXp } from './huntUseCases.js?v=30';
+import { checkBpTier } from './battlePassUseCases.js?v=30';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -23,6 +23,18 @@ export function loadGame() {
 
   // migração: zona/tarefa de versões antigas do bestiário
   if (G.activeZone && !ZONES[G.activeZone]) G.activeZone = null;
+  // migração ONE-TIME: gate de boss de zona (requiresBossOf) é novo — sem isso,
+  // um jogador que já estava além do nível de uma zona pela regra ANTIGA (só
+  // nível+mundo) ficaria trancado retroativamente ao ligar o gate. Pra cada
+  // zona que já era acessível pelo nível dele, marca o boss dela como "já
+  // derrotado" — mesmo que ele nunca tenha efetivamente matado aquele boss.
+  // Roda em TODO load (idempotente via .includes()/Set — nunca duplica).
+  if (!G.defeatedZoneBosses) G.defeatedZoneBosses = [];
+  const alreadyUnlocked = new Set(G.defeatedZoneBosses);
+  for (const [zoneId, zone] of Object.entries(ZONES)) {
+    if (zone.boss && G.level >= zone.minLevel) alreadyUnlocked.add(zoneId);
+  }
+  G.defeatedZoneBosses = [...alreadyUnlocked];
   if (G.activeTask && !MONSTERS[G.activeTask.monster]) G.activeTask = null;
   // migração: sistema antigo de pontos de skill → skills de treino Tibia
   if (!G.sk || !G.sk.magic) G.sk = createDefaultSkills();

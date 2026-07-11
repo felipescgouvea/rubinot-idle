@@ -1,13 +1,37 @@
-import { G } from '../application/gameStore.js?v=28';
-import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=28';
-import { on, EVENTS } from '../shared/eventBus.js?v=28';
-import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=28';
+import { G } from '../application/gameStore.js?v=30';
+import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=30';
+import { on, EVENTS } from '../shared/eventBus.js?v=30';
+import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=30';
+import { currentMissions } from '../application/battlePassUseCases.js?v=30';
 
 function bpRewardIcon(r) {
   if (r.type === 'item') return itemIconImg(r.itemId);
   if (r.type === 'gold') return goldIconImg();
   if (r.type === 'rubini') return rubiniIconImg();
   return r.icon;
+}
+
+function renderBpMissions() {
+  const el = document.getElementById('bp-missions-area');
+  if (!el) return;
+  const missions = currentMissions();
+  el.innerHTML = missions.map(m => {
+    const progress = Math.min(m.goal, G.bpMissionProgress[m.track] || 0);
+    const pct = Math.round((progress / m.goal) * 100);
+    const claimed = G.bpMissionClaimed.includes(m.id);
+    const done = progress >= m.goal;
+    return `<div class="bp-mission ${claimed ? 'claimed' : ''}">
+      <div class="bp-mission-name">${m.name}</div>
+      <div class="bp-xp-row">
+        <span style="font-size:11px;color:var(--muted)">${progress}/${m.goal}</span>
+        <div class="bp-xp-bar-track" style="height:10px"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
+        <span style="font-size:11px;color:var(--muted)">+${m.xp} XP</span>
+      </div>
+      <button class="bp-claim-btn" style="margin-top:6px" onclick="claimMissionReward('${m.id}')" ${(!done || claimed) ? 'disabled' : ''}>
+        ${claimed ? '✓ Coletada' : done ? 'Coletar' : 'Em progresso'}
+      </button>
+    </div>`;
+  }).join('');
 }
 
 export function renderBattlePassPanel() {
@@ -21,8 +45,10 @@ export function renderBattlePassPanel() {
       <div class="bp-xp-bar-track"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
       <span style="font-size:12px;color:var(--muted)">${pct}%</span>
     </div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px">XP do Battle Pass ganho ao matar monstros.</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">XP do Battle Pass ganho ao matar monstros — e mais XP completando as missões diárias abaixo.</div>
   `;
+
+  renderBpMissions();
 
   const track = document.getElementById('bp-rewards-track');
   track.innerHTML = BP_REWARDS.map(r => {

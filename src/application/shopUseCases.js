@@ -1,14 +1,22 @@
-import { G } from './gameStore.js?v=28';
-import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { emit, EVENTS } from '../shared/eventBus.js?v=28';
-import { getMaxHp, getMaxMana } from './stats.js?v=28';
-import { addItemToInventory } from './inventoryCore.js?v=28';
-import { saveGame } from './saveGameUseCase.js?v=28';
+import { G } from './gameStore.js?v=30';
+import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { emit, EVENTS } from '../shared/eventBus.js?v=30';
+import { getMaxHp, getMaxMana } from './stats.js?v=30';
+import { addItemToInventory } from './inventoryCore.js?v=30';
+import { saveGame } from './saveGameUseCase.js?v=30';
 
 export function buyShopItem(id) {
   const s = SHOP_ITEMS.find(x => x.id === id);
   if (!s) return;
+
+  // Loja Premium (dinheiro real) ainda não está ligada a um gateway de
+  // pagamento — não creditamos Rubini Coins de graça só porque o botão foi
+  // clicado; isso deixaria a loja mentindo sobre uma compra que não aconteceu.
+  if (s.currency === 'real') {
+    emit(EVENTS.NOTIFY, { msg: '💳 Pagamento com dinheiro real ainda não conectado a um gateway (Stripe/Mercado Pago/PIX). Fale com o suporte por enquanto.', type: 'error' });
+    return;
+  }
 
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
   if (balance < s.price) { emit(EVENTS.NOTIFY, { msg: 'Saldo insuficiente.', type: 'error' }); return; }

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=28" />
+  <link rel="stylesheet" href="style.css?v=30" />
 </head>
 <body>
   <div id="app">
@@ -13,10 +13,10 @@
       <div class="logo"><img src="logo.webp" alt="RubinOT" class="logo-img" /><span class="logo-sub">IDLE</span></div>
       <div id="header-stats">
         <span class="stat-pill">Lv <span id="hdr-level">1</span></span>
-        <span class="stat-pill"><img src="https://tibia.fandom.com/wiki/Special:FilePath/Gold_Coin.gif" alt="Gold" class="tibia-icon" onerror="this.outerHTML='<span>💰</span>'" /> <span id="hdr-gold">0</span></span>
-        <span class="stat-pill"><img src="https://tibia.fandom.com/wiki/Special:FilePath/Tibia_Coin.gif" alt="Rubini Coin" class="tibia-icon" onerror="this.outerHTML='<span>💎</span>'" /> <span id="hdr-rubini">0</span> RC</span>
-        <span class="stat-pill"><img src="https://tibia.fandom.com/wiki/Special:FilePath/Hit_Points_Icon.gif" alt="HP" class="tibia-icon" onerror="this.outerHTML='<span>❤️</span>'" /> <span id="hdr-hp">--</span></span>
-        <span class="stat-pill"><img src="https://tibia.fandom.com/wiki/Special:FilePath/Mana_Icon.gif" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /> <span id="hdr-mana">--</span></span>
+        <span class="stat-pill"><img src="assets/sprites/items/Gold_Coin.webp" alt="Gold" class="tibia-icon" onerror="this.outerHTML='<span>💰</span>'" /> <span id="hdr-gold">0</span></span>
+        <span class="stat-pill"><img src="assets/sprites/currency/Tibia_Coin.webp" alt="Rubini Coin" class="tibia-icon" onerror="this.outerHTML='<span>💎</span>'" /> <span id="hdr-rubini">0</span> RC</span>
+        <span class="stat-pill"><img src="assets/sprites/vitals/Hit_Points_Icon.webp" alt="HP" class="tibia-icon" onerror="this.outerHTML='<span>❤️</span>'" /> <span id="hdr-hp">--</span></span>
+        <span class="stat-pill"><img src="assets/sprites/vitals/Mana_Icon.webp" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /> <span id="hdr-mana">--</span></span>
       </div>
       <div id="header-btns">
         <button class="btn-small" onclick="saveGame()">💾 Salvar</button>
@@ -49,17 +49,17 @@
       </div>
       <div class="char-status-bars">
         <div class="bar-row-mini">
-          <label><img src="https://tibia.fandom.com/wiki/Special:FilePath/Hit_Points_Icon.gif" alt="HP" class="tibia-icon" onerror="this.outerHTML='<span>❤️</span>'" /></label>
+          <label><img src="assets/sprites/vitals/Hit_Points_Icon.webp" alt="HP" class="tibia-icon" onerror="this.outerHTML='<span>❤️</span>'" /></label>
           <div class="bar-track"><div id="hp-bar" class="bar hp-bar" style="width:100%"></div></div>
           <span id="hp-text">100/100</span>
         </div>
         <div class="bar-row-mini">
-          <label><img src="https://tibia.fandom.com/wiki/Special:FilePath/Mana_Icon.gif" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /></label>
+          <label><img src="assets/sprites/vitals/Mana_Icon.webp" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /></label>
           <div class="bar-track"><div id="mana-bar" class="bar mana-bar" style="width:100%"></div></div>
           <span id="mana-text">100/100</span>
         </div>
         <div class="bar-row-mini">
-          <label><img src="https://tibia.fandom.com/wiki/Special:FilePath/Experience_Icon.gif" alt="XP" class="tibia-icon" onerror="this.outerHTML='<span>⭐</span>'" /></label>
+          <label><img src="assets/sprites/vitals/Experience_Icon.webp" alt="XP" class="tibia-icon" onerror="this.outerHTML='<span>⭐</span>'" /></label>
           <div class="bar-track"><div id="xp-bar" class="bar xp-bar" style="width:0%"></div></div>
           <span id="xp-text">0%</span>
         </div>
@@ -142,8 +142,8 @@
         <div class="card full-card">
           <h3>📜 Linked Tasks</h3>
           <p class="muted">Complete tarefas de criaturas para ganhar XP bônus e recompensas exclusivas.</p>
-          <div id="task-rooms"></div>
           <div id="active-task-display"></div>
+          <div id="task-rooms"></div>
         </div>
       </section>
 
@@ -163,6 +163,8 @@
           <h3>🏟️ Prestige Arena</h3>
           <p class="muted">Batalhe contra oponentes da sua divisão. Requer Level 30+.</p>
           <div id="arena-info"></div>
+          <h4 style="margin:14px 0 8px">🏆 Recompensas de Divisão</h4>
+          <div id="arena-division-rewards"></div>
           <div id="arena-battle-area"></div>
         </div>
       </section>
@@ -190,6 +192,9 @@
         <div class="card full-card">
           <h3>🎖️ Battle Pass — Temporada Atual</h3>
           <div id="bp-progress-area"></div>
+          <h4 style="margin:14px 0 8px">📋 Missões Diárias</h4>
+          <div id="bp-missions-area" class="bp-missions-grid"></div>
+          <h4 style="margin:14px 0 8px">🎁 Recompensas por Tier</h4>
           <div id="bp-rewards-track"></div>
         </div>
       </section>
@@ -206,8 +211,8 @@
       <!-- MARKET -->
       <section id="tab-market" class="panel">
         <div class="card full-card">
-          <h3>🏪 Mercado — Comércio entre Jogadores</h3>
-          <p class="muted">Anuncie itens do seu inventário e compre o que outros jogadores estão vendendo, em gold.</p>
+          <h3>🏪 Mercado — Compra e Venda de Itens entre Jogadores</h3>
+          <p class="muted">Anuncie itens do seu inventário e compre itens que outros jogadores estão vendendo, tudo em gold. Personagens não são negociáveis aqui — só os itens.</p>
           <div id="market-content"></div>
         </div>
       </section>
@@ -266,6 +271,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=28"></script>
+  <script type="module" src="src/main.js?v=30"></script>
 </body>
 </html>

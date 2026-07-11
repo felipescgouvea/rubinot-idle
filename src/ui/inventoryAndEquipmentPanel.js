@@ -1,9 +1,9 @@
 // Inventário, modal de detalhe do item e os slots de equipamento no card da
 // Caçada — os três ficam juntos porque compartilham o mesmo modelo de item.
-import { G } from '../application/gameStore.js?v=28';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES } from '../domain/items.js?v=28';
-import { on, EVENTS } from '../shared/eventBus.js?v=28';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=28';
+import { G } from '../application/gameStore.js?v=30';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES } from '../domain/items.js?v=30';
+import { on, EVENTS } from '../shared/eventBus.js?v=30';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=30';
 
 export function renderInventory() {
   const grid = document.getElementById('inventory-grid');
@@ -39,6 +39,7 @@ export function openItemModal(itemId) {
     ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Equipar</button>` : ''}
     ${equipped ? `<button onclick="unequipItem('${itemId}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Desequipar</button>` : ''}
     <button onclick="sellItem('${itemId}')" style="margin-top:6px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Vender (${item.sell} ${goldIconImg('inline-icon')})</button>
+    ${qty > 1 ? `<button onclick="sellAllItem('${itemId}')" style="margin-top:6px;background:#27ae60;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Vender Todos (${qty}x — ${item.sell * qty} ${goldIconImg('inline-icon')})</button>` : ''}
   `);
 }
 

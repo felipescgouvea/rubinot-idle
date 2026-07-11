@@ -66,6 +66,23 @@ export function arenaDivisionForPoints(points) {
   return ARENA_DIVISIONS[index];
 }
 
+// Limite diário de lutas — sem isso, Arena Points é só uma torneira infinita
+// de Rubini Coins; o limite é o que faz "voltar amanhã" valer a pena.
+export const ARENA_DAILY_LIMIT = 15;
+
+// Recompensa única ao alcançar cada divisão pela primeira vez (não repete,
+// mesmo se cair de divisão depois) — dá um motivo extra pra subir, além dos
+// pontos em si.
+export const ARENA_DIVISION_REWARDS = {
+  Bronze: { type: 'gold', amount: 300 },
+  Prata: { type: 'gold', amount: 800 },
+  Ouro: { type: 'rubini', amount: 40 },
+  Platina: { type: 'rubini', amount: 100 },
+  Diamante: { type: 'item', itemId: 'crown_helmet' },
+  Mestre: { type: 'item', itemId: 'crown_shield' },
+  'Grão-Mestre': { type: 'rubini', amount: 500 },
+};
+
 export const BP_XP_PER_TIER = 500;
 
 export const BP_REWARDS = [
@@ -82,4 +99,35 @@ export const BP_REWARDS = [
 
 export function bpTierForXp(bpXp) {
   return Math.floor(bpXp / BP_XP_PER_TIER);
+}
+
+// Missões diárias do Battle Pass: XP extra além do trickle passivo de matar
+// monstros, ligadas a ações que o jogador já faz no jogo (caçar, tasks,
+// Arena) — não é busywork inventado à parte. `track` casa com uma chave de
+// G.bpMissionProgress (ver application/battlePassUseCases.js).
+export const BP_MISSION_POOL = [
+  { id: 'kill_50',   name: 'Mate 50 criaturas',        goal: 50,   track: 'kills',     xp: 150 },
+  { id: 'kill_150',  name: 'Mate 150 criaturas',       goal: 150,  track: 'kills',     xp: 350 },
+  { id: 'kill_300',  name: 'Mate 300 criaturas',       goal: 300,  track: 'kills',     xp: 600 },
+  { id: 'gold_1000', name: 'Ganhe 1000 gold caçando',  goal: 1000, track: 'gold',      xp: 150 },
+  { id: 'gold_5000', name: 'Ganhe 5000 gold caçando',  goal: 5000, track: 'gold',      xp: 350 },
+  { id: 'task_1',    name: 'Complete 1 Linked Task',   goal: 1,    track: 'tasks',     xp: 250 },
+  { id: 'task_2',    name: 'Complete 2 Linked Tasks',  goal: 2,    track: 'tasks',     xp: 450 },
+  { id: 'arena_1',   name: 'Vença 1 luta na Arena',    goal: 1,    track: 'arenaWins', xp: 200 },
+  { id: 'arena_3',   name: 'Vença 3 lutas na Arena',   goal: 3,    track: 'arenaWins', xp: 450 },
+];
+
+export const BP_MISSIONS_PER_DAY = 3;
+
+// Mesmas 3 missões o dia inteiro pra qualquer jogador, sem precisar de
+// servidor pra sortear — hash simples da data (string "YYYY-MM-DD") vira o
+// índice inicial no pool, e troca sozinho quando o dia muda.
+export function dailyMissionsFor(dateStr) {
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) hash = (hash * 31 + dateStr.charCodeAt(i)) >>> 0;
+  const picks = [];
+  for (let i = 0; i < BP_MISSIONS_PER_DAY; i++) {
+    picks.push(BP_MISSION_POOL[(hash + i * 7) % BP_MISSION_POOL.length]);
+  }
+  return picks;
 }

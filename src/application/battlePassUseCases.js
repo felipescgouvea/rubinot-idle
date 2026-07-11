@@ -1,9 +1,9 @@
-import { G } from './gameStore.js?v=28';
-import { BP_REWARDS, bpTierForXp } from '../domain/progression.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { emit, EVENTS } from '../shared/eventBus.js?v=28';
-import { addItemToInventory } from './inventoryCore.js?v=28';
-import { saveGame } from './saveGameUseCase.js?v=28';
+import { G } from './gameStore.js?v=30';
+import { BP_REWARDS, bpTierForXp, dailyMissionsFor } from '../domain/progression.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { emit, EVENTS } from '../shared/eventBus.js?v=30';
+import { addItemToInventory } from './inventoryCore.js?v=30';
+import { saveGame } from './saveGameUseCase.js?v=30';
 
 export function checkBpTier() {
   const newTier = bpTierForXp(G.bpXp);
@@ -11,6 +11,48 @@ export function checkBpTier() {
     G.bpTier = newTier;
     emit(EVENTS.NOTIFY, { msg: `🎖️ Battle Pass: Tier ${G.bpTier} alcançado!`, type: 'success' });
   }
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Zera o progresso das missões diárias quando o dia muda — chamada antes de
+// qualquer leitura/escrita em bpMissionProgress pra garantir que nunca conta
+// progresso de ontem nas missões de hoje.
+export function ensureDailyMissions() {
+  const today = todayStr();
+  if (G.bpMissionDate === today) return;
+  G.bpMissionDate = today;
+  G.bpMissionProgress = { kills: 0, gold: 0, tasks: 0, arenaWins: 0 };
+  G.bpMissionClaimed = [];
+}
+
+export function currentMissions() {
+  ensureDailyMissions();
+  return dailyMissionsFor(G.bpMissionDate);
+}
+
+// Chamada pelos pontos do jogo onde essas ações acontecem (matar criatura,
+// completar task, vencer na Arena) — soma no contador do dia, sem se importar
+// se a missão que usa essa trilha está ou não no sorteio de hoje.
+export function bumpMissionProgress(track, amount = 1) {
+  ensureDailyMissions();
+  G.bpMissionProgress[track] = (G.bpMissionProgress[track] || 0) + amount;
+}
+
+export function claimMissionReward(missionId) {
+  ensureDailyMissions();
+  const mission = currentMissions().find(m => m.id === missionId);
+  if (!mission || G.bpMissionClaimed.includes(missionId)) return;
+  const progress = G.bpMissionProgress[mission.track] || 0;
+  if (progress < mission.goal) return;
+  G.bpMissionClaimed.push(missionId);
+  G.bpXp += mission.xp;
+  checkBpTier();
+  emit(EVENTS.NOTIFY, { msg: `✅ Missão concluída: +${mission.xp} XP do Battle Pass!`, type: 'success' });
+  emit(EVENTS.BATTLE_PASS_PANEL);
+  saveGame();
 }
 
 export function claimBpReward(tier) {

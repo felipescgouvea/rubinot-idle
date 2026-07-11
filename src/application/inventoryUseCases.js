@@ -1,12 +1,19 @@
-import { G } from './gameStore.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { ZONES } from '../domain/bestiary.js?v=28';
-import { emit, EVENTS } from '../shared/eventBus.js?v=28';
-import { getMaxHp, getMaxMana } from './stats.js?v=28';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=28';
-import { saveGame } from './saveGameUseCase.js?v=28';
+import { G } from './gameStore.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { ZONES } from '../domain/bestiary.js?v=30';
+import { emit, EVENTS } from '../shared/eventBus.js?v=30';
+import { getMaxHp, getMaxMana } from './stats.js?v=30';
+import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=30';
+import { saveGame } from './saveGameUseCase.js?v=30';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=30';
 
-export { addItemToInventory } from './inventoryCore.js?v=28';
+function itemLogIcon(itemId) {
+  const item = ITEMS[itemId];
+  return `<img src="${spriteUrl(itemSpriteFile(itemId))}" alt="${item.name}" class="inline-icon"
+    onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
+}
+
+export { addItemToInventory } from './inventoryCore.js?v=30';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
@@ -42,6 +49,20 @@ export function sellItem(itemId) {
   saveGame();
 }
 
+export function sellAllItem(itemId) {
+  const item = ITEMS[itemId];
+  const qty = G.inventory[itemId] || 0;
+  if (qty <= 0) return;
+  const total = item.sell * qty;
+  G.gold += total;
+  delete G.inventory[itemId];
+  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.INVENTORY);
+  emit(EVENTS.HEADER_STATS);
+  emit(EVENTS.NOTIFY, { msg: `Vendido ${qty}x ${item.name} por ${total} 💰`, type: 'success' });
+  saveGame();
+}
+
 // Consome poção/runa/comida do inventário. Poções e comida curam HP/mana na hora;
 // runas de ataque (com "dmg") só funcionam com uma criatura em combate — como usar
 // uma runa mirando o alvo em Tibia — e runas de cura restauram HP a qualquer momento.
@@ -61,12 +82,12 @@ export function useItem(itemId) {
   if (item.heal) {
     const before = G.hp;
     G.hp = Math.min(getMaxHp(), G.hp + item.heal);
-    emit(EVENTS.LOG, `${item.icon} <span class="log-heal">Você usou ${item.name}: +${G.hp - before} HP.</span>`);
+    emit(EVENTS.LOG, `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.hp - before} HP.</span>`);
   }
   if (item.mana) {
     const before = G.mana;
     G.mana = Math.min(getMaxMana(), G.mana + item.mana);
-    emit(EVENTS.LOG, `${item.icon} <span class="log-heal">Você usou ${item.name}: +${G.mana - before} mana.</span>`);
+    emit(EVENTS.LOG, `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.mana - before} mana.</span>`);
   }
 
   G.inventory[itemId]--;

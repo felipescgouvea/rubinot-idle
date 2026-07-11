@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { on, EVENTS } from '../shared/eventBus.js?v=28';
-import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=28';
-import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=28';
-import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=28';
+import { G } from '../application/gameStore.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { on, EVENTS } from '../shared/eventBus.js?v=30';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=30';
+import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=30';
+import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=30';
 
 export async function renderMarketPanel() {
   const el = document.getElementById('market-content');
@@ -12,7 +12,7 @@ export async function renderMarketPanel() {
   if (!G.playerName) {
     el.innerHTML = `
       <div class="hs-register">
-        <p class="muted">Registre um nome de personagem (o mesmo do Highscores) para comprar e vender no Mercado.</p>
+        <p class="muted">Este mercado é só para <strong>itens</strong> — o personagem em si nunca é negociado. Registre o nome do seu personagem (o mesmo do Highscores) apenas para identificar seus anúncios de item pros outros jogadores.</p>
         <div style="display:flex; gap:8px; max-width:380px">
           <input id="mk-name-input" type="text" maxlength="20" placeholder="Nome do personagem"
                  style="flex:1" onkeydown="if(event.key==='Enter')handleMarketRegisterClick(this.value)" />

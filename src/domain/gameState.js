@@ -3,9 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=28';
-import { createDefaultRtc } from './rtcConfig.js?v=28';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=28';
+import { createDefaultSkills } from './character.js?v=30';
+import { createDefaultRtc } from './rtcConfig.js?v=30';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=30';
 
 export function createDefaultState() {
   return {
@@ -28,6 +28,12 @@ export function createDefaultState() {
     inventory: {},
     equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },
     activeZone: null,
+    // ids de zona cujo boss (ZONES[id].boss) já morreu ≥1x — gate de progressão
+    // (ver domain/bestiary.js: isZoneUnlocked / requiresBossOf). Migração pra
+    // saves antigos em application/persistenceUseCases.js: quem já tinha nível
+    // pra uma zona sob a regra antiga (só level+mundo) não pode ficar trancado
+    // retroativamente.
+    defeatedZoneBosses: [],
     hunting: false,
     taskKills: {},
     activeTask: null,
@@ -36,10 +42,16 @@ export function createDefaultState() {
     arenaWins: 0,
     arenaLosses: 0,
     arenaBattlesToday: 0,
+    arenaLastDate: null,
+    arenaStreak: 0,
+    arenaDivisionsClaimed: [],
     currentWorld: 'auroria',
     bpXp: 0,
     bpTier: 0,
     bpClaimed: [],
+    bpMissionDate: null,
+    bpMissionProgress: { kills: 0, gold: 0, tasks: 0, arenaWins: 0 },
+    bpMissionClaimed: [],
     totalKills: 0,
     totalGoldEarned: 0,
     killCounters: {},

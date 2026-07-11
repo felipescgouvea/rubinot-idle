@@ -1,9 +1,15 @@
-// Construção de URLs de sprite a partir do TibiaWiki. "Infraestrutura" porque
-// é acoplamento com um serviço externo (nome de arquivo por convenção,
-// disponibilidade não garantida) — por isso todo consumidor tem fallback
-// gracioso pro ícone (ver ui/*, o onerror da <img>).
+// Construção de caminhos de sprite. Todas as sprites foram baixadas do
+// TibiaWiki e são servidas localmente (assets/sprites/), pra não depender da
+// disponibilidade do CDN externo em tempo de jogo — ver .spec/90-regras-de-negocio-gerais.md.
+// O nome do arquivo ainda segue a convenção do TibiaWiki (histórico de onde veio),
+// mas o conteúdo real baixado é WebP; todo consumidor mantém fallback gracioso
+// pro ícone (ver ui/*, o onerror da <img>) pra qualquer sprite que não exista localmente.
 
-export const SPRITE_BASE = 'https://tibia.fandom.com/wiki/Special:FilePath/';
+export const SPRITE_BASE = 'assets/sprites/';
+
+function localName(file) {
+  return file.replace(/\.[^.]+$/, '.webp');
+}
 
 // bosses exclusivos do RubinOT não existem no Tibia — usam sprites temáticos
 export const SPRITE_OVERRIDE = {
@@ -15,13 +21,21 @@ export const SPRITE_OVERRIDE = {
 };
 
 export function monsterSpriteFile(monsterId, monster) {
-  return SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
+  const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
+  return 'monsters/' + localName(file);
 }
 
 // Itens cujo id não deriva o nome real do arquivo no TibiaWiki (o id ficou
 // em inglês mas diferente do nome oficial do item).
 const ITEM_SPRITE_OVERRIDE = {
   worm_dirt: 'Lump_of_Dirt.gif',
+  // "Dragon Scale" é uma página de desambiguação no TibiaWiki (não existe um
+  // item genérico "Dragon Scale") — a variante correspondente ao drop do
+  // Dragon comum é a "Green Dragon Scale".
+  dragon_scale: 'Green_Dragon_Scale.gif',
+  // "Robe" também não existe como item genérico — só variantes nomeadas
+  // (Red Robe, Purple Robe, etc.). Red Robe é a mais antiga/reconhecível.
+  robe: 'Red_Robe.gif',
 };
 
 // Toda entrada de ITEMS usa um id em inglês (mesmo quando o "name" exibido ao
@@ -36,7 +50,8 @@ function idToTibiaFilename(id) {
 }
 
 export function itemSpriteFile(itemId) {
-  return ITEM_SPRITE_OVERRIDE[itemId] || idToTibiaFilename(itemId);
+  const file = ITEM_SPRITE_OVERRIDE[itemId] || idToTibiaFilename(itemId);
+  return 'items/' + localName(file);
 }
 
 export function spriteUrl(file) {
@@ -55,24 +70,24 @@ const SKILL_ICON_FILES = {
   shielding: 'Shielding_Icon.png',
 };
 export function skillIconFile(skillId) {
-  return SKILL_ICON_FILES[skillId];
+  return 'skills/' + localName(SKILL_ICON_FILES[skillId]);
 }
 
 // Ícone de magia: cada spell tem sua própria sprite no TibiaWiki, nomeada
 // pelo nome em inglês da magia (ex.: "Light Healing" -> Light_Healing.gif).
 export function spellIconFile(spellName) {
-  return spellName.replace(/ /g, '_') + '.gif';
+  return 'spells/' + localName(spellName.replace(/ /g, '_') + '.gif');
 }
 
 // Vitais do personagem (HP/Mana/XP) — sprites reais da janela de status do Tibia.
 export const VITAL_ICON_FILES = {
-  hp: 'Hit_Points_Icon.gif',
-  mana: 'Mana_Icon.gif',
-  xp: 'Experience_Icon.gif',
+  hp: 'vitals/Hit_Points_Icon.webp',
+  mana: 'vitals/Mana_Icon.webp',
+  xp: 'vitals/Experience_Icon.webp',
 };
 
 // Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin
 // é moeda premium exclusiva deste jogo idle — não existe em Tibia/RubinOT,
 // então usa a sprite real mais próxima em conceito (Tibia Coin, a moeda
 // premium oficial) em vez de um emoji genérico.
-export const RUBINI_COIN_FILE = 'Tibia_Coin.gif';
+export const RUBINI_COIN_FILE = 'currency/Tibia_Coin.webp';

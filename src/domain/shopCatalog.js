@@ -1,12 +1,26 @@
-// Catálogo das 3 lojas (Rubini Store, Loja de Equipamentos, Loja de Artigos
-// Mágicos) e as configurações do RTC (Rubinot Custom Client).
+// Catálogo das 4 lojas (Loja Premium, Rubini Store, Loja de Equipamentos,
+// Loja de Artigos Mágicos) e as configurações do RTC (Rubinot Custom Client).
 
-// shop: 'rubini' (Rubini Store — boosts/supply, em RC ou gold),
+// shop: 'premium' (Loja Premium — dinheiro real, compra de Rubini Coins,
+//         igual à Store oficial do Tibia que vende Tibia Coins por R$),
+//       'rubini' (Rubini Store — boosts/supply, em RC ganho jogando ou gold),
 //       'equipment' (Loja de Equipamentos — armas/armaduras, em gold),
 //       'magic' (Loja de Artigos Mágicos — poções/runas, em gold).
 // Outfits não ficam mais aqui — viraram uma tela de aparência própria (ver
 // domain/outfits.js e ui/outfitPicker.js), igual à do Tibia de verdade.
+//
+// A Loja Premium é a ÚNICA que cobra dinheiro real — fica sempre separada
+// das demais (que só usam gold/Rubini Coins ganhos jogando) pra não misturar
+// o que é grátis-jogável com o que é pago. `priceBRL` ainda não está ligado a
+// um gateway de pagamento real (Stripe/Mercado Pago/PIX) — o botão de compra
+// sinaliza isso explicitamente até essa integração existir.
 export const SHOP_ITEMS = [
+  // Loja Premium (dinheiro real) — pacotes de Rubini Coins
+  { id: 'rc_pack_s',  name: '100 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 4.90,  type: 'currency', rubiniAmount: 100,  shop: 'premium', desc: 'Pacote pequeno de Rubini Coins.' },
+  { id: 'rc_pack_m',  name: '300 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 12.90, type: 'currency', rubiniAmount: 300,  shop: 'premium', desc: 'Pacote médio de Rubini Coins.' },
+  { id: 'rc_pack_l',  name: '700 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 24.90, type: 'currency', rubiniAmount: 700,  shop: 'premium', desc: 'Pacote grande — +10% de bônus de Rubini Coins.' },
+  { id: 'rc_pack_xl', name: '1500 Rubini Coins', icon: '💎', currency: 'real', priceBRL: 47.90, type: 'currency', rubiniAmount: 1500, shop: 'premium', desc: 'Pacote extra grande — +15% de bônus de Rubini Coins.' },
+
   // Rubini Store — Boosts temporários (Rubini Coins)
   { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, shop: 'rubini', desc: '+50% de XP por 30 minutos de caçada.' },
   { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, shop: 'rubini', desc: '+15% de chance de loot por 30 minutos.' },
@@ -78,9 +92,12 @@ export const SHOP_ITEMS = [
   { id: 'buy_great_spirit_potion',  name: 'Great Spirit Potion',    icon: '🧪', currency: 'gold', price: 1280, type: 'item', itemId: 'great_spirit_potion', shop: 'magic' },
 ];
 
-// As três "lojas/NPCs" e como cada uma agrupa seus itens na tela.
+// As quatro "lojas/NPCs" e como cada uma agrupa seus itens na tela.
 export const SHOPS = [
-  { key: 'rubini', title: '💎 Rubini Store', subtitle: 'Boosts e supply — como o Ctrl+S do RubinOT. Outfits agora ficam na tela de Aparência (botão 👕 no card do personagem).', sub: [
+  { key: 'premium', title: '💳 Loja Premium (Dinheiro Real)', subtitle: 'Compre Rubini Coins com dinheiro real — separado de tudo que se ganha jogando. Pagamento ainda não conectado a um gateway real.', sub: [
+      { title: '💎 Pacotes de Rubini Coins', filter: s => s.type === 'currency' },
+    ]},
+  { key: 'rubini', title: '💎 Rubini Store', subtitle: 'Boosts e supply — como o Ctrl+S do RubinOT. Pago com Rubini Coins ganhos jogando (tasks, Arena) ou gold. Outfits agora ficam na tela de Aparência (botão 👕 no card do personagem).', sub: [
       { title: '⚡ Boosts & Suprimentos', filter: s => s.type === 'boost' || s.type === 'refill' },
     ]},
   { key: 'equipment', title: '⚔️ Loja de Equipamentos', subtitle: 'Armas e armaduras clássicas de Tibia, pagas em gold.', sub: [

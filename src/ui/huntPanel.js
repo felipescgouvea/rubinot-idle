@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=28';
-import { ZONES } from '../domain/bestiary.js?v=28';
-import { MONSTERS } from '../domain/bestiary.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=28';
-import { on, EVENTS } from '../shared/eventBus.js?v=28';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=28';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=28';
+import { G } from '../application/gameStore.js?v=30';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=30';
+import { MONSTERS } from '../domain/bestiary.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=30';
+import { on, EVENTS } from '../shared/eventBus.js?v=30';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=30';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=30';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -83,26 +83,31 @@ export function renderMonsterDisplay(hit = false, killed = null) {
 // mundo, save antigo, primeira vez) — preserva a escolha manual do jogador
 // entre level-ups (a versão anterior resetava pra 1ª zona toda vez).
 function pickDefaultZoneIfNeeded() {
-  const current = ZONES[G.activeZone];
-  const stillValid = current && current.worldReq === G.currentWorld && G.level >= current.minLevel;
+  const stillValid = G.activeZone && isZoneUnlocked(G.activeZone, G.level, G.currentWorld, G.defeatedZoneBosses);
   if (stillValid) return;
-  const valid = Object.entries(ZONES).find(([, z]) => z.worldReq === G.currentWorld && G.level >= z.minLevel);
-  G.activeZone = valid ? valid[0] : null;
+  const valid = Object.keys(ZONES).find(id => isZoneUnlocked(id, G.level, G.currentWorld, G.defeatedZoneBosses));
+  G.activeZone = valid || null;
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
 }
 
 export function renderZonePicker() {
   pickDefaultZoneIfNeeded();
 
   const zone = ZONES[G.activeZone];
+  const isBoostedToday = G.activeZone && G.activeZone === boostedZoneForDate(todayStr());
+  const boostedBadge = isBoostedToday ? ' <span class="zone-boosted-badge" title="Zona Bônus do Dia: +50% XP/Gold">🔥 Bônus do Dia</span>' : '';
   const iconEl = document.getElementById('zone-current-icon');
   const nameEl = document.getElementById('zone-current-name');
   const titleEl = document.getElementById('battle-card-title');
   if (iconEl && nameEl) {
     iconEl.innerHTML = zone ? zoneIconImg(zone, 'zone-current-icon-img') : '🗺️';
-    nameEl.textContent = zone ? zone.name : 'Escolher zona de caça…';
+    nameEl.innerHTML = (zone ? zone.name : 'Escolher zona de caça…') + boostedBadge;
   }
   if (titleEl) {
-    titleEl.innerHTML = zone ? `⚔️ Batalha — ${zoneIconImg(zone, 'zone-current-icon-img')} ${zone.name}` : '⚔️ Batalha';
+    titleEl.innerHTML = zone ? `⚔️ Batalha — ${zoneIconImg(zone, 'zone-current-icon-img')} ${zone.name}${boostedBadge}` : '⚔️ Batalha';
   }
   renderZoneTheme();
 }
@@ -130,7 +135,7 @@ export function renderKillCounters() {
   const counters = G.killCounters || {};
   area.innerHTML = Object.entries(counters).map(([id, n]) => {
     const m = MONSTERS[id];
-    return `<div class="kill-pill">${m?.icon || ''} ${m?.name || id}: <span>${n}</span></div>`;
+    return `<div class="kill-pill">${m ? monsterSpriteImg(id, 'kill-pill-icon') : ''} ${m?.name || id}: <span>${n}</span></div>`;
   }).join('');
 }
 

@@ -27,6 +27,8 @@ Todo jogador, de forma automática — não é uma tela específica, mas um comp
 
 - Ao carregar o jogo após um período offline elegível, um resumo (criaturas abatidas, XP e gold ganhos, tempo fora) é mostrado antes de qualquer outra interação.
 - Dados de um save antigo que referenciam algo removido do jogo (zona, tarefa etc.) são migrados de forma segura, sem quebrar o carregamento.
+- **Uma nova regra de progressão nunca tranca retroativamente quem já tinha acesso a um conteúdo antes dela existir.** Ao carregar o save, o jogo reconhece automaticamente o acesso que o jogador já tinha sob a regra antiga e concede o equivalente sob a regra nova, sem exigir nenhuma ação dele.
+  *Por quê:* uma regra de progressão nova (ex.: exigir ter derrotado o chefe de uma zona para desbloquear a próxima) deve tornar o jogo mais rico dali pra frente, nunca punir quem já tinha avançado sob as regras de antes.
 
 ## Critérios de aceitação
 

@@ -6,7 +6,7 @@
 | **Nível (Level)** | Progressão principal do personagem. Máximo 100. Sobe ao acumular XP suficiente. |
 | **XP** | Experiência. Ganha ao derrotar criaturas; determina o nível. |
 | **Gold** | Moeda principal, obtida em caçadas. Usada para comprar equipamento e suprimentos. |
-| **Rubini Coins (RC)** | Moeda premium, obtida jogando (tasks, Arena) — não comprada com dinheiro real no jogo atual. Usada para boosts e outfits cosméticos. |
+| **Rubini Coins (RC)** | Moeda premium, obtida jogando (tasks, Arena). Também pode ser comprada com dinheiro real na Loja Premium, mas essa compra ainda não está conectada a um meio de pagamento real. Usada para boosts e outfits cosméticos. |
 | **HP / Mana** | Pontos de vida e de energia mágica. Regeneram com o tempo; HP zera → morte. |
 | **Zona de Caça** | Área de caça associada a um mundo, com nível mínimo e lista fixa de criaturas que podem aparecer. |
 | **Bestiário** | Catálogo de todas as criaturas do jogo, com atributos e tabela de loot. |

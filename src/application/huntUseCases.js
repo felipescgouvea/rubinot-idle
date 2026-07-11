@@ -3,21 +3,21 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=28';
-import { ZONES } from '../domain/bestiary.js?v=28';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=28';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=28';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=28';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=28';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=28';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { MONSTERS } from '../domain/bestiary.js?v=28';
-import { emit, EVENTS } from '../shared/eventBus.js?v=28';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=28';
-import { trainSkill } from './skillUseCases.js?v=28';
-import { addItemToInventory } from './inventoryCore.js?v=28';
-import { checkBpTier } from './battlePassUseCases.js?v=28';
+import { G } from './gameStore.js?v=30';
+import { ZONES, boostedZoneForDate } from '../domain/bestiary.js?v=30';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=30';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=30';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=30';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=30';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=30';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { MONSTERS } from '../domain/bestiary.js?v=30';
+import { emit, EVENTS } from '../shared/eventBus.js?v=30';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=30';
+import { trainSkill } from './skillUseCases.js?v=30';
+import { addItemToInventory } from './inventoryCore.js?v=30';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=30';
 
 let huntInterval = null;
 let regenInterval = null;
@@ -152,13 +152,22 @@ export function doHuntTick() {
   emit(EVENTS.HEADER_STATS);
 }
 
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 // Paga XP/gold/loot pela morte da criatura atual — usado tanto por um golpe normal
 // (doHuntTick) quanto por uma runa de ataque usada manualmente (inventoryUseCases),
 // para que nenhuma via de dano "sonegue" a recompensa da morte.
 export function resolveMonsterKill(zone) {
   const boosts = computeBoostMods(G.boosts, Date.now());
-  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold);
-  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp);
+  // Zona Bônus do Dia (como o Boosted Creature/Boss real de Tibia): +50% extra
+  // em gold/xp na zona sorteada de hoje — aplicado aqui em cima dos mults da
+  // zona/mundo, sem mutar ZONES (dado estático compartilhado por todo mundo).
+  const isBoostedToday = G.activeZone === boostedZoneForDate(todayStr());
+  const boostedMult = isBoostedToday ? 1.5 : 1;
+  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult);
+  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult);
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -171,8 +180,10 @@ export function resolveMonsterKill(zone) {
   // Battle Pass XP
   G.bpXp += Math.floor(xpGained * 0.01);
   checkBpTier();
+  bumpMissionProgress('kills', 1);
+  bumpMissionProgress('gold', goldGained);
 
-  emit(EVENTS.LOG, `<span class="log-kill">💀 ${currentMonster.name} morreu!</span> +${xpGained} XP, +${goldGained} <img src="https://tibia.fandom.com/wiki/Special:FilePath/Gold_Coin.gif" class="inline-icon" alt="gold" />`);
+  emit(EVENTS.LOG, `<span class="log-kill">💀 ${currentMonster.name} morreu!</span> +${xpGained} XP, +${goldGained} <img src="assets/sprites/items/Gold_Coin.webp" class="inline-icon" alt="gold" />`);
 
   // Loot
   const lootLine = [];
@@ -190,6 +201,15 @@ export function resolveMonsterKill(zone) {
   // anuncia a morte pra quem precisar reagir (ex.: progresso de Linked Tasks)
   // sem a caçada precisar saber que tasks existem
   emit(EVENTS.MONSTER_KILLED, { monsterId: killedId });
+
+  // Boss da zona derrotado pela 1ª vez: desbloqueia a próxima zona da cadeia
+  // (ver ZONES[id].requiresBossOf em domain/bestiary.js).
+  G.defeatedZoneBosses = G.defeatedZoneBosses || [];
+  if (killedId === zone.boss && G.activeZone && !G.defeatedZoneBosses.includes(G.activeZone)) {
+    G.defeatedZoneBosses.push(G.activeZone);
+    emit(EVENTS.NOTIFY, { msg: '🏆 Boss da zona derrotado! Nova zona desbloqueada.', type: 'success' });
+    emit(EVENTS.ZONE_PICKER);
+  }
 
   currentMonster = null;
   emit(EVENTS.MONSTER_DISPLAY, { killed: killedId });

@@ -20,7 +20,7 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 ## Itens & Economia
 
 - [20-itens-e-equipamento.md](20-itens-e-equipamento.md) — inventário, slots de equipamento e itens.
-- [21-loja.md](21-loja.md) — Rubini Store: boosts, equipamentos e outfits.
+- [21-loja.md](21-loja.md) — as 4 lojas do jogo: Rubini Store, Loja de Equipamentos, Loja de Artigos Mágicos e a Loja Premium (dinheiro real).
 
 ## Progressão & Competição
 

@@ -1,27 +1,31 @@
-import { G } from '../application/gameStore.js?v=28';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=28';
-import { ITEMS } from '../domain/items.js?v=28';
-import { on, EVENTS } from '../shared/eventBus.js?v=28';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=28';
+import { G } from '../application/gameStore.js?v=30';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=30';
+import { ITEMS } from '../domain/items.js?v=30';
+import { on, EVENTS } from '../shared/eventBus.js?v=30';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=30';
 
 function shopPriceLabel(s) {
+  if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
   return s.currency === 'rubini' ? `${s.price} ${rubiniIconImg('inline-icon')} RC` : `${formatNum(s.price)} ${goldIconImg('inline-icon')}`;
 }
 
 // Boosts (xp/gold) não são um item de inventário — não têm itemId pra usar
 // itemIconImg — mas o conceito ainda tem um ícone real (vitals/moeda).
+// Pacotes de Rubini Coins (Loja Premium) usam a mesma sprite da moeda.
 // Loot Boost e Supply Completo ficam com o emoji: não há sprite real de
 // Tibia pra "chance de loot" ou "recarga instantânea" como conceito.
 function shopIconHtml(s) {
   if (s.itemId) return itemIconImg(s.itemId);
+  if (s.type === 'currency') return rubiniIconImg();
   if (s.boost === 'xp') return vitalIconImg('xp');
   if (s.boost === 'gold') return goldIconImg();
   return s.icon;
 }
 
 function renderShopCard(s) {
+  const isReal = s.currency === 'real';
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
-  const canAfford = balance >= s.price;
+  const canAfford = isReal || balance >= s.price;
   const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
   const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
@@ -35,7 +39,7 @@ function renderShopCard(s) {
     <div class="skill-card-desc">${s.desc || statLine || ''}</div>
     <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')"
       ${(!canAfford && !owned) ? 'disabled' : ''}>
-      ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : canAfford ? 'Comprar' : 'Saldo insuficiente'}
+      ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : isReal ? 'Comprar' : canAfford ? 'Comprar' : 'Saldo insuficiente'}
     </button>
   </div>`;
 }
