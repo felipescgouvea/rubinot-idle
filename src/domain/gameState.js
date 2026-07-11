@@ -3,9 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=32';
-import { createDefaultRtc } from './rtcConfig.js?v=32';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=32';
+import { createDefaultSkills } from './character.js?v=33';
+import { createDefaultRtc } from './rtcConfig.js?v=33';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=33';
 
 export function createDefaultState() {
   return {
@@ -66,5 +66,22 @@ export function createDefaultState() {
     totalKills: 0,
     totalGoldEarned: 0,
     killCounters: {},
+    // Presas (Prey): 3 slots, cada um null ou { monster, bonusType, stars,
+    // bonusPct, expires } — ver domain/prey.js e application/preyUseCases.js.
+    prey: [null, null, null],
+    // Bestiário/Charms: pontos acumulados, charms desbloqueados e equipados,
+    // e o "carimbo" de quantos pontos já foram creditados por criatura (pra
+    // não pagar a mesma etapa de bestiário duas vezes) — ver domain/charms.js.
+    charmPoints: 0,
+    charmsUnlocked: [],
+    charmsEquipped: [],
+    bestiaryCredited: {},
+    // Recompensa diária (login streak) — ver domain/dailyReward.js.
+    dailyLastClaim: null,
+    dailyStreak: 0,
+    // Treino offline de skill — id da skill em treino (null = caçando) e
+    // instante em que o treino começou — ver domain/training.js.
+    trainingSkill: null,
+    trainingSince: null,
   };
 }

@@ -47,6 +47,10 @@ export const EVENTS = {
   HIGHSCORES_PANEL: 'highscoresPanel',
   OFFLINE_PROGRESS: 'offlineProgress',
   OUTFIT_PICKER: 'outfitPicker',
+  PREY_PANEL: 'preyPanel',
+  BESTIARY_PANEL: 'bestiaryPanel',
+  DAILY_REWARD_PANEL: 'dailyRewardPanel',
+  TRAINING_PANEL: 'trainingPanel',
   // eventos "de domínio" internos à application, usados para evitar imports
   // circulares entre casos de uso de áreas diferentes (ex.: caçada não
   // precisa saber que tasks existem, só anuncia "matei uma criatura X")

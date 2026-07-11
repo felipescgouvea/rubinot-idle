@@ -88,9 +88,14 @@ body {
   box-shadow: 0 3px 10px #00000040, inset 0 1px 0 #ffffff55;
 }
 
-/* título do painel = banner navy com trim dourado, como no site */
+/* título do painel = banner navy ornamentado com trim dourado, como no site.
+   Duas linhas douradas (topo + base), brilho central e flâmulas de losangos
+   nas pontas dão o ar de moldura de UI do Tibia. */
 .card h3 {
-  background: linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  background:
+    radial-gradient(120% 140% at 50% -30%, #ffffff22 0%, transparent 55%),
+    linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  border-top: 1px solid #ffffff33;
   border-bottom: 2px solid var(--gold);
   color: var(--cream);
   font-family: var(--serif);
@@ -98,21 +103,27 @@ body {
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 9px 16px;
+  padding: 9px 34px;
   margin: 0 0 0;
-  text-shadow: 0 1px 2px #00000088;
-  box-shadow: inset 0 1px 0 #ffffff2a;
+  text-align: center;
+  text-shadow: 0 1px 2px #00000088, 0 0 10px #f1c40f33;
+  box-shadow: inset 0 1px 0 #ffffff2a, inset 0 -4px 0 -2px #f1c40f55;
   position: relative;
+  overflow: hidden;
 }
+/* flâmula de losangos dourados em cada ponta do banner */
 .card h3::before, .card h3::after {
-  content: '◆';
+  content: '◆ ◈ ◆';
   color: var(--gold-bright);
-  font-size: 9px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  opacity: 0.9;
   position: absolute;
   top: 50%; transform: translateY(-50%);
+  text-shadow: 0 0 6px #f1c40f88;
 }
-.card h3::before { left: 6px; }
-.card h3::after { right: 6px; }
+.card h3::before { left: 8px; }
+.card h3::after { right: 8px; }
 
 /* corpo do painel */
 .card > *:not(h3) { margin-left: 14px; margin-right: 14px; }
@@ -208,28 +219,34 @@ body {
 .btn-blue:hover { filter: brightness(1.15); }
 
 /* ============ TABS ============ */
+/* Barra de abas: quebra em linhas em vez de rolar horizontalmente (o scroll
+   era o incômodo — ver task do header). As abas se distribuem centralizadas e
+   preenchem as linhas, então nunca há barra de rolagem, em nenhuma largura. */
 #tabs {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   margin: 10px 14px 0;
   background: linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
   border: 2px solid var(--gold);
   border-radius: 8px;
-  overflow-x: auto;
   box-shadow: inset 0 1px 0 #ffffff2a, 0 2px 8px #00000055;
+  padding: 2px;
 }
 
 .tab {
   background: none;
   border: none;
   color: #b8cde4;
-  padding: 11px 16px;
+  padding: 9px 14px;
   cursor: pointer;
   font-family: var(--serif);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   white-space: nowrap;
+  border-radius: 5px;
   border-bottom: 3px solid transparent;
   transition: all 0.2s;
 }
@@ -1363,4 +1380,126 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   #char-info { flex-wrap: wrap; margin: 8px 10px 0; gap: 8px 14px; }
   .char-status-bars { min-width: 100%; order: 3; max-width: none; }
   .char-status-stats { order: 4; }
+}
+
+/* ============================================================
+   FEATURES NOVAS — Daily Reward, Boosted, Prey, Charms, Bestiário, Treino
+   ============================================================ */
+
+/* ---- Botão + selo da Recompensa Diária (header) ---- */
+.daily-btn { position: relative; }
+.daily-badge {
+  position: absolute; top: -6px; right: -6px;
+  display: none; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--red-hot); color: #fff;
+  font-size: 11px; font-weight: 800; line-height: 1;
+  border: 1px solid #fff8; box-shadow: 0 0 6px #d84343aa;
+  animation: dailyPulse 1.3s ease-in-out infinite;
+}
+@keyframes dailyPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+
+/* ---- Box Boosted do Dia (aba Caçada) ---- */
+.boosted-body { display: flex; gap: 10px; }
+.boosted-item {
+  flex: 1; text-align: center;
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 2px solid var(--gold-dim); border-radius: 8px;
+  padding: 8px 6px; box-shadow: inset 0 1px 0 #ffffff88;
+}
+.boosted-label { font-family: var(--serif); font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--ink-soft); }
+.boosted-sprite { height: 52px; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
+.boosted-sprite-img { max-height: 48px; max-width: 48px; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #0006); }
+.boosted-name { font-size: 11px; font-weight: 700; color: var(--ink); }
+
+/* ---- Presas (Prey) ---- */
+.prey-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.prey-slot {
+  border: 2px solid var(--gold-dim); border-radius: 8px; padding: 10px;
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  text-align: center; box-shadow: inset 0 1px 0 #ffffff88;
+}
+.prey-slot.active { border-color: var(--gold); box-shadow: inset 0 1px 0 #ffffff88, 0 0 8px #d4a01755; }
+.prey-slot.empty { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; opacity: 0.9; }
+.prey-slot-empty-label { font-size: 12px; color: var(--ink-soft); }
+.prey-slot-monster { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; font-size: 13px; }
+.prey-monster-icon { width: 32px; height: 32px; image-rendering: pixelated; vertical-align: middle; }
+.prey-bonus { margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--green-2); }
+.prey-stars { color: var(--gold-soft); font-size: 13px; letter-spacing: 1px; }
+.prey-timer { font-size: 11px; color: var(--ink-soft); margin: 3px 0 6px; }
+.prey-actions { display: flex; gap: 6px; justify-content: center; }
+
+/* modal de escolha da presa */
+.prey-pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; max-height: 360px; overflow-y: auto; margin-top: 8px; }
+.prey-pick, .charm-card button, .training-skill-btn {
+  cursor: pointer; font-family: var(--body);
+}
+.prey-pick {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+  border: 1px solid var(--line-soft); border-radius: 6px;
+  background: var(--cream); color: var(--ink); font-size: 12px; font-weight: 600;
+}
+.prey-pick:hover { border-color: var(--gold); background: #fff; }
+
+/* ---- Charms ---- */
+.charm-points-row { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.charm-points-badge { color: var(--gold-soft); font-family: var(--serif); }
+.charms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.charm-card {
+  border: 2px solid var(--line-soft); border-radius: 8px; padding: 10px;
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  display: flex; flex-direction: column; gap: 8px;
+}
+.charm-card.equipped { border-color: var(--green-1); box-shadow: 0 0 8px #2e7d3255; }
+.charm-head { display: flex; gap: 8px; align-items: flex-start; }
+.charm-icon { font-size: 22px; }
+.charm-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+.charm-name small { color: var(--ink-faint); font-weight: 600; }
+.charm-desc { font-size: 11px; color: var(--ink-soft); }
+
+/* ---- Bestiário ---- */
+.bestiary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+.bestiary-entry {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  border: 1px solid var(--line-soft); border-radius: 7px; background: var(--cream);
+}
+.bestiary-entry.complete { border-color: var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); }
+.bestiary-monster { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; min-width: 92px; }
+.bestiary-progress { flex: 1; }
+.bestiary-stage { font-size: 11px; color: var(--ink-soft); margin-bottom: 4px; }
+
+/* ---- Treino Offline (aba Skills) ---- */
+.training-active {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  border: 2px solid var(--gold); border-radius: 8px; padding: 12px;
+  background: linear-gradient(180deg, #fbf1d6, #f0ddb2); box-shadow: 0 0 8px #d4a01744;
+}
+.training-active-info { display: flex; align-items: center; gap: 10px; }
+.training-active-title { font-family: var(--serif); font-size: 14px; font-weight: 700; color: var(--ink); }
+.training-skill-icon { width: 30px; height: 30px; image-rendering: pixelated; }
+.training-skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.training-skill-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 6px;
+  border: 1px solid var(--line-soft); border-radius: 8px; background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  color: var(--ink); font-size: 12px; font-weight: 700;
+}
+.training-skill-btn:hover { border-color: var(--gold); background: #fff; }
+.training-skill-btn small { color: var(--ink-soft); font-weight: 600; }
+
+/* ---- Modal da Recompensa Diária ---- */
+.daily-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 10px 0; }
+.daily-card {
+  text-align: center; padding: 8px 4px; border-radius: 7px;
+  border: 1px solid var(--line-soft); background: var(--cream);
+}
+.daily-card.today { border: 2px solid var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); box-shadow: 0 0 8px #d4a01766; }
+.daily-day { font-size: 10px; font-weight: 700; color: var(--ink-soft); }
+.daily-icon { font-size: 22px; margin: 3px 0; }
+.daily-name { font-size: 10px; color: var(--ink); line-height: 1.2; }
+.daily-claim-row { text-align: center; margin-top: 8px; }
+.daily-claim-btn { font-size: 13px; }
+
+@media (max-width: 720px) {
+  .daily-grid { grid-template-columns: repeat(4, 1fr); }
+  .boosted-body { flex-direction: row; }
 }

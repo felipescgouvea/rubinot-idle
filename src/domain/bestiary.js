@@ -244,3 +244,24 @@ export function boostedZoneForDate(dateStr) {
   const ids = Object.keys(ZONES);
   return ids[hash % ids.length];
 }
+
+// Hash da data com um "sal" próprio por categoria — assim Boosted Creature e
+// Boosted Boss do dia não caem sempre no mesmo índice um do outro.
+function hashWithSalt(dateStr, salt) {
+  let hash = salt >>> 0;
+  for (let i = 0; i < dateStr.length; i++) hash = (hash * 31 + dateStr.charCodeAt(i)) >>> 0;
+  return hash;
+}
+
+// "Boosted Creature" do dia — qualquer criatura comum (não-boss) do bestiário,
+// como o quadro BOOSTED do site oficial. Troca sozinho a cada dia.
+export function boostedCreatureForDate(dateStr) {
+  const commons = Object.keys(MONSTERS).filter(id => !BOSS_MONSTER_IDS.has(id));
+  return commons[hashWithSalt(dateStr, 101) % commons.length];
+}
+
+// "Boosted Boss" do dia — sorteado entre os bosses de zona.
+export function boostedBossForDate(dateStr) {
+  const bosses = [...BOSS_MONSTER_IDS];
+  return bosses[hashWithSalt(dateStr, 202) % bosses.length];
+}

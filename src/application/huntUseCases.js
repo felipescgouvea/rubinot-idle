@@ -3,23 +3,24 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=32';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=32';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=32';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=32';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=32';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=32';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=32';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=32';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=32';
-import { MONSTERS } from '../domain/bestiary.js?v=32';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=32';
-import { emit, EVENTS } from '../shared/eventBus.js?v=32';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=32';
-import { trainSkill } from './skillUseCases.js?v=32';
-import { addItemToInventory } from './inventoryCore.js?v=32';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=32';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=32';
+import { G } from './gameStore.js?v=33';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=33';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=33';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=33';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=33';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=33';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=33';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=33';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=33';
+import { MONSTERS } from '../domain/bestiary.js?v=33';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=33';
+import { emit, EVENTS } from '../shared/eventBus.js?v=33';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=33';
+import { trainSkill } from './skillUseCases.js?v=33';
+import { addItemToInventory } from './inventoryCore.js?v=33';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=33';
+import { getCombatBonuses } from './bonuses.js?v=33';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=33';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -153,7 +154,15 @@ export function doHuntTick() {
       spellElement = 'arcane';
     }
   }
+  // Bônus de dano de Presa/Charm (ver application/bonuses.js) por cima do golpe.
+  const combatBonus = getCombatBonuses(currentMonster.defKey, Date.now());
+  if (combatBonus.damage > 1) playerDmg = Math.floor(playerDmg * combatBonus.damage);
   currentMonster.hp -= playerDmg;
+  // Lifeleech (charm Vampírico): cura uma fração do dano causado.
+  if (combatBonus.lifeleech > 0) {
+    const leech = Math.floor(playerDmg * combatBonus.lifeleech);
+    if (leech > 0) G.hp = Math.min(getMaxHp(), G.hp + leech);
+  }
   emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
   emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
   emit(EVENTS.MONSTER_DISPLAY, { hit: true, spellElement });
@@ -222,8 +231,11 @@ export function resolveMonsterKill(zone) {
   // zona/mundo, sem mutar ZONES (dado estático compartilhado por todo mundo).
   const isBoostedToday = G.activeZone === boostedZoneForDate(todayStr());
   const boostedMult = isBoostedToday ? 1.5 : 1;
-  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult);
-  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult);
+  // Bônus de Presa/Charm contra esta criatura (ver application/bonuses.js) —
+  // multiplicadores de gold/xp e chance aditiva de loot, por cima de tudo.
+  const bonus = getCombatBonuses(currentMonster.defKey, Date.now());
+  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold);
+  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp);
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -244,7 +256,7 @@ export function resolveMonsterKill(zone) {
   // Loot
   const lootLine = [];
   currentMonster.loot.forEach(([itemId, chance]) => {
-    if (Math.random() < chance + boosts.loot) {
+    if (Math.random() < chance + boosts.loot + bonus.loot) {
       addItemToInventory(itemId);
       const item = ITEMS[itemId];
       lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon do Rubinot Idle: recriação do emblema do RubinOT (escudo/brasão
+       azul com espada dourada), já que o favicon oficial não pôde ser baixado
+       (Cloudflare bloqueia). Feito como SVG autocontido pra não depender de
+       download nem de host externo. -->
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c948"/>
+      <stop offset="1" stop-color="#ef8f2a"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b3d63"/>
+      <stop offset="1" stop-color="#16233d"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="url(#bg)" stroke="#0c1320" stroke-width="2"/>
+  <!-- Ombros/coroa do escudo (chevron superior azul) -->
+  <path d="M12 24 L12 15 L22 15 L27 21 L32 15 L37 21 L42 15 L52 15 L52 24 L44 24 L44 19 L38 25 L32 19 L26 25 L20 19 L20 24 Z"
+        fill="#3aa0e8" stroke="#0c1320" stroke-width="2.4" stroke-linejoin="round"/>
+  <!-- Chevron inferior azul -->
+  <path d="M22 46 L32 56 L42 46 L36 46 L32 50 L28 46 Z"
+        fill="#3aa0e8" stroke="#0c1320" stroke-width="2.4" stroke-linejoin="round"/>
+  <!-- Espada dourada -->
+  <g stroke="#0c1320" stroke-width="2.2" stroke-linejoin="round">
+    <circle cx="32" cy="21" r="4" fill="url(#gold)"/>
+    <rect x="24" y="27" width="16" height="4.6" rx="1.4" fill="url(#gold)"/>
+    <path d="M28.6 31.5 L35.4 31.5 L34 47 L32 51 L30 47 Z" fill="url(#gold)"/>
+  </g>
+</svg>

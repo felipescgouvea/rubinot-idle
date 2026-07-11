@@ -30,6 +30,10 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 - [33-battle-pass.md](33-battle-pass.md) — progressão sazonal por tiers.
 - [34-highscores.md](34-highscores.md) — ranking global entre jogadores.
 - [35-boss-rush.md](35-boss-rush.md) — desafiar um boss já desbloqueado direto, sem os monstros comuns da zona.
+- [36-presas-prey.md](36-presas-prey.md) — Presas: bônus de dano/XP/loot contra uma criatura escolhida por tempo.
+- [37-bestiario-e-charms.md](37-bestiario-e-charms.md) — preencher o bestiário rende Charm Points, gastos em bônus passivos (Charms).
+- [38-recompensa-diaria.md](38-recompensa-diaria.md) — prêmio de login diário com sequência crescente de 7 dias.
+- [39-treino-offline.md](39-treino-offline.md) — treinar uma skill escolhida fora do combate, inclusive offline.
 
 ## Persistência
 

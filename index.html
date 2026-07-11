@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=32" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=33" />
+  <link rel="stylesheet" href="style.css?v=33" />
 </head>
 <body>
   <div id="app">
@@ -19,6 +20,7 @@
         <span class="stat-pill"><img src="assets/sprites/vitals/Mana_Icon.webp" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /> <span id="hdr-mana">--</span></span>
       </div>
       <div id="header-btns">
+        <button class="btn-small daily-btn" onclick="openDailyReward()">🎁 Diário<span id="daily-reward-badge" class="daily-badge">!</span></button>
         <button class="btn-small" onclick="saveGame()">💾 Salvar</button>
         <button class="btn-small danger" onclick="confirmReset()">🔄 Reset</button>
       </div>
@@ -30,6 +32,7 @@
       <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="tasks">📜 Tarefas</button>
       <button class="tab" data-tab="skills">⚡ Skills</button>
+      <button class="tab" data-tab="bestiary">📖 Bestiário</button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="bossrush">💀 Boss Rush</button>
       <button class="tab" data-tab="inventory">🎒 Inventário</button>
@@ -93,6 +96,10 @@
               <div id="kill-counters"></div>
             </div>
           </div>
+          <div class="card" id="boosted-card">
+            <h3>🔥 Boosted do Dia</h3>
+            <div id="boosted-body" class="boosted-body"></div>
+          </div>
           <div class="card" id="loot-card" style="display:none">
             <h3>Loot Recente</h3>
             <div id="loot-display"></div>
@@ -152,10 +159,34 @@
       <!-- SKILLS -->
       <section id="tab-skills" class="panel">
         <div class="card full-card">
+          <h3>🏋️ Treino Offline</h3>
+          <div id="training-body"></div>
+        </div>
+        <div class="card full-card">
           <h3>⚡ Habilidades & Upgrades</h3>
-          <p class="muted">Gaste pontos de habilidade para melhorar seu personagem.</p>
+          <p class="muted">Skills sobem por uso durante a caçada — ou treine uma escolhida acima, inclusive offline.</p>
           <div id="skill-points-display"></div>
           <div id="skills-grid"></div>
+        </div>
+      </section>
+
+      <!-- BESTIARY (Prey + Bestiário + Charms) -->
+      <section id="tab-bestiary" class="panel">
+        <div class="card full-card">
+          <h3>🐾 Presas (Prey)</h3>
+          <p class="muted">Escolha uma criatura por slot e ganhe bônus de dano, XP ou loot contra ela por 2 horas.</p>
+          <div id="prey-slots" class="prey-slots"></div>
+        </div>
+        <div class="card full-card">
+          <h3>✨ Charms</h3>
+          <div id="charm-points-display" class="charm-points-row"></div>
+          <p class="muted">Desbloqueie charms com Charm Points (ganhos ao preencher o bestiário) e equipe até 3 para bônus passivos.</p>
+          <div id="charms-list" class="charms-grid"></div>
+        </div>
+        <div class="card full-card">
+          <h3>📖 Bestiário</h3>
+          <p class="muted">Cada criatura tem etapas de mortes que rendem Charm Points ao serem cruzadas.</p>
+          <div id="bestiary-list" class="bestiary-grid"></div>
         </div>
       </section>
 
@@ -292,6 +323,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=32"></script>
+  <script type="module" src="src/main.js?v=33"></script>
 </body>
 </html>
