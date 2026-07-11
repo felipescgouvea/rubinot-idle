@@ -3,24 +3,24 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=43';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=43';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=43';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=43';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=43';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=43';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=43';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=43';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=43';
-import { MONSTERS } from '../domain/bestiary.js?v=43';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=43';
-import { emit, EVENTS } from '../shared/eventBus.js?v=43';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=43';
-import { trainSkill } from './skillUseCases.js?v=43';
-import { addItemToInventory } from './inventoryCore.js?v=43';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=43';
-import { getCombatBonuses } from './bonuses.js?v=43';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=43';
+import { G } from './gameStore.js?v=44';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=44';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=44';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=44';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=44';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=44';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=44';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=44';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=44';
+import { MONSTERS } from '../domain/bestiary.js?v=44';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=44';
+import { emit, EVENTS } from '../shared/eventBus.js?v=44';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=44';
+import { trainSkill } from './skillUseCases.js?v=44';
+import { addItemToInventory } from './inventoryCore.js?v=44';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=44';
+import { getCombatBonuses } from './bonuses.js?v=44';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=44';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -48,6 +48,14 @@ let currentMonster = null;
 let currentPack = [];
 // Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1).
 const MAX_PACK_SIZE = 3;
+// Instante em que o próximo grupo pode aparecer — enquanto não chega, o
+// personagem fica "procurando" (andando pra baixo, ver ui/huntPanel.js:
+// updateSceneMode). Dá um respiro de exploração entre salas em vez de o
+// próximo bicho surgir instantâneo.
+let nextSpawnAt = 0;
+function searchDelay() {
+  return 1200 + Math.random() * 1800; // 1,2s a 3s procurando
+}
 // Modo "só o boss" do Boss Rush (ver application/bossRushUseCases.js): quando
 // ligado, spawnMonsterInstance só sorteia zone.boss em vez do elenco normal
 // da zona — nunca muda o desenho da caçada comum, só restringe o pool de
@@ -93,7 +101,9 @@ export function startHunt() {
   const zone = ZONES[G.activeZone];
   if (G.level < zone.minLevel) { emit(EVENTS.NOTIFY, { msg: `Nível mínimo: ${zone.minLevel}`, type: 'error' }); return; }
   G.hunting = true;
+  nextSpawnAt = Date.now() + searchDelay(); // começa procurando (boneco anda)
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
+  emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
   emit(EVENTS.LOG, bossOnly
     ? `<span class="log-info">💀 Boss Rush: desafiando ${monsterLogIcon(zone.boss)} ${zone.name}...</span>`
     : `<span class="log-info">🗺️ Entrando em ${monsterLogIcon(zone.monsters[0])} ${zone.name}...</span>`);
@@ -114,6 +124,9 @@ export function doHuntTick() {
   if (!G.hunting || !G.activeZone) return;
 
   if (!currentMonster) {
+    // Ainda "procurando": segura o próximo grupo até passar o tempo de busca
+    // (o boneco fica andando pra baixo nesse meio tempo — ver ui/huntPanel.js).
+    if (Date.now() < nextSpawnAt) return;
     const zone = ZONES[G.activeZone];
     // Boss Rush: restringe o pool de spawn só ao boss da zona, sem tocar em
     // spawnMonsterInstance (a caçada comum continua sorteando o elenco
@@ -341,6 +354,8 @@ export function resolveMonsterKill(zone) {
   // tick gera um novo grupo.
   currentPack.shift();
   currentMonster = currentPack[0] || null;
+  // sala limpa: volta a "procurar" (boneco anda de novo por um tempinho)
+  if (!currentMonster) nextSpawnAt = Date.now() + searchDelay();
   emit(EVENTS.MONSTER_DISPLAY, { killed: killedId });
   emit(EVENTS.BATTLE_LIST);
   emit(EVENTS.LOOT);

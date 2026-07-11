@@ -1,15 +1,15 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=43';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=43';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=43';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=43';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=43';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=43';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=43';
-import { on, EVENTS } from '../shared/eventBus.js?v=43';
-import { formatNum } from './shared.js?v=43';
-import { renderZonePicker } from './huntPanel.js?v=43';
+import { G } from '../application/gameStore.js?v=44';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=44';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=44';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=44';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=44';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=44';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=44';
+import { on, EVENTS } from '../shared/eventBus.js?v=44';
+import { formatNum } from './shared.js?v=44';
+import { renderZonePicker } from './huntPanel.js?v=44';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -75,11 +75,13 @@ function mountPlayerPortrait(container, cls) {
 // muda (outfit/gênero/addons/cores); congela o quadro quando o jogador morre.
 let walkTimer = null;
 let walkFrames = [];
+let walkIdle = null;
 let walkIdx = 0;
 
 function stopWalk() {
   if (walkTimer) { clearInterval(walkTimer); walkTimer = null; }
   walkFrames = [];
+  walkIdle = null;
 }
 
 function mountPlayerWalkSprite(wrap) {
@@ -104,17 +106,27 @@ function mountPlayerWalkSprite(wrap) {
     colors: G.outfitColors,
     addon1: G.outfitAddon1,
     addon2: G.outfitAddon2,
-  }).then(frames => {
+  }).then(({ idle, frames }) => {
     if (wrap.dataset.walk !== sig) return; // aparência mudou enquanto carregava
     if (!frames.length) { stopWalk(); wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; return; }
     walkFrames = frames;
+    walkIdle = idle;
     walkIdx = 0;
     walkTimer = setInterval(() => {
       if (!walkFrames.length || !document.body.contains(canvas)) return;
-      // congela no lugar quando morto (o CSS já acinzenta/tomba)
-      if (!wrap.classList.contains('dead')) walkIdx = (walkIdx + 1) % walkFrames.length;
+      const stage = document.getElementById('dungeon-stage');
+      const searching = stage && stage.classList.contains('searching');
+      let frame;
+      if (searching && !wrap.classList.contains('dead')) {
+        // procurando: caminha (cicla os quadros de movimento)
+        walkIdx = (walkIdx + 1) % walkFrames.length;
+        frame = walkFrames[walkIdx];
+      } else {
+        // parado (lutando/ocioso/morto): quadro idle
+        frame = walkIdle || walkFrames[0];
+      }
       ctx.clearRect(0, 0, 64, 64);
-      ctx.drawImage(walkFrames[walkIdx], 0, 0);
+      ctx.drawImage(frame, 0, 0);
     }, 110);
   });
 }

@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=43" />
-  <link rel="stylesheet" href="style.css?v=43" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=44" />
+  <link rel="stylesheet" href="style.css?v=44" />
 </head>
 <body>
   <div id="app">
@@ -294,18 +294,20 @@
           <h3 id="battle-card-title">⚔️ Batalha</h3>
           <button class="battle-modal-close-x" onclick="closeBattleModal()">✕</button>
         </div>
+        <!-- Cena única: o boneco fica no meio do palco da dungeon. Ao caçar,
+             anda pra baixo (chão rolando) procurando; quando um monstro
+             aparece à frente, para e luta até limpar a sala. -->
         <div id="battle-scene">
-          <div id="player-battle-side">
+          <div id="dungeon-stage">
             <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
-            <div class="player-battle-name" id="player-battle-name">—</div>
-            <div class="player-hp-track">
-              <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
-              <div class="player-hp-label" id="player-hp-label">--/--</div>
+            <div id="monster-display">
+              <div class="monster-empty">Inicie uma caçada!</div>
             </div>
           </div>
-          <div class="battle-vs-sep">⚔️</div>
-          <div id="monster-display">
-            <div class="monster-empty">Escolha sua vocação e inicie uma caçada…</div>
+          <div class="player-battle-name" id="player-battle-name">—</div>
+          <div class="player-hp-track">
+            <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
+            <div class="player-hp-label" id="player-hp-label">--/--</div>
           </div>
         </div>
         <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma -->
@@ -331,6 +333,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=43"></script>
+  <script type="module" src="src/main.js?v=44"></script>
 </body>
 </html>

@@ -56,11 +56,11 @@ function colorizeFrame(base, tpl, colors) {
   }
 }
 
-// Gera os 8 quadros (canvas 64x64) da caminhada recolorida. Retorna [] se o
-// atlas falhar ao carregar (quem chama cai no fallback).
+// Gera o quadro parado (idle) + os 8 quadros da caminhada recolorida. Retorna
+// { idle:null, frames:[] } se o atlas falhar (quem chama cai no fallback).
 export async function buildWalkFrames(atlasSrc, { colors, addon1, addon2 } = {}) {
   let atlas;
-  try { atlas = await loadImage(atlasSrc); } catch { return []; }
+  try { atlas = await loadImage(atlasSrc); } catch { return { idle: null, frames: [] }; }
 
   const off = document.createElement('canvas');
   off.width = atlas.width; off.height = atlas.height;
@@ -68,32 +68,33 @@ export async function buildWalkFrames(atlasSrc, { colors, addon1, addon2 } = {})
   octx.imageSmoothingEnabled = false;
   octx.drawImage(atlas, 0, 0);
 
-  const frames = [];
-  for (let jo = 0; jo < MOVE_FRAMES; jo++) {
-    const yo = (jo + IDLE_LEN) * ADD;
+  // Monta um quadro (canvas 64x64) recolorido a partir da linha-base `yo`,
+  // compondo os overlays de addon (linhas yo+1 / yo+2).
+  const buildFrame = (yo) => {
     const fc = document.createElement('canvas');
     fc.width = CELL; fc.height = CELL;
     const fctx = fc.getContext('2d');
     fctx.imageSmoothingEnabled = false;
-
     const drawLayer = (rowOffset) => {
       const y = (yo + rowOffset) * CELL;
       if (y + CELL > off.height) return;
       const base = octx.getImageData(X_BASE, y, CELL, CELL);
       const tpl = octx.getImageData(X_TPL, y, CELL, CELL);
       colorizeFrame(base, tpl, colors || {});
-      // compõe SOBRE o que já está no quadro (putImageData sobrescreveria o
-      // alpha), então passa por um canvas temporário e usa drawImage.
+      // compõe SOBRE o quadro (putImageData sobrescreveria o alpha) via canvas temp
       const tmp = document.createElement('canvas');
       tmp.width = CELL; tmp.height = CELL;
       tmp.getContext('2d').putImageData(base, 0, 0);
       fctx.drawImage(tmp, 0, 0);
     };
-
-    drawLayer(0);              // base (sem addon, em pé)
+    drawLayer(0);              // base (sem addon)
     if (addon1) drawLayer(1);  // overlay do addon 1
     if (addon2) drawLayer(2);  // overlay do addon 2
-    frames.push(fc);
-  }
-  return frames;
+    return fc;
+  };
+
+  const idle = buildFrame(0); // linha 0 = quadro parado
+  const frames = [];
+  for (let jo = 0; jo < MOVE_FRAMES; jo++) frames.push(buildFrame((jo + IDLE_LEN) * ADD));
+  return { idle, frames };
 }

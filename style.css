@@ -543,10 +543,11 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 /* o fundo muda de cor por zona (--zone-color-1/2, setados via JS conforme a
    dungeon atual — ver ui/huntPanel.js renderZoneTheme); sem zona ativa, cai
    no tom pergaminho padrão do resto da UI */
+/* Cena única de batalha: uma coluna com o PALCO da dungeon (onde o boneco anda
+   e os monstros aparecem) + nome/vida do jogador embaixo. */
 #battle-scene {
   display: flex;
-  align-items: stretch;
-  gap: 8px;
+  flex-direction: column;
   margin: 12px 14px !important;
   padding: 10px;
   border-radius: 10px;
@@ -554,85 +555,66 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   box-shadow: inset 0 2px 10px #00000044;
   transition: background 0.5s ease;
 }
-.battle-vs-sep {
-  align-self: center;
-  flex-shrink: 0;
-  font-size: 1.5rem;
-  color: var(--gold);
-  filter: drop-shadow(0 1px 2px #00000044);
-}
-#player-battle-side {
-  flex: 1;
-  min-width: 0;
-  background: linear-gradient(180deg, #faf0d8e8, #e8d5acef);
-  border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  padding: 14px;
-  text-align: center;
-  box-shadow: inset 0 1px 0 #ffffff66, 0 1px 4px #00000022;
-}
-/* Cena de caminhada: o boneco anda sobre um chão que rola, dentro de um
-   "diorama" cujo céu/paredes usam as cores da dungeon atual (as variáveis
-   --zone-color-* são setadas em #battle-scene por renderZoneTheme, e cascatam
-   pra cá) — dá a sensação de estar percorrendo a dungeon. */
-.player-sprite-wrap {
+/* Palco: corredor da dungeon visto de cima. O boneco fica no meio (virado pra
+   baixo) e o monstro aparece à frente (mais abaixo). O piso rola pra cima
+   quando está "procurando" (classe .searching), dando a sensação de andar pra
+   baixo; para de rolar quando está lutando/parado. */
+#dungeon-stage {
   position: relative;
-  display: block;
-  width: 100%;
-  max-width: 230px;
-  height: 104px;
-  margin: 0 auto;
+  height: 230px;
   border-radius: 8px;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--zone-color-1, #6c86b0) 0%, var(--zone-color-2, #2c3e57) 100%);
-  box-shadow: inset 0 2px 12px #00000055, 0 1px 3px #00000033;
+  background: linear-gradient(180deg, var(--zone-color-1, #5a6b8a) 0%, var(--zone-color-2, #26344a) 100%);
+  box-shadow: inset 0 2px 16px #00000077;
 }
-/* chão texturizado que rola pra esquerda -> ilusão de andar pra frente */
-.player-sprite-wrap::before {
+/* piso ladrilhado que rola verticalmente durante a busca */
+#dungeon-stage::before {
   content: '';
   position: absolute;
-  left: -32px; right: -32px; bottom: 0;
-  height: 30px;
-  background:
-    repeating-linear-gradient(90deg, #00000038 0 16px, #ffffff16 16px 32px),
-    linear-gradient(180deg, #7a6242, #45341f);
-  background-size: 32px 100%, auto;
-  animation: ground-scroll 0.8s linear infinite;
-  box-shadow: inset 0 4px 8px #00000066, inset 0 1px 0 #ffffff22;
+  inset: -48px 0;
+  background: repeating-linear-gradient(0deg, #00000033 0 22px, #ffffff12 22px 44px);
+  background-size: 100% 44px;
+  opacity: 0.55;
+  pointer-events: none;
 }
-@keyframes ground-scroll { to { background-position: -32px 0, 0 0; } }
-/* o boneco (canvas do outfit ou emoji de fallback), pisando no chão + bob */
+#dungeon-stage.searching::before { animation: floor-scroll 0.6s linear infinite; }
+@keyframes floor-scroll { to { background-position: 0 -44px; } }
+
+/* boneco: no meio do palco (centralizado por left/top + margem negativa, pra
+   as animações de hit/ataque poderem usar transform sem quebrar o centro). */
+.player-sprite-wrap {
+  position: absolute;
+  left: 50%; top: 32%;
+  margin: -32px 0 0 -32px;
+  width: 64px; height: 64px;
+  z-index: 2;
+}
 .player-sprite,
 .player-sprite-fallback,
 .player-sprite-wrap span {
-  position: absolute;
-  left: 50%;
-  bottom: 12px;
-  width: 62px;
-  height: 62px;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
   object-fit: contain;
-  line-height: 62px;
-  text-align: center;
   image-rendering: pixelated;
-  filter: drop-shadow(0 4px 3px #00000066);
-  z-index: 1;
-  /* bob sutil de passo; as pernas animam de verdade no próprio webp de 4 frames */
-  animation: player-walk 0.5s ease-in-out infinite;
+  filter: drop-shadow(0 5px 4px #00000088);
 }
-.player-sprite-fallback, .player-sprite-wrap span { font-size: 3rem; }
+.player-sprite-fallback, .player-sprite-wrap span { font-size: 3rem; line-height: 64px; text-align: center; }
+/* bob de passo só enquanto procura (andando); parado fica sem bob */
+#dungeon-stage.searching .player-sprite,
+#dungeon-stage.searching .player-sprite-wrap span { animation: player-walk 0.45s ease-in-out infinite; }
 @keyframes player-walk {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(-3px); }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
 }
-/* morto: tomba e para de andar */
+/* morto: tomba e para */
 .player-sprite-wrap.dead .player-sprite,
 .player-sprite-wrap.dead span {
-  animation: none;
-  transform: translateX(-50%) rotate(90deg);
+  animation: none !important;
+  transform: rotate(90deg);
   filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044);
 }
 .player-sprite-wrap.hit { animation: monster-hit 0.25s ease; }
-.player-battle-name { font-family: var(--serif); font-size: 13px; color: var(--navy-2); letter-spacing: 1px; margin: 6px 0; font-weight: 700; }
+.player-battle-name { font-family: var(--serif); font-size: 13px; color: #fff; text-shadow: 0 1px 3px #000000cc; letter-spacing: 1px; margin: 8px 0 4px; font-weight: 700; text-align: center; }
 .player-hp-track {
   height: 16px;
   background: #d9c9a3;
@@ -651,17 +633,20 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 
 /* ---- monstro atual ---- */
+/* monstro no palco: aparece à frente do boneco (mais abaixo), sobre o piso da
+   dungeon — sem card próprio (a cena agora é uma só). */
 #monster-display {
-  flex: 1;
-  min-width: 0;
-  background: linear-gradient(180deg, #faf0d8e8, #e8d5acef);
-  border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  padding: 14px;
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  padding: 0 8px;
   margin: 0 !important;
   text-align: center;
-  box-shadow: inset 0 1px 0 #ffffff66, 0 1px 4px #00000022;
+  z-index: 1;
 }
+#monster-display .monster-hp-track { max-width: 190px; margin-left: auto; margin-right: auto; }
+#monster-display .monster-empty { color: #ffffffcc; text-shadow: 0 1px 2px #000000aa; }
 .monster-sprite-wrap {
   display: inline-block;
   animation: monster-idle 2.2s ease-in-out infinite;

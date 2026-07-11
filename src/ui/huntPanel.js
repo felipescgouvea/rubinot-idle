@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=43';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=43';
-import { MONSTERS } from '../domain/bestiary.js?v=43';
-import { ITEMS } from '../domain/items.js?v=43';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=43';
-import { on, EVENTS } from '../shared/eventBus.js?v=43';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=43';
-import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=43';
+import { G } from '../application/gameStore.js?v=44';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=44';
+import { MONSTERS } from '../domain/bestiary.js?v=44';
+import { ITEMS } from '../domain/items.js?v=44';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=44';
+import { on, EVENTS } from '../shared/eventBus.js?v=44';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=44';
+import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=44';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -201,12 +201,23 @@ export function renderBattleList() {
   }).join('');
 }
 
+// Alterna o modo da cena: "searching" (boneco andando pra baixo procurando)
+// quando está caçando E não há monstro na frente; parado nos demais casos
+// (ocioso ou lutando). O CSS (#dungeon-stage.searching) liga o piso rolando e
+// o bob de passo; o timer de caminhada (ver ui/characterPanel.js) lê essa
+// classe pra ciclar os quadros ou congelar no idle.
+export function updateSceneMode() {
+  const stage = document.getElementById('dungeon-stage');
+  if (!stage) return;
+  stage.classList.toggle('searching', G.hunting && !getCurrentMonster());
+}
+
 export function wireHuntPanelEvents() {
-  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); });
-  on(EVENTS.BATTLE_LIST, renderBattleList);
+  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
+  on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);
-  on(EVENTS.HUNT_BUTTON, renderHuntButton);
+  on(EVENTS.HUNT_BUTTON, ({ hunting } = {}) => { renderHuntButton({ hunting }); updateSceneMode(); });
   on(EVENTS.OFFLINE_PROGRESS, renderOfflineProgressModal);
 }
