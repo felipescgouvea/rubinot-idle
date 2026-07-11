@@ -1,13 +1,14 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=41';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=41';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=41';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=41';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=41';
-import { on, EVENTS } from '../shared/eventBus.js?v=41';
-import { formatNum } from './shared.js?v=41';
-import { renderZonePicker } from './huntPanel.js?v=41';
+import { G } from '../application/gameStore.js?v=42';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=42';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=42';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=42';
+import { outfitAnimPath } from '../infrastructure/outfitAssets.js?v=42';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=42';
+import { on, EVENTS } from '../shared/eventBus.js?v=42';
+import { formatNum } from './shared.js?v=42';
+import { renderZonePicker } from './huntPanel.js?v=42';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -65,6 +66,25 @@ function mountPlayerPortrait(container, cls) {
       container.innerHTML = `<span class="${cls}">${icon}</span>`;
     }
   });
+}
+
+// Monta o sprite ANIMADO de caminhada (webp de 4 frames) na cena de batalha —
+// o boneco andando de verdade. Recria a <img> só quando o outfit/gênero muda
+// (senão a animação reiniciaria a cada tick de combate). Cai no emoji da
+// vocação se o arquivo falhar. As cores custom continuam no retrato (canvas).
+function mountPlayerWalkSprite(wrap) {
+  const outfitId = currentOutfitId();
+  const icon = playerFallbackIcon();
+  if (!outfitId) {
+    if (wrap.dataset.walk !== 'none') { wrap.dataset.walk = 'none'; wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; }
+    return;
+  }
+  const gender = G.outfitGender || 'male';
+  const sig = `${outfitId}|${gender}`;
+  if (wrap.dataset.walk === sig) return;
+  wrap.dataset.walk = sig;
+  wrap.innerHTML = `<img class="player-sprite" src="${outfitAnimPath(outfitId, gender)}" alt="${outfitId}"
+    onerror="this.outerHTML='<span class=&quot;player-sprite&quot;>${icon}</span>'" />`;
 }
 
 export function renderCharPanel() {
@@ -134,6 +154,7 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
   if (!wrap) return;
 
   if (!G.vocation) {
+    wrap.dataset.walk = 'none';
     wrap.innerHTML = '<span class="player-sprite-fallback">🧑</span>';
     wrap.classList.remove('dead', 'hit', 'attacking', 'healing');
     document.getElementById('player-battle-name').textContent = '—';
@@ -142,7 +163,7 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
     return;
   }
 
-  mountPlayerPortrait(wrap, 'player-sprite');
+  mountPlayerWalkSprite(wrap);
   if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
   if (attacking) { wrap.classList.remove('attacking'); void wrap.offsetWidth; wrap.classList.add('attacking'); }
   if (healing) { wrap.classList.remove('healing'); void wrap.offsetWidth; wrap.classList.add('healing'); }

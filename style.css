@@ -607,20 +607,22 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .player-sprite-wrap span {
   position: absolute;
   left: 50%;
-  bottom: 13px;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
+  bottom: 12px;
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  line-height: 62px;
   text-align: center;
   image-rendering: pixelated;
   filter: drop-shadow(0 4px 3px #00000066);
   z-index: 1;
-  animation: player-walk 0.55s ease-in-out infinite;
+  /* bob sutil de passo; as pernas animam de verdade no próprio webp de 4 frames */
+  animation: player-walk 0.5s ease-in-out infinite;
 }
 .player-sprite-fallback, .player-sprite-wrap span { font-size: 3rem; }
 @keyframes player-walk {
-  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-2.5deg); }
-  50%      { transform: translateX(-50%) translateY(-4px) rotate(2.5deg); }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-3px); }
 }
 /* morto: tomba e para de andar */
 .player-sprite-wrap.dead .player-sprite,
