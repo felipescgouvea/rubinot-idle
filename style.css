@@ -338,7 +338,7 @@ body {
 .stat-chip span { display: block; font-family: var(--serif); font-weight: 700; font-size: 13px; color: var(--navy-1); }
 .stat-chip small { display: block; font-size: 8px; color: var(--ink-faint); letter-spacing: 0.5px; }
 .char-voc-big { font-size: 2.6rem; filter: drop-shadow(0 2px 3px #00000033); }
-canvas.char-voc-big { width: 40px; height: 40px; image-rendering: pixelated; }
+canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 
 .bar-row { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
 .bar-row label { width: 50px; font-size: 11px; flex-shrink: 0; color: var(--ink-soft); font-weight: 600; }

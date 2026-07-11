@@ -4,11 +4,11 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=22';
-import { emit, EVENTS } from '../shared/eventBus.js?v=22';
-import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=22';
-import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=22';
-import { saveGame } from './saveGameUseCase.js?v=22';
+import { G } from './gameStore.js?v=23';
+import { emit, EVENTS } from '../shared/eventBus.js?v=23';
+import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=23';
+import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=23';
+import { saveGame } from './saveGameUseCase.js?v=23';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 

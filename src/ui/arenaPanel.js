@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js?v=22';
-import { VOCATIONS } from '../domain/character.js?v=22';
-import { ARENA_DIVISIONS } from '../domain/progression.js?v=22';
-import { startArenaBattle } from '../application/arenaUseCases.js?v=22';
+import { G } from '../application/gameStore.js?v=23';
+import { VOCATIONS } from '../domain/character.js?v=23';
+import { ARENA_DIVISIONS } from '../domain/progression.js?v=23';
+import { startArenaBattle } from '../application/arenaUseCases.js?v=23';
 
 function renderArenaSummary() {
   const divIndex = Math.min(ARENA_DIVISIONS.length - 1, Math.floor(G.arenaPoints / 100));

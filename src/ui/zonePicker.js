@@ -1,12 +1,12 @@
 // Painel de escolha de zona de caça: um card por dungeon do mundo atual, com
 // criaturas, multiplicadores e o requisito de nível — em vez do <select>
 // escondido de antes. Mesmo padrão do seletor de outfit (ver outfitPicker.js).
-import { G } from '../application/gameStore.js?v=22';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=22';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=22';
-import { openModal, closeModal } from './shared.js?v=22';
-import { openBattleModal } from './battleModal.js?v=22';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=22';
+import { G } from '../application/gameStore.js?v=23';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=23';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=23';
+import { openModal, closeModal } from './shared.js?v=23';
+import { openBattleModal } from './battleModal.js?v=23';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=23';
 
 function zoneCard(id, z) {
   const locked = G.level < z.minLevel;
