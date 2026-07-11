@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=56" />
-  <link rel="stylesheet" href="style.css?v=56" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=57" />
+  <link rel="stylesheet" href="style.css?v=57" />
 </head>
 <body>
   <div id="app">
@@ -20,6 +20,7 @@
         <span class="stat-pill"><img src="assets/sprites/vitals/Mana_Icon.webp" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /> <span id="hdr-mana">--</span></span>
       </div>
       <div id="header-btns">
+        <span id="auth-user" class="auth-user"></span>
         <button class="btn-small daily-btn" onclick="openDailyReward()">🎁 Diário<span id="daily-reward-badge" class="daily-badge">!</span></button>
         <button class="btn-small" onclick="saveGame()">💾 Salvar</button>
         <button class="btn-small danger" onclick="confirmReset()">🔄 Reset</button>
@@ -344,6 +345,9 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=56"></script>
+  <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
+  <div id="auth-gate" style="display:none"></div>
+
+  <script type="module" src="src/main.js?v=57"></script>
 </body>
 </html>

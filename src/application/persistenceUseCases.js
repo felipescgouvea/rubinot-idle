@@ -1,22 +1,31 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=56';
-import { createDefaultState } from '../domain/gameState.js?v=56';
-import { createDefaultSkills } from '../domain/character.js?v=56';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=56';
-import { isSpellAvailable } from '../domain/spells.js?v=56';
-import { findOutfit } from '../domain/outfits.js?v=56';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=56';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=56';
-import { isRelicId } from '../domain/items.js?v=56';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=56';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=56';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=56';
-import { emit, EVENTS } from '../shared/eventBus.js?v=56';
-import { getMaxHp, getMaxMana } from './stats.js?v=56';
-import { gainXp } from './huntUseCases.js?v=56';
-import { checkBpTier } from './battlePassUseCases.js?v=56';
-import { getXpRate, getGoldRate, getZoneMultiplier } from './adminUseCases.js?v=56';
+import { G, replaceState } from './gameStore.js?v=57';
+import { createDefaultState } from '../domain/gameState.js?v=57';
+import { createDefaultSkills } from '../domain/character.js?v=57';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=57';
+import { isSpellAvailable } from '../domain/spells.js?v=57';
+import { findOutfit } from '../domain/outfits.js?v=57';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=57';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=57';
+import { isRelicId } from '../domain/items.js?v=57';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=57';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=57';
+import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=57';
+import { emit, EVENTS } from '../shared/eventBus.js?v=57';
+import { getMaxHp, getMaxMana } from './stats.js?v=57';
+import { gainXp } from './huntUseCases.js?v=57';
+import { checkBpTier } from './battlePassUseCases.js?v=57';
+import { getXpRate, getGoldRate, getZoneMultiplier } from './adminUseCases.js?v=57';
+
+// Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
+// nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não
+// há (conta nova), mantém o que estiver local — assim um jogador que já jogava
+// sem conta importa o progresso ao criar a 1ª conta. Chamada só pelo main.js,
+// logo após o login e antes de loadGame().
+export function applyCloudSave(cloudData) {
+  if (cloudData) saveState(cloudData);
+}
 
 export function loadGame() {
   const parsed = loadRawState();

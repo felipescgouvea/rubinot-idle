@@ -1,13 +1,13 @@
-import { G } from './gameStore.js?v=56';
-import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=56';
-import { ZONES } from '../domain/bestiary.js?v=56';
-import { RARITY_TIERS } from '../domain/rarity.js?v=56';
-import { emit, EVENTS } from '../shared/eventBus.js?v=56';
-import { getMaxHp, getMaxMana } from './stats.js?v=56';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=56';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=56';
-import { saveGame } from './saveGameUseCase.js?v=56';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=56';
+import { G } from './gameStore.js?v=57';
+import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=57';
+import { ZONES } from '../domain/bestiary.js?v=57';
+import { RARITY_TIERS } from '../domain/rarity.js?v=57';
+import { emit, EVENTS } from '../shared/eventBus.js?v=57';
+import { getMaxHp, getMaxMana } from './stats.js?v=57';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=57';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=57';
+import { saveGame } from './saveGameUseCase.js?v=57';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=57';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -15,7 +15,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=56';
+export { addItemToInventory } from './inventoryCore.js?v=57';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
