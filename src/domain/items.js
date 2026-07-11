@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=33';
+import { primaryStatKeyForItem } from './rarity.js?v=35';
 
 export const ITEMS = {
   bones:          { name: 'Ossos', icon: '🦴', type: 'misc', sell: 1 },
