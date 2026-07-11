@@ -305,13 +305,40 @@ body {
 .voc-name { font-family: var(--serif); font-weight: 700; font-size: 14px; color: var(--navy-2); letter-spacing: 1px; }
 .voc-desc { font-size: 11px; color: var(--ink-soft); margin-top: 5px; line-height: 1.5; }
 
-/* ============ PERSONAGEM ============ */
-#char-info { padding: 0 14px 14px; }
-.char-header { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+/* ============ PERSONAGEM — barra de status fina e horizontal, abaixo das
+   abas, visível em qualquer aba assim que uma vocação é escolhida ============ */
+#char-info {
+  align-items: center;
+  gap: 16px;
+  margin: 10px 14px 0;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #00000033, inset 0 1px 0 #ffffff55;
+}
+.char-status-portrait { flex-shrink: 0; display: flex; align-items: center; }
+.char-status-name-block { flex-shrink: 0; min-width: 120px; }
+.char-status-name-block .char-name-line { font-family: var(--serif); font-size: 12.5px; letter-spacing: 0.5px; color: var(--navy-2); font-weight: 700; white-space: nowrap; }
+.char-status-name-block .char-level-line { font-size: 10.5px; color: var(--ink-soft); margin-top: 1px; white-space: nowrap; }
+.char-status-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 160px; max-width: 340px; }
+.bar-row-mini { display: flex; align-items: center; gap: 6px; }
+.bar-row-mini label { font-size: 11px; flex-shrink: 0; width: 14px; }
+.bar-row-mini .bar-track { height: 9px; flex: 1; }
+.bar-row-mini span { font-size: 9.5px; color: var(--ink-soft); width: 64px; text-align: right; font-weight: 600; flex-shrink: 0; }
+.char-status-stats { display: flex; gap: 6px; flex-shrink: 0; }
+.stat-chip {
+  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  border: 1px solid var(--line-soft);
+  border-radius: 5px;
+  padding: 3px 8px;
+  text-align: center;
+  min-width: 34px;
+}
+.stat-chip span { display: block; font-family: var(--serif); font-weight: 700; font-size: 13px; color: var(--navy-1); }
+.stat-chip small { display: block; font-size: 8px; color: var(--ink-faint); letter-spacing: 0.5px; }
 .char-voc-big { font-size: 2.6rem; filter: drop-shadow(0 2px 3px #00000033); }
 canvas.char-voc-big { width: 40px; height: 40px; image-rendering: pixelated; }
-.char-name-line { font-family: var(--serif); font-size: 14px; letter-spacing: 0.5px; color: var(--navy-2); }
-.char-level-line { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
 
 .bar-row { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
 .bar-row label { width: 50px; font-size: 11px; flex-shrink: 0; color: var(--ink-soft); font-weight: 600; }
@@ -1211,4 +1238,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   #tabs { margin: 8px 10px 0; }
   .hs-table { font-size: 10px; }
   .hs-table th, .hs-table td { padding: 5px 6px; }
+  #char-info { flex-wrap: wrap; margin: 8px 10px 0; gap: 8px 14px; }
+  .char-status-bars { min-width: 100%; order: 3; max-width: none; }
+  .char-status-stats { order: 4; }
 }

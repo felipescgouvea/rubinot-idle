@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=20" />
+  <link rel="stylesheet" href="style.css?v=21" />
 </head>
 <body>
   <div id="app">
@@ -38,6 +38,40 @@
       <button class="tab" data-tab="market">🏪 Mercado</button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
     </nav>
+
+    <!-- BARRA DE STATUS DO PERSONAGEM — fina e horizontal, visível em
+         qualquer aba (não só na Caçada) assim que uma vocação é escolhida -->
+    <div id="char-info" style="display:none">
+      <div class="char-status-portrait"><span id="char-voc-icon" class="char-voc-big"></span></div>
+      <div class="char-status-name-block">
+        <div class="char-name-line"><strong id="char-name-display"></strong><span id="char-voc-name"></span></div>
+        <div class="char-level-line">Lv <span id="char-level">1</span> · <span id="char-xp">0</span>/<span id="char-xp-next">100</span> XP</div>
+      </div>
+      <div class="char-status-bars">
+        <div class="bar-row-mini">
+          <label>❤️</label>
+          <div class="bar-track"><div id="hp-bar" class="bar hp-bar" style="width:100%"></div></div>
+          <span id="hp-text">100/100</span>
+        </div>
+        <div class="bar-row-mini">
+          <label>🔵</label>
+          <div class="bar-track"><div id="mana-bar" class="bar mana-bar" style="width:100%"></div></div>
+          <span id="mana-text">100/100</span>
+        </div>
+        <div class="bar-row-mini">
+          <label>⭐</label>
+          <div class="bar-track"><div id="xp-bar" class="bar xp-bar" style="width:0%"></div></div>
+          <span id="xp-text">0%</span>
+        </div>
+      </div>
+      <div class="char-status-stats">
+        <div class="stat-chip" title="Ataque"><span id="stat-atk">0</span><small>ATK</small></div>
+        <div class="stat-chip" title="Defesa"><span id="stat-def">0</span><small>DEF</small></div>
+        <div class="stat-chip" title="Velocidade"><span id="stat-spd">0</span><small>SPD</small></div>
+        <div class="stat-chip" title="Magia"><span id="stat-magic">0</span><small>MGC</small></div>
+      </div>
+      <button class="btn-small" onclick="openOutfitPicker()">👕 Outfit</button>
+    </div>
 
     <!-- PANELS -->
     <main id="panels">
@@ -88,37 +122,6 @@
                 <div class="voc-icon">🌿</div>
                 <div class="voc-name">Druid</div>
                 <div class="voc-desc">Mago de cura. Suporte + dano elemental.</div>
-              </div>
-            </div>
-            <div id="char-info" style="display:none">
-              <div class="char-header">
-                <span id="char-voc-icon" class="char-voc-big"></span>
-                <div>
-                  <div class="char-name-line"><strong id="char-name-display"></strong> — <span id="char-voc-name"></span></div>
-                  <div class="char-level-line">Level <span id="char-level">1</span> | XP: <span id="char-xp">0</span> / <span id="char-xp-next">100</span></div>
-                  <button class="btn-small" style="margin-top:5px" onclick="openOutfitPicker()">👕 Trocar Outfit</button>
-                </div>
-              </div>
-              <div class="bar-row">
-                <label>❤️ HP</label>
-                <div class="bar-track"><div id="hp-bar" class="bar hp-bar" style="width:100%"></div></div>
-                <span id="hp-text">100/100</span>
-              </div>
-              <div class="bar-row">
-                <label>🔵 MP</label>
-                <div class="bar-track"><div id="mana-bar" class="bar mana-bar" style="width:100%"></div></div>
-                <span id="mana-text">100/100</span>
-              </div>
-              <div class="bar-row">
-                <label>⭐ XP</label>
-                <div class="bar-track"><div id="xp-bar" class="bar xp-bar" style="width:0%"></div></div>
-                <span id="xp-text">0%</span>
-              </div>
-              <div class="stats-grid">
-                <div class="stat-box"><div class="stat-val" id="stat-atk">0</div><div class="stat-lbl">ATK</div></div>
-                <div class="stat-box"><div class="stat-val" id="stat-def">0</div><div class="stat-lbl">DEF</div></div>
-                <div class="stat-box"><div class="stat-val" id="stat-spd">0</div><div class="stat-lbl">SPD</div></div>
-                <div class="stat-box"><div class="stat-val" id="stat-magic">0</div><div class="stat-lbl">MGC</div></div>
               </div>
             </div>
           </div>
@@ -263,6 +266,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=20"></script>
+  <script type="module" src="src/main.js?v=21"></script>
 </body>
 </html>
