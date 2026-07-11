@@ -23,7 +23,7 @@ Jogador, na aba Caçada, depois de ter escolhido uma vocação.
 - **Os atributos das criaturas escalam com o nível do personagem** (ficam mais fortes e valem mais XP/gold conforme o jogador evolui), para que uma mesma zona continue relevante por mais tempo.
 - **O dano do personagem depende da skill de ataque da sua vocação** (Sword Fighting para Knight, Distance Fighting para Paladin, Magic Level para Sorcerer/Druid) mais o equipamento — nunca de um número fixo.
 - **O dano recebido é reduzido pela Defesa**, que combina a skill Shielding com bônus de equipamento.
-- **A velocidade da caçada (ritmo de ataque) é afetada pelas configurações do RTC** — ver [14-spells-e-rtc.md](14-spells-e-rtc.md).
+- **O ataque e a cura automáticos durante a caçada seguem a configuração do RTC** (magia ou runa de ataque, magia e poção de cura) — ver [14-spells-e-rtc.md](14-spells-e-rtc.md).
 - **Ao morrer, a caçada para automaticamente** e o personagem retorna com a penalidade descrita em [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
 
 ## Comportamento esperado
