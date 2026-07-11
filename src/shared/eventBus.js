@@ -29,6 +29,7 @@ export const EVENTS = {
   HEADER_STATS: 'headerStats',
   PLAYER_BATTLE_SIDE: 'playerBattleSide',
   MONSTER_DISPLAY: 'monsterDisplay',
+  BATTLE_LIST: 'battleList',
   EQUIPMENT_SLOTS: 'equipmentSlots',
   INVENTORY: 'inventory',
   LOOT: 'loot',

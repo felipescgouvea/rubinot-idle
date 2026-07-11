@@ -3,24 +3,24 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=36';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=36';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=36';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=36';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=36';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=36';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=36';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=36';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=36';
-import { MONSTERS } from '../domain/bestiary.js?v=36';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=36';
-import { emit, EVENTS } from '../shared/eventBus.js?v=36';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=36';
-import { trainSkill } from './skillUseCases.js?v=36';
-import { addItemToInventory } from './inventoryCore.js?v=36';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=36';
-import { getCombatBonuses } from './bonuses.js?v=36';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=36';
+import { G } from './gameStore.js?v=37';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=37';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=37';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=37';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=37';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=37';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=37';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=37';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=37';
+import { MONSTERS } from '../domain/bestiary.js?v=37';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=37';
+import { emit, EVENTS } from '../shared/eventBus.js?v=37';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=37';
+import { trainSkill } from './skillUseCases.js?v=37';
+import { addItemToInventory } from './inventoryCore.js?v=37';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=37';
+import { getCombatBonuses } from './bonuses.js?v=37';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=37';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -40,7 +40,14 @@ function monsterLogIcon(monsterId) {
 
 let huntInterval = null;
 let regenInterval = null;
+// currentMonster é sempre o ALVO da frente (currentPack[0]) — toda a lógica de
+// combate mira nele. currentPack é a "sala": o alvo + os monstros esperando,
+// mostrados na Battle List. Você luta um por vez; ao matar o da frente, o
+// próximo assume; quando a sala esvazia, o próximo tick gera um novo grupo.
 let currentMonster = null;
+let currentPack = [];
+// Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1).
+const MAX_PACK_SIZE = 3;
 // Modo "só o boss" do Boss Rush (ver application/bossRushUseCases.js): quando
 // ligado, spawnMonsterInstance só sorteia zone.boss em vez do elenco normal
 // da zona — nunca muda o desenho da caçada comum, só restringe o pool de
@@ -50,6 +57,11 @@ let bossOnly = false;
 
 export function getCurrentMonster() {
   return currentMonster;
+}
+
+// A "sala" atual: o alvo + monstros esperando (pra Battle List — ver ui/huntPanel.js).
+export function getCurrentPack() {
+  return currentPack;
 }
 
 export function isBossOnlyHunt() {
@@ -92,7 +104,9 @@ export function stopHunt() {
   G.hunting = false;
   if (huntInterval) { clearInterval(huntInterval); huntInterval = null; }
   currentMonster = null;
+  currentPack = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
+  emit(EVENTS.BATTLE_LIST);
   emit(EVENTS.LOG, '<span class="log-info">⏸ Caçada pausada.</span>');
 }
 
@@ -110,11 +124,16 @@ export function doHuntTick() {
     // bossTierMultiplier) — vencer o tier atual sobe pro próximo, mais forte.
     const bossTier = bossOnly ? (G.bossTiers[G.activeZone] || 1) : 1;
     const bossMult = bossOnly ? bossTierMultiplier(bossTier) : 1;
-    currentMonster = spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult);
+    // Grupo de 1..MAX_PACK_SIZE numa caçada comum; Boss Rush é sempre 1 boss.
+    const packSize = bossOnly ? 1 : 1 + Math.floor(Math.random() * MAX_PACK_SIZE);
+    currentPack = Array.from({ length: packSize }, () => spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult));
+    currentMonster = currentPack[0];
+    const extra = packSize > 1 ? ` <span class="log-info">(+${packSize - 1} na sala)</span>` : '';
     emit(EVENTS.LOG, bossOnly
       ? `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} (Tier ${bossTier}) apareceu!</span>`
-      : `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} apareceu!</span>`);
+      : `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} apareceu!</span>${extra}`);
     emit(EVENTS.MONSTER_DISPLAY, { bossAura: bossOnly ? bossAuraClass(bossTier) : null });
+    emit(EVENTS.BATTLE_LIST);
     return; // o monstro aparece neste tick; o combate começa no próximo
   }
 
@@ -317,8 +336,13 @@ export function resolveMonsterKill(zone) {
     emit(EVENTS.BOSS_RUSH_PANEL);
   }
 
-  currentMonster = null;
+  // Remove o alvo abatido (sempre o da frente) da sala; o próximo da fila vira
+  // o novo alvo. Só quando a sala esvazia (currentMonster null) é que o próximo
+  // tick gera um novo grupo.
+  currentPack.shift();
+  currentMonster = currentPack[0] || null;
   emit(EVENTS.MONSTER_DISPLAY, { killed: killedId });
+  emit(EVENTS.BATTLE_LIST);
   emit(EVENTS.LOOT);
   emit(EVENTS.KILL_COUNTERS);
   emit(EVENTS.HEADER_STATS);

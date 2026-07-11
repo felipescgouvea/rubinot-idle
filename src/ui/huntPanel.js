@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=36';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=36';
-import { MONSTERS } from '../domain/bestiary.js?v=36';
-import { ITEMS } from '../domain/items.js?v=36';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=36';
-import { on, EVENTS } from '../shared/eventBus.js?v=36';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=36';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=36';
+import { G } from '../application/gameStore.js?v=37';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=37';
+import { MONSTERS } from '../domain/bestiary.js?v=37';
+import { ITEMS } from '../domain/items.js?v=37';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=37';
+import { on, EVENTS } from '../shared/eventBus.js?v=37';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=37';
+import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=37';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -182,8 +182,28 @@ function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes,
   `);
 }
 
+// Battle List (como a do Tibia): lista todos os monstros da "sala" atual com a
+// vida de cada um, destacando o alvo da frente. Some quando não há ninguém.
+export function renderBattleList() {
+  const el = document.getElementById('battle-list');
+  if (!el) return;
+  const pack = getCurrentPack() || [];
+  if (!pack.length) { el.innerHTML = '<div class="battle-list-empty">Sem criaturas.</div>'; return; }
+  el.innerHTML = pack.map((m, i) => {
+    const pct = Math.max(0, Math.round((m.hp / m.maxHp) * 100));
+    return `<div class="battle-list-entry ${i === 0 ? 'target' : ''}">
+      <div class="battle-list-icon">${monsterSpriteImg(m.defKey, 'battle-list-sprite')}</div>
+      <div class="battle-list-info">
+        <div class="battle-list-name">${i === 0 ? '⚔️ ' : ''}${m.name}</div>
+        <div class="battle-list-hp-track"><div class="battle-list-hp-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 export function wireHuntPanelEvents() {
-  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => renderMonsterDisplay(hit, killed, spellElement, bossAura));
+  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); });
+  on(EVENTS.BATTLE_LIST, renderBattleList);
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);

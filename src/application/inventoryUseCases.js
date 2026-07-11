@@ -1,12 +1,12 @@
-import { G } from './gameStore.js?v=36';
-import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=36';
-import { ZONES } from '../domain/bestiary.js?v=36';
-import { RARITY_TIERS } from '../domain/rarity.js?v=36';
-import { emit, EVENTS } from '../shared/eventBus.js?v=36';
-import { getMaxHp, getMaxMana } from './stats.js?v=36';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=36';
-import { saveGame } from './saveGameUseCase.js?v=36';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=36';
+import { G } from './gameStore.js?v=37';
+import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=37';
+import { ZONES } from '../domain/bestiary.js?v=37';
+import { RARITY_TIERS } from '../domain/rarity.js?v=37';
+import { emit, EVENTS } from '../shared/eventBus.js?v=37';
+import { getMaxHp, getMaxMana } from './stats.js?v=37';
+import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=37';
+import { saveGame } from './saveGameUseCase.js?v=37';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=37';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -14,7 +14,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=36';
+export { addItemToInventory } from './inventoryCore.js?v=37';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];

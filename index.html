@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=36" />
-  <link rel="stylesheet" href="style.css?v=36" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=37" />
+  <link rel="stylesheet" href="style.css?v=37" />
 </head>
 <body>
   <div id="app">
@@ -308,6 +308,11 @@
             <div class="monster-empty">Escolha sua vocação e inicie uma caçada…</div>
           </div>
         </div>
+        <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma -->
+        <div class="card" id="battle-list-card">
+          <h3>🎯 Battle List</h3>
+          <div id="battle-list"><div class="battle-list-empty">Sem criaturas.</div></div>
+        </div>
         <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
         <div class="card" id="combat-log-card">
           <h3>Log de Combate</h3>
@@ -320,6 +325,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=36"></script>
+  <script type="module" src="src/main.js?v=37"></script>
 </body>
 </html>

@@ -1521,3 +1521,21 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   .daily-grid { grid-template-columns: repeat(4, 1fr); }
   .boosted-body { flex-direction: row; }
 }
+
+/* ============ BATTLE LIST (criaturas da sala + vida de cada uma) ============ */
+#battle-list-card { margin-top: 4px; }
+#battle-list { display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto; margin: 10px 14px !important; }
+.battle-list-empty { color: var(--ink-soft); font-size: 12px; }
+.battle-list-entry {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 6px; border-radius: 5px;
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 1px solid var(--line-soft);
+}
+.battle-list-entry.target { border-color: var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); box-shadow: 0 0 6px #d4a01755; }
+.battle-list-icon { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; flex: none; }
+.battle-list-sprite { max-width: 28px; max-height: 28px; image-rendering: pixelated; }
+.battle-list-info { flex: 1; min-width: 0; }
+.battle-list-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.battle-list-hp-track { height: 7px; background: #00000033; border-radius: 3px; overflow: hidden; margin-top: 2px; border: 1px solid #00000022; }
+.battle-list-hp-fill { height: 100%; background: linear-gradient(180deg, #6ac06a, #3a9a3a); transition: width 0.2s; }
