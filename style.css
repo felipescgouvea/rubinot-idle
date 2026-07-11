@@ -1348,9 +1348,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   border: 2px solid var(--gold);
   border-radius: 8px;
   padding: 0;
-  max-width: 640px;
-  width: 94%;
-  max-height: 90vh;
+  max-width: 940px;
+  width: 96%;
+  max-height: 92vh;
   overflow-y: auto;
   box-shadow: 0 10px 40px #00000088;
 }
@@ -1384,8 +1384,26 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   opacity: 0.8;
 }
 .battle-modal-close-x:hover { opacity: 1; }
-#battle-modal-box #battle-scene { margin: 14px !important; }
-#battle-modal-box #combat-log-card { margin: 0 14px 14px !important; }
+/* Corpo do modal de batalha em 2 colunas (telas largas): esquerda = cena +
+   botão; direita = Battle List + Log. Reduz muito a altura pra caber sem rolar. */
+#battle-modal-body {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
+  gap: 14px;
+  padding: 14px;
+  align-items: start;
+}
+.battle-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+#battle-modal-box #battle-scene { margin: 0 !important; }
+#battle-modal-box #battle-list-card { margin: 0 !important; }
+#battle-modal-box #combat-log-card { margin: 0 !important; }
+#battle-modal-box #hunt-toggle { margin: 0 !important; }
+#battle-modal-box #combat-log { margin: 10px 12px !important; height: 200px; }
+#battle-modal-box #battle-list { max-height: 140px; overflow-y: auto; }
+/* telas estreitas: volta pra 1 coluna (empilha tudo) */
+@media (max-width: 780px) {
+  #battle-modal-body { grid-template-columns: 1fr; }
+}
 
 /* ============ SELETOR DE OUTFIT — duas colunas lado a lado (customizar à
    esquerda, galeria à direita), como pedido; :has() só alarga esse modal
