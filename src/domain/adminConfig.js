@@ -14,6 +14,13 @@ export const DEFAULT_ADMIN_CONFIG = {
   // spawn (ver application/huntUseCases.js: searchDelay).
   spawnDelayMin: 1.2,
   spawnDelayMax: 3,
+  // Multiplicadores de XP/Gold por zona de caça. Por padrão DESLIGADO: a XP e o
+  // gold ficam iguais ao valor-base de cada criatura (fiel ao Tibia global). Ao
+  // ligar, as zonas usam sua progressão embutida (ZONES[id].xpMult/goldMult) —
+  // ou, se houver override aqui, o valor definido pelo dono. Ver
+  // zoneMultiplier() abaixo e application/huntUseCases.js: resolveMonsterKill.
+  useZoneMultipliers: false,
+  zoneMultipliers: {}, // { [zoneId]: { xp?: number, gold?: number } } — overrides opcionais
   rarityWeights: { uncommon: 52, rare: 28, epic: 15, legendary: 5 },
 };
 
@@ -37,6 +44,16 @@ export function rarityChancePercents(weights) {
 
 const asNum = (v, def) => (Number.isFinite(+v) && +v >= 0 ? +v : def);
 
+// Multiplicador efetivo de XP ou Gold de uma zona (kind = 'xp' | 'gold').
+// Desligado (padrão) => 1 (fiel ao Tibia). Ligado => override do dono, se
+// houver; senão o valor de progressão embutido na zona (builtIn).
+export function zoneMultiplier(cfg, zoneId, kind, builtIn) {
+  if (!cfg || !cfg.useZoneMultipliers) return 1;
+  const ov = cfg.zoneMultipliers && cfg.zoneMultipliers[zoneId];
+  if (ov && Number.isFinite(+ov[kind])) return +ov[kind];
+  return builtIn;
+}
+
 // Garante que G.adminConfig tem todos os campos válidos (>= 0, chance 0..1),
 // mesclando com os defaults — chamado em toda leitura/escrita.
 export function sanitizeAdminConfig(cfg) {
@@ -50,6 +67,18 @@ export function sanitizeAdminConfig(cfg) {
   c.spawnDelayMin = asNum(c.spawnDelayMin, d.spawnDelayMin);
   c.spawnDelayMax = asNum(c.spawnDelayMax, d.spawnDelayMax);
   if (c.spawnDelayMax < c.spawnDelayMin) c.spawnDelayMax = c.spawnDelayMin; // max nunca menor que min
+  c.useZoneMultipliers = !!c.useZoneMultipliers;
+  const zm = {};
+  if (c.zoneMultipliers && typeof c.zoneMultipliers === 'object') {
+    for (const [zid, ov] of Object.entries(c.zoneMultipliers)) {
+      if (!ov || typeof ov !== 'object') continue;
+      const e = {};
+      if (ov.xp != null) e.xp = asNum(ov.xp, 1);
+      if (ov.gold != null) e.gold = asNum(ov.gold, 1);
+      if ('xp' in e || 'gold' in e) zm[zid] = e;
+    }
+  }
+  c.zoneMultipliers = zm;
   c.rarityWeights = { ...d.rarityWeights, ...(c.rarityWeights || {}) };
   RARITY_TIER_ORDER.forEach(k => { c.rarityWeights[k] = asNum(c.rarityWeights[k], d.rarityWeights[k]); });
   return c;

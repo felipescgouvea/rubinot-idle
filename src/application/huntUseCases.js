@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=52';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=52';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=52';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=52';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=52';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=52';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=52';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=52';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=52';
-import { MONSTERS } from '../domain/bestiary.js?v=52';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=52';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=52';
-import { emit, EVENTS } from '../shared/eventBus.js?v=52';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=52';
-import { trainSkill } from './skillUseCases.js?v=52';
-import { addItemToInventory } from './inventoryCore.js?v=52';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=52';
-import { getCombatBonuses } from './bonuses.js?v=52';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange } from './adminUseCases.js?v=52';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=52';
+import { G } from './gameStore.js?v=53';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=53';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=53';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=53';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=53';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=53';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=53';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=53';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=53';
+import { MONSTERS } from '../domain/bestiary.js?v=53';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=53';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=53';
+import { emit, EVENTS } from '../shared/eventBus.js?v=53';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=53';
+import { trainSkill } from './skillUseCases.js?v=53';
+import { addItemToInventory } from './inventoryCore.js?v=53';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=53';
+import { getCombatBonuses } from './bonuses.js?v=53';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=53';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=53';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -328,8 +328,12 @@ export function resolveMonsterKill(zone, victim) {
   // Bônus de Presa/Charm contra esta criatura (ver application/bonuses.js) —
   // multiplicadores de gold/xp e chance aditiva de loot, por cima de tudo.
   const bonus = getCombatBonuses(mon.defKey, Date.now());
-  const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
-  const xpGained = Math.floor(mon.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate());
+  // Multiplicador de XP/Gold da zona: por padrão 1 (fiel ao Tibia); só difere
+  // se o dono ligou os multiplicadores no Painel Admin (ver adminUseCases).
+  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', zone.goldMult);
+  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', zone.xpMult);
+  const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
+  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate());
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;

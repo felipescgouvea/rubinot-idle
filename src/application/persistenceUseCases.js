@@ -1,22 +1,22 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=52';
-import { createDefaultState } from '../domain/gameState.js?v=52';
-import { createDefaultSkills } from '../domain/character.js?v=52';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=52';
-import { isSpellAvailable } from '../domain/spells.js?v=52';
-import { findOutfit } from '../domain/outfits.js?v=52';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=52';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=52';
-import { isRelicId } from '../domain/items.js?v=52';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=52';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=52';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=52';
-import { emit, EVENTS } from '../shared/eventBus.js?v=52';
-import { getMaxHp, getMaxMana } from './stats.js?v=52';
-import { gainXp } from './huntUseCases.js?v=52';
-import { checkBpTier } from './battlePassUseCases.js?v=52';
-import { getXpRate, getGoldRate } from './adminUseCases.js?v=52';
+import { G, replaceState } from './gameStore.js?v=53';
+import { createDefaultState } from '../domain/gameState.js?v=53';
+import { createDefaultSkills } from '../domain/character.js?v=53';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=53';
+import { isSpellAvailable } from '../domain/spells.js?v=53';
+import { findOutfit } from '../domain/outfits.js?v=53';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=53';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=53';
+import { isRelicId } from '../domain/items.js?v=53';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=53';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=53';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=53';
+import { emit, EVENTS } from '../shared/eventBus.js?v=53';
+import { getMaxHp, getMaxMana } from './stats.js?v=53';
+import { gainXp } from './huntUseCases.js?v=53';
+import { checkBpTier } from './battlePassUseCases.js?v=53';
+import { getXpRate, getGoldRate, getZoneMultiplier } from './adminUseCases.js?v=53';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -112,8 +112,10 @@ export function applyOfflineProgress() {
   const scaleFactor = 1 + (G.level - 1) * 0.05;
   const killsPerMin = 6; // ritmo offline reduzido (~metade do ativo)
   const kills = Math.floor((cappedSec / 60) * killsPerMin);
-  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMultiplier(G.currentWorld) * 0.5 * getXpRate());
-  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMultiplier(G.currentWorld) * 0.5 * getGoldRate());
+  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', zone.xpMult);
+  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', zone.goldMult);
+  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zoneXpMult * worldXpMultiplier(G.currentWorld) * 0.5 * getXpRate());
+  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * 0.5 * getGoldRate());
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;

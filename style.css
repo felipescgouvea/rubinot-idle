@@ -1664,3 +1664,10 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .admin-rarity-name { font-size: 12px; font-weight: 700; }
 .admin-rarity-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
 .admin-rarity-pct { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: right; }
+.admin-toggle-row { display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer; }
+.admin-toggle-row input { width: 16px; height: 16px; }
+.admin-zone-list { display: flex; flex-direction: column; gap: 5px; max-height: 300px; overflow-y: auto; margin-top: 8px; padding: 8px; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(0,0,0,0.03); }
+.admin-zone-row { display: grid; grid-template-columns: 1fr 110px 110px; align-items: center; gap: 8px; }
+.admin-zone-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-zone-mult { font-size: 11px; font-weight: 700; color: var(--ink-soft); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.admin-zone-mult input { width: 100%; padding: 4px 6px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }

@@ -1,10 +1,11 @@
 // Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
 // de relíquia por boss e os pesos de cada raridade. Lê/escreve via
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=52';
-import { RARITY_TIERS } from '../domain/rarity.js?v=52';
-import { on, EVENTS } from '../shared/eventBus.js?v=52';
-import { getAdminConfig } from '../application/adminUseCases.js?v=52';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=53';
+import { RARITY_TIERS } from '../domain/rarity.js?v=53';
+import { ZONES } from '../domain/bestiary.js?v=53';
+import { on, EVENTS } from '../shared/eventBus.js?v=53';
+import { getAdminConfig } from '../application/adminUseCases.js?v=53';
 
 export function renderAdminPanel() {
   const el = document.getElementById('admin-content');
@@ -22,6 +23,22 @@ export function renderAdminPanel() {
       </div>
       <small>${f.hint}</small>
     </div>`).join('');
+
+  // Lista de zonas com override de XP/Gold — o input mostra o valor efetivo
+  // (override do dono se houver, senão a progressão embutida da zona).
+  const zoneMultRows = Object.entries(ZONES).map(([id, z]) => {
+    const ov = cfg.zoneMultipliers[id] || {};
+    const xpVal = ov.xp != null ? ov.xp : z.xpMult;
+    const goldVal = ov.gold != null ? ov.gold : z.goldMult;
+    return `
+    <div class="admin-zone-row">
+      <span class="admin-zone-name">${z.icon} ${z.name}</span>
+      <label class="admin-zone-mult">XP ×<input type="number" min="0" step="0.1" value="${xpVal}"
+        onchange="setZoneMultiplier('${id}', 'xp', parseFloat(this.value))" /></label>
+      <label class="admin-zone-mult">Gold ×<input type="number" min="0" step="0.1" value="${goldVal}"
+        onchange="setZoneMultiplier('${id}', 'gold', parseFloat(this.value))" /></label>
+    </div>`;
+  }).join('');
 
   const rarityRows = RARITY_TIER_ORDER.map(id => {
     const tier = RARITY_TIERS[id];
@@ -61,6 +78,19 @@ export function renderAdminPanel() {
         <small>Cada aparição sorteia um tempo aleatório nesse intervalo.</small>
       </div>
     </div>
+
+    <h4>🗺️ Multiplicadores de XP/Gold por hunt</h4>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.useZoneMultipliers ? 'checked' : ''}
+          onchange="setUseZoneMultipliers(this.checked)" />
+        Aplicar multiplicadores de zona
+      </label>
+      <small>${cfg.useZoneMultipliers
+        ? 'Cada zona multiplica a XP/gold base pela sua progressão — ou pelo valor que você definir abaixo.'
+        : '🛡️ Modo Tibia (padrão): XP e gold iguais ao valor-base de cada criatura, sem multiplicador de zona.'}</small>
+    </div>
+    ${cfg.useZoneMultipliers ? `<div class="admin-zone-list">${zoneMultRows}</div>` : ''}
 
     <h4>💎 Raridade das Relíquias</h4>
     <div class="admin-field">

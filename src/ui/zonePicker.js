@@ -1,12 +1,13 @@
 // Painel de escolha de zona de caça: um card por dungeon do mundo atual, com
 // criaturas, multiplicadores e o requisito de nível — em vez do <select>
 // escondido de antes. Mesmo padrão do seletor de outfit (ver outfitPicker.js).
-import { G } from '../application/gameStore.js?v=52';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=52';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=52';
-import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=52';
-import { openBattleModal } from './battleModal.js?v=52';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=52';
+import { G } from '../application/gameStore.js?v=53';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=53';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=53';
+import { getZoneMultiplier } from '../application/adminUseCases.js?v=53';
+import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=53';
+import { openBattleModal } from './battleModal.js?v=53';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=53';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -27,7 +28,7 @@ function zoneCard(id, z) {
     <div class="zone-card-icon">${zoneIconImg(z, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${z.name}</div>
     <div class="zone-card-monster-row">${monsterIcons}</div>
-    <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${z.xpMult} ${goldIconImg('inline-icon')}×${z.goldMult}</div>
+    <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${getZoneMultiplier(id, 'xp', z.xpMult)} ${goldIconImg('inline-icon')}×${getZoneMultiplier(id, 'gold', z.goldMult)}</div>
     ${locked
       ? `<div class="zone-card-req">${levelLocked ? `🔒 Lv ${z.minLevel}` : `🔒 Boss: ${bossZoneName}`}</div>`
       : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? '✅ Caçando' : 'Caçar aqui'}</button>`}
