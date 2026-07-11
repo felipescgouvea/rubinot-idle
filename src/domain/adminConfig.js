@@ -9,6 +9,11 @@ export const DEFAULT_ADMIN_CONFIG = {
   goldRate: 1,        // multiplica o gold dropado
   lootRate: 1,        // multiplica a chance de loot
   relicDropChance: 0.10, // chance de cair uma relíquia por boss (0..1)
+  // Tempo (em SEGUNDOS) que o personagem fica "procurando" até o próximo grupo
+  // de criaturas aparecer — sorteado aleatoriamente entre min e max a cada
+  // spawn (ver application/huntUseCases.js: searchDelay).
+  spawnDelayMin: 1.2,
+  spawnDelayMax: 3,
   rarityWeights: { uncommon: 52, rare: 28, epic: 15, legendary: 5 },
 };
 
@@ -42,6 +47,9 @@ export function sanitizeAdminConfig(cfg) {
   c.goldRate = asNum(c.goldRate, d.goldRate);
   c.lootRate = asNum(c.lootRate, d.lootRate);
   c.relicDropChance = Math.min(1, Math.max(0, asNum(c.relicDropChance, d.relicDropChance)));
+  c.spawnDelayMin = asNum(c.spawnDelayMin, d.spawnDelayMin);
+  c.spawnDelayMax = asNum(c.spawnDelayMax, d.spawnDelayMax);
+  if (c.spawnDelayMax < c.spawnDelayMin) c.spawnDelayMax = c.spawnDelayMin; // max nunca menor que min
   c.rarityWeights = { ...d.rarityWeights, ...(c.rarityWeights || {}) };
   RARITY_TIER_ORDER.forEach(k => { c.rarityWeights[k] = asNum(c.rarityWeights[k], d.rarityWeights[k]); });
   return c;

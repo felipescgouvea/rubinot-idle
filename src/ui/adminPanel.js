@@ -1,10 +1,10 @@
 // Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
 // de relíquia por boss e os pesos de cada raridade. Lê/escreve via
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=50';
-import { RARITY_TIERS } from '../domain/rarity.js?v=50';
-import { on, EVENTS } from '../shared/eventBus.js?v=50';
-import { getAdminConfig } from '../application/adminUseCases.js?v=50';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=51';
+import { RARITY_TIERS } from '../domain/rarity.js?v=51';
+import { on, EVENTS } from '../shared/eventBus.js?v=51';
+import { getAdminConfig } from '../application/adminUseCases.js?v=51';
 
 export function renderAdminPanel() {
   const el = document.getElementById('admin-content');
@@ -39,6 +39,28 @@ export function renderAdminPanel() {
 
     <h4>📈 Taxas (multiplicadores)</h4>
     <div class="admin-grid">${rateInputs}</div>
+
+    <h4>⏱️ Tempo de aparição das criaturas</h4>
+    <div class="admin-grid">
+      <div class="admin-field">
+        <label>Mínimo</label>
+        <div class="admin-input-row">
+          <input type="number" min="0" step="0.1" value="${cfg.spawnDelayMin}"
+            onchange="setAdminRate('spawnDelayMin', parseFloat(this.value))" />
+          <span class="admin-x">s</span>
+        </div>
+        <small>Tempo mínimo procurando até o próximo grupo surgir.</small>
+      </div>
+      <div class="admin-field">
+        <label>Máximo</label>
+        <div class="admin-input-row">
+          <input type="number" min="0" step="0.1" value="${cfg.spawnDelayMax}"
+            onchange="setAdminRate('spawnDelayMax', parseFloat(this.value))" />
+          <span class="admin-x">s</span>
+        </div>
+        <small>Cada aparição sorteia um tempo aleatório nesse intervalo.</small>
+      </div>
+    </div>
 
     <h4>💎 Raridade das Relíquias</h4>
     <div class="admin-field">
