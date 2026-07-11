@@ -1,15 +1,15 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=59';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=59';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=59';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=59';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=59';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=59';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=59';
-import { on, EVENTS } from '../shared/eventBus.js?v=59';
-import { formatNum } from './shared.js?v=59';
-import { renderZonePicker } from './huntPanel.js?v=59';
+import { G } from '../application/gameStore.js?v=60';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=60';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=60';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=60';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=60';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=60';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=60';
+import { on, EVENTS } from '../shared/eventBus.js?v=60';
+import { formatNum } from './shared.js?v=60';
+import { renderZonePicker } from './huntPanel.js?v=60';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -84,6 +84,47 @@ function stopWalk() {
   walkIdle = null;
 }
 
+// Bounding box do conteúdo (pixels não-transparentes) de um quadro 64x64.
+function frameContentBBox(frame) {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 64;
+  const cx = c.getContext('2d', { willReadFrequently: true });
+  cx.imageSmoothingEnabled = false; cx.drawImage(frame, 0, 0);
+  const d = cx.getImageData(0, 0, 64, 64).data;
+  let minX = 64, minY = 64, maxX = -1, maxY = -1;
+  for (let y = 0; y < 64; y++) {
+    for (let x = 0; x < 64; x++) {
+      if (d[(y * 64 + x) * 4 + 3] > 16) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    }
+  }
+  return maxX < 0 ? null : { minX, minY, maxX, maxY };
+}
+
+// União das bounding boxes de vários quadros (o passo mexe braços/pernas, então
+// usamos a maior extensão pra não cortar nada ao escalar).
+function unionContentBBox(frames) {
+  let u = null;
+  for (const f of frames) {
+    if (!f) continue;
+    const b = frameContentBBox(f);
+    if (!b) continue;
+    u = u ? { minX: Math.min(u.minX, b.minX), minY: Math.min(u.minY, b.minY), maxX: Math.max(u.maxX, b.maxX), maxY: Math.max(u.maxY, b.maxY) } : b;
+  }
+  return u ? { minX: u.minX, minY: u.minY, w: u.maxX - u.minX + 1, h: u.maxY - u.minY + 1 } : null;
+}
+
+// Parâmetros de recorte+escala pra o conteúdo do outfit preencher FILL da caixa
+// SIZE, centralizado — mesmo enquadramento usado nos sprites de monstro, pra o
+// boneco ter o MESMO tamanho visual deles.
+function fitContent(box, SIZE, FILL) {
+  if (!box) return { sx: 0, sy: 0, sw: 64, sh: 64, dx: 0, dy: 0, dw: SIZE, dh: SIZE };
+  const scale = (SIZE * FILL) / Math.max(box.w, box.h);
+  const dw = box.w * scale, dh = box.h * scale;
+  return { sx: box.minX, sy: box.minY, sw: box.w, sh: box.h, dx: (SIZE - dw) / 2, dy: (SIZE - dh) / 2, dw, dh };
+}
+
 function mountPlayerWalkSprite(wrap) {
   const outfitId = currentOutfitId();
   const icon = playerFallbackIcon();
@@ -112,6 +153,10 @@ function mountPlayerWalkSprite(wrap) {
     walkFrames = frames;
     walkIdle = idle;
     walkIdx = 0;
+    // Recorta o conteúdo do outfit (que ocupa só parte da célula 64x64) e o
+    // escala pra preencher a caixa, centralizado — assim o boneco fica do mesmo
+    // tamanho dos monstros (que já são normalizados pra ~90% da caixa).
+    const fit = fitContent(unionContentBBox([idle, ...frames]), 64, 0.9);
     walkTimer = setInterval(() => {
       if (!walkFrames.length || !document.body.contains(canvas)) return;
       const stage = document.getElementById('dungeon-stage');
@@ -126,7 +171,7 @@ function mountPlayerWalkSprite(wrap) {
         frame = walkIdle || walkFrames[0];
       }
       ctx.clearRect(0, 0, 64, 64);
-      ctx.drawImage(frame, 0, 0);
+      ctx.drawImage(frame, fit.sx, fit.sy, fit.sw, fit.sh, fit.dx, fit.dy, fit.dw, fit.dh);
     }, 110);
   });
 }

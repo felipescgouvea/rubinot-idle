@@ -657,8 +657,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .player-sprite-wrap {
   position: absolute;
   left: 50%; top: 26%;
-  margin: -32px 0 0 -32px;
-  width: 64px; height: 64px;
+  margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no palco */
+  width: 54px; height: 54px; /* mesmo porte visual dos monstros (52px) */
   z-index: 2;
 }
 .player-sprite,
@@ -670,7 +670,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   image-rendering: pixelated;
   filter: drop-shadow(0 5px 4px #00000088);
 }
-.player-sprite-fallback, .player-sprite-wrap span { font-size: 3rem; line-height: 64px; text-align: center; }
+.player-sprite-fallback, .player-sprite-wrap span { font-size: 2.7rem; line-height: 54px; text-align: center; }
 /* bob de passo só enquanto procura (andando); parado fica sem bob */
 #dungeon-stage.searching .player-sprite,
 #dungeon-stage.searching .player-sprite-wrap span { animation: player-walk 0.45s ease-in-out infinite; }

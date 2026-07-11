@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=59';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=59';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=59';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=59';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=59';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=59';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=59';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=59';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=59';
-import { MONSTERS } from '../domain/bestiary.js?v=59';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=59';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=59';
-import { emit, EVENTS } from '../shared/eventBus.js?v=59';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=59';
-import { trainSkill } from './skillUseCases.js?v=59';
-import { addItemToInventory } from './inventoryCore.js?v=59';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=59';
-import { getCombatBonuses } from './bonuses.js?v=59';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=59';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=59';
+import { G } from './gameStore.js?v=60';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=60';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=60';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=60';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=60';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=60';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=60';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=60';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=60';
+import { MONSTERS } from '../domain/bestiary.js?v=60';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=60';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=60';
+import { emit, EVENTS } from '../shared/eventBus.js?v=60';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=60';
+import { trainSkill } from './skillUseCases.js?v=60';
+import { addItemToInventory } from './inventoryCore.js?v=60';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=60';
+import { getCombatBonuses } from './bonuses.js?v=60';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=60';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=60';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
