@@ -1,12 +1,13 @@
-import { G } from './gameStore.js?v=51';
-import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=51';
-import { ZONES } from '../domain/bestiary.js?v=51';
-import { RARITY_TIERS } from '../domain/rarity.js?v=51';
-import { emit, EVENTS } from '../shared/eventBus.js?v=51';
-import { getMaxHp, getMaxMana } from './stats.js?v=51';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=51';
-import { saveGame } from './saveGameUseCase.js?v=51';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=51';
+import { G } from './gameStore.js?v=52';
+import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=52';
+import { ZONES } from '../domain/bestiary.js?v=52';
+import { RARITY_TIERS } from '../domain/rarity.js?v=52';
+import { emit, EVENTS } from '../shared/eventBus.js?v=52';
+import { getMaxHp, getMaxMana } from './stats.js?v=52';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=52';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=52';
+import { saveGame } from './saveGameUseCase.js?v=52';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=52';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -14,7 +15,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=51';
+export { addItemToInventory } from './inventoryCore.js?v=52';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
@@ -119,12 +120,22 @@ export function useItem(itemId) {
   if (!item || qty <= 0 || !G.vocation) return;
 
   const currentMonster = getCurrentMonster();
-  let killedByRune = false;
+  let runeDeaths = null;
   if (item.dmg) {
     if (!currentMonster) { emit(EVENTS.NOTIFY, { msg: 'Sem criatura em combate para mirar a runa.', type: 'error' }); return; }
-    currentMonster.hp -= item.dmg;
-    emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">Você usou ${item.name}: ${item.dmg} de dano em ${currentMonster.name}.</span>`, cat: 'suprimento' });
-    if (currentMonster.hp <= 0) killedByRune = true;
+    // Runa mirada manualmente respeita a mesma FORMA de área da runa (ver
+    // domain/attackAreas.js): SD acerta só o alvo; Avalanche/GFB pegam a sala.
+    const pack = getCurrentPack();
+    const areaId = item.area || 'single';
+    const targets = isAreaAttack(areaId) ? pack.slice(0, areaMaxTargets(areaId)) : [currentMonster];
+    targets.forEach(t => {
+      t.hp -= item.dmg;
+      emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">Você usou ${item.name}: ${item.dmg} de dano em ${t.name}.</span>`, cat: 'suprimento' });
+    });
+    if (isAreaAttack(areaId) && targets.length > 1) {
+      emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${targets.length} criaturas.</span>`, cat: 'combate' });
+    }
+    runeDeaths = targets.filter(t => t.hp <= 0);
   }
   if (item.heal) {
     const before = G.hp;
@@ -144,8 +155,9 @@ export function useItem(itemId) {
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
 
-  if (killedByRune) {
-    resolveMonsterKill(ZONES[G.activeZone]);
+  if (runeDeaths && runeDeaths.length > 0) {
+    const zone = ZONES[G.activeZone];
+    runeDeaths.forEach(m => resolveMonsterKill(zone, m));
   } else {
     emit(EVENTS.MONSTER_DISPLAY, {});
   }

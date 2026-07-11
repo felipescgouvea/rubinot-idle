@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=51';
+import { primaryStatKeyForItem } from './rarity.js?v=52';
 
 export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
@@ -91,11 +91,14 @@ export const ITEMS = {
   // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
   intense_healing_rune: { name: 'Intense Healing Rune', icon: '📜', type: 'rune', heal: 150, sell: 70 },
-  sudden_death_rune:    { name: 'Sudden Death Rune', icon: '📜', type: 'rune', dmg: 320, sell: 200 },
-  explosion_rune:       { name: 'Explosion Rune', icon: '📜', type: 'rune', dmg: 140, sell: 60 },
-  avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, sell: 90 },
-  fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, sell: 15 },
-  great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, sell: 45 },
+  // `area` = forma de área do Tibia (ver domain/attackAreas.js): SD é alvo
+  // único; Explosion/Fireball explodem numa área compacta; Avalanche e Great
+  // Fireball cobrem o 3x3 inteiro (até 8 criaturas da sala).
+  sudden_death_rune:    { name: 'Sudden Death Rune', icon: '📜', type: 'rune', dmg: 320, area: 'single', sell: 200 },
+  explosion_rune:       { name: 'Explosion Rune', icon: '📜', type: 'rune', dmg: 140, area: 'explosion', sell: 60 },
+  avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, area: 'ball', sell: 90 },
+  fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, area: 'explosion', sell: 15 },
+  great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, area: 'ball', sell: 45 },
   great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 200, mana: 150, sell: 320 },
 
   // --- Loja de Equipamentos: mais opções reais de Tibia por categoria ---

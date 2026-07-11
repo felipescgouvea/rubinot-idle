@@ -4,17 +4,24 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=51';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=51';
-import { ITEMS } from '../domain/items.js?v=51';
-import { VOCATIONS } from '../domain/character.js?v=51';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=51';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=51';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=51';
-import { on, EVENTS } from '../shared/eventBus.js?v=51';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=51';
+import { G } from '../application/gameStore.js?v=52';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=52';
+import { ITEMS } from '../domain/items.js?v=52';
+import { VOCATIONS } from '../domain/character.js?v=52';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=52';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=52';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=52';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=52';
+import { on, EVENTS } from '../shared/eventBus.js?v=52';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=52';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
+
+// Badge de área pra magia/runa de ataque: mostra se é alvo único ou AoE (e a
+// forma). Ver domain/attackAreas.js.
+function areaBadge(areaId) {
+  return isAreaAttack(areaId) ? `💥 ${areaName(areaId)}` : `🎯 ${areaName('single')}`;
+}
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);
 
 // Qual sub-aba do RTC está aberta — estado só de UI (igual ao RTCaster real,
@@ -28,7 +35,7 @@ function spellRow(id, s, selected, onclick) {
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
       <div class="rtc-row-desc">
-        ${s.type === 'attack' ? `⚔️ Dano ×${s.power}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · Nível ${s.level}+
+        ${s.type === 'attack' ? `⚔️ Dano ×${s.power} · ${areaBadge(s.area)}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · Nível ${s.level}+
       </div>
     </div>
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
@@ -107,7 +114,7 @@ export function renderRtcPanel() {
         </div>
         <h5>Runas de ataque</h5>
         <div class="rtc-rows">
-          ${attackRunes.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg}`)).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
+          ${attackRunes.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg} · ${areaBadge(item.area)}`)).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
         </div>
         ` : `
         <h5>Spell de Cura <span class="muted">— casta abaixo de</span>

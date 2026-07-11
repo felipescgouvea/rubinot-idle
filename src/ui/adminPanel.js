@@ -1,10 +1,10 @@
 // Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
 // de relíquia por boss e os pesos de cada raridade. Lê/escreve via
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=51';
-import { RARITY_TIERS } from '../domain/rarity.js?v=51';
-import { on, EVENTS } from '../shared/eventBus.js?v=51';
-import { getAdminConfig } from '../application/adminUseCases.js?v=51';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=52';
+import { RARITY_TIERS } from '../domain/rarity.js?v=52';
+import { on, EVENTS } from '../shared/eventBus.js?v=52';
+import { getAdminConfig } from '../application/adminUseCases.js?v=52';
 
 export function renderAdminPanel() {
   const el = document.getElementById('admin-content');

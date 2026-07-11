@@ -11,6 +11,8 @@ export const ATTACK_RUNE_VOCATIONS = {
   sudden_death_rune: ['paladin', 'sorcerer', 'druid'],
   explosion_rune: ['paladin', 'sorcerer', 'druid'],
   avalanche_rune: ['paladin', 'sorcerer', 'druid'],
+  fireball_rune: ['paladin', 'sorcerer', 'druid'],
+  great_fireball_rune: ['paladin', 'sorcerer', 'druid'],
 };
 
 export function isRuneAvailableToVocation(itemId, vocation) {

@@ -16,6 +16,7 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 - [12-bestiario.md](12-bestiario.md) — o catálogo de criaturas e suas regras de loot.
 - [13-skills.md](13-skills.md) — evolução de habilidades por uso, ao estilo Tibia.
 - [14-spells-e-rtc.md](14-spells-e-rtc.md) — o RTC: ataque automático por magia ou runa, cura automática por magia e por poção.
+- [15-areas-de-ataque.md](15-areas-de-ataque.md) — alcance de área de cada ataque: alvo único vs. área (onda, explosão, 3x3), fiel ao Tibia.
 
 ## Itens & Economia
 

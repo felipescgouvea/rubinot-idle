@@ -3,25 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=51';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=51';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=51';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=51';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=51';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=51';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=51';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=51';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=51';
-import { MONSTERS } from '../domain/bestiary.js?v=51';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=51';
-import { emit, EVENTS } from '../shared/eventBus.js?v=51';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=51';
-import { trainSkill } from './skillUseCases.js?v=51';
-import { addItemToInventory } from './inventoryCore.js?v=51';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=51';
-import { getCombatBonuses } from './bonuses.js?v=51';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange } from './adminUseCases.js?v=51';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=51';
+import { G } from './gameStore.js?v=52';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=52';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=52';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=52';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=52';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=52';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=52';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=52';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=52';
+import { MONSTERS } from '../domain/bestiary.js?v=52';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=52';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=52';
+import { emit, EVENTS } from '../shared/eventBus.js?v=52';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=52';
+import { trainSkill } from './skillUseCases.js?v=52';
+import { addItemToInventory } from './inventoryCore.js?v=52';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=52';
+import { getCombatBonuses } from './bonuses.js?v=52';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange } from './adminUseCases.js?v=52';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=52';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -47,8 +48,11 @@ let regenInterval = null;
 // próximo assume; quando a sala esvazia, o próximo tick gera um novo grupo.
 let currentMonster = null;
 let currentPack = [];
-// Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1).
-const MAX_PACK_SIZE = 3;
+// Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1). Grupos
+// maiores fazem os ataques de ÁREA valerem a pena (limpam a sala num golpe),
+// enquanto o alvo único precisa abater um por um. Só o bicho da frente revida,
+// então uma sala cheia é mais XP disponível, não mais perigo simultâneo.
+const MAX_PACK_SIZE = 5;
 // Instante em que o próximo grupo pode aparecer — enquanto não chega, o
 // personagem fica "procurando" (andando pra baixo, ver ui/huntPanel.js:
 // updateSceneMode). Dá um respiro de exploração entre salas em vez de o
@@ -156,14 +160,27 @@ export function doHuntTick() {
   const zone = ZONES[G.activeZone];
   const voc = VOC_TRAINING[G.vocation];
 
-  // Player attacks monster
-  let playerDmg = calcDamage(getAtk(), currentMonster.def);
+  // O alvo da frente (sempre currentPack[0]). Guardado antes de resolver mortes
+  // porque um ataque de área pode abater ele E outros no mesmo tick.
+  const primary = currentMonster;
+
+  // Player attacks monster. `areaId` decide a FORMA de área (ver
+  // domain/attackAreas.js): quando não é 'single', o mesmo golpe respinga nas
+  // criaturas que estão esperando atrás na sala (até o limite da forma).
+  // `spellPower`/`runeDmg` guardam COMO recalcular o dano em cada alvo do
+  // respingo — cada criatura leva seu próprio dano (rola contra a def dela).
+  let playerDmg = calcDamage(getAtk(), primary.def);
   let spellElement = null;
+  let areaId = 'single';
+  let spellPower = null;
+  let runeDmg = null;
   if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
     // Ataque automático por runa (RTC): substitui o golpe normal, não treina skill —
     // é um item pré-carregado, não uma habilidade viva do personagem.
     const rune = ITEMS[G.rtc.attackRune];
     playerDmg = rune.dmg;
+    runeDmg = rune.dmg;
+    areaId = rune.area || 'single';
     G.inventory[G.rtc.attackRune]--;
     if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
@@ -172,6 +189,8 @@ export function doHuntTick() {
     const atkSpell = G.rtc.attackType === 'spell' && G.rtc.attackSpell && isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level) ? SPELLS[G.rtc.attackSpell] : null;
     if (atkSpell && G.mana >= atkSpell.mana) {
       playerDmg = Math.floor(playerDmg * atkSpell.power);
+      spellPower = atkSpell.power;
+      areaId = atkSpell.area || 'single';
       G.mana -= atkSpell.mana;
       trainSkill('magic', atkSpell.mana * voc.magicMult);
       emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
@@ -182,28 +201,62 @@ export function doHuntTick() {
       // sobe (sword só treina com espada equipada, axe só com machado, etc.)
       trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
     } else if (!atkSpell && G.mana >= 8) {
-      // mage sem spell selecionada: golpe arcano básico
+      // mage sem spell selecionada: golpe arcano básico (alvo único)
       playerDmg = Math.floor(playerDmg * 1.3);
       G.mana -= 8;
       trainSkill('magic', 8 * voc.magicMult);
       spellElement = 'arcane';
     }
   }
-  // Bônus de dano de Presa/Charm (ver application/bonuses.js) por cima do golpe.
-  const combatBonus = getCombatBonuses(currentMonster.defKey, Date.now());
-  if (combatBonus.damage > 1) playerDmg = Math.floor(playerDmg * combatBonus.damage);
-  currentMonster.hp -= playerDmg;
-  // Lifeleech (charm Vampírico): cura uma fração do dano causado.
-  if (combatBonus.lifeleech > 0) {
-    const leech = Math.floor(playerDmg * combatBonus.lifeleech);
-    if (leech > 0) G.hp = Math.min(getMaxHp(), G.hp + leech);
+
+  // Aplica dano num alvo com o bônus de Presa/Charm DELE e o lifeleech; devolve
+  // o dano final. Usado no alvo da frente e em cada alvo do respingo de área.
+  function strike(target, rawDmg) {
+    const cb = getCombatBonuses(target.defKey, Date.now());
+    let dmg = Math.max(1, Math.floor(rawDmg * (cb.damage > 1 ? cb.damage : 1)));
+    target.hp -= dmg;
+    if (cb.lifeleech > 0) {
+      const leech = Math.floor(dmg * cb.lifeleech);
+      if (leech > 0) G.hp = Math.min(getMaxHp(), G.hp + leech);
+    }
+    return dmg;
   }
-  emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
+
+  // Golpe no alvo da frente.
+  const primaryDmg = strike(primary, playerDmg);
+  emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${primaryDmg}</span> de dano ao ${primary.name}.`);
+
+  // Respingo de área: mesmo golpe nas criaturas esperando atrás, cada uma com
+  // seu próprio dano (recalculado contra a def dela). Limitado pela forma da
+  // área E pela quantidade de bichos realmente presentes na sala.
+  if (isAreaAttack(areaId) && currentPack.length > 1) {
+    const maxTargets = areaMaxTargets(areaId);
+    const splashTargets = currentPack.slice(1, maxTargets); // exclui o da frente
+    splashTargets.forEach(t => {
+      const raw = runeDmg != null ? runeDmg : Math.floor(calcDamage(getAtk(), t.def) * (spellPower || 1));
+      const d = strike(t, raw);
+      emit(EVENTS.LOG, `💥 <span class="log-dmg">${d}</span> em ${t.name} <span class="log-info">(área)</span>.`);
+    });
+    if (splashTargets.length > 0) {
+      emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${splashTargets.length + 1} criaturas.</span>`, cat: 'combate' });
+    }
+  }
+
   emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
   emit(EVENTS.MONSTER_DISPLAY, { hit: true, spellElement });
 
-  if (currentMonster.hp <= 0) {
-    resolveMonsterKill(zone);
+  // Resolve TODAS as criaturas que morreram neste golpe (o da frente e/ou as
+  // atingidas pela área). Snapshot antes, porque resolveMonsterKill remove da
+  // sala e reaponta currentMonster.
+  const primaryDied = primary.hp <= 0;
+  const deaths = currentPack.filter(m => m.hp <= 0);
+  deaths.forEach(m => resolveMonsterKill(zone, m));
+
+  // Se o alvo da frente caiu (ou a sala esvaziou), o tick acaba aqui — corpo
+  // não revida. O próximo tick já mira o novo alvo (ou volta a procurar).
+  if (primaryDied || !currentMonster) {
+    emit(EVENTS.BARS);
+    emit(EVENTS.HEADER_STATS);
     return;
   }
 
@@ -259,7 +312,13 @@ function todayStr() {
 // Paga XP/gold/loot pela morte da criatura atual — usado tanto por um golpe normal
 // (doHuntTick) quanto por uma runa de ataque usada manualmente (inventoryUseCases),
 // para que nenhuma via de dano "sonegue" a recompensa da morte.
-export function resolveMonsterKill(zone) {
+export function resolveMonsterKill(zone, victim) {
+  // `victim` é a criatura que morreu. Normalmente é o alvo da frente, mas num
+  // ataque de ÁREA pode ser uma que estava esperando atrás na sala (ver
+  // doHuntTick). Default: o alvo da frente — mantém compatível com quem chama
+  // sem passar vítima (runa manual em inventoryUseCases e golpe de alvo único).
+  const mon = victim || currentMonster;
+  if (!mon) return;
   const boosts = computeBoostMods(G.boosts, Date.now());
   // Zona Bônus do Dia (como o Boosted Creature/Boss real de Tibia): +50% extra
   // em gold/xp na zona sorteada de hoje — aplicado aqui em cima dos mults da
@@ -268,9 +327,9 @@ export function resolveMonsterKill(zone) {
   const boostedMult = isBoostedToday ? 1.5 : 1;
   // Bônus de Presa/Charm contra esta criatura (ver application/bonuses.js) —
   // multiplicadores de gold/xp e chance aditiva de loot, por cima de tudo.
-  const bonus = getCombatBonuses(currentMonster.defKey, Date.now());
-  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
-  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate());
+  const bonus = getCombatBonuses(mon.defKey, Date.now());
+  const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
+  const xpGained = Math.floor(mon.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate());
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -278,7 +337,7 @@ export function resolveMonsterKill(zone) {
 
   // Kill counters da zona atual
   G.killCounters = G.killCounters || {};
-  G.killCounters[currentMonster.defKey] = (G.killCounters[currentMonster.defKey] || 0) + 1;
+  G.killCounters[mon.defKey] = (G.killCounters[mon.defKey] || 0) + 1;
 
   // Battle Pass XP
   G.bpXp += Math.floor(xpGained * 0.01);
@@ -286,11 +345,11 @@ export function resolveMonsterKill(zone) {
   bumpMissionProgress('kills', 1);
   bumpMissionProgress('gold', goldGained);
 
-  emit(EVENTS.LOG, `<span class="log-kill">💀 ${currentMonster.name} morreu!</span> +${xpGained} XP, +${goldGained} <img src="assets/sprites/items/Gold_Coin.webp" class="inline-icon" alt="gold" />`);
+  emit(EVENTS.LOG, `<span class="log-kill">💀 ${mon.name} morreu!</span> +${xpGained} XP, +${goldGained} <img src="assets/sprites/items/Gold_Coin.webp" class="inline-icon" alt="gold" />`);
 
   // Loot
   const lootLine = [];
-  currentMonster.loot.forEach(([itemId, chance]) => {
+  mon.loot.forEach(([itemId, chance]) => {
     if (Math.random() < (chance + boosts.loot + bonus.loot) * getLootRate()) {
       addItemToInventory(itemId);
       const item = ITEMS[itemId];
@@ -304,8 +363,8 @@ export function resolveMonsterKill(zone) {
   // Funciona igual num kill de caçada comum (zona cujo boss aparece no
   // elenco) e num kill de Boss Rush (ver bossRushUseCases.js) — os dois
   // passam por aqui.
-  if (BOSS_MONSTER_IDS.has(currentMonster.defKey) && Math.random() < getRelicDropChance()) {
-    const equippablePool = currentMonster.loot
+  if (BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < getRelicDropChance()) {
+    const equippablePool = mon.loot
       .map(([id]) => id)
       .filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
     const pool = equippablePool.length > 0
@@ -327,7 +386,7 @@ export function resolveMonsterKill(zone) {
   }
 
   gainXp(xpGained);
-  const killedId = currentMonster.defKey;
+  const killedId = mon.defKey;
   // anuncia a morte pra quem precisar reagir (ex.: progresso de Linked Tasks)
   // sem a caçada precisar saber que tasks existem
   emit(EVENTS.MONSTER_KILLED, { monsterId: killedId });
@@ -348,14 +407,15 @@ export function resolveMonsterKill(zone) {
     G.bossTiers = G.bossTiers || {};
     const nextTier = (G.bossTiers[G.activeZone] || 1) + 1;
     G.bossTiers[G.activeZone] = nextTier;
-    emit(EVENTS.NOTIFY, { msg: `💀 ${currentMonster.name} Tier ${nextTier - 1} derrotado! Tier ${nextTier} desbloqueado.`, type: 'success' });
+    emit(EVENTS.NOTIFY, { msg: `💀 ${mon.name} Tier ${nextTier - 1} derrotado! Tier ${nextTier} desbloqueado.`, type: 'success' });
     emit(EVENTS.BOSS_RUSH_PANEL);
   }
 
-  // Remove o alvo abatido (sempre o da frente) da sala; o próximo da fila vira
-  // o novo alvo. Só quando a sala esvazia (currentMonster null) é que o próximo
-  // tick gera um novo grupo.
-  currentPack.shift();
+  // Remove a vítima da sala (por identidade — num ataque de área ela pode não
+  // ser a da frente). O alvo passa a ser sempre o primeiro sobrevivente. Só
+  // quando a sala esvazia (currentMonster null) o próximo tick gera novo grupo.
+  const idx = currentPack.indexOf(mon);
+  if (idx >= 0) currentPack.splice(idx, 1);
   currentMonster = currentPack[0] || null;
   // sala limpa: volta a "procurar" (boneco anda de novo por um tempinho)
   if (!currentMonster) nextSpawnAt = Date.now() + searchDelay();
