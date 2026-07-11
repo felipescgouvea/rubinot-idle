@@ -1,10 +1,10 @@
-import { G } from './gameStore.js?v=40';
-import { VOCATIONS } from '../domain/character.js?v=40';
-import { STARTER_KITS } from '../domain/items.js?v=40';
-import { emit, EVENTS } from '../shared/eventBus.js?v=40';
-import { addItemToInventory } from './inventoryCore.js?v=40';
-import { startRegen } from './huntUseCases.js?v=40';
-import { saveGame } from './saveGameUseCase.js?v=40';
+import { G } from './gameStore.js?v=41';
+import { VOCATIONS } from '../domain/character.js?v=41';
+import { STARTER_KITS } from '../domain/items.js?v=41';
+import { emit, EVENTS } from '../shared/eventBus.js?v=41';
+import { addItemToInventory } from './inventoryCore.js?v=41';
+import { startRegen } from './huntUseCases.js?v=41';
+import { saveGame } from './saveGameUseCase.js?v=41';
 
 export function selectVocation(voc) {
   if (G.vocation) return;
