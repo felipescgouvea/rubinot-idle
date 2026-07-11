@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=35" />
-  <link rel="stylesheet" href="style.css?v=35" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=36" />
+  <link rel="stylesheet" href="style.css?v=36" />
 </head>
 <body>
   <div id="app">
@@ -35,7 +35,6 @@
       <button class="tab" data-tab="bestiary">📖 Bestiário</button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="bossrush">💀 Boss Rush</button>
-      <button class="tab" data-tab="inventory">🎒 Inventário</button>
       <button class="tab" data-tab="relics">💎 Relíquias</button>
       <button class="tab" data-tab="worlds">🌍 Mundos</button>
       <button class="tab" data-tab="battlepass">🎖️ Battle Pass</button>
@@ -109,6 +108,13 @@
           <div class="card" id="equip-card">
             <h3>⚔️ Equipamento</h3>
             <div class="equipment-slots"></div>
+          </div>
+          <!-- Inventário (mochila) — some do header e aparece aqui embaixo do
+               Equipamento ao clicar com o botão direito no slot da Mochila. -->
+          <div class="card" id="backpack-inventory-card" style="display:none">
+            <h3>🎒 Mochila</h3>
+            <p class="muted">Clique num item para equipar, vender ou ver detalhes. Botão direito na mochila fecha esta janela.</p>
+            <div id="inventory-grid"></div>
           </div>
           <div class="card" id="char-card">
             <div id="vocation-select" class="vocation-grid">
@@ -209,15 +215,6 @@
           <p class="muted">Desafie diretamente o boss de qualquer zona que você já desbloqueou — sem os monstros comuns dela pelo caminho.</p>
           <div id="bossrush-stop-area" style="padding:0 14px 8px"></div>
           <div id="bossrush-grid"></div>
-        </div>
-      </section>
-
-      <!-- INVENTORY -->
-      <section id="tab-inventory" class="panel">
-        <div class="card full-card">
-          <h3>🎒 Inventário</h3>
-          <p class="muted">Clique num item para equipar, vender ou ver detalhes. O que estiver equipado aparece no card Equipamento da aba Caçada.</p>
-          <div id="inventory-grid"></div>
         </div>
       </section>
 
@@ -323,6 +320,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=35"></script>
+  <script type="module" src="src/main.js?v=36"></script>
 </body>
 </html>

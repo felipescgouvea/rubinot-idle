@@ -8,9 +8,20 @@
 // atributo a um item já equipado) — ver .spec/90-regras-de-negocio-gerais.md,
 // Regra 3, e .spec/20-itens-e-equipamento.md.
 export const RARITY_TIERS = {
-  refined:     { name: 'Refinado',    bonusPct: 0.10, weight: 60, color: '#7cb85c' },
-  exceptional: { name: 'Excepcional', bonusPct: 0.20, weight: 30, color: '#4a90d9' },
-  legendary:   { name: 'Lendário',    bonusPct: 0.35, weight: 10, color: '#d4a017' },
+  uncommon:  { name: 'Incomum',  bonusPct: 0.08, weight: 52, color: '#4caf50' },
+  rare:      { name: 'Raro',     bonusPct: 0.15, weight: 28, color: '#4a90d9' },
+  epic:      { name: 'Épico',    bonusPct: 0.25, weight: 15, color: '#9b59b6' },
+  legendary: { name: 'Lendário', bonusPct: 0.40, weight: 5,  color: '#e0a020' },
+};
+
+// Renomeação/expansão da escala de raridade: saves antigos guardam ids antigos
+// em G.relics[].rarity (refined/exceptional). Este mapa migra pros novos ids
+// (ver application/persistenceUseCases.js) pra a UI não quebrar ao procurar
+// RARITY_TIERS[rarity] de uma relíquia antiga.
+export const LEGACY_RARITY_MAP = {
+  refined: 'uncommon',
+  exceptional: 'rare',
+  legendary: 'legendary',
 };
 
 // Ordem de prioridade usada para decidir qual stat de um item é o "principal"

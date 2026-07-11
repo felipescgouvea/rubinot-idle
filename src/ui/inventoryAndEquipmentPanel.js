@@ -1,11 +1,11 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=35';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=35';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=35';
-import { on, EVENTS } from '../shared/eventBus.js?v=35';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=35';
+import { G } from '../application/gameStore.js?v=36';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=36';
+import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=36';
+import { on, EVENTS } from '../shared/eventBus.js?v=36';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=36';
 
 export function renderInventory() {
   const grid = document.getElementById('inventory-grid');
@@ -90,11 +90,17 @@ export function openItemModal(itemId) {
   `);
 }
 
+// Ícone-fantasma de cada slot vazio, ao estilo Tibia (silhueta acinzentada do
+// que vai ali) — o CSS deixa em cinza/baixa opacidade (ver .equip-slot-ghost).
+const SLOT_PLACEHOLDER = { weapon: '🗡️', armor: '🧥', shield: '🛡️', helmet: '⛑️', ring: '💍', legs: '👖', boots: '🥾' };
+const SLOT_LABEL = { weapon: 'Arma', armor: 'Armadura', shield: 'Escudo', helmet: 'Elmo', ring: 'Anel', legs: 'Calças', boots: 'Botas' };
+
 export function renderEquipmentSlots() {
   const areas = document.querySelectorAll('.equipment-slots');
   if (!areas.length) return;
-  // ordem/posições do inventário clássico do Tibia (elmo em cima, arma na mão…)
-  const labels = { weapon: 'Arma', armor: 'Armadura', shield: 'Escudo', helmet: 'Elmo', ring: 'Anel', legs: 'Calças', boots: 'Botas' };
+  // ordem/posições do inventário clássico do Tibia (elmo em cima, arma na mão…).
+  // Visual entalhado escuro como o cliente real: só o ícone dentro do slot;
+  // o nome do item vai no tooltip (title), não em texto embaixo.
   const html = EQUIPMENT_SLOTS.map(slot => {
     const slotValue = G.equipment[slot];
     // slotValue pode ser um itemId comum OU o id de uma Relíquia — o sprite
@@ -104,13 +110,35 @@ export function renderEquipmentSlots() {
     const item = resolveEquippedItem(slotValue, G.relics);
     const tier = relic ? RARITY_TIERS[relic.rarity] : null;
     const clickTarget = relic ? `openRelicModal('${relic.id}')` : item ? `openItemModal('${slotValue}')` : '';
-    const style = tier ? ` style="border-color:${tier.color};box-shadow:0 0 8px ${tier.color}99"` : '';
-    return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}"${style} onclick="${clickTarget}">
-      <div class="equip-slot-name">${labels[slot]}</div>
-      ${item ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div><div class="equip-slot-item">${item.name}${relic ? ' 💎' : ''}</div>` : '<div style="color:#8a6f4d;font-size:11px;margin-top:10px">Vazio</div>'}
+    const style = tier ? ` style="border-color:${tier.color};box-shadow:inset 0 0 6px ${tier.color}66, 0 0 8px ${tier.color}99"` : '';
+    const title = item ? `${item.name}${relic && tier ? ` — ${tier.name}` : ''}` : SLOT_LABEL[slot];
+    return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}"${style} title="${title}" onclick="${clickTarget}">
+      ${item
+        ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>${relic ? '<div class="equip-slot-relic-gem">💎</div>' : ''}`
+        : `<div class="equip-slot-ghost">${SLOT_PLACEHOLDER[slot]}</div>`}
     </div>`;
   }).join('');
-  areas.forEach(a => { a.innerHTML = html; });
+  // Slot da Mochila (Backpack) — não é um item de status, é o container do
+  // inventário, como no Tibia: clicar com o botão direito abre/fecha o
+  // inventário embaixo do card de Equipamento (ver toggleBackpack em
+  // huntPanel-adjacent wiring / index.html). Clique esquerdo faz o mesmo, por
+  // conveniência.
+  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="Botão direito: abrir/fechar a mochila"
+      onclick="toggleBackpack()" oncontextmenu="event.preventDefault(); toggleBackpack(); return false;">
+      <div class="equip-slot-name">Mochila</div>
+      <div class="equip-slot-icon">🎒</div>
+    </div>`;
+  areas.forEach(a => { a.innerHTML = html + backpackHtml; });
+}
+
+// Abre/fecha o card de inventário que fica embaixo do Equipamento (aba
+// Caçada). Renderiza o inventário ao abrir pra refletir o estado atual.
+export function toggleBackpack() {
+  const card = document.getElementById('backpack-inventory-card');
+  if (!card) return;
+  const willShow = card.style.display === 'none' || !card.style.display;
+  card.style.display = willShow ? 'block' : 'none';
+  if (willShow) { renderInventory(); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 }
 
 export function wireInventoryAndEquipmentEvents() {

@@ -266,7 +266,7 @@ body {
   grid-template-columns: repeat(3, 76px);
   grid-template-rows: repeat(4, 68px);
   grid-template-areas:
-    ".      helmet ."
+    ".      helmet backpack"
     "weapon armor  shield"
     "ring   legs   ."
     ".      boots  .";
@@ -281,20 +281,38 @@ body {
 #equip-card .slot-ring   { grid-area: ring; }
 #equip-card .slot-legs   { grid-area: legs; }
 #equip-card .slot-boots  { grid-area: boots; }
+#equip-card .slot-backpack { grid-area: backpack; cursor: pointer; border: 1px solid var(--brown-btn-line); }
+#equip-card .slot-backpack:hover { background: #fffbe9; box-shadow: 0 0 8px #b8860b66; }
+/* slots escuros e entalhados como o cliente real do Tibia: fundo cinza-ardósia,
+   borda afundada (inset), e nos vazios uma silhueta acinzentada do que vai ali */
 #equip-card .equip-slot {
+  position: relative;
   min-height: 0;
-  padding: 5px 3px;
+  padding: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #e3d2a8, #d4c193);
-  box-shadow: inset 0 2px 5px #00000022;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4b4b4b 0%, #383838 100%);
+  border: 2px solid #232323;
+  box-shadow: inset 2px 2px 4px #00000099, inset -1px -1px 2px #ffffff14, 0 1px 2px #00000055;
 }
-#equip-card .equip-slot.filled { background: #fdf4d7; }
-#equip-card .equip-slot-name { font-size: 7.5px; margin-bottom: 2px; }
-#equip-card .equip-slot-icon { font-size: 22px; }
-#equip-card .equip-slot-item { font-size: 8px; line-height: 1.2; }
+#equip-card .equip-slot.filled {
+  background: linear-gradient(180deg, #5c5c54 0%, #43433c 100%);
+  border-color: #2a2a2a;
+}
+#equip-card .equip-slot-icon { font-size: 25px; line-height: 1; }
+/* silhueta do slot vazio — emoji em cinza e translúcido, imitando o placeholder gravado */
+#equip-card .equip-slot-ghost {
+  font-size: 26px; line-height: 1;
+  opacity: 0.28;
+  filter: grayscale(1) brightness(1.7) contrast(0.7);
+}
+/* gema de raridade no canto de um slot com relíquia equipada */
+#equip-card .equip-slot-relic-gem {
+  position: absolute; top: 1px; right: 2px; font-size: 11px;
+  filter: drop-shadow(0 1px 1px #000);
+}
 
 /* ============ PANELS ============ */
 #panels { padding: 14px; }
