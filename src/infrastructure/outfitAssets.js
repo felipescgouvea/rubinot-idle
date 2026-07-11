@@ -21,6 +21,7 @@ export function outfitTemplatePath(outfitId, gender, addonIndex) {
 // recolorir e animar o boneco com as cores do jogador — ver
 // infrastructure/outfitWalkRenderer.js.
 export function outfitWalkAtlasPath(outfitId, gender) {
-  // ?v pra cache-bust: o conteúdo do atlas mudou (direção Sul) mantendo o nome.
-  return `assets/outfits-walk/${outfitId}-${gender}.png?v=45`;
+  // ?av (atlas version) — independente do ?v dos módulos pra o bump global não
+  // re-baixar os atlases (1.4MB) à toa. Bumpe só ao mudar o conteúdo do atlas.
+  return `assets/outfits-walk/${outfitId}-${gender}.png?av=1`;
 }

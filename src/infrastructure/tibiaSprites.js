@@ -20,9 +20,13 @@ export const SPRITE_OVERRIDE = {
   nzoth: 'World_Devourer.gif',
 };
 
+// ?sv (sprite version) força o navegador a re-baixar quando o CONTEÚDO dos
+// sprites de monstro muda mantendo o nome do arquivo (ex.: normalização de
+// enquadramento — recorte do transparente + re-quadrado). Bumpe ao reprocessar.
+const MONSTER_SPRITE_VER = 1;
 export function monsterSpriteFile(monsterId, monster) {
   const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
-  return 'monsters/' + localName(file);
+  return 'monsters/' + localName(file) + '?sv=' + MONSTER_SPRITE_VER;
 }
 
 // Itens cujo id não deriva o nome real do arquivo no TibiaWiki (o id ficou
