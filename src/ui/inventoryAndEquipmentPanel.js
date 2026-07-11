@@ -1,12 +1,12 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=49';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=49';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=49';
-import { on, EVENTS } from '../shared/eventBus.js?v=49';
-import { saveGame } from '../application/saveGameUseCase.js?v=49';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=49';
+import { G } from '../application/gameStore.js?v=50';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=50';
+import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=50';
+import { on, EVENTS } from '../shared/eventBus.js?v=50';
+import { saveGame } from '../application/saveGameUseCase.js?v=50';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=50';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -109,7 +109,8 @@ export function openRelicModal(relicId) {
 export function openItemModal(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
-  const stats = ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(s => item[s]).map(s => `<span>${s.toUpperCase()} +${item[s]}</span>`).join(' | ');
+  const STAT_LABEL = { atk: 'ATK', wandDmg: 'DANO', distanceBonus: 'DIST', def: 'DEF', magic: 'MAGIC', heal: 'HEAL', mana: 'MANA', dmg: 'DMG', spd: 'SPD' };
+  const stats = ['atk', 'wandDmg', 'distanceBonus', 'def', 'magic', 'heal', 'mana', 'dmg', 'spd'].filter(s => item[s]).map(s => `<span>${STAT_LABEL[s]} +${item[s]}</span>`).join(' | ');
   const isEquippable = EQUIPPABLE_TYPES.includes(item.type);
   const isConsumable = CONSUMABLE_TYPES.includes(item.type);
   const equipped = Object.values(G.equipment).includes(itemId);
@@ -128,8 +129,8 @@ export function openItemModal(itemId) {
 
 // Ícone-fantasma de cada slot vazio, ao estilo Tibia (silhueta acinzentada do
 // que vai ali) — o CSS deixa em cinza/baixa opacidade (ver .equip-slot-ghost).
-const SLOT_PLACEHOLDER = { weapon: '🗡️', armor: '🧥', shield: '🛡️', helmet: '⛑️', ring: '💍', legs: '👖', boots: '🥾' };
-const SLOT_LABEL = { weapon: 'Arma', armor: 'Armadura', shield: 'Escudo', helmet: 'Elmo', ring: 'Anel', legs: 'Calças', boots: 'Botas' };
+const SLOT_PLACEHOLDER = { weapon: '🗡️', armor: '🧥', shield: '🛡️', helmet: '⛑️', ammo: '🏹', ring: '💍', legs: '👖', boots: '🥾' };
+const SLOT_LABEL = { weapon: 'Arma', armor: 'Armadura', shield: 'Escudo', helmet: 'Elmo', ammo: 'Munição', ring: 'Anel', legs: 'Calças', boots: 'Botas' };
 
 export function renderEquipmentSlots() {
   const areas = document.querySelectorAll('.equipment-slots');

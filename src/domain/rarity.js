@@ -30,7 +30,7 @@ export const LEGACY_RARITY_MAP = {
 // de stats já usada pela UI de detalhe de item (ver
 // ui/inventoryAndEquipmentPanel.js: openItemModal) — ofensivo antes de
 // defensivo, porque é o que mais define "para que serve" o item.
-const PRIMARY_STAT_ORDER = ['atk', 'def', 'magic', 'heal', 'dmg'];
+const PRIMARY_STAT_ORDER = ['atk', 'wandDmg', 'def', 'magic', 'heal', 'dmg'];
 
 export function primaryStatKeyForItem(item) {
   if (!item) return null;

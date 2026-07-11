@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=49';
+import { primaryStatKeyForItem } from './rarity.js?v=50';
 
 export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
@@ -8,7 +8,7 @@ export const ITEMS = {
   bones:          { name: 'Ossos', icon: '🦴', type: 'misc', sell: 1 },
   minotaur_horn:  { name: 'Chifre Minotauro', icon: '📯', type: 'misc', sell: 80 },
   chain_armor:    { name: 'Armadura de Correntes', icon: '⛓️', type: 'armor', def: 8, sell: 300, rare: false },
-  guardian_halberd:{ name: 'Alabarda Guardiã', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 22, sell: 800, rare: true },
+  guardian_halberd:{ name: 'Alabarda Guardiã', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 35, sell: 800, rare: true },
   amazon_armor:   { name: 'Amazon Armor', icon: '🥊', type: 'armor', def: 12, sell: 500, rare: true },
   cheese:         { name: 'Cheese', icon: '🧀', type: 'food', heal: 10, sell: 2 },
   meat:           { name: 'Meat', icon: '🍖', type: 'food', heal: 20, sell: 3 },
@@ -16,7 +16,7 @@ export const ITEMS = {
   orc_tooth:      { name: 'Orc Tooth', icon: '🦷', type: 'misc', sell: 15 },
   studded_armor:  { name: 'Studded Armor', icon: '🦺', type: 'armor', def: 5, sell: 90 },
   cyclops_toe:    { name: 'Cyclops Toe', icon: '🦶', type: 'misc', sell: 55 },
-  halberd:        { name: 'Halberd', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 15, sell: 400 },
+  halberd:        { name: 'Halberd', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 35, sell: 400 },
   spider_silk:    { name: 'Spider Silk', icon: '🕸️', type: 'misc', sell: 100 },
   spider_fangs:   { name: 'Spider Fangs', icon: '🦷', type: 'misc', sell: 10 },
   knight_armor:   { name: 'Knight Armor', icon: '🛡️', type: 'armor', def: 14, sell: 5000, rare: true },
@@ -37,38 +37,43 @@ export const ITEMS = {
   elvish_talisman:{ name: 'Elvish Talisman', icon: '🔮', type: 'misc', sell: 30 },
   scarab_coin:    { name: 'Scarab Coin', icon: '🪙', type: 'currency', sell: 100 },
   mutated_flesh:  { name: 'Mutated Flesh', icon: '🥩', type: 'misc', sell: 8 },
-  ice_rapier:     { name: 'Ice Rapier', icon: '🧊', type: 'weapon', weaponType: 'sword', atk: 30, sell: 8000, rare: true },
-  skull_staff:    { name: 'Skull Staff', icon: '💀', type: 'weapon', weaponType: 'magic', atk: 35, magic: 12, sell: 12000, rare: true },
+  ice_rapier:     { name: 'Ice Rapier', icon: '🧊', type: 'weapon', weaponType: 'sword', atk: 42, sell: 8000, rare: true },
+  skull_staff:    { name: 'Skull Staff', icon: '💀', type: 'weapon', weaponType: 'magic', wandDmg: 35, sell: 12000, rare: true },
   vampire_dust:   { name: 'Vampire Dust', icon: '🌫️', type: 'misc', sell: 100 },
   strange_helmet: { name: 'Strange Helmet', icon: '🪖', type: 'helmet', def: 15, sell: 6000, rare: true },
   hellhound_slobber: { name: 'Hellhound Slobber', icon: '💧', type: 'misc', sell: 500 },
   // --- Itens exclusivos dos bosses RubinOT ---
   rubini_shard:   { name: 'Rubini Shard', icon: '💎', type: 'currency', sell: 5000, rare: true },
-  lothlorien_bow: { name: 'Lothlorien Bow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 55, sell: 60000, rare: true },
+  lothlorien_bow: { name: 'Lothlorien Bow', icon: '🏹', type: 'weapon', weaponType: 'distance', distanceBonus: 8, atk: 0, sell: 60000, rare: true },
   executioner_axe:{ name: 'Executioner Axe', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 60, sell: 70000, rare: true },
-  morgul_blade:   { name: 'Morgul Blade', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 65, magic: 10, sell: 85000, rare: true },
+  morgul_blade:   { name: 'Morgul Blade', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 65, sell: 85000, rare: true },
   corrupted_heart:{ name: 'Corrupted Heart', icon: '🩸', type: 'misc', sell: 25000, rare: true },
   nzoth_tentacle: { name: 'Tentacle of N\'Zoth', icon: '🦑', type: 'misc', sell: 40000, rare: true },
-  power_bolt:     { name: 'Dardo Poderoso', icon: '🏹', type: 'ammo', atk: 3, sell: 5, qty: 10 },
+  // --- Munição (equipada no slot Munição; define o ataque do paladino junto
+  // com a skill Distance). Ataques reais do Tibia. Não é consumida (idle). ---
+  arrow:          { name: 'Arrow', icon: '🏹', type: 'ammo', atk: 13, sell: 1 },
+  bolt:           { name: 'Bolt', icon: '🏹', type: 'ammo', atk: 27, sell: 1 },
+  sniper_arrow:   { name: 'Sniper Arrow', icon: '🏹', type: 'ammo', atk: 20, sell: 2 },
+  power_bolt:     { name: 'Power Bolt', icon: '🏹', type: 'ammo', atk: 33, sell: 5 },
   gold_coin:      { name: 'Moeda de Ouro', icon: '🪙', type: 'currency', sell: 1 },
   dragon_scale:   { name: 'Escama de Dragão', icon: '🐉', type: 'misc', sell: 200 },
   dragon_ham:     { name: 'Presunto de Dragão', icon: '🍖', type: 'food', heal: 120, sell: 150 },
-  dragonbone_staff:{ name: 'Cajado Osso de Dragão', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 40, magic: 15, sell: 5000, rare: true },
-  royal_helmet:   { name: 'Elmo Real', icon: '👑', type: 'helmet', def: 20, atk: 5, sell: 8000, rare: true },
+  dragonbone_staff:{ name: 'Cajado Osso de Dragão', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 42, sell: 5000, rare: true },
+  royal_helmet:   { name: 'Elmo Real', icon: '👑', type: 'helmet', def: 20, sell: 8000, rare: true },
   life_crystal:   { name: 'Cristal de Vida', icon: '💎', type: 'misc', sell: 400 },
   demon_dust:     { name: 'Pó de Demônio', icon: '✨', type: 'misc', sell: 500 },
   demon_shield:   { name: 'Escudo Demoníaco', icon: '😈', type: 'shield', def: 30, sell: 15000, rare: true },
   platinum_coin:  { name: 'Moeda de Platina', icon: '⚪', type: 'currency', sell: 100 },
-  titan_axe:      { name: 'Machado Titã', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 70, sell: 30000, rare: true },
+  titan_axe:      { name: 'Machado Titã', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 55, sell: 30000, rare: true },
   death_ring:     { name: 'Anel da Morte', icon: '💍', type: 'ring', def: 5, magic: 10, sell: 12000, rare: true },
   necromancer_shield:{ name: 'Escudo Necromante', icon: '🛡️', type: 'shield', def: 28, magic: 8, sell: 18000, rare: true },
   tentacle_piece: { name: 'Tentáculo de N\'Zoth', icon: '🦑', type: 'misc', sell: 500 },
 
   // --- Kit inicial por vocação (entregue automaticamente ao escolher a vocação) ---
   dagger:         { name: 'Dagger', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 6, sell: 6 },
-  bow:            { name: 'Bow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 7, sell: 20 },
-  wand_of_vortex: { name: 'Wand of Vortex', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 3, sell: 400 },
-  snakebite_rod:  { name: 'Snakebite Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 3, sell: 400 },
+  bow:            { name: 'Bow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 0, sell: 20 },
+  wand_of_vortex: { name: 'Wand of Vortex', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 400 },
+  snakebite_rod:  { name: 'Snakebite Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 400 },
   wooden_shield:  { name: 'Wooden Shield', icon: '🛡️', type: 'shield', def: 3, sell: 8 },
   leather_armor:  { name: 'Leather Armor', icon: '🥋', type: 'armor', def: 3, sell: 6 },
   leather_legs:   { name: 'Leather Legs', icon: '🦵', type: 'legs', def: 2, sell: 6 },
@@ -94,16 +99,16 @@ export const ITEMS = {
   great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 200, mana: 150, sell: 320 },
 
   // --- Loja de Equipamentos: mais opções reais de Tibia por categoria ---
-  broadsword:      { name: 'Broadsword', icon: '⚔️', type: 'weapon', weaponType: 'sword', atk: 12, sell: 90 },
-  fire_sword:      { name: 'Fire Sword', icon: '🔥', type: 'weapon', weaponType: 'sword', atk: 21, sell: 3000, rare: true },
-  battle_axe:      { name: 'Battle Axe', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 12, sell: 80 },
-  war_hammer:      { name: 'War Hammer', icon: '🔨', type: 'weapon', weaponType: 'club', atk: 13, sell: 90 },
-  crossbow:        { name: 'Crossbow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 12, sell: 70 },
-  composite_hornbow:{ name: 'Composite Hornbow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 22, sell: 12000, rare: true },
-  wand_of_cosmic_energy:{ name: 'Wand of Cosmic Energy', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 5, sell: 900 },
-  wand_of_inferno: { name: 'Wand of Inferno', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 6, sell: 3500, rare: true },
-  moonlight_rod:   { name: 'Moonlight Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 5, sell: 900 },
-  underworld_rod:  { name: 'Underworld Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', atk: 5, magic: 6, sell: 3500, rare: true },
+  broadsword:      { name: 'Broadsword', icon: '⚔️', type: 'weapon', weaponType: 'sword', atk: 24, sell: 90 },
+  fire_sword:      { name: 'Fire Sword', icon: '🔥', type: 'weapon', weaponType: 'sword', atk: 24, sell: 3000, rare: true },
+  battle_axe:      { name: 'Battle Axe', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 25, sell: 80 },
+  war_hammer:      { name: 'War Hammer', icon: '🔨', type: 'weapon', weaponType: 'club', atk: 35, sell: 90 },
+  crossbow:        { name: 'Crossbow', icon: '🏹', type: 'weapon', weaponType: 'distance', atk: 0, sell: 70 },
+  composite_hornbow:{ name: 'Composite Hornbow', icon: '🏹', type: 'weapon', weaponType: 'distance', distanceBonus: 4, atk: 0, sell: 12000, rare: true },
+  wand_of_cosmic_energy:{ name: 'Wand of Cosmic Energy', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 33, sell: 900 },
+  wand_of_inferno: { name: 'Wand of Inferno', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 38, sell: 3500, rare: true },
+  moonlight_rod:   { name: 'Moonlight Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 18, sell: 900 },
+  underworld_rod:  { name: 'Underworld Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 38, sell: 3500, rare: true },
   brass_armor:     { name: 'Brass Armor', icon: '🥋', type: 'armor', def: 8, sell: 180 },
   scale_armor:     { name: 'Scale Armor', icon: '🥋', type: 'armor', def: 8, sell: 90 },
   golden_armor:    { name: 'Golden Armor', icon: '🥋', type: 'armor', def: 12, sell: 1200 },
@@ -127,13 +132,13 @@ export const ITEMS = {
 // como o equipamento que o RubinOT dá ao personagem recém-criado.
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow',           armor: 'leather_armor', legs: 'leather_legs',    boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor', legs: 'leather_legs', boots: 'leather_boots' },
   sorcerer: { weapon: 'wand_of_vortex',armor: 'robe',                                    boots: 'leather_boots' },
   druid:    { weapon: 'snakebite_rod', armor: 'robe',                                    boots: 'leather_boots' },
 };
 
-export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ring', 'legs', 'boots'];
-export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ring', 'legs', 'boots'];
+export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
+export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ammo', 'ring', 'legs', 'boots'];
 export const CONSUMABLE_TYPES = ['potion', 'rune', 'food'];
 
 // Um valor de slot de equipamento (G.equipment[slot]) pode ser um itemId comum

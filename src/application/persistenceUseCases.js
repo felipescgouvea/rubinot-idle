@@ -1,22 +1,22 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=49';
-import { createDefaultState } from '../domain/gameState.js?v=49';
-import { createDefaultSkills } from '../domain/character.js?v=49';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=49';
-import { isSpellAvailable } from '../domain/spells.js?v=49';
-import { findOutfit } from '../domain/outfits.js?v=49';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=49';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=49';
-import { isRelicId } from '../domain/items.js?v=49';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=49';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=49';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=49';
-import { emit, EVENTS } from '../shared/eventBus.js?v=49';
-import { getMaxHp, getMaxMana } from './stats.js?v=49';
-import { gainXp } from './huntUseCases.js?v=49';
-import { checkBpTier } from './battlePassUseCases.js?v=49';
-import { getXpRate, getGoldRate } from './adminUseCases.js?v=49';
+import { G, replaceState } from './gameStore.js?v=50';
+import { createDefaultState } from '../domain/gameState.js?v=50';
+import { createDefaultSkills } from '../domain/character.js?v=50';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=50';
+import { isSpellAvailable } from '../domain/spells.js?v=50';
+import { findOutfit } from '../domain/outfits.js?v=50';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=50';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=50';
+import { isRelicId } from '../domain/items.js?v=50';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=50';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=50';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=50';
+import { emit, EVENTS } from '../shared/eventBus.js?v=50';
+import { getMaxHp, getMaxMana } from './stats.js?v=50';
+import { gainXp } from './huntUseCases.js?v=50';
+import { checkBpTier } from './battlePassUseCases.js?v=50';
+import { getXpRate, getGoldRate } from './adminUseCases.js?v=50';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -83,6 +83,8 @@ export function loadGame() {
   if (G.outfit && !findOutfit(G.outfit)) G.outfit = null;
   if (!G.outfitColors) G.outfitColors = { ...DEFAULT_OUTFIT_COLORS };
   if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
+  // migração: slot de Munição (ammo) é novo — ver domain/items.js.
+  if (!('ammo' in G.equipment)) G.equipment.ammo = null;
   if (G.rtc.attackSpell && !isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level)) { G.rtc.attackType = null; G.rtc.attackSpell = null; }
   if (G.rtc.attackRune && !isRuneAvailableToVocation(G.rtc.attackRune, G.vocation)) { G.rtc.attackType = null; G.rtc.attackRune = null; }
   if (G.rtc.healSpell && !isSpellAvailable(G.rtc.healSpell, G.vocation, G.level)) G.rtc.healSpell = null;

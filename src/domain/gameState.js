@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=49';
-import { createDefaultRtc } from './rtcConfig.js?v=49';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=49';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=49';
+import { createDefaultSkills } from './character.js?v=50';
+import { createDefaultRtc } from './rtcConfig.js?v=50';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=50';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=50';
 
 export function createDefaultState() {
   return {
@@ -35,7 +35,7 @@ export function createDefaultState() {
     // slot próprio — não entra no cálculo de atributos; é só o container do
     // inventário (botão direito abre/fecha).
     backpack: 'bag',
-    equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },
+    equipment: { weapon: null, armor: null, shield: null, helmet: null, ammo: null, ring: null, legs: null, boots: null },
     // Relíquias: itens dropados por boss com um modificador de raridade (ver
     // domain/rarity.js) — instâncias únicas, nunca empilhadas, separadas do
     // inventário normal empilhável (G.inventory). Um slot de G.equipment pode

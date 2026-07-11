@@ -1,20 +1,20 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=49';
-import { renderSkillsPanel } from './skillsPanel.js?v=49';
-import { renderArenaPanel } from './arenaPanel.js?v=49';
-import { renderInventory, renderRelics } from './inventoryAndEquipmentPanel.js?v=49';
-import { renderWorldsPanel } from './worldsPanel.js?v=49';
-import { renderBattlePassPanel } from './battlePassPanel.js?v=49';
-import { renderRtcPanel } from './rtcPanel.js?v=49';
-import { renderShopPanel } from './shopPanel.js?v=49';
-import { renderMarketPanel } from './marketPanel.js?v=49';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=49';
-import { renderBossRushPanel } from './bossRushPanel.js?v=49';
-import { renderBestiaryTab } from './bestiaryPanel.js?v=49';
-import { renderTrainingSection } from './trainingPanel.js?v=49';
-import { renderAdminPanel } from './adminPanel.js?v=49';
+import { renderTasksPanel } from './tasksPanel.js?v=50';
+import { renderSkillsPanel } from './skillsPanel.js?v=50';
+import { renderArenaPanel } from './arenaPanel.js?v=50';
+import { renderInventory, renderRelics } from './inventoryAndEquipmentPanel.js?v=50';
+import { renderWorldsPanel } from './worldsPanel.js?v=50';
+import { renderBattlePassPanel } from './battlePassPanel.js?v=50';
+import { renderRtcPanel } from './rtcPanel.js?v=50';
+import { renderShopPanel } from './shopPanel.js?v=50';
+import { renderMarketPanel } from './marketPanel.js?v=50';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=50';
+import { renderBossRushPanel } from './bossRushPanel.js?v=50';
+import { renderBestiaryTab } from './bestiaryPanel.js?v=50';
+import { renderTrainingSection } from './trainingPanel.js?v=50';
+import { renderAdminPanel } from './adminPanel.js?v=50';
 
 // A aba Skills renderiza também a seção de Treino Offline (que vive no topo
 // dela) — as duas coisas são "progressão de skill", então dividem a aba.

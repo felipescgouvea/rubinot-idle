@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=49';
-import { resolveEquippedItem } from './items.js?v=49';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=50';
+import { resolveEquippedItem } from './items.js?v=50';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -45,21 +45,41 @@ export function computeMaxMana({ vocation, level }) {
   return v.baseMana + (level - 1) * v.manaPerLevel;
 }
 
-// Dano segue a skill realmente treinada, como no Tibia:
-// mages = Magic Level; demais vocações = skill da arma equipada (ou Fist, desarmado).
+// Poder de ataque por vocação, no estilo Tibia — cada uma combina a SKILL
+// treinada com uma fonte de dano diferente do equipamento:
+//  • Knight (melee): ataque da ARMA (sword/axe/club) + a skill correspondente.
+//    Sem arma de corpo-a-corpo, soca (Fist, ataque base 7).
+//  • Paladin (distance): ataque da MUNIÇÃO (flecha/dardo) + Distance skill. O
+//    arco/besta NÃO soma ataque — só pode dar bônus de skill (distanceBonus).
+//  • Mage (sorcerer/druid): Magic Level + o DANO BASE da própria wand/rod
+//    (wandDmg). A wand não soma "atk"; ela tem dano próprio.
+// O "atk" de outros equipamentos NÃO entra aqui de propósito (no Tibia
+// elmo/armadura/anel não aumentam o ataque) — só a arma/munição/wand conta.
 export function computeAtk({ vocation, level, skills, equipment, relics }) {
   if (!vocation) return 0;
-  const eq = computeEquipBonus(equipment, relics).atk || 0;
-  const eqMagic = computeEquipBonus(equipment, relics).magic || 0;
   const voc = VOC_TRAINING[vocation];
+  const weapon = resolveEquippedItem(equipment.weapon, relics);
+
   if (voc.attackSkill === 'magic') {
-    return Math.floor(skills.magic.lv * 3 + level * 0.8 + eq + eqMagic * 1.5);
+    const wandDmg = (weapon && weapon.weaponType === 'magic' && weapon.wandDmg) || 0;
+    const ml = skills.magic.lv;
+    return Math.floor(ml * 2.5 + wandDmg * (1 + ml * 0.03) + level / 4);
   }
+
+  if (voc.attackSkill === 'distance') {
+    const ammo = resolveEquippedItem(equipment.ammo, relics);
+    const ammoAtk = (ammo && ammo.type === 'ammo' && ammo.atk) || 0;
+    const bowBonus = (weapon && weapon.weaponType === 'distance' && weapon.distanceBonus) || 0;
+    const dist = skills.distance.lv + bowBonus;
+    return Math.floor(0.09 * ammoAtk * (dist + 5) + level / 4);
+  }
+
+  // Melee (knight): a arma REALMENTE equipada decide a skill e o ataque; sem
+  // arma de corpo-a-corpo, é Fist com ataque base 7.
   const skillId = equippedWeaponSkillId(equipment, relics);
-  if (skillId === 'distance') {
-    return Math.floor(skills.distance.lv * 2.2 + level + eq);
-  }
-  return Math.floor(skills[skillId].lv * 2 + level * 1.5 + eq);
+  const isMelee = weapon && (weapon.weaponType === 'sword' || weapon.weaponType === 'axe' || weapon.weaponType === 'club');
+  const weaponAtk = isMelee ? (weapon.atk || 0) : 7;
+  return Math.floor(0.09 * weaponAtk * (skills[skillId].lv + 5) + level / 4);
 }
 
 // Defesa: o bônus de Shielding só se aplica com um escudo equipado — sem escudo,

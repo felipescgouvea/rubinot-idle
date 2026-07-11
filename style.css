@@ -268,7 +268,7 @@ body {
   grid-template-areas:
     ".      helmet backpack"
     "weapon armor  shield"
-    "ring   legs   ."
+    "ring   legs   ammo"
     ".      boots  .";
   gap: 6px;
   justify-content: center;
@@ -278,6 +278,7 @@ body {
 #equip-card .slot-weapon { grid-area: weapon; }
 #equip-card .slot-armor  { grid-area: armor; }
 #equip-card .slot-shield { grid-area: shield; }
+#equip-card .slot-ammo   { grid-area: ammo; }
 #equip-card .slot-ring   { grid-area: ring; }
 #equip-card .slot-legs   { grid-area: legs; }
 #equip-card .slot-boots  { grid-area: boots; }
