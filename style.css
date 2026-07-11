@@ -1633,3 +1633,33 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   #boosted-card { position: static; width: auto; margin: 10px !important; }
   #backpack-inventory-card { position: static; width: auto; max-height: none; margin: 10px !important; }
 }
+
+/* ============ PAINEL ADMIN ============ */
+#admin-content { margin: 12px 14px !important; }
+.admin-warn {
+  background: linear-gradient(180deg, #fff3cd, #ffe8a1);
+  border: 1px solid #d4a017; border-radius: 6px;
+  color: #6b4e00; font-size: 12px; font-weight: 600;
+  padding: 8px 12px; margin-bottom: 12px;
+}
+#admin-content h4 { font-family: var(--serif); font-size: 13px; color: var(--ink); margin: 14px 0 8px !important; }
+.admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.admin-field {
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 1px solid var(--line-soft); border-radius: 8px; padding: 10px;
+}
+.admin-field > label { display: block; font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.admin-field > label small { color: var(--ink-soft); font-weight: 600; }
+.admin-input-row { display: flex; align-items: center; gap: 6px; }
+.admin-field input[type="number"] {
+  width: 100%; max-width: 110px; padding: 6px 8px;
+  border: 1px solid var(--line-soft); border-radius: 6px;
+  background: #fff; color: var(--ink); font-size: 13px; font-weight: 700;
+}
+.admin-x { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+.admin-field small { display: block; color: var(--ink-soft); font-size: 11px; margin-top: 5px; }
+.admin-rarity-list { display: flex; flex-direction: column; gap: 6px; }
+.admin-rarity-row { display: grid; grid-template-columns: 1fr 90px 52px; align-items: center; gap: 8px; }
+.admin-rarity-name { font-size: 12px; font-weight: 700; }
+.admin-rarity-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
+.admin-rarity-pct { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: right; }

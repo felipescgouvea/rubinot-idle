@@ -1,13 +1,13 @@
 // Casos de uso das Presas (Prey): travar uma criatura num slot, rerolar o
 // bônus e ativar. Ver domain/prey.js pra as regras puras.
-import { G } from './gameStore.js?v=48';
-import { MONSTERS } from '../domain/bestiary.js?v=48';
+import { G } from './gameStore.js?v=49';
+import { MONSTERS } from '../domain/bestiary.js?v=49';
 import {
   PREY_SLOTS, PREY_DURATION_MS, PREY_REROLL_COST, PREY_BONUS_TYPES, PREY_STAR_PCT,
   rollPreyStars, rollPreyBonusType,
-} from '../domain/prey.js?v=48';
-import { emit, EVENTS } from '../shared/eventBus.js?v=48';
-import { saveGame } from './saveGameUseCase.js?v=48';
+} from '../domain/prey.js?v=49';
+import { emit, EVENTS } from '../shared/eventBus.js?v=49';
+import { saveGame } from './saveGameUseCase.js?v=49';
 
 function ensurePreyArray() {
   if (!Array.isArray(G.prey)) G.prey = [];

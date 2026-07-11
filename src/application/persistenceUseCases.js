@@ -1,21 +1,22 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=48';
-import { createDefaultState } from '../domain/gameState.js?v=48';
-import { createDefaultSkills } from '../domain/character.js?v=48';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=48';
-import { isSpellAvailable } from '../domain/spells.js?v=48';
-import { findOutfit } from '../domain/outfits.js?v=48';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=48';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=48';
-import { isRelicId } from '../domain/items.js?v=48';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=48';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=48';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=48';
-import { emit, EVENTS } from '../shared/eventBus.js?v=48';
-import { getMaxHp, getMaxMana } from './stats.js?v=48';
-import { gainXp } from './huntUseCases.js?v=48';
-import { checkBpTier } from './battlePassUseCases.js?v=48';
+import { G, replaceState } from './gameStore.js?v=49';
+import { createDefaultState } from '../domain/gameState.js?v=49';
+import { createDefaultSkills } from '../domain/character.js?v=49';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=49';
+import { isSpellAvailable } from '../domain/spells.js?v=49';
+import { findOutfit } from '../domain/outfits.js?v=49';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=49';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=49';
+import { isRelicId } from '../domain/items.js?v=49';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=49';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=49';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=49';
+import { emit, EVENTS } from '../shared/eventBus.js?v=49';
+import { getMaxHp, getMaxMana } from './stats.js?v=49';
+import { gainXp } from './huntUseCases.js?v=49';
+import { checkBpTier } from './battlePassUseCases.js?v=49';
+import { getXpRate, getGoldRate } from './adminUseCases.js?v=49';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -109,8 +110,8 @@ export function applyOfflineProgress() {
   const scaleFactor = 1 + (G.level - 1) * 0.05;
   const killsPerMin = 6; // ritmo offline reduzido (~metade do ativo)
   const kills = Math.floor((cappedSec / 60) * killsPerMin);
-  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMultiplier(G.currentWorld) * 0.5);
-  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMultiplier(G.currentWorld) * 0.5);
+  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zone.xpMult * worldXpMultiplier(G.currentWorld) * 0.5 * getXpRate());
+  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zone.goldMult * worldGoldMultiplier(G.currentWorld) * 0.5 * getGoldRate());
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;

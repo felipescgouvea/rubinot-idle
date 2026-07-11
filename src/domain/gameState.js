@@ -3,9 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=48';
-import { createDefaultRtc } from './rtcConfig.js?v=48';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=48';
+import { createDefaultSkills } from './character.js?v=49';
+import { createDefaultRtc } from './rtcConfig.js?v=49';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=49';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=49';
 
 export function createDefaultState() {
   return {
@@ -91,5 +92,8 @@ export function createDefaultState() {
     // instante em que o treino começou — ver domain/training.js.
     trainingSkill: null,
     trainingSince: null,
+    // Config de balanceamento do Painel Admin (taxas + raridade) — ver
+    // domain/adminConfig.js. Ausente em saves antigos (migrado no load).
+    adminConfig: { ...DEFAULT_ADMIN_CONFIG, rarityWeights: { ...DEFAULT_ADMIN_CONFIG.rarityWeights } },
   };
 }

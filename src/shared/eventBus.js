@@ -48,6 +48,7 @@ export const EVENTS = {
   HIGHSCORES_PANEL: 'highscoresPanel',
   OFFLINE_PROGRESS: 'offlineProgress',
   OUTFIT_PICKER: 'outfitPicker',
+  ADMIN_PANEL: 'adminPanel',
   PREY_PANEL: 'preyPanel',
   BESTIARY_PANEL: 'bestiaryPanel',
   DAILY_REWARD_PANEL: 'dailyRewardPanel',

@@ -37,15 +37,16 @@ export function primaryStatKeyForItem(item) {
   return PRIMARY_STAT_ORDER.find(key => item[key]) || null;
 }
 
-// Sorteio ponderado de raridade pelos pesos de RARITY_TIERS (60/30/10 —
-// refinado é o mais comum, lendário o mais raro).
-export function rollRarityTier() {
-  const entries = Object.entries(RARITY_TIERS);
-  const totalWeight = entries.reduce((sum, [, tier]) => sum + tier.weight, 0);
+// Sorteio ponderado de raridade. Usa os pesos padrão de RARITY_TIERS, ou os
+// pesos vindos do Painel Admin (G.adminConfig.rarityWeights) quando passados
+// por quem chama (ver application/huntUseCases.js).
+export function rollRarityTier(weightsOverride) {
+  const entries = Object.keys(RARITY_TIERS).map(id => [id, weightsOverride && weightsOverride[id] != null ? Math.max(0, weightsOverride[id]) : RARITY_TIERS[id].weight]);
+  const totalWeight = entries.reduce((sum, [, w]) => sum + w, 0) || 1;
   let roll = Math.random() * totalWeight;
-  for (const [id, tier] of entries) {
-    if (roll < tier.weight) return id;
-    roll -= tier.weight;
+  for (const [id, w] of entries) {
+    if (roll < w) return id;
+    roll -= w;
   }
   return entries[entries.length - 1][0]; // fallback de arredondamento de ponto flutuante
 }

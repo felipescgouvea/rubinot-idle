@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=48" />
-  <link rel="stylesheet" href="style.css?v=48" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=49" />
+  <link rel="stylesheet" href="style.css?v=49" />
 </head>
 <body>
   <div id="app">
@@ -41,6 +41,7 @@
       <button class="tab" data-tab="shop">🛒 Shop</button>
       <button class="tab" data-tab="market">🏪 Mercado</button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
+      <button class="tab" data-tab="admin">⚙️ Admin</button>
     </nav>
 
     <!-- BARRA DE STATUS DO PERSONAGEM — fina e horizontal, visível em
@@ -276,6 +277,14 @@
         </div>
       </section>
 
+      <!-- ADMIN (config de balanceamento do dono) -->
+      <section id="tab-admin" class="panel">
+        <div class="card full-card">
+          <h3>⚙️ Painel Admin — Configurações do Jogo</h3>
+          <div id="admin-content"></div>
+        </div>
+      </section>
+
     </main>
 
     <!-- MODAL -->
@@ -335,6 +344,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=48"></script>
+  <script type="module" src="src/main.js?v=49"></script>
 </body>
 </html>

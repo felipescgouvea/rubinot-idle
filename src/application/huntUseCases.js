@@ -3,24 +3,25 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=48';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=48';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=48';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=48';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=48';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=48';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=48';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=48';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=48';
-import { MONSTERS } from '../domain/bestiary.js?v=48';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=48';
-import { emit, EVENTS } from '../shared/eventBus.js?v=48';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=48';
-import { trainSkill } from './skillUseCases.js?v=48';
-import { addItemToInventory } from './inventoryCore.js?v=48';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=48';
-import { getCombatBonuses } from './bonuses.js?v=48';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=48';
+import { G } from './gameStore.js?v=49';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=49';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=49';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=49';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=49';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=49';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=49';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=49';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=49';
+import { MONSTERS } from '../domain/bestiary.js?v=49';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=49';
+import { emit, EVENTS } from '../shared/eventBus.js?v=49';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=49';
+import { trainSkill } from './skillUseCases.js?v=49';
+import { addItemToInventory } from './inventoryCore.js?v=49';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=49';
+import { getCombatBonuses } from './bonuses.js?v=49';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights } from './adminUseCases.js?v=49';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=49';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -266,8 +267,8 @@ export function resolveMonsterKill(zone) {
   // Bônus de Presa/Charm contra esta criatura (ver application/bonuses.js) —
   // multiplicadores de gold/xp e chance aditiva de loot, por cima de tudo.
   const bonus = getCombatBonuses(currentMonster.defKey, Date.now());
-  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold);
-  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp);
+  const goldGained = Math.floor((currentMonster.gold[0] + Math.random() * (currentMonster.gold[1] - currentMonster.gold[0])) * zone.goldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
+  const xpGained = Math.floor(currentMonster.xp * zone.xpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate());
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -288,7 +289,7 @@ export function resolveMonsterKill(zone) {
   // Loot
   const lootLine = [];
   currentMonster.loot.forEach(([itemId, chance]) => {
-    if (Math.random() < chance + boosts.loot + bonus.loot) {
+    if (Math.random() < (chance + boosts.loot + bonus.loot) * getLootRate()) {
       addItemToInventory(itemId);
       const item = ITEMS[itemId];
       lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
@@ -301,7 +302,7 @@ export function resolveMonsterKill(zone) {
   // Funciona igual num kill de caçada comum (zona cujo boss aparece no
   // elenco) e num kill de Boss Rush (ver bossRushUseCases.js) — os dois
   // passam por aqui.
-  if (BOSS_MONSTER_IDS.has(currentMonster.defKey) && Math.random() < 0.10) {
+  if (BOSS_MONSTER_IDS.has(currentMonster.defKey) && Math.random() < getRelicDropChance()) {
     const equippablePool = currentMonster.loot
       .map(([id]) => id)
       .filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
@@ -310,7 +311,7 @@ export function resolveMonsterKill(zone) {
       : Object.keys(ITEMS).filter(id => EQUIPPABLE_TYPES.includes(ITEMS[id].type));
     if (pool.length > 0) {
       const itemId = pool[Math.floor(Math.random() * pool.length)];
-      const rarity = rollRarityTier();
+      const rarity = rollRarityTier(getRarityWeights());
       const tier = RARITY_TIERS[rarity];
       G.relicSeq = (G.relicSeq || 0) + 1;
       G.relics = G.relics || [];
