@@ -1,13 +1,13 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=19';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=19';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=19';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=19';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=19';
-import { on, EVENTS } from '../shared/eventBus.js?v=19';
-import { formatNum } from './shared.js?v=19';
-import { renderZonePicker } from './huntPanel.js?v=19';
+import { G } from '../application/gameStore.js?v=20';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=20';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=20';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=20';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=20';
+import { on, EVENTS } from '../shared/eventBus.js?v=20';
+import { formatNum } from './shared.js?v=20';
+import { renderZonePicker } from './huntPanel.js?v=20';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
