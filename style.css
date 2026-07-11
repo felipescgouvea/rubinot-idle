@@ -387,6 +387,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 #zone-current-bar:hover { border-color: var(--gold); }
 #zone-current-icon { font-size: 15px; }
+.zone-current-icon-img { height: 20px; width: auto; vertical-align: -0.3em; image-rendering: pixelated; }
 #zone-current-name { flex: 1; font-weight: 600; }
 .zone-current-change { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -409,6 +410,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .zone-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
 .zone-card.locked { opacity: 0.55; }
 .zone-card-icon { font-size: 1.8rem; filter: drop-shadow(0 2px 3px #00000033); }
+.zone-card-icon-img { height: 40px; width: auto; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #00000033); }
 .zone-card-name { font-family: var(--serif); font-size: 12px; color: var(--navy-2); font-weight: 700; margin-top: 4px; }
 .zone-card-monsters { font-size: 9.5px; color: var(--ink-soft); margin: 4px 0; line-height: 1.4; }
 .zone-card-mults { font-size: 9.5px; color: var(--ink-faint); margin-bottom: 6px; }

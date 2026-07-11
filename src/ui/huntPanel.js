@@ -1,21 +1,28 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=18';
-import { ZONES } from '../domain/bestiary.js?v=18';
-import { MONSTERS } from '../domain/bestiary.js?v=18';
-import { ITEMS } from '../domain/items.js?v=18';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=18';
-import { on, EVENTS } from '../shared/eventBus.js?v=18';
-import { openModal, itemIconImg } from './shared.js?v=18';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=18';
+import { G } from '../application/gameStore.js?v=19';
+import { ZONES } from '../domain/bestiary.js?v=19';
+import { MONSTERS } from '../domain/bestiary.js?v=19';
+import { ITEMS } from '../domain/items.js?v=19';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=19';
+import { on, EVENTS } from '../shared/eventBus.js?v=19';
+import { openModal, itemIconImg } from './shared.js?v=19';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=19';
 
-function monsterSpriteImg(monsterId, cls = '') {
+export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
   const file = monsterSpriteFile(monsterId, m);
   // fallback para o emoji se o sprite não carregar
   return `<img src="${spriteUrl(file)}" alt="${m.name}" class="${cls}"
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${m.icon}</span>'" />`;
+}
+
+// Ícone da zona = sprite real do monstro principal da caçada (o primeiro do
+// elenco), em vez de um emoji genérico sem lastro em Tibia/RubinOT — ver
+// .spec/90-regras-de-negocio-gerais.md, Regra 4.
+export function zoneIconImg(zone, cls = '') {
+  return monsterSpriteImg(zone.monsters[0], cls);
 }
 
 export function renderMonsterDisplay(hit = false, killed = null) {
@@ -91,11 +98,11 @@ export function renderZonePicker() {
   const nameEl = document.getElementById('zone-current-name');
   const titleEl = document.getElementById('battle-card-title');
   if (iconEl && nameEl) {
-    iconEl.textContent = zone ? zone.icon : '🗺️';
+    iconEl.innerHTML = zone ? zoneIconImg(zone, 'zone-current-icon-img') : '🗺️';
     nameEl.textContent = zone ? zone.name : 'Escolher zona de caça…';
   }
   if (titleEl) {
-    titleEl.textContent = zone ? `⚔️ Batalha — ${zone.icon} ${zone.name}` : '⚔️ Batalha';
+    titleEl.innerHTML = zone ? `⚔️ Batalha — ${zoneIconImg(zone, 'zone-current-icon-img')} ${zone.name}` : '⚔️ Batalha';
   }
   renderZoneTheme();
 }
@@ -147,7 +154,8 @@ function renderHuntButton({ hunting }) {
   btn.classList.toggle('stop', hunting);
 }
 
-function renderOfflineProgressModal({ zoneName, zoneIcon, hours, minutes, kills, xpGained, goldGained }) {
+function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes, kills, xpGained, goldGained }) {
+  const zoneIcon = zoneMainMonster ? monsterSpriteImg(zoneMainMonster, 'zone-current-icon-img') : '🗺️';
   openModal(`
     <h3>🌙 Enquanto você esteve fora…</h3>
     <p>Seu personagem continuou caçando em <strong>${zoneIcon} ${zoneName}</strong> por <strong>${hours}h ${minutes}min</strong>.</p>

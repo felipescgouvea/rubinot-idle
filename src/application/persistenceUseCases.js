@@ -1,19 +1,19 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=18';
-import { createDefaultState } from '../domain/gameState.js?v=18';
-import { createDefaultSkills } from '../domain/character.js?v=18';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=18';
-import { isSpellAvailable } from '../domain/spells.js?v=18';
-import { findOutfit } from '../domain/outfits.js?v=18';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=18';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=18';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=18';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=18';
-import { emit, EVENTS } from '../shared/eventBus.js?v=18';
-import { getMaxHp, getMaxMana } from './stats.js?v=18';
-import { gainXp } from './huntUseCases.js?v=18';
-import { checkBpTier } from './battlePassUseCases.js?v=18';
+import { G, replaceState } from './gameStore.js?v=19';
+import { createDefaultState } from '../domain/gameState.js?v=19';
+import { createDefaultSkills } from '../domain/character.js?v=19';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=19';
+import { isSpellAvailable } from '../domain/spells.js?v=19';
+import { findOutfit } from '../domain/outfits.js?v=19';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=19';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=19';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=19';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=19';
+import { emit, EVENTS } from '../shared/eventBus.js?v=19';
+import { getMaxHp, getMaxMana } from './stats.js?v=19';
+import { gainXp } from './huntUseCases.js?v=19';
+import { checkBpTier } from './battlePassUseCases.js?v=19';
 
 export function loadGame() {
   const parsed = loadRawState();
@@ -84,7 +84,7 @@ export function applyOfflineProgress() {
   gainXp(xpGained);
 
   const hours = Math.floor(cappedSec / 3600), minutes = Math.floor((cappedSec % 3600) / 60);
-  emit(EVENTS.OFFLINE_PROGRESS, { zoneName: zone.name, zoneIcon: zone.icon, hours, minutes, kills, xpGained, goldGained });
+  emit(EVENTS.OFFLINE_PROGRESS, { zoneName: zone.name, zoneMainMonster: zone.monsters[0], hours, minutes, kills, xpGained, goldGained });
 }
 
 export function confirmReset() {

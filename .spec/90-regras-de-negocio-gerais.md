@@ -54,8 +54,8 @@ Todo sistema, fórmula ou comportamento de jogo novo deve ter um equivalente rea
 Todo ícone de interface (itens, slots de equipamento, moedas, skills, magias, configurações de RTC, mundos, outfits) deve usar arte extraída do Tibia ou do RubinOT — nunca emojis genéricos nem ícones de bibliotecas de terceiros.
 
 - **Por quê:** mesmo motivo da Regra 2 — a identidade visual do jogo deve parecer "o jogo de verdade", não uma interface genérica de jogo idle com emojis.
-- **Resolvido:** sprites de criaturas, ícones de itens de equipamento e outfits (com cor e addons reais) já usam arte extraída do Tibia.
-- **Pendência de conformidade identificada:** ícones de moedas (gold, Rubini Coins), skills, magias, ajustes de RTC e mundos ainda usam emojis Unicode genéricos como substituto. Aplicar esta regra por completo a esses pontos exige adotar a mesma fonte de ícones do jogo (sprites do TibiaWiki) já usada para itens e outfits.
+- **Resolvido:** sprites de criaturas, ícones de itens de equipamento e outfits (com cor e addons reais) já usam arte extraída do Tibia. Ícones de zona de caça (galeria de escolha e barra da zona atual) usam a sprite real do monstro principal da zona (o primeiro do elenco), em vez de um emoji temático — mesma fonte já usada pras criaturas.
+- **Pendência de conformidade identificada:** ícones de moedas (gold, Rubini Coins), skills, magias, ajustes de RTC e mundos ainda usam emojis Unicode genéricos como substituto. Aplicar esta regra por completo a esses pontos exige adotar a mesma fonte de ícones do jogo (sprites do TibiaWiki) já usada para itens, outfits e zonas.
 
 ## Como tratar pendências de conformidade
 
