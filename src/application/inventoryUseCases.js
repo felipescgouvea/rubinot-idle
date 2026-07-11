@@ -1,12 +1,12 @@
-import { G } from './gameStore.js?v=38';
-import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=38';
-import { ZONES } from '../domain/bestiary.js?v=38';
-import { RARITY_TIERS } from '../domain/rarity.js?v=38';
-import { emit, EVENTS } from '../shared/eventBus.js?v=38';
-import { getMaxHp, getMaxMana } from './stats.js?v=38';
-import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=38';
-import { saveGame } from './saveGameUseCase.js?v=38';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=38';
+import { G } from './gameStore.js?v=39';
+import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=39';
+import { ZONES } from '../domain/bestiary.js?v=39';
+import { RARITY_TIERS } from '../domain/rarity.js?v=39';
+import { emit, EVENTS } from '../shared/eventBus.js?v=39';
+import { getMaxHp, getMaxMana } from './stats.js?v=39';
+import { getCurrentMonster, resolveMonsterKill } from './huntUseCases.js?v=39';
+import { saveGame } from './saveGameUseCase.js?v=39';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=39';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -14,7 +14,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=38';
+export { addItemToInventory } from './inventoryCore.js?v=39';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
@@ -123,18 +123,18 @@ export function useItem(itemId) {
   if (item.dmg) {
     if (!currentMonster) { emit(EVENTS.NOTIFY, { msg: 'Sem criatura em combate para mirar a runa.', type: 'error' }); return; }
     currentMonster.hp -= item.dmg;
-    emit(EVENTS.LOG, `📜 <span class="log-dmg">Você usou ${item.name}: ${item.dmg} de dano em ${currentMonster.name}.</span>`);
+    emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">Você usou ${item.name}: ${item.dmg} de dano em ${currentMonster.name}.</span>`, cat: 'suprimento' });
     if (currentMonster.hp <= 0) killedByRune = true;
   }
   if (item.heal) {
     const before = G.hp;
     G.hp = Math.min(getMaxHp(), G.hp + item.heal);
-    emit(EVENTS.LOG, `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.hp - before} HP.</span>`);
+    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.hp - before} HP.</span>`, cat: 'suprimento' });
   }
   if (item.mana) {
     const before = G.mana;
     G.mana = Math.min(getMaxMana(), G.mana + item.mana);
-    emit(EVENTS.LOG, `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.mana - before} mana.</span>`);
+    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.mana - before} mana.</span>`, cat: 'suprimento' });
   }
 
   G.inventory[itemId]--;

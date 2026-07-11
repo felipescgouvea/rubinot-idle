@@ -1,7 +1,10 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=38';
+import { primaryStatKeyForItem } from './rarity.js?v=39';
 
 export const ITEMS = {
+  // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
+  // (ver domain/gameState.js: backpack), não é equipável nos slots de atributo.
+  bag:            { name: 'Bag', icon: '🎒', type: 'container', sell: 1 },
   bones:          { name: 'Ossos', icon: '🦴', type: 'misc', sell: 1 },
   minotaur_horn:  { name: 'Chifre Minotauro', icon: '📯', type: 'misc', sell: 80 },
   chain_armor:    { name: 'Armadura de Correntes', icon: '⛓️', type: 'armor', def: 8, sell: 300, rare: false },

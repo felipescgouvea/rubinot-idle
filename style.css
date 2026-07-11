@@ -1539,3 +1539,23 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .battle-list-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .battle-list-hp-track { height: 7px; background: #00000033; border-radius: 3px; overflow: hidden; margin-top: 2px; border: 1px solid #00000022; }
 .battle-list-hp-fill { height: 100%; background: linear-gradient(180deg, #6ac06a, #3a9a3a); transition: width 0.2s; }
+
+/* ============ ABAS DO LOG DE COMBATE ============ */
+#combat-log-tabs { display: flex; gap: 4px; margin: 8px 14px 0 !important; flex-wrap: wrap; }
+.log-tab {
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 1px solid var(--line-soft); border-radius: 5px 5px 0 0;
+  color: var(--ink-soft); padding: 4px 10px; cursor: pointer;
+  font-family: var(--body); font-size: 11px; font-weight: 700;
+}
+.log-tab:hover { background: #fff; }
+.log-tab.active { color: var(--ink); background: var(--cream); border-color: var(--gold); border-bottom-color: var(--cream); }
+/* filtragem por aba: esconde as linhas que não batem com o filtro atual */
+#combat-log[data-filter="combate"] .log-line:not([data-cat="combate"]) { display: none; }
+#combat-log[data-filter="magia"] .log-line:not([data-cat="magia"]) { display: none; }
+#combat-log[data-filter="suprimento"] .log-line:not([data-cat="suprimento"]) { display: none; }
+
+/* ============ DRAG-AND-DROP DO INVENTÁRIO (mochila) ============ */
+.inv-item { cursor: grab; }
+.inv-item.dragging { opacity: 0.4; cursor: grabbing; }
+.inv-item.drag-over { outline: 2px dashed var(--gold); outline-offset: 2px; background: #fffbe9; }

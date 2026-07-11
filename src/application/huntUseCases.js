@@ -3,24 +3,24 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=38';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=38';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=38';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=38';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=38';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=38';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=38';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=38';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=38';
-import { MONSTERS } from '../domain/bestiary.js?v=38';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=38';
-import { emit, EVENTS } from '../shared/eventBus.js?v=38';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=38';
-import { trainSkill } from './skillUseCases.js?v=38';
-import { addItemToInventory } from './inventoryCore.js?v=38';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=38';
-import { getCombatBonuses } from './bonuses.js?v=38';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=38';
+import { G } from './gameStore.js?v=39';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=39';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=39';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=39';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=39';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=39';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=39';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=39';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=39';
+import { MONSTERS } from '../domain/bestiary.js?v=39';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=39';
+import { emit, EVENTS } from '../shared/eventBus.js?v=39';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=39';
+import { trainSkill } from './skillUseCases.js?v=39';
+import { addItemToInventory } from './inventoryCore.js?v=39';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=39';
+import { getCombatBonuses } from './bonuses.js?v=39';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=39';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -150,7 +150,7 @@ export function doHuntTick() {
     playerDmg = rune.dmg;
     G.inventory[G.rtc.attackRune]--;
     if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
-    emit(EVENTS.LOG, `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`);
+    emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   } else {
     const atkSpell = G.rtc.attackType === 'spell' && G.rtc.attackSpell && isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level) ? SPELLS[G.rtc.attackSpell] : null;
@@ -158,7 +158,7 @@ export function doHuntTick() {
       playerDmg = Math.floor(playerDmg * atkSpell.power);
       G.mana -= atkSpell.mana;
       trainSkill('magic', atkSpell.mana * voc.magicMult);
-      emit(EVENTS.LOG, `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`);
+      emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
       spellElement = atkSpell.element;
     }
     if (voc.attackSkill !== 'magic') {
@@ -208,7 +208,7 @@ export function doHuntTick() {
     G.hp = Math.min(getMaxHp(), G.hp + heal);
     G.mana -= healSpell.mana;
     trainSkill('magic', healSpell.mana * voc.magicMult);
-    emit(EVENTS.LOG, `💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`);
+    emit(EVENTS.LOG, { html: `💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`, cat: 'magia' });
     emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
   }
 
@@ -220,7 +220,7 @@ export function doHuntTick() {
     G.hp = Math.min(getMaxHp(), G.hp + potion.heal);
     G.inventory[G.rtc.healPotion]--;
     if (G.inventory[G.rtc.healPotion] <= 0) delete G.inventory[G.rtc.healPotion];
-    emit(EVENTS.LOG, `${itemLogIcon(G.rtc.healPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`);
+    emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.healPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   }
 

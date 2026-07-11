@@ -1,24 +1,60 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=38';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=38';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=38';
-import { on, EVENTS } from '../shared/eventBus.js?v=38';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=38';
+import { G } from '../application/gameStore.js?v=39';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=39';
+import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=39';
+import { on, EVENTS } from '../shared/eventBus.js?v=39';
+import { saveGame } from '../application/saveGameUseCase.js?v=39';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=39';
+
+let dragId = null; // itemId sendo arrastado no inventário
+
+// Ordem de exibição dos itens: começa por G.inventoryOrder (escolha do
+// jogador via drag), removendo o que não está mais no inventário, e acrescenta
+// no fim qualquer item presente que ainda não esteja na ordem (ex.: saves
+// antigos sem inventoryOrder). Pura: não muta G aqui.
+function orderedInventoryIds() {
+  const owned = Object.keys(G.inventory).filter(id => G.inventory[id] > 0);
+  const order = (G.inventoryOrder || []).filter(id => owned.includes(id));
+  owned.forEach(id => { if (!order.includes(id)) order.push(id); });
+  return order;
+}
+
+// Move o item arrastado para a posição do item-alvo em G.inventoryOrder e salva.
+function reorderInventory(draggedId, targetId) {
+  if (!draggedId || draggedId === targetId) return;
+  const order = orderedInventoryIds();
+  const from = order.indexOf(draggedId);
+  const to = order.indexOf(targetId);
+  if (from === -1 || to === -1) return;
+  order.splice(from, 1);
+  order.splice(order.indexOf(targetId) + (from < to ? 1 : 0), 0, draggedId);
+  G.inventoryOrder = order;
+  renderInventory();
+  saveGame();
+}
 
 export function renderInventory() {
   const grid = document.getElementById('inventory-grid');
   if (!grid) return;
   grid.innerHTML = '';
-  Object.entries(G.inventory).forEach(([id, qty]) => {
-    if (qty <= 0) return;
+  orderedInventoryIds().forEach(id => {
+    const qty = G.inventory[id];
     const item = ITEMS[id];
     if (!item) return;
     const div = document.createElement('div');
     div.className = `inv-item${item.rare ? ' rare' : ''}`;
+    div.draggable = true;
+    div.dataset.itemId = id;
     div.innerHTML = `<div class="item-qty">${qty}</div><div class="item-icon">${itemIconImg(id, 'item-icon')}</div><div class="item-name">${item.name}</div>`;
     div.onclick = () => openItemModal(id);
+    // drag-and-drop pra organizar a ordem dos itens dentro da mochila
+    div.addEventListener('dragstart', e => { dragId = id; div.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+    div.addEventListener('dragend', () => { dragId = null; div.classList.remove('dragging'); grid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over')); });
+    div.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (dragId && dragId !== id) div.classList.add('drag-over'); });
+    div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+    div.addEventListener('drop', e => { e.preventDefault(); div.classList.remove('drag-over'); reorderInventory(dragId, id); });
     grid.appendChild(div);
   });
 
@@ -118,15 +154,15 @@ export function renderEquipmentSlots() {
         : `<div class="equip-slot-ghost">${SLOT_PLACEHOLDER[slot]}</div>`}
     </div>`;
   }).join('');
-  // Slot da Mochila (Backpack) — não é um item de status, é o container do
-  // inventário, como no Tibia: clicar com o botão direito abre/fecha o
-  // inventário embaixo do card de Equipamento (ver toggleBackpack em
-  // huntPanel-adjacent wiring / index.html). Clique esquerdo faz o mesmo, por
-  // conveniência.
-  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="Botão direito: abrir/fechar a mochila"
+  // Slot da Mochila (Backpack) — guarda um item de verdade (o "bag" inicial do
+  // Tibia, ver G.backpack), mas funciona como container: clicar com o botão
+  // direito abre/fecha o inventário embaixo do card de Equipamento (ver
+  // toggleBackpack / index.html). Clique esquerdo faz o mesmo, por conveniência.
+  const bagId = G.backpack || 'bag';
+  const bagName = (ITEMS[bagId] && ITEMS[bagId].name) || 'Bag';
+  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="${bagName} — botão direito abre/fecha a mochila"
       onclick="toggleBackpack()" oncontextmenu="event.preventDefault(); toggleBackpack(); return false;">
-      <div class="equip-slot-name">Mochila</div>
-      <div class="equip-slot-icon">🎒</div>
+      <div class="equip-slot-icon">${itemIconImg(bagId, 'equip-slot-icon')}</div>
     </div>`;
   areas.forEach(a => { a.innerHTML = html + backpackHtml; });
 }

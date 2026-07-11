@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=38';
-import { ITEMS } from '../domain/items.js?v=38';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=38';
+import { on, EVENTS } from '../shared/eventBus.js?v=39';
+import { ITEMS } from '../domain/items.js?v=39';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=39';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -61,15 +61,28 @@ export function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-export function addLog(html) {
+// Cada linha do log carrega uma categoria (data-cat) pra a filtragem por aba:
+// 'combate' (padrão), 'magia' (spells) e 'suprimento' (poções/runas). As
+// spells/poções são marcadas explicitamente por quem emite o log (ver
+// huntUseCases/inventoryUseCases) — o resto cai em 'combate'.
+export function addLog(html, cat = 'combate') {
   const log = document.getElementById('combat-log');
   if (!log) return;
   const line = document.createElement('div');
+  line.className = 'log-line';
+  line.dataset.cat = cat;
   line.innerHTML = html;
   log.appendChild(line);
-  // keep last 80 lines
-  while (log.children.length > 80) log.removeChild(log.firstChild);
+  // keep last 120 lines
+  while (log.children.length > 120) log.removeChild(log.firstChild);
   log.scrollTop = log.scrollHeight;
+}
+
+// Troca a aba ativa do log (filtro via CSS por data-cat — ver style.css).
+export function setLogFilter(cat) {
+  const log = document.getElementById('combat-log');
+  if (log) { log.dataset.filter = cat; log.scrollTop = log.scrollHeight; }
+  document.querySelectorAll('.log-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
 }
 
 export function notify(msg, type = 'info') {
@@ -93,7 +106,7 @@ export function closeModal() {
 
 export function wireSharedEvents() {
   on(EVENTS.NOTIFY, ({ msg, type }) => notify(msg, type));
-  on(EVENTS.LOG, html => addLog(html));
+  on(EVENTS.LOG, p => (typeof p === 'string' ? addLog(p) : addLog(p.html, p.cat)));
   on(EVENTS.MODAL_OPEN, html => openModal(html));
   on(EVENTS.MODAL_CLOSE, () => closeModal());
 }

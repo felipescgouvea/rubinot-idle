@@ -3,9 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=38';
-import { createDefaultRtc } from './rtcConfig.js?v=38';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=38';
+import { createDefaultSkills } from './character.js?v=39';
+import { createDefaultRtc } from './rtcConfig.js?v=39';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=39';
 
 export function createDefaultState() {
   return {
@@ -26,6 +26,14 @@ export function createDefaultState() {
     outfitAddon2: false,
     outfitColors: { ...DEFAULT_OUTFIT_COLORS },
     inventory: {},
+    // Ordem de exibição dos itens do inventário (drag-and-drop na Mochila) —
+    // itemIds na ordem escolhida pelo jogador. Itens novos entram no fim; ver
+    // application/inventoryCore.js e ui/inventoryAndEquipmentPanel.js.
+    inventoryOrder: [],
+    // A Mochila é um item de verdade (o "bag" inicial do Tibia) guardado neste
+    // slot próprio — não entra no cálculo de atributos; é só o container do
+    // inventário (botão direito abre/fecha).
+    backpack: 'bag',
     equipment: { weapon: null, armor: null, shield: null, helmet: null, ring: null, legs: null, boots: null },
     // Relíquias: itens dropados por boss com um modificador de raridade (ver
     // domain/rarity.js) — instâncias únicas, nunca empilhadas, separadas do

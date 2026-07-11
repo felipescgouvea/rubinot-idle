@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=38" />
-  <link rel="stylesheet" href="style.css?v=38" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=39" />
+  <link rel="stylesheet" href="style.css?v=39" />
 </head>
 <body>
   <div id="app">
@@ -316,7 +316,13 @@
         <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
         <div class="card" id="combat-log-card">
           <h3>Log de Combate</h3>
-          <div id="combat-log"></div>
+          <div id="combat-log-tabs">
+            <button class="log-tab active" data-cat="tudo" onclick="setLogFilter('tudo')">Tudo</button>
+            <button class="log-tab" data-cat="combate" onclick="setLogFilter('combate')">⚔️ Combate</button>
+            <button class="log-tab" data-cat="magia" onclick="setLogFilter('magia')">🗣️ Magias</button>
+            <button class="log-tab" data-cat="suprimento" onclick="setLogFilter('suprimento')">🧪 Suprimentos</button>
+          </div>
+          <div id="combat-log" data-filter="tudo"></div>
         </div>
       </div>
     </div>
@@ -325,6 +331,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=38"></script>
+  <script type="module" src="src/main.js?v=39"></script>
 </body>
 </html>
