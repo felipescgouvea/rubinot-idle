@@ -102,6 +102,15 @@ Object.assign(window, {
   },
 });
 
+// ---- ESC fecha qualquer modal aberto (genérico ou o de batalha) ----
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const battle = document.getElementById('battle-modal-overlay');
+  const generic = document.getElementById('modal-overlay');
+  if (battle && battle.style.display !== 'none') { closeBattleModal(); return; }
+  if (generic && generic.style.display !== 'none') closeModal();
+});
+
 // ---- init ----
 wireTabs();
 
