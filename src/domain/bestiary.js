@@ -260,15 +260,15 @@ export function bossAuraClass(tier) {
 // nível/mundo que já existia. Pura o bastante pra usar tanto na UI (zonePicker,
 // huntPanel) quanto num teste, sem tocar DOM/G diretamente: quem chama passa
 // os dados já lidos do G.
-// worldId é mantido na assinatura por compatibilidade com quem chama (Boss
-// Rush, huntPanel), mas NÃO gateia mais o acesso: desde que a navegação passou
-// a ser por CIDADE (ver domain/cities.js), o mundo virou só um bônus de fundo
-// e qualquer hunt fica acessível pelo nível + cadeia de boss, independente do
-// mundo atual do jogador.
+// worldId/level são mantidos na assinatura por compatibilidade com quem chama
+// (Boss Rush, huntPanel), mas NÃO gateiam mais o acesso: a navegação é por
+// CIDADE (ver domain/cities.js), o mundo virou só um bônus de fundo, e NÃO há
+// restrição de nível pra entrar numa hunt (as criaturas escalam com o nível do
+// jogador). A única trava que resta é a cadeia de boss: uma hunt encadeada só
+// abre depois de derrotar o boss da anterior.
 export function isZoneUnlocked(zoneId, level, worldId, defeatedZoneBosses) {
   const zone = ZONES[zoneId];
   if (!zone) return false;
-  if (level < zone.minLevel) return false;
   if (zone.requiresBossOf && !(defeatedZoneBosses || []).includes(zone.requiresBossOf)) return false;
   return true;
 }

@@ -2,14 +2,14 @@
 // (ver domain/cities.js), depois vê as hunts daquela cidade. As cidades
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
-import { G } from '../application/gameStore.js?v=55';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=55';
-import { CITIES } from '../domain/cities.js?v=55';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=55';
-import { getZoneMultiplier } from '../application/adminUseCases.js?v=55';
-import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=55';
-import { openBattleModal } from './battleModal.js?v=55';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=55';
+import { G } from '../application/gameStore.js?v=56';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=56';
+import { CITIES } from '../domain/cities.js?v=56';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=56';
+import { getZoneMultiplier } from '../application/adminUseCases.js?v=56';
+import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=56';
+import { openBattleModal } from './battleModal.js?v=56';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=56';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -46,20 +46,21 @@ function cityCard(city) {
     <div class="city-card-icon">${city.icon}</div>
     <div class="zone-card-name">${city.name}</div>
     <div class="city-card-blurb">${city.blurb}</div>
-    <div class="city-card-meta">🗺️ ${total} hunts · 🔓 ${unlocked} · ⚔️ Lv ${minLv}–${maxLv}</div>
+    <div class="city-card-meta">🗺️ ${total} hunts · 🔓 ${unlocked} · ⚔️ sugerido Lv ${minLv}–${maxLv}</div>
   </div>`;
 }
 
 function zoneCard(id, z) {
-  const levelLocked = G.level < z.minLevel;
-  const bossLocked = !levelLocked && z.requiresBossOf && !(G.defeatedZoneBosses || []).includes(z.requiresBossOf);
-  const locked = levelLocked || bossLocked;
+  // Sem trava de nível: a única trava é a cadeia de boss (uma hunt encadeada só
+  // abre depois de derrotar o boss da anterior).
+  const bossLocked = z.requiresBossOf && !(G.defeatedZoneBosses || []).includes(z.requiresBossOf);
+  const locked = bossLocked;
   const active = G.activeZone === id;
   const isBoostedToday = id === boostedZoneForDate(todayStr());
   const monsterTitle = z.monsters.map(mId => MONSTERS[mId]?.name || mId).join(', ');
   const monsterIcons = z.monsters.map(mId => monsterSpriteImg(mId, 'zone-card-monster-icon')).join('');
   const bossZoneName = bossLocked ? (ZONES[z.requiresBossOf]?.name || z.requiresBossOf) : '';
-  const lockTitle = levelLocked ? `Nível mínimo: ${z.minLevel}` : bossLocked ? `Derrote o boss de ${bossZoneName} primeiro` : monsterTitle;
+  const lockTitle = bossLocked ? `Derrote o boss de ${bossZoneName} primeiro` : monsterTitle;
   const xpM = getZoneMultiplier(id, 'xp', z.xpMult);
   const goldM = getZoneMultiplier(id, 'gold', z.goldMult);
   return `<div class="zone-card ${active ? 'active' : ''} ${locked ? 'locked' : ''}" title="${lockTitle}">
@@ -69,7 +70,7 @@ function zoneCard(id, z) {
     <div class="zone-card-monster-row">${monsterIcons}</div>
     <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${xpM} ${goldIconImg('inline-icon')}×${goldM}</div>
     ${locked
-      ? `<div class="zone-card-req">${levelLocked ? `🔒 Lv ${z.minLevel}` : `🔒 Boss: ${bossZoneName}`}</div>`
+      ? `<div class="zone-card-req">🔒 Boss: ${bossZoneName}</div>`
       : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? '✅ Caçando' : 'Caçar aqui'}</button>`}
   </div>`;
 }

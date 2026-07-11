@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=55';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=55';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=55';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=55';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=55';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=55';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=55';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=55';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=55';
-import { MONSTERS } from '../domain/bestiary.js?v=55';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=55';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=55';
-import { emit, EVENTS } from '../shared/eventBus.js?v=55';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=55';
-import { trainSkill } from './skillUseCases.js?v=55';
-import { addItemToInventory } from './inventoryCore.js?v=55';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=55';
-import { getCombatBonuses } from './bonuses.js?v=55';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=55';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=55';
+import { G } from './gameStore.js?v=56';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=56';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=56';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=56';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=56';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=56';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=56';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=56';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=56';
+import { MONSTERS } from '../domain/bestiary.js?v=56';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=56';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=56';
+import { emit, EVENTS } from '../shared/eventBus.js?v=56';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=56';
+import { trainSkill } from './skillUseCases.js?v=56';
+import { addItemToInventory } from './inventoryCore.js?v=56';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=56';
+import { getCombatBonuses } from './bonuses.js?v=56';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=56';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=56';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -106,7 +106,8 @@ export function startHunt() {
   if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: 'Escolha uma vocação primeiro!', type: 'error' }); return; }
   if (!G.activeZone) { emit(EVENTS.NOTIFY, { msg: 'Selecione uma zona de caça!', type: 'error' }); return; }
   const zone = ZONES[G.activeZone];
-  if (G.level < zone.minLevel) { emit(EVENTS.NOTIFY, { msg: `Nível mínimo: ${zone.minLevel}`, type: 'error' }); return; }
+  // Sem restrição de nível pra caçar — as criaturas escalam com o nível do
+  // jogador; entrar numa zona forte cedo é escolha (e risco) do jogador.
   G.hunting = true;
   nextSpawnAt = Date.now() + searchDelay(); // começa procurando (boneco anda)
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
