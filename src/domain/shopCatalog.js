@@ -84,7 +84,11 @@ export const SHOPS = [
       { title: '⚡ Boosts & Suprimentos', filter: s => s.type === 'boost' || s.type === 'refill' },
     ]},
   { key: 'equipment', title: '⚔️ Loja de Equipamentos', subtitle: 'Armas e armaduras clássicas de Tibia, pagas em gold.', sub: [
-      { title: '⚔️ Armas', filter: (s, items) => items[s.itemId]?.type === 'weapon' },
+      { title: '🗡️ Espadas', filter: (s, items) => items[s.itemId]?.weaponType === 'sword' },
+      { title: '🪓 Machados', filter: (s, items) => items[s.itemId]?.weaponType === 'axe' },
+      { title: '🔨 Clavas', filter: (s, items) => items[s.itemId]?.weaponType === 'club' },
+      { title: '🏹 Armas de Distância', filter: (s, items) => items[s.itemId]?.weaponType === 'distance' },
+      { title: '🪄 Wands & Rods', filter: (s, items) => items[s.itemId]?.weaponType === 'magic' },
       { title: '🥋 Armaduras', filter: (s, items) => items[s.itemId]?.type === 'armor' },
       { title: '🛡️ Escudos', filter: (s, items) => items[s.itemId]?.type === 'shield' },
       { title: '👑 Elmos', filter: (s, items) => items[s.itemId]?.type === 'helmet' },

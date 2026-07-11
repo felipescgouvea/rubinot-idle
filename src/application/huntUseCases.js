@@ -3,21 +3,21 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=26';
-import { ZONES } from '../domain/bestiary.js?v=26';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=26';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=26';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=26';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=26';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=26';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=26';
-import { ITEMS } from '../domain/items.js?v=26';
-import { MONSTERS } from '../domain/bestiary.js?v=26';
-import { emit, EVENTS } from '../shared/eventBus.js?v=26';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=26';
-import { trainSkill } from './skillUseCases.js?v=26';
-import { addItemToInventory } from './inventoryCore.js?v=26';
-import { checkBpTier } from './battlePassUseCases.js?v=26';
+import { G } from './gameStore.js?v=27';
+import { ZONES } from '../domain/bestiary.js?v=27';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=27';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=27';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=27';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=27';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=27';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=27';
+import { ITEMS } from '../domain/items.js?v=27';
+import { MONSTERS } from '../domain/bestiary.js?v=27';
+import { emit, EVENTS } from '../shared/eventBus.js?v=27';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=27';
+import { trainSkill } from './skillUseCases.js?v=27';
+import { addItemToInventory } from './inventoryCore.js?v=27';
+import { checkBpTier } from './battlePassUseCases.js?v=27';
 
 let huntInterval = null;
 let regenInterval = null;

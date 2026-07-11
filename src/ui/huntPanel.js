@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=26';
-import { ZONES } from '../domain/bestiary.js?v=26';
-import { MONSTERS } from '../domain/bestiary.js?v=26';
-import { ITEMS } from '../domain/items.js?v=26';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=26';
-import { on, EVENTS } from '../shared/eventBus.js?v=26';
-import { openModal, itemIconImg } from './shared.js?v=26';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=26';
+import { G } from '../application/gameStore.js?v=27';
+import { ZONES } from '../domain/bestiary.js?v=27';
+import { MONSTERS } from '../domain/bestiary.js?v=27';
+import { ITEMS } from '../domain/items.js?v=27';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=27';
+import { on, EVENTS } from '../shared/eventBus.js?v=27';
+import { openModal, itemIconImg } from './shared.js?v=27';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=27';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];

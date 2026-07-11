@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js?v=26';
-import { MONSTERS } from '../domain/bestiary.js?v=26';
-import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=26';
-import { on, EVENTS } from '../shared/eventBus.js?v=26';
+import { G } from '../application/gameStore.js?v=27';
+import { MONSTERS } from '../domain/bestiary.js?v=27';
+import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=27';
+import { on, EVENTS } from '../shared/eventBus.js?v=27';
 
 export function renderTasksPanel() {
   const roomsEl = document.getElementById('task-rooms');
