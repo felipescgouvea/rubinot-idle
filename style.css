@@ -606,6 +606,68 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   35% { transform: translateX(10px) rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 8px #f1c40fcc); }
   100% { transform: translateX(0) rotate(0); }
 }
+
+/* ---- efeito de cura (o "brilho verde" clássico do Tibia ao curar) ---- */
+.player-sprite-wrap.healing::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: heal-glow 0.7s ease-out;
+}
+.player-sprite-wrap { position: relative; }
+@keyframes heal-glow {
+  0% { box-shadow: 0 0 0 0 #2ecc7100, inset 0 0 0 0 #2ecc7100; background: radial-gradient(circle, #2ecc7166 0%, transparent 70%); opacity: 0; }
+  25% { opacity: 1; background: radial-gradient(circle, #7cffb2aa 0%, #2ecc7155 55%, transparent 75%); }
+  100% { background: radial-gradient(circle, transparent 0%, transparent 100%); opacity: 0; transform: scale(1.4); }
+}
+
+/* ---- efeitos de magia de ataque sobre o monstro, por elemento da spell ---- */
+.monster-sprite-wrap { position: relative; }
+.monster-sprite-wrap[class*="spell-"]::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: spell-burst 0.5s ease-out;
+}
+@keyframes spell-burst {
+  0% { opacity: 0; transform: scale(0.5); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.5); }
+}
+.monster-sprite-wrap.spell-fire::after     { background: radial-gradient(circle, #ff8c1eaa 0%, #e74c3c66 50%, transparent 75%); }
+.monster-sprite-wrap.spell-energy::after   { background: radial-gradient(circle, #d0a6ffcc 0%, #8e44ad77 50%, transparent 75%); }
+.monster-sprite-wrap.spell-ice::after      { background: radial-gradient(circle, #d6f7ffee 0%, #4ec9e055 50%, transparent 75%); }
+.monster-sprite-wrap.spell-holy::after     { background: radial-gradient(circle, #fff6cfee 0%, #f1c40f77 50%, transparent 75%); }
+.monster-sprite-wrap.spell-physical::after,
+.monster-sprite-wrap.spell-arcane::after   { background: radial-gradient(circle, #ffffffcc 0%, #b8a67f66 50%, transparent 75%); }
+
+/* ---- aura de boss do Boss Rush — anel pulsante contínuo enquanto o boss
+   está vivo na tela, cor escalando por tier (ver domain/bestiary.js:
+   bossAuraClass). Também usada nos cards da galeria do Boss Rush. ---- */
+.monster-sprite-wrap[class*="boss-aura-"]::before,
+.zone-card[class*="boss-aura-"]::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: boss-aura-pulse 1.6s ease-in-out infinite;
+  z-index: -1;
+}
+@keyframes boss-aura-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.94); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+.boss-aura-bronze::before   { box-shadow: 0 0 16px 4px #b8794455; background: radial-gradient(circle, #cd7f3266 0%, transparent 70%); }
+.boss-aura-silver::before   { box-shadow: 0 0 18px 5px #c0c0d055; background: radial-gradient(circle, #d6d6e666 0%, transparent 70%); }
+.boss-aura-gold::before     { box-shadow: 0 0 20px 6px #f1c40f66; background: radial-gradient(circle, #f1c40f77 0%, transparent 70%); }
+.boss-aura-arcane::before   { box-shadow: 0 0 22px 7px #8e44ad77; background: radial-gradient(circle, #b06ad477 0%, transparent 70%); }
+.boss-aura-crimson::before  { box-shadow: 0 0 26px 8px #d8434388; background: radial-gradient(circle, #e74c3c88 0%, transparent 70%); }
+.zone-card[class*="boss-aura-"] { position: relative; overflow: visible; }
 @keyframes monster-idle {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-4px) scale(1.03); }

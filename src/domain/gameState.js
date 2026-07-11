@@ -3,9 +3,9 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=31';
-import { createDefaultRtc } from './rtcConfig.js?v=31';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=31';
+import { createDefaultSkills } from './character.js?v=32';
+import { createDefaultRtc } from './rtcConfig.js?v=32';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=32';
 
 export function createDefaultState() {
   return {
@@ -41,6 +41,10 @@ export function createDefaultState() {
     // pra uma zona sob a regra antiga (só level+mundo) não pode ficar trancado
     // retroativamente.
     defeatedZoneBosses: [],
+    // tier atual do Boss Rush por zona (ver domain/bestiary.js: bossTierMultiplier/
+    // bossAuraClass) — começa em 1 assim que a zona é desbloqueada; vencer o tier
+    // atual sobe pro próximo, mais forte e com aura diferente (nunca regride).
+    bossTiers: {},
     hunting: false,
     taskKills: {},
     activeTask: null,

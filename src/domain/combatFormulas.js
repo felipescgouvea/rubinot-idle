@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=31';
-import { resolveEquippedItem } from './items.js?v=31';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=32';
+import { resolveEquippedItem } from './items.js?v=32';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -87,10 +87,13 @@ export function calcDamage(atk, def) {
 
 // Sorteia uma criatura da zona e escala seus atributos pelo nível do jogador —
 // zonas continuam relevantes por mais tempo em vez de ficarem obsoletas rápido.
-export function spawnMonsterInstance(zone, monsterCatalog, playerLevel) {
+// `bossMultiplier` (default 1, sem efeito na caçada normal) é só pro Boss
+// Rush — ver domain/bestiary.js: bossTierMultiplier — deixa o boss desafiado
+// de propósito mais forte que o mesmo bicho encontrado à toa numa zona comum.
+export function spawnMonsterInstance(zone, monsterCatalog, playerLevel, bossMultiplier = 1) {
   const monsterId = zone.monsters[Math.floor(Math.random() * zone.monsters.length)];
   const def = monsterCatalog[monsterId];
-  const scaleFactor = 1 + (playerLevel - 1) * 0.05;
+  const scaleFactor = (1 + (playerLevel - 1) * 0.05) * bossMultiplier;
   return {
     id: monsterId,
     defKey: monsterId,
@@ -99,9 +102,9 @@ export function spawnMonsterInstance(zone, monsterCatalog, playerLevel) {
     hp: Math.floor(def.hp * scaleFactor),
     maxHp: Math.floor(def.hp * scaleFactor),
     atk: Math.floor(def.atk * scaleFactor),
-    def: def.def,
+    def: Math.floor(def.def * bossMultiplier),
     xp: Math.floor(def.xp * scaleFactor),
-    gold: def.gold,
+    gold: def.gold.map(g => Math.floor(g * scaleFactor)),
     loot: def.loot,
   };
 }

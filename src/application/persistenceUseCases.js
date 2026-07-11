@@ -1,20 +1,20 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=31';
-import { createDefaultState } from '../domain/gameState.js?v=31';
-import { createDefaultSkills } from '../domain/character.js?v=31';
-import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=31';
-import { isSpellAvailable } from '../domain/spells.js?v=31';
-import { findOutfit } from '../domain/outfits.js?v=31';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=31';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=31';
-import { isRelicId } from '../domain/items.js?v=31';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=31';
-import { loadRawState, clearState } from '../infrastructure/storage.js?v=31';
-import { emit, EVENTS } from '../shared/eventBus.js?v=31';
-import { getMaxHp, getMaxMana } from './stats.js?v=31';
-import { gainXp } from './huntUseCases.js?v=31';
-import { checkBpTier } from './battlePassUseCases.js?v=31';
+import { G, replaceState } from './gameStore.js?v=32';
+import { createDefaultState } from '../domain/gameState.js?v=32';
+import { createDefaultSkills } from '../domain/character.js?v=32';
+import { createDefaultRtc, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=32';
+import { isSpellAvailable } from '../domain/spells.js?v=32';
+import { findOutfit } from '../domain/outfits.js?v=32';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=32';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=32';
+import { isRelicId } from '../domain/items.js?v=32';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=32';
+import { loadRawState, clearState } from '../infrastructure/storage.js?v=32';
+import { emit, EVENTS } from '../shared/eventBus.js?v=32';
+import { getMaxHp, getMaxMana } from './stats.js?v=32';
+import { gainXp } from './huntUseCases.js?v=32';
+import { checkBpTier } from './battlePassUseCases.js?v=32';
 
 export function loadGame() {
   const parsed = loadRawState();

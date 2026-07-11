@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="stylesheet" href="style.css?v=31" />
+  <link rel="stylesheet" href="style.css?v=32" />
 </head>
 <body>
   <div id="app">
@@ -33,6 +33,7 @@
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="bossrush">💀 Boss Rush</button>
       <button class="tab" data-tab="inventory">🎒 Inventário</button>
+      <button class="tab" data-tab="relics">💎 Relíquias</button>
       <button class="tab" data-tab="worlds">🌍 Mundos</button>
       <button class="tab" data-tab="battlepass">🎖️ Battle Pass</button>
       <button class="tab" data-tab="shop">🛒 Shop</button>
@@ -186,7 +187,13 @@
           <h3>🎒 Inventário</h3>
           <p class="muted">Clique num item para equipar, vender ou ver detalhes. O que estiver equipado aparece no card Equipamento da aba Caçada.</p>
           <div id="inventory-grid"></div>
-          <h3 style="margin-top:6px">💎 Relíquias</h3>
+        </div>
+      </section>
+
+      <!-- RELICS -->
+      <section id="tab-relics" class="panel">
+        <div class="card full-card">
+          <h3>💎 Relíquias</h3>
           <p class="muted">Itens com modificador de raridade, exclusivos de drop de boss (Caçada ou Boss Rush). Clique numa relíquia para equipar, vender ou ver detalhes.</p>
           <div id="relics-grid"></div>
         </div>
@@ -285,6 +292,6 @@
     <div id="notif-area"></div>
   </div>
 
-  <script type="module" src="src/main.js?v=31"></script>
+  <script type="module" src="src/main.js?v=32"></script>
 </body>
 </html>

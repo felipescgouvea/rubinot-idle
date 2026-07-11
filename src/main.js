@@ -4,43 +4,43 @@
 // dinamicamente via innerHTML) precisa chamar via onclick/onchange, e
 // dispara a sequência de inicialização do jogo.
 
-import { G } from './application/gameStore.js?v=31';
-import { VOCATIONS } from './domain/character.js?v=31';
-import { emit, EVENTS } from './shared/eventBus.js?v=31';
+import { G } from './application/gameStore.js?v=32';
+import { VOCATIONS } from './domain/character.js?v=32';
+import { emit, EVENTS } from './shared/eventBus.js?v=32';
 
 // application
-import { saveGame } from './application/saveGameUseCase.js?v=31';
-import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=31';
-import { selectVocation } from './application/characterUseCases.js?v=31';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=31';
-import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic } from './application/inventoryUseCases.js?v=31';
-import { startTask, cancelTask } from './application/taskUseCases.js?v=31';
-import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=31';
-import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=31';
-import { buyShopItem } from './application/shopUseCases.js?v=31';
-import { setRtcAttackSpell, setRtcAttackRune, setRtcHealSpell, setRtcHealPotion, setRtcThreshold } from './application/rtcUseCases.js?v=31';
-import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=31';
-import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=31';
-import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=31';
+import { saveGame } from './application/saveGameUseCase.js?v=32';
+import { loadGame, applyOfflineProgress, confirmReset } from './application/persistenceUseCases.js?v=32';
+import { selectVocation } from './application/characterUseCases.js?v=32';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=32';
+import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic } from './application/inventoryUseCases.js?v=32';
+import { startTask, cancelTask } from './application/taskUseCases.js?v=32';
+import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=32';
+import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=32';
+import { buyShopItem } from './application/shopUseCases.js?v=32';
+import { setRtcAttackSpell, setRtcAttackRune, setRtcHealSpell, setRtcHealPotion, setRtcThreshold } from './application/rtcUseCases.js?v=32';
+import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=32';
+import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=32';
+import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=32';
 
 // ui
-import { closeModal, wireSharedEvents } from './ui/shared.js?v=31';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents } from './ui/characterPanel.js?v=31';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=31';
-import { renderEquipmentSlots, openItemModal, openRelicModal, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=31';
-import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=31';
-import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=31';
-import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=31';
-import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=31';
-import { wireShopPanelEvents } from './ui/shopPanel.js?v=31';
-import { wireRtcPanelEvents, setRtcSubTab } from './ui/rtcPanel.js?v=31';
-import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=31';
-import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=31';
-import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=31';
-import { openZonePicker, pickZone } from './ui/zonePicker.js?v=31';
-import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=31';
-import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=31';
-import { wireTabs } from './ui/tabs.js?v=31';
+import { closeModal, wireSharedEvents } from './ui/shared.js?v=32';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents } from './ui/characterPanel.js?v=32';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=32';
+import { renderEquipmentSlots, openItemModal, openRelicModal, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=32';
+import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=32';
+import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=32';
+import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=32';
+import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=32';
+import { wireShopPanelEvents } from './ui/shopPanel.js?v=32';
+import { wireRtcPanelEvents, setRtcSubTab } from './ui/rtcPanel.js?v=32';
+import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=32';
+import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=32';
+import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=32';
+import { openZonePicker, pickZone } from './ui/zonePicker.js?v=32';
+import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=32';
+import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=32';
+import { wireTabs } from './ui/tabs.js?v=32';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();

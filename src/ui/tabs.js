@@ -1,23 +1,24 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=31';
-import { renderSkillsPanel } from './skillsPanel.js?v=31';
-import { renderArenaPanel } from './arenaPanel.js?v=31';
-import { renderInventory } from './inventoryAndEquipmentPanel.js?v=31';
-import { renderWorldsPanel } from './worldsPanel.js?v=31';
-import { renderBattlePassPanel } from './battlePassPanel.js?v=31';
-import { renderRtcPanel } from './rtcPanel.js?v=31';
-import { renderShopPanel } from './shopPanel.js?v=31';
-import { renderMarketPanel } from './marketPanel.js?v=31';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=31';
-import { renderBossRushPanel } from './bossRushPanel.js?v=31';
+import { renderTasksPanel } from './tasksPanel.js?v=32';
+import { renderSkillsPanel } from './skillsPanel.js?v=32';
+import { renderArenaPanel } from './arenaPanel.js?v=32';
+import { renderInventory, renderRelics } from './inventoryAndEquipmentPanel.js?v=32';
+import { renderWorldsPanel } from './worldsPanel.js?v=32';
+import { renderBattlePassPanel } from './battlePassPanel.js?v=32';
+import { renderRtcPanel } from './rtcPanel.js?v=32';
+import { renderShopPanel } from './shopPanel.js?v=32';
+import { renderMarketPanel } from './marketPanel.js?v=32';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=32';
+import { renderBossRushPanel } from './bossRushPanel.js?v=32';
 
 const RENDER_BY_TAB = {
   tasks: renderTasksPanel,
   skills: renderSkillsPanel,
   arena: renderArenaPanel,
   inventory: renderInventory,
+  relics: renderRelics,
   worlds: renderWorldsPanel,
   battlepass: renderBattlePassPanel,
   rtc: renderRtcPanel,

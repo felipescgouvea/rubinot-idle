@@ -38,6 +38,7 @@ export const EVENTS = {
   TASKS_PANEL: 'tasksPanel',
   ACTIVE_TASK: 'activeTask',
   ARENA_PANEL: 'arenaPanel',
+  BOSS_RUSH_PANEL: 'bossRushPanel',
   WORLDS_PANEL: 'worldsPanel',
   BATTLE_PASS_PANEL: 'battlePassPanel',
   SHOP_PANEL: 'shopPanel',

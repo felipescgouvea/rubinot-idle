@@ -16,7 +16,8 @@ export const ZONES = {
   spider_burrow: { name: 'Buraco de Aranhas', icon: '🕷️', minLevel: 9,  worldReq: 'auroria', monsters: ['bat', 'spider'], goldMult: 1.38, xpMult: 1.32, theme: ['#4a3a3a', '#201616'], boss: 'spider', requiresBossOf: 'wolf_trail' },
   elf_woods:     { name: 'Acampamento Dworc', icon: '🌀', minLevel: 10, worldReq: 'auroria', monsters: ['dworc'], goldMult: 1.4, xpMult: 1.35, theme: ['#3f7052', '#1e3d2b'], boss: 'dworc', requiresBossOf: 'spider_burrow' },
   old_graveyard: { name: 'Cemitério Antigo', icon: '💀', minLevel: 12, worldReq: 'auroria', monsters: ['skeleton', 'ghoul'], goldMult: 1.45, xpMult: 1.38, theme: ['#5a5560', '#211f28'], boss: 'ghoul', requiresBossOf: 'elf_woods' },
-  cyclops_camp:  { name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'minotaur'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops', requiresBossOf: 'old_graveyard' },
+  minotaur_den:  { name: 'Covil dos Minotauros', icon: '🐂', minLevel: 13, worldReq: 'auroria', monsters: ['minotaur', 'minotaur_archer', 'minotaur_mage', 'minotaur_guard'], goldMult: 1.48, xpMult: 1.39, theme: ['#7a5a3a', '#3a2818'], boss: 'minotaur_guard', requiresBossOf: 'old_graveyard' },
+  cyclops_camp:  { name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'juvenile_cyclops', 'cyclops_drone', 'cyclops_smith'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops_smith', requiresBossOf: 'minotaur_den' },
   amazon_camp:   { name: 'Acampamento Amazona', icon: '🏹', minLevel: 15, worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6, theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'cyclops_camp' },
   bandit_hideout:{ name: 'Esconderijo de Bandidos', icon: '🏴', minLevel: 17, worldReq: 'auroria', monsters: ['bandit', 'poacher'], goldMult: 1.9, xpMult: 1.7, theme: ['#6b5a3f', '#332a1c'], boss: 'poacher', requiresBossOf: 'amazon_camp' },
   scarab_desert: { name: 'Deserto dos Scarabs', icon: '🪲', minLevel: 18, worldReq: 'auroria', monsters: ['scarab', 'mutated_human'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'], boss: 'scarab', requiresBossOf: 'bandit_hideout' },
@@ -90,7 +91,13 @@ export const MONSTERS = {
   troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 7,  def: 3,  xp: 25,  gold: [2,6],   loot: [['bones',0.9],['leather_boots',0.12]] },
   orc:           { name: 'Orc', icon: '🗡️', hp: 70,  atk: 10, def: 4,  xp: 35,  gold: [3,8],   loot: [['orc_tooth',0.5],['studded_armor',0.06]] },
   cyclops:       { name: 'Cyclops', icon: '🗿', hp: 260, atk: 30, def: 10, xp: 150, gold: [10,30], loot: [['cyclops_toe',0.4],['halberd',0.04]] },
+  juvenile_cyclops:{ name: 'Juvenile Cyclops', icon: '🗿', hp: 220, atk: 22, def: 8,  xp: 120, gold: [8,24],  loot: [['cyclops_toe',0.3],['bones',0.4]] },
+  cyclops_drone: { name: 'Cyclops Drone', icon: '🗿', hp: 325, atk: 36, def: 12, xp: 200, gold: [12,34], loot: [['cyclops_toe',0.4],['studded_armor',0.05]] },
+  cyclops_smith: { name: 'Cyclops Smith', icon: '🗿', hp: 435, atk: 46, def: 15, xp: 255, gold: [16,42], loot: [['cyclops_toe',0.5],['halberd',0.05],['iron_helmet',0.05]] },
   minotaur:      { name: 'Minotaur', icon: '🐂', hp: 120, atk: 18, def: 6,  xp: 80,  gold: [5,15],  loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
+  minotaur_archer:{ name: 'Minotaur Archer', icon: '🐂', hp: 120, atk: 20, def: 5,  xp: 104, gold: [6,18],  loot: [['minotaur_horn',0.3],['power_bolt',0.4]] },
+  minotaur_mage: { name: 'Minotaur Mage', icon: '🐂', hp: 185, atk: 26, def: 7,  xp: 240, gold: [10,28], loot: [['minotaur_horn',0.4],['wand_of_vortex',0.02]] },
+  minotaur_guard:{ name: 'Minotaur Guard', icon: '🐂', hp: 220, atk: 28, def: 10, xp: 256, gold: [12,32], loot: [['minotaur_horn',0.5],['chain_armor',0.06],['studded_shield',0.04]] },
   amazon:        { name: 'Amazon', icon: '🏹', hp: 110, atk: 22, def: 5,  xp: 60,  gold: [4,10],  loot: [['amazon_armor',0.08],['power_bolt',0.5]] },
   valkyrie:      { name: 'Valkyrie', icon: '⚔️', hp: 190, atk: 30, def: 12, xp: 120, gold: [8,20],  loot: [['gold_coin',1.0]] },
   giant_spider:  { name: 'Giant Spider', icon: '🕷️', hp: 1300,atk: 75, def: 20, xp: 900, gold: [40,100], loot: [['spider_silk',0.4],['knight_armor',0.02],['plate_legs',0.05]] },
@@ -195,6 +202,24 @@ export const MONSTERS = {
 // quanto pro Boss Rush (ver application/bossRushUseCases.js). Não duplicar
 // essa lista em nenhum outro lugar: o boss de cada zona já é ZONES[id].boss.
 export const BOSS_MONSTER_IDS = new Set(Object.values(ZONES).map(z => z.boss));
+
+// Multiplicador de stats do Boss Rush: tier 1 já é bem mais forte que um
+// encontro normal do mesmo bicho na zona (1.8x), e cada tier vencido soma
+// +35% em cima do anterior — é o que torna o Boss Rush uma escada infinita
+// de dificuldade em vez de repetir a mesma luta pra sempre. Sem teto de
+// propósito (ver ui/bossRushPanel.js pro texto "tier N").
+export function bossTierMultiplier(tier) {
+  return 1.8 * Math.pow(1.35, Math.max(1, tier) - 1);
+}
+
+// Paleta de aura por tier — cores progressivamente mais intensas (bronze →
+// prata → ouro → arcano → carmesim), repetindo/intensificando a carmesim a
+// partir do tier 5 em diante pra não precisar de uma paleta infinita.
+const BOSS_AURA_TIERS = ['bronze', 'silver', 'gold', 'arcane', 'crimson'];
+export function bossAuraClass(tier) {
+  const idx = Math.min(BOSS_AURA_TIERS.length - 1, Math.max(1, tier) - 1);
+  return `boss-aura-${BOSS_AURA_TIERS[idx]}`;
+}
 
 // Uma zona com requiresBossOf só abre depois que o boss da zona anterior da
 // cadeia morreu ≥1x (ver ZONES[id].requiresBossOf/.boss) — em cima do gate de

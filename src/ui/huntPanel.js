@@ -1,14 +1,14 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=31';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=31';
-import { MONSTERS } from '../domain/bestiary.js?v=31';
-import { ITEMS } from '../domain/items.js?v=31';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=31';
-import { on, EVENTS } from '../shared/eventBus.js?v=31';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=31';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=31';
+import { G } from '../application/gameStore.js?v=32';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=32';
+import { MONSTERS } from '../domain/bestiary.js?v=32';
+import { ITEMS } from '../domain/items.js?v=32';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=32';
+import { on, EVENTS } from '../shared/eventBus.js?v=32';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=32';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=32';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -25,7 +25,14 @@ export function zoneIconImg(zone, cls = '') {
   return monsterSpriteImg(zone.monsters[0], cls);
 }
 
-export function renderMonsterDisplay(hit = false, killed = null) {
+function flashSpellEffect(wrap, spellElement) {
+  if (!wrap || !spellElement) return;
+  [...wrap.classList].filter(c => c.startsWith('spell-')).forEach(c => wrap.classList.remove(c));
+  void wrap.offsetWidth;
+  wrap.classList.add(`spell-${spellElement}`);
+}
+
+export function renderMonsterDisplay(hit = false, killed = null, spellElement = null, bossAura = null) {
   const el = document.getElementById('monster-display');
   if (!el) return;
   const currentMonster = getCurrentMonster();
@@ -68,11 +75,12 @@ export function renderMonsterDisplay(hit = false, killed = null) {
     const wrap = el.querySelector('.monster-sprite-wrap');
     wrap.classList.remove('dead');
     if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
+    flashSpellEffect(wrap, spellElement);
     return;
   }
   el.dataset.monsterId = currentMonster.defKey;
   el.innerHTML = `
-    <div class="monster-sprite-wrap${hit ? ' hit' : ''}">${monsterSpriteImg(currentMonster.defKey, 'monster-sprite')}</div>
+    <div class="monster-sprite-wrap${hit ? ' hit' : ''}${bossAura ? ` ${bossAura}` : ''}">${monsterSpriteImg(currentMonster.defKey, 'monster-sprite')}</div>
     <div class="monster-name">${currentMonster.name}</div>
     <div class="monster-hp-track">
       <div class="monster-hp-fill" style="width:${pct}%"></div>
@@ -175,7 +183,7 @@ function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes,
 }
 
 export function wireHuntPanelEvents() {
-  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed } = {}) => renderMonsterDisplay(hit, killed));
+  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => renderMonsterDisplay(hit, killed, spellElement, bossAura));
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);

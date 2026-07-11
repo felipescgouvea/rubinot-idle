@@ -3,22 +3,39 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=31';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS } from '../domain/bestiary.js?v=31';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=31';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=31';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=31';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=31';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=31';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=31';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=31';
-import { MONSTERS } from '../domain/bestiary.js?v=31';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=31';
-import { emit, EVENTS } from '../shared/eventBus.js?v=31';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=31';
-import { trainSkill } from './skillUseCases.js?v=31';
-import { addItemToInventory } from './inventoryCore.js?v=31';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=31';
+import { G } from './gameStore.js?v=32';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=32';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=32';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=32';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=32';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=32';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=32';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=32';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=32';
+import { MONSTERS } from '../domain/bestiary.js?v=32';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=32';
+import { emit, EVENTS } from '../shared/eventBus.js?v=32';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=32';
+import { trainSkill } from './skillUseCases.js?v=32';
+import { addItemToInventory } from './inventoryCore.js?v=32';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=32';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=32';
+
+// Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
+// outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
+// direto na infraestrutura porque a application não pode importar de ui/*.js
+// (ver ui/shared.js: itemIconImg/monsterSpriteImg, que fazem a mesma coisa
+// pro resto da UI — duplicado de propósito, não uma dependência cruzada).
+function itemLogIcon(itemId) {
+  const item = ITEMS[itemId];
+  return `<img src="${spriteUrl(itemSpriteFile(itemId))}" alt="${item.name}" class="inline-icon"
+    onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
+}
+function monsterLogIcon(monsterId) {
+  const m = MONSTERS[monsterId];
+  return `<img src="${spriteUrl(monsterSpriteFile(monsterId, m))}" alt="${m.name}" class="inline-icon"
+    onerror="this.outerHTML='<span>${m.icon}</span>'" />`;
+}
 
 let huntInterval = null;
 let regenInterval = null;
@@ -65,8 +82,8 @@ export function startHunt() {
   G.hunting = true;
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
   emit(EVENTS.LOG, bossOnly
-    ? `<span class="log-info">💀 Boss Rush: desafiando ${zone.icon} ${zone.name}...</span>`
-    : `<span class="log-info">🗺️ Entrando em ${zone.icon} ${zone.name}...</span>`);
+    ? `<span class="log-info">💀 Boss Rush: desafiando ${monsterLogIcon(zone.boss)} ${zone.name}...</span>`
+    : `<span class="log-info">🗺️ Entrando em ${monsterLogIcon(zone.monsters[0])} ${zone.name}...</span>`);
   huntInterval = setInterval(doHuntTick, Math.max(400, 1200 / getSpd()));
 }
 
@@ -87,9 +104,16 @@ export function doHuntTick() {
     // spawnMonsterInstance (a caçada comum continua sorteando o elenco
     // inteiro normalmente) — ver setBossOnlyMode()/bossRushUseCases.js.
     const spawnZone = bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
-    currentMonster = spawnMonsterInstance(spawnZone, MONSTERS, G.level);
-    emit(EVENTS.LOG, `${currentMonster.icon} <span class="log-info">${currentMonster.name} apareceu!</span>`);
-    emit(EVENTS.MONSTER_DISPLAY, {});
+    // Boss Rush: o boss desafiado de propósito é mais forte que o mesmo bicho
+    // encontrado à toa numa zona comum, e escala por tier (ver domain/bestiary.js:
+    // bossTierMultiplier) — vencer o tier atual sobe pro próximo, mais forte.
+    const bossTier = bossOnly ? (G.bossTiers[G.activeZone] || 1) : 1;
+    const bossMult = bossOnly ? bossTierMultiplier(bossTier) : 1;
+    currentMonster = spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult);
+    emit(EVENTS.LOG, bossOnly
+      ? `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} (Tier ${bossTier}) apareceu!</span>`
+      : `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} apareceu!</span>`);
+    emit(EVENTS.MONSTER_DISPLAY, { bossAura: bossOnly ? bossAuraClass(bossTier) : null });
     return; // o monstro aparece neste tick; o combate começa no próximo
   }
 
@@ -98,6 +122,7 @@ export function doHuntTick() {
 
   // Player attacks monster
   let playerDmg = calcDamage(getAtk(), currentMonster.def);
+  let spellElement = null;
   if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
     // Ataque automático por runa (RTC): substitui o golpe normal, não treina skill —
     // é um item pré-carregado, não uma habilidade viva do personagem.
@@ -114,6 +139,7 @@ export function doHuntTick() {
       G.mana -= atkSpell.mana;
       trainSkill('magic', atkSpell.mana * voc.magicMult);
       emit(EVENTS.LOG, `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`);
+      spellElement = atkSpell.element;
     }
     if (voc.attackSkill !== 'magic') {
       // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
@@ -124,12 +150,13 @@ export function doHuntTick() {
       playerDmg = Math.floor(playerDmg * 1.3);
       G.mana -= 8;
       trainSkill('magic', 8 * voc.magicMult);
+      spellElement = 'arcane';
     }
   }
   currentMonster.hp -= playerDmg;
   emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${playerDmg}</span> de dano ao ${currentMonster.name}.`);
   emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
-  emit(EVENTS.MONSTER_DISPLAY, { hit: true });
+  emit(EVENTS.MONSTER_DISPLAY, { hit: true, spellElement });
 
   if (currentMonster.hp <= 0) {
     resolveMonsterKill(zone);
@@ -154,6 +181,7 @@ export function doHuntTick() {
     G.mana -= healSpell.mana;
     trainSkill('magic', healSpell.mana * voc.magicMult);
     emit(EVENTS.LOG, `💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`);
+    emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
   }
 
   // RTC — Potion Healing: cura automática por poção do inventário, independente da
@@ -164,7 +192,7 @@ export function doHuntTick() {
     G.hp = Math.min(getMaxHp(), G.hp + potion.heal);
     G.inventory[G.rtc.healPotion]--;
     if (G.inventory[G.rtc.healPotion] <= 0) delete G.inventory[G.rtc.healPotion];
-    emit(EVENTS.LOG, `${potion.icon} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`);
+    emit(EVENTS.LOG, `${itemLogIcon(G.rtc.healPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`);
     emit(EVENTS.INVENTORY);
   }
 
@@ -219,7 +247,7 @@ export function resolveMonsterKill(zone) {
     if (Math.random() < chance + boosts.loot) {
       addItemToInventory(itemId);
       const item = ITEMS[itemId];
-      lootLine.push(`${item.icon} ${item.name}`);
+      lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
     }
   });
   if (lootLine.length > 0) emit(EVENTS.LOG, `<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
@@ -264,6 +292,17 @@ export function resolveMonsterKill(zone) {
     G.defeatedZoneBosses.push(G.activeZone);
     emit(EVENTS.NOTIFY, { msg: '🏆 Boss da zona derrotado! Nova zona desbloqueada.', type: 'success' });
     emit(EVENTS.ZONE_PICKER);
+  }
+
+  // Boss Rush: vencer o tier atual desbloqueia o próximo, mais forte e com
+  // aura diferente (ver domain/bestiary.js: bossTierMultiplier/bossAuraClass) —
+  // é a "escada" de dificuldade infinita do Boss Rush, nunca some/regride.
+  if (isBossOnlyHunt() && killedId === zone.boss && G.activeZone) {
+    G.bossTiers = G.bossTiers || {};
+    const nextTier = (G.bossTiers[G.activeZone] || 1) + 1;
+    G.bossTiers[G.activeZone] = nextTier;
+    emit(EVENTS.NOTIFY, { msg: `💀 ${currentMonster.name} Tier ${nextTier - 1} derrotado! Tier ${nextTier} desbloqueado.`, type: 'success' });
+    emit(EVENTS.BOSS_RUSH_PANEL);
   }
 
   currentMonster = null;
