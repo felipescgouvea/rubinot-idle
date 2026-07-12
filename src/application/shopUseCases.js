@@ -1,12 +1,12 @@
-import { G } from './gameStore.js?v=63';
-import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=63';
-import { ITEMS } from '../domain/items.js?v=63';
-import { emit, EVENTS } from '../shared/eventBus.js?v=63';
-import { getMaxHp, getMaxMana } from './stats.js?v=63';
-import { addItemToInventory } from './inventoryCore.js?v=63';
-import { saveGame } from './saveGameUseCase.js?v=63';
+import { G } from './gameStore.js?v=64';
+import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=64';
+import { ITEMS } from '../domain/items.js?v=64';
+import { emit, EVENTS } from '../shared/eventBus.js?v=64';
+import { getMaxHp, getMaxMana } from './stats.js?v=64';
+import { addItemToInventory } from './inventoryCore.js?v=64';
+import { saveGame } from './saveGameUseCase.js?v=64';
 
-export function buyShopItem(id) {
+export function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);
   if (!s) return;
 
@@ -18,9 +18,16 @@ export function buyShopItem(id) {
     return;
   }
 
+  // Só consumíveis empilháveis (poções/runas) podem ser comprados em quantidade;
+  // equipamento/boost/refill/outfit são sempre 1.
+  const item = s.itemId ? ITEMS[s.itemId] : null;
+  const isBulk = s.type === 'item' && item && (item.type === 'potion' || item.type === 'rune');
+  const count = isBulk ? Math.max(1, Math.min(9999, Math.floor(Number(qty) || 1))) : 1;
+  const total = s.price * count;
+
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
-  if (balance < s.price) { emit(EVENTS.NOTIFY, { msg: 'Saldo insuficiente.', type: 'error' }); return; }
-  if (s.currency === 'rubini') G.rubini -= s.price; else G.gold -= s.price;
+  if (balance < total) { emit(EVENTS.NOTIFY, { msg: 'Saldo insuficiente.', type: 'error' }); return; }
+  if (s.currency === 'rubini') G.rubini -= total; else G.gold -= total;
 
   if (s.type === 'boost') {
     const now = Date.now();
@@ -32,8 +39,8 @@ export function buyShopItem(id) {
     G.mana = getMaxMana();
     emit(EVENTS.NOTIFY, { msg: '🧪 HP e mana restaurados!', type: 'success' });
   } else if (s.type === 'item') {
-    addItemToInventory(s.itemId);
-    emit(EVENTS.NOTIFY, { msg: `${s.icon} ${ITEMS[s.itemId].name} comprado! Veja no inventário.`, type: 'success' });
+    for (let i = 0; i < count; i++) addItemToInventory(s.itemId);
+    emit(EVENTS.NOTIFY, { msg: `${count}× ${ITEMS[s.itemId].name} comprado(s)! Veja no inventário.`, type: 'success' });
   }
 
   emit(EVENTS.SHOP_PANEL);

@@ -1737,6 +1737,16 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #boosted-card .boosted-sprite-img { max-height: 24px; max-width: 24px; }
 #boosted-card .boosted-name { font-size: 8px; line-height: 1.05; }
 
+/* Seletor de quantidade na loja (poções/runas): input number com setas ao lado do Comprar */
+.shop-buy-row { display: flex; gap: 6px; align-items: stretch; }
+.shop-buy-row .skill-upgrade-btn { flex: 1; }
+.shop-qty {
+  width: 58px; flex: none; padding: 6px 6px;
+  border: 1px solid var(--line-soft); border-radius: 6px;
+  text-align: center; font-weight: 700; font-size: 13px;
+  color: var(--ink); background: #fff;
+}
+
 /* ============ BAG (janela do inventário abre fixa à direita) ============ */
 #backpack-inventory-card {
   position: fixed;

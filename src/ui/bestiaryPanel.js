@@ -4,20 +4,20 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=63';
-import { MONSTERS } from '../domain/bestiary.js?v=63';
+import { G } from '../application/gameStore.js?v=64';
+import { MONSTERS } from '../domain/bestiary.js?v=64';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, isPreyActive,
-} from '../domain/prey.js?v=63';
+} from '../domain/prey.js?v=64';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=63';
-import { on, EVENTS } from '../shared/eventBus.js?v=63';
-import { openModal, closeModal } from './shared.js?v=63';
-import { monsterSpriteImg } from './huntPanel.js?v=63';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=63';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=63';
+} from '../domain/charms.js?v=64';
+import { on, EVENTS } from '../shared/eventBus.js?v=64';
+import { openModal, closeModal } from './shared.js?v=64';
+import { monsterSpriteImg } from './huntPanel.js?v=64';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=64';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=64';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.

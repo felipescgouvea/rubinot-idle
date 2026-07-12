@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=63';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=63';
-import { ITEMS } from '../domain/items.js?v=63';
-import { on, EVENTS } from '../shared/eventBus.js?v=63';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=63';
+import { G } from '../application/gameStore.js?v=64';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=64';
+import { ITEMS } from '../domain/items.js?v=64';
+import { on, EVENTS } from '../shared/eventBus.js?v=64';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=64';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -31,16 +31,26 @@ function renderShopCard(s) {
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const statLine = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
   const iconHtml = shopIconHtml(s);
+  // Poções/runas podem ser compradas em quantidade: um seletor (input number,
+  // com setas/scroll) ao lado do Comprar. Equipamento/boost/outfit compram 1.
+  const isBulk = s.type === 'item' && item && (item.type === 'potion' || item.type === 'rune');
+  const buyArea = isBulk
+    ? `<div class="shop-buy-row">
+        <input type="number" class="shop-qty" min="1" value="1" title="Quantidade" onclick="event.stopPropagation()" />
+        <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}', this.previousElementSibling.value)" ${!canAfford ? 'disabled' : ''}>
+          ${canAfford ? 'Comprar' : 'Saldo insuficiente'}
+        </button>
+      </div>`
+    : `<button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')" ${(!canAfford && !owned) ? 'disabled' : ''}>
+        ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : isReal ? 'Comprar' : canAfford ? 'Comprar' : 'Saldo insuficiente'}
+      </button>`;
   return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
     <div class="skill-card-header">
       <span class="skill-card-name">${iconHtml} ${s.name}</span>
       <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
     </div>
     <div class="skill-card-desc">${s.desc || statLine || ''}</div>
-    <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')"
-      ${(!canAfford && !owned) ? 'disabled' : ''}>
-      ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : isReal ? 'Comprar' : canAfford ? 'Comprar' : 'Saldo insuficiente'}
-    </button>
+    ${buyArea}
   </div>`;
 }
 
