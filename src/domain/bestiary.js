@@ -85,48 +85,48 @@ export const ZONES = {
 export const MONSTERS = {
   // --- Bestiário clássico de Tibia (o mundo do RubinOT) ---
   cave_rat:      { name: 'Cave Rat', icon: '🐀', hp: 30,  atk: 10,  def: 1,  xp: 10,   gold: [0,2],   loot: [['cheese',0.4]] },
-  goblin:        { name: 'Goblin', icon: '👺', hp: 50,  atk: 10,  def: 2,  xp: 25,  gold: [1,4],   loot: [['goblin_ear',0.5],['bones',0.3]] },
+  goblin:        { name: 'Goblin', icon: '👺', hp: 50,  atk: 10,  def: 2,  xp: 25,  gold: [1,4],   loot: [['goblin_ear',0.5],['bones',0.3]], spells: [{ element: 'physical', min: 0, max: 25 }] }
   dwarf:         { name: 'Dwarf', icon: '⛏️', hp: 90,  atk: 30, def: 5,  xp: 45,  gold: [3,10],  loot: [['dwarven_ring',0.02],['studded_armor',0.05]] },
-  dwarf_soldier: { name: 'Dwarf Soldier', icon: '⛏️', hp: 135, atk: 70, def: 10, xp: 75,  gold: [5,16],  loot: [['studded_armor',0.06],['halberd',0.02]] },
-  dwarf_geomancer:{ name: 'Dwarf Geomancer', icon: '🪄', hp: 380, atk: 100, def: 8,  xp: 140, gold: [8,25],  loot: [['wand_of_vortex',0.03],['dwarven_ring',0.02]] },
+  dwarf_soldier: { name: 'Dwarf Soldier', icon: '⛏️', hp: 135, atk: 70, def: 10, xp: 75,  gold: [5,16],  loot: [['studded_armor',0.06],['halberd',0.02]], spells: [{ element: 'physical', min: 0, max: 60 }] }
+  dwarf_geomancer:{ name: 'Dwarf Geomancer', icon: '🪄', hp: 380, atk: 100, def: 8,  xp: 140, gold: [8,25],  loot: [['wand_of_vortex',0.03],['dwarven_ring',0.02]], spells: [{ element: 'earth', min: 50, max: 110 }, { element: 'death', min: 25, max: 80 }] }
   dwarf_guard:   { name: 'Dwarf Guard', icon: '🛡️', hp: 245, atk: 140, def: 18, xp: 165, gold: [10,30], loot: [['dwarven_ring',0.03],['halberd',0.04]] },
-  elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]] },
-  dworc:         { name: 'Dworc Voodoomaster', icon: '🌀', hp: 80,  atk: 20, def: 4,  xp: 55,  gold: [2,8],   loot: [['orc_tooth',0.4],['spider_fangs',0.2]] },
-  scarab:        { name: 'Scarab', icon: '🪲', hp: 320, atk: 75, def: 12, xp: 120, gold: [8,25],  loot: [['scarab_coin',0.3],['meat',0.4]] },
-  mutated_human: { name: 'Mutated Human', icon: '🧟', hp: 240, atk: 90, def: 8,  xp: 150, gold: [10,28], loot: [['mutated_flesh',0.5],['studded_armor',0.04]] },
-  frost_dragon:  { name: 'Frost Dragon', icon: '🧊', hp: 1800,atk: 225,def: 35, xp: 2100,gold: [90,190], loot: [['ice_rapier',0.02],['dragon_scale',0.4],['life_crystal',0.3]] },
-  warlock:       { name: 'Warlock', icon: '🧙', hp: 3500,atk: 130,def: 40, xp: 4000,gold: [140,280],loot: [['skull_staff',0.03],['demon_dust',0.3],['crystal_coin',0.03],['boots_of_haste',0.004]] },
-  bonebeast:     { name: 'Bonebeast', icon: '🦴', hp: 515, atk: 200, def: 22, xp: 580, gold: [30,80],  loot: [['bones',0.9],['plate_legs',0.03]] },
-  banshee:       { name: 'Banshee', icon: '👤', hp: 1000,atk: 100, def: 28, xp: 900, gold: [50,120], loot: [['life_crystal',0.2],['death_ring',0.01]] },
-  vampire:       { name: 'Vampire', icon: '🧛', hp: 475, atk: 150, def: 20, xp: 305, gold: [25,70],  loot: [['vampire_dust',0.4],['strange_helmet',0.01]] },
-  grim_reaper:   { name: 'Grim Reaper', icon: '⚰️', hp: 3900,atk: 320,def: 45, xp: 5500,gold: [150,320],loot: [['demon_dust',0.5],['death_ring',0.03],['crystal_coin',0.05]] },
-  fury:          { name: 'Fury', icon: '😡', hp: 4100,atk: 510,def: 42, xp: 4000,gold: [150,300],loot: [['demon_dust',0.4],['titan_axe',0.005],['platinum_coin',0.6]] },
-  hellhound:     { name: 'Hellhound', icon: '🐕', hp: 7500,atk: 520,def: 50, xp: 5440,gold: [180,380],loot: [['hellhound_slobber',0.3],['demon_dust',0.5],['crystal_coin',0.08]] },
-  plaguesmith:   { name: 'Plaguesmith', icon: '🔨', hp: 8250,atk: 539,def: 55, xp: 3800,gold: [160,340],loot: [['behemoth_claw',0.2],['giant_sword',0.008],['platinum_coin',0.7]] },
+  elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 25 }] }
+  dworc:         { name: 'Dworc Voodoomaster', icon: '🌀', hp: 80,  atk: 20, def: 4,  xp: 55,  gold: [2,8],   loot: [['orc_tooth',0.4],['spider_fangs',0.2]], spells: [{ element: 'death', min: 0, max: 40 }, { element: 'earth', min: 6, max: 18 }] }
+  scarab:        { name: 'Scarab', icon: '🪲', hp: 320, atk: 75, def: 12, xp: 120, gold: [8,25],  loot: [['scarab_coin',0.3],['meat',0.4]], spells: [{ element: 'earth', min: 0, max: 35 }] }
+  mutated_human: { name: 'Mutated Human', icon: '🧟', hp: 240, atk: 90, def: 8,  xp: 150, gold: [10,28], loot: [['mutated_flesh',0.5],['studded_armor',0.04]], spells: [{ element: 'death', min: 50, max: 60 }, { element: 'earth', min: 190, max: 280 }] }
+  frost_dragon:  { name: 'Frost Dragon', icon: '🧊', hp: 1800,atk: 225,def: 35, xp: 2100,gold: [90,190], loot: [['ice_rapier',0.02],['dragon_scale',0.4],['life_crystal',0.3]], spells: [{ element: 'death', min: 175, max: 380 }, { element: 'ice', min: 100, max: 240 }, { element: 'physical', min: 0, max: 220 }] }
+  warlock:       { name: 'Warlock', icon: '🧙', hp: 3500,atk: 130,def: 40, xp: 4000,gold: [140,280],loot: [['skull_staff',0.03],['demon_dust',0.3],['crystal_coin',0.03],['boots_of_haste',0.004]], spells: [{ element: 'energy', min: 150, max: 230 }, { element: 'fire', min: 50, max: 180 }, { element: 'death', min: 0, max: 120 }] }
+  bonebeast:     { name: 'Bonebeast', icon: '🦴', hp: 515, atk: 200, def: 22, xp: 580, gold: [30,80],  loot: [['bones',0.9],['plate_legs',0.03]], spells: [{ element: 'earth', min: 50, max: 90 }, { element: 'death', min: 25, max: 47 }] }
+  banshee:       { name: 'Banshee', icon: '👤', hp: 1000,atk: 100, def: 28, xp: 900, gold: [50,120], loot: [['life_crystal',0.2],['death_ring',0.01]], spells: [{ element: 'death', min: 55, max: 350 }] }
+  vampire:       { name: 'Vampire', icon: '🧛', hp: 475, atk: 150, def: 20, xp: 305, gold: [25,70],  loot: [['vampire_dust',0.4],['strange_helmet',0.01]], spells: [{ element: 'death', min: 50, max: 200 }] }
+  grim_reaper:   { name: 'Grim Reaper', icon: '⚰️', hp: 3900,atk: 320,def: 45, xp: 5500,gold: [150,320],loot: [['demon_dust',0.5],['death_ring',0.03],['crystal_coin',0.05]], spells: [{ element: 'physical', min: 0, max: 300 }, { element: 'death', min: 350, max: 720 }] }
+  fury:          { name: 'Fury', icon: '😡', hp: 4100,atk: 510,def: 42, xp: 4000,gold: [150,300],loot: [['demon_dust',0.4],['titan_axe',0.005],['platinum_coin',0.6]], spells: [{ element: 'fire', min: 200, max: 300 }, { element: 'death', min: 120, max: 700 }] }
+  hellhound:     { name: 'Hellhound', icon: '🐕', hp: 7500,atk: 520,def: 50, xp: 5440,gold: [180,380],loot: [['hellhound_slobber',0.3],['demon_dust',0.5],['crystal_coin',0.08]], spells: [{ element: 'earth', min: 300, max: 700 }, { element: 'death', min: 350, max: 976 }, { element: 'fire', min: 350, max: 660 }] }
+  plaguesmith:   { name: 'Plaguesmith', icon: '🔨', hp: 8250,atk: 539,def: 55, xp: 3800,gold: [160,340],loot: [['behemoth_claw',0.2],['giant_sword',0.008],['platinum_coin',0.7]], spells: [{ element: 'earth', min: 100, max: 350 }] }
   rotworm:       { name: 'Rotworm', icon: '🪱', hp: 65,  atk: 40,  def: 2,  xp: 40,  gold: [1,5],   loot: [['meat',0.7],['worm_dirt',0.5]] },
   troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 15,  def: 3,  xp: 20,  gold: [2,6],   loot: [['bones',0.9],['leather_boots',0.12]] },
   orc:           { name: 'Orc', icon: '🗡️', hp: 70,  atk: 35, def: 4,  xp: 25,  gold: [3,8],   loot: [['orc_tooth',0.5],['studded_armor',0.06]] },
   cyclops:       { name: 'Cyclops', icon: '🗿', hp: 260, atk: 105, def: 10, xp: 150, gold: [10,30], loot: [['cyclops_toe',0.4],['halberd',0.04]] },
   juvenile_cyclops:{ name: 'Juvenile Cyclops', icon: '🗿', hp: 220, atk: 22, def: 8,  xp: 120, gold: [8,24],  loot: [['cyclops_toe',0.3],['bones',0.4]] },
-  cyclops_drone: { name: 'Cyclops Drone', icon: '🗿', hp: 325, atk: 105, def: 12, xp: 200, gold: [12,34], loot: [['cyclops_toe',0.4],['studded_armor',0.05]] },
-  cyclops_smith: { name: 'Cyclops Smith', icon: '🗿', hp: 435, atk: 150, def: 15, xp: 255, gold: [16,42], loot: [['cyclops_toe',0.5],['halberd',0.05],['iron_helmet',0.05]] },
+  cyclops_drone: { name: 'Cyclops Drone', icon: '🗿', hp: 325, atk: 105, def: 12, xp: 200, gold: [12,34], loot: [['cyclops_toe',0.4],['studded_armor',0.05]], spells: [{ element: 'physical', min: 0, max: 80 }] }
+  cyclops_smith: { name: 'Cyclops Smith', icon: '🗿', hp: 435, atk: 150, def: 15, xp: 255, gold: [16,42], loot: [['cyclops_toe',0.5],['halberd',0.05],['iron_helmet',0.05]], spells: [{ element: 'physical', min: 0, max: 70 }] }
   minotaur:      { name: 'Minotaur', icon: '🐂', hp: 100, atk: 45, def: 6,  xp: 50,  gold: [5,15],  loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
-  minotaur_archer:{ name: 'Minotaur Archer', icon: '🐂', hp: 100, atk: 25, def: 5,  xp: 65, gold: [6,18],  loot: [['minotaur_horn',0.3],['power_bolt',0.4]] },
-  minotaur_mage: { name: 'Minotaur Mage', icon: '🐂', hp: 155, atk: 20, def: 7,  xp: 150, gold: [10,28], loot: [['minotaur_horn',0.4],['wand_of_vortex',0.02]] },
+  minotaur_archer:{ name: 'Minotaur Archer', icon: '🐂', hp: 100, atk: 25, def: 5,  xp: 65, gold: [6,18],  loot: [['minotaur_horn',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 80 }] }
+  minotaur_mage: { name: 'Minotaur Mage', icon: '🐂', hp: 155, atk: 20, def: 7,  xp: 150, gold: [10,28], loot: [['minotaur_horn',0.4],['wand_of_vortex',0.02]], spells: [{ element: 'energy', min: 20, max: 58 }, { element: 'fire', min: 50, max: 105 }] }
   minotaur_guard:{ name: 'Minotaur Guard', icon: '🐂', hp: 185, atk: 100, def: 10, xp: 160, gold: [12,32], loot: [['minotaur_horn',0.5],['chain_armor',0.06],['studded_shield',0.04]] },
-  amazon:        { name: 'Amazon', icon: '🏹', hp: 110, atk: 45, def: 5,  xp: 60,  gold: [4,10],  loot: [['amazon_armor',0.08],['power_bolt',0.5]] },
-  valkyrie:      { name: 'Valkyrie', icon: '⚔️', hp: 190, atk: 70, def: 12, xp: 85, gold: [8,20],  loot: [['gold_coin',1.0]] },
-  giant_spider:  { name: 'Giant Spider', icon: '🕷️', hp: 1300,atk: 300, def: 20, xp: 900, gold: [40,100], loot: [['spider_silk',0.4],['knight_armor',0.02],['plate_legs',0.05]] },
+  amazon:        { name: 'Amazon', icon: '🏹', hp: 110, atk: 45, def: 5,  xp: 60,  gold: [4,10],  loot: [['amazon_armor',0.08],['power_bolt',0.5]], spells: [{ element: 'physical', min: 0, max: 40 }] }
+  valkyrie:      { name: 'Valkyrie', icon: '⚔️', hp: 190, atk: 70, def: 12, xp: 85, gold: [8,20],  loot: [['gold_coin',1.0]], spells: [{ element: 'physical', min: 0, max: 50 }] }
+  giant_spider:  { name: 'Giant Spider', icon: '🕷️', hp: 1300,atk: 300, def: 20, xp: 900, gold: [40,100], loot: [['spider_silk',0.4],['knight_armor',0.02],['plate_legs',0.05]], spells: [{ element: 'earth', min: 40, max: 70 }] }
   tarantula:     { name: 'Tarantula', icon: '🕸️', hp: 225, atk: 90, def: 10, xp: 120, gold: [8,25],  loot: [['spider_fangs',0.6]] },
-  dragon:        { name: 'Dragon', icon: '🐉', hp: 1000,atk: 120, def: 25, xp: 700, gold: [40,105], loot: [['dragon_scale',0.6],['dragon_ham',0.8],['dragonbone_staff',0.02]] },
-  dragon_lord:   { name: 'Dragon Lord', icon: '🔴', hp: 1900,atk: 230,def: 35, xp: 2100,gold: [100,200],loot: [['royal_helmet',0.01],['life_crystal',0.5]] },
-  hydra:         { name: 'Hydra', icon: '🐍', hp: 2350,atk: 270,def: 40, xp: 2100,gold: [100,250],loot: [['hydra_head',0.3],['hydra_egg',0.05],['medusa_shield',0.01]] },
-  medusa:        { name: 'Medusa', icon: '🐍', hp: 4500,atk: 450,def: 45, xp: 4050,gold: [150,300],loot: [['strand_of_medusa_hair',0.2],['titan_axe',0.008]] },
-  lich:          { name: 'Lich', icon: '💀', hp: 880, atk: 75,def: 30, xp: 900, gold: [80,160], loot: [['death_ring',0.02]] },
-  undead_dragon: { name: 'Undead Dragon', icon: '☠️', hp: 8350,atk: 480,def: 50, xp: 7500,gold: [200,400],loot: [['necromancer_shield',0.02],['dragon_scale_legs',0.005]] },
-  behemoth:      { name: 'Behemoth', icon: '🦣', hp: 4000,atk: 455,def: 45, xp: 2500,gold: [150,300],loot: [['behemoth_claw',0.3],['giant_sword',0.015],['crystal_coin',0.05]] },
-  demon:         { name: 'Demon', icon: '😈', hp: 8200,atk: 500,def: 55, xp: 6000,gold: [200,400],loot: [['demon_dust',0.5],['demon_shield',0.01],['magic_plate_armor',0.005],['platinum_coin',0.8]] },
-  juggernaut:    { name: 'Juggernaut', icon: '💥', hp: 20000,atk: 1470,def: 65, xp: 11200,gold: [300,600],loot: [['titan_axe',0.01],['crystal_coin',0.15]] },
+  dragon:        { name: 'Dragon', icon: '🐉', hp: 1000,atk: 120, def: 25, xp: 700, gold: [40,105], loot: [['dragon_scale',0.6],['dragon_ham',0.8],['dragonbone_staff',0.02]], spells: [{ element: 'fire', min: 100, max: 170 }] }
+  dragon_lord:   { name: 'Dragon Lord', icon: '🔴', hp: 1900,atk: 230,def: 35, xp: 2100,gold: [100,200],loot: [['royal_helmet',0.01],['life_crystal',0.5]], spells: [{ element: 'fire', min: 150, max: 230 }] }
+  hydra:         { name: 'Hydra', icon: '🐍', hp: 2350,atk: 270,def: 40, xp: 2100,gold: [100,250],loot: [['hydra_head',0.3],['hydra_egg',0.05],['medusa_shield',0.01]], spells: [{ element: 'ice', min: 100, max: 250 }, { element: 'earth', min: 66, max: 320 }] }
+  medusa:        { name: 'Medusa', icon: '🐍', hp: 4500,atk: 450,def: 45, xp: 4050,gold: [150,300],loot: [['strand_of_medusa_hair',0.2],['titan_axe',0.008]], spells: [{ element: 'death', min: 75, max: 150 }, { element: 'earth', min: 250, max: 500 }] }
+  lich:          { name: 'Lich', icon: '💀', hp: 880, atk: 75,def: 30, xp: 900, gold: [80,160], loot: [['death_ring',0.02]], spells: [{ element: 'death', min: 200, max: 245 }, { element: 'earth', min: 300, max: 400 }] }
+  undead_dragon: { name: 'Undead Dragon', icon: '☠️', hp: 8350,atk: 480,def: 50, xp: 7500,gold: [200,400],loot: [['necromancer_shield',0.02],['dragon_scale_legs',0.005]], spells: [{ element: 'physical', min: 300, max: 400 }, { element: 'death', min: 300, max: 700 }, { element: 'earth', min: 150, max: 690 }] }
+  behemoth:      { name: 'Behemoth', icon: '🦣', hp: 4000,atk: 455,def: 45, xp: 2500,gold: [150,300],loot: [['behemoth_claw',0.3],['giant_sword',0.015],['crystal_coin',0.05]], spells: [{ element: 'physical', min: 0, max: 200 }] }
+  demon:         { name: 'Demon', icon: '😈', hp: 8200,atk: 500,def: 55, xp: 6000,gold: [200,400],loot: [['demon_dust',0.5],['demon_shield',0.01],['magic_plate_armor',0.005],['platinum_coin',0.8]], spells: [{ element: 'fire', min: 150, max: 250 }, { element: 'energy', min: 210, max: 300 }, { element: 'death', min: 300, max: 480 }] }
+  juggernaut:    { name: 'Juggernaut', icon: '💥', hp: 20000,atk: 1470,def: 65, xp: 11200,gold: [300,600],loot: [['titan_axe',0.01],['crystal_coin',0.15]], spells: [{ element: 'physical', min: 0, max: 780 }] }
   // --- Bosses exclusivos do RubinOT (salas de Linked Tasks) ---
   lothlorien:    { name: 'Lothlorien', icon: '🌲', hp: 30000,atk: 280,def: 70, xp: 25000,gold: [400,800],  loot: [['lothlorien_bow',0.02],['crystal_coin',0.4],['rubini_shard',0.3]] },
   executioner:   { name: 'Executioner', icon: '🪓', hp: 35000,atk: 320,def: 75, xp: 30000,gold: [500,900],  loot: [['executioner_axe',0.02],['crystal_coin',0.4],['rubini_shard',0.35]] },
@@ -150,88 +150,88 @@ export const MONSTERS = {
   bear:                { name: 'Bear', icon: '🐻', hp: 80, atk: 25, def: 5, xp: 23, gold: [4,10], loot: [['meat',0.6],['leather_boots',0.08]] },
   spider:              { name: 'Spider', icon: '🕷️', hp: 20, atk: 9, def: 4, xp: 12, gold: [3,9], loot: [['spider_fangs',0.3],['worm_dirt',0.2]] },
   bat:                 { name: 'Bat', icon: '🦇', hp: 30, atk: 8, def: 2, xp: 10, gold: [1,5], loot: [['bones',0.3],['cheese',0.2]] },
-  skeleton:            { name: 'Skeleton', icon: '💀', hp: 50, atk: 17, def: 6, xp: 35, gold: [5,12], loot: [['bones',0.9],['studded_armor',0.03]] },
-  ghoul:               { name: 'Ghoul', icon: '🧟', hp: 100, atk: 70, def: 7, xp: 85, gold: [6,15], loot: [['bones',0.9],['meat',0.5],['leather_boots',0.1]] },
+  skeleton:            { name: 'Skeleton', icon: '💀', hp: 50, atk: 17, def: 6, xp: 35, gold: [5,12], loot: [['bones',0.9],['studded_armor',0.03]], spells: [{ element: 'death', min: 7, max: 13 }] }
+  ghoul:               { name: 'Ghoul', icon: '🧟', hp: 100, atk: 70, def: 7, xp: 85, gold: [6,15], loot: [['bones',0.9],['meat',0.5],['leather_boots',0.1]], spells: [{ element: 'death', min: 15, max: 27 }] }
   bandit:              { name: 'Bandit', icon: '🏴', hp: 245, atk: 45, def: 8, xp: 65, gold: [8,20], loot: [['leather_boots',0.1],['gold_coin',1.0]] },
-  poacher:             { name: 'Poacher', icon: '🪤', hp: 90, atk: 35, def: 10, xp: 70, gold: [10,25], loot: [['leather_boots',0.15],['studded_armor',0.05],['crossbow',0.03]] },
+  poacher:             { name: 'Poacher', icon: '🪤', hp: 90, atk: 35, def: 10, xp: 70, gold: [10,25], loot: [['leather_boots',0.15],['studded_armor',0.05],['crossbow',0.03]], spells: [{ element: 'physical', min: 0, max: 35 }] }
   orc_rider:           { name: 'Orc Rider', icon: '🐗', hp: 180, atk: 130, def: 11, xp: 110, gold: [15,32], loot: [['orc_tooth',0.5],['studded_armor',0.06]] },
-  orc_shaman:          { name: 'Orc Shaman', icon: '🪄', hp: 115, atk: 15, def: 13, xp: 110, gold: [18,40], loot: [['orc_tooth',0.5],['elvish_talisman',0.15],['wand_of_cosmic_energy',0.02]] },
+  orc_shaman:          { name: 'Orc Shaman', icon: '🪄', hp: 115, atk: 15, def: 13, xp: 110, gold: [18,40], loot: [['orc_tooth',0.5],['elvish_talisman',0.15],['wand_of_cosmic_energy',0.02]], spells: [{ element: 'energy', min: 20, max: 35 }, { element: 'fire', min: 5, max: 45 }] }
   quara_pincher:       { name: 'Quara Pincher', icon: '🦀', hp: 1800, atk: 340, def: 18, xp: 1500, gold: [55,90], loot: [['scarab_coin',0.2],['meat',0.3]] },
-  wyvern:              { name: 'Wyvern', icon: '🐲', hp: 795, atk: 120, def: 21, xp: 515, gold: [65,110], loot: [['dragon_scale',0.15],['life_crystal',0.08]] },
-  ghost:               { name: 'Ghost', icon: '👻', hp: 150, atk: 80, def: 22, xp: 120, gold: [70,120], loot: [['life_crystal',0.15],['vampire_dust',0.1]] },
-  mummy:               { name: 'Mummy', icon: '🪦', hp: 240, atk: 85, def: 27, xp: 150, gold: [85,150], loot: [['bones',0.9],['elvish_talisman',0.2],['death_ring',0.005]] },
-  bonelord:            { name: 'Bonelord', icon: '👁️', hp: 260, atk: 5, def: 28, xp: 170, gold: [100,160], loot: [['life_crystal',0.2],['death_ring',0.008]] },
+  wyvern:              { name: 'Wyvern', icon: '🐲', hp: 795, atk: 120, def: 21, xp: 515, gold: [65,110], loot: [['dragon_scale',0.15],['life_crystal',0.08]], spells: [{ element: 'earth', min: 240, max: 240 }] }
+  ghost:               { name: 'Ghost', icon: '👻', hp: 150, atk: 80, def: 22, xp: 120, gold: [70,120], loot: [['life_crystal',0.15],['vampire_dust',0.1]], spells: [{ element: 'death', min: 20, max: 45 }] }
+  mummy:               { name: 'Mummy', icon: '🪦', hp: 240, atk: 85, def: 27, xp: 150, gold: [85,150], loot: [['bones',0.9],['elvish_talisman',0.2],['death_ring',0.005]], spells: [{ element: 'death', min: 30, max: 40 }] }
+  bonelord:            { name: 'Bonelord', icon: '👁️', hp: 260, atk: 5, def: 28, xp: 170, gold: [100,160], loot: [['life_crystal',0.2],['death_ring',0.008]], spells: [{ element: 'energy', min: 15, max: 45 }, { element: 'fire', min: 25, max: 45 }, { element: 'earth', min: 5, max: 45 }, { element: 'death', min: 30, max: 50 }] }
   stone_golem:         { name: 'Stone Golem', icon: '🗿', hp: 270, atk: 110, def: 36, xp: 160, gold: [130,200], loot: [['chain_armor',0.08],['plate_legs',0.06],['crystal_coin',0.03]] },
-  efreet:              { name: 'Efreet', icon: '🧞‍♂️', hp: 550, atk: 110, def: 33, xp: 410, gold: [120,190], loot: [['demon_dust',0.15],['fire_sword',0.01]] },
-  marid:               { name: 'Marid', icon: '🧞', hp: 550, atk: 90, def: 38, xp: 410, gold: [150,230], loot: [['demon_dust',0.2],['wand_of_inferno',0.01],['crystal_coin',0.05]] },
+  efreet:              { name: 'Efreet', icon: '🧞‍♂️', hp: 550, atk: 110, def: 33, xp: 410, gold: [120,190], loot: [['demon_dust',0.15],['fire_sword',0.01]], spells: [{ element: 'fire', min: 40, max: 110 }, { element: 'energy', min: 65, max: 120 }] }
+  marid:               { name: 'Marid', icon: '🧞', hp: 550, atk: 90, def: 38, xp: 410, gold: [150,230], loot: [['demon_dust',0.2],['wand_of_inferno',0.01],['crystal_coin',0.05]], spells: [{ element: 'energy', min: 100, max: 250 }, { element: 'death', min: 30, max: 90 }] }
   larva:               { name: 'Larva', icon: '🪱', hp: 70, atk: 35, def: 32, xp: 44, gold: [130,200], loot: [['worm_dirt',0.6],['meat',0.4]] },
   carrion_worm:        { name: 'Carrion Worm', icon: '🪱', hp: 145, atk: 45, def: 40, xp: 70, gold: [160,250], loot: [['worm_dirt',0.5],['life_crystal',0.2],['crystal_coin',0.05]] },
   centipede:           { name: 'Centipede', icon: '🐜', hp: 70, atk: 45, def: 18, xp: 34, gold: [60,100], loot: [['spider_fangs',0.3],['mutated_flesh',0.1]] },
   scorpion:            { name: 'Scorpion', icon: '🦂', hp: 45, atk: 50, def: 22, xp: 45, gold: [70,120], loot: [['spider_fangs',0.35],['scarab_coin',0.15]] },
-  priestess:           { name: 'Priestess', icon: '🙏', hp: 390, atk: 75, def: 20, xp: 420, gold: [80,140], loot: [['elvish_talisman',0.2],['death_ring',0.01]] },
-  crypt_shambler:      { name: 'Crypt Shambler', icon: '⚰️', hp: 330, atk: 140, def: 28, xp: 195, gold: [95,160], loot: [['bones',0.8],['life_crystal',0.15],['necromancer_shield',0.005]] },
-  serpent_spawn:       { name: 'Serpent Spawn', icon: '🐍', hp: 3000, atk: 250, def: 38, xp: 3050, gold: [145,210], loot: [['life_crystal',0.15],['mutated_flesh',0.1]] },
-  black_knight:        { name: 'Black Knight', icon: '⚔️', hp: 1800, atk: 300, def: 42, xp: 1600, gold: [170,260], loot: [['chain_armor',0.1],['studded_shield',0.08],['broadsword',0.05]] },
-  cobra:               { name: 'Cobra', icon: '🐍', hp: 3400, atk: 132, def: 38, xp: 30, gold: [195,300], loot: [['spider_fangs',0.2],['demon_dust',0.1]] },
-  werewolf:            { name: 'Werewolf', icon: '🌕', hp: 1955, atk: 350, def: 46, xp: 1900, gold: [250,380], loot: [['meat',0.5],['leather_boots',0.1],['strange_helmet',0.01]] },
-  dark_torturer:       { name: 'Dark Torturer', icon: '🔪', hp: 7350, atk: 500, def: 44, xp: 4650, gold: [250,360], loot: [['demon_dust',0.2],['strange_helmet',0.015]] },
-  ghastly_dragon:      { name: 'Ghastly Dragon', icon: '🐉', hp: 7800, atk: 603, def: 50, xp: 4600, gold: [300,420], loot: [['dragon_scale',0.3],['dragon_ham',0.5],['life_crystal',0.3],['crystal_coin',0.08]] },
+  priestess:           { name: 'Priestess', icon: '🙏', hp: 390, atk: 75, def: 20, xp: 420, gold: [80,140], loot: [['elvish_talisman',0.2],['death_ring',0.01]], spells: [{ element: 'earth', min: 200, max: 200 }, { element: 'death', min: 2, max: 170 }] }
+  crypt_shambler:      { name: 'Crypt Shambler', icon: '⚰️', hp: 330, atk: 140, def: 28, xp: 195, gold: [95,160], loot: [['bones',0.8],['life_crystal',0.15],['necromancer_shield',0.005]], spells: [{ element: 'death', min: 28, max: 55 }] }
+  serpent_spawn:       { name: 'Serpent Spawn', icon: '🐍', hp: 3000, atk: 250, def: 38, xp: 3050, gold: [145,210], loot: [['life_crystal',0.15],['mutated_flesh',0.1]], spells: [{ element: 'earth', min: 200, max: 500 }, { element: 'death', min: 200, max: 500 }] }
+  black_knight:        { name: 'Black Knight', icon: '⚔️', hp: 1800, atk: 300, def: 42, xp: 1600, gold: [170,260], loot: [['chain_armor',0.1],['studded_shield',0.08],['broadsword',0.05]], spells: [{ element: 'physical', min: 0, max: 200 }] }
+  cobra:               { name: 'Cobra', icon: '🐍', hp: 3400, atk: 132, def: 38, xp: 30, gold: [195,300], loot: [['spider_fangs',0.2],['demon_dust',0.1]], spells: [{ element: 'earth', min: 20, max: 40 }] }
+  werewolf:            { name: 'Werewolf', icon: '🌕', hp: 1955, atk: 350, def: 46, xp: 1900, gold: [250,380], loot: [['meat',0.5],['leather_boots',0.1],['strange_helmet',0.01]], spells: [{ element: 'death', min: 80, max: 200 }] }
+  dark_torturer:       { name: 'Dark Torturer', icon: '🔪', hp: 7350, atk: 500, def: 44, xp: 4650, gold: [250,360], loot: [['demon_dust',0.2],['strange_helmet',0.015]], spells: [{ element: 'physical', min: 0, max: 781 }] }
+  ghastly_dragon:      { name: 'Ghastly Dragon', icon: '🐉', hp: 7800, atk: 603, def: 50, xp: 4600, gold: [300,420], loot: [['dragon_scale',0.3],['dragon_ham',0.5],['life_crystal',0.3],['crystal_coin',0.08]], spells: [{ element: 'earth', min: 920, max: 1280 }, { element: 'death', min: 120, max: 250 }] }
   wasp:                { name: 'Wasp', icon: '🐝', hp: 35, atk: 20, def: 30, xp: 24, gold: [110,180], loot: [['demon_dust',0.1],['life_crystal',0.1]] },
   poison_spider:       { name: 'Poison Spider', icon: '🕸️', hp: 26, atk: 20, def: 38, xp: 22, gold: [140,220], loot: [['spider_silk',0.3],['spider_fangs',0.4]] },
-  quara_hydromancer:   { name: 'Quara Hydromancer', icon: '🌊', hp: 1900, atk: 118, def: 36, xp: 950, gold: [140,210], loot: [['demon_dust',0.1],['life_crystal',0.15]] },
-  braindeath:          { name: 'Braindeath', icon: '🧠', hp: 1225, atk: 100, def: 40, xp: 985, gold: [160,250], loot: [['life_crystal',0.2],['death_ring',0.01],['crystal_coin',0.05]] },
-  crypt_defiler:       { name: 'Crypt Defiler', icon: '⚰️', hp: 180, atk: 90, def: 40, xp: 70, gold: [230,340], loot: [['demon_dust',0.15],['life_crystal',0.2]] },
+  quara_hydromancer:   { name: 'Quara Hydromancer', icon: '🌊', hp: 1900, atk: 118, def: 36, xp: 950, gold: [140,210], loot: [['demon_dust',0.1],['life_crystal',0.15]], spells: [{ element: 'ice', min: 100, max: 180 }, { element: 'death', min: 170, max: 240 }] }
+  braindeath:          { name: 'Braindeath', icon: '🧠', hp: 1225, atk: 100, def: 40, xp: 985, gold: [160,250], loot: [['life_crystal',0.2],['death_ring',0.01],['crystal_coin',0.05]], spells: [{ element: 'energy', min: 93, max: 170 }, { element: 'fire', min: 75, max: 125 }, { element: 'earth', min: 65, max: 125 }, { element: 'death', min: 85, max: 170 }] }
+  crypt_defiler:       { name: 'Crypt Defiler', icon: '⚰️', hp: 180, atk: 90, def: 40, xp: 70, gold: [230,340], loot: [['demon_dust',0.15],['life_crystal',0.2]], spells: [{ element: 'physical', min: 0, max: 40 }] }
   betrayed_wraith:     { name: 'Betrayed Wraith', icon: '👤', hp: 4200, atk: 450, def: 48, xp: 3500, gold: [270,400], loot: [['life_crystal',0.25],['death_ring',0.02],['crystal_coin',0.07]] },
   fleshcrawler:        { name: 'Fleshcrawler', icon: '🦠', hp: 8000, atk: 178, def: 49, xp: 5900, gold: [260,380], loot: [['demon_dust',0.2],['mutated_flesh',0.1]] },
-  nightmare:           { name: 'Nightmare', icon: '🐴', hp: 2700, atk: 150, def: 57, xp: 1800, gold: [300,440], loot: [['demon_dust',0.3],['death_ring',0.025],['crystal_coin',0.1]] },
-  blightwalker:        { name: 'Blightwalker', icon: '🟣', hp: 8900, atk: 490, def: 58, xp: 6400, gold: [340,500], loot: [['demon_dust',0.25],['platinum_coin',0.5]] },
-  hellfire_fighter:    { name: 'Hellfire Fighter', icon: '🔥', hp: 3800, atk: 520, def: 66, xp: 3800, gold: [400,600], loot: [['demon_dust',0.35],['platinum_coin',0.7],['crystal_coin',0.12]] },
-  nightmare_scion:     { name: 'Nightmare Scion', icon: '🌑', hp: 1400, atk: 140, def: 63, xp: 1350, gold: [420,600], loot: [['demon_dust',0.25],['death_ring',0.015]] },
-  war_golem:           { name: 'War Golem', icon: '🤖', hp: 4300, atk: 550, def: 73, xp: 2680, gold: [500,720], loot: [['chain_armor',0.1],['plate_legs',0.08],['crystal_coin',0.15]] },
-  retching_horror:     { name: 'Retching Horror', icon: '🤢', hp: 5300, atk: 400, def: 75, xp: 4100, gold: [640,900], loot: [['demon_dust',0.3],['platinum_coin',0.6]] },
-  falcon_knight:       { name: 'Falcon Knight', icon: '🦅', hp: 9000, atk: 400, def: 86, xp: 6300, gold: [750,1050], loot: [['chain_armor',0.1],['studded_shield',0.1],['crystal_coin',0.18]] },
-  draptor:             { name: 'Draptor', icon: '🦖', hp: 55000, atk: 390, def: 88, xp: 2400, gold: [880,1250], loot: [['dragon_scale',0.3],['platinum_coin',0.7]] },
-  vexclaw:             { name: 'Vexclaw', icon: '🦞', hp: 8500, atk: 550, def: 101, xp: 6248, gold: [1050,1450], loot: [['demon_dust',0.35],['platinum_coin',1.0],['crystal_coin',0.25]] },
+  nightmare:           { name: 'Nightmare', icon: '🐴', hp: 2700, atk: 150, def: 57, xp: 1800, gold: [300,440], loot: [['demon_dust',0.3],['death_ring',0.025],['crystal_coin',0.1]], spells: [{ element: 'death', min: 120, max: 170 }, { element: 'earth', min: 150, max: 350 }] }
+  blightwalker:        { name: 'Blightwalker', icon: '🟣', hp: 8900, atk: 490, def: 58, xp: 6400, gold: [340,500], loot: [['demon_dust',0.25],['platinum_coin',0.5]], spells: [{ element: 'earth', min: 220, max: 405 }, { element: 'death', min: 65, max: 135 }] }
+  hellfire_fighter:    { name: 'Hellfire Fighter', icon: '🔥', hp: 3800, atk: 520, def: 66, xp: 3800, gold: [400,600], loot: [['demon_dust',0.35],['platinum_coin',0.7],['crystal_coin',0.12]], spells: [{ element: 'fire', min: 392, max: 1500 }] }
+  nightmare_scion:     { name: 'Nightmare Scion', icon: '🌑', hp: 1400, atk: 140, def: 63, xp: 1350, gold: [420,600], loot: [['demon_dust',0.25],['death_ring',0.015]], spells: [{ element: 'earth', min: 115, max: 180 }, { element: 'death', min: 70, max: 130 }] }
+  war_golem:           { name: 'War Golem', icon: '🤖', hp: 4300, atk: 550, def: 73, xp: 2680, gold: [500,720], loot: [['chain_armor',0.1],['plate_legs',0.08],['crystal_coin',0.15]], spells: [{ element: 'energy', min: 165, max: 220 }] }
+  retching_horror:     { name: 'Retching Horror', icon: '🤢', hp: 5300, atk: 400, def: 75, xp: 4100, gold: [640,900], loot: [['demon_dust',0.3],['platinum_coin',0.6]], spells: [{ element: 'physical', min: 0, max: 200 }, { element: 'fire', min: 200, max: 350 }] }
+  falcon_knight:       { name: 'Falcon Knight', icon: '🦅', hp: 9000, atk: 400, def: 86, xp: 6300, gold: [750,1050], loot: [['chain_armor',0.1],['studded_shield',0.1],['crystal_coin',0.18]], spells: [{ element: 'earth', min: 400, max: 500 }, { element: 'holy', min: 290, max: 360 }] }
+  draptor:             { name: 'Draptor', icon: '🦖', hp: 55000, atk: 390, def: 88, xp: 2400, gold: [880,1250], loot: [['dragon_scale',0.3],['platinum_coin',0.7]], spells: [{ element: 'energy', min: 130, max: 310 }, { element: 'fire', min: 70, max: 250 }] }
+  vexclaw:             { name: 'Vexclaw', icon: '🦞', hp: 8500, atk: 550, def: 101, xp: 6248, gold: [1050,1450], loot: [['demon_dust',0.35],['platinum_coin',1.0],['crystal_coin',0.25]], spells: [{ element: 'fire', min: 150, max: 250 }, { element: 'death', min: 300, max: 490 }, { element: 'energy', min: 210, max: 300 }] }
   werelion:            { name: 'Werelion', icon: '🦁', hp: 70000, atk: 432, def: 98, xp: 2200, gold: [1080,1500], loot: [['demon_dust',0.35],['crystal_coin',0.2]] },
-  feversleep:          { name: 'Feversleep', icon: '💤', hp: 5900, atk: 450, def: 113, xp: 5060, gold: [1300,1800], loot: [['dragon_scale',0.3],['titan_axe',0.008],['crystal_coin',0.3]] },
-  omruc:               { name: 'Omruc', icon: '🌋', hp: 90000, atk: 480, def: 111, xp: 76000, gold: [1340,1850], loot: [['demon_dust',0.4],['crystal_coin',0.25]] },
-  grorlam:             { name: 'Grorlam', icon: '🐖', hp: 3000, atk: 300, def: 128, xp: 92000, gold: [1600,2200], loot: [['demon_shield',0.008],['platinum_coin',1.2],['crystal_coin',0.35]] },
-  massive_water_elemental:{ name: 'Massive Water Elemental', icon: '💧', hp: 120000, atk: 538, def: 125, xp: 1100, gold: [1650,2300], loot: [['life_crystal',0.3],['platinum_coin',1.0]] },
-  zorvorax:            { name: 'Zorvorax', icon: '🔮', hp: 10000, atk: 385, def: 145, xp: 121000, gold: [2000,2750], loot: [['demon_dust',0.45],['skull_staff',0.01],['crystal_coin',0.4]] },
-  draken_abomination:  { name: 'Draken Abomination', icon: '👹', hp: 6250, atk: 420, def: 132, xp: 4500, gold: [1850,2600], loot: [['demon_dust',0.4],['crystal_coin',0.35]] },
-  draken_warmaster:    { name: 'Draken Warmaster', icon: '🐲', hp: 4150, atk: 300, def: 153, xp: 2400, gold: [2250,3100], loot: [['dragon_scale',0.4],['titan_axe',0.01],['crystal_coin',0.5]] },
-  zulazza:             { name: 'Zulazza the Corruptor', icon: '🕸️', hp: 46500, atk: 2100, def: 143, xp: 158000, gold: [2250,3100], loot: [['demon_dust',0.45],['death_ring',0.025]] },
-  latrivan:            { name: 'Latrivan', icon: '⚡', hp: 25000, atk: 878, def: 166, xp: 192000, gold: [2700,3700], loot: [['demon_shield',0.01],['platinum_coin',1.5],['crystal_coin',0.55]] },
-  ushuriel:            { name: 'Ushuriel', icon: '😈', hp: 31500, atk: 1088, def: 156, xp: 208000, gold: [2700,3700], loot: [['demon_dust',0.5],['royal_helmet',0.005]] },
-  madareth:            { name: 'Madareth', icon: '💥', hp: 75000, atk: 2000, def: 181, xp: 254000, gold: [3250,4400], loot: [['demon_shield',0.012],['titan_axe',0.015],['crystal_coin',0.6]] },
-  zamulosh:            { name: 'Zamulosh', icon: '🔺', hp: 300000, atk: 2300, def: 168, xp: 265000, gold: [3200,4300], loot: [['demon_dust',0.5],['crystal_coin',0.55]] },
-  shulgrax:            { name: 'Shulgrax', icon: '🟠', hp: 290000, atk: 2500, def: 186, xp: 315000, gold: [3700,4900], loot: [['magic_plate_armor',0.006],['crystal_coin',0.65]] },
-  tanjis:               { name: 'Tanjis', icon: '🔶', hp: 30000, atk: 600, def: 202, xp: 365000, gold: [4300,5600], loot: [['demon_shield',0.015],['royal_helmet',0.01],['crystal_coin',0.75]] },
+  feversleep:          { name: 'Feversleep', icon: '💤', hp: 5900, atk: 450, def: 113, xp: 5060, gold: [1300,1800], loot: [['dragon_scale',0.3],['titan_axe',0.008],['crystal_coin',0.3]], spells: [{ element: 'earth', min: 800, max: 1000 }, { element: 'death', min: 150, max: 300 }] }
+  omruc:               { name: 'Omruc', icon: '🌋', hp: 90000, atk: 480, def: 111, xp: 76000, gold: [1340,1850], loot: [['demon_dust',0.4],['crystal_coin',0.25]], spells: [{ element: 'death', min: 100, max: 250 }, { element: 'earth', min: 200, max: 500 }, { element: 'fire', min: 120, max: 450 }] }
+  grorlam:             { name: 'Grorlam', icon: '🐖', hp: 3000, atk: 300, def: 128, xp: 92000, gold: [1600,2200], loot: [['demon_shield',0.008],['platinum_coin',1.2],['crystal_coin',0.35]], spells: [{ element: 'physical', min: 150, max: 200 }] }
+  massive_water_elemental:{ name: 'Massive Water Elemental', icon: '💧', hp: 120000, atk: 538, def: 125, xp: 1100, gold: [1650,2300], loot: [['life_crystal',0.3],['platinum_coin',1.0]], spells: [{ element: 'death', min: 330, max: 450 }, { element: 'ice', min: 170, max: 210 }, { element: 'earth', min: 355, max: 420 }] }
+  zorvorax:            { name: 'Zorvorax', icon: '🔮', hp: 10000, atk: 385, def: 145, xp: 121000, gold: [2000,2750], loot: [['demon_dust',0.45],['skull_staff',0.01],['crystal_coin',0.4]], spells: [{ element: 'death', min: 300, max: 780 }, { element: 'fire', min: 330, max: 805 }] }
+  draken_abomination:  { name: 'Draken Abomination', icon: '👹', hp: 6250, atk: 420, def: 132, xp: 4500, gold: [1850,2600], loot: [['demon_dust',0.4],['crystal_coin',0.35]], spells: [{ element: 'fire', min: 310, max: 630 }, { element: 'death', min: 170, max: 370 }] }
+  draken_warmaster:    { name: 'Draken Warmaster', icon: '🐲', hp: 4150, atk: 300, def: 153, xp: 2400, gold: [2250,3100], loot: [['dragon_scale',0.4],['titan_axe',0.01],['crystal_coin',0.5]], spells: [{ element: 'fire', min: 240, max: 520 }] }
+  zulazza:             { name: 'Zulazza the Corruptor', icon: '🕸️', hp: 46500, atk: 2100, def: 143, xp: 158000, gold: [2250,3100], loot: [['demon_dust',0.45],['death_ring',0.025]], spells: [{ element: 'physical', min: 500, max: 800 }, { element: 'earth', min: 300, max: 800 }, { element: 'death', min: 50, max: 130 }] }
+  latrivan:            { name: 'Latrivan', icon: '⚡', hp: 25000, atk: 878, def: 166, xp: 192000, gold: [2700,3700], loot: [['demon_shield',0.01],['platinum_coin',1.5],['crystal_coin',0.55]], spells: [{ element: 'fire', min: 50, max: 850 }] }
+  ushuriel:            { name: 'Ushuriel', icon: '😈', hp: 31500, atk: 1088, def: 156, xp: 208000, gold: [2700,3700], loot: [['demon_dust',0.5],['royal_helmet',0.005]], spells: [{ element: 'physical', min: 250, max: 500 }, { element: 'death', min: 30, max: 760 }, { element: 'earth', min: 200, max: 585 }, { element: 'ice', min: 0, max: 430 }, { element: 'energy', min: 250, max: 250 }] }
+  madareth:            { name: 'Madareth', icon: '💥', hp: 75000, atk: 2000, def: 181, xp: 254000, gold: [3250,4400], loot: [['demon_shield',0.012],['titan_axe',0.015],['crystal_coin',0.6]], spells: [{ element: 'energy', min: 180, max: 660 }, { element: 'death', min: 600, max: 850 }] }
+  zamulosh:            { name: 'Zamulosh', icon: '🔺', hp: 300000, atk: 2300, def: 168, xp: 265000, gold: [3200,4300], loot: [['demon_dust',0.5],['crystal_coin',0.55]], spells: [{ element: 'death', min: 2600, max: 3300 }, { element: 'fire', min: 900, max: 1500 }] }
+  shulgrax:            { name: 'Shulgrax', icon: '🟠', hp: 290000, atk: 2500, def: 186, xp: 315000, gold: [3700,4900], loot: [['magic_plate_armor',0.006],['crystal_coin',0.65]], spells: [{ element: 'fire', min: 500, max: 1000 }, { element: 'death', min: 500, max: 800 }] }
+  tanjis:               { name: 'Tanjis', icon: '🔶', hp: 30000, atk: 600, def: 202, xp: 365000, gold: [4300,5600], loot: [['demon_shield',0.015],['royal_helmet',0.01],['crystal_coin',0.75]], spells: [{ element: 'ice', min: 200, max: 400 }, { element: 'death', min: 300, max: 800 }, { element: 'physical', min: 100, max: 400 }, { element: 'energy', min: 200, max: 500 }] }
   pale_worm:           { name: 'The Pale Worm', icon: '⚪', hp: 420000, atk: 840, def: 185, xp: 340000, gold: [3800,5000], loot: [['demon_dust',0.6],['crystal_coin',0.7]] },
-  diblis:              { name: 'Diblis the Fair', icon: '💍', hp: 1500, atk: 380, def: 195, xp: 390000, gold: [4200,5600], loot: [['magic_plate_armor',0.008],['crystal_coin',0.8]] },
-  soul_despoiler:      { name: 'The Souldespoiler', icon: '🔥', hp: 290000, atk: 783, def: 210, xp: 450000, gold: [4800,6300], loot: [['demon_shield',0.02],['titan_axe',0.02],['crystal_coin',0.85]] },
-  ferumbras_mortal_shell:{ name: 'Ferumbras Mortal Shell', icon: '⚱️', hp: 300000, atk: 1000, def: 225, xp: 530000, gold: [5400,7000], loot: [['boots_of_haste',0.003],['crystal_coin',0.9]] },
+  diblis:              { name: 'Diblis the Fair', icon: '💍', hp: 1500, atk: 380, def: 195, xp: 390000, gold: [4200,5600], loot: [['magic_plate_armor',0.008],['crystal_coin',0.8]], spells: [{ element: 'death', min: 0, max: 155 }] }
+  soul_despoiler:      { name: 'The Souldespoiler', icon: '🔥', hp: 290000, atk: 783, def: 210, xp: 450000, gold: [4800,6300], loot: [['demon_shield',0.02],['titan_axe',0.02],['crystal_coin',0.85]], spells: [{ element: 'death', min: 125, max: 640 }, { element: 'energy', min: 210, max: 538 }] }
+  ferumbras_mortal_shell:{ name: 'Ferumbras Mortal Shell', icon: '⚱️', hp: 300000, atk: 1000, def: 225, xp: 530000, gold: [5400,7000], loot: [['boots_of_haste',0.003],['crystal_coin',0.9]], spells: [{ element: 'earth', min: 250, max: 520 }, { element: 'death', min: 590, max: 1050 }, { element: 'energy', min: 400, max: 650 }] }
   devovorga:           { name: 'Devovorga', icon: '🟪', hp: 750000, atk: 1010, def: 235, xp: 610000, gold: [6000,7800], loot: [['magic_plate_armor',0.012],['crystal_coin',1.0]] },
-  gazharagoth:         { name: 'Gaz\'haragoth', icon: '🖤', hp: 350000, atk: 5000, def: 250, xp: 740000, gold: [6800,8800], loot: [['royal_helmet',0.02],['demon_shield',0.02],['crystal_coin',1.1]] },
-  ferumbras:           { name: 'Ferumbras', icon: '👑', hp: 90000, atk: 350, def: 270, xp: 1000000, gold: [8000,10500], loot: [['boots_of_haste',0.006],['magic_plate_armor',0.02],['crystal_coin',1.3],['titan_axe',0.03]] },
+  gazharagoth:         { name: 'Gaz\'haragoth', icon: '🖤', hp: 350000, atk: 5000, def: 250, xp: 740000, gold: [6800,8800], loot: [['royal_helmet',0.02],['demon_shield',0.02],['crystal_coin',1.1]], spells: [{ element: 'ice', min: 900, max: 1100 }, { element: 'fire', min: 4000, max: 6000 }, { element: 'physical', min: 200, max: 480 }] }
+  ferumbras:           { name: 'Ferumbras', icon: '👑', hp: 90000, atk: 350, def: 270, xp: 1000000, gold: [8000,10500], loot: [['boots_of_haste',0.006],['magic_plate_armor',0.02],['crystal_coin',1.3],['titan_axe',0.03]], spells: [{ element: 'death', min: 300, max: 700 }, { element: 'earth', min: 250, max: 550 }, { element: 'energy', min: 200, max: 400 }, { element: 'fire', min: 200, max: 800 }] }
 
   // --- Criaturas adicionadas com as novas cidades (sprites reais do TibiaWiki) ---
-  stalker:         { name: 'Stalker', icon: '🐾', hp: 120,   atk: 70,  def: 3,  xp: 40,   gold: [1,8],    loot: [['bones',0.3],['spider_silk',0.02]] },
+  stalker:         { name: 'Stalker', icon: '🐾', hp: 120,   atk: 70,  def: 3,  xp: 40,   gold: [1,8],    loot: [['bones',0.3],['spider_silk',0.02]], spells: [{ element: 'death', min: 20, max: 30 }] }
   crocodile:       { name: 'Crocodile', icon: '🐊', hp: 190,  atk: 20,  def: 8,  xp: 120,  gold: [5,18],   loot: [['meat',0.5]] },
-  sibang:          { name: 'Sibang', icon: '🐒', hp: 225,  atk: 40,  def: 10, xp: 100,  gold: [3,15],   loot: [['cheese',0.3],['bones',0.2]] },
-  merlkin:         { name: 'Merlkin', icon: '🦧', hp: 235,  atk: 30,  def: 12, xp: 130,  gold: [5,20],   loot: [['elvish_talisman',0.1],['meat',0.3]] },
+  sibang:          { name: 'Sibang', icon: '🐒', hp: 225,  atk: 40,  def: 10, xp: 100,  gold: [3,15],   loot: [['cheese',0.3],['bones',0.2]], spells: [{ element: 'physical', min: 0, max: 55 }] }
+  merlkin:         { name: 'Merlkin', icon: '🦧', hp: 235,  atk: 30,  def: 12, xp: 130,  gold: [5,20],   loot: [['elvish_talisman',0.1],['meat',0.3]], spells: [{ element: 'fire', min: 60, max: 90 }, { element: 'energy', min: 15, max: 45 }] }
   kongra:          { name: 'Kongra', icon: '🦍', hp: 340,  atk: 60,  def: 15, xp: 175,  gold: [10,28],  loot: [['meat',0.4],['orc_tooth',0.2]] },
   terror_bird:     { name: 'Terror Bird', icon: '🦤', hp: 300,  atk: 90,  def: 12, xp: 150,  gold: [8,24],   loot: [['meat',0.4]] },
-  terramite:       { name: 'Terramite', icon: '🐜', hp: 365,  atk: 100,  def: 25, xp: 500,  gold: [20,60],  loot: [['bones',0.4],['scarab_coin',0.15]] },
-  ancient_scarab:  { name: 'Ancient Scarab', icon: '🪲', hp: 1000,  atk: 210,  def: 30, xp: 750,  gold: [40,90],  loot: [['scarab_coin',0.5],['strange_helmet',0.01]] },
+  terramite:       { name: 'Terramite', icon: '🐜', hp: 365,  atk: 100,  def: 25, xp: 500,  gold: [20,60],  loot: [['bones',0.4],['scarab_coin',0.15]], spells: [{ element: 'earth', min: 5, max: 16 }] }
+  ancient_scarab:  { name: 'Ancient Scarab', icon: '🪲', hp: 1000,  atk: 210,  def: 30, xp: 750,  gold: [40,90],  loot: [['scarab_coin',0.5],['strange_helmet',0.01]], spells: [{ element: 'earth', min: 440, max: 520 }] }
   frost_troll:     { name: 'Frost Troll', icon: '❄️', hp: 55,   atk: 20,   def: 3,  xp: 30,   gold: [1,10],   loot: [['meat',0.3],['leather_boots',0.1]] },
-  ice_golem:       { name: 'Ice Golem', icon: '🧊', hp: 385,  atk: 220,  def: 30, xp: 260,  gold: [15,45],  loot: [['life_crystal',0.06]] },
-  yeti:            { name: 'Yeti', icon: '🦣', hp: 950,  atk: 200,  def: 22, xp: 580,  gold: [30,80],  loot: [['meat',0.4],['life_crystal',0.05]] },
-  crystal_wolf:    { name: 'Crystal Wolf', icon: '🐺', hp: 750,  atk: 80,  def: 30, xp: 900,  gold: [40,110], loot: [['life_crystal',0.08]] },
-  crystal_spider:  { name: 'Crystal Spider', icon: '🕸️', hp: 1250, atk: 250,  def: 35, xp: 1400, gold: [60,140], loot: [['spider_silk',0.3],['life_crystal',0.1]] },
-  wyrm:            { name: 'Wyrm', icon: '🐉', hp: 1825, atk: 235, def: 40, xp: 1600, gold: [80,170], loot: [['dragon_scale',0.3],['life_crystal',0.15]] },
-  hero:            { name: 'Hero', icon: '🦸', hp: 1400, atk: 240,  def: 35, xp: 1500, gold: [70,160], loot: [['plate_legs',0.05],['giant_sword',0.005]] },
-  nightstalker:    { name: 'Nightstalker', icon: '🌚', hp: 1150, atk: 88,  def: 30, xp: 1200, gold: [50,130], loot: [['demon_dust',0.1]] },
+  ice_golem:       { name: 'Ice Golem', icon: '🧊', hp: 385,  atk: 220,  def: 30, xp: 260,  gold: [15,45],  loot: [['life_crystal',0.06]], spells: [{ element: 'ice', min: 50, max: 85 }] }
+  yeti:            { name: 'Yeti', icon: '🦣', hp: 950,  atk: 200,  def: 22, xp: 580,  gold: [30,80],  loot: [['meat',0.4],['life_crystal',0.05]], spells: [{ element: 'physical', min: 0, max: 180 }, { element: 'energy', min: 0, max: 175 }] }
+  crystal_wolf:    { name: 'Crystal Wolf', icon: '🐺', hp: 750,  atk: 80,  def: 30, xp: 900,  gold: [40,110], loot: [['life_crystal',0.08]], spells: [{ element: 'earth', min: 60, max: 130 }, { element: 'ice', min: 80, max: 150 }, { element: 'death', min: 25, max: 80 }] }
+  crystal_spider:  { name: 'Crystal Spider', icon: '🕸️', hp: 1250, atk: 250,  def: 35, xp: 1400, gold: [60,140], loot: [['spider_silk',0.3],['life_crystal',0.1]], spells: [{ element: 'ice', min: 50, max: 100 }] }
+  wyrm:            { name: 'Wyrm', icon: '🐉', hp: 1825, atk: 235, def: 40, xp: 1600, gold: [80,170], loot: [['dragon_scale',0.3],['life_crystal',0.15]], spells: [{ element: 'energy', min: 100, max: 220 }, { element: 'death', min: 98, max: 145 }] }
+  hero:            { name: 'Hero', icon: '🦸', hp: 1400, atk: 240,  def: 35, xp: 1500, gold: [70,160], loot: [['plate_legs',0.05],['giant_sword',0.005]], spells: [{ element: 'physical', min: 0, max: 120 }] }
+  nightstalker:    { name: 'Nightstalker', icon: '🌚', hp: 1150, atk: 88,  def: 30, xp: 1200, gold: [50,130], loot: [['demon_dust',0.1]], spells: [{ element: 'death', min: 60, max: 170 }] }
 };
 
 // Definição única de "o que conta como boss" no jogo inteiro — reaproveitada

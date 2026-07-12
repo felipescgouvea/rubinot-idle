@@ -4,9 +4,9 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=103';
-import { resolveEquippedItem } from './items.js?v=103';
-import { pickWeightedMonster } from './adminConfig.js?v=103';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=104';
+import { resolveEquippedItem } from './items.js?v=104';
+import { pickWeightedMonster } from './adminConfig.js?v=104';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -106,6 +106,23 @@ export function calcDamage(atk, def) {
   return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));
 }
 
+// Ação de ataque do monstro contra o jogador neste golpe. Se o monstro tem
+// magias (spells do TFS — elemento + dano), tem chance de castar uma (dano
+// ELEMENTAL, que ignora a armadura física, como no Tibia); senão dá o golpe
+// melee físico (reduzido pela DEF). Casters ficam perigosos mesmo com melee
+// fraco. Retorna { dmg, element, kind: 'melee' | 'spell' }.
+export function monsterAttack(monster, playerDef) {
+  const spells = monster.spells;
+  if (spells && spells.length && Math.random() < 0.5) {
+    const s = spells[Math.floor(Math.random() * spells.length)];
+    const min = Number.isFinite(+s.min) ? +s.min : s.max;
+    const raw = min + Math.random() * Math.max(0, s.max - min);
+    const dmg = Math.max(1, Math.floor(raw * (monster.spellMult || 1)));
+    return { dmg, element: s.element || 'physical', kind: 'spell' };
+  }
+  return { dmg: calcDamage(monster.atk, playerDef), element: 'physical', kind: 'melee' };
+}
+
 // FÓRMULA REAL DO TIBIA (TFS) pra dano/cura de magias e runas. O valor é um
 // número aleatório uniforme entre min e max, onde:
 //   min = nível/5 + aMin·X + baseMin ;  max = nível/5 + aMax·X + baseMax
@@ -161,18 +178,25 @@ export function spawnMonsterInstance(zone, monsterCatalog, playerLevel, bossMult
   const monsterId = weights ? pickWeightedMonster(zone.monsters, weights)
     : zone.monsters[Math.floor(Math.random() * zone.monsters.length)];
   const def = monsterCatalog[monsterId];
-  const scaleFactor = (1 + (playerLevel - 1) * 0.05) * bossMultiplier;
+  // SEM escala por nível do jogador: HP/atk/xp/gold são os valores REAIS do Tibia
+  // (ver domain/bestiary.js). O único multiplicador é o de tier do Boss Rush
+  // (bossMultiplier = 1 na caçada comum), que deixa o boss desafiado mais forte.
+  const mult = bossMultiplier;
   return {
     id: monsterId,
     defKey: monsterId,
     name: def.name,
     icon: def.icon,
-    hp: Math.floor(def.hp * scaleFactor),
-    maxHp: Math.floor(def.hp * scaleFactor),
-    atk: Math.floor(def.atk * scaleFactor),
+    hp: Math.floor(def.hp * mult),
+    maxHp: Math.floor(def.hp * mult),
+    atk: Math.floor(def.atk * mult),
     def: Math.floor(def.def * bossMultiplier),
-    xp: Math.floor(def.xp * scaleFactor),
-    gold: def.gold.map(g => Math.floor(g * scaleFactor)),
+    xp: Math.floor(def.xp * mult),
+    gold: def.gold.map(g => Math.floor(g * mult)),
     loot: def.loot,
+    // Magias/ataques à distância do monstro (elemento + dano), do TFS — o
+    // monstro pode castá-las contra o jogador (ver application/huntUseCases.js).
+    spells: def.spells || null,
+    spellMult: mult, // pra escalar o dano das magias no Boss Rush
   };
 }

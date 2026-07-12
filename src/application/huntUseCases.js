@@ -3,30 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=103';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=103';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=103';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=103';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=103';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=103';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=103';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=103';
-import { elementMod } from '../domain/elements.js?v=103';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=103';
-import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=103';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=103';
-import { MONSTERS } from '../domain/bestiary.js?v=103';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=103';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=103';
-import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=103';
-import { emit, EVENTS } from '../shared/eventBus.js?v=103';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=103';
-import { trainSkill } from './skillUseCases.js?v=103';
-import { addItemToInventory } from './inventoryCore.js?v=103';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=103';
-import { getCombatBonuses } from './bonuses.js?v=103';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=103';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=103';
+import { G } from './gameStore.js?v=104';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=104';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=104';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=104';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=104';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=104';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=104';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=104';
+import { elementMod } from '../domain/elements.js?v=104';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=104';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=104';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=104';
+import { MONSTERS } from '../domain/bestiary.js?v=104';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=104';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=104';
+import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=104';
+import { emit, EVENTS } from '../shared/eventBus.js?v=104';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=104';
+import { trainSkill } from './skillUseCases.js?v=104';
+import { addItemToInventory } from './inventoryCore.js?v=104';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=104';
+import { getCombatBonuses } from './bonuses.js?v=104';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=104';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=104';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -43,6 +43,9 @@ function monsterLogIcon(monsterId) {
   return `<img src="${spriteUrl(monsterSpriteFile(monsterId, m))}" alt="${m.name}" class="inline-icon"
     onerror="this.outerHTML='<span>${m.icon}</span>'" />`;
 }
+
+// Rótulo em PT do elemento da magia do monstro, pro log de combate.
+const MONSTER_ELEMENT_PT = { fire: 'fogo', energy: 'energia', ice: 'gelo', earth: 'terra', death: 'morte', holy: 'sagrado', physical: 'físico' };
 
 let huntInterval = null;
 let regenInterval = null;
@@ -386,12 +389,15 @@ export function doHuntTick() {
     return;
   }
 
-  // Monster attacks player (defender treina Shielding, como no Tibia — só com escudo equipado)
-  const monsterDmg = calcDamage(currentMonster.atk, getDef());
-  G.hp = Math.max(0, G.hp - monsterDmg);
+  // Monstro ataca o jogador: melee físico OU uma de suas magias (elemental, do
+  // TFS — ver domain/combatFormulas.js: monsterAttack). Shielding treina como no
+  // Tibia (só com escudo equipado).
+  const atk = monsterAttack(currentMonster, getDef());
+  G.hp = Math.max(0, G.hp - atk.dmg);
   if (G.equipment.shield) trainSkill('shielding', 1 * voc.shieldMult);
-  emit(EVENTS.LOG, `🩸 ${currentMonster.name} causou <span class="log-dmg">${monsterDmg}</span> de dano em você.`);
-  emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true });
+  const spellTag = atk.kind === 'spell' ? ` <span class="log-info">(${MONSTER_ELEMENT_PT[atk.element] || atk.element})</span>` : '';
+  emit(EVENTS.LOG, `🩸 ${currentMonster.name} causou <span class="log-dmg">${atk.dmg}</span> de dano em você${spellTag}.`);
+  emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true, spellElement: atk.kind === 'spell' ? atk.element : null });
 
   // RTC — Spell Healing: cura automática por magia, sempre ativa (spell configurada
   // na própria aba RTC, ou exura como padrão) ao cruzar o limiar de % de HP definido.
