@@ -3,29 +3,29 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=83';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=83';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=83';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=83';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=83';
-import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=83';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=83';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=83';
-import { elementMod } from '../domain/elements.js?v=83';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=83';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=83';
-import { MONSTERS } from '../domain/bestiary.js?v=83';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=83';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=83';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=83';
-import { emit, EVENTS } from '../shared/eventBus.js?v=83';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=83';
-import { trainSkill } from './skillUseCases.js?v=83';
-import { addItemToInventory } from './inventoryCore.js?v=83';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=83';
-import { getCombatBonuses } from './bonuses.js?v=83';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=83';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=83';
+import { G } from './gameStore.js?v=84';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=84';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=84';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=84';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=84';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=84';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=84';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=84';
+import { elementMod } from '../domain/elements.js?v=84';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=84';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=84';
+import { MONSTERS } from '../domain/bestiary.js?v=84';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=84';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=84';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=84';
+import { emit, EVENTS } from '../shared/eventBus.js?v=84';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=84';
+import { trainSkill } from './skillUseCases.js?v=84';
+import { addItemToInventory } from './inventoryCore.js?v=84';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=84';
+import { getCombatBonuses } from './bonuses.js?v=84';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=84';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=84';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -268,7 +268,7 @@ export function doHuntTick() {
   let areaId = 'single';
   let element = null;
   let hitFn = null; // (target) => dano-base (antes do modificador elemental)
-  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
+  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && canUseAttackRune(G.rtc.attackRune, G.vocation, magic) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
     const rune = ITEMS[G.rtc.attackRune];
     areaId = rune.area || 'single';
     element = rune.element || 'physical';
@@ -280,12 +280,21 @@ export function doHuntTick() {
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   } else {
-    // Prioridade de magias: casta a PRIMEIRA disponível (nível/voc ok, com mana
-    // e fora de cooldown). As de trás são fallback quando a de cima está em CD.
+    // Magias PRONTAS agora (nível/voc ok, com mana e fora de cooldown), na ordem
+    // de prioridade.
+    const ready = normalizeAttackSpells(G.rtc)
+      .map(id => ({ id, s: SPELLS[id] }))
+      .filter(({ id, s }) => s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id));
     let atkSpellId = null, atkSpell = null;
-    for (const id of normalizeAttackSpells(G.rtc)) {
-      const s = SPELLS[id];
-      if (s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id)) { atkSpellId = id; atkSpell = s; break; }
+    if (ready.length) {
+      let pick = ready[0]; // padrão: a primeira da prioridade
+      if (G.rtc.smartElement) {
+        // Prioridade inteligente: entre as prontas, a mais forte contra a
+        // fraqueza da criatura da frente (maior modificador elemental).
+        pick = ready.reduce((best, cur) =>
+          elementMod(primary.defKey, cur.s.element) > elementMod(primary.defKey, best.s.element) ? cur : best, ready[0]);
+      }
+      atkSpellId = pick.id; atkSpell = pick.s;
     }
     if (atkSpell) {
       areaId = atkSpell.area || 'single';

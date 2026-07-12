@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=83';
+import { primaryStatKeyForItem } from './rarity.js?v=84';
 
 export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
@@ -94,11 +94,11 @@ export const ITEMS = {
   // `area` = forma de área do Tibia (ver domain/attackAreas.js): SD é alvo
   // único; Explosion/Fireball explodem numa área compacta; Avalanche e Great
   // Fireball cobrem o 3x3 inteiro (até 8 criaturas da sala).
-  sudden_death_rune:    { name: 'Sudden Death Rune', icon: '📜', type: 'rune', dmg: 320, area: 'single', element: 'death', sell: 200 },
-  explosion_rune:       { name: 'Explosion Rune', icon: '📜', type: 'rune', dmg: 140, area: 'explosion', element: 'physical', sell: 60 },
-  avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, area: 'ball', element: 'ice', sell: 90 },
-  fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, area: 'explosion', element: 'fire', sell: 15 },
-  great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, area: 'ball', element: 'fire', sell: 45 },
+  sudden_death_rune:    { name: 'Sudden Death Rune', icon: '📜', type: 'rune', dmg: 320, area: 'single', element: 'death', reqMl: 15, sell: 200 },
+  explosion_rune:       { name: 'Explosion Rune', icon: '📜', type: 'rune', dmg: 140, area: 'explosion', element: 'physical', reqMl: 6, sell: 60 },
+  avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, area: 'ball', element: 'ice', reqMl: 9, sell: 90 },
+  fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, area: 'explosion', element: 'fire', reqMl: 4, sell: 15 },
+  great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, area: 'ball', element: 'fire', reqMl: 7, sell: 45 },
   great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 200, mana: 150, sell: 320 },
 
   // --- Loja de Equipamentos: mais opções reais de Tibia por categoria ---
@@ -143,6 +143,29 @@ export const STARTER_KITS = {
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
 export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ammo', 'ring', 'legs', 'boots'];
 export const CONSUMABLE_TYPES = ['potion', 'rune', 'food'];
+
+// Tipos de ARMA que cada vocação pode empunhar (fiel ao Tibia: cada profissão
+// usa sua classe de arma). Armadura/elmo/anel/etc. não são restritos aqui. A
+// munição (ammo) é exclusiva do paladino. Ver equipItem em inventoryUseCases.
+export const VOCATION_WEAPON_TYPES = {
+  knight:   ['sword', 'axe', 'club'],
+  paladin:  ['distance'],
+  sorcerer: ['magic'],
+  druid:    ['magic'],
+};
+export function canVocationEquip(item, vocation) {
+  if (!item || !vocation) return true;
+  if (item.type === 'weapon') return (VOCATION_WEAPON_TYPES[vocation] || []).includes(item.weaponType);
+  if (item.type === 'ammo') return vocation === 'paladin'; // só o paladino usa munição
+  return true; // demais peças (armadura/elmo/anel/calças/botas/escudo) livres
+}
+// Motivo do bloqueio (pra mensagem), ou null se pode equipar.
+export function equipBlockReason(item, vocation) {
+  if (canVocationEquip(item, vocation)) return null;
+  if (item.type === 'weapon') return 'sua vocação não usa esse tipo de arma';
+  if (item.type === 'ammo') return 'só o paladino usa munição';
+  return 'não pode equipar';
+}
 
 // Requisito de nível/vocação de uma poção, fiel ao Tibia (ver reqLevel/reqVoc
 // nas poções acima). Retorna null se PODE usar, ou uma string com o motivo do

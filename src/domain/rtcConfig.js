@@ -7,6 +7,8 @@
 // Knight fica de fora de todas: sem investimento em magia, runa de ataque
 // não rende dano nenhum (igual ao Tibia real, onde o dano da runa escala
 // com Magic Level).
+import { ITEMS } from './items.js?v=84';
+
 export const ATTACK_RUNE_VOCATIONS = {
   sudden_death_rune: ['paladin', 'sorcerer', 'druid'],
   explosion_rune: ['paladin', 'sorcerer', 'druid'],
@@ -18,6 +20,15 @@ export const ATTACK_RUNE_VOCATIONS = {
 export function isRuneAvailableToVocation(itemId, vocation) {
   const vocs = ATTACK_RUNE_VOCATIONS[itemId];
   return !vocs || vocs.includes(vocation);
+}
+
+// Magic Level mínimo pra usar a runa (fiel ao Tibia — runa forte exige mais ML).
+export function runeMinMl(itemId) {
+  return (ITEMS[itemId] && ITEMS[itemId].reqMl) || 0;
+}
+// Pode usar a runa de ataque? Precisa ser da vocação E ter o Magic Level mínimo.
+export function canUseAttackRune(itemId, vocation, magicLevel) {
+  return isRuneAvailableToVocation(itemId, vocation) && (magicLevel || 0) >= runeMinMl(itemId);
 }
 
 // Lista de magias de ataque em ordem de PRIORIDADE (como o RTCaster real, que
@@ -32,6 +43,7 @@ export function createDefaultRtc() {
   return {
     attackType: null,        // 'spell' | 'rune' | null
     attackSpells: [],        // ids das magias de ataque, em ordem de prioridade
+    smartElement: false,     // casta a magia forte contra a fraqueza da criatura
     attackRune: null,
     healSpell: null,         // null = usa exura (cura básica) como padrão
     healSpellThreshold: 40,  // % de HP pra castar a spell de cura

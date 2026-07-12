@@ -74,13 +74,11 @@ o VIP compra principalmente *tempo* e *conveniência*.
 
 ## 1. RTC
 
-- [ ] 🔴 **Prioridade inteligente por elemento** — opção pra o auto-ataque escolher a magia
-      forte contra a fraqueza da criatura atual (usa `domain/elements.js`). Dá real sentido
-      à lista de prioridade de magias.
+- [x] **Prioridade inteligente por elemento** — toggle no RTC: entre as magias prontas, casta
+      a mais forte contra a fraqueza da criatura atual (usa `domain/elements.js`).
 - [ ] 🟡 **Magias de suporte** — utani hur (haste = mais ticks/s), utamo vita (escudo mágico),
       utana vid (invisibilidade). Amplia a automação além de ataque/cura.
-- [ ] 🟢 **Botão "abrir bag" dentro da aba Healing** — hoje precisa abrir a bag pela aba Caçada
-      pra arrastar a poção pro slot.
+- [x] **Botão "abrir bag" dentro da aba Healing** — atalho 🎒 pra arrastar a poção pro slot.
 
 ## 2. BATTLE
 
@@ -98,13 +96,11 @@ consegue **equipar** itens/armas da própria profissão; (c) só vê/usa **magia
 própria profissão; (d) só usa **runas** que o **Magic Level** da profissão permite.
 
 **Regras transversais (valem pra todas):**
-- [ ] 🔴 **Restrição de equipamento por vocação** — hoje o `computeAtk` só *ignora* a arma errada
-      (vira Fist), mas o jogo **deixa equipar** qualquer coisa. Bloquear no `equipItem`:
-      knight = melee (sword/axe/club) + escudo; paladin = distance + munição; mage = wand/rod.
-      (elmo/armadura/anel/botas: aplicar os limites de vocação do Tibia onde houver.)
-- [ ] 🔴 **Runas por Magic Level** — hoje `isRuneAvailableToVocation` só barra por vocação
-      (knight fora). Adicionar **ML mínimo por runa** (a runa só funciona/aparece se o ML
-      permitir), como no Tibia. Ver `domain/rtcConfig.js` + `domain/combatFormulas.js: runeDamage`.
+- [x] **Restrição de equipamento por vocação** — bloqueado no `equipItem`/`equipRelic`:
+      knight = sword/axe/club; paladin = distance + munição; mage = wand/rod (ver
+      `domain/items.js: canVocationEquip`). Armadura/elmo/anel/etc. seguem livres.
+- [x] **Runas por Magic Level** — cada runa tem `reqMl`; a seleção e o combate exigem o ML
+      mínimo (ver `domain/rtcConfig.js: canUseAttackRune`). A UI mostra 🔮 ML e 🔒 se faltar.
 - [ ] 🟡 **Magias só da própria vocação** — o RTC já filtra por `spell.voc`; confirmar que
       NÃO há caminho (save antigo, item, atalho) pra castar magia de outra vocação.
 - [ ] 🟡 **Documentar as fórmulas-alvo** do Tibia numa nota (fonte TibiaWiki) pra comparar 1:1.

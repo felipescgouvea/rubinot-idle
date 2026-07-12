@@ -1126,6 +1126,14 @@ img.tibia-icon {
 .rtc-row-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .rtc-row.selected .rtc-row-btn { background: linear-gradient(180deg, #8a6f1f, #5c4a14); border-color: var(--gold-bright); color: #fff4d0; }
 
+/* Toggle de prioridade inteligente por elemento (RTC) */
+.rtc-smart-toggle {
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+  font-size: 12px; font-weight: 700; color: #cdd6ff;
+  background: #23283f; border: 1px solid #3a4160; border-radius: 6px;
+  padding: 7px 10px; margin: 0 0 10px;
+}
+
 /* Prioridade das magias de ataque (RTC) */
 .rtc-prio-row { align-items: center; }
 .rtc-prio-num {
@@ -1828,7 +1836,21 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* caixa FIXA + object-fit: contain padroniza o tamanho visual de todos os
    sprites (mesma abordagem do sprite principal), independente das dimensões
    nativas de cada gif — sem isso os monstros apareciam em tamanhos diferentes */
-.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; font-size: 26px; line-height: 1; text-align: center; }
+.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; font-size: 26px; line-height: 1; text-align: center;
+  /* monstros "vivos" na janela de batalha: um bob/respiração contínuo (o alvo
+     da frente balança mais rápido; os mortos congelam — ver .dead abaixo) */
+  transform-origin: center bottom;
+  animation: mon-bob 1.15s ease-in-out infinite;
+}
+@keyframes mon-bob {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50%      { transform: translateY(-2px) scaleY(1.05); }
+}
+/* varia o compasso pra a sala não bater junto */
+.battle-list-entry:nth-child(2n) .battle-list-sprite { animation-duration: 1.35s; animation-delay: -0.3s; }
+.battle-list-entry:nth-child(3n) .battle-list-sprite { animation-duration: 0.95s; animation-delay: -0.6s; }
+.battle-list-entry.target .battle-list-sprite { animation-duration: 0.6s; } /* alvo mais agitado */
+.battle-list-entry.dead .battle-list-sprite { animation: none; }
 .battle-list-info { flex: 1; min-width: 0; }
 .battle-list-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* Barra de vida da Battle List — mesmo estilo da que ficava na cena (16px,

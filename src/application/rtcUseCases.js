@@ -1,11 +1,12 @@
 // Configuração do RTC (Rubinot Custom Client): ataque automático (spell OU
 // runa, mutuamente exclusivos) e cura automática (spell E poção, cada uma
 // com seu limiar de % de HP) — ver domain/rtcConfig.js e a UI em rtcPanel.js.
-import { G } from './gameStore.js?v=83';
-import { isSpellAvailable } from '../domain/spells.js?v=83';
-import { normalizeAttackSpells } from '../domain/rtcConfig.js?v=83';
-import { emit, EVENTS } from '../shared/eventBus.js?v=83';
-import { saveGame } from './saveGameUseCase.js?v=83';
+import { G } from './gameStore.js?v=84';
+import { isSpellAvailable } from '../domain/spells.js?v=84';
+import { normalizeAttackSpells, canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=84';
+import { getMagic } from './stats.js?v=84';
+import { emit, EVENTS } from '../shared/eventBus.js?v=84';
+import { saveGame } from './saveGameUseCase.js?v=84';
 
 function refresh(msg) {
   emit(EVENTS.RTC_PANEL);
@@ -45,10 +46,23 @@ export function moveRtcAttackSpell(spellId, dir) {
 
 export function setRtcAttackRune(itemId) {
   const clearing = G.rtc.attackType === 'rune' && G.rtc.attackRune === itemId;
+  // Magic Level mínimo pra usar a runa (fiel ao Tibia — ver domain/rtcConfig.js).
+  if (!clearing && !canUseAttackRune(itemId, G.vocation, getMagic())) {
+    emit(EVENTS.NOTIFY, { msg: `Magic Level insuficiente para essa runa (precisa ML ${runeMinMl(itemId)}).`, type: 'error' });
+    return;
+  }
   G.rtc.attackType = clearing ? null : 'rune';
   G.rtc.attackRune = clearing ? null : itemId;
   if (!clearing) G.rtc.attackSpells = []; // runa desliga as magias
   refresh(clearing ? 'Ataque automático removido.' : 'RTC vai usar essa runa automaticamente.');
+}
+
+// Prioridade inteligente por elemento: quando ligada, entre as magias PRONTAS
+// da lista de prioridade, o RTC casta a mais forte contra a fraqueza da criatura
+// atual (ver domain/elements.js + application/huntUseCases.js). Padrão: desligada.
+export function setRtcSmartElement(on) {
+  G.rtc.smartElement = !!on;
+  refresh(G.rtc.smartElement ? 'Prioridade por fraqueza elemental ligada.' : 'Prioridade por ordem da lista.');
 }
 
 export function setRtcHealSpell(spellId) {

@@ -1,13 +1,13 @@
-import { G } from './gameStore.js?v=83';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason } from '../domain/items.js?v=83';
-import { ZONES } from '../domain/bestiary.js?v=83';
-import { RARITY_TIERS } from '../domain/rarity.js?v=83';
-import { emit, EVENTS } from '../shared/eventBus.js?v=83';
-import { getMaxHp, getMaxMana } from './stats.js?v=83';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=83';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=83';
-import { saveGame } from './saveGameUseCase.js?v=83';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=83';
+import { G } from './gameStore.js?v=84';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=84';
+import { ZONES } from '../domain/bestiary.js?v=84';
+import { RARITY_TIERS } from '../domain/rarity.js?v=84';
+import { emit, EVENTS } from '../shared/eventBus.js?v=84';
+import { getMaxHp, getMaxMana } from './stats.js?v=84';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=84';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=84';
+import { saveGame } from './saveGameUseCase.js?v=84';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=84';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -15,7 +15,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=83';
+export { addItemToInventory } from './inventoryCore.js?v=84';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -35,6 +35,10 @@ export function setAutoSellMax(value) {
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
+  // Restrição de vocação: cada profissão só empunha a sua classe de arma (e só
+  // o paladino usa munição) — ver domain/items.js: canVocationEquip.
+  const block = equipBlockReason(item, G.vocation);
+  if (block) { emit(EVENTS.NOTIFY, { msg: `${item.name}: ${block}.`, type: 'error' }); return; }
   G.equipment[item.type] = itemId;
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
@@ -65,6 +69,8 @@ export function equipRelic(relicId) {
   if (!relic) return;
   const base = ITEMS[relic.itemId];
   if (!base) return;
+  const block = equipBlockReason(base, G.vocation);
+  if (block) { emit(EVENTS.NOTIFY, { msg: `${base.name}: ${block}.`, type: 'error' }); return; }
   G.equipment[base.type] = relicId;
   const tier = RARITY_TIERS[relic.rarity];
   emit(EVENTS.MODAL_CLOSE);
