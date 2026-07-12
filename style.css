@@ -1722,6 +1722,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .log-tab:hover { background: #fff; }
 .log-tab.active { color: var(--ink); background: var(--cream); border-color: var(--gold); border-bottom-color: var(--cream); }
 /* filtragem por aba: esconde as linhas que não batem com o filtro atual */
+.log-time { color: var(--ink-faint, #9b8a6a); font-size: 10px; font-variant-numeric: tabular-nums; margin-right: 3px; }
 #combat-log[data-filter="combate"] .log-line:not([data-cat="combate"]) { display: none; }
 #combat-log[data-filter="magia"] .log-line:not([data-cat="magia"]) { display: none; }
 #combat-log[data-filter="suprimento"] .log-line:not([data-cat="suprimento"]) { display: none; }

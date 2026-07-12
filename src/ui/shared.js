@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=66';
-import { ITEMS } from '../domain/items.js?v=66';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=66';
+import { on, EVENTS } from '../shared/eventBus.js?v=67';
+import { ITEMS } from '../domain/items.js?v=67';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=67';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -65,13 +65,20 @@ export function escapeHtml(s) {
 // 'combate' (padrão), 'magia' (spells) e 'suprimento' (poções/runas). As
 // spells/poções são marcadas explicitamente por quem emite o log (ver
 // huntUseCases/inventoryUseCases) — o resto cai em 'combate'.
+// Horário atual (HH:MM:SS) pra carimbar cada linha do log.
+function logTimestamp() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
 export function addLog(html, cat = 'combate') {
   const log = document.getElementById('combat-log');
   if (!log) return;
   const line = document.createElement('div');
   line.className = 'log-line';
   line.dataset.cat = cat;
-  line.innerHTML = html;
+  line.innerHTML = `<span class="log-time">${logTimestamp()}</span> ${html}`;
   log.appendChild(line);
   // keep last 120 lines
   while (log.children.length > 120) log.removeChild(log.firstChild);
