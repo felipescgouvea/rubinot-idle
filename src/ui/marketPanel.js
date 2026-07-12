@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=69';
-import { ITEMS } from '../domain/items.js?v=69';
-import { on, EVENTS } from '../shared/eventBus.js?v=69';
-import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=69';
-import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=69';
-import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=69';
+import { G } from '../application/gameStore.js?v=70';
+import { ITEMS } from '../domain/items.js?v=70';
+import { on, EVENTS } from '../shared/eventBus.js?v=70';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=70';
+import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=70';
+import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=70';
 
 export async function renderMarketPanel() {
   const el = document.getElementById('market-content');

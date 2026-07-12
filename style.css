@@ -769,6 +769,25 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   100% { background: radial-gradient(circle, transparent 0%, transparent 100%); opacity: 0; transform: scale(1.4); }
 }
 
+/* ---- sprite REAL de efeito (gif animado) tocada na cena ao castar magia/runa ---- */
+.spell-effect-sprite {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 72px; height: 72px;
+  margin: -36px 0 0 -36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 3; /* acima do boneco (z-index:2) */
+  animation: spell-effect-pop 0.9s ease-out forwards;
+}
+@keyframes spell-effect-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  18% { opacity: 1; transform: scale(1.08); }
+  70% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+
 /* ---- efeitos de magia de ataque sobre o monstro, por elemento da spell ---- */
 .monster-sprite-wrap { position: relative; }
 .monster-sprite-wrap[class*="spell-"]::after {

@@ -1,15 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=69';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=69';
-import { MONSTERS } from '../domain/bestiary.js?v=69';
-import { cityName } from '../domain/cities.js?v=69';
-import { ITEMS } from '../domain/items.js?v=69';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=69';
-import { on, EVENTS } from '../shared/eventBus.js?v=69';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=69';
-import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=69';
+import { G } from '../application/gameStore.js?v=70';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=70';
+import { MONSTERS } from '../domain/bestiary.js?v=70';
+import { cityName } from '../domain/cities.js?v=70';
+import { ITEMS } from '../domain/items.js?v=70';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=70';
+import { on, EVENTS } from '../shared/eventBus.js?v=70';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=70';
+import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=70';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -31,6 +31,24 @@ function flashSpellEffect(wrap, spellElement) {
   [...wrap.classList].filter(c => c.startsWith('spell-')).forEach(c => wrap.classList.remove(c));
   void wrap.offsetWidth;
   wrap.classList.add(`spell-${spellElement}`);
+}
+
+// Toca o sprite REAL de efeito do Tibia (gif animado) sobre a cena de batalha
+// quando uma magia/runa é castada. Cada chamada cria um <img> novo (o gif toca
+// do primeiro quadro) sobreposto ao personagem e se remove ao terminar. O
+// monstro-alvo foi removido do DOM, então o efeito é ancorado no #dungeon-stage.
+function playSpellEffectOnStage(spellElement) {
+  if (!spellElement) return;
+  const stage = document.getElementById('dungeon-stage');
+  const file = effectSpriteFile(spellElement);
+  if (!stage || !file) return;
+  const img = document.createElement('img');
+  img.className = 'spell-effect-sprite';
+  img.src = spriteUrl(file);
+  img.alt = '';
+  stage.appendChild(img);
+  // duração ~ um ciclo do gif; removido depois pra não acumular no DOM
+  setTimeout(() => img.remove(), 900);
 }
 
 export function renderMonsterDisplay(hit = false, killed = null, spellElement = null, bossAura = null) {
@@ -226,7 +244,7 @@ export function updateSceneMode() {
 }
 
 export function wireHuntPanelEvents() {
-  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
+  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); if (spellElement) playSpellEffectOnStage(spellElement); renderBattleList(); updateSceneMode(); });
   on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
