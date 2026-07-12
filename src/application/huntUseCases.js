@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=77';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=77';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=77';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=77';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=77';
-import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=77';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=77';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=77';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=77';
-import { MONSTERS } from '../domain/bestiary.js?v=77';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=77';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=77';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=77';
-import { emit, EVENTS } from '../shared/eventBus.js?v=77';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=77';
-import { trainSkill } from './skillUseCases.js?v=77';
-import { addItemToInventory } from './inventoryCore.js?v=77';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=77';
-import { getCombatBonuses } from './bonuses.js?v=77';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=77';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=77';
+import { G } from './gameStore.js?v=78';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=78';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=78';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=78';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=78';
+import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=78';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=78';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=78';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=78';
+import { MONSTERS } from '../domain/bestiary.js?v=78';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=78';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=78';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=78';
+import { emit, EVENTS } from '../shared/eventBus.js?v=78';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=78';
+import { trainSkill } from './skillUseCases.js?v=78';
+import { addItemToInventory } from './inventoryCore.js?v=78';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=78';
+import { getCombatBonuses } from './bonuses.js?v=78';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=78';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=78';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -186,64 +186,8 @@ export function doHuntTick() {
   // criaturas que estão esperando atrás na sala (até o limite da forma).
   // `spellPower`/`runeDmg` guardam COMO recalcular o dano em cada alvo do
   // respingo — cada criatura leva seu próprio dano (rola contra a def dela).
-  let playerDmg = calcDamage(getAtk(), primary.def);
-  // combatFx = efeito visual REAL deste golpe: { effect, shape } — o sprite de
-  // efeito (fogo/gelo/groundshaker/…) espalhado nos tiles ao redor do boneco
-  // conforme a forma da área da magia (ver ui/huntPanel.js: playAreaEffect).
-  // Golpe básico não tem efeito de magia (fica null).
-  let combatFx = null;
-  let areaId = 'single';
-  let spellPower = null;
-  let runeDmg = null;
-  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
-    // Ataque automático por runa (RTC): substitui o golpe normal, não treina skill —
-    // é um item pré-carregado, não uma habilidade viva do personagem.
-    const rune = ITEMS[G.rtc.attackRune];
-    playerDmg = rune.dmg;
-    runeDmg = rune.dmg;
-    areaId = rune.area || 'single';
-    combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
-    G.inventory[G.rtc.attackRune]--;
-    if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
-    emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
-    emit(EVENTS.INVENTORY);
-  } else {
-    // Prioridade de magias (como o RTCaster real): percorre a lista na ordem e
-    // casta a PRIMEIRA disponível — nível/vocação ok, com mana E fora de cooldown.
-    // As de trás são fallback quando a de cima está em CD ou sem mana.
-    let atkSpellId = null, atkSpell = null;
-    if (G.rtc.attackType !== 'rune') {
-      for (const id of normalizeAttackSpells(G.rtc)) {
-        const s = SPELLS[id];
-        if (s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id)) { atkSpellId = id; atkSpell = s; break; }
-      }
-    }
-    const spellReady = !!atkSpell;
-    if (spellReady) {
-      playerDmg = Math.floor(playerDmg * atkSpell.power);
-      spellPower = atkSpell.power;
-      areaId = atkSpell.area || 'single';
-      G.mana -= atkSpell.mana;
-      startSpellCd(atkSpellId, atkSpell.cd);
-      trainSkill('magic', atkSpell.mana * voc.magicMult);
-      emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
-      combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
-    }
-    if (voc.attackSkill !== 'magic') {
-      // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
-      // sobe (sword só treina com espada equipada, axe só com machado, etc.)
-      trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
-    } else if (!spellReady && G.mana >= 8) {
-      // mage sem magia disponível (nenhuma selecionada OU em cooldown/sem mana):
-      // golpe arcano básico (alvo único).
-      playerDmg = Math.floor(playerDmg * 1.3);
-      G.mana -= 8;
-      trainSkill('magic', 8 * voc.magicMult);
-    }
-  }
-
   // Aplica dano num alvo com o bônus de Presa/Charm DELE e o lifeleech; devolve
-  // o dano final. Usado no alvo da frente e em cada alvo do respingo de área.
+  // o dano final. Usado no golpe básico, na magia/runa e em cada alvo do respingo.
   function strike(target, rawDmg) {
     const cb = getCombatBonuses(target.defKey, Date.now());
     let dmg = Math.max(1, Math.floor(rawDmg * (cb.damage > 1 ? cb.damage : 1)));
@@ -255,23 +199,73 @@ export function doHuntTick() {
     return dmg;
   }
 
-  // Golpe no alvo da frente.
-  const primaryDmg = strike(primary, playerDmg);
-  emit(EVENTS.LOG, `⚔️ Você causou <span class="log-dmg">${primaryDmg}</span> de dano ao ${primary.name}.`);
+  // === Ações ofensivas do tick — FIÉIS ao Tibia: o auto-ataque (arma) e a
+  // magia/runa são SEPARADOS e acontecem no MESMO tick (você bate com a arma E
+  // casta ao mesmo tempo). As poções (cura/mana) também rodam neste mesmo tick,
+  // mais abaixo. Então um tick = 1 golpe básico + 1 magia/runa + poções. ===
 
-  // Respingo de área: mesmo golpe nas criaturas esperando atrás, cada uma com
-  // seu próprio dano (recalculado contra a def dela). Limitado pela forma da
-  // área E pela quantidade de bichos realmente presentes na sala.
-  if (isAreaAttack(areaId) && currentPack.length > 1) {
-    const maxTargets = areaMaxTargets(areaId);
-    const splashTargets = currentPack.slice(1, maxTargets); // exclui o da frente
-    splashTargets.forEach(t => {
-      const raw = runeDmg != null ? runeDmg : Math.floor(calcDamage(getAtk(), t.def) * (spellPower || 1));
-      const d = strike(t, raw);
-      emit(EVENTS.LOG, `💥 <span class="log-dmg">${d}</span> em ${t.name} <span class="log-info">(área)</span>.`);
-    });
-    if (splashTargets.length > 0) {
-      emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${splashTargets.length + 1} criaturas.</span>`, cat: 'combate' });
+  // (1) GOLPE BÁSICO — sempre acontece: arma pro guerreiro/paladino (treina a
+  // skill da arma equipada); o cajado/wand do mago é arma mágica e NÃO custa mana.
+  const basicDmg = calcDamage(getAtk(), primary.def);
+  if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
+  const basicHit = strike(primary, basicDmg);
+  emit(EVENTS.LOG, `⚔️ Golpe básico: <span class="log-dmg">${basicHit}</span> de dano ao ${primary.name}.`);
+
+  // (2) MAGIA (por prioridade) OU RUNA — ação ADICIONAL no mesmo tick, com dano,
+  // área e efeito próprios. Magia custa mana + cooldown; runa consome o item.
+  let combatFx = null;
+  let areaId = 'single';
+  let spellPower = null;
+  let runeDmg = null;
+  let spellDmg = 0;
+  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
+    const rune = ITEMS[G.rtc.attackRune];
+    spellDmg = rune.dmg;
+    runeDmg = rune.dmg;
+    areaId = rune.area || 'single';
+    combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
+    G.inventory[G.rtc.attackRune]--;
+    if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
+    emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
+    emit(EVENTS.INVENTORY);
+  } else {
+    // Prioridade de magias: casta a PRIMEIRA disponível (nível/voc ok, com mana
+    // e fora de cooldown). As de trás são fallback quando a de cima está em CD.
+    let atkSpellId = null, atkSpell = null;
+    for (const id of normalizeAttackSpells(G.rtc)) {
+      const s = SPELLS[id];
+      if (s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id)) { atkSpellId = id; atkSpell = s; break; }
+    }
+    if (atkSpell) {
+      spellDmg = Math.floor(calcDamage(getAtk(), primary.def) * atkSpell.power);
+      spellPower = atkSpell.power;
+      areaId = atkSpell.area || 'single';
+      G.mana -= atkSpell.mana;
+      startSpellCd(atkSpellId, atkSpell.cd);
+      trainSkill('magic', atkSpell.mana * voc.magicMult);
+      emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
+      combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
+    }
+  }
+
+  // Aplica a magia/runa: dano no alvo da frente (se sobreviveu ao básico) + o
+  // respingo de área nas criaturas atrás (cada uma rola o dano contra a def dela).
+  if (spellDmg > 0) {
+    if (primary.hp > 0) {
+      const sHit = strike(primary, spellDmg);
+      emit(EVENTS.LOG, `✨ Magia: <span class="log-dmg">${sHit}</span> de dano ao ${primary.name}.`);
+    }
+    if (isAreaAttack(areaId) && currentPack.length > 1) {
+      const maxTargets = areaMaxTargets(areaId);
+      const splashTargets = currentPack.slice(1, maxTargets); // exclui o da frente
+      splashTargets.forEach(t => {
+        const raw = runeDmg != null ? runeDmg : Math.floor(calcDamage(getAtk(), t.def) * (spellPower || 1));
+        const d = strike(t, raw);
+        emit(EVENTS.LOG, `💥 <span class="log-dmg">${d}</span> em ${t.name} <span class="log-info">(área)</span>.`);
+      });
+      if (splashTargets.length > 0) {
+        emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${splashTargets.length + 1} criaturas.</span>`, cat: 'combate' });
+      }
     }
   }
 
