@@ -752,12 +752,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 .player-sprite-fallback, .player-sprite-wrap span { font-size: 2.7rem; line-height: 54px; text-align: center; }
 /* bob de passo só enquanto procura (andando); parado fica sem bob */
-#dungeon-stage.searching .player-sprite,
-#dungeon-stage.searching .player-sprite-wrap span { animation: player-walk 0.45s ease-in-out infinite; }
-@keyframes player-walk {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-3px); }
-}
+/* Boneco ESTÁTICO na cena de batalha (sem pulo/caminhada) — só os efeitos de
+   spell aparecem. Mantido virado pra baixo (idle frontal do atlas). */
 /* morto: tomba e para */
 .player-sprite-wrap.dead .player-sprite,
 .player-sprite-wrap.dead span {
@@ -765,7 +761,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   transform: rotate(90deg);
   filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044);
 }
-.player-sprite-wrap.hit { animation: monster-hit 0.25s ease; }
+.player-sprite-wrap.hit { animation: none; } /* estático: sem tremida ao ser atingido */
 .player-battle-name { font-family: var(--serif); font-size: 13px; color: #fff; text-shadow: 0 1px 3px #000000cc; letter-spacing: 1px; margin: 8px 0 4px; font-weight: 700; text-align: center; }
 .player-hp-track {
   height: 16px;
@@ -825,12 +821,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   40% { transform: scale(1.18) rotate(-10deg); opacity: 0.9; filter: brightness(2.2) drop-shadow(0 0 14px #ffffffcc); }
   100% { transform: scale(0.75) rotate(15deg) translateY(12px); opacity: 0.45; filter: grayscale(1) drop-shadow(0 3px 5px #00000044); }
 }
-.player-sprite-wrap.attacking { animation: player-attack 0.3s ease; }
-@keyframes player-attack {
-  0% { transform: translateX(0) rotate(0); }
-  35% { transform: translateX(10px) rotate(-8deg) scale(1.08); filter: drop-shadow(0 0 8px #f1c40fcc); }
-  100% { transform: translateX(0) rotate(0); }
-}
+.player-sprite-wrap.attacking { animation: none; } /* estático: sem lunge ao atacar */
 
 /* ---- efeito de cura (o "brilho verde" clássico do Tibia ao curar) ---- */
 .player-sprite-wrap.healing::after {
