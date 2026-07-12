@@ -82,9 +82,10 @@ o VIP compra principalmente *tempo* e *conveniência*.
 
 ## 2. BATTLE
 
-- [ ] 🔴 **Calibrar balanceamento** do combate novo (golpe básico + magia por tick, wand grátis,
-      dano por nível+ML). Coeficientes em `domain/combatFormulas.js`.
-- [ ] 🟡 **Blessings** compráveis que reduzem a perda de XP na morte (hoje 5% + revive 30% HP).
+- [x] **Calibração inicial** do combate novo — o wand/rod do mago virou poke fraco (×0.5) pra o
+      dano vir das magias, não do cajado grátis (`huntUseCases.js`). Ainda pode afinar por playtest.
+- [x] **Blessings** compráveis (gold, escala com o nível): reduzem a perda de XP na morte e
+      melhoram o revive (30%→60% HP com as 5); consumidas ao morrer. Card na aba Caçada.
 - [ ] 🟡 **Refinar tabela elemental por criatura** (hoje por família temática — `domain/elements.js`).
 - [ ] 🟢 **Popular imunidades elementais reais** (mod = 0 já suportado no código).
 - [ ] 🟢 **Hunt Analyzer avançado** — loot detalhado por item, "gold/h ao vender", exportar sessão.

@@ -3,29 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=84';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=84';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=84';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=84';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=84';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=84';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=84';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=84';
-import { elementMod } from '../domain/elements.js?v=84';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=84';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=84';
-import { MONSTERS } from '../domain/bestiary.js?v=84';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=84';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=84';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=84';
-import { emit, EVENTS } from '../shared/eventBus.js?v=84';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=84';
-import { trainSkill } from './skillUseCases.js?v=84';
-import { addItemToInventory } from './inventoryCore.js?v=84';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=84';
-import { getCombatBonuses } from './bonuses.js?v=84';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=84';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=84';
+import { G } from './gameStore.js?v=85';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=85';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=85';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=85';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=85';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=85';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=85';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=85';
+import { elementMod } from '../domain/elements.js?v=85';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=85';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=85';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=85';
+import { MONSTERS } from '../domain/bestiary.js?v=85';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=85';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=85';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=85';
+import { emit, EVENTS } from '../shared/eventBus.js?v=85';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=85';
+import { trainSkill } from './skillUseCases.js?v=85';
+import { addItemToInventory } from './inventoryCore.js?v=85';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=85';
+import { getCombatBonuses } from './bonuses.js?v=85';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=85';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=85';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -253,6 +254,10 @@ export function doHuntTick() {
     }
   } else {
     basicRaw = calcDamage(getAtk(), primary.def);
+    // Calibragem: o auto-ataque de wand/rod do mago é um POKE fraco (como no
+    // Tibia) — o dano do mago vem das magias, não do cajado gratuito. Sem esse
+    // corte, o wand grátis todo tick inflava demais o DPS do mago.
+    if (voc.attackSkill === 'magic') basicRaw *= 0.5;
   }
   const basicDmg = basicRaw * elementMod(primary.defKey, 'physical');
   if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
@@ -414,9 +419,14 @@ export function doHuntTick() {
   }
 
   if (G.hp <= 0) {
-    emit(EVENTS.LOG, `<span class="log-kill">💔 Você morreu! Retornando ao templo...</span>`);
-    G.hp = Math.floor(getMaxHp() * 0.3);
-    G.xp = Math.floor(G.xp * 0.95); // 5% xp loss
+    // Bênçãos reduzem a perda de XP e melhoram o revive; são consumidas na morte.
+    const bless = G.blessings || 0;
+    const lostPct = deathXpLossPct(bless);
+    const xpLost = Math.floor(G.xp * lostPct);
+    G.hp = Math.floor(getMaxHp() * reviveHpPct(bless));
+    G.xp = Math.max(0, G.xp - xpLost);
+    emit(EVENTS.LOG, `<span class="log-kill">💔 Você morreu! Retornando ao templo... (-${xpLost} XP${bless > 0 ? `, ${bless} bênção(ões) consumida(s)` : ''})</span>`);
+    if (bless > 0) { G.blessings = 0; emit(EVENTS.BLESSINGS); }
     currentMonster = null;
     stopHunt();
   }

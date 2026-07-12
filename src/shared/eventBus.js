@@ -48,6 +48,7 @@ export const EVENTS = {
   MARKET_VISIBILITY: 'marketVisibility',
   COMBAT_FX: 'combatFx',
   HUNT_STATS: 'huntStats',
+  BLESSINGS: 'blessings',
   HIGHSCORES_PANEL: 'highscoresPanel',
   OFFLINE_PROGRESS: 'offlineProgress',
   OUTFIT_PICKER: 'outfitPicker',

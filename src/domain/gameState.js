@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=84';
-import { createDefaultRtc } from './rtcConfig.js?v=84';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=84';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=84';
+import { createDefaultSkills } from './character.js?v=85';
+import { createDefaultRtc } from './rtcConfig.js?v=85';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=85';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=85';
 
 export function createDefaultState() {
   return {
@@ -63,6 +63,9 @@ export function createDefaultState() {
     // (adminConfig.staminaEnabled): cai enquanto caça, regenera descansando, e
     // abaixo de certos limiares reduz a XP — igual ao Tibia. Ver stats/huntUseCases.
     stamina: 2520,
+    // Bênçãos ativas (0..5) — reduzem a perda de XP na morte e melhoram o
+    // revive; consumidas ao morrer (ver domain/blessings.js).
+    blessings: 0,
     taskKills: {},
     activeTask: null,
     taskCompletion: {},

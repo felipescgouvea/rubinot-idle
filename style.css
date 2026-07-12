@@ -389,6 +389,13 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .hunt-analyzer-stamina.tier-mid { color: #d98a1f; }
 .hunt-analyzer-stamina.tier-low { color: #e05a5a; }
 
+/* Bênçãos */
+.bless-pips { display: flex; align-items: center; gap: 3px; font-size: 16px; margin-bottom: 6px; }
+.bless-pip { filter: grayscale(1) opacity(0.35); }
+.bless-pip.on { filter: none; }
+.bless-pips strong { margin-left: 6px; font-size: 13px; color: var(--navy-1); }
+.bless-info { font-size: 11px; margin: 0 0 8px !important; }
+
 /* Hunt Analyzer (Análise da Caçada) */
 .hunt-analyzer-status { font-weight: 700; font-size: 12px; margin-bottom: 8px; }
 .hunt-analyzer-status.on { color: #2ecc71; }
