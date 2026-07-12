@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=82';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=82';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=82';
-import { on, EVENTS } from '../shared/eventBus.js?v=82';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=82';
+import { G } from '../application/gameStore.js?v=83';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=83';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=83';
+import { on, EVENTS } from '../shared/eventBus.js?v=83';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=83';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -56,6 +56,36 @@ function renderShopCard(s) {
   </div>`;
 }
 
+// Qual loja está selecionada no menu lateral (estado só de UI). Cada loja é
+// como um NPC diferente — o jogador clica na esquerda e vê os itens à direita,
+// em vez de uma lista gigante única.
+let activeShop = SHOPS[0].key;
+
+export function setShopTab(key) {
+  if (!SHOPS.some(s => s.key === key)) return;
+  activeShop = key;
+  renderShopPanel();
+}
+
+// Conteúdo (itens agrupados por sub-seção) de UMA loja — o painel principal à
+// direita do menu lateral.
+function renderShopContent(shop) {
+  const shopItems = SHOP_ITEMS.filter(s => s.shop === shop.key);
+  const subs = shop.sub.map(sub => {
+    const items = shopItems.filter(s => sub.filter(s, ITEMS));
+    if (!items.length) return '';
+    return `
+      ${sub.title ? `<h4 style="margin: 12px 0 8px !important">${sub.title}</h4>` : ''}
+      <div id="skills-grid" style="margin: 0 0 8px !important">
+        ${items.map(renderShopCard).join('')}
+      </div>`;
+  }).join('');
+  return `
+    <h3 style="margin:0 0 2px !important">${shop.title}</h3>
+    <p class="muted" style="margin:0 0 6px !important;font-size:12px">${shop.subtitle}</p>
+    ${subs}`;
+}
+
 export function renderShopPanel() {
   const el = document.getElementById('shop-content');
   if (!el) return;
@@ -65,30 +95,21 @@ export function renderShopPanel() {
     const mins = Math.ceil((G.boosts[k] - now) / 60000);
     return `${k.toUpperCase()} (${mins}min restantes)`;
   });
+  const shop = SHOPS.find(s => s.key === activeShop) || SHOPS[0];
 
   el.innerHTML = `
-    <div id="skill-points-display" style="margin: 0 0 14px !important">
+    <div id="skill-points-display" style="margin: 0 0 12px !important">
       <strong>Seu saldo:</strong> <span>${formatNum(G.gold)} ${goldIconImg('inline-icon')} gold</span> · <span>${formatNum(G.rubini)} ${rubiniIconImg('inline-icon')} Rubini Coins</span>
       ${activeBoosts.length ? `<br/><strong>Boosts ativos:</strong> <span>${activeBoosts.join(' · ')}</span>` : ''}
-      <br/><span class="muted" style="font-size:11px">Ganhe Rubini Coins completando tasks e vencendo na Arena.</span>
     </div>
-    ${SHOPS.map(shop => {
-      const shopItems = SHOP_ITEMS.filter(s => s.shop === shop.key);
-      return `
-      <div class="shop-npc-block">
-        <h3 style="margin:0 0 2px !important">${shop.title}</h3>
-        <p class="muted" style="margin:0 0 10px !important;font-size:12px">${shop.subtitle}</p>
-        ${shop.sub.map(sub => {
-          const items = shopItems.filter(s => sub.filter(s, ITEMS));
-          if (!items.length) return '';
-          return `
-          ${sub.title ? `<h4 style="margin: 10px 0 8px !important">${sub.title}</h4>` : ''}
-          <div id="skills-grid" style="margin: 0 0 8px !important">
-            ${items.map(renderShopCard).join('')}
-          </div>`;
-        }).join('')}
-      </div>`;
-    }).join('')}`;
+    <div class="shop-layout">
+      <div class="shop-sidebar">
+        ${SHOPS.map(s => `<button class="shop-tab-btn ${s.key === shop.key ? 'active' : ''}" onclick="setShopTab('${s.key}')">${s.title}</button>`).join('')}
+      </div>
+      <div class="shop-main">
+        ${renderShopContent(shop)}
+      </div>
+    </div>`;
 }
 
 export function wireShopPanelEvents() {

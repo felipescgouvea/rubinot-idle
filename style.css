@@ -1172,6 +1172,42 @@ img.tibia-icon {
 .rtc-subtab-btn.active { background: linear-gradient(180deg, #4a3d1a, #2e260f); border-color: var(--gold-bright); color: #f1d98a; }
 
 /* ============ SHOP: 3 lojas separadas ============ */
+/* Layout da loja: menu lateral (tipos de loja, 1 coluna) + painel principal */
+.shop-layout { display: flex; gap: 12px; margin: 0 14px 12px; align-items: flex-start; }
+.shop-sidebar {
+  flex: 0 0 200px; display: flex; flex-direction: column; gap: 6px;
+  position: sticky; top: 8px;
+}
+.shop-tab-btn {
+  text-align: left; padding: 10px 12px; border-radius: 8px; cursor: pointer;
+  background: linear-gradient(180deg, #f5ead0, var(--parch-2));
+  border: 1px solid var(--line-soft); color: var(--navy-2);
+  font-family: var(--serif); font-weight: 700; font-size: 13px; line-height: 1.25;
+}
+.shop-tab-btn:hover { border-color: var(--gold-dim); }
+.shop-tab-btn.active {
+  background: linear-gradient(180deg, #8a6f1f, #5c4a14); color: #fff4d0;
+  border-color: var(--gold-bright); box-shadow: 0 1px 4px #00000044;
+}
+.shop-main {
+  flex: 1 1 auto; min-width: 0;
+  background: linear-gradient(180deg, #f5ead0, var(--parch-2));
+  border: 1px solid var(--line-soft); border-radius: 8px;
+  padding: 12px 0 8px; box-shadow: 0 1px 4px #00000022;
+}
+.shop-main > h3 {
+  background: none !important; border-bottom: 1px solid var(--gold-dim);
+  color: var(--navy-2) !important; text-shadow: none !important; box-shadow: none !important;
+  padding: 0 14px 8px !important; font-size: 15px !important;
+}
+.shop-main > p.muted { padding: 0 14px; }
+.shop-main h4 { padding: 0 14px; color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+@media (max-width: 720px) {
+  .shop-layout { flex-direction: column; }
+  .shop-sidebar { flex-basis: auto; position: static; flex-direction: row; flex-wrap: wrap; }
+  .shop-tab-btn { flex: 1 1 auto; text-align: center; }
+}
+
 .shop-npc-block {
   background: linear-gradient(180deg, #f5ead0, var(--parch-2));
   border: 1px solid var(--line-soft);
@@ -1836,10 +1872,16 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .inv-item.drag-over { outline: 2px dashed var(--gold); outline-offset: 2px; background: #fffbe9; }
 
 /* ============ BOOSTED (widget compacto, no cabeçalho ao lado do Reset) ====== */
+/* Faixa do Boosted — destacada do header, colada à direita e bem próxima dele */
+#boosted-strip {
+  display: flex;
+  justify-content: flex-end;
+  margin: 4px 14px 0;
+}
 #boosted-card {
   width: auto;
   margin: 0 !important;
-  align-self: center;
+  align-self: flex-end;
   box-shadow: 0 2px 6px #00000088;
 }
 #boosted-card h3 { padding: 2px 12px; font-size: 8px; letter-spacing: 1px; }

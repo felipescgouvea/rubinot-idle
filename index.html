@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=82" />
-  <link rel="stylesheet" href="style.css?v=82" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=83" />
+  <link rel="stylesheet" href="style.css?v=83" />
 </head>
 <body>
   <div id="app">
@@ -24,13 +24,16 @@
         <button class="btn-small daily-btn" onclick="openDailyReward()">🎁 Diário<span id="daily-reward-badge" class="daily-badge">!</span></button>
         <button class="btn-small" onclick="saveGame()">💾 Salvar</button>
         <button class="btn-small danger" onclick="confirmReset()">🔄 Reset</button>
-        <!-- Boosted do Dia — ao lado do botão Reset, no cabeçalho -->
-        <div class="card" id="boosted-card">
-          <h3>🔥 Boosted</h3>
-          <div id="boosted-body" class="boosted-body"></div>
-        </div>
       </div>
     </header>
+
+    <!-- Boosted do Dia — DESTACADO do header, alinhado à direita e bem próximo dele -->
+    <div id="boosted-strip">
+      <div class="card" id="boosted-card">
+        <h3>🔥 Boosted</h3>
+        <div id="boosted-body" class="boosted-body"></div>
+      </div>
+    </div>
 
     <!-- TABS -->
     <nav id="tabs">
@@ -378,6 +381,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=82"></script>
+  <script type="module" src="src/main.js?v=83"></script>
 </body>
 </html>

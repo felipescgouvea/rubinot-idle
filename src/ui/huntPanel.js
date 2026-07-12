@@ -1,17 +1,17 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=82';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=82';
-import { MONSTERS } from '../domain/bestiary.js?v=82';
-import { cityName } from '../domain/cities.js?v=82';
-import { ITEMS } from '../domain/items.js?v=82';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=82';
-import { on, EVENTS } from '../shared/eventBus.js?v=82';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=82';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=82';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=82';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=82';
+import { G } from '../application/gameStore.js?v=83';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=83';
+import { MONSTERS } from '../domain/bestiary.js?v=83';
+import { cityName } from '../domain/cities.js?v=83';
+import { ITEMS } from '../domain/items.js?v=83';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=83';
+import { on, EVENTS } from '../shared/eventBus.js?v=83';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=83';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=83';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=83';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=83';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];

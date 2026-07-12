@@ -135,11 +135,14 @@ própria profissão; (d) só usa **runas** que o **Magic Level** da profissão p
 
 ## 3. HEADER
 
-- [ ] _(anotar itens do cabeçalho aqui — ex.: layout, responsividade, o que mostrar/ocultar)_
+- [x] Boosted destacado do header principal (faixa própria, alinhada à direita, bem próxima dele).
+- [ ] _(outros itens do cabeçalho aqui — ex.: responsividade, o que mostrar/ocultar)_
 
 ## 4. SHOP UI
 
-- [ ] _(anotar melhorias da loja aqui — ex.: organização por categoria, busca, comparação de itens)_
+- [x] Reorganizada: menu lateral com os tipos de loja (1 coluna) + painel principal à direita
+      com os itens da loja selecionada (em vez de uma lista gigante única).
+- [ ] _(próximo: busca/filtro de itens, comparação com o equipado, ordenar por preço)_
 
 ## 5. LINKED TASKS (TAREFAS)
 
@@ -181,6 +184,16 @@ própria profissão; (d) só usa **runas** que o **Magic Level** da profissão p
 - [x] Runas escalando com Magic Level
 - [x] Consumo de munição do paladino (toggle Admin)
 - [x] Poções com faixa de cura (±15%) + exhaust de ~1s (cura/mana compartilham)
+- [x] Boss Rush pausa a cada tier vencido — clicar pra desafiar o próximo (sem auto-avanço)
+- [x] Shop UI: menu lateral por tipo de loja + painel de itens à direita
+- [x] Header: Boosted destacado do header, à direita
+- [x] Auditoria de hunts: cada zona só com monstros da mesma família (ex.: Bosque dos Elfos
+      só com elfos; removidos dworc/serpent/cobra/etc. das zonas onde não faziam sentido)
+
+**Pendências da auditoria de hunts (polir):**
+- [ ] Enriquecer hunts que ficaram com 1 só monstro (ex.: Bosque dos Elfos) com variantes reais
+      da família (Elf Scout, Elf Arcanist…) — precisa buscar sprites.
+- [ ] Dar um lar temático aos monstros que ficaram sem zona (dworc, cobra, warlock, quara…).
 
 ---
 
