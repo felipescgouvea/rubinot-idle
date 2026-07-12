@@ -259,6 +259,11 @@ body {
 }
 
 /* ============ EQUIPAMENTO (card na aba Caçada) ============ */
+/* .panel-right é flex-column (align-items:stretch por padrão) — sem isto o
+   card estica pra largura toda da coluna (dimensionada pro grid de vocação,
+   que sai de cena após escolher), sobrando parchment vazio dos dois lados do
+   grid de slots (240px). Encolhe pro tamanho do próprio conteúdo. */
+#equip-card { align-self: flex-start; width: auto; }
 /* layout do inventário clássico do Tibia: elmo em cima, arma/armadura/escudo
    no meio, anel + calças embaixo, botas na base */
 #equip-card .equipment-slots {
@@ -862,7 +867,20 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 /* tamanho PADRONIZADO do monstro no palco: caixa fixa 52x52 + object-fit
    contain, pra todo bicho aparecer no mesmo tamanho (independente do sprite
-   nativo) e não dominar/encostar no boneco. */
+   nativo) e não dominar/encostar no boneco. Além disso, cada sprite baixado
+   do TibiaWiki preenche uma fração diferente do próprio canvas (sobra de
+   quadro de animação, não o tamanho real do bicho) — domain/monsterSpriteScale.js
+   corrige isso com um scale por monstro; o clip abaixo evita que essa correção
+   vaze por cima do vizinho quando vários bichos ficam lado a lado na sala. */
+.monster-sprite-clip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin: -4px;
+  overflow: hidden;
+}
 .monster-sprite {
   width: 52px;
   height: 52px;
@@ -1922,7 +1940,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   25% { transform: translateX(-2px); }
   75% { transform: translateX(2px); }
 }
-.battle-list-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; }
+/* overflow:hidden clipa a correção de escala por monstro (ver
+   domain/monsterSpriteScale.js) sem deixá-la vazar em cima do nome ao lado. */
+.battle-list-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden; }
 /* caixa FIXA + object-fit: contain padroniza o tamanho visual de todos os
    sprites (mesma abordagem do sprite principal), independente das dimensões
    nativas de cada gif — sem isso os monstros apareciam em tamanhos diferentes */

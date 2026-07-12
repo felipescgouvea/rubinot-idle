@@ -13,13 +13,27 @@ import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossO
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=107';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=107';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=107';
+import { monsterSpriteScale } from '../domain/monsterSpriteScale.js?v=107';
+
+// Classes que recebem a correção de tamanho (ver domain/monsterSpriteScale.js)
+// — só nos dois lugares que o jogador vê vários bichos lado a lado e onde a
+// inconsistência de enquadramento do sprite real fica óbvia (cena de batalha
+// e Battle List). Ícones soltos (Bestiário, Tarefas, card de zona…) ficam
+// como estavam, sem a correção — lá o tamanho já é pequeno o bastante pra não
+// incomodar, e aplicar lá também arriscaria vazar por cima de texto vizinho.
+const SCALE_CORRECTED_CLASSES = new Set(['monster-sprite', 'battle-list-sprite']);
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
   const file = monsterSpriteFile(monsterId, m);
+  const scale = SCALE_CORRECTED_CLASSES.has(cls) ? monsterSpriteScale(monsterId) : 1;
+  const style = scale !== 1 ? ` style="transform:scale(${scale})"` : '';
   // fallback para o emoji se o sprite não carregar
-  return `<img src="${spriteUrl(file)}" alt="${m.name}" class="${cls}"
+  const img = `<img src="${spriteUrl(file)}" alt="${m.name}" class="${cls}"${style}
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${m.icon}</span>'" />`;
+  // a cena (monster-sprite) precisa de um clip pra correção de escala não
+  // vazar em cima do bicho vizinho (a Battle List já clipa via .battle-list-icon)
+  return cls === 'monster-sprite' ? `<span class="monster-sprite-clip">${img}</span>` : img;
 }
 
 // Ícone da zona = sprite real do monstro principal da caçada (o primeiro do

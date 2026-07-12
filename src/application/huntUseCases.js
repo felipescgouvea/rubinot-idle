@@ -298,7 +298,12 @@ export function doHuntTick() {
     combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
     G.inventory[G.rtc.attackRune]--;
     huntSession.supplies += rune.sell || 0;
-    if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
+    if (G.inventory[G.rtc.attackRune] <= 0) {
+      delete G.inventory[G.rtc.attackRune];
+      // Sem isso o RTC volta a bater só o golpe básico e o jogador não entende
+      // por que o dano caiu — mesmo aviso já dado pra munição (ver acima).
+      emit(EVENTS.NOTIFY, { msg: `📜 Suas runas de ${rune.name} acabaram!`, type: 'error' });
+    }
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   } else {
