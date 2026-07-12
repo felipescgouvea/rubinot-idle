@@ -28,16 +28,11 @@ Prioridade: 🔴 alta · 🟡 média · 🟢 baixa/QoL.
       Hoje a morte tira 5% do XP e revive com 30% HP (`huntUseCases.js`).
 - [ ] **Magias de suporte no RTC:** utani hur (haste = mais ticks/s), utamo vita (escudo
       mágico), utana vid (invisibilidade). Amplia a automação além de ataque/cura.
-- [ ] **Poções com faixa de cura + cooldown** (~1s) em vez de valor fixo usado todo tick.
 - [ ] **Botão "abrir bag" dentro da aba Healing** — hoje precisa abrir a bag pela aba Caçada
       pra arrastar a poção pro slot.
 
 ## 🟢 Baixa / QoL / polimento
 
-- [ ] **Quiver/consumo de munição** do paladino como opção (toggle no Admin) — realismo.
-- [ ] **Runas escalando com Magic Level** (hoje dano fixo). No Tibia o dano da runa sobe com ML.
-- [ ] **Stamina** (opcional) reduzindo XP após muitas horas — hoje só há cap de 8h offline.
-- [ ] **Filtros/auto-vender loot** (ex.: vender lixo automaticamente) — QoL de idle.
 - [ ] **Imunidades elementais reais** (alguns bichos imunes, mod = 0) já suportado no código;
       falta popular quem é imune de fato.
 
@@ -53,6 +48,11 @@ Prioridade: 🔴 alta · 🟡 média · 🟢 baixa/QoL.
 - [x] Fraqueza/resistência elemental por criatura + Bestiário mostra
 - [x] Dano de magia/cura escalando com nível + Magic Level
 - [x] Hunt Analyzer (tempo, kills, XP/h, gold/h, loot, suprimentos, lucro/h)
+- [x] Auto-vender lixo (itens misc baratos viram gold no loot) — toggle na Bag
+- [x] Stamina opcional (toggle Admin): cai caçando, regenera descansando, <14h reduz XP
+- [x] Runas escalando com Magic Level
+- [x] Consumo de munição do paladino (toggle Admin)
+- [x] Poções com faixa de cura (±15%) + exhaust de ~1s (cura/mana compartilham)
 
 ---
 
