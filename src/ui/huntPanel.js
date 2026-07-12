@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=91';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=91';
-import { MONSTERS } from '../domain/bestiary.js?v=91';
-import { cityName } from '../domain/cities.js?v=91';
-import { ITEMS } from '../domain/items.js?v=91';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=91';
-import { on, EVENTS } from '../shared/eventBus.js?v=91';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=91';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=91';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=91';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=91';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=91';
+import { G } from '../application/gameStore.js?v=92';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=92';
+import { MONSTERS } from '../domain/bestiary.js?v=92';
+import { cityName } from '../domain/cities.js?v=92';
+import { ITEMS } from '../domain/items.js?v=92';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=92';
+import { on, EVENTS } from '../shared/eventBus.js?v=92';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=92';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=92';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=92';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=92';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=92';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -336,6 +336,27 @@ export function updateSceneMode() {
   const stage = document.getElementById('dungeon-stage');
   if (!stage) return;
   stage.classList.toggle('searching', G.hunting && !getCurrentMonster());
+  renderStageMonster(stage);
+}
+
+// Materializa o monstro-alvo no palco principal, À FRENTE do boneco (o boneco
+// olha pra baixo, então o bicho aparece na metade de baixo do palco) — surgindo
+// DE BAIXO PRA CIMA, na direção oposta à que o personagem encara. Some quando não
+// há alvo (procurando/ocioso). Re-materializa a cada instância nova (uid) mesmo
+// que o próximo monstro seja do mesmo tipo.
+function renderStageMonster(stage) {
+  const cur = getCurrentMonster();
+  let el = document.getElementById('stage-monster');
+  if (!cur) { if (el) el.remove(); return; }
+  const uid = String(cur.uid || cur.defKey);
+  if (el && el.dataset.uid === uid) return; // mesmo alvo: não re-materializa
+  if (el) el.remove();
+  el = document.createElement('div');
+  el.id = 'stage-monster';
+  el.className = 'stage-monster spawning';
+  el.dataset.uid = uid;
+  el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(cur.defKey, 'monster-sprite')}</div>`;
+  stage.appendChild(el);
 }
 
 export function wireHuntPanelEvents() {

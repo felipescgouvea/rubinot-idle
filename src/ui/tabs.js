@@ -1,22 +1,22 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=91';
-import { renderSkillsPanel } from './skillsPanel.js?v=91';
-import { renderArenaPanel } from './arenaPanel.js?v=91';
-import { renderInventory, renderRelics } from './inventoryAndEquipmentPanel.js?v=91';
-import { renderWorldsPanel } from './worldsPanel.js?v=91';
-import { renderBattlePassPanel } from './battlePassPanel.js?v=91';
-import { renderRtcPanel } from './rtcPanel.js?v=91';
-import { renderShopPanel } from './shopPanel.js?v=91';
-import { renderMarketPanel } from './marketPanel.js?v=91';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=91';
-import { renderBossRushPanel } from './bossRushPanel.js?v=91';
-import { renderBestiaryTab } from './bestiaryPanel.js?v=91';
-import { renderTrainingSection } from './trainingPanel.js?v=91';
-import { renderAdminPanel } from './adminPanel.js?v=91';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=91';
-import { on, EVENTS } from '../shared/eventBus.js?v=91';
+import { renderTasksPanel } from './tasksPanel.js?v=92';
+import { renderSkillsPanel } from './skillsPanel.js?v=92';
+import { renderArenaPanel } from './arenaPanel.js?v=92';
+import { renderInventory, renderRelics } from './inventoryAndEquipmentPanel.js?v=92';
+import { renderWorldsPanel } from './worldsPanel.js?v=92';
+import { renderBattlePassPanel } from './battlePassPanel.js?v=92';
+import { renderRtcPanel } from './rtcPanel.js?v=92';
+import { renderShopPanel } from './shopPanel.js?v=92';
+import { renderMarketPanel } from './marketPanel.js?v=92';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=92';
+import { renderBossRushPanel } from './bossRushPanel.js?v=92';
+import { renderBestiaryTab } from './bestiaryPanel.js?v=92';
+import { renderTrainingSection } from './trainingPanel.js?v=92';
+import { renderAdminPanel } from './adminPanel.js?v=92';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=92';
+import { on, EVENTS } from '../shared/eventBus.js?v=92';
 
 // A aba Skills renderiza também a seção de Treino Offline (que vive no topo
 // dela) — as duas coisas são "progressão de skill", então dividem a aba.
