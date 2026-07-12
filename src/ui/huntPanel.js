@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=94';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=94';
-import { MONSTERS } from '../domain/bestiary.js?v=94';
-import { cityName } from '../domain/cities.js?v=94';
-import { ITEMS } from '../domain/items.js?v=94';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=94';
-import { on, EVENTS } from '../shared/eventBus.js?v=94';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=94';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=94';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=94';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=94';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=94';
+import { G } from '../application/gameStore.js?v=95';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=95';
+import { MONSTERS } from '../domain/bestiary.js?v=95';
+import { cityName } from '../domain/cities.js?v=95';
+import { ITEMS } from '../domain/items.js?v=95';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=95';
+import { on, EVENTS } from '../shared/eventBus.js?v=95';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=95';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=95';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=95';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=95';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=95';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -51,11 +51,12 @@ function areaOffsets(shape) {
   } else if (shape === 'explosion') {
     for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) out.push([dx, dy]);
   } else if (shape === 'wave' || shape === 'beam') {
-    // cone/feixe que abre PRA BAIXO — o boneco olha pro sul (frente), então a
-    // onda de mago (Fire/Energy/Ice/Terra Wave) sai na direção que ele encara.
-    for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, r]); }
+    // cone/feixe que abre PRA CIMA — o boneco fica embaixo encarando os monstros
+    // (que ficam no topo), então a onda de mago (Fire/Energy/Ice/Terra Wave) sai
+    // pra cima, na direção do inimigo.
+    for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, -r]); }
   } else {
-    out.push([0, 1]); // single: um tile À FRENTE (pra baixo, direção do boneco)
+    out.push([0, -1]); // single: um tile À FRENTE (pra cima, direção do inimigo)
   }
   return out;
 }
@@ -339,11 +340,11 @@ export function updateSceneMode() {
   renderStagePack(stage);
 }
 
-// Materializa TODA a sala no palco principal, uma criatura ao lado da outra, À
-// FRENTE do boneco (metade de baixo, o boneco olha pro sul) e VIRADAS PRA CIMA
-// (encarando o personagem, que está acima). Cada instância nova (uid) surge de
-// baixo pra cima; as que morrem somem. Reaproveita os elementos já na tela pra
-// não re-materializar quem já estava (evita "piscar" a cada tick).
+// Materializa TODA a sala no TOPO do palco, uma criatura ao lado da outra,
+// encarando o boneco (que fica embaixo). O sprite nativo do Tibia já olha pro
+// sul (pra baixo), então SEM flip elas encaram naturalmente o personagem lá em
+// baixo. Cada instância nova (uid) surge de baixo pra cima; as que morrem somem.
+// Reaproveita os elementos já na tela pra não re-materializar quem já estava.
 function renderStagePack(stage) {
   const pack = getCurrentPack() || [];
   let cont = document.getElementById('stage-pack');
@@ -360,7 +361,7 @@ function renderStagePack(stage) {
       el = document.createElement('div');
       el.className = 'stage-monster spawning';
       el.dataset.uid = uid;
-      el.innerHTML = `<div class="monster-sprite-wrap face-up">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>`;
+      el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>`;
     }
     el.classList.toggle('is-target', i === 0);
     if (cont.children[i] !== el) cont.insertBefore(el, cont.children[i] || null);

@@ -712,24 +712,24 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   pointer-events: none;
 }
 #dungeon-stage.searching::before { animation: floor-scroll 0.6s linear infinite; }
-@keyframes floor-scroll { to { background-position: 0 -44px; } }
+@keyframes floor-scroll { to { background-position: 0 44px; } }
 
 /* boneco: no meio do palco (centralizado por left/top + margem negativa, pra
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
 .player-sprite-wrap {
   position: absolute;
-  /* um pouco acima do centro: as waves de mago abrem PRA BAIXO (r até 4 tiles),
-     então o boneco fica no terço superior pra caber a área inteira na tela */
-  left: 50%; top: 42%;
+  /* boneco EMBAIXO encarando os monstros (que ficam no topo). As waves de mago
+     abrem PRA CIMA (r até 4 tiles), então o terço inferior deixa a área caber. */
+  left: 50%; top: 72%;
   margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no eixo */
   width: 54px; height: 54px; /* mesmo porte visual dos monstros (52px) */
   z-index: 2;
 }
-/* a sala inteira no palco: as criaturas alinhadas UMA AO LADO DA OUTRA, à frente
-   do boneco (metade de baixo, o boneco olha pro sul), no rodapé do palco. */
+/* a sala inteira no TOPO do palco: as criaturas alinhadas UMA AO LADO DA OUTRA,
+   encarando o boneco que fica embaixo. */
 .stage-pack {
   position: absolute;
-  left: 50%; top: 76%;
+  left: 50%; top: 24%;
   transform: translate(-50%, -50%);
   display: flex; gap: 4px; align-items: flex-end; justify-content: center;
   max-width: 98%; flex-wrap: nowrap;
@@ -745,9 +745,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   55%  { opacity: 1; filter: brightness(1.5) blur(0.4px); }
   100% { opacity: 1; transform: translateY(0) scale(1); filter: none; }
 }
-/* VIRADA PRA CIMA: o sprite nativo do Tibia encara o sul (pra baixo). Como o
-   boneco está ACIMA, espelhamos o sprite na vertical pra criatura encará-lo. */
-.monster-sprite-wrap.face-up .monster-sprite { transform: scaleY(-1); }
+/* Sem flip: o sprite nativo do Tibia encara o sul (pra baixo) e o boneco está
+   EMBAIXO, então as criaturas no topo já encaram o personagem naturalmente. */
 /* sprite real de efeito espalhado nos tiles da área da magia (ao redor do
    boneco) — igual ao Tibia, onde a animação cobre cada tile atingido */
 .combat-area-tile {
