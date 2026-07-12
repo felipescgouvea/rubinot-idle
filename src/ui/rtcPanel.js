@@ -4,18 +4,18 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=92';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=92';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=92';
-import { VOCATIONS } from '../domain/character.js?v=92';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=92';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=92';
-import { getMagic } from '../application/stats.js?v=92';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=92';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=92';
-import { setRtcHealPotion, setRtcManaPotion } from '../application/rtcUseCases.js?v=92';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=92';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=92';
+import { G } from '../application/gameStore.js?v=93';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=93';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=93';
+import { VOCATIONS } from '../domain/character.js?v=93';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=93';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=93';
+import { getMagic } from '../application/stats.js?v=93';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=93';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=93';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=93';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=93';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=93';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -65,9 +65,10 @@ function priorityRow(id, s, idx, total) {
   </div>`;
 }
 
-// Slot de poção do Healing: em vez de listar todas as poções, um quadrado onde
-// o jogador ARRASTA a poção da bag (ver ui/inventoryAndEquipmentPanel.js). Vazio
-// mostra o alvo de arraste; preenchido mostra a poção escolhida (clique remove).
+// Slot de poção do Healing: um quadrado onde o jogador escolhe a poção. No
+// desktop dá pra ARRASTAR a poção da bag; no celular (sem drag) basta TOCAR o
+// slot pra abrir uma janelinha de opções (openRtcPotionPicker). Vazio mostra o
+// alvo; preenchido mostra a poção escolhida (tocar troca/remove pelo modal).
 function potionDropSlot(kind, selectedId) {
   const item = selectedId ? ITEMS[selectedId] : null;
   const label = kind === 'life' ? 'vida' : 'mana';
@@ -75,11 +76,53 @@ function potionDropSlot(kind, selectedId) {
       ondragover="event.preventDefault(); this.classList.add('drag-over')"
       ondragleave="this.classList.remove('drag-over')"
       ondrop="this.classList.remove('drag-over'); handleRtcPotionDrop(event, '${kind}')"
-      ${item ? `onclick="clearRtcPotion('${kind}')" title="${item.name} — clique para remover"` : `title="Arraste uma poção de ${label} da bag aqui"`}>
+      onclick="openRtcPotionPicker('${kind}')"
+      title="${item ? `${item.name} — toque para trocar` : `Toque para escolher a poção de ${label}`}">
     ${item
       ? `<span class="rtc-potion-slot-icon">${itemIconImg(selectedId, 'item-icon')}</span><span class="rtc-potion-slot-name">${item.name}</span>`
-      : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">Arraste a poção de ${label} da bag</span>`}
+      : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">Toque para escolher a poção de ${label}</span>`}
   </div>`;
+}
+
+// Janelinha de opções pra escolher a poção que o RTC bebe — a alternativa ao
+// drag-and-drop (essencial no celular, que não arrasta). Lista as poções do tipo
+// (vida/mana), a quantidade que o jogador tem e o requisito, com um botão pra
+// selecionar. Também permite remover a poção atual.
+export function openRtcPotionPicker(kind) {
+  const list = kind === 'life' ? HEAL_POTIONS : MANA_POTIONS;
+  const label = kind === 'life' ? 'vida' : 'mana';
+  const selectedId = kind === 'life' ? G.rtc.healPotion : G.rtc.manaPotion;
+  const rows = list.map(([id, item]) => {
+    const qty = G.inventory[id] || 0;
+    const sel = selectedId === id;
+    const amount = kind === 'life' ? `💚 +${item.heal} HP` : `${vitalIconImg('mana', 'inline-icon')} +${item.mana} mana`;
+    return `<div class="rtc-row ${sel ? 'selected' : ''}">
+      <span class="rtc-row-icon">${itemIconImg(id, 'item-icon')}</span>
+      <div class="rtc-row-info">
+        <div class="rtc-row-name">${item.name}</div>
+        <div class="rtc-row-desc">${amount} · ${potionReqLabel(item)} · possui ${qty}</div>
+      </div>
+      <button class="rtc-row-btn" onclick="pickRtcPotion('${kind}','${id}')">${sel ? '✅ Ativa' : 'Usar'}</button>
+    </div>`;
+  }).join('');
+  openModal(`
+    <div class="rtc-potion-picker">
+      <h3>💊 Poção de ${label}</h3>
+      <p class="muted">Toque na poção que o RTC deve beber automaticamente.</p>
+      <div class="rtc-rows">${rows}</div>
+      <div class="rtc-potion-picker-actions">
+        ${selectedId ? `<button class="btn-small danger" onclick="pickRtcPotion('${kind}','')">Remover</button>` : ''}
+        <button class="btn-small" onclick="closeModal()">Fechar</button>
+      </div>
+    </div>
+  `);
+}
+
+// Aplica a escolha do modal (id vazio = remover) e fecha a janelinha.
+export function pickRtcPotion(kind, id) {
+  if (id) { kind === 'life' ? setRtcHealPotion(id) : setRtcManaPotion(id); }
+  else { clearRtcPotion(kind); }
+  closeModal();
 }
 
 function itemRow(id, item, qty, selected, onclick, extraDesc) {
@@ -171,11 +214,11 @@ export function renderRtcPanel() {
         <button class="btn-small" style="margin:2px 0 8px" onclick="toggleBackpack()">🎒 Abrir Bag</button>
         <h5>Poção de Cura <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
-        <p class="muted rtc-drag-hint">Arraste a poção de vida da bag pro quadrado.</p>
+        <p class="muted rtc-drag-hint">Toque no quadrado para escolher (ou arraste a poção de vida da bag).</p>
         ${potionDropSlot('life', G.rtc.healPotion)}
         <h5>Poção de Mana <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.manaPotionThreshold}" onchange="setRtcThreshold('manaPotionThreshold', this.value)" class="rtc-threshold-input" />% de mana</h5>
-        <p class="muted rtc-drag-hint">Arraste a poção de mana da bag pro quadrado.</p>
+        <p class="muted rtc-drag-hint">Toque no quadrado para escolher (ou arraste a poção de mana da bag).</p>
         ${potionDropSlot('mana', G.rtc.manaPotion)}
         `}
       </div>

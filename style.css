@@ -1188,6 +1188,10 @@ img.tibia-icon {
 .rtc-potion-slot-name { font-weight: 700; color: #f0e6c8; }
 .rtc-potion-slot-ghost { font-size: 26px; color: #4a5178; }
 .rtc-potion-slot-hint { color: #8a92b8; font-size: 12px; }
+/* janelinha de opções de poção (alternativa mobile ao drag) */
+.rtc-potion-picker h3 { margin: 0 0 4px; color: var(--gold-bright); }
+.rtc-potion-picker .rtc-rows { max-height: 52vh; overflow-y: auto; margin: 8px 0; }
+.rtc-potion-picker-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 6px; }
 .rtc-threshold-input {
   width: 46px; background: #14171a; border: 1px solid #4a5058; color: #eef1f4;
   border-radius: 4px; padding: 3px 5px; font-size: 11px; text-align: center;

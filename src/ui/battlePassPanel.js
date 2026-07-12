@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=92';
-import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=92';
-import { on, EVENTS } from '../shared/eventBus.js?v=92';
-import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=92';
-import { currentMissions } from '../application/battlePassUseCases.js?v=92';
+import { G } from '../application/gameStore.js?v=93';
+import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=93';
+import { on, EVENTS } from '../shared/eventBus.js?v=93';
+import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=93';
+import { currentMissions } from '../application/battlePassUseCases.js?v=93';
 
 function bpRewardIcon(r) {
   if (r.type === 'item') return itemIconImg(r.itemId);
