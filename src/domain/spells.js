@@ -31,7 +31,7 @@ export const SPELLS = {
   exori_vis:        { name: 'Energy Strike', words: 'exori vis', icon: '⚡', voc: ['sorcerer'], level: 12, mana: 20,  type: 'attack', power: 1.45, element: 'energy', area: 'single', cd: 2 },
   exevo_vis_hur:    { name: 'Energy Wave', words: 'exevo vis hur', icon: '⚡', voc: ['sorcerer'], level: 38, mana: 170, type: 'attack', power: 1.9, element: 'energy', area: 'wave', cd: 8 },
   exori_gran_vis:   { name: 'Strong Energy Strike', words: 'exori gran vis', icon: '🌩️', voc: ['sorcerer'], level: 80, mana: 60, type: 'attack', power: 2.2, element: 'energy', area: 'single', cd: 8 },
-  exevo_gran_mas_vis:{ name: "Hell's Core", words: 'exevo gran mas vis', icon: '☢️', voc: ['sorcerer'], level: 60, mana: 600, type: 'attack', power: 3.2, element: 'energy', area: 'ball', cd: 40 },
+  exevo_gran_mas_vis:{ name: "Hell's Core", words: 'exevo gran mas vis', icon: '☢️', voc: ['sorcerer'], level: 60, mana: 600, type: 'attack', power: 3.2, element: 'fire', area: 'ball', cd: 40 },
   // druid — strikes alvo único; waves em onda; Eternal Winter em área ampla.
   exori_frigo:      { name: 'Ice Strike', words: 'exori frigo', icon: '❄️', voc: ['druid'], level: 12, mana: 20, type: 'attack', power: 1.45, element: 'ice', area: 'single', cd: 2 },
   exevo_frigo_hur:  { name: 'Ice Wave', words: 'exevo frigo hur', icon: '🌊', voc: ['druid'], level: 18, mana: 25, type: 'attack', power: 1.35, element: 'ice', area: 'wave', cd: 4 },

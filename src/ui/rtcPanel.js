@@ -4,17 +4,17 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=78';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=78';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=78';
-import { VOCATIONS } from '../domain/character.js?v=78';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=78';
-import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=78';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=78';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=78';
-import { setRtcHealPotion, setRtcManaPotion } from '../application/rtcUseCases.js?v=78';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=78';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=78';
+import { G } from '../application/gameStore.js?v=79';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=79';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=79';
+import { VOCATIONS } from '../domain/character.js?v=79';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=79';
+import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=79';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=79';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=79';
+import { setRtcHealPotion, setRtcManaPotion } from '../application/rtcUseCases.js?v=79';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=79';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=79';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -37,7 +37,7 @@ function spellRow(id, s, selected, onclick) {
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
       <div class="rtc-row-desc">
-        ${s.type === 'attack' ? `⚔️ Dano ×${s.power} · ${areaBadge(s.area)}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · ⏱ CD ${s.cd}s · Nível ${s.level}+
+        ${s.type === 'attack' ? `⚔️ Dano ×${s.power} · ${areaBadge(s.area)}` : `💚 Cura (escala nível+ML)`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · ⏱ CD ${s.cd}s · Nível ${s.level}+
       </div>
     </div>
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>

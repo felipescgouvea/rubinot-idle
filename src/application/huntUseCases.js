@@ -3,27 +3,28 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=78';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=78';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=78';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=78';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=78';
-import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=78';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=78';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=78';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=78';
-import { MONSTERS } from '../domain/bestiary.js?v=78';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=78';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=78';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=78';
-import { emit, EVENTS } from '../shared/eventBus.js?v=78';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=78';
-import { trainSkill } from './skillUseCases.js?v=78';
-import { addItemToInventory } from './inventoryCore.js?v=78';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=78';
-import { getCombatBonuses } from './bonuses.js?v=78';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=78';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=78';
+import { G } from './gameStore.js?v=79';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=79';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=79';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=79';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=79';
+import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=79';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=79';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount } from '../domain/combatFormulas.js?v=79';
+import { elementMod } from '../domain/elements.js?v=79';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=79';
+import { MONSTERS } from '../domain/bestiary.js?v=79';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=79';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=79';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=79';
+import { emit, EVENTS } from '../shared/eventBus.js?v=79';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=79';
+import { trainSkill } from './skillUseCases.js?v=79';
+import { addItemToInventory } from './inventoryCore.js?v=79';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=79';
+import { getCombatBonuses } from './bonuses.js?v=79';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=79';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=79';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -85,6 +86,27 @@ function searchDelay() {
 // (o jogador nunca "salva" estando em Boss Rush).
 let bossOnly = false;
 
+// Hunt Analyzer (como o Analisador de Caçada do Tibia): estatísticas da SESSÃO
+// atual de caçada — zeradas ao iniciar uma caçada. Só de sessão (não vai pro
+// save). XP/gold por hora são derivados do tempo decorrido em getHuntStats().
+function newHuntSession() {
+  return { start: Date.now(), kills: 0, xp: 0, gold: 0, loot: 0, supplies: 0 };
+}
+let huntSession = newHuntSession();
+export function getHuntStats() {
+  const s = huntSession;
+  const elapsedMs = Math.max(1000, Date.now() - s.start);
+  const perHour = (v) => Math.round(v / (elapsedMs / 3600000));
+  const profit = s.gold + s.loot - s.supplies;
+  return {
+    hunting: G.hunting, elapsedMs, kills: s.kills,
+    xp: s.xp, xpH: perHour(s.xp),
+    gold: s.gold, goldH: perHour(s.gold),
+    loot: s.loot, supplies: s.supplies,
+    profit, profitH: perHour(profit),
+  };
+}
+
 export function getCurrentMonster() {
   return currentMonster;
 }
@@ -124,8 +146,10 @@ export function startHunt() {
   // Sem restrição de nível pra caçar — as criaturas escalam com o nível do
   // jogador; entrar numa zona forte cedo é escolha (e risco) do jogador.
   G.hunting = true;
+  huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
   nextSpawnAt = Date.now() + searchDelay(); // começa procurando (boneco anda)
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
+  emit(EVENTS.HUNT_STATS);
   emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
   emit(EVENTS.LOG, bossOnly
     ? `<span class="log-info">💀 Boss Rush: desafiando ${monsterLogIcon(zone.boss)} ${zone.name}...</span>`
@@ -206,25 +230,29 @@ export function doHuntTick() {
 
   // (1) GOLPE BÁSICO — sempre acontece: arma pro guerreiro/paladino (treina a
   // skill da arma equipada); o cajado/wand do mago é arma mágica e NÃO custa mana.
-  const basicDmg = calcDamage(getAtk(), primary.def);
+  // Dano físico → aplica o modificador físico do alvo (a maioria é neutra).
+  const basicDmg = calcDamage(getAtk(), primary.def) * elementMod(primary.defKey, 'physical');
   if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
   const basicHit = strike(primary, basicDmg);
   emit(EVENTS.LOG, `⚔️ Golpe básico: <span class="log-dmg">${basicHit}</span> de dano ao ${primary.name}.`);
 
   // (2) MAGIA (por prioridade) OU RUNA — ação ADICIONAL no mesmo tick, com dano,
-  // área e efeito próprios. Magia custa mana + cooldown; runa consome o item.
+  // área e efeito próprios. Magia custa mana + cooldown; runa consome o item. O
+  // dano de cada alvo é calculado por `hitFn(target)` e multiplicado pela
+  // resistência/fraqueza elemental DELE (ver domain/elements.js).
+  const magic = getMagic();
   let combatFx = null;
   let areaId = 'single';
-  let spellPower = null;
-  let runeDmg = null;
-  let spellDmg = 0;
+  let element = null;
+  let hitFn = null; // (target) => dano-base (antes do modificador elemental)
   if (G.rtc.attackType === 'rune' && G.rtc.attackRune && isRuneAvailableToVocation(G.rtc.attackRune, G.vocation) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
     const rune = ITEMS[G.rtc.attackRune];
-    spellDmg = rune.dmg;
-    runeDmg = rune.dmg;
     areaId = rune.area || 'single';
+    element = rune.element || 'physical';
+    hitFn = () => rune.dmg;
     combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
     G.inventory[G.rtc.attackRune]--;
+    huntSession.supplies += rune.sell || 0;
     if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
@@ -237,9 +265,10 @@ export function doHuntTick() {
       if (s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id)) { atkSpellId = id; atkSpell = s; break; }
     }
     if (atkSpell) {
-      spellDmg = Math.floor(calcDamage(getAtk(), primary.def) * atkSpell.power);
-      spellPower = atkSpell.power;
       areaId = atkSpell.area || 'single';
+      element = atkSpell.element;
+      // Físicas escalam com a arma (com def do alvo); elementais com nível+ML.
+      hitFn = (t) => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, atk: getAtk(), targetDef: t.def });
       G.mana -= atkSpell.mana;
       startSpellCd(atkSpellId, atkSpell.cd);
       trainSkill('magic', atkSpell.mana * voc.magicMult);
@@ -249,18 +278,17 @@ export function doHuntTick() {
   }
 
   // Aplica a magia/runa: dano no alvo da frente (se sobreviveu ao básico) + o
-  // respingo de área nas criaturas atrás (cada uma rola o dano contra a def dela).
-  if (spellDmg > 0) {
+  // respingo de área nas criaturas atrás — cada alvo com SEU modificador elemental.
+  if (hitFn) {
     if (primary.hp > 0) {
-      const sHit = strike(primary, spellDmg);
+      const sHit = strike(primary, hitFn(primary) * elementMod(primary.defKey, element));
       emit(EVENTS.LOG, `✨ Magia: <span class="log-dmg">${sHit}</span> de dano ao ${primary.name}.`);
     }
     if (isAreaAttack(areaId) && currentPack.length > 1) {
       const maxTargets = areaMaxTargets(areaId);
       const splashTargets = currentPack.slice(1, maxTargets); // exclui o da frente
       splashTargets.forEach(t => {
-        const raw = runeDmg != null ? runeDmg : Math.floor(calcDamage(getAtk(), t.def) * (spellPower || 1));
-        const d = strike(t, raw);
+        const d = strike(t, hitFn(t) * elementMod(t.defKey, element));
         emit(EVENTS.LOG, `💥 <span class="log-dmg">${d}</span> em ${t.name} <span class="log-info">(área)</span>.`);
       });
       if (splashTargets.length > 0) {
@@ -303,7 +331,7 @@ export function doHuntTick() {
   const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation);
   const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
   if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana && isSpellReady(healSpellId)) {
-    const heal = Math.floor(getMaxHp() * healSpell.power);
+    const heal = Math.min(getMaxHp() - G.hp, spellHealAmount({ spell: healSpell, level: G.level, magicLevel: getMagic() }));
     G.hp = Math.min(getMaxHp(), G.hp + heal);
     G.mana -= healSpell.mana;
     startSpellCd(healSpellId, healSpell.cd);
@@ -319,6 +347,7 @@ export function doHuntTick() {
     const before = G.hp;
     G.hp = Math.min(getMaxHp(), G.hp + potion.heal);
     G.inventory[G.rtc.healPotion]--;
+    huntSession.supplies += potion.sell || 0;
     if (G.inventory[G.rtc.healPotion] <= 0) delete G.inventory[G.rtc.healPotion];
     emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.healPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
@@ -331,6 +360,7 @@ export function doHuntTick() {
     const before = G.mana;
     G.mana = Math.min(getMaxMana(), G.mana + (potion.mana || 0));
     G.inventory[G.rtc.manaPotion]--;
+    huntSession.supplies += potion.sell || 0;
     if (G.inventory[G.rtc.manaPotion] <= 0) delete G.inventory[G.rtc.manaPotion];
     emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.manaPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.mana - before} mana</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
@@ -382,6 +412,11 @@ export function resolveMonsterKill(zone, victim) {
   G.totalGoldEarned += goldGained;
   G.totalKills++;
 
+  // Hunt Analyzer: registra kill, XP e gold desta morte na sessão atual.
+  huntSession.kills++;
+  huntSession.xp += xpGained;
+  huntSession.gold += goldGained;
+
   // Kill counters da zona atual
   G.killCounters = G.killCounters || {};
   G.killCounters[mon.defKey] = (G.killCounters[mon.defKey] || 0) + 1;
@@ -400,6 +435,7 @@ export function resolveMonsterKill(zone, victim) {
     if (Math.random() < (chance + boosts.loot + bonus.loot) * getLootRate()) {
       addItemToInventory(itemId);
       const item = ITEMS[itemId];
+      huntSession.loot += item.sell || 0; // valor do loot pra o Hunt Analyzer
       lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
     }
   });
@@ -509,5 +545,6 @@ export function startRegen() {
     }
     emit(EVENTS.BARS);
     emit(EVENTS.HEADER_STATS);
+    if (G.hunting) emit(EVENTS.HUNT_STATS); // mantém XP/h, gold/h vivos no tempo
   }, 2000);
 }

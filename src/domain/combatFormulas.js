@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=78';
-import { resolveEquippedItem } from './items.js?v=78';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=79';
+import { resolveEquippedItem } from './items.js?v=79';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -103,6 +103,35 @@ export function computeSpd({ vocation, equipment, relics }) {
 export function calcDamage(atk, def) {
   const base = Math.max(1, atk - Math.floor(def * 0.6));
   return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));
+}
+
+// Dano de UMA magia de ataque num alvo (fiel ao Tibia):
+//  • Magias FÍSICAS (Berserk/Groundshaker/Ethereal Spear) escalam com a ARMA
+//    e a skill do personagem — usam o ataque físico e sofrem redução por defesa,
+//    igual a um golpe de arma reforçado.
+//  • Magias ELEMENTAIS (fogo/gelo/energia/terra/sagrado) escalam com NÍVEL +
+//    MAGIC LEVEL (não com a arma), e NÃO são reduzidas por armadura física — o
+//    que muda o dano delas é a resistência elemental do alvo (ver domain/elements.js,
+//    aplicada em huntUseCases). O campo `power` da magia é o coeficiente dela.
+export function elementalSpellBase(level, magicLevel) {
+  return level * 0.4 + magicLevel * 2.0;
+}
+export function spellAttackDamage({ spell, level, magicLevel, atk, targetDef }) {
+  const variance = 0.85 + Math.random() * 0.3;
+  let raw;
+  if (spell.element === 'physical') {
+    raw = Math.max(1, atk - Math.floor((targetDef || 0) * 0.6)) * spell.power;
+  } else {
+    raw = elementalSpellBase(level, magicLevel) * spell.power;
+  }
+  return Math.max(1, Math.floor(raw * variance));
+}
+
+// Cura de uma magia — escala com NÍVEL + MAGIC LEVEL (como no Tibia; quem tem
+// mais ML cura mais). Knight, com ML baixíssimo, cura pouco e depende de poção.
+export function spellHealAmount({ spell, level, magicLevel }) {
+  const variance = 0.9 + Math.random() * 0.2;
+  return Math.max(1, Math.floor((level * 1.2 + magicLevel * 6) * spell.power * 6 * variance));
 }
 
 // Sorteia uma criatura da zona e escala seus atributos pelo nível do jogador —

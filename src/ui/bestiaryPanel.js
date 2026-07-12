@@ -4,20 +4,21 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=78';
-import { MONSTERS } from '../domain/bestiary.js?v=78';
+import { G } from '../application/gameStore.js?v=79';
+import { MONSTERS } from '../domain/bestiary.js?v=79';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, isPreyActive,
-} from '../domain/prey.js?v=78';
+} from '../domain/prey.js?v=79';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=78';
-import { on, EVENTS } from '../shared/eventBus.js?v=78';
-import { openModal, closeModal } from './shared.js?v=78';
-import { monsterSpriteImg } from './huntPanel.js?v=78';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=78';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=78';
+} from '../domain/charms.js?v=79';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=79';
+import { on, EVENTS } from '../shared/eventBus.js?v=79';
+import { openModal, closeModal } from './shared.js?v=79';
+import { monsterSpriteImg } from './huntPanel.js?v=79';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=79';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=79';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -90,11 +91,21 @@ function renderBestiarySection() {
     const next = nextBestiaryStage(kills);
     const pct = next ? Math.round((kills / next.kills) * 100) : 100;
     const stageLabel = done > 0 ? BESTIARY_STAGES[done - 1].label : '—';
+    const prof = monsterElementProfile(id);
+    const chip = (e, cls) => `<span class="elem-chip ${cls}" title="${ELEMENT_LABEL[e]}">${ELEMENT_ICON[e]}</span>`;
+    const elemLine = (prof.weak.length || prof.resist.length || prof.immune.length)
+      ? `<div class="bestiary-elems">
+          ${prof.weak.length ? `<span class="elem-tag weak">Fraco:</span>${prof.weak.map(e => chip(e, 'weak')).join('')}` : ''}
+          ${prof.resist.length ? `<span class="elem-tag resist">Resiste:</span>${prof.resist.map(e => chip(e, 'resist')).join('')}` : ''}
+          ${prof.immune.length ? `<span class="elem-tag immune">Imune:</span>${prof.immune.map(e => chip(e, 'immune')).join('')}` : ''}
+        </div>`
+      : '';
     return `<div class="bestiary-entry ${done >= BESTIARY_STAGES.length ? 'complete' : ''}">
       <div class="bestiary-monster">${monsterSpriteImg(id, 'prey-monster-icon')}<span>${MONSTERS[id].name}</span></div>
       <div class="bestiary-progress">
         <div class="bestiary-stage">Etapa ${stageLabel} · ${kills.toLocaleString()} mortes${next ? ` / ${next.kills.toLocaleString()}` : ' · ✅ completo'}</div>
         <div class="task-progress-bar-track"><div class="task-progress-bar" style="width:${pct}%"></div></div>
+        ${elemLine}
       </div>
     </div>`;
   }).join('');

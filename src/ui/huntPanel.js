@@ -1,15 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=78';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=78';
-import { MONSTERS } from '../domain/bestiary.js?v=78';
-import { cityName } from '../domain/cities.js?v=78';
-import { ITEMS } from '../domain/items.js?v=78';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=78';
-import { on, EVENTS } from '../shared/eventBus.js?v=78';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=78';
-import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=78';
+import { G } from '../application/gameStore.js?v=79';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=79';
+import { MONSTERS } from '../domain/bestiary.js?v=79';
+import { cityName } from '../domain/cities.js?v=79';
+import { ITEMS } from '../domain/items.js?v=79';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=79';
+import { on, EVENTS } from '../shared/eventBus.js?v=79';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=79';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats } from '../application/huntUseCases.js?v=79';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -211,6 +211,34 @@ export function renderLoot() {
   }).join('');
 }
 
+// Hunt Analyzer (Analisador de Caçada): estatísticas da sessão atual — tempo,
+// kills, XP total e por hora, gold, valor do loot, suprimentos e lucro/hora.
+// Ver application/huntUseCases.js: getHuntStats.
+function fmtDuration(ms) {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return (h ? `${h}h ` : '') + `${m}m ${sec}s`;
+}
+export function renderHuntAnalyzer() {
+  const el = document.getElementById('hunt-analyzer-body');
+  if (!el) return;
+  const st = getHuntStats();
+  const gi = goldIconImg('inline-icon');
+  const xi = vitalIconImg('xp', 'inline-icon');
+  const profitColor = st.profit >= 0 ? 'var(--positive, #2ecc71)' : '#e05a5a';
+  el.innerHTML = `
+    <div class="hunt-analyzer-status ${st.hunting ? 'on' : 'off'}">${st.hunting ? '🟢 Caçando' : '⏸ Parado'} · ${fmtDuration(st.elapsedMs)}</div>
+    <div class="hunt-analyzer-grid">
+      <div class="ha-cell"><span class="ha-label">💀 Kills</span><span class="ha-val">${formatNum(st.kills)}</span></div>
+      <div class="ha-cell"><span class="ha-label">${xi} XP</span><span class="ha-val">${formatNum(st.xp)}</span><span class="ha-rate">${formatNum(st.xpH)}/h</span></div>
+      <div class="ha-cell"><span class="ha-label">${gi} Gold</span><span class="ha-val">${formatNum(st.gold)}</span><span class="ha-rate">${formatNum(st.goldH)}/h</span></div>
+      <div class="ha-cell"><span class="ha-label">📦 Loot</span><span class="ha-val">${formatNum(st.loot)}</span></div>
+      <div class="ha-cell"><span class="ha-label">🧪 Suprimentos</span><span class="ha-val">-${formatNum(st.supplies)}</span></div>
+      <div class="ha-cell"><span class="ha-label">💰 Lucro</span><span class="ha-val" style="color:${profitColor}">${formatNum(st.profit)}</span><span class="ha-rate">${formatNum(st.profitH)}/h</span></div>
+    </div>
+    <div class="ha-note muted">Loot/suprimentos pelo valor de venda. Zera ao iniciar uma caçada.</div>`;
+}
+
 function renderHuntButton({ hunting }) {
   const btn = document.getElementById('hunt-toggle');
   if (!btn) return;
@@ -275,6 +303,7 @@ export function updateSceneMode() {
 export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
   on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
+  on(EVENTS.HUNT_STATS, renderHuntAnalyzer);
   on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);

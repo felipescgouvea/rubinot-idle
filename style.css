@@ -376,6 +376,32 @@ body {
 .char-voc-big { font-size: 2.6rem; filter: drop-shadow(0 2px 3px #00000033); }
 canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 
+/* Hunt Analyzer (Análise da Caçada) */
+.hunt-analyzer-status { font-weight: 700; font-size: 12px; margin-bottom: 8px; }
+.hunt-analyzer-status.on { color: #2ecc71; }
+.hunt-analyzer-status.off { color: var(--ink-faint); }
+.hunt-analyzer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ha-cell {
+  display: flex; flex-direction: column; gap: 1px;
+  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  border: 1px solid var(--line-soft); border-radius: 6px; padding: 5px 8px;
+}
+.ha-label { font-size: 10px; color: var(--ink-faint); letter-spacing: 0.3px; }
+.ha-val { font-family: var(--serif); font-weight: 700; font-size: 15px; color: var(--navy-1); }
+.ha-rate { font-size: 10px; color: #c45c1a; font-weight: 700; }
+.ha-note { font-size: 10px; margin-top: 6px !important; }
+
+/* Chips de fraqueza/resistência elemental (Bestiário) */
+.bestiary-elems { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; margin-top: 4px; font-size: 11px; }
+.elem-tag { font-size: 10px; font-weight: 700; margin-left: 4px; }
+.elem-tag.weak { color: #e05a5a; }
+.elem-tag.resist { color: #5a86e0; }
+.elem-tag.immune { color: var(--ink-faint); }
+.elem-chip { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; border-radius: 4px; }
+.elem-chip.weak { background: #e05a5a22; }
+.elem-chip.resist { background: #5a86e022; }
+.elem-chip.immune { background: #88888822; filter: grayscale(0.6); }
+
 /* Skills compactas na barra do personagem (à direita do Outfit) */
 .char-skills { display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto; align-content: center; }
 .char-skill-chip {
