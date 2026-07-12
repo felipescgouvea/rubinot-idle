@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=95';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=95';
-import { MONSTERS } from '../domain/bestiary.js?v=95';
-import { cityName } from '../domain/cities.js?v=95';
-import { ITEMS } from '../domain/items.js?v=95';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=95';
-import { on, EVENTS } from '../shared/eventBus.js?v=95';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=95';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=95';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=95';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=95';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=95';
+import { G } from '../application/gameStore.js?v=96';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=96';
+import { MONSTERS } from '../domain/bestiary.js?v=96';
+import { cityName } from '../domain/cities.js?v=96';
+import { ITEMS } from '../domain/items.js?v=96';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=96';
+import { on, EVENTS } from '../shared/eventBus.js?v=96';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=96';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=96';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=96';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=96';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=96';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -351,8 +351,17 @@ function renderStagePack(stage) {
   if (!pack.length) { if (cont) cont.remove(); return; }
   if (!cont) { cont = document.createElement('div'); cont.id = 'stage-pack'; cont.className = 'stage-pack'; stage.appendChild(cont); }
   const wantUids = pack.map(m => String(m.uid || m.defKey));
-  // remove os que saíram da sala (mortos)
-  [...cont.children].forEach(ch => { if (!wantUids.includes(ch.dataset.uid)) ch.remove(); });
+  // Criaturas que saíram da sala (morreram): não somem na hora — ficam um
+  // instante acinzentadas/tombando (animação de morte) antes de serem removidas,
+  // pra dar um respiro visual à morte em vez de piscar pra fora.
+  [...cont.children].forEach(ch => {
+    if (!wantUids.includes(ch.dataset.uid) && !ch.classList.contains('leaving')) {
+      ch.classList.add('leaving');
+      const wrap = ch.querySelector('.monster-sprite-wrap');
+      if (wrap) { wrap.classList.add('dead'); void wrap.offsetWidth; wrap.classList.add('dying'); }
+      setTimeout(() => ch.remove(), 650);
+    }
+  });
   // adiciona os novos (materializando) e mantém a ordem (alvo = primeiro à esquerda)
   pack.forEach((m, i) => {
     const uid = String(m.uid || m.defKey);
