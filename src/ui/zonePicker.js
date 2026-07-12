@@ -2,14 +2,14 @@
 // (ver domain/cities.js), depois vê as hunts daquela cidade. As cidades
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
-import { G } from '../application/gameStore.js?v=98';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=98';
-import { CITIES } from '../domain/cities.js?v=98';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=98';
-import { getZoneMultiplier } from '../application/adminUseCases.js?v=98';
-import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=98';
-import { openBattleModal } from './battleModal.js?v=98';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=98';
+import { G } from '../application/gameStore.js?v=99';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=99';
+import { CITIES } from '../domain/cities.js?v=99';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=99';
+import { getZoneMultiplier } from '../application/adminUseCases.js?v=99';
+import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=99';
+import { openBattleModal } from './battleModal.js?v=99';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=99';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

@@ -1526,6 +1526,16 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #modal-content p { font-size: 12px; line-height: 1.55; color: var(--ink-soft); }
 .item-detail-stats { margin-top: 10px; font-size: 11.5px; line-height: 1.9; color: var(--ink); }
 .item-detail-stats span { color: var(--navy-1); font-weight: 700; }
+/* comparativo de status ao equipar: valor novo x atual, diferença colorida */
+.stat-cmp { margin: 10px 0; border: 1px solid #2b3350; border-radius: 8px; overflow: hidden; }
+.stat-cmp-head { background: #1c2136; color: #8a92b8; font-size: 11px; font-weight: 700; padding: 5px 10px; }
+.stat-cmp-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; font-size: 13px; }
+.stat-cmp-row:nth-child(2n) { background: #ffffff08; }
+.stat-cmp-label { color: #b8c0e0; font-weight: 700; letter-spacing: 0.5px; }
+.stat-cmp-val { color: #f0e6c8; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-cmp-val .stat-up { color: #4ade80; }
+.stat-cmp-val .stat-down { color: #f87171; }
+.stat-cmp-val .stat-same { color: #8a92b8; }
 
 /* ============ MODAL DE BATALHA ============ */
 /* separado do modal genérico de propósito — ver o comentário no index.html */

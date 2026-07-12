@@ -1,14 +1,39 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=98';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=98';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=98';
-import { on, EVENTS } from '../shared/eventBus.js?v=98';
-import { saveGame } from '../application/saveGameUseCase.js?v=98';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=98';
+import { G } from '../application/gameStore.js?v=99';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=99';
+import { RARITY_TIERS } from '../domain/rarity.js?v=99';
+import { on, EVENTS } from '../shared/eventBus.js?v=99';
+import { saveGame } from '../application/saveGameUseCase.js?v=99';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=99';
 
 let dragId = null; // itemId sendo arrastado no inventário
+
+// Rótulos e conjunto de atributos comparáveis entre peças de equipamento.
+const STAT_LABEL = { atk: 'ATK', wandDmg: 'DANO', distanceBonus: 'DIST', def: 'DEF', magic: 'MAGIC', heal: 'HEAL', mana: 'MANA', dmg: 'DMG', spd: 'SPD' };
+const COMPARE_STATS = ['atk', 'wandDmg', 'distanceBonus', 'def', 'magic', 'spd'];
+
+// Comparativo de status ao equipar: mostra, pra cada atributo relevante, o valor
+// do item novo x o que já está no slot (item.type = slot), com a diferença em
+// verde/vermelho. Serve tanto pra item comum quanto pra relíquia (já resolvida).
+function statCompareHtml(newItem, slotType, alreadyEquipped = false) {
+  const current = resolveEquippedItem(G.equipment[slotType], G.relics);
+  const isEquippedItself = alreadyEquipped || current === newItem;
+  const keys = COMPARE_STATS.filter(s => (newItem[s] || 0) || (current && (current[s] || 0)));
+  if (!keys.length) return '';
+  const rows = keys.map(s => {
+    const nv = newItem[s] || 0;
+    const cv = (current && !isEquippedItself) ? (current[s] || 0) : 0;
+    const d = nv - cv;
+    const cls = d > 0 ? 'stat-up' : d < 0 ? 'stat-down' : 'stat-same';
+    const arrow = (current && !isEquippedItself) ? `${cv} → ${nv}` : `${nv}`;
+    const delta = (current && !isEquippedItself && d !== 0) ? ` <span class="${cls}">(${d > 0 ? '+' : ''}${d})</span>` : '';
+    return `<div class="stat-cmp-row"><span class="stat-cmp-label">${STAT_LABEL[s]}</span><span class="stat-cmp-val">${arrow}${delta}</span></div>`;
+  }).join('');
+  const head = isEquippedItself ? 'Equipado' : current ? `Comparar com: ${current.name}` : 'Nenhum item equipado no slot';
+  return `<div class="stat-cmp"><div class="stat-cmp-head">${head}</div>${rows}</div>`;
+}
 
 // Ordem de exibição dos itens: começa por G.inventoryOrder (escolha do
 // jogador via drag), removendo o que não está mais no inventário, e acrescenta
@@ -75,18 +100,10 @@ export function renderInventory() {
     grid.appendChild(div);
   });
 
-  renderRelics();
-  renderEquipmentSlots();
-}
-
-// Relíquias (ver domain/gameState.js: G.relics) — instâncias únicas, nunca
-// empilhadas, então cada uma vira seu próprio card, com uma borda/glow na cor
-// da raridade (ver domain/rarity.js) por cima do MESMO sprite real do item
-// base (não existe sprite real de Tibia pra "versão lendária" de um item).
-export function renderRelics() {
-  const grid = document.getElementById('relics-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
+  // Relíquias (ver domain/gameState.js: G.relics) ficam JUNTAS na bag, ao lado
+  // dos demais itens (não numa aba separada). São instâncias únicas, nunca
+  // empilhadas, então cada uma vira seu próprio card, distinguida pela borda/glow
+  // na cor da raridade (ver domain/rarity.js) sobre o MESMO sprite do item base.
   (G.relics || []).forEach(relic => {
     const base = ITEMS[relic.itemId];
     if (!base) return;
@@ -95,10 +112,12 @@ export function renderRelics() {
     div.className = 'inv-item relic-item';
     div.style.borderColor = tier.color;
     div.style.boxShadow = `0 0 9px ${tier.color}99`;
-    div.innerHTML = `<div class="item-icon">${itemIconImg(relic.itemId, 'item-icon')}</div><div class="item-name">${base.name}</div><div class="relic-tier-badge" style="color:${tier.color}">💎 ${tier.name}</div>`;
+    div.innerHTML = `<div class="item-icon">${itemIconImg(relic.itemId, 'item-icon')}</div><div class="item-name">${base.name}</div><div class="relic-tier-badge" style="color:${tier.color}">${tier.name}</div>`;
     div.onclick = () => openRelicModal(relic.id);
     grid.appendChild(div);
   });
+
+  renderEquipmentSlots();
 }
 
 export function openRelicModal(relicId) {
@@ -107,15 +126,13 @@ export function openRelicModal(relicId) {
   const base = ITEMS[relic.itemId];
   if (!base) return;
   const tier = RARITY_TIERS[relic.rarity];
-  const statKey = primaryStatKeyForItem(base);
-  const boostedVal = statKey ? Math.round(base[statKey] * (1 + relic.bonusPct)) : null;
+  const resolved = resolveEquippedItem(relic.id, G.relics) || base;
   const equipped = Object.values(G.equipment).includes(relic.id);
   const sellPrice = Math.round(base.sell * (1 + relic.bonusPct * 2));
   openModal(`
     <h3>${itemIconImg(relic.itemId)} ${base.name}</h3>
-    <p style="color:${tier.color};font-weight:700">💎 Relíquia ${tier.name} (+${Math.round(relic.bonusPct * 100)}%)</p>
-    <p>${base.type}</p>
-    <div class="item-detail-stats">${statKey ? `<span>${statKey.toUpperCase()} +${boostedVal}</span>` : ''}</div>
+    <p style="color:${tier.color};font-weight:700">Relíquia ${tier.name}</p>
+    ${EQUIPPABLE_TYPES.includes(base.type) ? statCompareHtml(resolved, base.type, equipped) : ''}
     <p style="margin-top:8px; color:#6272a4; font-size:12px">Venda: ${sellPrice} ${goldIconImg('inline-icon')}</p>
     ${!equipped ? `<button onclick="equipRelic('${relic.id}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Equipar</button>` : ''}
     ${equipped ? `<button onclick="unequipItem('${relic.id}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Desequipar</button>` : ''}
@@ -126,15 +143,17 @@ export function openRelicModal(relicId) {
 export function openItemModal(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
-  const STAT_LABEL = { atk: 'ATK', wandDmg: 'DANO', distanceBonus: 'DIST', def: 'DEF', magic: 'MAGIC', heal: 'HEAL', mana: 'MANA', dmg: 'DMG', spd: 'SPD' };
-  const stats = ['atk', 'wandDmg', 'distanceBonus', 'def', 'magic', 'heal', 'mana', 'dmg', 'spd'].filter(s => item[s]).map(s => `<span>${STAT_LABEL[s]} +${item[s]}</span>`).join(' | ');
   const isEquippable = EQUIPPABLE_TYPES.includes(item.type);
   const isConsumable = CONSUMABLE_TYPES.includes(item.type);
   const equipped = Object.values(G.equipment).includes(itemId);
+  // Equipável: mostra o COMPARATIVO de status com o que está no slot. Demais
+  // itens (consumíveis/materiais): só a lista simples de atributos.
+  const simpleStats = ['heal', 'mana', 'dmg'].filter(s => item[s]).map(s => `<span>${STAT_LABEL[s]} +${item[s]}</span>`).join(' | ');
+  const statsHtml = isEquippable ? statCompareHtml(item, item.type, equipped) : `<div class="item-detail-stats">${simpleStats}</div>`;
   openModal(`
     <h3>${itemIconImg(itemId)} ${item.name}</h3>
-    <p>${item.type} — Qtd: ${qty}</p>
-    <div class="item-detail-stats">${stats}</div>
+    <p class="muted" style="font-size:12px">Qtd: ${qty}</p>
+    ${statsHtml}
     <p style="margin-top:8px; color:#6272a4; font-size:12px">Venda: ${item.sell} ${goldIconImg('inline-icon')}</p>
     ${isConsumable ? `<button onclick="useItem('${itemId}')" style="margin-top:8px;background:#3a7bd5;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Usar</button>` : ''}
     ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Equipar</button>` : ''}
@@ -168,7 +187,7 @@ export function renderEquipmentSlots() {
     const title = item ? `${item.name}${relic && tier ? ` — ${tier.name}` : ''}` : SLOT_LABEL[slot];
     return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}"${style} title="${title}" onclick="${clickTarget}">
       ${item
-        ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>${relic ? '<div class="equip-slot-relic-gem">💎</div>' : ''}`
+        ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>`
         : `<div class="equip-slot-ghost">${SLOT_PLACEHOLDER[slot]}</div>`}
     </div>`;
   }).join('');
