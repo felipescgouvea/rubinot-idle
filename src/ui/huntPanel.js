@@ -1,15 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=71';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=71';
-import { MONSTERS } from '../domain/bestiary.js?v=71';
-import { cityName } from '../domain/cities.js?v=71';
-import { ITEMS } from '../domain/items.js?v=71';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=71';
-import { on, EVENTS } from '../shared/eventBus.js?v=71';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=71';
-import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=71';
+import { G } from '../application/gameStore.js?v=72';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=72';
+import { MONSTERS } from '../domain/bestiary.js?v=72';
+import { cityName } from '../domain/cities.js?v=72';
+import { ITEMS } from '../domain/items.js?v=72';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=72';
+import { on, EVENTS } from '../shared/eventBus.js?v=72';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=72';
+import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=72';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -33,22 +33,74 @@ function flashSpellEffect(wrap, spellElement) {
   wrap.classList.add(`spell-${spellElement}`);
 }
 
-// Toca o sprite REAL de efeito do Tibia (gif animado) sobre a cena de batalha
-// quando uma magia/runa é castada. Cada chamada cria um <img> novo (o gif toca
-// do primeiro quadro) sobreposto ao personagem e se remove ao terminar. O
-// monstro-alvo foi removido do DOM, então o efeito é ancorado no #dungeon-stage.
-function playSpellEffectOnStage(spellElement) {
-  if (!spellElement) return;
-  const stage = document.getElementById('dungeon-stage');
-  const file = effectSpriteFile(spellElement);
-  if (!stage || !file) return;
+// Monstro-alvo na cena de batalha (à direita, de frente pro personagem). É só
+// o sprite do alvo da frente — a vida numérica de toda a sala continua na
+// Battle List. Some quando não há alvo (procurando/ocioso). Atualiza in-place
+// pra não recriar o <img> a cada tick (deixaria o sprite piscar ao recarregar).
+export function renderBattleTarget(hit = false) {
+  const wrap = document.getElementById('battle-target-wrap');
+  if (!wrap) return;
+  const m = getCurrentMonster();
+  if (!m) { wrap.classList.remove('active'); wrap.dataset.monsterId = ''; wrap.innerHTML = ''; return; }
+  wrap.classList.add('active');
+  if (wrap.dataset.monsterId !== m.defKey || !wrap.querySelector('img,span')) {
+    wrap.dataset.monsterId = m.defKey;
+    wrap.innerHTML = monsterSpriteImg(m.defKey, 'battle-target-sprite');
+  }
+  if (hit) { wrap.classList.remove('hit'); void wrap.offsetWidth; wrap.classList.add('hit'); }
+}
+
+// Toca o efeito de combate FIEL ao Tibia sobre o monstro: se o golpe tem
+// projétil (missile), a flecha/míssil voa do personagem até o alvo e SÓ ao
+// chegar toca o impacto; sem projétil (corpo-a-corpo/strike/área), o impacto
+// aparece na hora sobre o monstro. Ver domain/combatFx.js pro mapa por magia.
+function overlayImpact(stage, target, impact, area) {
+  const file = effectSpriteFile(impact);
+  if (!file) return;
   const img = document.createElement('img');
-  img.className = 'spell-effect-sprite';
+  img.className = 'combat-impact-sprite' + (area ? ' area' : '');
   img.src = spriteUrl(file);
   img.alt = '';
+  // centraliza o impacto sobre o monstro
+  img.style.left = target.cx + 'px';
+  img.style.top = target.cy + 'px';
   stage.appendChild(img);
-  // duração ~ um ciclo do gif; removido depois pra não acumular no DOM
-  setTimeout(() => img.remove(), 900);
+  setTimeout(() => img.remove(), 850);
+}
+function centerOf(el, stageRect) {
+  const r = el.getBoundingClientRect();
+  return { cx: r.left - stageRect.left + r.width / 2, cy: r.top - stageRect.top + r.height / 2 };
+}
+export function playCombatFx({ impact, missile, area } = {}) {
+  const stage = document.getElementById('dungeon-stage');
+  const targetWrap = document.getElementById('battle-target-wrap');
+  const playerWrap = document.getElementById('player-sprite-wrap');
+  if (!stage || !targetWrap || !getCurrentMonster()) return;
+  const stageRect = stage.getBoundingClientRect();
+  const target = centerOf(targetWrap, stageRect);
+  const missileFile = missile ? missileSpriteFile(missile) : null;
+  if (missileFile && playerWrap) {
+    const from = centerOf(playerWrap, stageRect);
+    const proj = document.createElement('img');
+    proj.className = 'combat-missile-sprite';
+    proj.src = spriteUrl(missileFile);
+    proj.alt = '';
+    // aponta o projétil na direção do voo (player -> alvo)
+    const ang = Math.atan2(target.cy - from.cy, target.cx - from.cx) * 180 / Math.PI;
+    proj.style.left = from.cx + 'px';
+    proj.style.top = from.cy + 'px';
+    proj.style.setProperty('--fx-angle', ang + 'deg');
+    stage.appendChild(proj);
+    // dispara a translação no próximo frame (deixa o browser aplicar o estado inicial)
+    requestAnimationFrame(() => {
+      proj.style.left = target.cx + 'px';
+      proj.style.top = target.cy + 'px';
+    });
+    const FLIGHT = 260;
+    setTimeout(() => { proj.remove(); overlayImpact(stage, target, impact, area); }, FLIGHT);
+  } else {
+    overlayImpact(stage, target, impact, area);
+  }
 }
 
 export function renderMonsterDisplay(hit = false, killed = null, spellElement = null, bossAura = null) {
@@ -244,8 +296,9 @@ export function updateSceneMode() {
 }
 
 export function wireHuntPanelEvents() {
-  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); if (spellElement) playSpellEffectOnStage(spellElement); renderBattleList(); updateSceneMode(); });
-  on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
+  on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleTarget(hit); renderBattleList(); updateSceneMode(); });
+  on(EVENTS.COMBAT_FX, (fx) => playCombatFx(fx));
+  on(EVENTS.BATTLE_LIST, () => { renderBattleTarget(); renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);

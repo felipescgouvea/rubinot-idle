@@ -90,24 +90,20 @@ export const VITAL_ICON_FILES = {
   xp: 'vitals/Experience_Icon.webp',
 };
 
-// Efeitos de magia/runa: gifs REAIS de efeito do Tibia (Fire/Energy/Ice/Holy/
-// Explosion/Death/Earth), mantidos ANIMADOS (.gif, não achatados pra webp) pra
-// a animação tocar na cena de batalha quando uma magia/runa é castada. O
-// elemento vem de domain/spells.js (element) e das runas (domain/items.js).
-// 'arcane' (golpe básico do mago) reaproveita o efeito de energia.
-const EFFECT_ELEMENT_FILE = {
-  fire: 'fire.gif',
-  energy: 'energy.gif',
-  arcane: 'energy.gif',
-  ice: 'ice.gif',
-  holy: 'holy.gif',
-  physical: 'physical.gif',
-  death: 'death.gif',
-  earth: 'earth.gif',
-};
-export function effectSpriteFile(element) {
-  const f = EFFECT_ELEMENT_FILE[element];
-  return f ? 'effects/' + f : null;
+// Efeitos de combate: gifs REAIS do Tibia, mantidos ANIMADOS (.gif, não
+// achatados pra webp) pra a animação tocar na cena de batalha. Dois tipos:
+//   - IMPACTO (assets/sprites/effects/): a explosão/hit que aparece sobre o
+//     alvo (fire/energy/ice/holy/physical/death/earth/groundshaker/blood).
+//   - PROJÉTIL (assets/sprites/missiles/): a flecha/míssil que voa do
+//     personagem até o monstro antes do impacto (arrow/bolt/spear/energy/…).
+// O nome vem do mapa fiel por magia/runa/munição em domain/combatFx.js.
+const EFFECT_NAMES = new Set(['fire','energy','ice','holy','physical','death','earth','groundshaker','blood']);
+const MISSILE_NAMES = new Set(['arrow','bolt','spear','energy','fire','ice','death','earth','holy']);
+export function effectSpriteFile(impact) {
+  return impact && EFFECT_NAMES.has(impact) ? 'effects/' + impact + '.gif' : null;
+}
+export function missileSpriteFile(missile) {
+  return missile && MISSILE_NAMES.has(missile) ? 'missiles/' + missile + '.gif' : null;
 }
 
 // Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin

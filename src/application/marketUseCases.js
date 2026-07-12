@@ -1,16 +1,16 @@
 // Market entre jogadores: depositar/sacar da carteira, anunciar, cancelar e
 // comprar itens. Mesmo modelo de confiança do ranking global (secret gerado
 // no navegador + funções SECURITY DEFINER no banco como fronteira real).
-import { G } from './gameStore.js?v=71';
-import { ITEMS } from '../domain/items.js?v=71';
-import { emit, EVENTS } from '../shared/eventBus.js?v=71';
+import { G } from './gameStore.js?v=72';
+import { ITEMS } from '../domain/items.js?v=72';
+import { emit, EVENTS } from '../shared/eventBus.js?v=72';
 import {
   fetchMyWalletRequest, fetchListingsRequest, depositRequest, withdrawRequest,
   listItemRequest, cancelListingRequest, buyListingRequest,
-} from '../infrastructure/marketApi.js?v=71';
-import { addItemToInventory } from './inventoryCore.js?v=71';
-import { ensurePlayerSecret } from './highscoresUseCases.js?v=71';
-import { saveGame } from './saveGameUseCase.js?v=71';
+} from '../infrastructure/marketApi.js?v=72';
+import { addItemToInventory } from './inventoryCore.js?v=72';
+import { ensurePlayerSecret } from './highscoresUseCases.js?v=72';
+import { saveGame } from './saveGameUseCase.js?v=72';
 
 export async function fetchMyMarketWallet() {
   if (!G.playerSecret) return 0;

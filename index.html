@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=71" />
-  <link rel="stylesheet" href="style.css?v=71" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=72" />
+  <link rel="stylesheet" href="style.css?v=72" />
 </head>
 <body>
   <div id="app">
@@ -317,9 +317,13 @@
                  aparece à frente, para e luta até limpar a sala. -->
             <div id="battle-scene">
               <div id="dungeon-stage">
+                <!-- Duelo estilo Tibia: personagem à esquerda, monstro-alvo à
+                     direita. As magias/runas/flechas tocam o efeito real (com
+                     projétil voando) SOBRE o monstro — ver ui/huntPanel.js:
+                     renderBattleTarget + playCombatFx. A vida numérica de cada
+                     criatura da sala continua na Battle List ao lado. -->
                 <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
-                <!-- O monstro NÃO aparece mais no palco: a vida de cada criatura
-                     (com número) fica na Battle List abaixo. Aqui só o boneco. -->
+                <div class="battle-target-wrap" id="battle-target-wrap"></div>
               </div>
               <div class="player-battle-name" id="player-battle-name">—</div>
               <div class="player-hp-track">
@@ -368,6 +372,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=71"></script>
+  <script type="module" src="src/main.js?v=72"></script>
 </body>
 </html>
