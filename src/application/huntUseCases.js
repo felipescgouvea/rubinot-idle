@@ -3,30 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=100';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=100';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=100';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=100';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=100';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=100';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=100';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=100';
-import { elementMod } from '../domain/elements.js?v=100';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=100';
-import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=100';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=100';
-import { MONSTERS } from '../domain/bestiary.js?v=100';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=100';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=100';
-import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=100';
-import { emit, EVENTS } from '../shared/eventBus.js?v=100';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=100';
-import { trainSkill } from './skillUseCases.js?v=100';
-import { addItemToInventory } from './inventoryCore.js?v=100';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=100';
-import { getCombatBonuses } from './bonuses.js?v=100';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=100';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=100';
+import { G } from './gameStore.js?v=101';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=101';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=101';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=101';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=101';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=101';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=101';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=101';
+import { elementMod } from '../domain/elements.js?v=101';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=101';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=101';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=101';
+import { MONSTERS } from '../domain/bestiary.js?v=101';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=101';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=101';
+import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=101';
+import { emit, EVENTS } from '../shared/eventBus.js?v=101';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=101';
+import { trainSkill } from './skillUseCases.js?v=101';
+import { addItemToInventory } from './inventoryCore.js?v=101';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=101';
+import { getCombatBonuses } from './bonuses.js?v=101';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=101';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=101';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -289,7 +289,7 @@ export function doHuntTick() {
     const rune = ITEMS[G.rtc.attackRune];
     areaId = rune.area || 'single';
     element = rune.element || 'physical';
-    hitFn = () => runeDamage({ rune, magicLevel: magic }); // escala com Magic Level
+    hitFn = () => runeDamage({ rune, level: G.level, magicLevel: magic }); // fórmula do Tibia (nível/5 + ML·a + base)
     combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
     G.inventory[G.rtc.attackRune]--;
     huntSession.supplies += rune.sell || 0;
@@ -316,8 +316,15 @@ export function doHuntTick() {
     if (atkSpell) {
       areaId = atkSpell.area || 'single';
       element = atkSpell.element;
-      // Físicas escalam com a arma (com def do alvo); elementais com nível+ML.
-      hitFn = (t) => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, atk: getAtk(), targetDef: t.def });
+      // Contexto pra escala das magias FÍSICAS (fórmula do Tibia): melee usa
+      // skill·ataque da arma; distância usa a skill de distância. As demais só
+      // usam Magic Level. (Ver domain/combatFormulas.js: spellAttackDamage.)
+      const meleeSkillId = getEquippedWeaponSkillId();
+      const meleeSkill = (G.sk[meleeSkillId] && G.sk[meleeSkillId].lv) || 0;
+      const eqWeapon = resolveEquippedItem(G.equipment.weapon, G.relics);
+      const weaponAtk = (eqWeapon && eqWeapon.atk) || 7; // punho = ataque base 7
+      const distanceSkill = (G.sk.distance && G.sk.distance.lv) || 0;
+      hitFn = () => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
       G.mana -= atkSpell.mana;
       startSpellCd(atkSpellId, atkSpell.cd);
       trainSkill('magic', atkSpell.mana * voc.magicMult);

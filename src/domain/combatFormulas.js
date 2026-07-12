@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=100';
-import { resolveEquippedItem } from './items.js?v=100';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=101';
+import { resolveEquippedItem } from './items.js?v=101';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -105,33 +105,35 @@ export function calcDamage(atk, def) {
   return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));
 }
 
-// Dano de UMA magia de ataque num alvo (fiel ao Tibia):
-//  • Magias FÍSICAS (Berserk/Groundshaker/Ethereal Spear) escalam com a ARMA
-//    e a skill do personagem — usam o ataque físico e sofrem redução por defesa,
-//    igual a um golpe de arma reforçado.
-//  • Magias ELEMENTAIS (fogo/gelo/energia/terra/sagrado) escalam com NÍVEL +
-//    MAGIC LEVEL (não com a arma), e NÃO são reduzidas por armadura física — o
-//    que muda o dano delas é a resistência elemental do alvo (ver domain/elements.js,
-//    aplicada em huntUseCases). O campo `power` da magia é o coeficiente dela.
-export function elementalSpellBase(level, magicLevel) {
-  return level * 0.4 + magicLevel * 2.0;
-}
-export function spellAttackDamage({ spell, level, magicLevel, atk, targetDef }) {
-  const variance = 0.85 + Math.random() * 0.3;
-  let raw;
-  if (spell.element === 'physical') {
-    raw = Math.max(1, atk - Math.floor((targetDef || 0) * 0.6)) * spell.power;
-  } else {
-    raw = elementalSpellBase(level, magicLevel) * spell.power;
-  }
-  return Math.max(1, Math.floor(raw * variance));
+// FÓRMULA REAL DO TIBIA (TFS) pra dano/cura de magias e runas. O valor é um
+// número aleatório uniforme entre min e max, onde:
+//   min = nível/5 + aMin·X + baseMin ;  max = nível/5 + aMax·X + baseMax
+// e X é a variável de escala: Magic Level (padrão), skill·ataque (magias físicas
+// de melee: Berserk/Groundshaker/Fierce Berserk) ou skill de distância (Ethereal
+// Spear). Os 4 coeficientes [aMin, baseMin, aMax, baseMax] são o "base power" de
+// cada magia/runa (ver domain/spells.js e domain/items.js) — extraídos dos
+// scripts oficiais do TFS (otland/forgottenserver: data/scripts/spells).
+export function levelMagicRoll(level, x, power) {
+  const [aMin, bMin, aMax, bMax] = power;
+  const base = level / 5;
+  const min = base + x * aMin + bMin;
+  const max = base + x * aMax + bMax;
+  return Math.max(1, Math.floor(min + Math.random() * Math.max(0, max - min)));
 }
 
-// Cura de uma magia — escala com NÍVEL + MAGIC LEVEL (como no Tibia; quem tem
-// mais ML cura mais). Knight, com ML baixíssimo, cura pouco e depende de poção.
+// Dano de UMA magia de ataque num alvo, pela fórmula do Tibia acima. A escala
+// depende da magia: física de melee usa skill·ataque; física de distância usa a
+// skill de distância; as demais (elementais/holy) usam o Magic Level. A
+// resistência/fraqueza elemental do alvo é aplicada por fora (ver huntUseCases).
+export function spellAttackDamage({ spell, level, magicLevel, meleeSkill = 0, weaponAtk = 0, distanceSkill = 0 }) {
+  if (spell.scale === 'melee') return levelMagicRoll(level, meleeSkill * weaponAtk, spell.power);
+  if (spell.scale === 'distance') return levelMagicRoll(level, distanceSkill, spell.power);
+  return levelMagicRoll(level, magicLevel, spell.power);
+}
+
+// Cura de uma magia — mesma fórmula do Tibia, escalando com nível + Magic Level.
 export function spellHealAmount({ spell, level, magicLevel }) {
-  const variance = 0.9 + Math.random() * 0.2;
-  return Math.max(1, Math.floor((level * 1.2 + magicLevel * 6) * spell.power * 6 * variance));
+  return levelMagicRoll(level, magicLevel, spell.power);
 }
 
 // Restauração de poção com FAIXA (±15%) em vez de valor fixo — como no Tibia,
@@ -141,13 +143,10 @@ export function potionRestore(amount) {
   return Math.max(1, Math.floor((amount || 0) * (0.85 + Math.random() * 0.3)));
 }
 
-// Dano de runa escalando com Magic Level (fiel ao Tibia, onde o dano da runa
-// sobe com ML). `rune.dmg` é o dano-base de referência (~ML 20). Fora disso,
-// escala ±3% por ponto de ML, com piso pra não zerar em ML baixíssimo.
-export function runeDamage({ rune, magicLevel }) {
-  const scale = Math.max(0.4, 1 + (magicLevel - 20) * 0.03);
-  const variance = 0.85 + Math.random() * 0.3;
-  return Math.max(1, Math.floor(rune.dmg * scale * variance));
+// Dano de runa pela MESMA fórmula do Tibia (nível/5 + ML·a + base), usando o
+// base power real da runa (ver domain/items.js: rune.power).
+export function runeDamage({ rune, level, magicLevel }) {
+  return levelMagicRoll(level, magicLevel, rune.power);
 }
 
 // Sorteia uma criatura da zona e escala seus atributos pelo nível do jogador —

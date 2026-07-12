@@ -4,18 +4,18 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=100';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=100';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=100';
-import { VOCATIONS } from '../domain/character.js?v=100';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=100';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=100';
-import { getMagic } from '../application/stats.js?v=100';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=100';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=100';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=100';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=100';
-import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=100';
+import { G } from '../application/gameStore.js?v=101';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=101';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=101';
+import { VOCATIONS } from '../domain/character.js?v=101';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=101';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=101';
+import { getMagic } from '../application/stats.js?v=101';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=101';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=101';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=101';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=101';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=101';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -38,7 +38,7 @@ function spellRow(id, s, selected, onclick) {
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
       <div class="rtc-row-desc">
-        ${s.type === 'attack' ? `⚔️ Dano ×${s.power} · ${areaBadge(s.area)}` : `💚 Cura (escala nível+ML)`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · ⏱ CD ${s.cd}s · Nível ${s.level}+
+        ${s.type === 'attack' ? `⚔️ ${areaBadge(s.area)}` : `💚 Cura (escala nível+ML)`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · ⏱ CD ${s.cd}s · Nível ${s.level}+
       </div>
     </div>
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
@@ -55,7 +55,7 @@ function priorityRow(id, s, idx, total) {
     <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
-      <div class="rtc-row-desc">⚔️ Dano ×${s.power} · ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} · ⏱ ${s.cd}s</div>
+      <div class="rtc-row-desc">⚔️ ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} · ⏱ ${s.cd}s</div>
     </div>
     <div class="rtc-prio-controls">
       <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', -1)" ${idx === 0 ? 'disabled' : ''} title="Subir prioridade">▲</button>
@@ -203,7 +203,7 @@ export function renderRtcPanel() {
         </div>
         <h5>Runas de ataque <span class="muted">(alternativa às magias)</span></h5>
         <div class="rtc-rows">
-          ${attackRunes.map(([id, item]) => { const lock = getMagic() < runeMinMl(id); return itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg} · ${areaBadge(item.area)} · 🔮 ML ${runeMinMl(id)}+${lock ? ' 🔒' : ''}`); }).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
+          ${attackRunes.map(([id, item]) => { const lock = getMagic() < runeMinMl(id); return itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ ${areaBadge(item.area)} · 🔮 ML ${runeMinMl(id)}+${lock ? ' 🔒' : ''}`); }).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
         </div>
         ` : `
         <h5>Spell de Cura <span class="muted">— casta abaixo de</span>

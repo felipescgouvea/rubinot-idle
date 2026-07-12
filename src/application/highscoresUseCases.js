@@ -1,11 +1,11 @@
 // Identidade do jogador no ranking global e envio/leitura de score. O
 // "secret" é um UUID gerado no navegador — mesmo modelo de confiança usado
 // pelo Market (ver marketUseCases.js).
-import { G } from './gameStore.js?v=100';
-import { XP_TABLE } from '../domain/character.js?v=100';
-import { emit, EVENTS } from '../shared/eventBus.js?v=100';
-import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=100';
-import { saveGame } from './saveGameUseCase.js?v=100';
+import { G } from './gameStore.js?v=101';
+import { XP_TABLE } from '../domain/character.js?v=101';
+import { emit, EVENTS } from '../shared/eventBus.js?v=101';
+import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=101';
+import { saveGame } from './saveGameUseCase.js?v=101';
 
 let lastSubmitAt = 0;
 let highscoresCache = null;

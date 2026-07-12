@@ -1,14 +1,16 @@
-import { G } from './gameStore.js?v=100';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=100';
-import { ZONES } from '../domain/bestiary.js?v=100';
-import { RARITY_TIERS } from '../domain/rarity.js?v=100';
-import { emit, EVENTS } from '../shared/eventBus.js?v=100';
-import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=100';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=100';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=100';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=100';
-import { saveGame } from './saveGameUseCase.js?v=100';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=100';
+import { G } from './gameStore.js?v=101';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=101';
+import { ZONES } from '../domain/bestiary.js?v=101';
+import { RARITY_TIERS } from '../domain/rarity.js?v=101';
+import { emit, EVENTS } from '../shared/eventBus.js?v=101';
+import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=101';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=101';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=101';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=101';
+import { runeDamage } from '../domain/combatFormulas.js?v=101';
+import { elementMod } from '../domain/elements.js?v=101';
+import { saveGame } from './saveGameUseCase.js?v=101';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=101';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -16,7 +18,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=100';
+export { addItemToInventory } from './inventoryCore.js?v=101';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -161,9 +163,12 @@ export function useItem(itemId) {
     const pack = getCurrentPack();
     const areaId = item.area || 'single';
     const targets = isAreaAttack(areaId) ? pack.slice(0, areaMaxTargets(areaId)) : [currentMonster];
+    // Dano pela fórmula real do Tibia (nível/5 + ML·a + base), com a
+    // resistência/fraqueza elemental do alvo por cima (ver domain/elements.js).
     targets.forEach(t => {
-      t.hp -= item.dmg;
-      emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">Você usou ${item.name}: ${item.dmg} de dano em ${t.name}.</span>`, cat: 'suprimento' });
+      const dmg = Math.max(1, Math.floor(runeDamage({ rune: item, level: G.level, magicLevel: getMagic() }) * elementMod(t.defKey, item.element || 'physical')));
+      t.hp -= dmg;
+      emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">Você usou ${item.name}: ${dmg} de dano em ${t.name}.</span>`, cat: 'suprimento' });
     });
     if (isAreaAttack(areaId) && targets.length > 1) {
       emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${targets.length} criaturas.</span>`, cat: 'combate' });
