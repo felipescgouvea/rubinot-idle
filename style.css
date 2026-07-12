@@ -644,7 +644,6 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .zone-card-name { font-family: var(--serif); font-size: 13px; line-height: 1.3; color: var(--navy-2); font-weight: 700; margin-top: 8px; min-height: 34px; }
 .zone-card-monster-row { display: flex; justify-content: center; gap: 4px; margin: 6px 0; }
 .zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
-.zone-card-mults { font-size: 11px; color: var(--ink-faint); margin-bottom: 10px; white-space: nowrap; }
 .zone-card-req { font-size: 11.5px; color: var(--red-hot); font-weight: 700; padding: 8px 0; }
 .zone-card .skill-upgrade-btn { font-size: 11.5px; padding: 8px 6px; width: 100%; }
 
@@ -703,7 +702,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    baixo; para de rolar quando está lutando/parado. */
 #dungeon-stage {
   position: relative;
-  height: 240px;
+  height: 200px;
   border-radius: 8px;
   overflow: hidden;
   background: linear-gradient(180deg, var(--zone-color-1, #5a6b8a) 0%, var(--zone-color-2, #26344a) 100%);
@@ -748,6 +747,19 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    .monster-sprite-wrap interno cuida da marcha (monster-walk). */
 .stage-monster { position: relative; flex: 0 0 auto; }
 .stage-monster.spawning { animation: monster-rise 0.55s cubic-bezier(0.18, 0.9, 0.3, 1.2); }
+/* barrinha de vida sob cada criatura da sala — compacta, sem número, só a
+   proporção (o valor exato já mora na Battle List ao lado). */
+.stage-monster-hp {
+  width: 40px;
+  height: 5px;
+  margin: 3px auto 0;
+  background: #00000055;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #00000044;
+}
+.stage-monster-hp-fill { height: 100%; border-radius: 3px; background: linear-gradient(180deg, #e74c3c, var(--hp-c)); transition: width 0.2s ease; }
+.stage-monster.leaving .stage-monster-hp-fill { background: #8a8a8a; }
 @keyframes monster-rise {
   0%   { opacity: 0; transform: translateY(52px) scale(0.72); filter: brightness(2.4) blur(2.5px); }
   55%  { opacity: 1; filter: brightness(1.5) blur(0.4px); }
@@ -1535,7 +1547,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .item-detail-stats { margin-top: 10px; font-size: 11.5px; line-height: 1.9; color: var(--ink); }
 .item-detail-stats span { color: var(--navy-1); font-weight: 700; }
 /* comparativo de status ao equipar: valor novo x atual, diferença colorida */
-.stat-cmp { margin: 10px 0; border: 1px solid #2b3350; border-radius: 8px; overflow: hidden; }
+.stat-cmp { margin: 10px 0; border: 1px solid #2b3350; border-radius: 8px; overflow: hidden; background: #1c2136; }
 .stat-cmp-head { background: #1c2136; color: #8a92b8; font-size: 11px; font-weight: 700; padding: 5px 10px; }
 .stat-cmp-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; font-size: 13px; }
 .stat-cmp-row:nth-child(2n) { background: #ffffff08; }
@@ -1562,7 +1574,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   /* TAMANHO FIXO: não cresce/encolhe com a quantidade de monstros ou o log —
      as seções internas rolam sozinhas. */
   width: min(940px, 96vw);
-  height: min(600px, 92vh);
+  height: min(660px, 92vh);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1625,9 +1637,11 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* Battle List preenche a coluna direita inteira, até onde começa o Log. */
 #battle-modal-box #battle-list-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 #battle-modal-box #battle-list { flex: 1; height: auto; max-height: none; overflow-y: auto; }
-/* Log de Combate: linha inteira, abaixo do botão de caçada, preenche o resto. */
+/* Log de Combate: linha inteira, abaixo do botão de caçada. Altura MÍNIMA
+   garantida (não pode encolher pra virar uma frestinha de 1 linha só porque a
+   cena/battle list acima é alta) — cresce além disso se sobrar espaço. */
 #battle-modal-box #combat-log-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
-#battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
+#battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 130px; }
 /* entrada de monstro MORTO na Battle List: acinzentada, some após 1s */
 .battle-list-entry.dead { opacity: 0.5; filter: grayscale(0.7); }
 .battle-list-entry.dead .battle-list-hp-fill { background: #8a8a8a; }
@@ -1973,18 +1987,33 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .inv-item.dragging { opacity: 0.4; cursor: grabbing; }
 .inv-item.drag-over { outline: 2px dashed var(--gold); outline-offset: 2px; background: #fffbe9; }
 
-/* ============ BOOSTED (widget compacto, no cabeçalho ao lado do Reset) ====== */
-/* Faixa do Boosted — destacada do header, colada à direita e bem próxima dele */
+/* ============ BOOSTED (widget compacto, fora do header, no canto superior
+   direito da página — como no mock: encostado no topo, à direita do header,
+   fora da moldura dourada dele). Só cabe assim quando há espaço na lateral
+   (telas largas); em telas estreitas volta pro fluxo normal, logo abaixo. */
+/* #app (não #header) é o ancestor posicionado: boosted-strip é IRMÃO de
+   #header no DOM, não filho — precisa ancorar num ancestral comum aos dois. */
+#app { position: relative; }
 #boosted-strip {
-  display: flex;
-  justify-content: flex-end;
-  margin: 4px 14px 0;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin: 0 0 0 16px;
+  z-index: 5;
 }
 #boosted-card {
   width: auto;
   margin: 0 !important;
-  align-self: flex-end;
   box-shadow: 0 2px 6px #00000088;
+}
+@media (max-width: 1550px) {
+  #boosted-strip {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    margin: 4px 14px 0;
+  }
+  #boosted-card { align-self: flex-end; }
 }
 #boosted-card h3 { padding: 2px 12px; font-size: 8px; letter-spacing: 1px; }
 #boosted-card h3::before, #boosted-card h3::after { font-size: 5px; }

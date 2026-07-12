@@ -2,14 +2,13 @@
 // (ver domain/cities.js), depois vê as hunts daquela cidade. As cidades
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
-import { G } from '../application/gameStore.js?v=106';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=106';
-import { CITIES } from '../domain/cities.js?v=106';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=106';
-import { getZoneMultiplier } from '../application/adminUseCases.js?v=106';
-import { openModal, closeModal, vitalIconImg, goldIconImg } from './shared.js?v=106';
-import { openBattleModal } from './battleModal.js?v=106';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=106';
+import { G } from '../application/gameStore.js?v=107';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=107';
+import { CITIES } from '../domain/cities.js?v=107';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=107';
+import { openModal, closeModal } from './shared.js?v=107';
+import { openBattleModal } from './battleModal.js?v=107';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=107';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -61,14 +60,11 @@ function zoneCard(id, z) {
   const monsterIcons = z.monsters.map(mId => monsterSpriteImg(mId, 'zone-card-monster-icon')).join('');
   const bossZoneName = bossLocked ? (ZONES[z.requiresBossOf]?.name || z.requiresBossOf) : '';
   const lockTitle = bossLocked ? `Derrote o boss de ${bossZoneName} primeiro` : monsterTitle;
-  const xpM = getZoneMultiplier(id, 'xp', z.xpMult);
-  const goldM = getZoneMultiplier(id, 'gold', z.goldMult);
   return `<div class="zone-card ${active ? 'active' : ''} ${locked ? 'locked' : ''}" title="${lockTitle}">
     ${isBoostedToday ? '<div class="zone-boosted-badge" title="Zona Bônus do Dia: +50% XP/Gold">🔥 Bônus do Dia</div>' : ''}
     <div class="zone-card-icon">${zoneIconImg(z, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${z.name}</div>
     <div class="zone-card-monster-row">${monsterIcons}</div>
-    <div class="zone-card-mults">${vitalIconImg('xp', 'inline-icon')}×${xpM} ${goldIconImg('inline-icon')}×${goldM}</div>
     ${locked
       ? `<div class="zone-card-req">🔒 Boss: ${bossZoneName}</div>`
       : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? '✅ Caçando' : 'Caçar aqui'}</button>`}

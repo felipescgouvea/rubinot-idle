@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=106';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=106';
-import { MONSTERS } from '../domain/bestiary.js?v=106';
-import { cityName } from '../domain/cities.js?v=106';
-import { ITEMS } from '../domain/items.js?v=106';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=106';
-import { on, EVENTS } from '../shared/eventBus.js?v=106';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=106';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=106';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=106';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=106';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=106';
+import { G } from '../application/gameStore.js?v=107';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=107';
+import { MONSTERS } from '../domain/bestiary.js?v=107';
+import { cityName } from '../domain/cities.js?v=107';
+import { ITEMS } from '../domain/items.js?v=107';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=107';
+import { on, EVENTS } from '../shared/eventBus.js?v=107';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=107';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=107';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=107';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=107';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=107';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -194,16 +194,6 @@ function renderZoneTheme() {
   }
 }
 
-export function renderKillCounters() {
-  const area = document.getElementById('kill-counters');
-  if (!area) return;
-  const counters = G.killCounters || {};
-  area.innerHTML = Object.entries(counters).map(([id, n]) => {
-    const m = MONSTERS[id];
-    return `<div class="kill-pill">${m ? monsterSpriteImg(id, 'kill-pill-icon') : ''} ${m?.name || id}: <span>${n}</span></div>`;
-  }).join('');
-}
-
 export function renderLoot() {
   const area = document.getElementById('loot-display');
   const card = document.getElementById('loot-card');
@@ -374,8 +364,12 @@ function renderStagePack(stage) {
       el = document.createElement('div');
       el.className = 'stage-monster spawning';
       el.dataset.uid = uid;
-      el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>`;
+      el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>
+        <div class="stage-monster-hp"><div class="stage-monster-hp-fill" style="width:100%"></div></div>`;
     }
+    // vida atualizada a cada tick, inclusive nos que já estavam na tela.
+    const fill = el.querySelector('.stage-monster-hp-fill');
+    if (fill) fill.style.width = Math.max(0, Math.round((m.hp / m.maxHp) * 100)) + '%';
     el.classList.toggle('is-target', i === 0);
     if (box.children[i] !== el) box.insertBefore(el, box.children[i] || null);
   });
@@ -426,7 +420,6 @@ export function wireHuntPanelEvents() {
   on(EVENTS.HEADER_STATS, renderBlessings); // atualiza o botão quando o gold muda
   on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
-  on(EVENTS.KILL_COUNTERS, renderKillCounters);
   on(EVENTS.LOOT, renderLoot);
   on(EVENTS.HUNT_BUTTON, ({ hunting } = {}) => { renderHuntButton({ hunting }); updateSceneMode(); });
   on(EVENTS.OFFLINE_PROGRESS, renderOfflineProgressModal);

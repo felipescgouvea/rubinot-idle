@@ -23,7 +23,9 @@ export const SPRITE_OVERRIDE = {
 // ?sv (sprite version) força o navegador a re-baixar quando o CONTEÚDO dos
 // sprites de monstro muda mantendo o nome do arquivo (ex.: normalização de
 // enquadramento — recorte do transparente + re-quadrado). Bumpe ao reprocessar.
-const MONSTER_SPRITE_VER = 1;
+// v2: sprites re-baixados como WebP ANIMADO (preservando os frames de
+// caminhada do TibiaWiki) em vez do frame único estático anterior.
+const MONSTER_SPRITE_VER = 2;
 export function monsterSpriteFile(monsterId, monster) {
   const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
   return 'monsters/' + localName(file) + '?sv=' + MONSTER_SPRITE_VER;

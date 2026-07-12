@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=106" />
-  <link rel="stylesheet" href="style.css?v=106" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=107" />
+  <link rel="stylesheet" href="style.css?v=107" />
 </head>
 <body>
   <div id="app">
@@ -40,7 +40,7 @@
       <button class="tab active" data-tab="hunt">🗺️ Caçada</button>
       <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="tasks">📜 Tarefas</button>
-      <button class="tab" data-tab="skills">⚡ Skills</button>
+      <button class="tab" data-tab="skills" style="display:none">⚡ Skills</button>
       <button class="tab" data-tab="bestiary">📖 Bestiário</button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="bossrush">💀 Boss Rush</button>
@@ -113,7 +113,6 @@
                 <span class="zone-current-change">Trocar ▾</span>
               </div>
               <button id="hunt-status-battle-btn" class="btn-blue" onclick="openBattleModal()">⚔️ Ver Batalha</button>
-              <div id="kill-counters"></div>
             </div>
           </div>
           <div class="card" id="hunt-analyzer-card">
@@ -376,6 +375,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=106"></script>
+  <script type="module" src="src/main.js?v=107"></script>
 </body>
 </html>
