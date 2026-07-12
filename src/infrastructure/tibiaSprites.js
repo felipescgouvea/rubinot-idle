@@ -95,8 +95,12 @@ export const VITAL_ICON_FILES = {
 // conforme a forma da área da magia (ver ui/huntPanel.js: playAreaEffect e
 // domain/combatFx.js pro nome por magia/runa).
 const EFFECT_NAMES = new Set(['fire','energy','ice','holy','physical','death','earth','groundshaker','blood']);
+// ?ev (effect version) força o navegador a re-baixar quando o CONTEÚDO de um
+// sprite de efeito muda mantendo o nome (ex.: groundshaker trocado do ícone
+// pela animação real do efeito). Bumpe ao reprocessar um efeito.
+const EFFECT_SPRITE_VER = 2;
 export function effectSpriteFile(name) {
-  return name && EFFECT_NAMES.has(name) ? 'effects/' + name + '.gif' : null;
+  return name && EFFECT_NAMES.has(name) ? 'effects/' + name + '.gif?ev=' + EFFECT_SPRITE_VER : null;
 }
 
 // Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin
