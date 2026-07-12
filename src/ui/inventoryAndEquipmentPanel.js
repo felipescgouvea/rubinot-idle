@@ -1,12 +1,12 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=99';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=99';
-import { RARITY_TIERS } from '../domain/rarity.js?v=99';
-import { on, EVENTS } from '../shared/eventBus.js?v=99';
-import { saveGame } from '../application/saveGameUseCase.js?v=99';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=99';
+import { G } from '../application/gameStore.js?v=100';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=100';
+import { RARITY_TIERS } from '../domain/rarity.js?v=100';
+import { on, EVENTS } from '../shared/eventBus.js?v=100';
+import { saveGame } from '../application/saveGameUseCase.js?v=100';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=100';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -76,7 +76,12 @@ export function renderInventory() {
   const grid = document.getElementById('inventory-grid');
   if (!grid) return;
   grid.innerHTML = '';
+  // Itens EQUIPADOS não aparecem na Bag — estão "no corpo" (nos slots de
+  // equipamento). Munição equipada também sai da Bag; a quantidade dela fica
+  // num contador no próprio slot de munição (ver renderEquipmentSlots).
+  const equippedIds = new Set(Object.values(G.equipment).filter(Boolean));
   orderedInventoryIds().forEach(id => {
+    if (equippedIds.has(id)) return;
     const qty = G.inventory[id];
     const item = ITEMS[id];
     if (!item) return;
@@ -105,6 +110,7 @@ export function renderInventory() {
   // empilhadas, então cada uma vira seu próprio card, distinguida pela borda/glow
   // na cor da raridade (ver domain/rarity.js) sobre o MESMO sprite do item base.
   (G.relics || []).forEach(relic => {
+    if (equippedIds.has(relic.id)) return; // relíquia equipada mora no slot, não na Bag
     const base = ITEMS[relic.itemId];
     if (!base) return;
     const tier = RARITY_TIERS[relic.rarity];
@@ -184,10 +190,13 @@ export function renderEquipmentSlots() {
     const tier = relic ? RARITY_TIERS[relic.rarity] : null;
     const clickTarget = relic ? `openRelicModal('${relic.id}')` : item ? `openItemModal('${slotValue}')` : '';
     const style = tier ? ` style="border-color:${tier.color};box-shadow:inset 0 0 6px ${tier.color}66, 0 0 8px ${tier.color}99"` : '';
-    const title = item ? `${item.name}${relic && tier ? ` — ${tier.name}` : ''}` : SLOT_LABEL[slot];
+    // Munição: mostra a QUANTIDADE num contador no slot (ela sai da Bag ao ser
+    // equipada, então é o único lugar que mostra quantas flechas/virotes restam).
+    const ammoQty = slot === 'ammo' && item ? (G.inventory[slotValue] || 0) : 0;
+    const title = item ? `${item.name}${relic && tier ? ` — ${tier.name}` : ''}${slot === 'ammo' ? ` (${ammoQty})` : ''}` : SLOT_LABEL[slot];
     return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}"${style} title="${title}" onclick="${clickTarget}">
       ${item
-        ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>`
+        ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>${slot === 'ammo' ? `<div class="equip-slot-ammo-qty">${ammoQty}</div>` : ''}`
         : `<div class="equip-slot-ghost">${SLOT_PLACEHOLDER[slot]}</div>`}
     </div>`;
   }).join('');

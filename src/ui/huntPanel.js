@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=99';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=99';
-import { MONSTERS } from '../domain/bestiary.js?v=99';
-import { cityName } from '../domain/cities.js?v=99';
-import { ITEMS } from '../domain/items.js?v=99';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=99';
-import { on, EVENTS } from '../shared/eventBus.js?v=99';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=99';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=99';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=99';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=99';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=99';
+import { G } from '../application/gameStore.js?v=100';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=100';
+import { MONSTERS } from '../domain/bestiary.js?v=100';
+import { cityName } from '../domain/cities.js?v=100';
+import { ITEMS } from '../domain/items.js?v=100';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=100';
+import { on, EVENTS } from '../shared/eventBus.js?v=100';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=100';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=100';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=100';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=100';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=100';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
