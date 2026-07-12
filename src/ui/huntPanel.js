@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=86';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=86';
-import { MONSTERS } from '../domain/bestiary.js?v=86';
-import { cityName } from '../domain/cities.js?v=86';
-import { ITEMS } from '../domain/items.js?v=86';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=86';
-import { on, EVENTS } from '../shared/eventBus.js?v=86';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=86';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=86';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=86';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=86';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=86';
+import { G } from '../application/gameStore.js?v=87';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=87';
+import { MONSTERS } from '../domain/bestiary.js?v=87';
+import { cityName } from '../domain/cities.js?v=87';
+import { ITEMS } from '../domain/items.js?v=87';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=87';
+import { on, EVENTS } from '../shared/eventBus.js?v=87';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=87';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=87';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=87';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=87';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=87';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -295,8 +295,8 @@ function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes,
 
 // Battle List (como a do Tibia): lista todos os monstros da "sala" atual com a
 // vida de cada um, destacando o alvo da frente. Some quando não há ninguém.
-function battleListEntry({ defKey, name, pct, hp, maxHp, target, dead }) {
-  return `<div class="battle-list-entry ${target ? 'target' : ''} ${dead ? 'dead' : ''}">
+function battleListEntry({ defKey, name, pct, hp, maxHp, target, dead, hit }) {
+  return `<div class="battle-list-entry ${target ? 'target' : ''} ${dead ? 'dead' : ''} ${hit ? 'hit-flash' : ''}">
     <div class="battle-list-icon">${monsterSpriteImg(defKey, 'battle-list-sprite')}</div>
     <div class="battle-list-info">
       <div class="battle-list-name">${name}</div>
@@ -314,9 +314,11 @@ export function renderBattleList() {
   const pack = getCurrentPack() || [];
   const dead = getRecentDead() || [];
   if (!pack.length && !dead.length) { el.innerHTML = '<div class="battle-list-empty">Sem criaturas.</div>'; return; }
+  const now = Date.now();
   const rows = pack.map((m, i) => battleListEntry({
     defKey: m.defKey, name: `${i === 0 ? '⚔️ ' : ''}${m.name}`,
     pct: Math.max(0, Math.round((m.hp / m.maxHp) * 100)), hp: Math.max(0, m.hp), maxHp: m.maxHp, target: i === 0,
+    hit: (now - (m._hitAt || 0)) < 350, // flash de dano (inclui os atingidos em área)
   }));
   // Mortos recentes (vida zerada) ficam ao fim da lista por 1s antes de sumir.
   dead.forEach(d => rows.push(battleListEntry({ defKey: d.defKey, name: `☠️ ${d.name}`, pct: 0, hp: 0, maxHp: d.maxHp, dead: true })));

@@ -4,18 +4,18 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=86';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=86';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=86';
-import { VOCATIONS } from '../domain/character.js?v=86';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=86';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=86';
-import { getMagic } from '../application/stats.js?v=86';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=86';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=86';
-import { setRtcHealPotion, setRtcManaPotion } from '../application/rtcUseCases.js?v=86';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=86';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=86';
+import { G } from '../application/gameStore.js?v=87';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=87';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=87';
+import { VOCATIONS } from '../domain/character.js?v=87';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=87';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=87';
+import { getMagic } from '../application/stats.js?v=87';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=87';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=87';
+import { setRtcHealPotion, setRtcManaPotion } from '../application/rtcUseCases.js?v=87';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=87';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=87';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 

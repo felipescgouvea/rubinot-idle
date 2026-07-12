@@ -1,14 +1,14 @@
-import { G } from './gameStore.js?v=86';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=86';
-import { ZONES } from '../domain/bestiary.js?v=86';
-import { RARITY_TIERS } from '../domain/rarity.js?v=86';
-import { emit, EVENTS } from '../shared/eventBus.js?v=86';
-import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=86';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=86';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=86';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=86';
-import { saveGame } from './saveGameUseCase.js?v=86';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=86';
+import { G } from './gameStore.js?v=87';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=87';
+import { ZONES } from '../domain/bestiary.js?v=87';
+import { RARITY_TIERS } from '../domain/rarity.js?v=87';
+import { emit, EVENTS } from '../shared/eventBus.js?v=87';
+import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=87';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=87';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=87';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=87';
+import { saveGame } from './saveGameUseCase.js?v=87';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=87';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -16,7 +16,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=86';
+export { addItemToInventory } from './inventoryCore.js?v=87';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.

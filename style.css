@@ -1839,6 +1839,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   border: 1px solid var(--line-soft);
 }
 .battle-list-entry.target { border-color: var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); box-shadow: 0 0 6px #d4a01755; }
+/* flash de dano — pisca em CADA monstro atingido no tick (inclui os de área) */
+.battle-list-entry.hit-flash { animation: bl-hit 0.32s ease-out; }
+.battle-list-entry.hit-flash .battle-list-sprite { animation: bl-hit-shake 0.32s ease-out; }
+@keyframes bl-hit {
+  0% { background: #ffb3b3; box-shadow: 0 0 8px #e0000088; }
+  100% { background: linear-gradient(180deg, var(--parch-1), var(--parch-3)); box-shadow: none; }
+}
+@keyframes bl-hit-shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
 .battle-list-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; }
 /* caixa FIXA + object-fit: contain padroniza o tamanho visual de todos os
    sprites (mesma abordagem do sprite principal), independente das dimensões
