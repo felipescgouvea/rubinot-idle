@@ -1,11 +1,11 @@
 // Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
 // de relíquia por boss e os pesos de cada raridade. Lê/escreve via
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=79';
-import { RARITY_TIERS } from '../domain/rarity.js?v=79';
-import { ZONES } from '../domain/bestiary.js?v=79';
-import { on, EVENTS } from '../shared/eventBus.js?v=79';
-import { getAdminConfig } from '../application/adminUseCases.js?v=79';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=80';
+import { RARITY_TIERS } from '../domain/rarity.js?v=80';
+import { ZONES } from '../domain/bestiary.js?v=80';
+import { on, EVENTS } from '../shared/eventBus.js?v=80';
+import { getAdminConfig } from '../application/adminUseCases.js?v=80';
 
 export function renderAdminPanel() {
   const el = document.getElementById('admin-content');
@@ -102,6 +102,26 @@ export function renderAdminPanel() {
       <small>${cfg.marketEnabled
         ? 'A aba 🏪 Mercado está visível e os jogadores podem comprar/vender itens entre si.'
         : '🚧 Desativado (padrão por enquanto): a aba 🏪 Mercado fica escondida e a economia player-to-player fica fechada.'}</small>
+    </div>
+
+    <h4>⚙️ Fidelidades opcionais (Tibia)</h4>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.staminaEnabled ? 'checked' : ''} onchange="setStaminaEnabled(this.checked)" />
+        Stamina (cai caçando, regenera descansando)
+      </label>
+      <small>${cfg.staminaEnabled
+        ? 'Ligada: abaixo de 14h de stamina a XP cai pela metade (como no Tibia).'
+        : 'Desligada (padrão): sem penalidade de stamina.'}</small>
+    </div>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.consumeAmmo ? 'checked' : ''} onchange="setConsumeAmmo(this.checked)" />
+        Consumo de munição do paladino
+      </label>
+      <small>${cfg.consumeAmmo
+        ? 'Ligado: cada tiro gasta 1 flecha/dardo; sem munição, o paladino só soca.'
+        : 'Desligado (padrão): munição infinita.'}</small>
     </div>
 
     <h4>💎 Raridade das Relíquias</h4>

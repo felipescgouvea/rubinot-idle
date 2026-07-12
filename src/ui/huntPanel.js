@@ -1,15 +1,17 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=79';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=79';
-import { MONSTERS } from '../domain/bestiary.js?v=79';
-import { cityName } from '../domain/cities.js?v=79';
-import { ITEMS } from '../domain/items.js?v=79';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=79';
-import { on, EVENTS } from '../shared/eventBus.js?v=79';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=79';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats } from '../application/huntUseCases.js?v=79';
+import { G } from '../application/gameStore.js?v=80';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=80';
+import { MONSTERS } from '../domain/bestiary.js?v=80';
+import { cityName } from '../domain/cities.js?v=80';
+import { ITEMS } from '../domain/items.js?v=80';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=80';
+import { on, EVENTS } from '../shared/eventBus.js?v=80';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=80';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats } from '../application/huntUseCases.js?v=80';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=80';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=80';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -226,8 +228,12 @@ export function renderHuntAnalyzer() {
   const gi = goldIconImg('inline-icon');
   const xi = vitalIconImg('xp', 'inline-icon');
   const profitColor = st.profit >= 0 ? 'var(--positive, #2ecc71)' : '#e05a5a';
+  const staminaLine = isStaminaEnabled()
+    ? `<div class="hunt-analyzer-stamina tier-${staminaTier(G.stamina)}">🔋 Stamina ${formatStamina(G.stamina)} · XP ×${staminaXpMult(G.stamina)}</div>`
+    : '';
   el.innerHTML = `
     <div class="hunt-analyzer-status ${st.hunting ? 'on' : 'off'}">${st.hunting ? '🟢 Caçando' : '⏸ Parado'} · ${fmtDuration(st.elapsedMs)}</div>
+    ${staminaLine}
     <div class="hunt-analyzer-grid">
       <div class="ha-cell"><span class="ha-label">💀 Kills</span><span class="ha-val">${formatNum(st.kills)}</span></div>
       <div class="ha-cell"><span class="ha-label">${xi} XP</span><span class="ha-val">${formatNum(st.xp)}</span><span class="ha-rate">${formatNum(st.xpH)}/h</span></div>

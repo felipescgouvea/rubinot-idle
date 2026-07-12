@@ -1,12 +1,12 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=79';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=79';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=79';
-import { on, EVENTS } from '../shared/eventBus.js?v=79';
-import { saveGame } from '../application/saveGameUseCase.js?v=79';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=79';
+import { G } from '../application/gameStore.js?v=80';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=80';
+import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=80';
+import { on, EVENTS } from '../shared/eventBus.js?v=80';
+import { saveGame } from '../application/saveGameUseCase.js?v=80';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=80';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -35,7 +35,19 @@ function reorderInventory(draggedId, targetId) {
   saveGame();
 }
 
+function renderAutoSellControls() {
+  const el = document.getElementById('autosell-controls');
+  if (!el) return;
+  const as = G.autoSell || { enabled: false, maxValue: 50 };
+  el.innerHTML = `<div class="autosell-row">
+    <label class="autosell-toggle"><input type="checkbox" ${as.enabled ? 'checked' : ''} onchange="setAutoSell(this.checked)" /> 🧹 Auto-vender lixo</label>
+    <span class="autosell-max">≤ <input type="number" min="0" class="autosell-input" value="${as.maxValue}" onchange="setAutoSellMax(this.value)" /> ${goldIconImg('inline-icon')}</span>
+  </div>
+  <div class="muted autosell-hint">Vende na hora itens de material (misc) até esse valor, sem lotar a bag.</div>`;
+}
+
 export function renderInventory() {
+  renderAutoSellControls();
   const grid = document.getElementById('inventory-grid');
   if (!grid) return;
   grid.innerHTML = '';

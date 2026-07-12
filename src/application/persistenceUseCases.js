@@ -1,22 +1,23 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=79';
-import { createDefaultState } from '../domain/gameState.js?v=79';
-import { createDefaultSkills } from '../domain/character.js?v=79';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=79';
-import { isSpellAvailable } from '../domain/spells.js?v=79';
-import { findOutfit } from '../domain/outfits.js?v=79';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=79';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=79';
-import { isRelicId } from '../domain/items.js?v=79';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=79';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=79';
-import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=79';
-import { emit, EVENTS } from '../shared/eventBus.js?v=79';
-import { getMaxHp, getMaxMana } from './stats.js?v=79';
-import { gainXp } from './huntUseCases.js?v=79';
-import { checkBpTier } from './battlePassUseCases.js?v=79';
-import { getXpRate, getGoldRate, getZoneMultiplier } from './adminUseCases.js?v=79';
+import { G, replaceState } from './gameStore.js?v=80';
+import { createDefaultState } from '../domain/gameState.js?v=80';
+import { createDefaultSkills } from '../domain/character.js?v=80';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=80';
+import { isSpellAvailable } from '../domain/spells.js?v=80';
+import { findOutfit } from '../domain/outfits.js?v=80';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=80';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=80';
+import { isRelicId } from '../domain/items.js?v=80';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=80';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=80';
+import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=80';
+import { emit, EVENTS } from '../shared/eventBus.js?v=80';
+import { getMaxHp, getMaxMana } from './stats.js?v=80';
+import { gainXp } from './huntUseCases.js?v=80';
+import { checkBpTier } from './battlePassUseCases.js?v=80';
+import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=80';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=80';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
 // nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não
@@ -65,6 +66,9 @@ export function loadGame() {
   G.rtc.attackSpells = normalizeAttackSpells(G.rtc);
   delete G.rtc.attackSpell;
   if (!G.boosts) G.boosts = {};
+  // migração: auto-vender lixo e stamina são novos.
+  if (!G.autoSell) G.autoSell = { enabled: false, maxValue: 50 };
+  if (typeof G.stamina !== 'number') G.stamina = STAMINA_MAX;
   // migração: Mochila-item + ordem do inventário (drag) são novos. Todo save
   // ganha o bag inicial e uma ordem inicial a partir dos itens que já tem.
   if (!G.backpack) G.backpack = 'bag';
@@ -129,8 +133,14 @@ export function applyOfflineProgress() {
   const kills = Math.floor((cappedSec / 60) * killsPerMin);
   const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', zone.xpMult);
   const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', zone.goldMult);
-  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zoneXpMult * worldXpMultiplier(G.currentWorld) * 0.5 * getXpRate());
+  // Stamina offline: caçar offline também consome stamina (se ligada) e a XP
+  // sofre o mesmo multiplicador da stamina. Consome pelo tempo caçado.
+  const staminaMult = isStaminaEnabled() ? staminaXpMult(G.stamina) : 1;
+  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zoneXpMult * worldXpMultiplier(G.currentWorld) * 0.5 * getXpRate() * staminaMult);
   const goldGained = Math.floor(kills * avg.gold * scaleFactor * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * 0.5 * getGoldRate());
+  if (isStaminaEnabled() && typeof G.stamina === 'number') {
+    G.stamina = Math.max(0, G.stamina - cappedSec / 60);
+  }
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;

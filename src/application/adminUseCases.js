@@ -1,9 +1,9 @@
 // Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
-import { G } from './gameStore.js?v=79';
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=79';
-import { emit, EVENTS } from '../shared/eventBus.js?v=79';
-import { saveGame } from './saveGameUseCase.js?v=79';
+import { G } from './gameStore.js?v=80';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=80';
+import { emit, EVENTS } from '../shared/eventBus.js?v=80';
+import { saveGame } from './saveGameUseCase.js?v=80';
 
 export function getAdminConfig() {
   G.adminConfig = sanitizeAdminConfig(G.adminConfig);
@@ -93,6 +93,27 @@ export function setMarketEnabled(on) {
   emit(EVENTS.ADMIN_PANEL);
   emit(EVENTS.MARKET_VISIBILITY, { enabled: cfg.marketEnabled });
   emit(EVENTS.NOTIFY, { msg: cfg.marketEnabled ? '🏪 Mercado entre jogadores ativado.' : '🏪 Mercado entre jogadores desativado.', type: 'success' });
+  saveGame();
+}
+
+// Stamina e consumo de munição — fidelidades opcionais ligadas pelo dono.
+export const isStaminaEnabled = () => getAdminConfig().staminaEnabled;
+export const isConsumeAmmo = () => getAdminConfig().consumeAmmo;
+export function setStaminaEnabled(on) {
+  const cfg = getAdminConfig();
+  cfg.staminaEnabled = !!on;
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  emit(EVENTS.HUNT_STATS);
+  emit(EVENTS.NOTIFY, { msg: cfg.staminaEnabled ? '🔋 Stamina ativada.' : '🔋 Stamina desativada.', type: 'success' });
+  saveGame();
+}
+export function setConsumeAmmo(on) {
+  const cfg = getAdminConfig();
+  cfg.consumeAmmo = !!on;
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  emit(EVENTS.NOTIFY, { msg: cfg.consumeAmmo ? '🏹 Consumo de munição ativado.' : '🏹 Munição infinita.', type: 'success' });
   saveGame();
 }
 

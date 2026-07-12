@@ -26,6 +26,14 @@ export const DEFAULT_ADMIN_CONFIG = {
   // quando quiser reabrir a economia player-to-player. Enquanto desligado, a
   // aba fica escondida e o painel mostra aviso. Ver application/adminUseCases.js.
   marketEnabled: false,
+  // Stamina (fidelidade opcional ao Tibia): quando ligado, a stamina cai
+  // caçando, regenera descansando e reduz a XP abaixo dos limiares. Padrão OFF
+  // (não penaliza quem não quer). Ver application/staminaUseCases.js.
+  staminaEnabled: false,
+  // Consumo de munição do paladino (realismo opcional): quando ligado, cada
+  // ataque à distância gasta 1 flecha/dardo do inventário; sem munição, o
+  // paladino só soca. Padrão OFF (munição infinita, mais amigável ao idle).
+  consumeAmmo: false,
 };
 
 // Campos de taxa simples (numéricos) exibidos no painel, na ordem.
@@ -73,6 +81,8 @@ export function sanitizeAdminConfig(cfg) {
   if (c.spawnDelayMax < c.spawnDelayMin) c.spawnDelayMax = c.spawnDelayMin; // max nunca menor que min
   c.useZoneMultipliers = !!c.useZoneMultipliers;
   c.marketEnabled = !!c.marketEnabled;
+  c.staminaEnabled = !!c.staminaEnabled;
+  c.consumeAmmo = !!c.consumeAmmo;
   const zm = {};
   if (c.zoneMultipliers && typeof c.zoneMultipliers === 'object') {
     for (const [zid, ov] of Object.entries(c.zoneMultipliers)) {

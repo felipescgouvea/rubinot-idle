@@ -3,28 +3,29 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=79';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=79';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=79';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=79';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=79';
-import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=79';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=79';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount } from '../domain/combatFormulas.js?v=79';
-import { elementMod } from '../domain/elements.js?v=79';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=79';
-import { MONSTERS } from '../domain/bestiary.js?v=79';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=79';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=79';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=79';
-import { emit, EVENTS } from '../shared/eventBus.js?v=79';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=79';
-import { trainSkill } from './skillUseCases.js?v=79';
-import { addItemToInventory } from './inventoryCore.js?v=79';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=79';
-import { getCombatBonuses } from './bonuses.js?v=79';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=79';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=79';
+import { G } from './gameStore.js?v=80';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=80';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=80';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=80';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=80';
+import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=80';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=80';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage } from '../domain/combatFormulas.js?v=80';
+import { elementMod } from '../domain/elements.js?v=80';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=80';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=80';
+import { MONSTERS } from '../domain/bestiary.js?v=80';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=80';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=80';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=80';
+import { emit, EVENTS } from '../shared/eventBus.js?v=80';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=80';
+import { trainSkill } from './skillUseCases.js?v=80';
+import { addItemToInventory } from './inventoryCore.js?v=80';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=80';
+import { getCombatBonuses } from './bonuses.js?v=80';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=80';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=80';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -230,11 +231,29 @@ export function doHuntTick() {
 
   // (1) GOLPE BÁSICO — sempre acontece: arma pro guerreiro/paladino (treina a
   // skill da arma equipada); o cajado/wand do mago é arma mágica e NÃO custa mana.
-  // Dano físico → aplica o modificador físico do alvo (a maioria é neutra).
-  const basicDmg = calcDamage(getAtk(), primary.def) * elementMod(primary.defKey, 'physical');
+  // Consumo de munição (opcional, Admin): o paladino gasta 1 flecha/dardo por
+  // golpe à distância; sem munição, só soca fraco. Dano físico → aplica o
+  // modificador físico do alvo (a maioria é neutra).
+  let basicRaw, outOfAmmo = false;
+  if (voc.attackSkill === 'distance' && isConsumeAmmo()) {
+    const ammoId = G.equipment.ammo;
+    if (ammoId && (G.inventory[ammoId] || 0) > 0) {
+      G.inventory[ammoId]--;
+      huntSession.supplies += (ITEMS[ammoId] && ITEMS[ammoId].sell) || 0;
+      if (G.inventory[ammoId] <= 0) { delete G.inventory[ammoId]; emit(EVENTS.NOTIFY, { msg: '🏹 Sua munição acabou!', type: 'error' }); }
+      emit(EVENTS.INVENTORY);
+      basicRaw = calcDamage(getAtk(), primary.def);
+    } else {
+      outOfAmmo = true;
+      basicRaw = calcDamage(7 + G.sk.fist.lv, primary.def) * 0.5; // sem munição: soco fraco
+    }
+  } else {
+    basicRaw = calcDamage(getAtk(), primary.def);
+  }
+  const basicDmg = basicRaw * elementMod(primary.defKey, 'physical');
   if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
   const basicHit = strike(primary, basicDmg);
-  emit(EVENTS.LOG, `⚔️ Golpe básico: <span class="log-dmg">${basicHit}</span> de dano ao ${primary.name}.`);
+  emit(EVENTS.LOG, `⚔️ ${outOfAmmo ? 'Sem munição (soco)' : 'Golpe básico'}: <span class="log-dmg">${basicHit}</span> de dano ao ${primary.name}.`);
 
   // (2) MAGIA (por prioridade) OU RUNA — ação ADICIONAL no mesmo tick, com dano,
   // área e efeito próprios. Magia custa mana + cooldown; runa consome o item. O
@@ -249,7 +268,7 @@ export function doHuntTick() {
     const rune = ITEMS[G.rtc.attackRune];
     areaId = rune.area || 'single';
     element = rune.element || 'physical';
-    hitFn = () => rune.dmg;
+    hitFn = () => runeDamage({ rune, magicLevel: magic }); // escala com Magic Level
     combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
     G.inventory[G.rtc.attackRune]--;
     huntSession.supplies += rune.sell || 0;
@@ -406,7 +425,8 @@ export function resolveMonsterKill(zone, victim) {
   const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', zone.goldMult);
   const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', zone.xpMult);
   const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
-  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate());
+  const staminaMult = isStaminaEnabled() ? staminaXpMult(G.stamina) : 1;
+  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate() * staminaMult);
 
   G.gold += goldGained;
   G.totalGoldEarned += goldGained;
@@ -431,15 +451,25 @@ export function resolveMonsterKill(zone, victim) {
 
   // Loot
   const lootLine = [];
+  let soldGold = 0;
   mon.loot.forEach(([itemId, chance]) => {
     if (Math.random() < (chance + boosts.loot + bonus.loot) * getLootRate()) {
-      addItemToInventory(itemId);
       const item = ITEMS[itemId];
-      huntSession.loot += item.sell || 0; // valor do loot pra o Hunt Analyzer
-      lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
+      // Auto-vender lixo: itens 'misc' baratos viram gold na hora, sem lotar a bag.
+      const autoSell = G.autoSell && G.autoSell.enabled && item.type === 'misc' && (item.sell || 0) <= (G.autoSell.maxValue || 0);
+      if (autoSell) {
+        G.gold += item.sell || 0;
+        huntSession.gold += item.sell || 0;
+        soldGold += item.sell || 0;
+      } else {
+        addItemToInventory(itemId);
+        huntSession.loot += item.sell || 0; // valor do loot pra o Hunt Analyzer
+        lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
+      }
     }
   });
   if (lootLine.length > 0) emit(EVENTS.LOG, `<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
+  if (soldGold > 0) emit(EVENTS.LOG, { html: `<span class="log-loot">🧹 Lixo auto-vendido: +${soldGold} <img src="assets/sprites/items/Gold_Coin.webp" class="inline-icon" alt="gold" /></span>`, cat: 'suprimento' });
 
   // Relíquia (raridade) — cai SÓ de boss (ver domain/bestiary.js:
   // BOSS_MONSTER_IDS), com uma chance pequena por cima do loot normal acima.
@@ -542,6 +572,15 @@ export function startRegen() {
     } else {
       G.hp = Math.min(getMaxHp(), G.hp + v.hpRegen);
       G.mana = Math.min(getMaxMana(), G.mana + v.manaRegen);
+    }
+    // Stamina (se ligada no Admin): cai 1min/min caçando; regenera ~1/3 disso
+    // descansando. O tick roda a cada 2s → 2/60 min por tick.
+    if (isStaminaEnabled()) {
+      if (typeof G.stamina !== 'number') G.stamina = STAMINA_MAX;
+      const step = 2 / 60;
+      G.stamina = G.hunting
+        ? Math.max(0, G.stamina - step)
+        : Math.min(STAMINA_MAX, G.stamina + step / 3);
     }
     emit(EVENTS.BARS);
     emit(EVENTS.HEADER_STATS);

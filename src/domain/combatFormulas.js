@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=79';
-import { resolveEquippedItem } from './items.js?v=79';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=80';
+import { resolveEquippedItem } from './items.js?v=80';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -132,6 +132,15 @@ export function spellAttackDamage({ spell, level, magicLevel, atk, targetDef }) 
 export function spellHealAmount({ spell, level, magicLevel }) {
   const variance = 0.9 + Math.random() * 0.2;
   return Math.max(1, Math.floor((level * 1.2 + magicLevel * 6) * spell.power * 6 * variance));
+}
+
+// Dano de runa escalando com Magic Level (fiel ao Tibia, onde o dano da runa
+// sobe com ML). `rune.dmg` é o dano-base de referência (~ML 20). Fora disso,
+// escala ±3% por ponto de ML, com piso pra não zerar em ML baixíssimo.
+export function runeDamage({ rune, magicLevel }) {
+  const scale = Math.max(0.4, 1 + (magicLevel - 20) * 0.03);
+  const variance = 0.85 + Math.random() * 0.3;
+  return Math.max(1, Math.floor(rune.dmg * scale * variance));
 }
 
 // Sorteia uma criatura da zona e escala seus atributos pelo nível do jogador —

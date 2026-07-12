@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=79';
-import { createDefaultRtc } from './rtcConfig.js?v=79';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=79';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=79';
+import { createDefaultSkills } from './character.js?v=80';
+import { createDefaultRtc } from './rtcConfig.js?v=80';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=80';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=80';
 
 export function createDefaultState() {
   return {
@@ -55,6 +55,14 @@ export function createDefaultState() {
     // atual sobe pro próximo, mais forte e com aura diferente (nunca regride).
     bossTiers: {},
     hunting: false,
+    // Auto-vender lixo: ao dar loot, itens de tipo 'misc' com valor <= maxValue
+    // são vendidos na hora (viram gold) em vez de entrar no inventário. QoL de
+    // idle — ver application/huntUseCases.js e ui/inventoryAndEquipmentPanel.js.
+    autoSell: { enabled: false, maxValue: 50 },
+    // Stamina (minutos; 2520 = 42h). Só tem efeito se o dono ligar no Admin
+    // (adminConfig.staminaEnabled): cai enquanto caça, regenera descansando, e
+    // abaixo de certos limiares reduz a XP — igual ao Tibia. Ver stats/huntUseCases.
+    stamina: 2520,
     taskKills: {},
     activeTask: null,
     taskCompletion: {},
