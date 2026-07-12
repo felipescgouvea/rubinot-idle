@@ -4,8 +4,8 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=80';
-import { resolveEquippedItem } from './items.js?v=80';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=81';
+import { resolveEquippedItem } from './items.js?v=81';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -132,6 +132,13 @@ export function spellAttackDamage({ spell, level, magicLevel, atk, targetDef }) 
 export function spellHealAmount({ spell, level, magicLevel }) {
   const variance = 0.9 + Math.random() * 0.2;
   return Math.max(1, Math.floor((level * 1.2 + magicLevel * 6) * spell.power * 6 * variance));
+}
+
+// Restauração de poção com FAIXA (±15%) em vez de valor fixo — como no Tibia,
+// onde a mesma poção cura/restaura um valor variável. `amount` é o item.heal
+// ou item.mana de referência.
+export function potionRestore(amount) {
+  return Math.max(1, Math.floor((amount || 0) * (0.85 + Math.random() * 0.3)));
 }
 
 // Dano de runa escalando com Magic Level (fiel ao Tibia, onde o dano da runa

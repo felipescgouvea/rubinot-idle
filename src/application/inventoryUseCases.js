@@ -1,13 +1,13 @@
-import { G } from './gameStore.js?v=80';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason } from '../domain/items.js?v=80';
-import { ZONES } from '../domain/bestiary.js?v=80';
-import { RARITY_TIERS } from '../domain/rarity.js?v=80';
-import { emit, EVENTS } from '../shared/eventBus.js?v=80';
-import { getMaxHp, getMaxMana } from './stats.js?v=80';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=80';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=80';
-import { saveGame } from './saveGameUseCase.js?v=80';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=80';
+import { G } from './gameStore.js?v=81';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason } from '../domain/items.js?v=81';
+import { ZONES } from '../domain/bestiary.js?v=81';
+import { RARITY_TIERS } from '../domain/rarity.js?v=81';
+import { emit, EVENTS } from '../shared/eventBus.js?v=81';
+import { getMaxHp, getMaxMana } from './stats.js?v=81';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=81';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=81';
+import { saveGame } from './saveGameUseCase.js?v=81';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=81';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -15,7 +15,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=80';
+export { addItemToInventory } from './inventoryCore.js?v=81';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.

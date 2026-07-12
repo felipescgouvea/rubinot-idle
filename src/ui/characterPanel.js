@@ -1,17 +1,17 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=80';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=80';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=80';
-import { skillIconImg } from './shared.js?v=80';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=80';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=80';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=80';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=80';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=80';
-import { on, EVENTS } from '../shared/eventBus.js?v=80';
-import { formatNum } from './shared.js?v=80';
-import { renderZonePicker } from './huntPanel.js?v=80';
+import { G } from '../application/gameStore.js?v=81';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=81';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=81';
+import { skillIconImg } from './shared.js?v=81';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=81';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=81';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=81';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=81';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=81';
+import { on, EVENTS } from '../shared/eventBus.js?v=81';
+import { formatNum } from './shared.js?v=81';
+import { renderZonePicker } from './huntPanel.js?v=81';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
