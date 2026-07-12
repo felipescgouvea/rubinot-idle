@@ -91,6 +91,48 @@ o VIP compra principalmente *tempo* e *conveniência*.
 - [ ] 🟢 **Popular imunidades elementais reais** (mod = 0 já suportado no código).
 - [ ] 🟢 **Hunt Analyzer avançado** — loot detalhado por item, "gold/h ao vender", exportar sessão.
 
+### 🧪 Auditoria por vocação (fidelidade ao Tibia)
+
+Checar, **para cada vocação**, que: (a) a fórmula de dano bate com o Tibia; (b) só
+consegue **equipar** itens/armas da própria profissão; (c) só vê/usa **magias** da
+própria profissão; (d) só usa **runas** que o **Magic Level** da profissão permite.
+
+**Regras transversais (valem pra todas):**
+- [ ] 🔴 **Restrição de equipamento por vocação** — hoje o `computeAtk` só *ignora* a arma errada
+      (vira Fist), mas o jogo **deixa equipar** qualquer coisa. Bloquear no `equipItem`:
+      knight = melee (sword/axe/club) + escudo; paladin = distance + munição; mage = wand/rod.
+      (elmo/armadura/anel/botas: aplicar os limites de vocação do Tibia onde houver.)
+- [ ] 🔴 **Runas por Magic Level** — hoje `isRuneAvailableToVocation` só barra por vocação
+      (knight fora). Adicionar **ML mínimo por runa** (a runa só funciona/aparece se o ML
+      permitir), como no Tibia. Ver `domain/rtcConfig.js` + `domain/combatFormulas.js: runeDamage`.
+- [ ] 🟡 **Magias só da própria vocação** — o RTC já filtra por `spell.voc`; confirmar que
+      NÃO há caminho (save antigo, item, atalho) pra castar magia de outra vocação.
+- [ ] 🟡 **Documentar as fórmulas-alvo** do Tibia numa nota (fonte TibiaWiki) pra comparar 1:1.
+
+**Knight** (`voc.attackSkill: 'sword'`, `magicMult 0.1`)
+- [ ] Fórmula melee bate com Tibia (`0.09 * atkArma * (skill+5) + lvl/4`?) — validar coeficientes.
+- [ ] Só equipa arma melee (sword/axe/club) + escudo; sem wand/bow.
+- [ ] Só magias de knight (exori / exori mas / exori gran / exura ico); sem magia elemental de mage.
+- [ ] **Sem runa de ataque** (ML baixo não rende dano) — confirmar bloqueio.
+
+**Paladin** (`voc.attackSkill: 'distance'`, `magicMult 0.35`)
+- [ ] Fórmula distance bate com Tibia (`0.09 * atkMunição * (dist+5) + lvl/4`?) — validar.
+- [ ] Só equipa arco/besta + munição; sem melee/wand contando ataque.
+- [ ] Só magias de paladin (Ethereal Spear, Divine Missile, Divine Caldera, Divine Healing).
+- [ ] Runas só até o ML de paladin permitir (poucas, dano baixo) — validar limites.
+
+**Sorcerer** (`voc.attackSkill: 'magic'`, `magicMult 1.0`)
+- [ ] Fórmula mágica bate com Tibia (dano por nível+ML por magia) — validar `spellAttackDamage`.
+- [ ] Só equipa wand/rod (arma mágica); melee/bow não somam ataque.
+- [ ] Só magias de sorcerer (fogo/energia/morte: Flame/Energy strikes+waves, Hell's Core, etc.).
+- [ ] Runas de sorcerer liberadas pelo ML (SD, GFB, Explosion…) — validar por ML.
+
+**Druid** (`voc.attackSkill: 'magic'`, `magicMult 1.0`)
+- [ ] Fórmula mágica bate com Tibia (nível+ML) — validar.
+- [ ] Só equipa wand/rod; melee/bow não somam ataque.
+- [ ] Só magias de druid (gelo/terra: Ice/Terra strikes+waves, Eternal Winter, curas).
+- [ ] Runas de druid liberadas pelo ML (Avalanche, Icicle…) — validar por ML.
+
 ## 3. HEADER
 
 - [ ] _(anotar itens do cabeçalho aqui — ex.: layout, responsividade, o que mostrar/ocultar)_
