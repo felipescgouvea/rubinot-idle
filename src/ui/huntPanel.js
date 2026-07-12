@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=96';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=96';
-import { MONSTERS } from '../domain/bestiary.js?v=96';
-import { cityName } from '../domain/cities.js?v=96';
-import { ITEMS } from '../domain/items.js?v=96';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=96';
-import { on, EVENTS } from '../shared/eventBus.js?v=96';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=96';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=96';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=96';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=96';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=96';
+import { G } from '../application/gameStore.js?v=97';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=97';
+import { MONSTERS } from '../domain/bestiary.js?v=97';
+import { cityName } from '../domain/cities.js?v=97';
+import { ITEMS } from '../domain/items.js?v=97';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=97';
+import { on, EVENTS } from '../shared/eventBus.js?v=97';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=97';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=97';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=97';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=97';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=97';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];

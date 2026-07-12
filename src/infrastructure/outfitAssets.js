@@ -17,11 +17,14 @@ export function outfitTemplatePath(outfitId, gender, addonIndex) {
   return `${BASE}${outfitId}-${gender}-${addonIndex}-template.png`;
 }
 
-// Atlas de CAMINHADA (base + template por quadro, direção frontal) usado pra
-// recolorir e animar o boneco com as cores do jogador — ver
-// infrastructure/outfitWalkRenderer.js.
+// Atlas de CAMINHADA (base + template por quadro) usado pra recolorir e animar
+// o boneco com as cores do jogador — ver infrastructure/outfitWalkRenderer.js.
+// Usa a direção NORTE (de costas): na cena de batalha o boneco fica embaixo
+// encarando os monstros lá em cima, então mostra as costas (olhando pra cima).
+// Este atlas é usado SÓ na cena de batalha — o retrato/loja de outfit usam os
+// PNGs frontais de assets/outfits/ (ver infrastructure/outfitRenderer.js).
 export function outfitWalkAtlasPath(outfitId, gender) {
   // ?av (atlas version) — independente do ?v dos módulos pra o bump global não
   // re-baixar os atlases (1.4MB) à toa. Bumpe só ao mudar o conteúdo do atlas.
-  return `assets/outfits-walk/${outfitId}-${gender}.png?av=1`;
+  return `assets/outfits-walk-north/${outfitId}-${gender}.png?av=2`;
 }
