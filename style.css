@@ -725,23 +725,29 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   width: 54px; height: 54px; /* mesmo porte visual dos monstros (52px) */
   z-index: 2;
 }
-/* monstro-alvo no palco: À FRENTE do boneco (metade de baixo, já que o boneco
-   olha pro sul). Surge DE BAIXO PRA CIMA — direção oposta à que o personagem
-   encara — via .spawning (materialize). O container cuida da posição/entrada; o
-   .monster-sprite-wrap interno cuida da marcha (monster-walk). */
-.stage-monster {
+/* a sala inteira no palco: as criaturas alinhadas UMA AO LADO DA OUTRA, à frente
+   do boneco (metade de baixo, o boneco olha pro sul), no rodapé do palco. */
+.stage-pack {
   position: absolute;
-  left: 50%; top: 74%;
+  left: 50%; top: 76%;
   transform: translate(-50%, -50%);
+  display: flex; gap: 4px; align-items: flex-end; justify-content: center;
+  max-width: 98%; flex-wrap: nowrap;
   z-index: 3;
   pointer-events: none;
 }
-.stage-monster.spawning { animation: monster-materialize 0.55s cubic-bezier(0.18, 0.9, 0.3, 1.2); }
-@keyframes monster-materialize {
-  0%   { opacity: 0; transform: translate(-50%, calc(-50% + 52px)) scale(0.72); filter: brightness(2.4) blur(2.5px); }
+/* cada criatura: item da fila. Surge DE BAIXO PRA CIMA via .spawning; o
+   .monster-sprite-wrap interno cuida da marcha (monster-walk). */
+.stage-monster { position: relative; flex: 0 0 auto; }
+.stage-monster.spawning { animation: monster-rise 0.55s cubic-bezier(0.18, 0.9, 0.3, 1.2); }
+@keyframes monster-rise {
+  0%   { opacity: 0; transform: translateY(52px) scale(0.72); filter: brightness(2.4) blur(2.5px); }
   55%  { opacity: 1; filter: brightness(1.5) blur(0.4px); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: none; }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: none; }
 }
+/* VIRADA PRA CIMA: o sprite nativo do Tibia encara o sul (pra baixo). Como o
+   boneco está ACIMA, espelhamos o sprite na vertical pra criatura encará-lo. */
+.monster-sprite-wrap.face-up .monster-sprite { transform: scaleY(-1); }
 /* sprite real de efeito espalhado nos tiles da área da magia (ao redor do
    boneco) — igual ao Tibia, onde a animação cobre cada tile atingido */
 .combat-area-tile {

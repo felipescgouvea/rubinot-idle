@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=93';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=93';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=93';
-import { on, EVENTS } from '../shared/eventBus.js?v=93';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=93';
+import { G } from '../application/gameStore.js?v=94';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=94';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=94';
+import { on, EVENTS } from '../shared/eventBus.js?v=94';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=94';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
