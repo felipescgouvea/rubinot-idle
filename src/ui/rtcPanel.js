@@ -4,16 +4,17 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=75';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=75';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=75';
-import { VOCATIONS } from '../domain/character.js?v=75';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=75';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=75';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=75';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=75';
-import { on, EVENTS } from '../shared/eventBus.js?v=75';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=75';
+import { G } from '../application/gameStore.js?v=76';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=76';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=76';
+import { VOCATIONS } from '../domain/character.js?v=76';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=76';
+import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=76';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=76';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=76';
+import { setRtcHealPotion, setRtcManaPotion } from '../application/rtcUseCases.js?v=76';
+import { on, EVENTS } from '../shared/eventBus.js?v=76';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=76';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -42,6 +43,41 @@ function spellRow(id, s, selected, onclick) {
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
       ${!unlocked ? `🔒 Nível ${s.level}` : selected ? '✅ Ativa' : 'Usar'}
     </button>
+  </div>`;
+}
+
+// Linha de uma magia JÁ escolhida, com o número de prioridade e os controles
+// pra subir/descer na ordem e remover (o RTC casta a primeira disponível).
+function priorityRow(id, s, idx, total) {
+  return `<div class="rtc-row selected rtc-prio-row">
+    <span class="rtc-prio-num">${idx + 1}</span>
+    <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
+    <div class="rtc-row-info">
+      <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
+      <div class="rtc-row-desc">⚔️ Dano ×${s.power} · ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} · ⏱ ${s.cd}s</div>
+    </div>
+    <div class="rtc-prio-controls">
+      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', -1)" ${idx === 0 ? 'disabled' : ''} title="Subir prioridade">▲</button>
+      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', 1)" ${idx === total - 1 ? 'disabled' : ''} title="Descer prioridade">▼</button>
+      <button class="rtc-prio-btn remove" onclick="removeRtcAttackSpell('${id}')" title="Remover">✕</button>
+    </div>
+  </div>`;
+}
+
+// Slot de poção do Healing: em vez de listar todas as poções, um quadrado onde
+// o jogador ARRASTA a poção da bag (ver ui/inventoryAndEquipmentPanel.js). Vazio
+// mostra o alvo de arraste; preenchido mostra a poção escolhida (clique remove).
+function potionDropSlot(kind, selectedId) {
+  const item = selectedId ? ITEMS[selectedId] : null;
+  const label = kind === 'life' ? 'vida' : 'mana';
+  return `<div class="rtc-potion-slot ${item ? 'filled' : 'empty'}"
+      ondragover="event.preventDefault(); this.classList.add('drag-over')"
+      ondragleave="this.classList.remove('drag-over')"
+      ondrop="this.classList.remove('drag-over'); handleRtcPotionDrop(event, '${kind}')"
+      ${item ? `onclick="clearRtcPotion('${kind}')" title="${item.name} — clique para remover"` : `title="Arraste uma poção de ${label} da bag aqui"`}>
+    ${item
+      ? `<span class="rtc-potion-slot-icon">${itemIconImg(selectedId, 'item-icon')}</span><span class="rtc-potion-slot-name">${item.name}</span>`
+      : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">Arraste a poção de ${label} da bag</span>`}
   </div>`;
 }
 
@@ -82,7 +118,8 @@ export function renderRtcPanel() {
   const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
 
   const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc);
-  const atkSummary = G.rtc.attackType === 'spell' && G.rtc.attackSpell ? `"${SPELLS[G.rtc.attackSpell].words}"`
+  const prioSpells = normalizeAttackSpells(G.rtc);
+  const atkSummary = prioSpells.length ? prioSpells.map((id, i) => `${i + 1}. "${SPELLS[id].words}"`).join(' → ')
     : G.rtc.attackType === 'rune' && G.rtc.attackRune ? ITEMS[G.rtc.attackRune].name
     : 'nenhum (só ataque normal)';
   const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : ' (padrão)'}`;
@@ -110,12 +147,16 @@ export function renderRtcPanel() {
         </div>
 
         ${activeRtcTab === 'attack' ? `
-        <p class="muted">Escolha uma magia OU uma runa — o RTC usa automaticamente a cada golpe durante a caçada.</p>
-        <h5>Magias de ataque</h5>
+        <p class="muted">Configure VÁRIAS magias por prioridade — o RTC casta a primeira disponível (com mana e fora de cooldown) a cada golpe. As de baixo entram como fallback.</p>
+        <h5>Prioridade de ataque ${prioSpells.length ? `(${prioSpells.length})` : ''}</h5>
         <div class="rtc-rows">
-          ${attackSpells.map(([id, s]) => spellRow(id, s, G.rtc.attackType === 'spell' && G.rtc.attackSpell === id, 'setRtcAttackSpell')).join('') || '<p class="muted">Sua vocação não tem magias de ataque.</p>'}
+          ${prioSpells.map((id, i) => priorityRow(id, SPELLS[id], i, prioSpells.length)).join('') || '<p class="muted">Nenhuma magia na prioridade. Adicione abaixo (ou use uma runa).</p>'}
         </div>
-        <h5>Runas de ataque</h5>
+        <h5>Adicionar magia de ataque</h5>
+        <div class="rtc-rows">
+          ${attackSpells.filter(([id]) => !prioSpells.includes(id)).map(([id, s]) => spellRow(id, s, false, 'addRtcAttackSpell')).join('') || '<p class="muted">Todas as suas magias de ataque já estão na prioridade.</p>'}
+        </div>
+        <h5>Runas de ataque <span class="muted">(alternativa às magias)</span></h5>
         <div class="rtc-rows">
           ${attackRunes.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ Dano ${item.dmg} · ${areaBadge(item.area)}`)).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
         </div>
@@ -127,19 +168,34 @@ export function renderRtcPanel() {
         </div>
         <h5>Poção de Cura <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
-        <div class="rtc-rows">
-          ${HEAL_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}${potionReqLabel(item) ? ` · 🔒 ${potionReqLabel(item)}` : ''}`)).join('')}
-        </div>
+        <p class="muted rtc-drag-hint">Abra a bag (🎒 no equipamento) e arraste a poção de vida pro quadrado.</p>
+        ${potionDropSlot('life', G.rtc.healPotion)}
         <h5>Poção de Mana <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.manaPotionThreshold}" onchange="setRtcThreshold('manaPotionThreshold', this.value)" class="rtc-threshold-input" />% de mana</h5>
-        <div class="rtc-rows">
-          ${MANA_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.manaPotion === id, 'setRtcManaPotion', `${vitalIconImg('mana', 'inline-icon')} +${item.mana} mana${potionReqLabel(item) ? ` · 🔒 ${potionReqLabel(item)}` : ''}`)).join('') || '<p class="muted">Nenhuma poção de mana no jogo.</p>'}
-        </div>
+        <p class="muted rtc-drag-hint">Arraste a poção de mana da bag pro quadrado.</p>
+        ${potionDropSlot('mana', G.rtc.manaPotion)}
         `}
       </div>
     </div>
   `;
   mountPortrait();
+}
+
+// Recebe a poção arrastada da bag (ver inventoryAndEquipmentPanel: dragstart
+// grava o itemId no dataTransfer). Valida que é do tipo certo (vida no slot de
+// vida, mana no slot de mana) antes de configurar.
+export function handleRtcPotionDrop(ev, kind) {
+  ev.preventDefault();
+  const id = ev.dataTransfer.getData('application/x-item-id') || ev.dataTransfer.getData('text/plain');
+  const item = ITEMS[id];
+  if (!item || item.type !== 'potion') { emit(EVENTS.NOTIFY, { msg: 'Arraste uma poção da bag.', type: 'error' }); return; }
+  if (kind === 'life') {
+    if (!item.heal) { emit(EVENTS.NOTIFY, { msg: `${item.name} não é poção de vida.`, type: 'error' }); return; }
+    setRtcHealPotion(id);
+  } else {
+    if (!item.mana) { emit(EVENTS.NOTIFY, { msg: `${item.name} não é poção de mana.`, type: 'error' }); return; }
+    setRtcManaPotion(id);
+  }
 }
 
 export function setRtcSubTab(tab) {

@@ -20,10 +20,18 @@ export function isRuneAvailableToVocation(itemId, vocation) {
   return !vocs || vocs.includes(vocation);
 }
 
+// Lista de magias de ataque em ordem de PRIORIDADE (como o RTCaster real, que
+// deixa configurar várias e usa a primeira disponível). Migra saves antigos que
+// tinham uma única `attackSpell`.
+export function normalizeAttackSpells(rtc) {
+  if (rtc && Array.isArray(rtc.attackSpells)) return rtc.attackSpells;
+  return rtc && rtc.attackSpell ? [rtc.attackSpell] : [];
+}
+
 export function createDefaultRtc() {
   return {
     attackType: null,        // 'spell' | 'rune' | null
-    attackSpell: null,
+    attackSpells: [],        // ids das magias de ataque, em ordem de prioridade
     attackRune: null,
     healSpell: null,         // null = usa exura (cura básica) como padrão
     healSpellThreshold: 40,  // % de HP pra castar a spell de cura

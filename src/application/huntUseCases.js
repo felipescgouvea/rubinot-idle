@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=75';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=75';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=75';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=75';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=75';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=75';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=75';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=75';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=75';
-import { MONSTERS } from '../domain/bestiary.js?v=75';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=75';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=75';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=75';
-import { emit, EVENTS } from '../shared/eventBus.js?v=75';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=75';
-import { trainSkill } from './skillUseCases.js?v=75';
-import { addItemToInventory } from './inventoryCore.js?v=75';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=75';
-import { getCombatBonuses } from './bonuses.js?v=75';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=75';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=75';
+import { G } from './gameStore.js?v=76';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=76';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=76';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=76';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=76';
+import { isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=76';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=76';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=76';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=76';
+import { MONSTERS } from '../domain/bestiary.js?v=76';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=76';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=76';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=76';
+import { emit, EVENTS } from '../shared/eventBus.js?v=76';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=76';
+import { trainSkill } from './skillUseCases.js?v=76';
+import { addItemToInventory } from './inventoryCore.js?v=76';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=76';
+import { getCombatBonuses } from './bonuses.js?v=76';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=76';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=76';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -208,19 +208,26 @@ export function doHuntTick() {
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   } else {
-    const atkSpell = G.rtc.attackType === 'spell' && G.rtc.attackSpell && isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level) ? SPELLS[G.rtc.attackSpell] : null;
-    // Só casta se tiver mana E a magia estiver FORA de cooldown (fiel ao Tibia).
-    // Em cooldown, o golpe deste tick é o básico (a magia recasta ao ficar pronta).
-    const spellReady = !!atkSpell && G.mana >= atkSpell.mana && isSpellReady(G.rtc.attackSpell);
+    // Prioridade de magias (como o RTCaster real): percorre a lista na ordem e
+    // casta a PRIMEIRA disponível — nível/vocação ok, com mana E fora de cooldown.
+    // As de trás são fallback quando a de cima está em CD ou sem mana.
+    let atkSpellId = null, atkSpell = null;
+    if (G.rtc.attackType !== 'rune') {
+      for (const id of normalizeAttackSpells(G.rtc)) {
+        const s = SPELLS[id];
+        if (s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id)) { atkSpellId = id; atkSpell = s; break; }
+      }
+    }
+    const spellReady = !!atkSpell;
     if (spellReady) {
       playerDmg = Math.floor(playerDmg * atkSpell.power);
       spellPower = atkSpell.power;
       areaId = atkSpell.area || 'single';
       G.mana -= atkSpell.mana;
-      startSpellCd(G.rtc.attackSpell, atkSpell.cd);
+      startSpellCd(atkSpellId, atkSpell.cd);
       trainSkill('magic', atkSpell.mana * voc.magicMult);
       emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
-      combatFx = { effect: spellEffectName(G.rtc.attackSpell, atkSpell.element), shape: areaId };
+      combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
     }
     if (voc.attackSkill !== 'magic') {
       // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill

@@ -1,15 +1,17 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=75';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=75';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=75';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=75';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=75';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=75';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=75';
-import { on, EVENTS } from '../shared/eventBus.js?v=75';
-import { formatNum } from './shared.js?v=75';
-import { renderZonePicker } from './huntPanel.js?v=75';
+import { G } from '../application/gameStore.js?v=76';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=76';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=76';
+import { skillIconImg } from './shared.js?v=76';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=76';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=76';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=76';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=76';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=76';
+import { on, EVENTS } from '../shared/eventBus.js?v=76';
+import { formatNum } from './shared.js?v=76';
+import { renderZonePicker } from './huntPanel.js?v=76';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -204,7 +206,33 @@ export function renderCharInfo() {
   document.getElementById('stat-def').textContent = getDef();
   document.getElementById('stat-spd').textContent = getSpd().toFixed(1);
   document.getElementById('stat-magic').textContent = getMagic();
+  renderCharSkills();
   renderBars();
+}
+
+// Skills compactas na barra do personagem (à direita do botão Outfit): cada
+// skill como um chip pequeno (ícone + nível + mini-barra de progresso). A que
+// está treinando agora ganha destaque. O treino em si acontece durante a
+// caçada (ver application/skillUseCases.js) — aqui é só a leitura compacta.
+export function renderCharSkills() {
+  const el = document.getElementById('char-skills');
+  if (!el || !G.vocation) return;
+  const voc = VOC_TRAINING[G.vocation];
+  const isMage = voc && voc.attackSkill === 'magic';
+  const weaponSkillId = voc && !isMage ? getEquippedWeaponSkillId() : null;
+  el.innerHTML = Object.entries(TIBIA_SKILLS).map(([id, s]) => {
+    const sk = G.sk[id];
+    const needed = triesForNext(id, sk.lv);
+    const pct = Math.min(100, Math.round((sk.tries / needed) * 100));
+    const active = (id === 'shielding' && !!G.equipment.shield) ||
+      (id === 'magic' && (isMage || voc.magicMult >= 0.35)) ||
+      (!isMage && id === weaponSkillId);
+    return `<div class="char-skill-chip${active ? ' active' : ''}" title="${s.name}: ${sk.lv} (${pct}%)">
+      <span class="char-skill-icon">${skillIconImg(id, s.icon, 'char-skill-icon-img')}</span>
+      <span class="char-skill-lv">${sk.lv}</span>
+      <span class="char-skill-track"><span class="char-skill-fill" style="width:${pct}%"></span></span>
+    </div>`;
+  }).join('');
 }
 
 export function renderBars() {

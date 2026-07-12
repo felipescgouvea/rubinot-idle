@@ -32,6 +32,9 @@ export function monsterSpriteFile(monsterId, monster) {
 // Itens cujo id não deriva o nome real do arquivo no TibiaWiki (o id ficou
 // em inglês mas diferente do nome oficial do item).
 const ITEM_SPRITE_OVERRIDE = {
+  // O "bag" inicial usa a sprite real da Backpack do Tibia (a mochila), não o
+  // ícone genérico de bolsinha — é o container que o jogador abre pra ver o loot.
+  bag: 'Backpack.gif',
   worm_dirt: 'Lump_of_Dirt.gif',
   // "Dragon Scale" é uma página de desambiguação no TibiaWiki (não existe um
   // item genérico "Dragon Scale") — a variante correspondente ao drop do

@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=75" />
-  <link rel="stylesheet" href="style.css?v=75" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=76" />
+  <link rel="stylesheet" href="style.css?v=76" />
 </head>
 <body>
   <div id="app">
@@ -82,6 +82,9 @@
         <div class="stat-chip" title="Magia"><span id="stat-magic">0</span><small>MGC</small></div>
       </div>
       <button class="btn-small" onclick="openOutfitPicker()">👕 Outfit</button>
+      <!-- Skills compactas, à direita do botão Outfit (treino silencioso durante
+           a caçada — ver ui/characterPanel.js: renderCharSkills). -->
+      <div id="char-skills" class="char-skills"></div>
     </div>
 
     <!-- Janela da Bag (inventário, abre à direita ao clicar com o botão direito
@@ -370,6 +373,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=75"></script>
+  <script type="module" src="src/main.js?v=76"></script>
 </body>
 </html>

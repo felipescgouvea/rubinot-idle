@@ -1,12 +1,12 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=75';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=75';
-import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=75';
-import { on, EVENTS } from '../shared/eventBus.js?v=75';
-import { saveGame } from '../application/saveGameUseCase.js?v=75';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=75';
+import { G } from '../application/gameStore.js?v=76';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=76';
+import { RARITY_TIERS, primaryStatKeyForItem } from '../domain/rarity.js?v=76';
+import { on, EVENTS } from '../shared/eventBus.js?v=76';
+import { saveGame } from '../application/saveGameUseCase.js?v=76';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=76';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -50,7 +50,12 @@ export function renderInventory() {
     div.innerHTML = `<div class="item-qty">${qty}</div><div class="item-icon">${itemIconImg(id, 'item-icon')}</div><div class="item-name">${item.name}</div>`;
     div.onclick = () => openItemModal(id);
     // drag-and-drop pra organizar a ordem dos itens dentro da mochila
-    div.addEventListener('dragstart', e => { dragId = id; div.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+    div.addEventListener('dragstart', e => {
+      dragId = id; div.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
+      // grava o itemId pra alvos de drop FORA da bag (ex.: slot de poção do RTC)
+      e.dataTransfer.setData('application/x-item-id', id);
+      e.dataTransfer.setData('text/plain', id);
+    });
     div.addEventListener('dragend', () => { dragId = null; div.classList.remove('dragging'); grid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over')); });
     div.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (dragId && dragId !== id) div.classList.add('drag-over'); });
     div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
