@@ -4,16 +4,16 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=68';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=68';
-import { ITEMS } from '../domain/items.js?v=68';
-import { VOCATIONS } from '../domain/character.js?v=68';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=68';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=68';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=68';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=68';
-import { on, EVENTS } from '../shared/eventBus.js?v=68';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=68';
+import { G } from '../application/gameStore.js?v=69';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=69';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=69';
+import { VOCATIONS } from '../domain/character.js?v=69';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=69';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=69';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=69';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=69';
+import { on, EVENTS } from '../shared/eventBus.js?v=69';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=69';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -128,12 +128,12 @@ export function renderRtcPanel() {
         <h5>Poção de Cura <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
         <div class="rtc-rows">
-          ${HEAL_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}`)).join('')}
+          ${HEAL_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.healPotion === id, 'setRtcHealPotion', `💚 Cura ${item.heal}${potionReqLabel(item) ? ` · 🔒 ${potionReqLabel(item)}` : ''}`)).join('')}
         </div>
         <h5>Poção de Mana <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.manaPotionThreshold}" onchange="setRtcThreshold('manaPotionThreshold', this.value)" class="rtc-threshold-input" />% de mana</h5>
         <div class="rtc-rows">
-          ${MANA_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.manaPotion === id, 'setRtcManaPotion', `${vitalIconImg('mana', 'inline-icon')} +${item.mana} mana`)).join('') || '<p class="muted">Nenhuma poção de mana no jogo.</p>'}
+          ${MANA_POTIONS.map(([id, item]) => itemRow(id, item, G.inventory[id] || 0, G.rtc.manaPotion === id, 'setRtcManaPotion', `${vitalIconImg('mana', 'inline-icon')} +${item.mana} mana${potionReqLabel(item) ? ` · 🔒 ${potionReqLabel(item)}` : ''}`)).join('') || '<p class="muted">Nenhuma poção de mana no jogo.</p>'}
         </div>
         `}
       </div>

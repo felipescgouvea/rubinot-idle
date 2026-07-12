@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=68';
+import { primaryStatKeyForItem } from './rarity.js?v=69';
 
 export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
@@ -81,12 +81,12 @@ export const ITEMS = {
 
   // --- Poções (curam HP/mana ao usar — não ocupam slot de equipamento) ---
   health_potion:        { name: 'Health Potion', icon: '🧪', type: 'potion', heal: 60, sell: 25 },
-  strong_health_potion: { name: 'Strong Health Potion', icon: '🧪', type: 'potion', heal: 150, sell: 60 },
-  great_health_potion:  { name: 'Great Health Potion', icon: '🧪', type: 'potion', heal: 300, sell: 130 },
-  ultimate_health_potion:{ name: 'Ultimate Health Potion', icon: '🧪', type: 'potion', heal: 500, sell: 260 },
+  strong_health_potion: { name: 'Strong Health Potion', icon: '🧪', type: 'potion', heal: 150, sell: 60, reqLevel: 50, reqVoc: ['knight','paladin'] },
+  great_health_potion:  { name: 'Great Health Potion', icon: '🧪', type: 'potion', heal: 300, sell: 130, reqLevel: 80, reqVoc: ['knight','paladin'] },
+  ultimate_health_potion:{ name: 'Ultimate Health Potion', icon: '🧪', type: 'potion', heal: 500, sell: 260, reqLevel: 130, reqVoc: ['knight'] },
   mana_potion:          { name: 'Mana Potion', icon: '🔵', type: 'potion', mana: 60, sell: 25 },
-  strong_mana_potion:   { name: 'Strong Mana Potion', icon: '🔵', type: 'potion', mana: 150, sell: 60 },
-  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 300, sell: 130 },
+  strong_mana_potion:   { name: 'Strong Mana Potion', icon: '🔵', type: 'potion', mana: 150, sell: 60, reqLevel: 50, reqVoc: ['sorcerer','druid','paladin'] },
+  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 300, sell: 130, reqLevel: 80, reqVoc: ['sorcerer','druid'] },
 
   // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
@@ -143,6 +143,34 @@ export const STARTER_KITS = {
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
 export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ammo', 'ring', 'legs', 'boots'];
 export const CONSUMABLE_TYPES = ['potion', 'rune', 'food'];
+
+// Requisito de nível/vocação de uma poção, fiel ao Tibia (ver reqLevel/reqVoc
+// nas poções acima). Retorna null se PODE usar, ou uma string com o motivo do
+// bloqueio (pra mostrar ao jogador). Poções sem requisito (Health/Mana Potion)
+// nunca bloqueiam. Usado no uso manual (inventoryUseCases), no auto-uso do RTC
+// (huntUseCases) e na exibição (loja/RTC).
+const VOC_DISPLAY = { knight: 'Knight', paladin: 'Paladin', sorcerer: 'Sorcerer', druid: 'Druid' };
+export function potionUseBlockReason(item, vocation, level) {
+  if (!item) return null;
+  if (item.reqLevel && level < item.reqLevel) return `Requer nível ${item.reqLevel}.`;
+  if (item.reqVoc && vocation && !item.reqVoc.includes(vocation)) {
+    return `Só ${item.reqVoc.map(v => VOC_DISPLAY[v] || v).join('/')} podem usar.`;
+  }
+  return null;
+}
+export function canUsePotion(item, vocation, level) {
+  return potionUseBlockReason(item, vocation, level) === null;
+}
+
+// Rótulo estático do requisito de uma poção (pra loja/RTC), ex.:
+// "Nível 50 · Knight/Paladin". Vazio quando não há requisito.
+export function potionReqLabel(item) {
+  if (!item || (!item.reqLevel && !item.reqVoc)) return '';
+  const parts = [];
+  if (item.reqLevel) parts.push(`Nível ${item.reqLevel}`);
+  if (item.reqVoc) parts.push(item.reqVoc.map(v => VOC_DISPLAY[v] || v).join('/'));
+  return parts.join(' · ');
+}
 
 // Um valor de slot de equipamento (G.equipment[slot]) pode ser um itemId comum
 // (chave direta de ITEMS) OU o id de uma Relíquia (G.relics — ver

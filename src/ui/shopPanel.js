@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=68';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=68';
-import { ITEMS } from '../domain/items.js?v=68';
-import { on, EVENTS } from '../shared/eventBus.js?v=68';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=68';
+import { G } from '../application/gameStore.js?v=69';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=69';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=69';
+import { on, EVENTS } from '../shared/eventBus.js?v=69';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=69';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -29,7 +29,9 @@ function renderShopCard(s) {
   const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
   const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
-  const statLine = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
+  const stats = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
+  const reqLabel = item ? potionReqLabel(item) : '';
+  const statLine = reqLabel ? `${stats} · <span class="shop-req">🔒 ${reqLabel}</span>` : stats;
   const iconHtml = shopIconHtml(s);
   // Poções/runas podem ser compradas em quantidade: um seletor (input number,
   // com setas/scroll) ao lado do Comprar. Equipamento/boost/outfit compram 1.

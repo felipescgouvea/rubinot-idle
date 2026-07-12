@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=68';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=68';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=68';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=68';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=68';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=68';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=68';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=68';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=68';
-import { MONSTERS } from '../domain/bestiary.js?v=68';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=68';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=68';
-import { emit, EVENTS } from '../shared/eventBus.js?v=68';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=68';
-import { trainSkill } from './skillUseCases.js?v=68';
-import { addItemToInventory } from './inventoryCore.js?v=68';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=68';
-import { getCombatBonuses } from './bonuses.js?v=68';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=68';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=68';
+import { G } from './gameStore.js?v=69';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=69';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=69';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=69';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=69';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=69';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=69';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=69';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=69';
+import { MONSTERS } from '../domain/bestiary.js?v=69';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=69';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=69';
+import { emit, EVENTS } from '../shared/eventBus.js?v=69';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=69';
+import { trainSkill } from './skillUseCases.js?v=69';
+import { addItemToInventory } from './inventoryCore.js?v=69';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=69';
+import { getCombatBonuses } from './bonuses.js?v=69';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=69';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=69';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -305,7 +305,7 @@ export function doHuntTick() {
 
   // RTC — Potion Healing: cura automática por poção do inventário, independente da
   // spell — normalmente um limiar mais baixo, de emergência (ver domain/rtcConfig.js).
-  if (G.rtc.healPotion && G.hp > 0 && ((G.hp / getMaxHp()) * 100) < G.rtc.healPotionThreshold && (G.inventory[G.rtc.healPotion] || 0) > 0) {
+  if (G.rtc.healPotion && G.hp > 0 && ((G.hp / getMaxHp()) * 100) < G.rtc.healPotionThreshold && (G.inventory[G.rtc.healPotion] || 0) > 0 && canUsePotion(ITEMS[G.rtc.healPotion], G.vocation, G.level)) {
     const potion = ITEMS[G.rtc.healPotion];
     const before = G.hp;
     G.hp = Math.min(getMaxHp(), G.hp + potion.heal);
@@ -317,7 +317,7 @@ export function doHuntTick() {
 
   // RTC — Mana Potion: repõe mana automaticamente por poção quando cai abaixo do
   // limiar, pra o mage/paladin não ficar sem mana pra castar (ver rtcConfig.js).
-  if (G.rtc.manaPotion && G.mana < getMaxMana() && ((G.mana / getMaxMana()) * 100) < G.rtc.manaPotionThreshold && (G.inventory[G.rtc.manaPotion] || 0) > 0) {
+  if (G.rtc.manaPotion && G.mana < getMaxMana() && ((G.mana / getMaxMana()) * 100) < G.rtc.manaPotionThreshold && (G.inventory[G.rtc.manaPotion] || 0) > 0 && canUsePotion(ITEMS[G.rtc.manaPotion], G.vocation, G.level)) {
     const potion = ITEMS[G.rtc.manaPotion];
     const before = G.mana;
     G.mana = Math.min(getMaxMana(), G.mana + (potion.mana || 0));

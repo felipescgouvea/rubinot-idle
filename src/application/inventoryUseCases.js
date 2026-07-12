@@ -1,13 +1,13 @@
-import { G } from './gameStore.js?v=68';
-import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=68';
-import { ZONES } from '../domain/bestiary.js?v=68';
-import { RARITY_TIERS } from '../domain/rarity.js?v=68';
-import { emit, EVENTS } from '../shared/eventBus.js?v=68';
-import { getMaxHp, getMaxMana } from './stats.js?v=68';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=68';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=68';
-import { saveGame } from './saveGameUseCase.js?v=68';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=68';
+import { G } from './gameStore.js?v=69';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason } from '../domain/items.js?v=69';
+import { ZONES } from '../domain/bestiary.js?v=69';
+import { RARITY_TIERS } from '../domain/rarity.js?v=69';
+import { emit, EVENTS } from '../shared/eventBus.js?v=69';
+import { getMaxHp, getMaxMana } from './stats.js?v=69';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=69';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=69';
+import { saveGame } from './saveGameUseCase.js?v=69';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=69';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -15,7 +15,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=68';
+export { addItemToInventory } from './inventoryCore.js?v=69';
 
 export function equipItem(itemId) {
   const item = ITEMS[itemId];
@@ -118,6 +118,10 @@ export function useItem(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   if (!item || qty <= 0 || !G.vocation) return;
+
+  // Nível/vocação mínimos pra usar a poção (fiel ao Tibia — ver domain/items.js).
+  const blockReason = potionUseBlockReason(item, G.vocation, G.level);
+  if (blockReason) { emit(EVENTS.NOTIFY, { msg: `${item.name}: ${blockReason}`, type: 'error' }); return; }
 
   const currentMonster = getCurrentMonster();
   let runeDeaths = null;

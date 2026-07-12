@@ -22,6 +22,8 @@ Jogador, na aba Inventário, e no card de Equipamento sempre visível na Caçada
 - **Itens raros são sinalizados visualmente** diferente dos comuns.
 - **Vender um item é definitivo** e paga o valor de venda fixo do item em gold. Quando o jogador tem mais de uma unidade, pode vender tudo de uma vez em vez de repetir a ação item por item, recebendo o valor de venda multiplicado pela quantidade vendida.
 - **O card de Equipamento aparece apenas na aba Caçada** — é ali que o jogador acompanha o personagem em combate, então é ali que faz sentido ver o que ele está vestindo.
+- **Poções têm nível e vocação mínimos fiéis ao Tibia atual.** Health/Mana Potion não têm restrição; Strong Health/Strong Mana exigem nível 50; Great Health/Great Mana/Great Spirit exigem nível 80; Ultimate Health exige nível 130 — cada uma restrita às vocações do Tibia (ex.: Great Health = Knight/Paladin, Great Mana = Sorcerer/Druid, Great Spirit = Paladin, Ultimate Health = Knight). Quem não cumpre o requisito não consegue usar a poção (nem manualmente, nem pelo auto-uso do RTC); a loja ainda deixa comprar, mas mostra o requisito.
+  *Por quê:* o dono pediu que o requisito de poção fosse igual ao Tibia — é o que impede um personagem de baixo nível ou da vocação errada de abusar das poções fortes.
 
 ## Comportamento esperado
 

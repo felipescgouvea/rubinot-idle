@@ -1757,6 +1757,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   text-align: center; font-weight: 700; font-size: 13px;
   color: var(--ink); background: #fff;
 }
+.shop-req { color: #b1341f; font-weight: 700; }
 
 /* ============ BAG (janela do inventário abre fixa à direita) ============ */
 #backpack-inventory-card {
