@@ -1,9 +1,9 @@
 // Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
-import { G } from './gameStore.js?v=70';
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=70';
-import { emit, EVENTS } from '../shared/eventBus.js?v=70';
-import { saveGame } from './saveGameUseCase.js?v=70';
+import { G } from './gameStore.js?v=71';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=71';
+import { emit, EVENTS } from '../shared/eventBus.js?v=71';
+import { saveGame } from './saveGameUseCase.js?v=71';
 
 export function getAdminConfig() {
   G.adminConfig = sanitizeAdminConfig(G.adminConfig);
@@ -79,6 +79,20 @@ export function setZoneMultiplier(zoneId, kind, value) {
   G.adminConfig = sanitizeAdminConfig(cfg);
   emit(EVENTS.ADMIN_PANEL);
   emit(EVENTS.ZONE_PICKER);
+  saveGame();
+}
+
+// Mercado entre jogadores ligado/desligado (padrão: desligado). Enquanto
+// desligado, a aba 🏪 fica escondida e o painel mostra aviso (ver ui/tabs.js:
+// applyMarketVisibility e ui/marketPanel.js).
+export const isMarketEnabled = () => getAdminConfig().marketEnabled;
+export function setMarketEnabled(on) {
+  const cfg = getAdminConfig();
+  cfg.marketEnabled = !!on;
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  emit(EVENTS.MARKET_VISIBILITY, { enabled: cfg.marketEnabled });
+  emit(EVENTS.NOTIFY, { msg: cfg.marketEnabled ? '🏪 Mercado entre jogadores ativado.' : '🏪 Mercado entre jogadores desativado.', type: 'success' });
   saveGame();
 }
 

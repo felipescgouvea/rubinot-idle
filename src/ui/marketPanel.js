@@ -1,13 +1,20 @@
-import { G } from '../application/gameStore.js?v=70';
-import { ITEMS } from '../domain/items.js?v=70';
-import { on, EVENTS } from '../shared/eventBus.js?v=70';
-import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=70';
-import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=70';
-import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=70';
+import { G } from '../application/gameStore.js?v=71';
+import { ITEMS } from '../domain/items.js?v=71';
+import { on, EVENTS } from '../shared/eventBus.js?v=71';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=71';
+import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=71';
+import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=71';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=71';
 
 export async function renderMarketPanel() {
   const el = document.getElementById('market-content');
   if (!el) return;
+
+  // Mercado entre jogadores pode estar desligado pelo dono (Painel Admin).
+  if (!isMarketEnabled()) {
+    el.innerHTML = '<p class="muted">🚧 O Mercado entre jogadores está desativado no momento. O dono pode reativá-lo no Painel Admin.</p>';
+    return;
+  }
 
   if (!G.playerName) {
     el.innerHTML = `

@@ -22,6 +22,10 @@ export const DEFAULT_ADMIN_CONFIG = {
   useZoneMultipliers: false,
   zoneMultipliers: {}, // { [zoneId]: { xp?: number, gold?: number } } — overrides opcionais
   rarityWeights: { uncommon: 52, rare: 28, epic: 15, legendary: 5 },
+  // Mercado entre jogadores (aba 🏪). DESLIGADO por enquanto — o dono liga
+  // quando quiser reabrir a economia player-to-player. Enquanto desligado, a
+  // aba fica escondida e o painel mostra aviso. Ver application/adminUseCases.js.
+  marketEnabled: false,
 };
 
 // Campos de taxa simples (numéricos) exibidos no painel, na ordem.
@@ -68,6 +72,7 @@ export function sanitizeAdminConfig(cfg) {
   c.spawnDelayMax = asNum(c.spawnDelayMax, d.spawnDelayMax);
   if (c.spawnDelayMax < c.spawnDelayMin) c.spawnDelayMax = c.spawnDelayMin; // max nunca menor que min
   c.useZoneMultipliers = !!c.useZoneMultipliers;
+  c.marketEnabled = !!c.marketEnabled;
   const zm = {};
   if (c.zoneMultipliers && typeof c.zoneMultipliers === 'object') {
     for (const [zid, ov] of Object.entries(c.zoneMultipliers)) {

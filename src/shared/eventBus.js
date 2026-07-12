@@ -45,6 +45,7 @@ export const EVENTS = {
   SHOP_PANEL: 'shopPanel',
   RTC_PANEL: 'rtcPanel',
   MARKET_PANEL: 'marketPanel',
+  MARKET_VISIBILITY: 'marketVisibility',
   HIGHSCORES_PANEL: 'highscoresPanel',
   OFFLINE_PROGRESS: 'offlineProgress',
   OUTFIT_PICKER: 'outfitPicker',

@@ -76,3 +76,22 @@ Jogador, na aba Inventário (seção "Relíquias", separada da grade de itens co
 - [ ] O stat reforçado de uma relíquia é sempre maior que o do item base equivalente, na proporção da raridade sorteada.
 - [ ] Vender uma relíquia sempre paga mais gold que vender o item base equivalente.
 - [ ] Uma relíquia vendida ou desequipada nunca deixa o slot de equipamento "travado".
+
+## Mercado entre jogadores (compra e venda de itens entre contas)
+
+### Objetivo
+
+Permitir que jogadores negociem itens entre si, criando uma economia player-to-player além da compra/venda com o próprio jogo.
+
+### Regras de negócio
+
+- **O Mercado entre jogadores pode ser ligado ou desligado pelo dono do jogo**, e por enquanto nasce **desligado**. Enquanto estiver desligado, a seção do Mercado fica indisponível para todos os jogadores (fora de vista) e a economia player-to-player fica fechada — o jogador ainda compra e vende normalmente com o próprio jogo.
+  *Por quê:* o dono pediu para pausar a negociação entre jogadores por ora, mantendo o controle de reabrir quando quiser, sem remover a funcionalidade.
+- **O controle de ligar/desligar o Mercado fica na área de administração do dono**, junto das demais configurações globais do jogo.
+
+### Critérios de aceitação
+
+- [ ] Com o Mercado desligado, o jogador não encontra a seção de Mercado em lugar nenhum.
+- [ ] Com o Mercado desligado, nenhuma negociação de item entre jogadores é possível.
+- [ ] O dono consegue ligar e desligar o Mercado pela área de administração, e o efeito vale na hora.
+- [ ] Desligar o Mercado não afeta a compra/venda de itens com o próprio jogo.
