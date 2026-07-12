@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=64" />
-  <link rel="stylesheet" href="style.css?v=64" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=65" />
+  <link rel="stylesheet" href="style.css?v=65" />
 </head>
 <body>
   <div id="app">
@@ -306,10 +306,11 @@
           <h3 id="battle-card-title">⚔️ Batalha</h3>
           <button class="battle-modal-close-x" onclick="closeBattleModal()">✕</button>
         </div>
-        <!-- Corpo em 2 colunas (em telas largas): esquerda = cena + botão;
-             direita = Battle List + Log. Assim tudo cabe sem rolar. Em telas
-             estreitas vira 1 coluna (empilha). -->
+        <!-- Corpo: uma linha de 2 colunas (esquerda = cena + botão; direita =
+             Battle List que preenche a coluna toda) e, ABAIXO ocupando a linha
+             inteira, o Log de Combate. Em telas estreitas vira 1 coluna. -->
         <div id="battle-modal-body">
+          <div class="battle-top-row">
           <div class="battle-col battle-col-left">
             <!-- Cena única: o boneco fica no meio do palco da dungeon. Ao caçar,
                  anda pra baixo (chão rolando) procurando; quando um monstro
@@ -337,21 +338,24 @@
             <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
           </div>
           <div class="battle-col battle-col-right">
-            <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma -->
+            <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma.
+                 Preenche a coluna direita até embaixo, onde começa o Log. -->
             <div class="card" id="battle-list-card">
               <h3>🎯 Battle List</h3>
               <div id="battle-list"><div class="battle-list-empty">Sem criaturas.</div></div>
             </div>
-            <div class="card" id="combat-log-card">
-              <h3>Log de Combate</h3>
-              <div id="combat-log-tabs">
-                <button class="log-tab active" data-cat="tudo" onclick="setLogFilter('tudo')">Tudo</button>
-                <button class="log-tab" data-cat="combate" onclick="setLogFilter('combate')">⚔️ Combate</button>
-                <button class="log-tab" data-cat="magia" onclick="setLogFilter('magia')">🗣️ Magias</button>
-                <button class="log-tab" data-cat="suprimento" onclick="setLogFilter('suprimento')">🧪 Suprimentos</button>
-              </div>
-              <div id="combat-log" data-filter="tudo"></div>
+          </div>
+          </div>
+          <!-- Log de Combate: abaixo do botão de caçada, ocupando a linha inteira -->
+          <div class="card" id="combat-log-card">
+            <h3>Log de Combate</h3>
+            <div id="combat-log-tabs">
+              <button class="log-tab active" data-cat="tudo" onclick="setLogFilter('tudo')">Tudo</button>
+              <button class="log-tab" data-cat="combate" onclick="setLogFilter('combate')">⚔️ Combate</button>
+              <button class="log-tab" data-cat="magia" onclick="setLogFilter('magia')">🗣️ Magias</button>
+              <button class="log-tab" data-cat="suprimento" onclick="setLogFilter('suprimento')">🧪 Suprimentos</button>
             </div>
+            <div id="combat-log" data-filter="tudo"></div>
           </div>
         </div>
       </div>
@@ -364,6 +368,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=64"></script>
+  <script type="module" src="src/main.js?v=65"></script>
 </body>
 </html>

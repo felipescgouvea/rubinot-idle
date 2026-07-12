@@ -1392,20 +1392,29 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #battle-modal-body {
   flex: 1;               /* ocupa a altura fixa do modal */
   min-height: 0;
+  display: flex;
+  flex-direction: column; /* linha de 2 colunas em cima; Log full-width embaixo */
+  gap: 14px;
+  padding: 14px;
+  overflow: hidden;
+}
+/* Linha de cima: 2 colunas (cena+botão | Battle List). Altura natural da coluna
+   esquerda; a direita estica pra igualar (a Battle List preenche até embaixo). */
+.battle-top-row {
   display: grid;
   grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
   gap: 14px;
-  padding: 14px;
-  align-items: stretch;  /* colunas preenchem a altura */
-  overflow: hidden;
+  align-items: stretch;
+  flex: none;
+  min-height: 0;
 }
 .battle-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; }
 #battle-modal-box #battle-scene { margin: 0 !important; flex: none; }
 #battle-modal-box #hunt-toggle { margin: 0 !important; flex: none; }
-/* coluna direita: Battle List (altura fixa, ~metade) em cima; Log preenche o
-   resto e rola por dentro — assim o modal nunca muda de tamanho. */
-#battle-modal-box #battle-list-card { margin: 0 !important; flex: none; }
-#battle-modal-box #battle-list { height: 110px; max-height: 110px; overflow-y: auto; }
+/* Battle List preenche a coluna direita inteira, até onde começa o Log. */
+#battle-modal-box #battle-list-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+#battle-modal-box #battle-list { flex: 1; height: auto; max-height: none; overflow-y: auto; }
+/* Log de Combate: linha inteira, abaixo do botão de caçada, preenche o resto. */
 #battle-modal-box #combat-log-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 #battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
 /* entrada de monstro MORTO na Battle List: acinzentada, some após 1s */
@@ -1414,7 +1423,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* telas estreitas: volta pra 1 coluna (empilha tudo), altura livre */
 @media (max-width: 780px) {
   #battle-modal-box { height: auto; max-height: 92vh; overflow-y: auto; }
-  #battle-modal-body { grid-template-columns: 1fr; overflow: visible; }
+  .battle-top-row { grid-template-columns: 1fr; }
+  #battle-modal-box #battle-list { height: 140px; max-height: 140px; flex: none; }
   #battle-modal-box #combat-log { height: 200px; flex: none; }
 }
 
