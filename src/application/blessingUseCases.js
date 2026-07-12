@@ -1,9 +1,9 @@
 // Compra de bênçãos (Blessings) — pagas em gold, reduzem a perda de XP na morte
 // e melhoram o revive. Consumidas ao morrer (ver application/huntUseCases.js).
-import { G } from './gameStore.js?v=88';
-import { MAX_BLESSINGS, blessingCost } from '../domain/blessings.js?v=88';
-import { emit, EVENTS } from '../shared/eventBus.js?v=88';
-import { saveGame } from './saveGameUseCase.js?v=88';
+import { G } from './gameStore.js?v=89';
+import { MAX_BLESSINGS, blessingCost } from '../domain/blessings.js?v=89';
+import { emit, EVENTS } from '../shared/eventBus.js?v=89';
+import { saveGame } from './saveGameUseCase.js?v=89';
 
 export function buyBlessing() {
   G.blessings = G.blessings || 0;

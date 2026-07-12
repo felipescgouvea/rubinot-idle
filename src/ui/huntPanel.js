@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=88';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=88';
-import { MONSTERS } from '../domain/bestiary.js?v=88';
-import { cityName } from '../domain/cities.js?v=88';
-import { ITEMS } from '../domain/items.js?v=88';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=88';
-import { on, EVENTS } from '../shared/eventBus.js?v=88';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=88';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=88';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=88';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=88';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=88';
+import { G } from '../application/gameStore.js?v=89';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=89';
+import { MONSTERS } from '../domain/bestiary.js?v=89';
+import { cityName } from '../domain/cities.js?v=89';
+import { ITEMS } from '../domain/items.js?v=89';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=89';
+import { on, EVENTS } from '../shared/eventBus.js?v=89';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=89';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=89';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=89';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=89';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=89';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -51,9 +51,11 @@ function areaOffsets(shape) {
   } else if (shape === 'explosion') {
     for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) out.push([dx, dy]);
   } else if (shape === 'wave' || shape === 'beam') {
-    for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, -r]); }
+    // cone/feixe que abre PRA BAIXO — o boneco olha pro sul (frente), então a
+    // onda de mago (Fire/Energy/Ice/Terra Wave) sai na direção que ele encara.
+    for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, r]); }
   } else {
-    out.push([0, -1]); // single: um tile à frente
+    out.push([0, 1]); // single: um tile À FRENTE (pra baixo, direção do boneco)
   }
   return out;
 }

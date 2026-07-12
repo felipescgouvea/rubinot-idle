@@ -1,10 +1,10 @@
 // Recompensa Diária (Reward Shrine) — não ocupa uma aba: é um botão no header
 // que abre um modal com o ciclo de 7 dias e o botão de resgate. Um "selo"
 // vermelho no botão avisa quando há recompensa disponível hoje.
-import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=88';
-import { on, EVENTS } from '../shared/eventBus.js?v=88';
-import { openModal } from './shared.js?v=88';
-import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=88';
+import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=89';
+import { on, EVENTS } from '../shared/eventBus.js?v=89';
+import { openModal } from './shared.js?v=89';
+import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=89';
 
 // Atualiza o selo "!" do botão do header conforme há ou não resgate hoje.
 export function renderDailyBadge() {
