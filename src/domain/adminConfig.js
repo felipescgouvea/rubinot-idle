@@ -21,6 +21,11 @@ export const DEFAULT_ADMIN_CONFIG = {
   // zoneMultiplier() abaixo e application/huntUseCases.js: resolveMonsterKill.
   useZoneMultipliers: false,
   zoneMultipliers: {}, // { [zoneId]: { xp?: number, gold?: number } } — overrides opcionais
+  // Spawn por hunt: peso (%) de cada monstro na zona e faixa do tamanho do grupo
+  // (min..max). Vazio => uniforme (todos com peso igual) + faixa padrão. Só afeta
+  // a caçada comum — o Boss Rush é sempre 1 boss. Ver resolveZoneSpawn() abaixo e
+  // application/huntUseCases.js.
+  huntSpawns: {}, // { [zoneId]: { weights: { [monsterId]: number }, packMin: number, packMax: number } }
   rarityWeights: { uncommon: 52, rare: 28, epic: 15, legendary: 5 },
   // Mercado entre jogadores (aba 🏪). DESLIGADO por enquanto — o dono liga
   // quando quiser reabrir a economia player-to-player. Enquanto desligado, a
@@ -45,6 +50,46 @@ export const ADMIN_RATE_FIELDS = [
 ];
 
 export const RARITY_TIER_ORDER = ['uncommon', 'rare', 'epic', 'legendary'];
+
+// Faixa padrão do tamanho do grupo (quando a zona não tem override no Admin).
+export const DEFAULT_PACK_MIN = 1;
+export const DEFAULT_PACK_MAX = 5;
+
+// Resolve a config EFETIVA de spawn de uma zona a partir do adminConfig: pesos
+// por monstro (default = uniforme, todos com peso igual) e a faixa do grupo
+// (min..max). `zoneMonsters` é a lista de ids válidos da zona — pesos de ids que
+// não estão mais na zona são ignorados.
+export function resolveZoneSpawn(cfg, zoneId, zoneMonsters) {
+  const hs = (cfg && cfg.huntSpawns && cfg.huntSpawns[zoneId]) || {};
+  const weights = {};
+  zoneMonsters.forEach(id => {
+    const w = hs.weights && Number.isFinite(+hs.weights[id]) ? Math.max(0, +hs.weights[id]) : 1;
+    weights[id] = w;
+  });
+  const sum = zoneMonsters.reduce((s, id) => s + weights[id], 0);
+  if (sum <= 0) zoneMonsters.forEach(id => { weights[id] = 1; }); // tudo zerado => uniforme
+  let packMin = Number.isFinite(+hs.packMin) ? Math.max(1, Math.floor(+hs.packMin)) : DEFAULT_PACK_MIN;
+  let packMax = Number.isFinite(+hs.packMax) ? Math.max(1, Math.floor(+hs.packMax)) : DEFAULT_PACK_MAX;
+  if (packMax < packMin) packMax = packMin;
+  return { weights, packMin, packMax };
+}
+
+// Percentuais de spawn (relativos à soma dos pesos) — só pra exibir no painel.
+export function zoneSpawnPercents(weights, zoneMonsters) {
+  const sum = zoneMonsters.reduce((s, id) => s + Math.max(0, weights[id] || 0), 0) || 1;
+  const out = {};
+  zoneMonsters.forEach(id => { out[id] = +(100 * Math.max(0, weights[id] || 0) / sum).toFixed(1); });
+  return out;
+}
+
+// Sorteia um monstro da zona pelos pesos (soma qualquer — não precisa ser 100).
+export function pickWeightedMonster(zoneMonsters, weights) {
+  const sum = zoneMonsters.reduce((s, id) => s + Math.max(0, (weights && weights[id]) || 0), 0);
+  if (sum <= 0) return zoneMonsters[Math.floor(Math.random() * zoneMonsters.length)];
+  let r = Math.random() * sum;
+  for (const id of zoneMonsters) { r -= Math.max(0, (weights && weights[id]) || 0); if (r <= 0) return id; }
+  return zoneMonsters[zoneMonsters.length - 1];
+}
 
 // Converte os pesos de raridade em porcentagens (relativas à soma).
 export function rarityChancePercents(weights) {
@@ -94,6 +139,24 @@ export function sanitizeAdminConfig(cfg) {
     }
   }
   c.zoneMultipliers = zm;
+  // huntSpawns: só guarda entradas com pesos/faixa válidos por zona.
+  const hs = {};
+  if (c.huntSpawns && typeof c.huntSpawns === 'object') {
+    for (const [zid, e] of Object.entries(c.huntSpawns)) {
+      if (!e || typeof e !== 'object') continue;
+      const entry = {};
+      if (e.weights && typeof e.weights === 'object') {
+        const w = {};
+        for (const [mid, val] of Object.entries(e.weights)) { if (Number.isFinite(+val)) w[mid] = Math.max(0, +val); }
+        if (Object.keys(w).length) entry.weights = w;
+      }
+      if (e.packMin != null) entry.packMin = Math.max(1, Math.floor(asNum(e.packMin, DEFAULT_PACK_MIN)));
+      if (e.packMax != null) entry.packMax = Math.max(1, Math.floor(asNum(e.packMax, DEFAULT_PACK_MAX)));
+      if (entry.packMin != null && entry.packMax != null && entry.packMax < entry.packMin) entry.packMax = entry.packMin;
+      if (Object.keys(entry).length) hs[zid] = entry;
+    }
+  }
+  c.huntSpawns = hs;
   c.rarityWeights = { ...d.rarityWeights, ...(c.rarityWeights || {}) };
   RARITY_TIER_ORDER.forEach(k => { c.rarityWeights[k] = asNum(c.rarityWeights[k], d.rarityWeights[k]); });
   return c;

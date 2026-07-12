@@ -1,9 +1,9 @@
 // Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
-import { G } from './gameStore.js?v=101';
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=101';
-import { emit, EVENTS } from '../shared/eventBus.js?v=101';
-import { saveGame } from './saveGameUseCase.js?v=101';
+import { G } from './gameStore.js?v=102';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=102';
+import { emit, EVENTS } from '../shared/eventBus.js?v=102';
+import { saveGame } from './saveGameUseCase.js?v=102';
 
 export function getAdminConfig() {
   G.adminConfig = sanitizeAdminConfig(G.adminConfig);
@@ -29,6 +29,36 @@ export function getSpawnDelayRange() {
 export const isUsingZoneMultipliers = () => getAdminConfig().useZoneMultipliers;
 export function getZoneMultiplier(zoneId, kind, builtIn) {
   return zoneMultiplier(getAdminConfig(), zoneId, kind, builtIn);
+}
+
+// Config efetiva de spawn de uma zona (pesos por monstro + faixa do grupo),
+// consumida pelo motor de caçada (huntUseCases) e pelo painel Admin.
+export function getZoneSpawn(zoneId, zoneMonsters) {
+  return resolveZoneSpawn(getAdminConfig(), zoneId, zoneMonsters);
+}
+
+// Define o peso (%) de UM monstro numa zona. O peso é relativo (a % exibida é
+// peso/soma). Zerar tira o monstro do sorteio daquela zona.
+export function setZoneSpawnWeight(zoneId, monsterId, value) {
+  const cfg = getAdminConfig();
+  cfg.huntSpawns = cfg.huntSpawns || {};
+  cfg.huntSpawns[zoneId] = cfg.huntSpawns[zoneId] || {};
+  cfg.huntSpawns[zoneId].weights = cfg.huntSpawns[zoneId].weights || {};
+  cfg.huntSpawns[zoneId].weights[monsterId] = Math.max(0, Number(value) || 0);
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  saveGame();
+}
+
+// Define a faixa do tamanho do grupo de uma zona (field = 'packMin' | 'packMax').
+export function setZonePackRange(zoneId, field, value) {
+  const cfg = getAdminConfig();
+  cfg.huntSpawns = cfg.huntSpawns || {};
+  cfg.huntSpawns[zoneId] = cfg.huntSpawns[zoneId] || {};
+  cfg.huntSpawns[zoneId][field] = Math.max(1, Math.floor(Number(value) || 1));
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  saveGame();
 }
 
 export function setAdminRate(key, value) {

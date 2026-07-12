@@ -1,11 +1,74 @@
 // Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
 // de relíquia por boss e os pesos de cada raridade. Lê/escreve via
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents } from '../domain/adminConfig.js?v=101';
-import { RARITY_TIERS } from '../domain/rarity.js?v=101';
-import { ZONES } from '../domain/bestiary.js?v=101';
-import { on, EVENTS } from '../shared/eventBus.js?v=101';
-import { getAdminConfig } from '../application/adminUseCases.js?v=101';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=102';
+import { RARITY_TIERS } from '../domain/rarity.js?v=102';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=102';
+import { on, EVENTS } from '../shared/eventBus.js?v=102';
+import { getAdminConfig, getZoneSpawn } from '../application/adminUseCases.js?v=102';
+
+// Zona selecionada no sub-painel de Spawn (estado só de UI, preservado entre
+// re-renders do painel). Começa na primeira zona.
+let adminSpawnZone = null;
+export function setAdminSpawnZone(zoneId) {
+  adminSpawnZone = zoneId;
+  renderAdminPanel();
+}
+
+// Sub-painel "Spawn de monstros por hunt": escolhe a zona e configura a % de
+// cada monstro (peso relativo) e a faixa do tamanho do grupo (min..max).
+function renderSpawnSubPanel() {
+  const zoneIds = Object.keys(ZONES);
+  if (!zoneIds.length) return '';
+  const sel = zoneIds.includes(adminSpawnZone) ? adminSpawnZone : zoneIds[0];
+  const zone = ZONES[sel];
+  const spawn = getZoneSpawn(sel, zone.monsters);
+  const pcts = zoneSpawnPercents(spawn.weights, zone.monsters);
+  const options = zoneIds.map(id => `<option value="${id}" ${id === sel ? 'selected' : ''}>${ZONES[id].icon} ${ZONES[id].name}</option>`).join('');
+  const monsterRows = zone.monsters.map(mid => {
+    const m = MONSTERS[mid];
+    const name = m ? m.name : mid;
+    const icon = m ? m.icon : '❓';
+    return `
+    <div class="admin-spawn-row">
+      <span class="admin-spawn-name">${icon} ${name}</span>
+      <input type="number" min="0" step="1" value="${spawn.weights[mid]}"
+        onchange="setZoneSpawnWeight('${sel}', '${mid}', parseFloat(this.value))" title="Peso relativo" />
+      <span class="admin-spawn-pct">${pcts[mid]}%</span>
+    </div>`;
+  }).join('');
+  return `
+    <h4>🎯 Spawn de monstros por hunt</h4>
+    <div class="admin-field">
+      <label>Escolha a hunt</label>
+      <select class="admin-spawn-select" onchange="setAdminSpawnZone(this.value)">${options}</select>
+      <small>Configure a % de cada monstro (peso relativo — a % é peso/soma) e a frequência do grupo. Só vale na caçada comum (o Boss Rush é sempre 1 boss).</small>
+    </div>
+    <div class="admin-grid">
+      <div class="admin-field">
+        <label>Grupo mínimo</label>
+        <div class="admin-input-row">
+          <input type="number" min="1" step="1" value="${spawn.packMin}"
+            onchange="setZonePackRange('${sel}', 'packMin', parseFloat(this.value))" />
+          <span class="admin-x">👾</span>
+        </div>
+        <small>Quantidade mínima de criaturas por grupo.</small>
+      </div>
+      <div class="admin-field">
+        <label>Grupo máximo</label>
+        <div class="admin-input-row">
+          <input type="number" min="1" step="1" value="${spawn.packMax}"
+            onchange="setZonePackRange('${sel}', 'packMax', parseFloat(this.value))" />
+          <span class="admin-x">👾</span>
+        </div>
+        <small>Cada aparição sorteia um tamanho aleatório nesse intervalo.</small>
+      </div>
+    </div>
+    <div class="admin-field">
+      <label>% de cada monstro na hunt</label>
+      <div class="admin-spawn-list">${monsterRows}</div>
+    </div>`;
+}
 
 export function renderAdminPanel() {
   const el = document.getElementById('admin-content');
@@ -78,6 +141,8 @@ export function renderAdminPanel() {
         <small>Cada aparição sorteia um tempo aleatório nesse intervalo.</small>
       </div>
     </div>
+
+    ${renderSpawnSubPanel()}
 
     <h4>🗺️ Multiplicadores de XP/Gold por hunt</h4>
     <div class="admin-field">

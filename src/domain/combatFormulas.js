@@ -4,8 +4,9 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=101';
-import { resolveEquippedItem } from './items.js?v=101';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=102';
+import { resolveEquippedItem } from './items.js?v=102';
+import { pickWeightedMonster } from './adminConfig.js?v=102';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -154,8 +155,11 @@ export function runeDamage({ rune, level, magicLevel }) {
 // `bossMultiplier` (default 1, sem efeito na caçada normal) é só pro Boss
 // Rush — ver domain/bestiary.js: bossTierMultiplier — deixa o boss desafiado
 // de propósito mais forte que o mesmo bicho encontrado à toa numa zona comum.
-export function spawnMonsterInstance(zone, monsterCatalog, playerLevel, bossMultiplier = 1) {
-  const monsterId = zone.monsters[Math.floor(Math.random() * zone.monsters.length)];
+export function spawnMonsterInstance(zone, monsterCatalog, playerLevel, bossMultiplier = 1, weights = null) {
+  // `weights` (opcional, do Painel Admin) sorteia o monstro pela % configurada;
+  // sem ele, sorteio uniforme entre os monstros da zona.
+  const monsterId = weights ? pickWeightedMonster(zone.monsters, weights)
+    : zone.monsters[Math.floor(Math.random() * zone.monsters.length)];
   const def = monsterCatalog[monsterId];
   const scaleFactor = (1 + (playerLevel - 1) * 0.05) * bossMultiplier;
   return {

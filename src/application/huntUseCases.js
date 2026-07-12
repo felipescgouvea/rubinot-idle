@@ -3,30 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=101';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=101';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=101';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=101';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=101';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=101';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=101';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=101';
-import { elementMod } from '../domain/elements.js?v=101';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=101';
-import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=101';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=101';
-import { MONSTERS } from '../domain/bestiary.js?v=101';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=101';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=101';
-import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=101';
-import { emit, EVENTS } from '../shared/eventBus.js?v=101';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=101';
-import { trainSkill } from './skillUseCases.js?v=101';
-import { addItemToInventory } from './inventoryCore.js?v=101';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=101';
-import { getCombatBonuses } from './bonuses.js?v=101';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=101';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=101';
+import { G } from './gameStore.js?v=102';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=102';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=102';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=102';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=102';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=102';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=102';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=102';
+import { elementMod } from '../domain/elements.js?v=102';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=102';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=102';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=102';
+import { MONSTERS } from '../domain/bestiary.js?v=102';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=102';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=102';
+import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=102';
+import { emit, EVENTS } from '../shared/eventBus.js?v=102';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=102';
+import { trainSkill } from './skillUseCases.js?v=102';
+import { addItemToInventory } from './inventoryCore.js?v=102';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=102';
+import { getCombatBonuses } from './bonuses.js?v=102';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=102';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=102';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -194,9 +194,11 @@ export function doHuntTick() {
     // bossTierMultiplier) — vencer o tier atual sobe pro próximo, mais forte.
     const bossTier = bossOnly ? (G.bossTiers[G.activeZone] || 1) : 1;
     const bossMult = bossOnly ? bossTierMultiplier(bossTier) : 1;
-    // Grupo de 1..MAX_PACK_SIZE numa caçada comum; Boss Rush é sempre 1 boss.
-    const packSize = bossOnly ? 1 : 1 + Math.floor(Math.random() * MAX_PACK_SIZE);
-    currentPack = Array.from({ length: packSize }, () => { const m = spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult); m.uid = ++spawnSeq; return m; });
+    // Peso por monstro e faixa do grupo vêm do Painel Admin (por zona). No Boss
+    // Rush, ignora: é sempre 1 boss. Ver domain/adminConfig.js: resolveZoneSpawn.
+    const spawnCfg = bossOnly ? null : getZoneSpawn(G.activeZone, zone.monsters);
+    const packSize = bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
+    currentPack = Array.from({ length: packSize }, () => { const m = spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult, spawnCfg && spawnCfg.weights); m.uid = ++spawnSeq; return m; });
     currentMonster = currentPack[0];
     const extra = packSize > 1 ? ` <span class="log-info">(+${packSize - 1} na sala)</span>` : '';
     emit(EVENTS.LOG, bossOnly

@@ -1,12 +1,12 @@
 // Configuração do RTC (Rubinot Custom Client): ataque automático (spell OU
 // runa, mutuamente exclusivos) e cura automática (spell E poção, cada uma
 // com seu limiar de % de HP) — ver domain/rtcConfig.js e a UI em rtcPanel.js.
-import { G } from './gameStore.js?v=101';
-import { isSpellAvailable } from '../domain/spells.js?v=101';
-import { normalizeAttackSpells, canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=101';
-import { getMagic } from './stats.js?v=101';
-import { emit, EVENTS } from '../shared/eventBus.js?v=101';
-import { saveGame } from './saveGameUseCase.js?v=101';
+import { G } from './gameStore.js?v=102';
+import { isSpellAvailable } from '../domain/spells.js?v=102';
+import { normalizeAttackSpells, canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=102';
+import { getMagic } from './stats.js?v=102';
+import { emit, EVENTS } from '../shared/eventBus.js?v=102';
+import { saveGame } from './saveGameUseCase.js?v=102';
 
 function refresh(msg) {
   emit(EVENTS.RTC_PANEL);
