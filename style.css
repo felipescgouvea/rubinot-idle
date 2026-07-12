@@ -656,60 +656,31 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
 .player-sprite-wrap {
   position: absolute;
-  left: 30%; top: 50%; /* duelo estilo Tibia: personagem à esquerda */
-  margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no ponto */
+  left: 50%; top: 50%;
+  margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no palco */
   width: 54px; height: 54px; /* mesmo porte visual dos monstros (52px) */
   z-index: 2;
 }
-/* monstro-alvo à direita, de frente pro personagem */
-.battle-target-wrap {
+/* ícone da magia/runa saindo de dentro do boneco e subindo rápido (~50px) */
+.spell-cast-icon {
   position: absolute;
-  left: 72%; top: 50%;
-  margin: -27px 0 0 -27px;
-  width: 54px; height: 54px;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.15s ease;
+  width: 34px; height: 34px;
+  margin: -17px 0 0 -17px; /* ancora no centro do boneco (left/top) */
+  pointer-events: none;
+  z-index: 5;
+  font-size: 26px; line-height: 34px; text-align: center; /* fallback emoji */
+  animation: spell-cast-rise 0.7s ease-out forwards;
 }
-.battle-target-wrap.active { opacity: 1; }
-.battle-target-sprite {
+.spell-cast-icon img {
   width: 100%; height: 100%;
   object-fit: contain;
   image-rendering: pixelated;
-  filter: drop-shadow(0 5px 4px #00000088);
-  transform: scaleX(-1); /* encara o personagem (à esquerda) */
+  filter: drop-shadow(0 2px 3px #000000aa);
 }
-.battle-target-wrap.hit { animation: monster-hit 0.25s ease; }
-
-/* projétil (flecha/míssil) voando do personagem até o monstro */
-.combat-missile-sprite {
-  position: absolute;
-  width: 28px; height: 28px;
-  margin: -14px 0 0 -14px; /* ancora no centro do ponto (left/top) */
-  object-fit: contain;
-  image-rendering: pixelated;
-  pointer-events: none;
-  z-index: 4;
-  transform: rotate(var(--fx-angle, 0deg));
-  transition: left 0.26s linear, top 0.26s linear;
-}
-/* impacto real da magia/runa SOBRE o monstro */
-.combat-impact-sprite {
-  position: absolute;
-  width: 56px; height: 56px;
-  margin: -28px 0 0 -28px; /* centraliza no ponto do monstro (left/top) */
-  object-fit: contain;
-  image-rendering: pixelated;
-  pointer-events: none;
-  z-index: 5;
-  animation: combat-impact-pop 0.85s ease-out forwards;
-}
-.combat-impact-sprite.area { width: 84px; height: 84px; margin: -42px 0 0 -42px; }
-@keyframes combat-impact-pop {
-  0% { opacity: 0; transform: scale(0.7); }
-  15% { opacity: 1; transform: scale(1.05); }
-  75% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1); }
+@keyframes spell-cast-rise {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.5); }
+  22%  { opacity: 1; transform: translateY(-4px) scale(1.08); }
+  100% { opacity: 0; transform: translateY(-54px) scale(1); }
 }
 .player-sprite,
 .player-sprite-fallback,
