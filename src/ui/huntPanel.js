@@ -1,15 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=62';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=62';
-import { MONSTERS } from '../domain/bestiary.js?v=62';
-import { cityName } from '../domain/cities.js?v=62';
-import { ITEMS } from '../domain/items.js?v=62';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=62';
-import { on, EVENTS } from '../shared/eventBus.js?v=62';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=62';
-import { getCurrentMonster, getCurrentPack } from '../application/huntUseCases.js?v=62';
+import { G } from '../application/gameStore.js?v=63';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=63';
+import { MONSTERS } from '../domain/bestiary.js?v=63';
+import { cityName } from '../domain/cities.js?v=63';
+import { ITEMS } from '../domain/items.js?v=63';
+import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=63';
+import { on, EVENTS } from '../shared/eventBus.js?v=63';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=63';
+import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=63';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -186,24 +186,32 @@ function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes,
 
 // Battle List (como a do Tibia): lista todos os monstros da "sala" atual com a
 // vida de cada um, destacando o alvo da frente. Some quando não há ninguém.
+function battleListEntry({ defKey, name, pct, hp, maxHp, target, dead }) {
+  return `<div class="battle-list-entry ${target ? 'target' : ''} ${dead ? 'dead' : ''}">
+    <div class="battle-list-icon">${monsterSpriteImg(defKey, 'battle-list-sprite')}</div>
+    <div class="battle-list-info">
+      <div class="battle-list-name">${name}</div>
+      <div class="battle-list-hp-track">
+        <div class="battle-list-hp-fill" style="width:${pct}%"></div>
+        <div class="battle-list-hp-label">${hp}/${maxHp}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
 export function renderBattleList() {
   const el = document.getElementById('battle-list');
   if (!el) return;
   const pack = getCurrentPack() || [];
-  if (!pack.length) { el.innerHTML = '<div class="battle-list-empty">Sem criaturas.</div>'; return; }
-  el.innerHTML = pack.map((m, i) => {
-    const pct = Math.max(0, Math.round((m.hp / m.maxHp) * 100));
-    return `<div class="battle-list-entry ${i === 0 ? 'target' : ''}">
-      <div class="battle-list-icon">${monsterSpriteImg(m.defKey, 'battle-list-sprite')}</div>
-      <div class="battle-list-info">
-        <div class="battle-list-name">${i === 0 ? '⚔️ ' : ''}${m.name}</div>
-        <div class="battle-list-hp-track">
-          <div class="battle-list-hp-fill" style="width:${pct}%"></div>
-          <div class="battle-list-hp-label">${Math.max(0, m.hp)}/${m.maxHp}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+  const dead = getRecentDead() || [];
+  if (!pack.length && !dead.length) { el.innerHTML = '<div class="battle-list-empty">Sem criaturas.</div>'; return; }
+  const rows = pack.map((m, i) => battleListEntry({
+    defKey: m.defKey, name: `${i === 0 ? '⚔️ ' : ''}${m.name}`,
+    pct: Math.max(0, Math.round((m.hp / m.maxHp) * 100)), hp: Math.max(0, m.hp), maxHp: m.maxHp, target: i === 0,
+  }));
+  // Mortos recentes (vida zerada) ficam ao fim da lista por 1s antes de sumir.
+  dead.forEach(d => rows.push(battleListEntry({ defKey: d.defKey, name: `☠️ ${d.name}`, pct: 0, hp: 0, maxHp: d.maxHp, dead: true })));
+  el.innerHTML = rows.join('');
 }
 
 // Alterna o modo da cena: "searching" (boneco andando pra baixo procurando)

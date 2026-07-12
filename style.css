@@ -1348,10 +1348,13 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   border: 2px solid var(--gold);
   border-radius: 8px;
   padding: 0;
-  max-width: 940px;
-  width: 96%;
-  max-height: 92vh;
-  overflow-y: auto;
+  /* TAMANHO FIXO: não cresce/encolhe com a quantidade de monstros ou o log —
+     as seções internas rolam sozinhas. */
+  width: min(940px, 96vw);
+  height: min(600px, 92vh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   box-shadow: 0 10px 40px #00000088;
 }
 .battle-modal-header {
@@ -1387,22 +1390,32 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* Corpo do modal de batalha em 2 colunas (telas largas): esquerda = cena +
    botão; direita = Battle List + Log. Reduz muito a altura pra caber sem rolar. */
 #battle-modal-body {
+  flex: 1;               /* ocupa a altura fixa do modal */
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
   gap: 14px;
   padding: 14px;
-  align-items: start;
+  align-items: stretch;  /* colunas preenchem a altura */
+  overflow: hidden;
 }
-.battle-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-#battle-modal-box #battle-scene { margin: 0 !important; }
-#battle-modal-box #battle-list-card { margin: 0 !important; }
-#battle-modal-box #combat-log-card { margin: 0 !important; }
-#battle-modal-box #hunt-toggle { margin: 0 !important; }
-#battle-modal-box #combat-log { margin: 10px 12px !important; height: 200px; }
-#battle-modal-box #battle-list { max-height: 140px; overflow-y: auto; }
-/* telas estreitas: volta pra 1 coluna (empilha tudo) */
+.battle-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; }
+#battle-modal-box #battle-scene { margin: 0 !important; flex: none; }
+#battle-modal-box #hunt-toggle { margin: 0 !important; flex: none; }
+/* coluna direita: Battle List (altura fixa, ~metade) em cima; Log preenche o
+   resto e rola por dentro — assim o modal nunca muda de tamanho. */
+#battle-modal-box #battle-list-card { margin: 0 !important; flex: none; }
+#battle-modal-box #battle-list { height: 110px; max-height: 110px; overflow-y: auto; }
+#battle-modal-box #combat-log-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+#battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
+/* entrada de monstro MORTO na Battle List: acinzentada, some após 1s */
+.battle-list-entry.dead { opacity: 0.5; filter: grayscale(0.7); }
+.battle-list-entry.dead .battle-list-hp-fill { background: #8a8a8a; }
+/* telas estreitas: volta pra 1 coluna (empilha tudo), altura livre */
 @media (max-width: 780px) {
-  #battle-modal-body { grid-template-columns: 1fr; }
+  #battle-modal-box { height: auto; max-height: 92vh; overflow-y: auto; }
+  #battle-modal-body { grid-template-columns: 1fr; overflow: visible; }
+  #battle-modal-box #combat-log { height: 200px; flex: none; }
 }
 
 /* ============ SELETOR DE OUTFIT — duas colunas lado a lado (customizar à

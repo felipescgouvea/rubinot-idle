@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=62';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=62';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=62';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=62';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=62';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=62';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=62';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=62';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=62';
-import { MONSTERS } from '../domain/bestiary.js?v=62';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=62';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=62';
-import { emit, EVENTS } from '../shared/eventBus.js?v=62';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=62';
-import { trainSkill } from './skillUseCases.js?v=62';
-import { addItemToInventory } from './inventoryCore.js?v=62';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=62';
-import { getCombatBonuses } from './bonuses.js?v=62';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=62';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=62';
+import { G } from './gameStore.js?v=63';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=63';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=63';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=63';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=63';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=63';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=63';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=63';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=63';
+import { MONSTERS } from '../domain/bestiary.js?v=63';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=63';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=63';
+import { emit, EVENTS } from '../shared/eventBus.js?v=63';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=63';
+import { trainSkill } from './skillUseCases.js?v=63';
+import { addItemToInventory } from './inventoryCore.js?v=63';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=63';
+import { getCombatBonuses } from './bonuses.js?v=63';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=63';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=63';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -48,6 +48,12 @@ let regenInterval = null;
 // próximo assume; quando a sala esvazia, o próximo tick gera um novo grupo.
 let currentMonster = null;
 let currentPack = [];
+// Monstros mortos há menos de 1s: continuam aparecendo na Battle List com a
+// vida ZERADA (indicando a morte) por 1 segundo antes de sumir (ver
+// resolveMonsterKill + ui/huntPanel.js: renderBattleList).
+let recentDead = [];
+let deadSeq = 0;
+export function getRecentDead() { return recentDead; }
 // Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1). Grupos
 // maiores fazem os ataques de ÁREA valerem a pena (limpam a sala num golpe),
 // enquanto o alvo único precisa abater um por um. Só o bicho da frente revida,
@@ -123,6 +129,7 @@ export function stopHunt() {
   if (huntInterval) { clearInterval(huntInterval); huntInterval = null; }
   currentMonster = null;
   currentPack = [];
+  recentDead = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
   emit(EVENTS.BATTLE_LIST);
   emit(EVENTS.LOG, '<span class="log-info">⏸ Caçada pausada.</span>');
@@ -434,6 +441,10 @@ export function resolveMonsterKill(zone, victim) {
   const idx = currentPack.indexOf(mon);
   if (idx >= 0) currentPack.splice(idx, 1);
   currentMonster = currentPack[0] || null;
+  // Deixa o morto 1s na Battle List com a vida zerada (indica que morreu), depois some.
+  const deadEntry = { defKey: mon.defKey, name: mon.name, maxHp: mon.maxHp, uid: ++deadSeq };
+  recentDead.push(deadEntry);
+  setTimeout(() => { recentDead = recentDead.filter(d => d.uid !== deadEntry.uid); emit(EVENTS.BATTLE_LIST); }, 1000);
   // sala limpa: volta a "procurar" (boneco anda de novo por um tempinho)
   if (!currentMonster) nextSpawnAt = Date.now() + searchDelay();
   emit(EVENTS.MONSTER_DISPLAY, { killed: killedId });

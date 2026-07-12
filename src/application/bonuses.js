@@ -2,9 +2,9 @@
 // único que a caçada consulta pra saber "quanto a mais" de dano/XP/gold/loot
 // aplicar num kill — assim huntUseCases não precisa conhecer as regras de prey
 // nem de charm, só pedir os multiplicadores prontos.
-import { G } from './gameStore.js?v=62';
-import { isPreyActive, PREY_BONUS_TYPES } from '../domain/prey.js?v=62';
-import { CHARMS } from '../domain/charms.js?v=62';
+import { G } from './gameStore.js?v=63';
+import { isPreyActive, PREY_BONUS_TYPES } from '../domain/prey.js?v=63';
+import { CHARMS } from '../domain/charms.js?v=63';
 
 // Soma o valor de todos os charms equipados que tenham um dado efeito.
 function charmSum(effect) {
