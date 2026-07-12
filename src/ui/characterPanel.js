@@ -1,15 +1,15 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=65';
-import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=65';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=65';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=65';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=65';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=65';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=65';
-import { on, EVENTS } from '../shared/eventBus.js?v=65';
-import { formatNum } from './shared.js?v=65';
-import { renderZonePicker } from './huntPanel.js?v=65';
+import { G } from '../application/gameStore.js?v=66';
+import { VOCATIONS, XP_TABLE } from '../domain/character.js?v=66';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=66';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=66';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=66';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=66';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=66';
+import { on, EVENTS } from '../shared/eventBus.js?v=66';
+import { formatNum } from './shared.js?v=66';
+import { renderZonePicker } from './huntPanel.js?v=66';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).

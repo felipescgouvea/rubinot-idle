@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=65';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=65';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=65';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=65';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=65';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=65';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=65';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=65';
-import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=65';
-import { MONSTERS } from '../domain/bestiary.js?v=65';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=65';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=65';
-import { emit, EVENTS } from '../shared/eventBus.js?v=65';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=65';
-import { trainSkill } from './skillUseCases.js?v=65';
-import { addItemToInventory } from './inventoryCore.js?v=65';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=65';
-import { getCombatBonuses } from './bonuses.js?v=65';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=65';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=65';
+import { G } from './gameStore.js?v=66';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=66';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=66';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=66';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=66';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=66';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=66';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=66';
+import { ITEMS, EQUIPPABLE_TYPES } from '../domain/items.js?v=66';
+import { MONSTERS } from '../domain/bestiary.js?v=66';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=66';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=66';
+import { emit, EVENTS } from '../shared/eventBus.js?v=66';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=66';
+import { trainSkill } from './skillUseCases.js?v=66';
+import { addItemToInventory } from './inventoryCore.js?v=66';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=66';
+import { getCombatBonuses } from './bonuses.js?v=66';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=66';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=66';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -54,6 +54,14 @@ let currentPack = [];
 let recentDead = [];
 let deadSeq = 0;
 export function getRecentDead() { return recentDead; }
+// Cooldown de magias (fiel ao Tibia — ver domain/spells.js: cd em segundos).
+// Guarda o instante (epoch ms) em que cada magia volta a ficar pronta. Enquanto
+// está em cooldown, o RTC não recasta — o personagem faz o golpe básico. É
+// estado efêmero de sessão (baseado em tempo real), fora do save.
+const spellCdUntil = {};
+function isSpellReady(id) { return (spellCdUntil[id] || 0) <= Date.now(); }
+function startSpellCd(id, seconds) { if (seconds > 0) spellCdUntil[id] = Date.now() + seconds * 1000; }
+export function getSpellCooldownRemaining(id) { return Math.max(0, (spellCdUntil[id] || 0) - Date.now()); }
 // Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1). Grupos
 // maiores fazem os ataques de ÁREA valerem a pena (limpam a sala num golpe),
 // enquanto o alvo único precisa abater um por um. Só o bicho da frente revida,
@@ -195,11 +203,15 @@ export function doHuntTick() {
     emit(EVENTS.INVENTORY);
   } else {
     const atkSpell = G.rtc.attackType === 'spell' && G.rtc.attackSpell && isSpellAvailable(G.rtc.attackSpell, G.vocation, G.level) ? SPELLS[G.rtc.attackSpell] : null;
-    if (atkSpell && G.mana >= atkSpell.mana) {
+    // Só casta se tiver mana E a magia estiver FORA de cooldown (fiel ao Tibia).
+    // Em cooldown, o golpe deste tick é o básico (a magia recasta ao ficar pronta).
+    const spellReady = !!atkSpell && G.mana >= atkSpell.mana && isSpellReady(G.rtc.attackSpell);
+    if (spellReady) {
       playerDmg = Math.floor(playerDmg * atkSpell.power);
       spellPower = atkSpell.power;
       areaId = atkSpell.area || 'single';
       G.mana -= atkSpell.mana;
+      startSpellCd(G.rtc.attackSpell, atkSpell.cd);
       trainSkill('magic', atkSpell.mana * voc.magicMult);
       emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
       spellElement = atkSpell.element;
@@ -208,8 +220,9 @@ export function doHuntTick() {
       // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
       // sobe (sword só treina com espada equipada, axe só com machado, etc.)
       trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
-    } else if (!atkSpell && G.mana >= 8) {
-      // mage sem spell selecionada: golpe arcano básico (alvo único)
+    } else if (!spellReady && G.mana >= 8) {
+      // mage sem magia disponível (nenhuma selecionada OU em cooldown/sem mana):
+      // golpe arcano básico (alvo único).
       playerDmg = Math.floor(playerDmg * 1.3);
       G.mana -= 8;
       trainSkill('magic', 8 * voc.magicMult);
@@ -280,10 +293,11 @@ export function doHuntTick() {
   const hpPct = (G.hp / getMaxHp()) * 100;
   const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation);
   const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
-  if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana) {
+  if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana && isSpellReady(healSpellId)) {
     const heal = Math.floor(getMaxHp() * healSpell.power);
     G.hp = Math.min(getMaxHp(), G.hp + heal);
     G.mana -= healSpell.mana;
+    startSpellCd(healSpellId, healSpell.cd);
     trainSkill('magic', healSpell.mana * voc.magicMult);
     emit(EVENTS.LOG, { html: `💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`, cat: 'magia' });
     emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });

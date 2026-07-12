@@ -28,6 +28,8 @@ Jogador, na aba RTC — a segunda aba do jogo, logo depois da Caçada, porque é
 - **Cura por magia e cura por poção são independentes e podem disparar na mesma sequência de combate** — a poção existe justamente como rede de segurança para quando a magia não dá conta (sem mana, ou HP caindo rápido demais). Poções nunca são restritas por vocação — qualquer personagem bebe qualquer poção, como no Tibia real.
 - **Sem uma magia de cura selecionada, a cura automática usa a cura básica da própria vocação como padrão** ("exura" pra paladin/sorcerer/druid, "exura ico" pra knight).
 - **Sem uma poção de cura selecionada, não há cura automática por poção** — só a de magia.
+- **Toda magia tem um tempo de recarga (cooldown) fiel ao Tibia atual.** Depois de lançada, a magia não pode ser lançada de novo até o cooldown passar (ex.: Berserk 4s, Fierce Berserk 6s, Groundshaker 8s, os Strikes 2s, Strong Strikes 8s, as Waves 4–8s, Divine Caldera 4s, Hell's Core / Eternal Winter 40s, curas 1s). Enquanto a magia de ataque está em recarga, o personagem faz o **golpe básico** (arma equipada, ou golpe arcano no caso do mago) e volta a lançar a magia assim que ela fica pronta.
+  *Por quê:* é o mecanismo central do Tibia — o cooldown limita o dano por segundo das magias e faz o golpe básico importar entre um cast e outro.
 
 ## Comportamento esperado
 
@@ -41,3 +43,4 @@ Jogador, na aba RTC — a segunda aba do jogo, logo depois da Caçada, porque é
 - [ ] A cura por magia e a cura por poção respeitam, cada uma, seu próprio limiar de % de HP configurado pelo jogador.
 - [ ] Ficar sem a runa/poção configurada no inventário não trava o combate — a caçada continua com o comportamento padrão até haver estoque de novo.
 - [ ] Knight nunca vê nem consegue selecionar "Light Healing" (exura) ou runas de ataque no RTC.
+- [ ] Cada magia respeita seu cooldown fiel ao Tibia: não é lançada de novo antes do tempo de recarga, e nesse meio-tempo o personagem faz o golpe básico.

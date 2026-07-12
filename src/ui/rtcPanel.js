@@ -4,16 +4,16 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=65';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=65';
-import { ITEMS } from '../domain/items.js?v=65';
-import { VOCATIONS } from '../domain/character.js?v=65';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=65';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=65';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=65';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=65';
-import { on, EVENTS } from '../shared/eventBus.js?v=65';
-import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=65';
+import { G } from '../application/gameStore.js?v=66';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=66';
+import { ITEMS } from '../domain/items.js?v=66';
+import { VOCATIONS } from '../domain/character.js?v=66';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=66';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=66';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=66';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=66';
+import { on, EVENTS } from '../shared/eventBus.js?v=66';
+import { itemIconImg, spellIconImg, vitalIconImg } from './shared.js?v=66';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -36,7 +36,7 @@ function spellRow(id, s, selected, onclick) {
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
       <div class="rtc-row-desc">
-        ${s.type === 'attack' ? `⚔️ Dano ×${s.power} · ${areaBadge(s.area)}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · Nível ${s.level}+
+        ${s.type === 'attack' ? `⚔️ Dano ×${s.power} · ${areaBadge(s.area)}` : `💚 Cura ${Math.round(s.power * 100)}% do HP`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · ⏱ CD ${s.cd}s · Nível ${s.level}+
       </div>
     </div>
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
