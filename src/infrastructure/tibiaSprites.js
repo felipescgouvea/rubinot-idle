@@ -90,6 +90,15 @@ export const VITAL_ICON_FILES = {
   xp: 'vitals/Experience_Icon.webp',
 };
 
+// Sprite REAL de efeito de combate (assets/sprites/effects/<nome>.gif),
+// mantido ANIMADO. A UI espalha esse sprite nos tiles ao redor do personagem
+// conforme a forma da área da magia (ver ui/huntPanel.js: playAreaEffect e
+// domain/combatFx.js pro nome por magia/runa).
+const EFFECT_NAMES = new Set(['fire','energy','ice','holy','physical','death','earth','groundshaker','blood']);
+export function effectSpriteFile(name) {
+  return name && EFFECT_NAMES.has(name) ? 'effects/' + name + '.gif' : null;
+}
+
 // Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin
 // é moeda premium exclusiva deste jogo idle — não existe em Tibia/RubinOT,
 // então usa a sprite real mais próxima em conceito (Tibia Coin, a moeda

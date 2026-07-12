@@ -1,15 +1,15 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=73';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=73';
-import { MONSTERS } from '../domain/bestiary.js?v=73';
-import { cityName } from '../domain/cities.js?v=73';
-import { ITEMS } from '../domain/items.js?v=73';
-import { monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=73';
-import { on, EVENTS } from '../shared/eventBus.js?v=73';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=73';
-import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=73';
+import { G } from '../application/gameStore.js?v=74';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=74';
+import { MONSTERS } from '../domain/bestiary.js?v=74';
+import { cityName } from '../domain/cities.js?v=74';
+import { ITEMS } from '../domain/items.js?v=74';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=74';
+import { on, EVENTS } from '../shared/eventBus.js?v=74';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg } from './shared.js?v=74';
+import { getCurrentMonster, getCurrentPack, getRecentDead } from '../application/huntUseCases.js?v=74';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -33,27 +33,51 @@ function flashSpellEffect(wrap, spellElement) {
   wrap.classList.add(`spell-${spellElement}`);
 }
 
-// Ao usar uma magia/runa, o ÍCONE dela sai de dentro do boneco e sobe rápido
-// (aparece dentro do personagem, sobe ~50px e some). Não há monstro na cena —
-// o efeito é ancorado no #dungeon-stage, na posição do boneco. `castIcon` traz
-// a sprite real do ícone e o emoji de fallback (montado em application, ver
-// huntUseCases.js). Golpe básico não manda castIcon (nada sobe).
-export function playSpellCastIcon(castIcon) {
-  if (!castIcon || !castIcon.url) return;
+// Tiles cobertos pela forma da área da magia, em offsets (dx, dy) relativos ao
+// tile do personagem — replica o padrão real do Tibia:
+//  - ball: losango preenchido ao redor do caster (Groundshaker, Berserk, waves
+//    de área ampla, Hell's Core, Eternal Winter, Avalanche/GFB)
+//  - explosion: 3x3 ao redor
+//  - wave: cone que abre à frente (pra cima)
+//  - single: um tile à frente
+const TILE_PX = 28;
+function areaOffsets(shape) {
+  const out = [];
+  if (shape === 'ball') {
+    for (let dx = -3; dx <= 3; dx++) for (let dy = -3; dy <= 3; dy++) if (Math.abs(dx) + Math.abs(dy) <= 3) out.push([dx, dy]);
+  } else if (shape === 'explosion') {
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) out.push([dx, dy]);
+  } else if (shape === 'wave' || shape === 'beam') {
+    for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, -r]); }
+  } else {
+    out.push([0, -1]); // single: um tile à frente
+  }
+  return out;
+}
+
+// Toca o efeito REAL da magia/runa: espalha o sprite de efeito (fogo/gelo/
+// groundshaker/…) nos tiles ao redor do boneco conforme a forma da área — igual
+// ao Tibia, onde a animação cobre cada tile atingido. Não há monstro na cena.
+export function playAreaEffect({ effect, shape } = {}) {
+  const file = effect ? effectSpriteFile(effect) : null;
   const stage = document.getElementById('dungeon-stage');
   const playerWrap = document.getElementById('player-sprite-wrap');
-  if (!stage || !playerWrap) return;
+  if (!file || !stage || !playerWrap) return;
   const sr = stage.getBoundingClientRect();
   const pr = playerWrap.getBoundingClientRect();
   const cx = pr.left - sr.left + pr.width / 2;
   const cy = pr.top - sr.top + pr.height / 2;
-  const el = document.createElement('span');
-  el.className = 'spell-cast-icon';
-  el.style.left = cx + 'px';
-  el.style.top = cy + 'px';
-  el.innerHTML = `<img src="${castIcon.url}" alt="" onerror="this.outerHTML='${castIcon.emoji || '✨'}'" />`;
-  stage.appendChild(el);
-  setTimeout(() => el.remove(), 700);
+  const url = spriteUrl(file);
+  areaOffsets(shape).forEach(([dx, dy]) => {
+    const img = document.createElement('img');
+    img.className = 'combat-area-tile';
+    img.src = url;
+    img.alt = '';
+    img.style.left = (cx + dx * TILE_PX) + 'px';
+    img.style.top = (cy + dy * TILE_PX) + 'px';
+    stage.appendChild(img);
+    setTimeout(() => img.remove(), 720);
+  });
 }
 
 export function renderMonsterDisplay(hit = false, killed = null, spellElement = null, bossAura = null) {
@@ -250,7 +274,7 @@ export function updateSceneMode() {
 
 export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
-  on(EVENTS.COMBAT_FX, ({ castIcon } = {}) => playSpellCastIcon(castIcon));
+  on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
   on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.KILL_COUNTERS, renderKillCounters);

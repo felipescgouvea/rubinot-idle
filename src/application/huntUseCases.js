@@ -3,26 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=73';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=73';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=73';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=73';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=73';
-import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=73';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=73';
-import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=73';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=73';
-import { MONSTERS } from '../domain/bestiary.js?v=73';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=73';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=73';
-import { emit, EVENTS } from '../shared/eventBus.js?v=73';
-import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=73';
-import { trainSkill } from './skillUseCases.js?v=73';
-import { addItemToInventory } from './inventoryCore.js?v=73';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=73';
-import { getCombatBonuses } from './bonuses.js?v=73';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=73';
-import { itemSpriteFile, monsterSpriteFile, spellIconFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=73';
+import { G } from './gameStore.js?v=74';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=74';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=74';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=74';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=74';
+import { isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=74';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=74';
+import { calcDamage, spawnMonsterInstance } from '../domain/combatFormulas.js?v=74';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=74';
+import { MONSTERS } from '../domain/bestiary.js?v=74';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=74';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=74';
+import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=74';
+import { emit, EVENTS } from '../shared/eventBus.js?v=74';
+import { getAtk, getDef, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=74';
+import { trainSkill } from './skillUseCases.js?v=74';
+import { addItemToInventory } from './inventoryCore.js?v=74';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=74';
+import { getCombatBonuses } from './bonuses.js?v=74';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier } from './adminUseCases.js?v=74';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=74';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -186,10 +187,11 @@ export function doHuntTick() {
   // `spellPower`/`runeDmg` guardam COMO recalcular o dano em cada alvo do
   // respingo — cada criatura leva seu próprio dano (rola contra a def dela).
   let playerDmg = calcDamage(getAtk(), primary.def);
-  // castIcon = ícone da magia/runa usada neste golpe, pra subir de dentro do
-  // boneco na cena (ver ui/huntPanel.js: playSpellCastIcon). Golpe básico não
-  // tem ícone (fica null → nada sobe). Traz a sprite real + emoji de fallback.
-  let castIcon = null;
+  // combatFx = efeito visual REAL deste golpe: { effect, shape } — o sprite de
+  // efeito (fogo/gelo/groundshaker/…) espalhado nos tiles ao redor do boneco
+  // conforme a forma da área da magia (ver ui/huntPanel.js: playAreaEffect).
+  // Golpe básico não tem efeito de magia (fica null).
+  let combatFx = null;
   let areaId = 'single';
   let spellPower = null;
   let runeDmg = null;
@@ -200,7 +202,7 @@ export function doHuntTick() {
     playerDmg = rune.dmg;
     runeDmg = rune.dmg;
     areaId = rune.area || 'single';
-    castIcon = { url: spriteUrl(itemSpriteFile(G.rtc.attackRune)), emoji: rune.icon };
+    combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
     G.inventory[G.rtc.attackRune]--;
     if (G.inventory[G.rtc.attackRune] <= 0) delete G.inventory[G.rtc.attackRune];
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
@@ -218,7 +220,7 @@ export function doHuntTick() {
       startSpellCd(G.rtc.attackSpell, atkSpell.cd);
       trainSkill('magic', atkSpell.mana * voc.magicMult);
       emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
-      castIcon = { url: spriteUrl(spellIconFile(atkSpell.name)), emoji: atkSpell.icon };
+      combatFx = { effect: spellEffectName(G.rtc.attackSpell, atkSpell.element), shape: areaId };
     }
     if (voc.attackSkill !== 'magic') {
       // treino da skill de arma por golpe — a arma REALMENTE equipada decide qual skill
@@ -268,8 +270,9 @@ export function doHuntTick() {
 
   emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
   emit(EVENTS.MONSTER_DISPLAY, { hit: true });
-  // Ícone da magia/runa subindo de dentro do boneco (null no golpe básico).
-  if (castIcon) emit(EVENTS.COMBAT_FX, { castIcon });
+  // Efeito real da magia/runa espalhado nos tiles ao redor do boneco (null no
+  // golpe básico → nada é desenhado).
+  if (combatFx) emit(EVENTS.COMBAT_FX, combatFx);
 
   // Resolve TODAS as criaturas que morreram neste golpe (o da frente e/ou as
   // atingidas pela área). Snapshot antes, porque resolveMonsterKill remove da

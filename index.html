@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=73" />
-  <link rel="stylesheet" href="style.css?v=73" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=74" />
+  <link rel="stylesheet" href="style.css?v=74" />
 </head>
 <body>
   <div id="app">
@@ -317,10 +317,10 @@
                  aparece à frente, para e luta até limpar a sala. -->
             <div id="battle-scene">
               <div id="dungeon-stage">
-                <!-- Só o boneco no palco. Ao usar uma magia/runa, o ÍCONE dela
-                     sai de dentro do boneco e sobe rápido (ver ui/huntPanel.js:
-                     playSpellCastIcon). A vida de cada criatura fica na Battle
-                     List ao lado — o monstro não aparece no palco. -->
+                <!-- Só o boneco no palco. Ao usar uma magia/runa, o sprite real
+                     do efeito se espalha nos tiles ao redor do boneco conforme
+                     a forma da área (ver ui/huntPanel.js: playAreaEffect). A
+                     vida de cada criatura fica na Battle List ao lado. -->
                 <div class="player-sprite-wrap" id="player-sprite-wrap"><span class="player-sprite-fallback">🧑</span></div>
               </div>
               <div class="player-battle-name" id="player-battle-name">—</div>
@@ -370,6 +370,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=73"></script>
+  <script type="module" src="src/main.js?v=74"></script>
 </body>
 </html>
