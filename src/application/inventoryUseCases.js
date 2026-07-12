@@ -1,13 +1,14 @@
-import { G } from './gameStore.js?v=85';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=85';
-import { ZONES } from '../domain/bestiary.js?v=85';
-import { RARITY_TIERS } from '../domain/rarity.js?v=85';
-import { emit, EVENTS } from '../shared/eventBus.js?v=85';
-import { getMaxHp, getMaxMana } from './stats.js?v=85';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=85';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=85';
-import { saveGame } from './saveGameUseCase.js?v=85';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=85';
+import { G } from './gameStore.js?v=86';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=86';
+import { ZONES } from '../domain/bestiary.js?v=86';
+import { RARITY_TIERS } from '../domain/rarity.js?v=86';
+import { emit, EVENTS } from '../shared/eventBus.js?v=86';
+import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=86';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=86';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=86';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=86';
+import { saveGame } from './saveGameUseCase.js?v=86';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=86';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -15,7 +16,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=85';
+export { addItemToInventory } from './inventoryCore.js?v=86';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -148,6 +149,12 @@ export function useItem(itemId) {
   const currentMonster = getCurrentMonster();
   let runeDeaths = null;
   if (item.dmg) {
+    // Runa de ataque exige a vocação certa E o Magic Level mínimo (fiel ao Tibia
+    // — o mesmo gate do RTC; ver domain/rtcConfig.js: canUseAttackRune).
+    if (item.type === 'rune' && !canUseAttackRune(itemId, G.vocation, getMagic())) {
+      emit(EVENTS.NOTIFY, { msg: `${item.name}: sua vocação/Magic Level não permite usar essa runa (precisa ML ${runeMinMl(itemId)}).`, type: 'error' });
+      return;
+    }
     if (!currentMonster) { emit(EVENTS.NOTIFY, { msg: 'Sem criatura em combate para mirar a runa.', type: 'error' }); return; }
     // Runa mirada manualmente respeita a mesma FORMA de área da runa (ver
     // domain/attackAreas.js): SD acerta só o alvo; Avalanche/GFB pegam a sala.

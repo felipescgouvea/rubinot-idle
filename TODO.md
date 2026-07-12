@@ -102,33 +102,34 @@ própria profissão; (d) só usa **runas** que o **Magic Level** da profissão p
       `domain/items.js: canVocationEquip`). Armadura/elmo/anel/etc. seguem livres.
 - [x] **Runas por Magic Level** — cada runa tem `reqMl`; a seleção e o combate exigem o ML
       mínimo (ver `domain/rtcConfig.js: canUseAttackRune`). A UI mostra 🔮 ML e 🔒 se faltar.
-- [ ] 🟡 **Magias só da própria vocação** — o RTC já filtra por `spell.voc`; confirmar que
-      NÃO há caminho (save antigo, item, atalho) pra castar magia de outra vocação.
-- [ ] 🟡 **Documentar as fórmulas-alvo** do Tibia numa nota (fonte TibiaWiki) pra comparar 1:1.
+- [x] **Magias só da própria vocação** — confirmado: todas as spells têm `voc` correto;
+      o RTC (add/heal) e o combate filtram por `isSpellAvailable`, e a persistência limpa
+      no load qualquer magia fora da vocação. Uso manual de runa também passou a exigir vocação+ML.
+- [x] **Fórmulas-alvo documentadas** — ver [docs/formulas.md](docs/formulas.md).
 
 **Knight** (`voc.attackSkill: 'sword'`, `magicMult 0.1`)
-- [ ] Fórmula melee bate com Tibia (`0.09 * atkArma * (skill+5) + lvl/4`?) — validar coeficientes.
-- [ ] Só equipa arma melee (sword/axe/club) + escudo; sem wand/bow.
-- [ ] Só magias de knight (exori / exori mas / exori gran / exura ico); sem magia elemental de mage.
-- [ ] **Sem runa de ataque** (ML baixo não rende dano) — confirmar bloqueio.
+- [x] Fórmula melee = `0.09·atkArma·(skill+5) + nível/4` (aproximação Tibia — ver docs/formulas.md).
+- [x] Só equipa sword/axe/club (bloqueado no equip); sem wand/bow.
+- [x] Só magias de knight (exori / exori mas / exori gran / exura ico).
+- [x] **Sem runa de ataque** — knight fora de `ATTACK_RUNE_VOCATIONS` (confirmado).
 
 **Paladin** (`voc.attackSkill: 'distance'`, `magicMult 0.35`)
-- [ ] Fórmula distance bate com Tibia (`0.09 * atkMunição * (dist+5) + lvl/4`?) — validar.
-- [ ] Só equipa arco/besta + munição; sem melee/wand contando ataque.
-- [ ] Só magias de paladin (Ethereal Spear, Divine Missile, Divine Caldera, Divine Healing).
-- [ ] Runas só até o ML de paladin permitir (poucas, dano baixo) — validar limites.
+- [x] Fórmula distance = `0.09·atkMunição·(dist+5) + nível/4`.
+- [x] Só equipa distance + munição; melee/wand não contam ataque nem podem ser equipados.
+- [x] Só magias de paladin (Ethereal Spear, Divine Missile, Divine Caldera, Divine Healing, exura).
+- [x] Runas limitadas pelo ML (magicMult baixo → poucas liberadas).
 
 **Sorcerer** (`voc.attackSkill: 'magic'`, `magicMult 1.0`)
-- [ ] Fórmula mágica bate com Tibia (dano por nível+ML por magia) — validar `spellAttackDamage`.
-- [ ] Só equipa wand/rod (arma mágica); melee/bow não somam ataque.
-- [ ] Só magias de sorcerer (fogo/energia/morte: Flame/Energy strikes+waves, Hell's Core, etc.).
-- [ ] Runas de sorcerer liberadas pelo ML (SD, GFB, Explosion…) — validar por ML.
+- [x] Fórmula mágica = `(nível·0.4 + ML·2.0)·power`; wand básico ×0.5 (calibração).
+- [x] Só equipa wand/rod.
+- [x] Só magias de sorcerer (Flame/Energy strikes+waves, Strong Energy, Hell's Core, curas).
+- [x] Runas de sorcerer liberadas pelo ML (SD 15, GFB 7, Explosion 6, Fireball 4).
 
 **Druid** (`voc.attackSkill: 'magic'`, `magicMult 1.0`)
-- [ ] Fórmula mágica bate com Tibia (nível+ML) — validar.
-- [ ] Só equipa wand/rod; melee/bow não somam ataque.
-- [ ] Só magias de druid (gelo/terra: Ice/Terra strikes+waves, Eternal Winter, curas).
-- [ ] Runas de druid liberadas pelo ML (Avalanche, Icicle…) — validar por ML.
+- [x] Fórmula mágica idêntica ao sorcerer (nível+ML); wand básico ×0.5.
+- [x] Só equipa wand/rod.
+- [x] Só magias de druid (Ice/Terra strikes+waves, Eternal Winter, Flame Strike, curas).
+- [x] Runas de druid liberadas pelo ML (Avalanche 9, etc.).
 
 ## 3. HEADER
 
