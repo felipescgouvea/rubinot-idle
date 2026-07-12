@@ -1,17 +1,17 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=81';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=81';
-import { MONSTERS } from '../domain/bestiary.js?v=81';
-import { cityName } from '../domain/cities.js?v=81';
-import { ITEMS } from '../domain/items.js?v=81';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=81';
-import { on, EVENTS } from '../shared/eventBus.js?v=81';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=81';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats } from '../application/huntUseCases.js?v=81';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=81';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=81';
+import { G } from '../application/gameStore.js?v=82';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=82';
+import { MONSTERS } from '../domain/bestiary.js?v=82';
+import { cityName } from '../domain/cities.js?v=82';
+import { ITEMS } from '../domain/items.js?v=82';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=82';
+import { on, EVENTS } from '../shared/eventBus.js?v=82';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=82';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=82';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=82';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=82';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -248,7 +248,14 @@ export function renderHuntAnalyzer() {
 function renderHuntButton({ hunting }) {
   const btn = document.getElementById('hunt-toggle');
   if (!btn) return;
-  btn.textContent = hunting ? '⏹ Parar Caçada' : '▶ Iniciar Caçada';
+  // No Boss Rush, cada tier vencido pausa: o botão vira "💀 Batalhar Tier X" pra
+  // o jogador desafiar o próximo tier explicitamente (não sobe automático).
+  if (isBossOnlyHunt()) {
+    const tier = (G.bossTiers && G.bossTiers[G.activeZone]) || 1;
+    btn.textContent = hunting ? `⏹ Parar (Tier ${tier})` : `💀 Batalhar Tier ${tier}`;
+  } else {
+    btn.textContent = hunting ? '⏹ Parar Caçada' : '▶ Iniciar Caçada';
+  }
   btn.classList.toggle('stop', hunting);
 }
 
