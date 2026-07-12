@@ -161,19 +161,41 @@ export async function ensureValidToken() {
 }
 
 // ---- save na nuvem (public.saves, uma linha por usuário) ----
+// BLINDAGEM contra perda de progresso: se a LEITURA da nuvem falhar nesta sessão
+// (erro de rede/servidor/token — NÃO "conta nova sem linha"), a gravação na
+// nuvem fica BLOQUEADA até uma leitura bem-sucedida. Isso impede que um estado
+// local vazio (jogo iniciado sem conseguir puxar a nuvem) sobrescreva um save
+// bom já existente na nuvem. Uma leitura OK — com dados OU sem linha (conta
+// nova) — libera a gravação normalmente.
+let cloudReadFailed = false;
+export function isCloudSaveBlocked() { return cloudReadFailed; }
+
+// Retorna { ok, data }: ok=false => a leitura FALHOU (não sobrescreva nada);
+// ok=true, data=null => conta nova sem save (pode gravar); ok=true, data=obj =>
+// save carregado.
 export async function loadCloudSave() {
   const token = await ensureValidToken();
   const user = currentUser();
-  if (!token || !user) return null;
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/saves?user_id=eq.${user.id}&select=data`, {
-    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) return null;
-  const rows = await res.json().catch(() => []);
-  return rows && rows.length ? rows[0].data : null;
+  if (!token || !user) { cloudReadFailed = true; return { ok: false, data: null }; }
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/saves?user_id=eq.${user.id}&select=data`, {
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) { cloudReadFailed = true; return { ok: false, data: null }; }
+    const rows = await res.json().catch(() => null);
+    if (rows === null) { cloudReadFailed = true; return { ok: false, data: null }; }
+    cloudReadFailed = false; // leitura bem-sucedida (com ou sem linha) — libera a gravação
+    return { ok: true, data: rows.length ? rows[0].data : null };
+  } catch {
+    cloudReadFailed = true; // rede caiu, etc. — NÃO grava nesta sessão
+    return { ok: false, data: null };
+  }
 }
 
 export async function saveCloudSave(data) {
+  // Não grava se a leitura da nuvem falhou nesta sessão (evita sobrescrever um
+  // save bom com um estado possivelmente vazio) — ver cloudReadFailed acima.
+  if (cloudReadFailed) return { ok: false, blocked: true };
   const token = await ensureValidToken();
   const user = currentUser();
   if (!token || !user) return { ok: false };
