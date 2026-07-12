@@ -1,9 +1,9 @@
 // Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
-import { G } from './gameStore.js?v=97';
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=97';
-import { emit, EVENTS } from '../shared/eventBus.js?v=97';
-import { saveGame } from './saveGameUseCase.js?v=97';
+import { G } from './gameStore.js?v=98';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier } from '../domain/adminConfig.js?v=98';
+import { emit, EVENTS } from '../shared/eventBus.js?v=98';
+import { saveGame } from './saveGameUseCase.js?v=98';
 
 export function getAdminConfig() {
   G.adminConfig = sanitizeAdminConfig(G.adminConfig);

@@ -36,3 +36,25 @@ export function spellEffectName(spellId, element) {
 export function runeEffectName(runeId) {
   return RUNE_EFFECT[runeId] || 'physical';
 }
+
+// Projétil do GOLPE BÁSICO à distância/mágico — o que voa do personagem até o
+// alvo (ver ui/huntPanel.js: playProjectile). Só arco (paladino) e wand/rod
+// (mago) disparam; corpo-a-corpo (cavaleiro) não tem projétil (retorna null).
+//  - distance: a própria munição equipada (flecha/virote); sem munição, flecha.
+//  - magic: o "raio" elemental da wand/rod (energia/fogo/gelo/terra/morte).
+const AMMO_MISSILE = {
+  arrow: 'arrow', sniper_arrow: 'arrow',
+  bolt: 'bolt', power_bolt: 'bolt',
+};
+const WAND_MISSILE = {
+  wand_of_vortex: 'energy', wand_of_cosmic_energy: 'energy',
+  wand_of_inferno: 'fire', dragonbone_staff: 'fire',
+  snakebite_rod: 'earth',
+  moonlight_rod: 'ice',
+  underworld_rod: 'death', skull_staff: 'death',
+};
+export function basicAttackMissile({ attackSkill, weaponId, ammoId } = {}) {
+  if (attackSkill === 'distance') return AMMO_MISSILE[ammoId] || 'arrow';
+  if (attackSkill === 'magic') return WAND_MISSILE[weaponId] || 'energy';
+  return null; // corpo-a-corpo não dispara projétil
+}

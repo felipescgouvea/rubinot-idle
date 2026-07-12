@@ -106,6 +106,16 @@ export function effectSpriteFile(name) {
   return name && EFFECT_NAMES.has(name) ? 'effects/' + name + '.gif?ev=' + EFFECT_SPRITE_VER : null;
 }
 
+// Sprite REAL de PROJÉTIL/missile do Tibia (assets/sprites/missiles/<nome>.gif):
+// a flecha/virote/spear do arco e o "raio" elemental da wand/rod que VOAM do
+// personagem até o alvo. A UI anima esse sprite atravessando a cena (ver
+// ui/huntPanel.js: playProjectile). Nome derivado da arma/munição/elemento em
+// domain/combatFx.js (basicAttackMissile).
+const MISSILE_NAMES = new Set(['arrow', 'bolt', 'spear', 'energy', 'fire', 'ice', 'earth', 'death', 'holy']);
+export function missileSpriteFile(name) {
+  return name && MISSILE_NAMES.has(name) ? 'missiles/' + name + '.gif' : null;
+}
+
 // Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin
 // é moeda premium exclusiva deste jogo idle — não existe em Tibia/RubinOT,
 // então usa a sprite real mais próxima em conceito (Tibia Coin, a moeda

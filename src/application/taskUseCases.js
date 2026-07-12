@@ -1,12 +1,12 @@
 // Linked Tasks: iniciar, progredir e cancelar. Escuta MONSTER_KILLED (emitido
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
-import { G } from './gameStore.js?v=97';
-import { MONSTERS } from '../domain/bestiary.js?v=97';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=97';
-import { gainXp } from './huntUseCases.js?v=97';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=97';
-import { saveGame } from './saveGameUseCase.js?v=97';
+import { G } from './gameStore.js?v=98';
+import { MONSTERS } from '../domain/bestiary.js?v=98';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=98';
+import { gainXp } from './huntUseCases.js?v=98';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=98';
+import { saveGame } from './saveGameUseCase.js?v=98';
 
 export function startTask(monsterId, required) {
   if (G.activeTask) {

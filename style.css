@@ -765,6 +765,18 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   80%  { opacity: 0.9; }
   100% { opacity: 0; transform: scale(1); }
 }
+/* projétil (flecha/virote/raio da wand) voando do boneco até o alvo: o JS seta
+   left/top no boneco e depois translada até o alvo; a transição faz o voo. */
+.combat-projectile {
+  position: absolute;
+  width: 24px; height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 5;
+  transition: transform 0.3s linear;
+  filter: drop-shadow(0 1px 2px #0008);
+}
 .player-sprite,
 .player-sprite-fallback,
 .player-sprite-wrap span {

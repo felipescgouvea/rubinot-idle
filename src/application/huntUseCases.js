@@ -3,30 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=97';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=97';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=97';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=97';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=97';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=97';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=97';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=97';
-import { elementMod } from '../domain/elements.js?v=97';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=97';
-import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=97';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=97';
-import { MONSTERS } from '../domain/bestiary.js?v=97';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=97';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=97';
-import { spellEffectName, runeEffectName } from '../domain/combatFx.js?v=97';
-import { emit, EVENTS } from '../shared/eventBus.js?v=97';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=97';
-import { trainSkill } from './skillUseCases.js?v=97';
-import { addItemToInventory } from './inventoryCore.js?v=97';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=97';
-import { getCombatBonuses } from './bonuses.js?v=97';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=97';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=97';
+import { G } from './gameStore.js?v=98';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=98';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=98';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=98';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=98';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=98';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=98';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore } from '../domain/combatFormulas.js?v=98';
+import { elementMod } from '../domain/elements.js?v=98';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=98';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=98';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion } from '../domain/items.js?v=98';
+import { MONSTERS } from '../domain/bestiary.js?v=98';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=98';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=98';
+import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=98';
+import { emit, EVENTS } from '../shared/eventBus.js?v=98';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=98';
+import { trainSkill } from './skillUseCases.js?v=98';
+import { addItemToInventory } from './inventoryCore.js?v=98';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=98';
+import { getCombatBonuses } from './bonuses.js?v=98';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=98';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=98';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -267,6 +267,14 @@ export function doHuntTick() {
   if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
   const basicHit = strike(primary, basicDmg);
   emit(EVENTS.LOG, `⚔️ ${outOfAmmo ? 'Sem munição (soco)' : 'Golpe básico'}: <span class="log-dmg">${basicHit}</span> de dano ao ${primary.name}.`);
+
+  // Projétil do golpe básico à distância/mágico: a flecha/virote do arco ou o
+  // raio elemental da wand/rod voando do boneco até o alvo (ver ui/huntPanel.js).
+  // Corpo-a-corpo não dispara; sem munição (soco) também não.
+  if (!outOfAmmo) {
+    const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
+    if (missile) emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
+  }
 
   // (2) MAGIA (por prioridade) OU RUNA — ação ADICIONAL no mesmo tick, com dano,
   // área e efeito próprios. Magia custa mana + cooldown; runa consome o item. O

@@ -1,18 +1,18 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=97';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=97';
-import { MONSTERS } from '../domain/bestiary.js?v=97';
-import { cityName } from '../domain/cities.js?v=97';
-import { ITEMS } from '../domain/items.js?v=97';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile } from '../infrastructure/tibiaSprites.js?v=97';
-import { on, EVENTS } from '../shared/eventBus.js?v=97';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=97';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=97';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=97';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=97';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=97';
+import { G } from '../application/gameStore.js?v=98';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=98';
+import { MONSTERS } from '../domain/bestiary.js?v=98';
+import { cityName } from '../domain/cities.js?v=98';
+import { ITEMS } from '../domain/items.js?v=98';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=98';
+import { on, EVENTS } from '../shared/eventBus.js?v=98';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=98';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=98';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=98';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=98';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=98';
 
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
@@ -347,25 +347,29 @@ export function updateSceneMode() {
 // Reaproveita os elementos já na tela pra não re-materializar quem já estava.
 function renderStagePack(stage) {
   const pack = getCurrentPack() || [];
-  let cont = document.getElementById('stage-pack');
-  if (!pack.length) { if (cont) cont.remove(); return; }
-  if (!cont) { cont = document.createElement('div'); cont.id = 'stage-pack'; cont.className = 'stage-pack'; stage.appendChild(cont); }
+  const cont = document.getElementById('stage-pack');
   const wantUids = pack.map(m => String(m.uid || m.defKey));
   // Criaturas que saíram da sala (morreram): não somem na hora — ficam um
   // instante acinzentadas/tombando (animação de morte) antes de serem removidas,
-  // pra dar um respiro visual à morte em vez de piscar pra fora.
-  [...cont.children].forEach(ch => {
-    if (!wantUids.includes(ch.dataset.uid) && !ch.classList.contains('leaving')) {
-      ch.classList.add('leaving');
-      const wrap = ch.querySelector('.monster-sprite-wrap');
-      if (wrap) { wrap.classList.add('dead'); void wrap.offsetWidth; wrap.classList.add('dying'); }
-      setTimeout(() => ch.remove(), 650);
-    }
-  });
+  // pra dar um respiro visual à morte em vez de piscar pra fora. Isso vale também
+  // pro ÚLTIMO inimigo: antes, com o pack vazio, o container era removido na hora
+  // e matava a animação de morte da última criatura.
+  if (cont) {
+    [...cont.children].forEach(ch => {
+      if (!wantUids.includes(ch.dataset.uid) && !ch.classList.contains('leaving')) {
+        ch.classList.add('leaving');
+        const wrap = ch.querySelector('.monster-sprite-wrap');
+        if (wrap) { wrap.classList.add('dead'); void wrap.offsetWidth; wrap.classList.add('dying'); }
+        setTimeout(() => { ch.remove(); const c = document.getElementById('stage-pack'); if (c && !c.children.length) c.remove(); }, 650);
+      }
+    });
+  }
+  if (!pack.length) return; // sala vazia: deixa os que morreram tombarem e sumirem
+  const box = cont || (() => { const c = document.createElement('div'); c.id = 'stage-pack'; c.className = 'stage-pack'; stage.appendChild(c); return c; })();
   // adiciona os novos (materializando) e mantém a ordem (alvo = primeiro à esquerda)
   pack.forEach((m, i) => {
     const uid = String(m.uid || m.defKey);
-    let el = cont.querySelector(`[data-uid="${CSS.escape(uid)}"]`);
+    let el = box.querySelector(`[data-uid="${CSS.escape(uid)}"]`);
     if (!el) {
       el = document.createElement('div');
       el.className = 'stage-monster spawning';
@@ -373,13 +377,50 @@ function renderStagePack(stage) {
       el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>`;
     }
     el.classList.toggle('is-target', i === 0);
-    if (cont.children[i] !== el) cont.insertBefore(el, cont.children[i] || null);
+    if (box.children[i] !== el) box.insertBefore(el, box.children[i] || null);
   });
+}
+
+// Dispara o projétil do golpe básico à distância/mágico: cria o sprite do
+// missile (flecha/virote/raio elemental) no centro do boneco e o anima voando
+// até a criatura-alvo no topo do palco, girando na direção do voo. Removido ao
+// chegar. Reaproveita o mesmo palco/coordenadas do playAreaEffect.
+export function playProjectile({ missile, targetUid } = {}) {
+  const file = missile ? missileSpriteFile(missile) : null;
+  const stage = document.getElementById('dungeon-stage');
+  const playerWrap = document.getElementById('player-sprite-wrap');
+  if (!file || !stage || !playerWrap) return;
+  // alvo: a criatura pedida (por uid) ou a primeira da fila
+  const cont = document.getElementById('stage-pack');
+  const targetEl = (targetUid && cont && cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`)) || (cont && cont.firstElementChild);
+  if (!targetEl) return;
+  const sr = stage.getBoundingClientRect();
+  const pr = playerWrap.getBoundingClientRect();
+  const tr = targetEl.getBoundingClientRect();
+  const x0 = pr.left - sr.left + pr.width / 2;
+  const y0 = pr.top - sr.top + pr.height / 2;
+  const x1 = tr.left - sr.left + tr.width / 2;
+  const y1 = tr.top - sr.top + tr.height / 2;
+  const ang = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI;
+  const img = document.createElement('img');
+  img.className = 'combat-projectile';
+  img.src = spriteUrl(file);
+  img.alt = '';
+  // o sprite do Tibia aponta pra cima (norte); +90° alinha o "nariz" ao vetor de voo
+  img.style.left = x0 + 'px';
+  img.style.top = y0 + 'px';
+  img.style.transform = `translate(-50%, -50%) rotate(${ang + 90}deg)`;
+  stage.appendChild(img);
+  // força reflow e anima até o alvo
+  void img.offsetWidth;
+  img.style.transform = `translate(-50%, -50%) translate(${x1 - x0}px, ${y1 - y0}px) rotate(${ang + 90}deg)`;
+  setTimeout(() => img.remove(), 320);
 }
 
 export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
   on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
+  on(EVENTS.COMBAT_PROJECTILE, (p) => playProjectile(p));
   on(EVENTS.HUNT_STATS, renderHuntAnalyzer);
   on(EVENTS.BLESSINGS, renderBlessings);
   on(EVENTS.HEADER_STATS, renderBlessings); // atualiza o botão quando o gold muda
