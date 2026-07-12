@@ -1,17 +1,18 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=89';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=89';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=89';
-import { skillIconImg } from './shared.js?v=89';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=89';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=89';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=89';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=89';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=89';
-import { on, EVENTS } from '../shared/eventBus.js?v=89';
-import { formatNum } from './shared.js?v=89';
-import { renderZonePicker } from './huntPanel.js?v=89';
+import { G } from '../application/gameStore.js?v=90';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=90';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=90';
+import { skillIconImg } from './shared.js?v=90';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=90';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=90';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=90';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=90';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=90';
+import { on, EVENTS } from '../shared/eventBus.js?v=90';
+import { formatNum } from './shared.js?v=90';
+import { renderZonePicker } from './huntPanel.js?v=90';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=90';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -151,17 +152,33 @@ function mountPlayerWalkSprite(wrap) {
     addon2: G.outfitAddon2,
   }).then(({ idle, frames }) => {
     if (wrap.dataset.walk !== sig) return; // aparência mudou enquanto carregava
-    const frame = idle || frames[0];
-    if (!frame) { stopWalk(); wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; return; }
-    // Boneco ESTÁTICO: desenha só o quadro idle FRONTAL (virado pra baixo) uma
-    // vez, sem ciclar os quadros de caminhada — o movimento na cena vem só dos
-    // efeitos de spell (ver ui/huntPanel.js: playAreaEffect).
+    const base = idle || frames[0];
+    if (!base) { stopWalk(); wrap.innerHTML = `<span class="player-sprite">${icon}</span>`; return; }
     stopWalk(); // garante que nenhum timer antigo fique ciclando
     // Recorta o conteúdo do outfit (ocupa só parte da célula 64x64) e escala pra
     // preencher a caixa, centralizado — mesmo porte visual dos monstros (~90%).
     const fit = fitContent(unionContentBBox([idle, ...frames]), 64, 0.9);
-    ctx.clearRect(0, 0, 64, 64);
-    ctx.drawImage(frame, fit.sx, fit.sy, fit.sw, fit.sh, fit.dx, fit.dy, fit.dw, fit.dh);
+    walkFrames = frames.filter(Boolean);
+    walkIdle = base;
+    walkIdx = 0;
+    const draw = (frame) => {
+      ctx.clearRect(0, 0, 64, 64);
+      ctx.drawImage(frame, fit.sx, fit.sy, fit.sw, fit.sh, fit.dx, fit.dy, fit.dw, fit.dh);
+    };
+    // Enquanto PROCURA criatura (caçando, sem monstro na cena), o boneco anda:
+    // cicla os quadros de caminhada. Ao entrar em combate (ou parar a caçada),
+    // volta ao quadro idle frontal, estático — só os efeitos de spell se mexem.
+    draw(walkIdle);
+    walkTimer = setInterval(() => {
+      const searching = G.hunting && !getCurrentMonster();
+      if (searching && walkFrames.length > 1) {
+        walkIdx = (walkIdx + 1) % walkFrames.length;
+        draw(walkFrames[walkIdx]);
+      } else if (walkIdx !== 0) {
+        walkIdx = 0;
+        draw(walkIdle);
+      }
+    }, 180);
   });
 }
 

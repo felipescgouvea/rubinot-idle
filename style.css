@@ -695,7 +695,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    baixo; para de rolar quando está lutando/parado. */
 #dungeon-stage {
   position: relative;
-  height: 170px;
+  height: 240px;
   border-radius: 8px;
   overflow: hidden;
   background: linear-gradient(180deg, var(--zone-color-1, #5a6b8a) 0%, var(--zone-color-2, #26344a) 100%);
@@ -718,8 +718,10 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
 .player-sprite-wrap {
   position: absolute;
-  left: 50%; top: 50%;
-  margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no palco */
+  /* um pouco acima do centro: as waves de mago abrem PRA BAIXO (r até 4 tiles),
+     então o boneco fica no terço superior pra caber a área inteira na tela */
+  left: 50%; top: 42%;
+  margin: -27px 0 0 -27px; /* metade da largura/altura, pra centralizar no eixo */
   width: 54px; height: 54px; /* mesmo porte visual dos monstros (52px) */
   z-index: 2;
 }
