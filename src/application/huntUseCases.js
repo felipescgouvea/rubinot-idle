@@ -3,30 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=110';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=110';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=110';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=110';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=110';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=110';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=110';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=110';
-import { elementMod } from '../domain/elements.js?v=110';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=110';
-import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=110';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=110';
-import { MONSTERS } from '../domain/bestiary.js?v=110';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=110';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=110';
-import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=110';
-import { emit, EVENTS } from '../shared/eventBus.js?v=110';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=110';
-import { trainSkill } from './skillUseCases.js?v=110';
-import { addItemToInventory } from './inventoryCore.js?v=110';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=110';
-import { getCombatBonuses } from './bonuses.js?v=110';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=110';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=110';
+import { G } from './gameStore.js?v=111';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=111';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=111';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=111';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=111';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=111';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=111';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=111';
+import { elementMod } from '../domain/elements.js?v=111';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=111';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=111';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=111';
+import { MONSTERS } from '../domain/bestiary.js?v=111';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=111';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=111';
+import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=111';
+import { emit, EVENTS } from '../shared/eventBus.js?v=111';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=111';
+import { trainSkill } from './skillUseCases.js?v=111';
+import { addItemToInventory } from './inventoryCore.js?v=111';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=111';
+import { getCombatBonuses } from './bonuses.js?v=111';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=111';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=111';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -49,6 +49,7 @@ const MONSTER_ELEMENT_PT = { fire: 'fogo', energy: 'energia', ice: 'gelo', earth
 
 let huntInterval = null;
 let regenInterval = null;
+let rtcHealInterval = null;
 // currentMonster é sempre o ALVO da frente (currentPack[0]) — toda a lógica de
 // combate mira nele. currentPack é a "sala": o alvo + os monstros esperando,
 // mostrados na Battle List. Você luta um por vez; ao matar o da frente, o
@@ -671,14 +672,21 @@ export function startRegen() {
         ? Math.max(0, G.stamina - step)
         : Math.min(STAMINA_MAX, G.stamina + step / 3);
     }
-    // RTC fora de combate: parado ou "procurando" entre um monstro e outro,
-    // doHuntTick não roda cura nenhuma (só entra no bloco de cura depois de
-    // resolver o ataque de um monstro vivo) — sem isto o jogador podia emendar
-    // pra próxima luta sem vida mesmo com a cura automática ligada. Enquanto
-    // há um monstro na frente, quem cuida da cura é o próprio doHuntTick.
-    if (!currentMonster) applyRtcHealing(VOC_TRAINING[G.vocation], G.hunting);
     emit(EVENTS.BARS);
     emit(EVENTS.HEADER_STATS);
     if (G.hunting) emit(EVENTS.HUNT_STATS); // mantém XP/h, gold/h vivos no tempo
   }, 2000);
+
+  // RTC fora de combate: parado ou "procurando" entre um monstro e outro,
+  // doHuntTick não roda cura nenhuma (só entra no bloco de cura depois de
+  // resolver o ataque de um monstro vivo) — sem isto o jogador podia emendar
+  // pra próxima luta sem vida mesmo com a cura automática ligada. Enquanto há
+  // um monstro na frente, quem cuida da cura é o próprio doHuntTick. Roda num
+  // intervalo PRÓPRIO de 500ms (não junto do regen de 2s acima) pra respeitar
+  // de verdade o exhaust de 1s da poção — preso ao tick de 2s, o intervalo
+  // real entre poções virava 2s (ou mais) em vez do 1s combinado.
+  if (rtcHealInterval) clearInterval(rtcHealInterval);
+  rtcHealInterval = setInterval(() => {
+    if (G.vocation && !currentMonster) applyRtcHealing(VOC_TRAINING[G.vocation], G.hunting);
+  }, 500);
 }
