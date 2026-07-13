@@ -3,7 +3,7 @@
 // Escuta MONSTER_KILLED (como taskUseCases) — a caçada não precisa saber que
 // bestiário existe, só anuncia a morte.
 import { G } from './gameStore.js?v=125';
-import { MONSTERS } from '../domain/bestiary.js?v=126';
+import { MONSTERS } from '../domain/bestiary.js?v=127';
 import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=125';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';

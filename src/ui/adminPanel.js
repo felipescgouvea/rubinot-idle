@@ -3,7 +3,7 @@
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
 import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=125';
 import { RARITY_TIERS } from '../domain/rarity.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=126';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=127';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAdminConfig, getZoneSpawn } from '../application/adminUseCases.js?v=125';
 
