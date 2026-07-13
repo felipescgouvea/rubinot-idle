@@ -1,25 +1,45 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=120';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=120';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=120';
-import { skillIconImg } from './shared.js?v=120';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=120';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=120';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=120';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=120';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=120';
-import { on, EVENTS } from '../shared/eventBus.js?v=120';
-import { formatNum } from './shared.js?v=120';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=120';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=120';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=120';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=120';
+import { G } from '../application/gameStore.js?v=121';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=121';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=121';
+import { skillIconImg } from './shared.js?v=121';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=121';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=121';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=121';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=121';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=121';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=121';
+import { formatNum } from './shared.js?v=121';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=121';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=121';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=121';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=121';
+import { selectVocation } from '../application/characterUseCases.js?v=121';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=121';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
 function currentOutfitId() {
   return G.outfit || (G.vocation ? VOCATION_DEFAULT_OUTFIT[G.vocation] : null);
+}
+
+// Cria o personagem: nome (mesmo cadastro do ranking, ver highscoresUseCases)
+// + vocação, na MESMA tela — antes o nome só era pedido depois, na aba
+// Highscores, e o personagem podia jogar a partida inteira sem nunca ter um.
+// Escolhe a vocação primeiro (currentOutfitId/kit dependem dela) e só então
+// registra o nome — submitScore() exige G.vocation setado pra aceitar o envio.
+export async function createCharacter(voc) {
+  if (G.vocation) return;
+  const input = document.getElementById('char-name-input');
+  const name = (input?.value || '').trim();
+  if (name.length < 3 || name.length > 20) {
+    emit(EVENTS.NOTIFY, { msg: 'Escolha um nome de personagem (3 a 20 caracteres).', type: 'error' });
+    input?.focus();
+    return;
+  }
+  selectVocation(voc);
+  await registerPlayerName(name);
 }
 
 function playerFallbackIcon() {
@@ -204,6 +224,7 @@ export function renderCharInfo() {
   if (!G.vocation) return;
   const v = VOCATIONS[G.vocation];
   mountPlayerPortrait(document.getElementById('char-voc-icon'), 'char-voc-big');
+  document.getElementById('char-name-display').textContent = G.playerName || '';
   document.getElementById('char-voc-name').textContent = v.name;
   document.getElementById('char-level').textContent = G.level;
   document.getElementById('char-xp').textContent = G.xp;

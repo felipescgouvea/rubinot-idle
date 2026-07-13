@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=120" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=121" />
   <link rel="stylesheet" href="style.css?v=121" />
 </head>
 <body>
@@ -129,23 +129,27 @@
             <div class="equipment-slots"></div>
           </div>
           <div class="card" id="char-card">
+            <div id="char-name-field">
+              <label for="char-name-input">Nome do personagem</label>
+              <input type="text" id="char-name-input" maxlength="20" placeholder="Ex.: Gandalf" autocomplete="off" />
+            </div>
             <div id="vocation-select" class="vocation-grid">
-              <div class="voc-btn" data-voc="knight" onclick="selectVocation('knight')">
+              <div class="voc-btn" data-voc="knight" onclick="createCharacter('knight')">
                 <div class="voc-icon">🛡️</div>
                 <div class="voc-name">Knight</div>
                 <div class="voc-desc">Tanque corpo-a-corpo. Alta HP, ataque constante.</div>
               </div>
-              <div class="voc-btn" data-voc="paladin" onclick="selectVocation('paladin')">
+              <div class="voc-btn" data-voc="paladin" onclick="createCharacter('paladin')">
                 <div class="voc-icon">🏹</div>
                 <div class="voc-name">Paladin</div>
                 <div class="voc-desc">Distância equilibrada. Mana e HP balanceados.</div>
               </div>
-              <div class="voc-btn" data-voc="sorcerer" onclick="selectVocation('sorcerer')">
+              <div class="voc-btn" data-voc="sorcerer" onclick="createCharacter('sorcerer')">
                 <div class="voc-icon">🔮</div>
                 <div class="voc-name">Sorcerer</div>
                 <div class="voc-desc">Mago ofensivo. Alto dano, frágil. Usa mana.</div>
               </div>
-              <div class="voc-btn" data-voc="druid" onclick="selectVocation('druid')">
+              <div class="voc-btn" data-voc="druid" onclick="createCharacter('druid')">
                 <div class="voc-icon">🌿</div>
                 <div class="voc-name">Druid</div>
                 <div class="voc-desc">Mago de cura. Suporte + dano elemental.</div>
@@ -380,6 +384,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=120"></script>
+  <script type="module" src="src/main.js?v=121"></script>
 </body>
 </html>

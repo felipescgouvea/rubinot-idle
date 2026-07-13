@@ -1,11 +1,11 @@
 // Identidade do jogador no ranking global e envio/leitura de score. O
 // "secret" é um UUID gerado no navegador — mesmo modelo de confiança usado
 // pelo Market (ver marketUseCases.js).
-import { G } from './gameStore.js?v=120';
-import { XP_TABLE } from '../domain/character.js?v=120';
-import { emit, EVENTS } from '../shared/eventBus.js?v=120';
-import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=120';
-import { saveGame } from './saveGameUseCase.js?v=120';
+import { G } from './gameStore.js?v=121';
+import { XP_TABLE } from '../domain/character.js?v=121';
+import { emit, EVENTS } from '../shared/eventBus.js?v=121';
+import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=121';
+import { saveGame } from './saveGameUseCase.js?v=121';
 
 let lastSubmitAt = 0;
 let highscoresCache = null;
@@ -64,6 +64,7 @@ export async function registerPlayerName(name) {
   emit(EVENTS.NOTIFY, { msg: `Bem-vindo ao ranking, ${name}!`, type: 'success' });
   saveGame();
   emit(EVENTS.HIGHSCORES_PANEL);
+  emit(EVENTS.CHAR_INFO); // atualiza o nome na barra de status do personagem (ver ui/characterPanel.js)
   return true;
 }
 

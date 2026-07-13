@@ -358,6 +358,11 @@ body {
    o personagem existe, então essa largura só é reservada enquanto realmente
    precisa (grade 2x2 de vocação legível). */
 #char-card { min-width: 340px; }
+/* Nome do personagem, pedido ANTES de escolher a vocação — mesmo cadastro
+   usado no ranking (ver ui/characterPanel.js: createCharacter). */
+#char-name-field { margin: 12px 14px 0 !important; }
+#char-name-field label { display: block; font-size: 11.5px; font-weight: 700; color: var(--navy-2); margin-bottom: 5px; }
+#char-name-field input[type="text"] { width: 100%; box-sizing: border-box; }
 .vocation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 14px !important; }
 
 .voc-btn {

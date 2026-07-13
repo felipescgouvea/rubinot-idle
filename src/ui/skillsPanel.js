@@ -1,10 +1,10 @@
 // Aba Skills. Só re-renderiza ao trocar de aba (o treino em si acontece
 // silenciosamente durante a caçada — ver application/skillUseCases.js).
-import { G } from '../application/gameStore.js?v=120';
-import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=120';
-import { resolveEquippedItem } from '../domain/items.js?v=120';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=120';
-import { skillIconImg } from './shared.js?v=120';
+import { G } from '../application/gameStore.js?v=121';
+import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=121';
+import { resolveEquippedItem } from '../domain/items.js?v=121';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=121';
+import { skillIconImg } from './shared.js?v=121';
 
 export function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');
