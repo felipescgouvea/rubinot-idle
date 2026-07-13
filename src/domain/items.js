@@ -80,13 +80,13 @@ export const ITEMS = {
   robe:           { name: 'Robe', icon: '👘', type: 'armor', def: 3, sell: 15 },
 
   // --- Poções (curam HP/mana ao usar — não ocupam slot de equipamento) ---
-  health_potion:        { name: 'Health Potion', icon: '🧪', type: 'potion', heal: 60, sell: 25 },
-  strong_health_potion: { name: 'Strong Health Potion', icon: '🧪', type: 'potion', heal: 150, sell: 60, reqLevel: 50, reqVoc: ['knight','paladin'] },
-  great_health_potion:  { name: 'Great Health Potion', icon: '🧪', type: 'potion', heal: 300, sell: 130, reqLevel: 80, reqVoc: ['knight','paladin'] },
-  ultimate_health_potion:{ name: 'Ultimate Health Potion', icon: '🧪', type: 'potion', heal: 500, sell: 260, reqLevel: 130, reqVoc: ['knight'] },
-  mana_potion:          { name: 'Mana Potion', icon: '🔵', type: 'potion', mana: 60, sell: 25 },
+  health_potion:        { name: 'Health Potion', icon: '🧪', type: 'potion', heal: 150, sell: 25 },
+  strong_health_potion: { name: 'Strong Health Potion', icon: '🧪', type: 'potion', heal: 300, sell: 60, reqLevel: 50, reqVoc: ['knight','paladin'] },
+  great_health_potion:  { name: 'Great Health Potion', icon: '🧪', type: 'potion', heal: 500, sell: 130, reqLevel: 80, reqVoc: ['knight','paladin'] },
+  ultimate_health_potion:{ name: 'Ultimate Health Potion', icon: '🧪', type: 'potion', heal: 750, sell: 260, reqLevel: 130, reqVoc: ['knight'] },
+  mana_potion:          { name: 'Mana Potion', icon: '🔵', type: 'potion', mana: 100, sell: 25 },
   strong_mana_potion:   { name: 'Strong Mana Potion', icon: '🔵', type: 'potion', mana: 150, sell: 60, reqLevel: 50, reqVoc: ['sorcerer','druid','paladin'] },
-  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 300, sell: 130, reqLevel: 80, reqVoc: ['sorcerer','druid'] },
+  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 200, sell: 130, reqLevel: 80, reqVoc: ['sorcerer','druid'] },
 
   // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
@@ -104,7 +104,7 @@ export const ITEMS = {
   avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'ice', reqMl: 9, sell: 90 },
   fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, power: [1.8, 12, 3.0, 17], area: 'single', element: 'fire', reqMl: 4, sell: 15 },
   great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'fire', reqMl: 7, sell: 45 },
-  great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 200, mana: 150, sell: 320 },
+  great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 300, mana: 150, sell: 320 },
 
   // --- Loja de Equipamentos: mais opções reais de Tibia por categoria ---
   broadsword:      { name: 'Broadsword', icon: '⚔️', type: 'weapon', weaponType: 'sword', atk: 24, sell: 90 },

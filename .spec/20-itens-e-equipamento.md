@@ -77,6 +77,41 @@ Jogador, na aba Inventário (seção "Relíquias", separada da grade de itens co
 - [ ] Vender uma relíquia sempre paga mais gold que vender o item base equivalente.
 - [ ] Uma relíquia vendida ou desequipada nunca deixa o slot de equipamento "travado".
 
+## Atributos por tipo de item (regras de compatibilidade)
+
+### Objetivo
+
+Garantir que cada tipo de equipamento só receba bônus que façam sentido pra ele — um elmo não deveria poder rolar "dano de wand", assim como uma armadura não deveria rolar "crítico". Isso preserva a identidade de cada peça dentro do sistema de raridade e evita combinações sem sentido.
+
+**Nota de fidelidade:** assim como as Relíquias (ver acima), esta lista de atributos e o conceito de tier reduzido são uma liberdade de design assumida a pedido do dono do produto. A analogia real mais próxima no Tibia são os **Imbuements** (Fatal Hit, Dodge/Ruse, Vampirism, Void, Bash/Chop/Slash, Epiphany) e o sistema de **Tier/Forge** (bônus por tier de 1 a 10, com nomes por slot como Momentum no elmo) — aqui simplificados numa única lista por tipo de item, com um tier reduzido de 1 a 3.
+
+### Quem usa
+
+O sistema de geração de bônus de raridade (Relíquias e futuras evoluções dele), de forma indireta — o jogador só percebe o resultado, vendo quais atributos aparecem em cada item que cai.
+
+### Regras de negócio
+
+- **Espadas, machados e clavas** (armas corpo-a-corpo) só podem receber: ataque, bônus de skill, crítico, roubo de vida ou roubo de mana.
+- **Wands e rods** só podem receber: dano base da wand/rod, magic level ou fatal.
+- **Armaduras** só podem receber: defesa, proteção elemental ou dodge.
+- **Elmos** só podem receber: bônus de skill, magic level ou Momentum.
+- **Fatal, dodge e Momentum só podem aparecer em itens de raridade Lendária**, com um nível de 1 a 3 — quanto mais alto, mais forte o bônus. Nas raridades Incomum, Raro e Épico, esses três atributos nunca aparecem.
+  *Por quê:* são os bônus mais poderosos da lista, então ficam reservados à raridade mais rara — uma recompensa extra por cima da própria sorte de cair Lendário.
+- Esta é, por enquanto, **só a regra de compatibilidade** (o que é permitido) — ainda não define como/quando um item efetivamente rola esses atributos ao cair, nem o efeito exato de cada um em combate. Isso fica para uma etapa futura.
+
+### Comportamento esperado
+
+- Um item nunca aparece com um atributo fora da lista permitida pro seu tipo.
+- Fatal, dodge e Momentum nunca aparecem fora da raridade Lendária.
+
+### Critérios de aceitação
+
+- [ ] Nenhuma arma corpo-a-corpo recebe atributo de wand/magic level/fatal/defesa/proteção elemental/dodge/Momentum.
+- [ ] Nenhuma wand/rod recebe atributo de ataque/skill/crítico/roubo de vida/roubo de mana/defesa/proteção elemental/dodge/Momentum.
+- [ ] Nenhuma armadura recebe atributo de ataque/skill/crítico/roubo de vida/roubo de mana/dano de wand/magic level/fatal/Momentum.
+- [ ] Nenhum elmo recebe atributo de ataque/crítico/roubo de vida/roubo de mana/dano de wand/defesa/proteção elemental/dodge/fatal.
+- [ ] Fatal, dodge e Momentum só aparecem em itens de raridade Lendária, nunca em Incomum/Raro/Épico.
+
 ## Mercado entre jogadores (compra e venda de itens entre contas)
 
 ### Objetivo

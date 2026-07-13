@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=126';
 import { VOCATIONS } from './domain/character.js?v=126';
 import { emit, EVENTS } from './shared/eventBus.js?v=125';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=127';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=130';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=126';
@@ -20,7 +20,7 @@ import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sel
 import { startTask, cancelTask } from './application/taskUseCases.js?v=125';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=125';
-import { buyShopItem } from './application/shopUseCases.js?v=125';
+import { buyShopItem } from './application/shopUseCases.js?v=130';
 import { buyBlessing } from './application/blessingUseCases.js?v=125';
 import { addRtcAttackSpell, removeRtcAttackSpell, moveRtcAttackSpell, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold } from './application/rtcUseCases.js?v=125';
 import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=125';
@@ -40,7 +40,7 @@ import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=125';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=125';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=125';
-import { wireShopPanelEvents, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty } from './ui/shopPanel.js?v=128';
+import { wireShopPanelEvents, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=130';
 import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion } from './ui/rtcPanel.js?v=125';
 import { refreshHighscoresClick, wireHighscoresPanelEvents } from './ui/highscoresPanel.js?v=125';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=125';
@@ -92,7 +92,7 @@ Object.assign(window, {
   handleClaimArenaDivision,
   selectWorld,
   claimBpReward, claimMissionReward,
-  buyShopItem, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing,
+  buyShopItem, confirmBuyShopItem, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing,
   addRtcAttackSpell, removeRtcAttackSpell, moveRtcAttackSpell, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion,
   registerPlayerName, refreshHighscoresClick,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,

@@ -2,10 +2,10 @@
 // silenciosamente durante a caçada — ver application/skillUseCases.js).
 import { G } from '../application/gameStore.js?v=126';
 import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=126';
-import { resolveEquippedItem } from '../domain/items.js?v=125';
+import { resolveEquippedItem } from '../domain/items.js?v=130';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=127';
+import { t } from '../i18n/i18n.js?v=130';
 
 export function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');

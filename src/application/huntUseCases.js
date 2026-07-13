@@ -14,7 +14,7 @@ import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, r
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=125';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=130';
 import { MONSTERS } from '../domain/bestiary.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
@@ -27,7 +27,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=127';
+import { t } from '../i18n/i18n.js?v=130';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui

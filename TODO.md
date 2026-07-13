@@ -131,6 +131,16 @@ própria profissão; (d) só usa **runas** que o **Magic Level** da profissão p
 - [x] Magias de druid: os 4 strikes básicos (compartilhados com sorcerer) + Physical Strike exclusivo + linha de gelo/terra (waves, strong, ultimate) + Eternal Winter + Wrath of Nature + curas.
 - [x] Runas de druid liberadas pelo ML (Avalanche 9, etc.).
 
+## 2b. ITENS & EQUIPAMENTO — auditoria vs .spec/20-itens-e-equipamento.md
+
+- [ ] 🔴 **Great Spirit Potion sem requisito de nível/vocação** — `domain/items.js`
+      (`great_spirit_potion`) não tem `reqLevel`/`reqVoc`; spec exige nível 80 + só paladin
+      (igual às demais Great potions). Hoje qualquer nível/vocação pode usar.
+- [ ] 🟡 **`domain/itemAttributeRules.js` criado mas não consumido por ninguém** — só valida
+      "tipo de item → atributos permitidos" (fatal/dodge/momentum só Lendário); falta ligar
+      isso na geração de Relíquias (`huntUseCases.js`) pra realmente rolar o atributo extra
+      ao cair um boss. Sem essa ligação, o arquivo é código morto.
+
 ## 3. HEADER
 
 - [x] Boosted destacado do header principal (faixa própria, alinhada à direita, bem próxima dele).

@@ -1,9 +1,10 @@
 import { G } from '../application/gameStore.js?v=126';
 import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=125';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=125';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=130';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=127';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=125';
+import { buyShopItem } from '../application/shopUseCases.js?v=130';
+import { t } from '../i18n/i18n.js?v=130';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -80,6 +81,27 @@ export function scrollShopQty(e, id) {
   stepShopQty(id, step);
 }
 
+// Confirmação antes de gastar gold/RC de verdade — sem isso um clique errado
+// (ou scroll acidental mudando a quantidade) já debita o saldo na hora.
+export function confirmBuyShopItem(id, qty = 1) {
+  const s = SHOP_ITEMS.find(x => x.id === id);
+  if (!s) return;
+  const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
+  // Trocar/tirar um outfit já comprado é reversível e não custa nada de novo —
+  // não faz sentido confirmar isso.
+  if (owned || s.currency === 'real') { buyShopItem(id, qty); return; }
+  const item = s.itemId ? ITEMS[s.itemId] : null;
+  const count = item && (item.type === 'potion' || item.type === 'rune') ? Math.max(1, Math.floor(Number(qty) || 1)) : 1;
+  const total = s.price * count;
+  const totalLabel = s.currency === 'rubini' ? `${total} ${rubiniIconImg('inline-icon')} RC` : `${formatNum(total)} ${goldIconImg('inline-icon')}`;
+  openModal(`
+    <h3>${shopIconHtml(s)} ${t(s.name)}</h3>
+    <p>${t('shop.confirmBuyMsg', { count, name: t(s.name), price: totalLabel })}</p>
+    <button onclick="buyShopItem('${id}', ${count}); closeModal();" style="margin-top:8px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('shop.confirmBuyYes')}</button>
+    <button onclick="closeModal()" style="margin-top:6px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('shop.confirmBuyNo')}</button>
+  `);
+}
+
 function renderShopCard(s) {
   const isReal = s.currency === 'real';
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
@@ -110,11 +132,11 @@ function renderShopCard(s) {
           <input type="range" id="shop-qty-range-${s.id}" class="shop-qty-range" min="1" max="${qtyMax}" value="${qtyVal}" oninput="onShopQtyInput('${s.id}', this.value)" />
           <button type="button" class="shop-qty-arrow" onclick="stepShopQty('${s.id}', 1)">▶</button>
         </div>
-        <button class="skill-upgrade-btn shop-buy-btn" onclick="buyShopItem('${s.id}', getShopQty('${s.id}'))" ${!canAfford ? 'disabled' : ''}>
+        <button class="skill-upgrade-btn shop-buy-btn" onclick="confirmBuyShopItem('${s.id}', getShopQty('${s.id}'))" ${!canAfford ? 'disabled' : ''}>
           ${canAfford ? t('shop.buy') : t('shop.noBalance')}
         </button>
       </div>`
-    : `<button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')" ${(!canAfford && !owned) ? 'disabled' : ''}>
+    : `<button class="skill-upgrade-btn" onclick="confirmBuyShopItem('${s.id}')" ${(!canAfford && !owned) ? 'disabled' : ''}>
         ${owned ? (wearing ? `✅ ${t('shop.wearingClickToRemove')}` : t('shop.wearOutfit')) : isReal ? t('shop.buy') : canAfford ? t('shop.buy') : t('shop.insufficientBalance')}
       </button>`;
   return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
