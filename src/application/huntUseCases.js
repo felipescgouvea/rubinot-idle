@@ -4,30 +4,30 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G } from './gameStore.js?v=126';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=128';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=129';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=125';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=126';
 import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=125';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=125';
 import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=130';
-import { MONSTERS } from '../domain/bestiary.js?v=128';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=132';
+import { MONSTERS } from '../domain/bestiary.js?v=129';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=125';
 import { trainSkill } from './skillUseCases.js?v=126';
-import { addItemToInventory } from './inventoryCore.js?v=125';
+import { addItemToInventory } from './inventoryCore.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -577,8 +577,10 @@ export function resolveMonsterKill(zone, victim) {
         G.gold += item.sell || 0;
         huntSession.gold += item.sell || 0;
         soldGold += item.sell || 0;
-      } else {
-        addItemToInventory(itemId);
+      } else if (addItemToInventory(itemId)) {
+        // Bag cheia (20 tipos distintos, ver domain/items.js: BAG_MAX_SLOTS) e
+        // o item é um tipo NOVO: addItemToInventory recusa, e o loot simplesmente
+        // não é capturado (o monstro ainda morre e dá XP/gold normalmente).
         huntSession.loot += item.sell || 0; // valor do loot pra o Hunt Analyzer
         lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
       }

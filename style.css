@@ -527,7 +527,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 #hunt-status-body { padding: 14px; }
 #hunt-status-battle-btn { width: 100%; margin-top: 10px; }
 
-/* barra clicável que abre o painel de escolha de zona (ui/zonePicker.js) */
+/* barra de exibição (só leitura) da zona/hunt atual — trocar de hunt é só
+   pelo botão único abaixo dela (ver #hunt-status-battle-btn/renderHuntStatusButton). */
 #zone-current-bar {
   display: flex;
   align-items: center;
@@ -539,14 +540,10 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   padding: 7px 11px;
   font-size: 12px;
   font-family: var(--body);
-  cursor: pointer;
-  transition: border-color 0.15s;
 }
-#zone-current-bar:hover { border-color: var(--gold); }
 #zone-current-icon { font-size: 15px; }
 .zone-current-icon-img { height: 20px; width: auto; vertical-align: -0.3em; image-rendering: pixelated; }
 #zone-current-name { flex: 1; font-weight: 600; }
-.zone-current-change { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* ---- galeria de zonas (dentro do modal) — grade horizontal 8x2 ---- */
 /* :has() só escala esse modal específico; os demais (outfit picker, detalhe
@@ -2110,6 +2107,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   max-height: calc(100vh - 232px);
   overflow-y: auto;
 }
+.bag-slot-counter { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.bag-slot-counter-full { color: #c0392b; }
 
 @media (max-width: 1080px) {
   #backpack-inventory-card { flex-basis: 100%; width: auto; max-height: none; }

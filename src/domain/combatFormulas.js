@@ -5,7 +5,7 @@
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
 import { VOCATIONS, VOC_TRAINING } from './character.js?v=126';
-import { resolveEquippedItem } from './items.js?v=125';
+import { resolveEquippedItem } from './items.js?v=132';
 import { pickWeightedMonster } from './adminConfig.js?v=127';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,

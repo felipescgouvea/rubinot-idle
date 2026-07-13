@@ -25,12 +25,12 @@ export const SHOP_ITEMS = [
   { id: 'rc_pack_l',  name: '700 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 24.90, type: 'currency', rubiniAmount: 700,  shop: 'premium', desc: 'shop.desc.rcPackL' },
   { id: 'rc_pack_xl', name: '1500 Rubini Coins', icon: '💎', currency: 'real', priceBRL: 47.90, type: 'currency', rubiniAmount: 1500, shop: 'premium', desc: 'shop.desc.rcPackXl' },
 
-  // Rubini Store — Boosts temporários (Rubini Coins)
+  // Rubini Store — só Boosts temporários, só Rubini Coins (a loja fica pura:
+  // nada de gold aqui, pra não misturar as duas moedas na mesma prateleira —
+  // ver Loja de Artigos Mágicos abaixo pro Supply Completo, que é gold).
   { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, shop: 'rubini', desc: 'shop.desc.xpBoost' },
   { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, shop: 'rubini', desc: 'shop.desc.lootBoost' },
   { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, shop: 'rubini', desc: 'shop.desc.goldBoost' },
-  // Rubini Store — Suprimentos (gold)
-  { id: 'refill',     name: 'shop.item.fullSupply', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', shop: 'rubini', desc: 'shop.desc.refill' },
 
   // Loja de Equipamentos (gold) — preço = 4x o valor de venda do item
   { id: 'buy_dagger',       name: 'Dagger',           icon: '🗡️', currency: 'gold', price: 24,     type: 'item', itemId: 'dagger', shop: 'equipment' },
@@ -82,7 +82,9 @@ export const SHOP_ITEMS = [
   { id: 'buy_steel_boots',      name: 'Steel Boots',       icon: '👢', currency: 'gold', price: 880,   type: 'item', itemId: 'steel_boots', shop: 'equipment' },
   { id: 'buy_might_ring',       name: 'Might Ring',        icon: '💍', currency: 'gold', price: 1520,  type: 'item', itemId: 'might_ring', shop: 'equipment' },
 
-  // Loja de Artigos Mágicos (gold) — poções e runas, preço = 4x o valor de venda
+  // Loja de Artigos Mágicos (gold) — Supply Completo (restaura HP/mana na
+  // hora), depois poções e runas, preço = 4x o valor de venda
+  { id: 'refill', name: 'shop.item.fullSupply', icon: '🧪', currency: 'gold', price: 500, type: 'refill', shop: 'magic', desc: 'shop.desc.refill' },
   { id: 'buy_health_potion',        name: 'Health Potion',          icon: '🧪', currency: 'gold', price: 100,  type: 'item', itemId: 'health_potion', shop: 'magic' },
   { id: 'buy_strong_health_potion', name: 'Strong Health Potion',   icon: '🧪', currency: 'gold', price: 240,  type: 'item', itemId: 'strong_health_potion', shop: 'magic' },
   { id: 'buy_great_health_potion',  name: 'Great Health Potion',    icon: '🧪', currency: 'gold', price: 520,  type: 'item', itemId: 'great_health_potion', shop: 'magic' },
@@ -109,7 +111,7 @@ export const SHOPS = [
       { title: 'shop.premium.subRcPacks', filter: s => s.type === 'currency' },
     ]},
   { key: 'rubini', title: 'shop.rubini.title', subtitle: 'shop.rubini.subtitle', sub: [
-      { title: 'shop.rubini.subBoosts', filter: s => s.type === 'boost' || s.type === 'refill' },
+      { title: 'shop.rubini.subBoosts', filter: s => s.type === 'boost' },
     ]},
   { key: 'equipment', title: 'shop.equipment.title', subtitle: 'shop.equipment.subtitle', sub: [
       { title: 'shop.equipment.subSwords', filter: (s, items) => items[s.itemId]?.weaponType === 'sword' },
@@ -126,6 +128,7 @@ export const SHOPS = [
       { title: 'shop.equipment.subRings', filter: (s, items) => items[s.itemId]?.type === 'ring' },
     ]},
   { key: 'magic', title: 'shop.magic.title', subtitle: 'shop.magic.subtitle', sub: [
+      { title: 'shop.magic.subRefill', filter: s => s.type === 'refill' },
       { title: 'shop.magic.subPotions', filter: (s, items) => items[s.itemId]?.type === 'potion' },
       { title: 'shop.magic.subRunes', filter: (s, items) => items[s.itemId]?.type === 'rune' },
     ]},

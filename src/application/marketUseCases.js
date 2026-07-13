@@ -2,14 +2,14 @@
 // comprar itens. Mesmo modelo de confiança do ranking global (secret gerado
 // no navegador + funções SECURITY DEFINER no banco como fronteira real).
 import { G } from './gameStore.js?v=126';
-import { ITEMS } from '../domain/items.js?v=130';
+import { ITEMS } from '../domain/items.js?v=132';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 import {
   fetchMyWalletRequest, fetchListingsRequest, depositRequest, withdrawRequest,
   listItemRequest, cancelListingRequest, buyListingRequest,
 } from '../infrastructure/marketApi.js?v=125';
-import { addItemToInventory } from './inventoryCore.js?v=125';
+import { addItemToInventory } from './inventoryCore.js?v=126';
 import { ensurePlayerSecret } from './highscoresUseCases.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
 

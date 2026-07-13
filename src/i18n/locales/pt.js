@@ -17,7 +17,7 @@ export default {
 
   // ---- hunt tab ----
   'hunt.chooseZone': 'Escolher zona de caça…',
-  'hunt.change': 'Trocar ▾',
+  'hunt.switchHunt': 'Trocar de Hunt',
   'hunt.viewBattle': 'Ver Batalha',
   'hunt.recentLoot': 'Loot Recente',
   'hunt.blessings': 'Bênçãos',
@@ -237,8 +237,6 @@ export default {
   'rtc.potionMana': 'mana',
   'rtc.potionSlotEmptyTitle': 'Toque para escolher a poção de {label}',
   'rtc.potionSlotFilledTitle': '{name} — toque para trocar',
-  'rtc.healAmount': '+{amount} HP',
-  'rtc.manaAmount': '+{amount} mana',
   'rtc.owned': 'possui {qty}',
   'rtc.potionOf': 'Poção de {label}',
   'rtc.potionPickerHint': 'Toque na poção que o RTC deve beber automaticamente.',
@@ -790,8 +788,8 @@ export default {
   'shop.premium.subtitle': 'Compre Rubini Coins com dinheiro real — separado de tudo que se ganha jogando. Pagamento ainda não conectado a um gateway real.',
   'shop.premium.subRcPacks': '💎 Pacotes de Rubini Coins',
   'shop.rubini.title': '💎 Rubini Store',
-  'shop.rubini.subtitle': 'Boosts e supply — como o Ctrl+S do RubinOT. Pago com Rubini Coins ganhos jogando (tasks, Arena) ou gold. Outfits agora ficam na tela de Aparência (botão 👕 no card do personagem).',
-  'shop.rubini.subBoosts': '⚡ Boosts & Suprimentos',
+  'shop.rubini.subtitle': 'Boosts temporários, pagos só com Rubini Coins ganhos jogando (tasks, Arena) ou comprados na Loja Premium. Outfits agora ficam na tela de Aparência (botão 👕 no card do personagem).',
+  'shop.rubini.subBoosts': '⚡ Boosts',
   'shop.equipment.title': '⚔️ Loja de Equipamentos',
   'shop.equipment.subtitle': 'Armas e armaduras clássicas de Tibia, pagas em gold.',
   'shop.equipment.subSwords': '🗡️ Espadas',
@@ -807,7 +805,8 @@ export default {
   'shop.equipment.subBoots': '👢 Botas',
   'shop.equipment.subRings': '💍 Anéis',
   'shop.magic.title': '🧪 Loja de Artigos Mágicos',
-  'shop.magic.subtitle': 'Poções e runas, pagas em gold.',
+  'shop.magic.subtitle': 'Supply completo, poções e runas, pagos em gold.',
+  'shop.magic.subRefill': '🔋 Supply Completo',
   'shop.magic.subPotions': '🧪 Poções',
   'shop.magic.subRunes': '📜 Runas',
 };

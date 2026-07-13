@@ -2,8 +2,8 @@
 // projeto já usa RLS + funções SECURITY DEFINER no banco como fronteira de
 // segurança real; aqui é só o transporte HTTP, sem lógica de jogo nenhuma.
 
-const SUPABASE_URL = 'https://tyjmyfpdqyjjxejudfmr.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_-Y4w7gioJ_cj6SwkNsiOpQ_NSEbg6VE';
+const SUPABASE_URL = 'https://qrkqhqdfneumymhiczki.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFya3FocWRmbmV1bXltaGljemtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3OTk0NjIsImV4cCI6MjA5OTM3NTQ2Mn0.iBf7aQBVj583Q1TzRw1NeIuKK5jYpLuxByLFmkSnkhk';
 
 function headers() {
   return {

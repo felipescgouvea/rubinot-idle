@@ -5,7 +5,7 @@ import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyRewa
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal } from './shared.js?v=125';
 import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 
 // Atualiza o selo "!" do botão do header conforme há ou não resgate hoje.
 export function renderDailyBadge() {

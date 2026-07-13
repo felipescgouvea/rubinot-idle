@@ -7,15 +7,15 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } fr
 import { isSpellAvailable } from '../domain/spells.js?v=125';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=128';
-import { isRelicId } from '../domain/items.js?v=130';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=129';
+import { isRelicId } from '../domain/items.js?v=132';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=125';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
-import { gainXp } from './huntUseCases.js?v=128';
+import { gainXp } from './huntUseCases.js?v=129';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
 import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=127';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
@@ -36,7 +36,12 @@ export function applyCloudSave(cloudData) {
 function normalizeAccountData(parsed) {
   if (parsed && Array.isArray(parsed.slots)) {
     const slots = [parsed.slots[0] || null, parsed.slots[1] || null];
-    const activeSlot = parsed.activeSlot === 1 && slots[1] ? 1 : 0;
+    // NÃO exigir que o slot já tenha dado (`slots[activeSlot]` truthy) aqui —
+    // o slot ativo pode estar legitimamente vazio bem no momento de criar o
+    // 2º personagem (troca pro slot vazio, recarrega, cai na tela de escolha
+    // de vocação). Exigir dado prévio travava esse fluxo permanentemente de
+    // volta pro slot 0.
+    const activeSlot = parsed.activeSlot === 1 ? 1 : 0;
     return { activeSlot, slots };
   }
   return { activeSlot: 0, slots: [parsed, null] }; // formato antigo (pré multi-personagem)

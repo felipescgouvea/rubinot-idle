@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=125" />
-  <link rel="stylesheet" href="style.css?v=129" />
+  <link rel="stylesheet" href="style.css?v=130" />
 </head>
 <body>
   <div id="app">
@@ -100,12 +100,11 @@
           <div class="card" id="hunt-status-card">
             <h3>🗺️ <span data-i18n="shell.tabHunt">Hunt</span></h3>
             <div id="hunt-status-body">
-              <div id="zone-current-bar" onclick="openZonePicker()">
+              <div id="zone-current-bar">
                 <span id="zone-current-icon">🗺️</span>
                 <span id="zone-current-name" data-i18n="hunt.chooseZone">Choose a hunting ground…</span>
-                <span class="zone-current-change" data-i18n="hunt.change">Change ▾</span>
               </div>
-              <button id="hunt-status-battle-btn" class="btn-blue" onclick="openBattleModal()">⚔️ <span data-i18n="hunt.viewBattle">View Battle</span></button>
+              <button id="hunt-status-battle-btn" class="btn-blue" onclick="handleHuntStatusButton()"></button>
             </div>
           </div>
           <div class="hunt-mid-row">
@@ -162,7 +161,7 @@
              slot da mochila) — encaixada no espaço ao lado de Equipamento,
              não mais flutuando por cima do resto da página. -->
         <div class="card" id="backpack-inventory-card" style="display:none">
-          <h3>🎒 Bag</h3>
+          <h3>🎒 Bag <span id="bag-slot-counter" class="bag-slot-counter"></span></h3>
           <p class="muted" data-i18n="hunt.bagHint">Click an item to equip, sell, or see details. Right-click the Bag to close it.</p>
           <div id="autosell-controls"></div>
           <div id="inventory-grid"></div>
@@ -384,6 +383,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=130"></script>
+  <script type="module" src="src/main.js?v=131"></script>
 </body>
 </html>

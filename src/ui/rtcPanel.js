@@ -6,7 +6,7 @@
 // domain/rtcConfig.js (runas por vocação).
 import { G } from '../application/gameStore.js?v=126';
 import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=125';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=130';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=132';
 import { VOCATIONS } from '../domain/character.js?v=126';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
 import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=125';
@@ -16,7 +16,7 @@ import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125'
 import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=125';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -96,12 +96,16 @@ export function openRtcPotionPicker(kind) {
   const rows = list.map(([id, item]) => {
     const qty = G.inventory[id] || 0;
     const sel = selectedId === id;
-    const amount = kind === 'life' ? `💚 ${t('rtc.healAmount', { amount: item.heal })}` : `${vitalIconImg('mana', 'inline-icon')} ${t('rtc.manaAmount', { amount: item.mana })}`;
+    // Sem quantia fixa de propósito: a cura/mana real varia ±15% (ver
+    // domain/combatFormulas.js: potionRestore) — mostrar "+X HP" fixo aqui
+    // seria enganoso, já que o valor real nunca é exatamente esse.
+    const reqLabel = potionReqLabel(item, t);
+    const desc = [reqLabel, t('rtc.owned', { qty })].filter(Boolean).join(' · ');
     return `<div class="rtc-row ${sel ? 'selected' : ''}">
       <span class="rtc-row-icon">${itemIconImg(id, 'item-icon')}</span>
       <div class="rtc-row-info">
         <div class="rtc-row-name">${item.name}</div>
-        <div class="rtc-row-desc">${amount} · ${potionReqLabel(item, t)} · ${t('rtc.owned', { qty })}</div>
+        <div class="rtc-row-desc">${desc}</div>
       </div>
       <button class="rtc-row-btn" onclick="pickRtcPotion('${kind}','${id}')">${sel ? `✅ ${t('rtc.active')}` : t('rtc.use')}</button>
     </div>`;

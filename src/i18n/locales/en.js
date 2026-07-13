@@ -16,7 +16,7 @@ export default {
 
   // ---- hunt tab ----
   'hunt.chooseZone': 'Choose a hunting ground…',
-  'hunt.change': 'Change ▾',
+  'hunt.switchHunt': 'Switch Hunt',
   'hunt.viewBattle': 'View Battle',
   'hunt.recentLoot': 'Recent Loot',
   'hunt.blessings': 'Blessings',
@@ -236,8 +236,6 @@ export default {
   'rtc.potionMana': 'mana',
   'rtc.potionSlotEmptyTitle': 'Tap to choose the {label} potion',
   'rtc.potionSlotFilledTitle': '{name} — tap to change',
-  'rtc.healAmount': '+{amount} HP',
-  'rtc.manaAmount': '+{amount} mana',
   'rtc.owned': 'have {qty}',
   'rtc.potionOf': 'Potion of {label}',
   'rtc.potionPickerHint': 'Tap the potion the RTC should drink automatically.',
@@ -789,8 +787,8 @@ export default {
   'shop.premium.subtitle': "Buy Rubini Coins with real money — separate from anything earned by playing. Payment isn't connected to a real gateway yet.",
   'shop.premium.subRcPacks': '💎 Rubini Coins Packs',
   'shop.rubini.title': '💎 Rubini Store',
-  'shop.rubini.subtitle': "Boosts and supply — like RubinOT's Ctrl+S. Paid with Rubini Coins earned by playing (tasks, Arena) or gold. Outfits now live in the Appearance screen (👕 button on the character card).",
-  'shop.rubini.subBoosts': '⚡ Boosts & Supplies',
+  'shop.rubini.subtitle': 'Temporary boosts, paid only with Rubini Coins earned by playing (tasks, Arena) or bought in the Premium Shop. Outfits now live in the Appearance screen (👕 button on the character card).',
+  'shop.rubini.subBoosts': '⚡ Boosts',
   'shop.equipment.title': '⚔️ Equipment Shop',
   'shop.equipment.subtitle': 'Classic Tibia weapons and armor, paid in gold.',
   'shop.equipment.subSwords': '🗡️ Swords',
@@ -806,7 +804,8 @@ export default {
   'shop.equipment.subBoots': '👢 Boots',
   'shop.equipment.subRings': '💍 Rings',
   'shop.magic.title': '🧪 Magic Supplies Shop',
-  'shop.magic.subtitle': 'Potions and runes, paid in gold.',
+  'shop.magic.subtitle': 'Full supply, potions, and runes, paid in gold.',
+  'shop.magic.subRefill': '🔋 Full Supply',
   'shop.magic.subPotions': '🧪 Potions',
   'shop.magic.subRunes': '📜 Runes',
 };

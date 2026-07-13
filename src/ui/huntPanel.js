@@ -2,16 +2,16 @@
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
 import { G } from '../application/gameStore.js?v=126';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=128';
-import { MONSTERS } from '../domain/bestiary.js?v=128';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=129';
+import { MONSTERS } from '../domain/bestiary.js?v=129';
 import { cityName } from '../domain/cities.js?v=125';
-import { ITEMS } from '../domain/items.js?v=130';
+import { ITEMS } from '../domain/items.js?v=132';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=125';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=128';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=129';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -188,6 +188,17 @@ export function renderZonePicker() {
     titleEl.innerHTML = zone ? `⚔️ ${t('battle.title')} — ${zoneIconImg(zone, 'zone-current-icon-img')} ${t(zone.name)}${boostedBadge}` : `⚔️ ${t('battle.title')}`;
   }
   renderZoneTheme();
+  renderHuntStatusButton();
+}
+
+// Botão único (embaixo da barra de zona atual) com dupla função, conforme a
+// situação — caçando, mostra "Ver Batalha" (abre a cena de combate); parado,
+// mostra "Trocar de Hunt" (abre o seletor de zona). Existir só este botão
+// evita duplicar a mesma ação de trocar de zona em dois controles diferentes.
+export function renderHuntStatusButton() {
+  const btn = document.getElementById('hunt-status-battle-btn');
+  if (!btn) return;
+  btn.innerHTML = G.hunting ? `⚔️ ${t('hunt.viewBattle')}` : `🗺️ ${t('hunt.switchHunt')}`;
 }
 
 // Cada dungeon tinge o fundo da cena de batalha com sua própria paleta (ver
@@ -428,6 +439,6 @@ export function wireHuntPanelEvents() {
   on(EVENTS.BATTLE_LIST, () => { renderBattleList(); updateSceneMode(); });
   on(EVENTS.ZONE_PICKER, renderZonePicker);
   on(EVENTS.LOOT, renderLoot);
-  on(EVENTS.HUNT_BUTTON, ({ hunting } = {}) => { renderHuntButton({ hunting }); updateSceneMode(); });
+  on(EVENTS.HUNT_BUTTON, ({ hunting } = {}) => { renderHuntButton({ hunting }); renderHuntStatusButton(); updateSceneMode(); });
   on(EVENTS.OFFLINE_PROGRESS, renderOfflineProgressModal);
 }

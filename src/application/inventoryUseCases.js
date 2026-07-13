@@ -1,17 +1,17 @@
 import { G } from './gameStore.js?v=126';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=130';
-import { ZONES } from '../domain/bestiary.js?v=128';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=132';
+import { ZONES } from '../domain/bestiary.js?v=129';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=125';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=125';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=128';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=129';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
-import { runeDamage } from '../domain/combatFormulas.js?v=125';
+import { runeDamage, potionRestore } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=130';
+import { t } from '../i18n/i18n.js?v=131';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -19,7 +19,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=125';
+export { addItemToInventory } from './inventoryCore.js?v=126';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -176,14 +176,18 @@ export function useItem(itemId) {
     }
     runeDeaths = targets.filter(mon => mon.hp <= 0);
   }
+  // potionRestore() aplica a faixa ±15% (fiel ao Tibia: toda poção cura/repõe
+  // um valor ALEATÓRIO dentro de uma faixa, nunca um número fixo) — mesma
+  // fórmula usada quando o RTC bebe automaticamente (ver huntUseCases.js:
+  // applyRtcHealing). Bebida manual pela Bag tinha ficado de fora dessa conta.
   if (item.heal) {
     const before = G.hp;
-    G.hp = Math.min(getMaxHp(), G.hp + item.heal);
+    G.hp = Math.min(getMaxHp(), G.hp + potionRestore(item.heal));
     emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealHp', { item: item.name, amount: G.hp - before })}`, cat: 'suprimento' });
   }
   if (item.mana) {
     const before = G.mana;
-    G.mana = Math.min(getMaxMana(), G.mana + item.mana);
+    G.mana = Math.min(getMaxMana(), G.mana + potionRestore(item.mana));
     emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealMana', { item: item.name, amount: G.mana - before })}`, cat: 'suprimento' });
   }
 
