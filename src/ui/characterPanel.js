@@ -1,18 +1,20 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=116';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=116';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=116';
-import { skillIconImg } from './shared.js?v=116';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=116';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=116';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=116';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=116';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=116';
-import { on, EVENTS } from '../shared/eventBus.js?v=116';
-import { formatNum } from './shared.js?v=116';
-import { renderZonePicker } from './huntPanel.js?v=116';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=116';
+import { G } from '../application/gameStore.js?v=117';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=117';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=117';
+import { skillIconImg } from './shared.js?v=117';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=117';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=117';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=117';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=117';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=117';
+import { on, EVENTS } from '../shared/eventBus.js?v=117';
+import { formatNum } from './shared.js?v=117';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=117';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=117';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=117';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=117';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -265,9 +267,27 @@ export function renderHeaderStats() {
   document.getElementById('hdr-level').textContent = G.level;
   document.getElementById('hdr-gold').textContent = formatNum(G.gold);
   document.getElementById('hdr-rubini').textContent = formatNum(G.rubini);
+  const huntPill = document.getElementById('hdr-hunt-status');
+  const staminaPill = document.getElementById('hdr-stamina');
   if (G.vocation) {
     document.getElementById('hdr-hp').textContent = `${G.hp}/${getMaxHp()}`;
     document.getElementById('hdr-mana').textContent = `${G.mana}/${getMaxMana()}`;
+    // Status de caçada + Stamina: moraram no Analisador de Caçada (só visível
+    // na aba Caçada); agora ficam no header, visíveis em qualquer aba.
+    const st = getHuntStats();
+    huntPill.style.display = 'inline-block';
+    huntPill.className = `stat-pill hunt-status-pill ${st.hunting ? 'on' : 'off'}`;
+    huntPill.textContent = `${st.hunting ? '🟢 Caçando' : '⏸ Parado'} · ${fmtDuration(st.elapsedMs)}`;
+    if (isStaminaEnabled()) {
+      staminaPill.style.display = 'inline-block';
+      staminaPill.className = `stat-pill stamina-pill tier-${staminaTier(G.stamina)}`;
+      staminaPill.textContent = `🔋 Stamina ${formatStamina(G.stamina)} · XP ×${staminaXpMult(G.stamina)}`;
+    } else {
+      staminaPill.style.display = 'none';
+    }
+  } else {
+    huntPill.style.display = 'none';
+    staminaPill.style.display = 'none';
   }
 }
 

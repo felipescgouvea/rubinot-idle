@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=116" />
-  <link rel="stylesheet" href="style.css?v=116" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=117" />
+  <link rel="stylesheet" href="style.css?v=117" />
 </head>
 <body>
   <div id="app">
@@ -18,6 +18,8 @@
         <span class="stat-pill"><img src="assets/sprites/currency/Tibia_Coin.webp" alt="Rubini Coin" class="tibia-icon" onerror="this.outerHTML='<span>💎</span>'" /> <span id="hdr-rubini">0</span> RC</span>
         <span class="stat-pill"><img src="assets/sprites/vitals/Hit_Points_Icon.webp" alt="HP" class="tibia-icon" onerror="this.outerHTML='<span>❤️</span>'" /> <span id="hdr-hp">--</span></span>
         <span class="stat-pill"><img src="assets/sprites/vitals/Mana_Icon.webp" alt="Mana" class="tibia-icon" onerror="this.outerHTML='<span>🔵</span>'" /> <span id="hdr-mana">--</span></span>
+        <span class="stat-pill hunt-status-pill" id="hdr-hunt-status" style="display:none"></span>
+        <span class="stat-pill stamina-pill" id="hdr-stamina" style="display:none"></span>
       </div>
       <div id="header-btns">
         <span id="auth-user" class="auth-user"></span>
@@ -376,6 +378,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=116"></script>
+  <script type="module" src="src/main.js?v=117"></script>
 </body>
 </html>

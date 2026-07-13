@@ -4,15 +4,15 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=116';
-import { emit, EVENTS } from '../shared/eventBus.js?v=116';
-import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=116';
-import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=116';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=116';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=116';
-import { addItemToInventory } from './inventoryCore.js?v=116';
-import { ITEMS } from '../domain/items.js?v=116';
-import { saveGame } from './saveGameUseCase.js?v=116';
+import { G } from './gameStore.js?v=117';
+import { emit, EVENTS } from '../shared/eventBus.js?v=117';
+import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=117';
+import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=117';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=117';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=117';
+import { addItemToInventory } from './inventoryCore.js?v=117';
+import { ITEMS } from '../domain/items.js?v=117';
+import { saveGame } from './saveGameUseCase.js?v=117';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 

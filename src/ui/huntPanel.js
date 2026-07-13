@@ -1,18 +1,16 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=116';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=116';
-import { MONSTERS } from '../domain/bestiary.js?v=116';
-import { cityName } from '../domain/cities.js?v=116';
-import { ITEMS } from '../domain/items.js?v=116';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=116';
-import { on, EVENTS } from '../shared/eventBus.js?v=116';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=116';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=116';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=116';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=116';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=116';
+import { G } from '../application/gameStore.js?v=117';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=117';
+import { MONSTERS } from '../domain/bestiary.js?v=117';
+import { cityName } from '../domain/cities.js?v=117';
+import { ITEMS } from '../domain/items.js?v=117';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=117';
+import { on, EVENTS } from '../shared/eventBus.js?v=117';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=117';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=117';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=117';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -215,7 +213,7 @@ export function renderLoot() {
 // Hunt Analyzer (Analisador de Caçada): estatísticas da sessão atual — tempo,
 // kills, XP total e por hora, gold, valor do loot, suprimentos e lucro/hora.
 // Ver application/huntUseCases.js: getHuntStats.
-function fmtDuration(ms) {
+export function fmtDuration(ms) {
   const s = Math.floor(ms / 1000);
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
   return (h ? `${h}h ` : '') + `${m}m ${sec}s`;
@@ -227,12 +225,7 @@ export function renderHuntAnalyzer() {
   const gi = goldIconImg('inline-icon');
   const xi = vitalIconImg('xp', 'inline-icon');
   const profitColor = st.profit >= 0 ? 'var(--positive, #2ecc71)' : '#e05a5a';
-  const staminaLine = isStaminaEnabled()
-    ? `<div class="hunt-analyzer-stamina tier-${staminaTier(G.stamina)}">🔋 Stamina ${formatStamina(G.stamina)} · XP ×${staminaXpMult(G.stamina)}</div>`
-    : '';
   el.innerHTML = `
-    <div class="hunt-analyzer-status ${st.hunting ? 'on' : 'off'}">${st.hunting ? '🟢 Caçando' : '⏸ Parado'} · ${fmtDuration(st.elapsedMs)}</div>
-    ${staminaLine}
     <div class="hunt-analyzer-grid">
       <div class="ha-cell"><span class="ha-label">💀 Kills</span><span class="ha-val">${formatNum(st.kills)}</span></div>
       <div class="ha-cell"><span class="ha-label">${xi} XP</span><span class="ha-val">${formatNum(st.xp)}</span><span class="ha-rate">${formatNum(st.xpH)}/h</span></div>
