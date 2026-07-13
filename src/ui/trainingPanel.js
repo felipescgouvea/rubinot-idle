@@ -2,12 +2,12 @@
 // uma skill pra treinar (dummies): enquanto o treino roda, o personagem não
 // caça, mas acumula tentativas da skill mesmo offline (ver
 // application/trainingUseCases.js).
-import { G } from '../application/gameStore.js?v=117';
-import { TIBIA_SKILLS } from '../domain/character.js?v=117';
-import { TRAINABLE_SKILLS, triesPerMinuteFor } from '../domain/training.js?v=117';
-import { on, EVENTS } from '../shared/eventBus.js?v=117';
-import { skillIconImg } from './shared.js?v=117';
-import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=117';
+import { G } from '../application/gameStore.js?v=118';
+import { TIBIA_SKILLS } from '../domain/character.js?v=118';
+import { TRAINABLE_SKILLS, triesPerMinuteFor } from '../domain/training.js?v=118';
+import { on, EVENTS } from '../shared/eventBus.js?v=118';
+import { skillIconImg } from './shared.js?v=118';
+import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=118';
 
 export function renderTrainingSection() {
   const el = document.getElementById('training-body');

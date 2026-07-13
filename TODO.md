@@ -110,25 +110,25 @@ própria profissão; (d) só usa **runas** que o **Magic Level** da profissão p
 **Knight** (`voc.attackSkill: 'sword'`, `magicMult 0.1`)
 - [x] Fórmula melee = `0.09·atkArma·(skill+5) + nível/4` (aproximação Tibia — ver docs/formulas.md).
 - [x] Só equipa sword/axe/club (bloqueado no equip); sem wand/bow.
-- [x] Só magias de knight (exori / exori mas / exori gran / exura ico).
+- [x] Só magias de knight (Berserk/Brutal Strike/Whirlwind Throw/Groundshaker/Front Sweep/Fierce Berserk/Annihilation + Wound Cleansing).
 - [x] **Sem runa de ataque** — knight fora de `ATTACK_RUNE_VOCATIONS` (confirmado).
 
 **Paladin** (`voc.attackSkill: 'distance'`, `magicMult 0.35`)
 - [x] Fórmula distance = `0.09·atkMunição·(dist+5) + nível/4`.
 - [x] Só equipa distance + munição; melee/wand não contam ataque nem podem ser equipados.
-- [x] Só magias de paladin (Ethereal Spear, Divine Missile, Divine Caldera, Divine Healing, exura).
+- [x] Só magias de paladin (Ethereal Spear/Strong Ethereal Spear, Divine Missile, Divine Caldera, Divine Healing, exura).
 - [x] Runas limitadas pelo ML (magicMult baixo → poucas liberadas).
 
 **Sorcerer** (`voc.attackSkill: 'magic'`, `magicMult 1.0`)
 - [x] Fórmula mágica = `(nível·0.4 + ML·2.0)·power`; wand básico ×0.5 (calibração).
 - [x] Só equipa wand/rod.
-- [x] Só magias de sorcerer (Flame/Energy strikes+waves, Strong Energy, Hell's Core, curas).
+- [x] Magias de sorcerer: os 4 strikes básicos (Flame/Energy/Ice/Terra, compartilhados com druid — fiel à atualização real de magias do Tibia) + Death Strike exclusivo + linha de fogo/energia (waves, beam, strong, ultimate) + Hell's Core + Rage of the Skies + curas.
 - [x] Runas de sorcerer liberadas pelo ML (SD 15, GFB 7, Explosion 6, Fireball 4).
 
 **Druid** (`voc.attackSkill: 'magic'`, `magicMult 1.0`)
 - [x] Fórmula mágica idêntica ao sorcerer (nível+ML); wand básico ×0.5.
 - [x] Só equipa wand/rod.
-- [x] Só magias de druid (Ice/Terra strikes+waves, Eternal Winter, Flame Strike, curas).
+- [x] Magias de druid: os 4 strikes básicos (compartilhados com sorcerer) + Physical Strike exclusivo + linha de gelo/terra (waves, strong, ultimate) + Eternal Winter + Wrath of Nature + curas.
 - [x] Runas de druid liberadas pelo ML (Avalanche 9, etc.).
 
 ## 3. HEADER
@@ -167,6 +167,15 @@ própria profissão; (d) só usa **runas** que o **Magic Level** da profissão p
 
 ## ✅ Concluído recentemente (histórico)
 
+- [x] Auditoria de área/efeito das magias: Berserk e Fierce Berserk viraram área 3x3
+      própria ('square') em vez de dividir a área gigante do Groundshaker; Berserk/
+      Fierce Berserk/Brutal Strike/Whirlwind Throw/Front Sweep/Annihilation ganharam
+      o efeito vermelho real (blood); Hell's Core e Rage of the Skies estavam
+      trocadas (mesma entrada com palavra de energia e elemento de fogo) — separadas
+      corretamente; Eternal Winter tinha a palavra errada ("frio" → "frigo"); Energy
+      Strike/Ice Strike liberados também pro druid/sorcerer (strikes básicos são
+      compartilhados no Tibia real); Fireball Rune corrigida pra alvo único (não
+      tinha área real); +19 magias reais do Tibia que faltavam no elenco
 - [x] Efeito real de magia por-tile na área (groundshaker etc.), sem monstro na cena
 - [x] RTC: várias magias de ataque por prioridade
 - [x] Healing: arrastar a poção da bag pro slot (vida e mana)

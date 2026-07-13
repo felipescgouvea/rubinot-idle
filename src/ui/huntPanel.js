@@ -1,16 +1,16 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=117';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=117';
-import { MONSTERS } from '../domain/bestiary.js?v=117';
-import { cityName } from '../domain/cities.js?v=117';
-import { ITEMS } from '../domain/items.js?v=117';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=117';
-import { on, EVENTS } from '../shared/eventBus.js?v=117';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=117';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=117';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=117';
+import { G } from '../application/gameStore.js?v=118';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=118';
+import { MONSTERS } from '../domain/bestiary.js?v=118';
+import { cityName } from '../domain/cities.js?v=118';
+import { ITEMS } from '../domain/items.js?v=118';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=118';
+import { on, EVENTS } from '../shared/eventBus.js?v=118';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=118';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=118';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=118';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -40,23 +40,32 @@ function flashSpellEffect(wrap, spellElement) {
 }
 
 // Tiles cobertos pela forma da área da magia, em offsets (dx, dy) relativos ao
-// tile do personagem — replica o padrão real do Tibia:
-//  - ball: losango preenchido ao redor do caster (Groundshaker, Berserk, waves
-//    de área ampla, Hell's Core, Eternal Winter, Avalanche/GFB)
-//  - explosion: 3x3 ao redor
+// tile do personagem — replica o padrão real do Tibia (ver domain/attackAreas.js
+// e .spec/15-areas-de-ataque.md):
+//  - ball: losango GIGANTE ao redor do caster (Groundshaker, Divine Caldera,
+//    Hell's Core, Eternal Winter, Rage of the Skies, Wrath of Nature, Avalanche/GFB)
+//  - square: 3x3 completo ao redor do caster (Berserk, Fierce Berserk)
+//  - explosion: cruz compacta ao redor do alvo (Explosion Rune)
 //  - wave: cone que abre à frente (pra cima)
+//  - beam: linha reta à frente (pra cima)
 //  - single: um tile à frente
 const TILE_PX = 28;
 function areaOffsets(shape) {
   const out = [];
   if (shape === 'ball') {
     for (let dx = -3; dx <= 3; dx++) for (let dy = -3; dy <= 3; dy++) if (Math.abs(dx) + Math.abs(dy) <= 3) out.push([dx, dy]);
-  } else if (shape === 'explosion') {
+  } else if (shape === 'square') {
     for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) out.push([dx, dy]);
-  } else if (shape === 'wave' || shape === 'beam') {
-    // cone/feixe que abre PRA CIMA — o boneco fica embaixo encarando os monstros
-    // (que ficam no topo), então a onda de mago (Fire/Energy/Ice/Terra Wave) sai
-    // pra cima, na direção do inimigo.
+  } else if (shape === 'explosion') {
+    out.push([0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]); // cruz: centro + 4 vizinhos ortogonais
+  } else if (shape === 'beam') {
+    // feixe reto que sai PRA CIMA, largura 1 — o boneco fica embaixo encarando
+    // os monstros (que ficam no topo), então o feixe (Ethereal Spear, Energy
+    // Beam) sai reto na direção do inimigo, sem abrir como a onda.
+    for (let r = 1; r <= 5; r++) out.push([0, -r]);
+  } else if (shape === 'wave') {
+    // cone que abre PRA CIMA — a onda de mago (Fire/Energy/Ice/Terra Wave)
+    // sai pra cima, na direção do inimigo, alargando conforme avança.
     for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, -r]); }
   } else {
     out.push([0, -1]); // single: um tile À FRENTE (pra cima, direção do inimigo)

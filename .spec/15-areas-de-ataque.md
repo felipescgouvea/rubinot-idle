@@ -26,12 +26,19 @@ Cada ataque tem uma forma. As formas, do menor para o maior alcance:
 
 | Forma | Alcance | Exemplos reais de Tibia |
 |---|---|---|
-| **Alvo único** | 1 criatura | Golpe corpo-a-corpo normal, tiro de flecha, Strikes (Flame/Energy/Ice Strike), Sudden Death, Divine Missile, Ethereal Spear |
-| **Onda** | até 5 criaturas | Fire Wave, Energy Wave, Terra Wave, Ice Wave |
-| **Explosão** | até 5 criaturas | Explosion, Fireball |
-| **Área 3x3** | até 8 criaturas | Berserk (exori), Fierce Berserk, Groundshaker, Divine Caldera, Hell's Core, Eternal Winter, Avalanche, Great Fireball |
+| **Alvo único** | 1 criatura | Golpe corpo-a-corpo normal, tiro de flecha, Strikes (Flame/Energy/Ice/Terra/Death Strike), Sudden Death, Fireball, Divine Missile, Ethereal Spear |
+| **Feixe** | até 3 criaturas | Linha reta a partir do conjurador — Energy Beam, Great Energy Beam |
+| **Onda** | até 5 criaturas | Cone à frente — Fire Wave, Energy Wave, Terra Wave, Ice Wave, Front Sweep |
+| **Explosão** | até 5 criaturas | Cruz compacta ao redor do alvo — Explosion Rune |
+| **Área 3x3** | até 8 criaturas | As 8 casas ao redor do conjurador — Berserk (exori), Fierce Berserk |
+| **Área Gigante** | até 12 criaturas | Losango bem maior que o 3x3 (até 36 casas ou mais) — Groundshaker, Divine Caldera, Hell's Core, Eternal Winter, Rage of the Skies, Wrath of Nature, Avalanche, Great Fireball |
 
-O limite de criaturas atingidas é sempre restringido pelo tamanho real do grupo presente: um ataque de área 3x3 num grupo de 3 criaturas atinge as 3.
+Berserk e Groundshaker parecem parecidos ("os dois batem em volta do cavaleiro"),
+mas no Tibia real a área de Groundshaker é MUITO maior que a de Berserk — por
+isso as duas formas diferentes acima, em vez de tratar as duas magias como a
+mesma coisa.
+
+O limite de criaturas atingidas é sempre restringido pelo tamanho real do grupo presente: um ataque de área gigante num grupo de 3 criaturas atinge as 3.
 
 ## Regras de negócio
 

@@ -1,9 +1,9 @@
-import { G } from './gameStore.js?v=117';
-import { BP_REWARDS, bpTierForXp, dailyMissionsFor } from '../domain/progression.js?v=117';
-import { ITEMS } from '../domain/items.js?v=117';
-import { emit, EVENTS } from '../shared/eventBus.js?v=117';
-import { addItemToInventory } from './inventoryCore.js?v=117';
-import { saveGame } from './saveGameUseCase.js?v=117';
+import { G } from './gameStore.js?v=118';
+import { BP_REWARDS, bpTierForXp, dailyMissionsFor } from '../domain/progression.js?v=118';
+import { ITEMS } from '../domain/items.js?v=118';
+import { emit, EVENTS } from '../shared/eventBus.js?v=118';
+import { addItemToInventory } from './inventoryCore.js?v=118';
+import { saveGame } from './saveGameUseCase.js?v=118';
 
 export function checkBpTier() {
   const newTier = bpTierForXp(G.bpXp);

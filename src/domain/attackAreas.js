@@ -9,11 +9,12 @@
 // A referência de cada forma (que casas o Tibia atinge de verdade) está em
 // .spec/15-areas-de-ataque.md; `tibia` abaixo resume pra quem lê o código.
 export const ATTACK_AREAS = {
-  single:    { name: 'Alvo único',        maxTargets: 1, tibia: 'Atinge apenas o alvo à frente (golpe normal, strikes, SD, missile).' },
-  beam:      { name: 'Feixe',             maxTargets: 3, tibia: 'Linha reta a partir do conjurador (ex.: Ethereal Spear).' },
-  wave:      { name: 'Onda',              maxTargets: 5, tibia: 'Cone/onda à frente (ex.: Fire Wave, Energy Wave, Terra Wave).' },
-  explosion: { name: 'Explosão',          maxTargets: 5, tibia: 'Área compacta ao redor do alvo (ex.: Explosion, Fireball).' },
-  ball:      { name: 'Área 3x3 (8 sqm)',  maxTargets: 8, tibia: 'Todas as casas ao redor (ex.: exori, Avalanche, GFB, Divine Caldera, Hell\'s Core).' },
+  single:    { name: 'Alvo único',        maxTargets: 1,  tibia: 'Atinge apenas o alvo à frente (golpe normal, strikes, SD, missile, Fireball).' },
+  beam:      { name: 'Feixe',             maxTargets: 3,  tibia: 'Linha reta a partir do conjurador (ex.: Ethereal Spear, Energy Beam).' },
+  wave:      { name: 'Onda',              maxTargets: 5,  tibia: 'Cone/onda à frente (ex.: Fire Wave, Energy Wave, Terra Wave, Front Sweep).' },
+  explosion: { name: 'Explosão',          maxTargets: 5,  tibia: 'Cruz compacta ao redor do alvo (ex.: Explosion Rune).' },
+  square:    { name: 'Área 3x3 (9 sqm)',  maxTargets: 8,  tibia: 'As 8 casas ao redor do conjurador (ex.: Berserk, Fierce Berserk).' },
+  ball:      { name: 'Área Gigante (36+ sqm)', maxTargets: 12, tibia: 'Losango bem maior ao redor do conjurador — cobre até 36 casas ou mais (ex.: Groundshaker, Divine Caldera, Avalanche, Great Fireball, Hell\'s Core, Eternal Winter, Rage of the Skies, Wrath of Nature).' },
 };
 
 const DEFAULT = ATTACK_AREAS.single;

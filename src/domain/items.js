@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=117';
+import { primaryStatKeyForItem } from './rarity.js?v=118';
 
 export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
@@ -91,9 +91,10 @@ export const ITEMS = {
   // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
   intense_healing_rune: { name: 'Intense Healing Rune', icon: '📜', type: 'rune', heal: 150, sell: 70 },
-  // `area` = forma de área do Tibia (ver domain/attackAreas.js): SD é alvo
-  // único; Explosion/Fireball explodem numa área compacta; Avalanche e Great
-  // Fireball cobrem o 3x3 inteiro (até 8 criaturas da sala).
+  // `area` = forma de área do Tibia (ver domain/attackAreas.js): SD e Fireball
+  // são de alvo único (fiel ao TFS — nenhuma das duas tem área); Explosion
+  // explode numa cruz compacta; Avalanche e Great Fireball cobrem a área
+  // gigante inteira (até 12 criaturas da sala).
   // `power` = base power REAL do Tibia/TFS [aMin, baseMin, aMax, baseMax]; o dano é
   // aleatório entre min/max, min = nível/5 + aMin·ML + baseMin (idem max) — mesma
   // fórmula das magias (ver domain/combatFormulas.js: runeDamage). `dmg` é só um
@@ -101,7 +102,7 @@ export const ITEMS = {
   sudden_death_rune:    { name: 'Sudden Death Rune', icon: '📜', type: 'rune', dmg: 320, power: [4.3, 32, 7.4, 48], area: 'single', element: 'death', reqMl: 15, sell: 200 },
   explosion_rune:       { name: 'Explosion Rune', icon: '📜', type: 'rune', dmg: 140, power: [1.6, 9, 3.2, 19], area: 'explosion', element: 'physical', reqMl: 6, sell: 60 },
   avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'ice', reqMl: 9, sell: 90 },
-  fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, power: [1.8, 12, 3.0, 17], area: 'explosion', element: 'fire', reqMl: 4, sell: 15 },
+  fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, power: [1.8, 12, 3.0, 17], area: 'single', element: 'fire', reqMl: 4, sell: 15 },
   great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'fire', reqMl: 7, sell: 45 },
   great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 200, mana: 150, sell: 320 },
 

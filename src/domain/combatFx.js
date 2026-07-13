@@ -14,12 +14,18 @@ const ELEMENT_EFFECT = {
   holy: 'holy',
   earth: 'earth',
   physical: 'physical',
+  death: 'death',
 };
 
 // Magias com efeito visual próprio no Tibia (diferente do "por elemento").
 const SPELL_EFFECT_OVERRIDE = {
+  exori: 'blood',                  // Berserk — CONST_ME_HITAREA (respingo vermelho)
+  exori_gran: 'blood',             // Fierce Berserk — mesmo CONST_ME_HITAREA do Berserk
+  exori_ico: 'blood',              // Brutal Strike — CONST_ME_HITAREA
+  exori_hur: 'blood',              // Whirlwind Throw — CONST_ME_HITAREA
+  exori_min: 'blood',              // Front Sweep — CONST_ME_HITAREA
+  exori_gran_ico: 'blood',         // Annihilation — CONST_ME_HITAREA
   exori_mas: 'groundshaker',       // Groundshaker — abalo de pedras no chão
-  exevo_gran_mas_vis: 'fire',      // Hell's Core — grande explosão de fogo
 };
 
 const RUNE_EFFECT = {
