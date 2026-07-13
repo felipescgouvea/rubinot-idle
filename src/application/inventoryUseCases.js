@@ -11,7 +11,7 @@ import { runeDamage } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
 import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=125';
+import { t } from '../i18n/i18n.js?v=126';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];

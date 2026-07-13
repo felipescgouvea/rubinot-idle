@@ -7,7 +7,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=128';
 import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=125';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
-import { t } from '../i18n/i18n.js?v=125';
+import { t } from '../i18n/i18n.js?v=126';
 
 // Credita a DIFERENÇA de Charm Points de uma criatura: total que ela já vale
 // (pelas mortes acumuladas) menos o que já foi creditado dela antes. Assim uma

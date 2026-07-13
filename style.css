@@ -395,7 +395,9 @@ body {
 }
 .char-status-portrait { flex-shrink: 0; display: flex; align-items: center; }
 .char-status-name-block { flex-shrink: 0; min-width: 120px; }
-.char-status-name-block .char-name-line { font-family: var(--serif); font-size: 12.5px; letter-spacing: 0.5px; color: var(--navy-2); font-weight: 700; white-space: nowrap; }
+.char-status-name-block .char-nick-line { font-family: var(--serif); font-size: 12.5px; letter-spacing: 0.3px; color: var(--gold-bright); font-weight: 800; white-space: nowrap; text-shadow: 0 1px 1px #00000055; }
+.char-status-name-block .char-nick-line:empty { display: none; }
+.char-status-name-block .char-name-line { font-family: var(--serif); font-size: 11.5px; letter-spacing: 0.5px; color: var(--navy-2); font-weight: 700; white-space: nowrap; }
 .char-status-name-block .char-level-line { font-size: 10.5px; color: var(--ink-soft); margin-top: 1px; white-space: nowrap; }
 .char-status-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 160px; max-width: 340px; }
 .bar-row-mini { display: flex; align-items: center; gap: 6px; }

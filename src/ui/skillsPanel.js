@@ -5,7 +5,7 @@ import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js
 import { resolveEquippedItem } from '../domain/items.js?v=125';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=125';
+import { t } from '../i18n/i18n.js?v=126';
 
 export function renderSkillsPanel() {
   const pts = document.getElementById('skill-points-display');

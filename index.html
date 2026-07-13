@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=125" />
-  <link rel="stylesheet" href="style.css?v=127" />
+  <link rel="stylesheet" href="style.css?v=128" />
 </head>
 <body>
   <div id="app">
@@ -58,7 +58,8 @@
     <div id="char-info" style="display:none">
       <div class="char-status-portrait"><span id="char-voc-icon" class="char-voc-big"></span></div>
       <div class="char-status-name-block">
-        <div class="char-name-line"><strong id="char-name-display"></strong><span id="char-voc-name"></span></div>
+        <div class="char-nick-line" id="char-name-display"></div>
+        <div class="char-name-line"><span id="char-voc-name"></span></div>
         <div class="char-level-line">Lv <span id="char-level">1</span> · <span id="char-xp">0</span>/<span id="char-xp-next">100</span> XP</div>
       </div>
       <div class="char-status-bars">
@@ -383,6 +384,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=127"></script>
+  <script type="module" src="src/main.js?v=128"></script>
 </body>
 </html>

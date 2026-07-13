@@ -8,7 +8,7 @@ import { TRAINABLE_SKILLS, triesPerMinuteFor } from '../domain/training.js?v=125
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
 import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=125';
-import { t } from '../i18n/i18n.js?v=125';
+import { t } from '../i18n/i18n.js?v=126';
 
 export function renderTrainingSection() {
   const el = document.getElementById('training-body');

@@ -6,7 +6,7 @@ import { XP_TABLE } from '../domain/character.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
-import { t } from '../i18n/i18n.js?v=125';
+import { t } from '../i18n/i18n.js?v=126';
 
 let lastSubmitAt = 0;
 let highscoresCache = null;
