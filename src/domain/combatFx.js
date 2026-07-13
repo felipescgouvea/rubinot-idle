@@ -19,12 +19,12 @@ const ELEMENT_EFFECT = {
 
 // Magias com efeito visual próprio no Tibia (diferente do "por elemento").
 const SPELL_EFFECT_OVERRIDE = {
-  exori: 'blood',                  // Berserk — CONST_ME_HITAREA (respingo vermelho)
-  exori_gran: 'blood',             // Fierce Berserk — mesmo CONST_ME_HITAREA do Berserk
-  exori_ico: 'blood',              // Brutal Strike — CONST_ME_HITAREA
-  exori_hur: 'blood',              // Whirlwind Throw — CONST_ME_HITAREA
-  exori_min: 'blood',              // Front Sweep — CONST_ME_HITAREA
-  exori_gran_ico: 'blood',         // Annihilation — CONST_ME_HITAREA
+  exori: 'hitarea',                // Berserk — CONST_ME_HITAREA (redemoinho branco, não sangue)
+  exori_gran: 'hitarea',           // Fierce Berserk — mesmo CONST_ME_HITAREA do Berserk
+  exori_ico: 'hitarea',            // Brutal Strike — CONST_ME_HITAREA
+  exori_hur: 'hitarea',            // Whirlwind Throw — CONST_ME_HITAREA
+  exori_min: 'hitarea',            // Front Sweep — CONST_ME_HITAREA
+  exori_gran_ico: 'hitarea',       // Annihilation — CONST_ME_HITAREA
   exori_mas: 'groundshaker',       // Groundshaker — abalo de pedras no chão
 };
 

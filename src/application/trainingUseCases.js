@@ -6,13 +6,13 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G } from './gameStore.js?v=119';
-import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, triesForTraining } from '../domain/training.js?v=119';
-import { TIBIA_SKILLS } from '../domain/character.js?v=119';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=119';
-import { trainSkill } from './skillUseCases.js?v=119';
-import { stopHunt } from './huntUseCases.js?v=119';
-import { saveGame } from './saveGameUseCase.js?v=119';
+import { G } from './gameStore.js?v=120';
+import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, triesForTraining } from '../domain/training.js?v=120';
+import { TIBIA_SKILLS } from '../domain/character.js?v=120';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=120';
+import { trainSkill } from './skillUseCases.js?v=120';
+import { stopHunt } from './huntUseCases.js?v=120';
+import { saveGame } from './saveGameUseCase.js?v=120';
 
 let trainingInterval = null;
 

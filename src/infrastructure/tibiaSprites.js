@@ -56,6 +56,15 @@ const ITEM_SPRITE_OVERRIDE = {
   // "Robe" também não existe como item genérico — só variantes nomeadas
   // (Red Robe, Purple Robe, etc.). Red Robe é a mais antiga/reconhecível.
   robe: 'Red_Robe.gif',
+  // Loot exclusivo dos 5 bosses RubinOT — não existem no Tibia real (mesmo
+  // caso dos bosses em si, ver SPRITE_OVERRIDE acima), então usam a sprite
+  // real de um item temático equivalente em vez de cair no emoji genérico.
+  rubini_shard: 'Shard.gif',
+  lothlorien_bow: 'Elvish_Bow.gif',
+  executioner_axe: 'Headchopper.gif',
+  morgul_blade: 'Soulcutter.gif',
+  corrupted_heart: 'Rotten_Heart.gif',
+  nzoth_tentacle: 'Tentacle_of_the_Deep_Terror.gif',
 };
 
 // Toda entrada de ITEMS usa um id em inglês (mesmo quando o "name" exibido ao
@@ -110,7 +119,7 @@ export const VITAL_ICON_FILES = {
 // mantido ANIMADO. A UI espalha esse sprite nos tiles ao redor do personagem
 // conforme a forma da área da magia (ver ui/huntPanel.js: playAreaEffect e
 // domain/combatFx.js pro nome por magia/runa).
-const EFFECT_NAMES = new Set(['fire','energy','ice','holy','physical','death','earth','groundshaker','blood']);
+const EFFECT_NAMES = new Set(['fire','energy','ice','holy','physical','death','earth','groundshaker','blood','hitarea']);
 // ?ev (effect version) força o navegador a re-baixar quando o CONTEÚDO de um
 // sprite de efeito muda mantendo o nome (ex.: groundshaker trocado do ícone
 // pela animação real do efeito). Bumpe ao reprocessar um efeito.
