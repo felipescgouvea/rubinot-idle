@@ -475,7 +475,6 @@ export default {
   'battlepass.tierLabel': 'Tier {tier}',
 
   // ---- tasks panel (ui/tasksPanel.js) ----
-  'tasks.lockedLevel': 'Lv {lvl}+',
   'tasks.firstTimeBonus': 'First time: 2x reward',
   'tasks.active': 'Active',
   'tasks.start': 'Start',

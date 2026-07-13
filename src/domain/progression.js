@@ -26,34 +26,36 @@ export function worldGoldMultiplier(worldId) {
 // desbloqueia a próxima). Lista da Lothlorien's Room confirmada na wiki/comunidade;
 // demais salas seguem a progressão de bestiário do servidor.
 export const TASK_ROOMS = [
-  { id: 'lothlorien', name: "Lothlorien's Room", icon: '🌲', minLevel: 8, tasks: [
+  { id: 'lothlorien', name: "Lothlorien's Room", icon: '🌲', tasks: [
     { m: 'goblin', n: 150 }, { m: 'troll', n: 200 }, { m: 'rotworm', n: 300 },
     { m: 'minotaur', n: 300 }, { m: 'dwarf', n: 300 }, { m: 'elf', n: 300 },
     { m: 'dworc', n: 400 }, { m: 'scarab', n: 400 }, { m: 'cyclops', n: 500 },
     { m: 'mutated_human', n: 500 },
   ]},
-  { id: 'executioner', name: "Executioner's Room", icon: '🪓', minLevel: 50, tasks: [
+  { id: 'executioner', name: "Executioner's Room", icon: '🪓', tasks: [
     { m: 'giant_spider', n: 500 }, { m: 'dragon', n: 500 }, { m: 'dragon_lord', n: 600 },
     { m: 'frost_dragon', n: 600 }, { m: 'warlock', n: 700 }, { m: 'hydra', n: 700 },
     { m: 'medusa', n: 800 }, { m: 'behemoth', n: 800 },
   ]},
-  { id: 'morgul', name: "Morgul's Room", icon: '👻', minLevel: 100, tasks: [
+  { id: 'morgul', name: "Morgul's Room", icon: '👻', tasks: [
     { m: 'bonebeast', n: 600 }, { m: 'banshee', n: 600 }, { m: 'vampire', n: 700 },
     { m: 'lich', n: 700 }, { m: 'grim_reaper', n: 800 }, { m: 'undead_dragon', n: 900 },
   ]},
-  { id: 'corrupted', name: "Corrupted's Room", icon: '🩸', minLevel: 150, tasks: [
+  { id: 'corrupted', name: "Corrupted's Room", icon: '🩸', tasks: [
     { m: 'fury', n: 800 }, { m: 'hellhound', n: 800 }, { m: 'plaguesmith', n: 900 },
     { m: 'demon', n: 1000 }, { m: 'juggernaut', n: 1200 },
   ]},
-  { id: 'nzoth', name: "N'Zoth's Room", icon: '🌀', minLevel: 250, tasks: [
+  { id: 'nzoth', name: "N'Zoth's Room", icon: '🌀', tasks: [
     { m: 'lothlorien', n: 30 }, { m: 'executioner', n: 30 }, { m: 'morgul', n: 40 },
     { m: 'corrupted_one', n: 40 }, { m: 'nzoth', n: 50 },
   ]},
 ];
 
 // Uma task só desbloqueia quando a anterior da cadeia foi completa ≥1x (Linked!).
-export function isTaskUnlocked(room, index, level, taskCompletion) {
-  if (level < room.minLevel) return false;
+// Sem trava de nível de propósito (pedido do Felipe): qualquer personagem pode
+// entrar em qualquer sala a qualquer nível, mesmo que a criatura da task seja
+// bem mais forte — a progressão é só a cadeia sequencial dentro da sala.
+export function isTaskUnlocked(room, index, taskCompletion) {
   if (index === 0) return true;
   const prev = room.tasks[index - 1];
   return (taskCompletion[prev.m] || 0) >= 1;

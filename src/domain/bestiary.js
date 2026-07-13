@@ -14,12 +14,14 @@ export const ZONES = {
   // --- Rookgaard (ilha inicial, sempre desbloqueada — única cidade disponível
   // até o nível 8, ver domain/cities.js: ROOKGAARD_LEVEL_CAP). As 5 hunts
   // seguem a progressão real de criaturas de Rookgaard no Tibia global (fonte:
-  // otland/forgottenserver), encadeadas por boss igual às demais cidades. ---
+  // otland/forgottenserver). Nenhuma trava de boss entre elas: as 5 já vêm
+  // TODAS abertas (pedido do Felipe) — `boss` continua marcado só pra
+  // alimentar a aba de Linked Tasks (Boss Rush), não pra gatear a hunt. ---
   rat_nest:      { city: 'rookgaard', name: 'zone.rat_nest', icon: '🐁',  worldReq: 'auroria', monsters: ['rat'], goldMult: 1.0, xpMult: 1.0, theme: ['#4a4234', '#231f18'], boss: 'rat' },
-  rat_cellar:    { city: 'rookgaard', name: 'zone.rat_cellar', icon: '🐀',  worldReq: 'auroria', monsters: ['rat', 'cave_rat'], goldMult: 1.05, xpMult: 1.04, theme: ['#4a4234', '#231f18'], boss: 'cave_rat', requiresBossOf: 'rat_nest' },
-  bug_hole:      { city: 'rookgaard', name: 'zone.bug_hole', icon: '🐛',  worldReq: 'auroria', monsters: ['bug'], goldMult: 1.1, xpMult: 1.08, theme: ['#4a4234', '#2e2419'], boss: 'bug', requiresBossOf: 'rat_cellar' },
-  spider_den:    { city: 'rookgaard', name: 'zone.spider_den', icon: '🕷️',  worldReq: 'auroria', monsters: ['spider', 'poison_spider'], goldMult: 1.15, xpMult: 1.12, theme: ['#4a3a3a', '#201616'], boss: 'poison_spider', requiresBossOf: 'bug_hole' },
-  wolf_den:      { city: 'rookgaard', name: 'zone.wolf_den', icon: '🐺',  worldReq: 'auroria', monsters: ['wolf'], goldMult: 1.2, xpMult: 1.15, theme: ['#3d5c47', '#1a2b20'], boss: 'wolf', requiresBossOf: 'spider_den' },
+  rat_cellar:    { city: 'rookgaard', name: 'zone.rat_cellar', icon: '🐀',  worldReq: 'auroria', monsters: ['rat', 'cave_rat'], goldMult: 1.05, xpMult: 1.04, theme: ['#4a4234', '#231f18'], boss: 'cave_rat' },
+  bug_hole:      { city: 'rookgaard', name: 'zone.bug_hole', icon: '🐛',  worldReq: 'auroria', monsters: ['bug'], goldMult: 1.1, xpMult: 1.08, theme: ['#4a4234', '#2e2419'], boss: 'bug' },
+  spider_den:    { city: 'rookgaard', name: 'zone.spider_den', icon: '🕷️',  worldReq: 'auroria', monsters: ['spider', 'poison_spider'], goldMult: 1.15, xpMult: 1.12, theme: ['#4a3a3a', '#201616'], boss: 'poison_spider' },
+  wolf_den:      { city: 'rookgaard', name: 'zone.wolf_den', icon: '🐺',  worldReq: 'auroria', monsters: ['wolf'], goldMult: 1.2, xpMult: 1.15, theme: ['#3d5c47', '#1a2b20'], boss: 'wolf' },
 
   // --- Dawnport (ilha inicial removida do Tibia global — travada até nível 8
   // como qualquer outra cidade do mainland, ver domain/cities.js: isCityUnlocked) ---

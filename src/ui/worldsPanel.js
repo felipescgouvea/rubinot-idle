@@ -1,5 +1,5 @@
 import { G } from '../application/gameStore.js?v=126';
-import { WORLDS } from '../domain/progression.js?v=125';
+import { WORLDS } from '../domain/progression.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { t } from '../i18n/i18n.js?v=133';
 

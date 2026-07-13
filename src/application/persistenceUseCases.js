@@ -8,9 +8,10 @@ import { isSpellAvailable } from '../domain/spells.js?v=125';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
 import { ZONES, MONSTERS } from '../domain/bestiary.js?v=131';
-import { isRelicId } from '../domain/items.js?v=134';
+import { isRelicId, STARTER_KITS } from '../domain/items.js?v=134';
+import { addItemToInventory } from './inventoryCore.js?v=126';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
-import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=125';
+import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=126';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { t } from '../i18n/i18n.js?v=133';
@@ -120,6 +121,18 @@ export function loadGame() {
   if (!('legs' in G.equipment)) { G.equipment.legs = null; G.equipment.boots = null; }
   // migração: slot de Munição (ammo) é novo — ver domain/items.js.
   if (!('ammo' in G.equipment)) G.equipment.ammo = null;
+  // migração: o kit inicial ganhou capacete (e escudo/spellbook pros magos) —
+  // personagens criados antes disso nunca receberam essas peças. Preenche só
+  // slot VAZIO (não sobrescreve equipamento que o jogador já trocou).
+  if (G.vocation) {
+    const kit = STARTER_KITS[G.vocation] || {};
+    Object.entries(kit).forEach(([slot, itemId]) => {
+      if (!G.equipment[slot]) {
+        addItemToInventory(itemId);
+        G.equipment[slot] = itemId;
+      }
+    });
+  }
   // Tira da prioridade magias que a vocação/nível atual não pode usar.
   G.rtc.attackSpells = normalizeAttackSpells(G.rtc).filter(id => isSpellAvailable(id, G.vocation, G.level));
   if (G.rtc.attackRune && !isRuneAvailableToVocation(G.rtc.attackRune, G.vocation)) { G.rtc.attackType = null; G.rtc.attackRune = null; }
