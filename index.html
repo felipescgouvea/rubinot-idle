@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=121" />
-  <link rel="stylesheet" href="style.css?v=121" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=122" />
+  <link rel="stylesheet" href="style.css?v=122" />
 </head>
 <body>
   <div id="app">
@@ -23,6 +23,7 @@
       </div>
       <div id="header-btns">
         <span id="auth-user" class="auth-user"></span>
+        <button class="btn-small" onclick="openSettingsPanel()">⚙️ Config</button>
         <button class="btn-small daily-btn" onclick="openDailyReward()">🎁 Diário<span id="daily-reward-badge" class="daily-badge">!</span></button>
         <button class="btn-small" onclick="saveGame()">💾 Salvar</button>
         <button class="btn-small danger" onclick="confirmReset()">🔄 Reset</button>
@@ -384,6 +385,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=121"></script>
+  <script type="module" src="src/main.js?v=122"></script>
 </body>
 </html>
