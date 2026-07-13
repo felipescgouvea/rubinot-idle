@@ -340,6 +340,11 @@ body {
 .panel { display: none; gap: 14px; }
 .panel.active { display: flex; flex-wrap: wrap; }
 .panel-left { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 14px; }
+/* Análise da Caçada + Loot Recente lado a lado, cada um com metade do
+   espaço — Loot Recente costumava ficar empilhado sozinho embaixo (e
+   escondido a maior parte do tempo, já que só aparece com loot). */
+.hunt-mid-row { display: flex; gap: 14px; }
+.hunt-mid-row > .card { flex: 1; min-width: 0; }
 /* Sem flex-grow nem min-width fixo: o card de Equipamento já encolhe pro
    próprio conteúdo (ver #equip-card), então esta coluna precisa acompanhar
    — senão sobra espaço "fantasma" reservado à toa entre Equipamento e a Bag
@@ -420,8 +425,9 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .bless-pips strong { margin-left: 6px; font-size: 13px; color: var(--navy-1); }
 .bless-info { font-size: 11px; margin: 0 0 8px !important; }
 
-/* Hunt Analyzer (Análise da Caçada) */
-.hunt-analyzer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+/* Hunt Analyzer (Análise da Caçada) — 1 coluna: o card divide o espaço com
+   Loot Recente (.hunt-mid-row), 2 colunas de célula ficariam apertadas. */
+.hunt-analyzer-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
 .ha-cell {
   display: flex; flex-direction: column; gap: 1px;
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
@@ -1783,6 +1789,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   .vocation-grid { grid-template-columns: 1fr; }
   #panels { padding: 10px; }
   .panel-left, .panel-right { min-width: 100%; }
+  .hunt-mid-row { flex-direction: column; }
   #header { margin: 10px 10px 0; }
   #tabs { margin: 8px 10px 0; }
   .hs-table { font-size: 10px; }
@@ -2024,23 +2031,47 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #boosted-card .boosted-sprite-img { max-height: 24px; max-width: 24px; }
 #boosted-card .boosted-name { font-size: 8px; line-height: 1.05; }
 
-/* Seletor de quantidade na loja (poções/runas): ajustável via scroll horizontal
-   sobre o campo, ao lado do Comprar. Setas nativas do input number ficam
-   escondidas — a interação é rolar o scroll, não clicar num botão direcional. */
-.shop-buy-row { display: flex; gap: 6px; align-items: stretch; }
-.shop-buy-row .skill-upgrade-btn { flex: 1; }
-.shop-qty {
-  width: 58px; flex: none; padding: 6px 6px;
+/* Seletor de quantidade na loja (poções/runas): campo numérico + barra de
+   rolagem (◀ trilha arrastável ▶), igual ao seletor de quantidade do trade
+   do Tibia, ao lado de um Comprar mais estreito pra abrir espaço. */
+.shop-buy-row { display: flex; gap: 6px; align-items: center; }
+.shop-buy-row .shop-buy-btn {
+  flex: none; width: auto;
+  padding: 6px 10px;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+.shop-qty-widget {
+  display: flex; align-items: center; gap: 3px;
+  flex: 1; min-width: 0;
   border: 1px solid var(--line-soft); border-radius: 6px;
-  text-align: center; font-weight: 700; font-size: 13px;
-  color: var(--ink); background: #fff;
-  cursor: ew-resize;
+  background: #fff; padding: 2px 4px;
+}
+.shop-qty-num {
+  width: 24px; flex: none; padding: 0;
+  border: none; background: transparent;
+  text-align: center; font-weight: 700; font-size: 11.5px;
+  color: var(--ink);
   -moz-appearance: textfield;
 }
-.shop-qty::-webkit-outer-spin-button,
-.shop-qty::-webkit-inner-spin-button {
+.shop-qty-num::-webkit-outer-spin-button,
+.shop-qty-num::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.shop-qty-arrow {
+  flex: none; width: 15px; height: 17px; padding: 0;
+  border: 1px solid var(--line-soft); border-radius: 3px;
+  background: linear-gradient(180deg, #fff, #e7ddc0);
+  font-size: 8px; line-height: 1; color: var(--ink);
+  cursor: pointer;
+}
+.shop-qty-arrow:hover { filter: brightness(0.94); }
+.shop-qty-arrow:active { filter: brightness(0.88); }
+.shop-qty-range {
+  flex: 1; min-width: 28px; height: 14px; margin: 0;
+  accent-color: var(--gold, #b8860b);
+  cursor: pointer;
 }
 .shop-req { color: #b1341f; font-weight: 700; }
 

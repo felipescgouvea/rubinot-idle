@@ -95,7 +95,7 @@ export const MONSTERS = {
   dwarf_guard:   { name: 'Dwarf Guard', icon: '🛡️', hp: 245, atk: 140, def: 18, xp: 165, gold: [10,30], loot: [['dwarven_ring',0.03],['halberd',0.04]] },
   elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 25 }] },
   dworc:         { name: 'Dworc Voodoomaster', icon: '🌀', hp: 80,  atk: 20, def: 4,  xp: 55,  gold: [2,8],   loot: [['orc_tooth',0.4],['spider_fangs',0.2]], spells: [{ element: 'death', min: 0, max: 40 }, { element: 'earth', min: 6, max: 18 }] },
-  dworc_fighter: { name: 'Dworc Fighter', icon: '🪓', hp: 140, atk: 50, def: 8,  xp: 70,  gold: [3,10],  loot: [['orc_tooth',0.5],['studded_armor',0.05]] },
+  dworc_fighter: { name: 'Dworc Fleshhunter', icon: '🪓', hp: 140, atk: 50, def: 8,  xp: 70,  gold: [3,10],  loot: [['orc_tooth',0.5],['studded_armor',0.05]] },
   dworc_venomsniper:{ name: 'Dworc Venomsniper', icon: '🏹', hp: 70,  atk: 15, def: 3,  xp: 60,  gold: [2,9],   loot: [['orc_tooth',0.4],['spider_fangs',0.3]], spells: [{ element: 'earth', min: 10, max: 30 }] },
   scarab:        { name: 'Scarab', icon: '🪲', hp: 320, atk: 75, def: 12, xp: 120, gold: [8,25],  loot: [['scarab_coin',0.3],['meat',0.4]], spells: [{ element: 'earth', min: 0, max: 35 }] },
   mutated_human: { name: 'Mutated Human', icon: '🧟', hp: 240, atk: 90, def: 8,  xp: 150, gold: [10,28], loot: [['mutated_flesh',0.5],['studded_armor',0.04]], spells: [{ element: 'death', min: 50, max: 60 }, { element: 'earth', min: 190, max: 280 }] },
