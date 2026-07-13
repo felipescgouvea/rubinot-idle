@@ -425,9 +425,7 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .bless-pips strong { margin-left: 6px; font-size: 13px; color: var(--navy-1); }
 .bless-info { font-size: 11px; margin: 0 0 8px !important; }
 
-/* Hunt Analyzer (Análise da Caçada) — 1 coluna: o card divide o espaço com
-   Loot Recente (.hunt-mid-row), 2 colunas de célula ficariam apertadas. */
-.hunt-analyzer-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.hunt-analyzer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .ha-cell {
   display: flex; flex-direction: column; gap: 1px;
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
