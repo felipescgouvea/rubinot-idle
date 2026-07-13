@@ -2117,6 +2117,20 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   color: #6b4e00; font-size: 12px; font-weight: 600;
   padding: 8px 12px; margin-bottom: 12px;
 }
+/* Sub-abas do Admin (Geral / Spawn de Hunts / Loot) — mesmo mecanismo do
+   ui/rtcPanel.js (.rtc-subtabs), com paleta clara pra combinar com o resto
+   do painel (que é "pergaminho", não escuro como o console do RTC). */
+.admin-subtabs { display: flex; gap: 6px; margin-bottom: 12px; border-bottom: 1px solid var(--line-soft); padding-bottom: 8px; }
+.admin-subtab-btn {
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 1px solid var(--line-soft);
+  color: var(--ink-soft);
+  font-family: var(--serif); font-size: 12px; font-weight: 700;
+  padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  transition: filter 0.15s;
+}
+.admin-subtab-btn:hover { filter: brightness(0.97); }
+.admin-subtab-btn.active { background: linear-gradient(180deg, #ffe9a3, var(--gold-bright)); border-color: var(--gold); color: #4a3300; }
 #admin-content h4 { font-family: var(--serif); font-size: 13px; color: var(--ink); margin: 14px 0 8px !important; }
 .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .admin-field {
@@ -2152,3 +2166,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .admin-spawn-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .admin-spawn-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
 .admin-spawn-pct { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: right; }
+/* Soma ao vivo da % de raridade (sub-aba Loot) */
+.admin-rarity-sum { font-size: 11px; font-weight: 700; margin-top: 6px; text-align: right; }
+.admin-rarity-sum.ok { color: #2e7d32; }
+.admin-rarity-sum.warn { color: #b8860b; }
+/* Drop de itens normais por monstro (sub-aba Loot) */
+.admin-loot-list { display: flex; flex-direction: column; gap: 10px; max-height: 420px; overflow-y: auto; margin-top: 6px; padding: 8px; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(0,0,0,0.03); }
+.admin-loot-monster { display: flex; flex-direction: column; gap: 5px; }
+.admin-loot-monster-name { font-size: 12px; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line-soft); padding-bottom: 3px; }
+.admin-loot-row { display: grid; grid-template-columns: 1fr 80px 20px 22px; align-items: center; gap: 8px; }
+.admin-loot-item { font-size: 12px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-loot-icon { width: 18px; height: 18px; object-fit: contain; flex: 0 0 auto; }
+.admin-loot-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
+.admin-loot-reset { background: none; border: none; color: var(--ink-soft); font-size: 14px; cursor: pointer; padding: 0; line-height: 1; }
+.admin-loot-reset:hover { color: var(--ink); }
+.admin-loot-reset-spacer { display: inline-block; width: 14px; }

@@ -16,6 +16,8 @@ Todo jogador, indiretamente, sempre que caça ou consulta tarefas.
 ## Regras de negócio
 
 - **Cada criatura tem: HP, ataque, defesa, XP concedida, faixa de gold (mínimo–máximo) e uma tabela de loot**, em que cada item tem sua própria chance de drop, independente dos demais.
+- **O dono do jogo pode auditar e ajustar, criatura por criatura e item por item, a chance de drop de cada item do loot normal, diretamente em porcentagem** — sem precisar calcular proporções, e sem afetar as outras criaturas nem os outros itens daquela mesma criatura. Também pode ajustar, diretamente em porcentagem, a chance de cada raridade de Relíquia (drop exclusivo de boss — ver [20-itens-e-equipamento.md](20-itens-e-equipamento.md)). Nenhum ajuste altera o padrão visto pelo jogador até o dono mudar algo; sem ajuste nenhum, vale o valor padrão do jogo.
+  *Por quê:* balancear economia/loot é um trabalho contínuo do dono; sem controle direto em %, cada ajuste vira tentativa e erro com proporções relativas difíceis de prever o resultado real.
 - **O bestiário é majoritariamente composto por criaturas reais do Tibia** (Cave Rat, Goblin, Dwarf, Elf, Dragon, Demon, Hydra, Medusa, Behemoth, entre outras), cobrindo desde criaturas iniciantes até bosses de altíssimo nível.
 - **A caçada acontece em 49 zonas, espalhadas pelos 6 mundos do jogo, cobrindo do nível 1 ao nível 100** — sempre há uma zona nova esperando conforme o personagem sobe de nível.
 - **Cinco criaturas são bosses exclusivos do RubinOT** (Lothlorien, Executioner, Morgul, The Corrupted, N'Zoth). Aparecem como recompensa final das Linked Tasks de suas respectivas salas e também numa única zona de caça de altíssimo nível dedicada a eles — não aparecem misturados às zonas comuns do bestiário.
@@ -38,6 +40,7 @@ Todo jogador, indiretamente, sempre que caça ou consulta tarefas.
 ## Critérios de aceitação
 
 - [ ] Toda criatura exibida tem nome, sprite, HP, ataque, defesa, XP e loot definidos.
+- [ ] O dono consegue ver e ajustar a % de drop de cada item de cada criatura, e a % de cada raridade de Relíquia, sem precisar calcular proporções — um ajuste num item/raridade nunca muda a % dos demais.
 - [ ] Os 5 bosses exclusivos do RubinOT só aparecem através das Linked Tasks correspondentes ou da zona de caça de altíssimo nível dedicada a eles — nunca misturados às zonas comuns.
 - [ ] Uma zona com chefe só desbloqueia a próxima zona do mesmo mundo depois que esse chefe foi derrotado ao menos uma vez, além do nível mínimo.
 - [ ] A Zona Bônus do Dia é a mesma para todos os jogadores e muda automaticamente a cada novo dia, sempre concedendo +50% de gold/XP enquanto durar.

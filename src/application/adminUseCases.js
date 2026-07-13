@@ -1,7 +1,7 @@
 // Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
 import { G } from './gameStore.js?v=125';
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=125';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
 
@@ -37,6 +37,12 @@ export function getZoneSpawn(zoneId, zoneMonsters) {
   return resolveZoneSpawn(getAdminConfig(), zoneId, zoneMonsters);
 }
 
+// Loot efetivo de UM monstro (override do dono por cima do padrão do
+// bestiário), consumido pelo motor de caçada (huntUseCases) e pelo painel Admin.
+export function getMonsterLoot(monsterId, baseLoot) {
+  return resolveMonsterLoot(getAdminConfig(), monsterId, baseLoot);
+}
+
 // Define o peso (%) de UM monstro numa zona. O peso é relativo (a % exibida é
 // peso/soma). Zerar tira o monstro do sorteio daquela zona.
 export function setZoneSpawnWeight(zoneId, monsterId, value) {
@@ -61,6 +67,31 @@ export function setZonePackRange(zoneId, field, value) {
   saveGame();
 }
 
+// Define a chance de loot (em %, 0..100) de UM item de UM monstro. Sobrescreve
+// a chance padrão do bestiário (ver domain/bestiary.js: MONSTERS[id].loot).
+export function setLootChance(monsterId, itemId, pct) {
+  const cfg = getAdminConfig();
+  cfg.lootOverrides = cfg.lootOverrides || {};
+  cfg.lootOverrides[monsterId] = cfg.lootOverrides[monsterId] || {};
+  cfg.lootOverrides[monsterId][itemId] = Math.max(0, (Number(pct) || 0) / 100);
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  saveGame();
+}
+
+// Remove o override de UM item de UM monstro — volta a usar a chance padrão
+// do bestiário pra aquele item.
+export function resetLootChance(monsterId, itemId) {
+  const cfg = getAdminConfig();
+  if (cfg.lootOverrides && cfg.lootOverrides[monsterId]) {
+    delete cfg.lootOverrides[monsterId][itemId];
+    if (!Object.keys(cfg.lootOverrides[monsterId]).length) delete cfg.lootOverrides[monsterId];
+  }
+  G.adminConfig = sanitizeAdminConfig(cfg);
+  emit(EVENTS.ADMIN_PANEL);
+  saveGame();
+}
+
 export function setAdminRate(key, value) {
   const cfg = getAdminConfig();
   cfg[key] = value;
@@ -80,9 +111,11 @@ export function setRelicDropChancePct(pct) {
   saveGame();
 }
 
-export function setRarityWeight(tier, value) {
+// % (0..100) editada DIRETO pelo dono — não é mais peso relativo arbitrário
+// (ver comentário em domain/adminConfig.js: rarityWeights).
+export function setRarityPercent(tier, pct) {
   const cfg = getAdminConfig();
-  cfg.rarityWeights[tier] = value;
+  cfg.rarityWeights[tier] = Math.max(0, Number(pct) || 0);
   G.adminConfig = sanitizeAdminConfig(cfg);
   emit(EVENTS.ADMIN_PANEL);
   saveGame();

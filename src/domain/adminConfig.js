@@ -26,7 +26,18 @@ export const DEFAULT_ADMIN_CONFIG = {
   // a caçada comum — o Boss Rush é sempre 1 boss. Ver resolveZoneSpawn() abaixo e
   // application/huntUseCases.js.
   huntSpawns: {}, // { [zoneId]: { weights: { [monsterId]: number }, packMin: number, packMax: number } }
+  // % (0..100) de cada raridade de Relíquia — editada DIRETO no Painel Admin
+  // (não é mais peso relativo arbitrário). Alimenta rollRarityTier() como peso,
+  // que normaliza pela soma — então funciona mesmo que a soma não feche em 100,
+  // mas o valor só corresponde exatamente à chance real quando soma = 100 (ver
+  // domain/rarity.js: rollRarityTier / ui/adminPanel.js: mostra a soma ao vivo).
   rarityWeights: { uncommon: 52, rare: 28, epic: 15, legendary: 5 },
+  // Override do dono por monstro+item da chance de loot normal (0..1, mesma
+  // unidade de bestiary.js: MONSTERS[id].loot). Ausente = usa o valor padrão do
+  // bestiário. Não há teto em 1 de propósito: alguns itens do bestiário já
+  // passam de 100% (ex.: gold_coin garantido + chance extra), então um override
+  // também pode. Ver resolveMonsterLoot() abaixo e application/huntUseCases.js.
+  lootOverrides: {}, // { [monsterId]: { [itemId]: number (0..1+) } }
   // Mercado entre jogadores (aba 🏪). DESLIGADO por enquanto — o dono liga
   // quando quiser reabrir a economia player-to-player. Enquanto desligado, a
   // aba fica escondida e o painel mostra aviso. Ver application/adminUseCases.js.
@@ -89,6 +100,15 @@ export function pickWeightedMonster(zoneMonsters, weights) {
   let r = Math.random() * sum;
   for (const id of zoneMonsters) { r -= Math.max(0, (weights && weights[id]) || 0); if (r <= 0) return id; }
   return zoneMonsters[zoneMonsters.length - 1];
+}
+
+// Loot EFETIVO de um monstro: a chance override do dono (Painel Admin), item a
+// item, por cima da chance padrão do bestiário — sem override, usa a do
+// bestiário direto. `baseLoot` é o array estático de MONSTERS[id].loot
+// ([itemId, chance][]), nunca mutado (é compartilhado por todo mundo).
+export function resolveMonsterLoot(cfg, monsterId, baseLoot) {
+  const overrides = (cfg && cfg.lootOverrides && cfg.lootOverrides[monsterId]) || {};
+  return baseLoot.map(([itemId, chance]) => [itemId, Number.isFinite(overrides[itemId]) ? overrides[itemId] : chance]);
 }
 
 // Converte os pesos de raridade em porcentagens (relativas à soma).
@@ -158,6 +178,20 @@ export function sanitizeAdminConfig(cfg) {
   }
   c.huntSpawns = hs;
   c.rarityWeights = { ...d.rarityWeights, ...(c.rarityWeights || {}) };
-  RARITY_TIER_ORDER.forEach(k => { c.rarityWeights[k] = asNum(c.rarityWeights[k], d.rarityWeights[k]); });
+  // % direta (0..100) — teto em 100 porque agora é editada como porcentagem,
+  // não peso arbitrário (ver comentário no DEFAULT_ADMIN_CONFIG acima).
+  RARITY_TIER_ORDER.forEach(k => { c.rarityWeights[k] = Math.min(100, asNum(c.rarityWeights[k], d.rarityWeights[k])); });
+  // lootOverrides: só guarda entradas com chance válida (>= 0) por monstro+item
+  // — mesma disciplina de "podar vazio" do huntSpawns acima.
+  const lo = {};
+  if (c.lootOverrides && typeof c.lootOverrides === 'object') {
+    for (const [mid, itemMap] of Object.entries(c.lootOverrides)) {
+      if (!itemMap || typeof itemMap !== 'object') continue;
+      const im = {};
+      for (const [iid, val] of Object.entries(itemMap)) { if (Number.isFinite(+val)) im[iid] = Math.max(0, +val); }
+      if (Object.keys(im).length) lo[mid] = im;
+    }
+  }
+  c.lootOverrides = lo;
   return c;
 }
