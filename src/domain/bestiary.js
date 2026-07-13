@@ -9,7 +9,7 @@ export const ZONES = {
   // --- Auroria (mundo inicial, sempre desbloqueado) ---
   rotworm_cave:  { city: 'rookgaard', name: 'Caverna de Rotworms', icon: '🪱',  worldReq: 'auroria', monsters: ['rotworm', 'cave_rat'], goldMult: 1.0, xpMult: 1.0, theme: ['#5a4a35', '#2e2419'], boss: 'rotworm' },
   sewer_rats:    { city: 'rookgaard', name: 'Esgoto de Ratos', icon: '🐁',  worldReq: 'auroria', monsters: ['rat', 'bug'], goldMult: 1.02, xpMult: 1.02, theme: ['#4a4234', '#231f18'], boss: 'rat', requiresBossOf: 'rotworm_cave' },
-  goblin_village:{ city: 'rookgaard', name: 'Vila Goblin', icon: '👺',  worldReq: 'auroria', monsters: ['goblin', 'troll'], goldMult: 1.1, xpMult: 1.1, theme: ['#5c6b3a', '#33401f'], boss: 'troll', requiresBossOf: 'sewer_rats' },
+  goblin_village:{ city: 'rookgaard', name: 'Caverna dos Trolls', icon: '🧌',  worldReq: 'auroria', monsters: ['troll'], goldMult: 1.1, xpMult: 1.1, theme: ['#5c6b3a', '#33401f'], boss: 'troll', requiresBossOf: 'sewer_rats' },
   swamp_slimes:  { city: 'rookgaard', name: 'Charco das Cobras', icon: '🟢',  worldReq: 'auroria', monsters: ['snake', 'slime'], goldMult: 1.2, xpMult: 1.15, theme: ['#4a6b3f', '#1f331b'], boss: 'snake', requiresBossOf: 'goblin_village' },
   dwarf_mines:   { city: 'thais', name: 'Minas dos Dwarfs', icon: '⛏️',  worldReq: 'auroria', monsters: ['dwarf', 'dwarf_soldier', 'dwarf_geomancer', 'dwarf_guard'], goldMult: 1.3, xpMult: 1.25, theme: ['#6b5a44', '#3a2f22'], boss: 'dwarf_guard', requiresBossOf: 'swamp_slimes' },
   wolf_trail:    { city: 'abdendriel', name: 'Trilha da Matilha', icon: '🐺',  worldReq: 'auroria', monsters: ['wolf', 'bear'], goldMult: 1.35, xpMult: 1.3, theme: ['#3d5c47', '#1a2b20'], boss: 'bear', requiresBossOf: 'dwarf_mines' },
@@ -20,7 +20,7 @@ export const ZONES = {
   cyclops_camp:  { city: 'thais', name: 'Acampamento Cyclops', icon: '🗿', worldReq: 'auroria', monsters: ['cyclops', 'juvenile_cyclops', 'cyclops_drone', 'cyclops_smith'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops_smith', requiresBossOf: 'minotaur_den' },
   amazon_camp:   { city: 'carlin', name: 'Acampamento Amazona', icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6, theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'cyclops_camp' },
   bandit_hideout:{ city: 'carlin', name: 'Esconderijo de Bandidos', icon: '🏴', worldReq: 'auroria', monsters: ['bandit', 'poacher'], goldMult: 1.9, xpMult: 1.7, theme: ['#6b5a3f', '#332a1c'], boss: 'poacher', requiresBossOf: 'amazon_camp' },
-  scarab_desert: { city: 'ankrahmun', name: 'Deserto dos Scarabs', icon: '🪲', worldReq: 'auroria', monsters: ['scarab', 'ancient_scarab', 'larva'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'], boss: 'scarab', requiresBossOf: 'bandit_hideout' },
+  scarab_desert: { city: 'ankrahmun', name: 'Deserto dos Scarabs', icon: '🪲', worldReq: 'auroria', monsters: ['scarab', 'larva'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'], boss: 'scarab', requiresBossOf: 'bandit_hideout' },
   orc_fortress:  { city: 'venore', name: 'Forte dos Orcs', icon: '🏹', worldReq: 'auroria', monsters: ['orc', 'orc_rider', 'orc_shaman'], goldMult: 2.1, xpMult: 1.9, theme: ['#6b3f2f', '#2e1a12'], boss: 'orc_shaman', requiresBossOf: 'scarab_desert' },
 
   // --- Spectrum (PvP opcional, reqLevel 20) ---
@@ -88,6 +88,8 @@ export const ZONES = {
   carlin_sewers:   { city: 'carlin',    name: 'Esgoto de Carlin', icon: '🐛', worldReq: 'auroria', monsters: ['bug', 'poison_spider', 'slime'], goldMult: 1.15, xpMult: 1.12, theme: ['#4a4234', '#231f18'], boss: 'slime' },
   ankrahmun_tombs: { city: 'ankrahmun', name: 'Túmulo da Península', icon: '🏺', worldReq: 'solarian', monsters: ['fleshcrawler', 'omruc'], goldMult: 5.0, xpMult: 4.3, theme: ['#c9a35c', '#5c3a1a'], boss: 'omruc' },
   porthope_water_dungeon:{ city: 'porthope', name: 'Calabouço dos Elementais', icon: '💧', worldReq: 'bellum', monsters: ['crocodile', 'massive_water_elemental'], goldMult: 3.0, xpMult: 2.6, theme: ['#2a5c6b', '#0f2e33'], boss: 'massive_water_elemental' },
+  thais_dragon_cave:{ city: 'thais', name: 'Caverna dos Dragões', icon: '🐉', worldReq: 'bellum', monsters: ['dragon'], goldMult: 2.5, xpMult: 2.2, theme: ['#8a3020', '#3a1410'], boss: 'dragon' },
+  femor_hills:     { city: 'carlin', name: 'Colinas de Femor', icon: '👺', worldReq: 'auroria', monsters: ['goblin', 'cyclops'], goldMult: 1.15, xpMult: 1.1, theme: ['#5c6b3a', '#33401f'], boss: 'cyclops' },
   yalahar_sunken_quarter:{ city: 'yalahar', name: 'Bairro Afundado', icon: '🦑', worldReq: 'spectrum', monsters: ['quara_pincher', 'quara_hydromancer'], goldMult: 3.3, xpMult: 2.9, theme: ['#1f3a5c', '#0a1826'], boss: 'quara_pincher' },
 };
 
