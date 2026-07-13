@@ -4,9 +4,9 @@
 // estado novo: reaproveita G.autoSell e setAutoSell/setAutoSellMax (mesmas
 // funções da Bag, ver ui/inventoryAndEquipmentPanel.js) e G.lastSave (grava-
 // do em cada saveGame, ver application/saveGameUseCase.js).
-import { G } from '../application/gameStore.js?v=124';
-import { currentUser } from '../infrastructure/authClient.js?v=124';
-import { goldIconImg, openModal } from './shared.js?v=124';
+import { G } from '../application/gameStore.js?v=125';
+import { currentUser } from '../infrastructure/authClient.js?v=125';
+import { goldIconImg, openModal } from './shared.js?v=125';
 
 function fmtLastSave() {
   if (!G.lastSave) return 'ainda não salvo nesta sessão';

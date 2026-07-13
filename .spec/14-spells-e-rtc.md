@@ -30,6 +30,8 @@ Jogador, na aba RTC — a segunda aba do jogo, logo depois da Caçada, porque é
 - **Sem uma poção de cura selecionada, não há cura automática por poção** — só a de magia.
 - **Toda magia tem um tempo de recarga (cooldown) fiel ao Tibia atual.** Depois de lançada, a magia não pode ser lançada de novo até o cooldown passar (ex.: Berserk 4s, Fierce Berserk 6s, Groundshaker 8s, os Strikes 2s, Strong Strikes 8s, as Waves 4–8s, Divine Caldera 4s, Hell's Core / Eternal Winter 40s, curas 1s). Enquanto a magia de ataque está em recarga, o personagem faz o **golpe básico** (arma equipada, ou golpe arcano no caso do mago) e volta a lançar a magia assim que ela fica pronta.
   *Por quê:* é o mecanismo central do Tibia — o cooldown limita o dano por segundo das magias e faz o golpe básico importar entre um cast e outro.
+- **Além do cooldown individual, toda magia de ATAQUE compartilha uma recarga de grupo de 2 segundos** — depois de lançar qualquer magia de ataque, nenhuma outra magia de ataque (a mesma ou outra, quando há mais de uma configurada por prioridade) pode ser lançada antes de 2s se passarem, mesmo que o cooldown individual dela já tenha terminado. Cura não entra nessa recarga de grupo (grupo separado).
+  *Por quê:* fiel ao Tibia real — sem essa trava, configurar várias magias de ataque por prioridade (ex.: uma de 4s e uma de 6s de recarga) deixa o RTC alternar entre elas mais rápido que qualquer uma sozinha permitiria.
 
 ## Comportamento esperado
 
@@ -44,3 +46,4 @@ Jogador, na aba RTC — a segunda aba do jogo, logo depois da Caçada, porque é
 - [ ] Ficar sem a runa/poção configurada no inventário não trava o combate — a caçada continua com o comportamento padrão até haver estoque de novo.
 - [ ] Knight nunca vê nem consegue selecionar "Light Healing" (exura) ou runas de ataque no RTC.
 - [ ] Cada magia respeita seu cooldown fiel ao Tibia: não é lançada de novo antes do tempo de recarga, e nesse meio-tempo o personagem faz o golpe básico.
+- [ ] Duas magias de ataque (a mesma ou diferentes) nunca são lançadas com menos de 2s de diferença entre si, mesmo com várias configuradas por prioridade.

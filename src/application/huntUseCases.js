@@ -3,30 +3,30 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=124';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=124';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=124';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=124';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=124';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=124';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=124';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=124';
-import { elementMod } from '../domain/elements.js?v=124';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=124';
-import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=124';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=124';
-import { MONSTERS } from '../domain/bestiary.js?v=124';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=124';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=124';
-import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=124';
-import { emit, EVENTS } from '../shared/eventBus.js?v=124';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=124';
-import { trainSkill } from './skillUseCases.js?v=124';
-import { addItemToInventory } from './inventoryCore.js?v=124';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=124';
-import { getCombatBonuses } from './bonuses.js?v=124';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=124';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=124';
+import { G } from './gameStore.js?v=125';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=125';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=125';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=125';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=125';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=125';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=125';
+import { elementMod } from '../domain/elements.js?v=125';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
+import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=125';
+import { MONSTERS } from '../domain/bestiary.js?v=125';
+import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=125';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
+import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
+import { emit, EVENTS } from '../shared/eventBus.js?v=125';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=125';
+import { trainSkill } from './skillUseCases.js?v=125';
+import { addItemToInventory } from './inventoryCore.js?v=125';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
+import { getCombatBonuses } from './bonuses.js?v=125';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=125';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -70,6 +70,14 @@ export function getRecentDead() { return recentDead; }
 // está em cooldown, o RTC não recasta — o personagem faz o golpe básico. É
 // estado efêmero de sessão (baseado em tempo real), fora do save.
 const spellCdUntil = {};
+// Cooldown de GRUPO das magias de ataque (fiel ao Tibia: toda magia de ataque
+// pertence ao grupo "Attack", com recarga de grupo de 2s COMPARTILHADA entre
+// TODAS elas — além do cooldown individual de cada uma). É o que impede o RTC
+// de alternar entre duas magias de ataque prontas (ex.: Berserk cd 4s e
+// Whirlwind Throw cd 6s, ambas configuradas por prioridade) mais rápido que
+// 2s, mesmo que os cooldowns individuais permitam.
+const ATTACK_GROUP_CD_MS = 2000;
+let attackGroupCdUntil = 0;
 // Exhaust de poção (~1s, como no Tibia) — cura e mana COMPARTILHAM o cooldown,
 // então o RTC não bebe poção todo tick, só a cada segundo. Estado de sessão.
 const POTION_CD_MS = 1000;
@@ -77,6 +85,8 @@ let potionCdUntil = 0;
 function isSpellReady(id) { return (spellCdUntil[id] || 0) <= Date.now(); }
 function startSpellCd(id, seconds) { if (seconds > 0) spellCdUntil[id] = Date.now() + seconds * 1000; }
 export function getSpellCooldownRemaining(id) { return Math.max(0, (spellCdUntil[id] || 0) - Date.now()); }
+function isAttackGroupReady() { return attackGroupCdUntil <= Date.now(); }
+function startAttackGroupCd() { attackGroupCdUntil = Date.now() + ATTACK_GROUP_CD_MS; }
 // Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1). Grupos
 // maiores fazem os ataques de ÁREA valerem a pena (limpam a sala num golpe),
 // enquanto o alvo único precisa abater um por um. Só o bicho da frente revida,
@@ -371,9 +381,11 @@ export function doHuntTick() {
   } else {
     // Magias PRONTAS agora (nível/voc ok, com mana sobrando MESMO reservando
     // o custo da cura, e fora de cooldown), na ordem de prioridade.
-    const ready = normalizeAttackSpells(G.rtc)
-      .map(id => ({ id, s: SPELLS[id] }))
-      .filter(({ id, s }) => s && isSpellAvailable(id, G.vocation, G.level) && G.mana - healManaReserve >= s.mana && isSpellReady(id));
+    const ready = isAttackGroupReady()
+      ? normalizeAttackSpells(G.rtc)
+        .map(id => ({ id, s: SPELLS[id] }))
+        .filter(({ id, s }) => s && isSpellAvailable(id, G.vocation, G.level) && G.mana - healManaReserve >= s.mana && isSpellReady(id))
+      : [];
     let atkSpellId = null, atkSpell = null;
     if (ready.length) {
       let pick = ready[0]; // padrão: a primeira da prioridade
@@ -399,6 +411,7 @@ export function doHuntTick() {
       hitFn = () => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
       G.mana -= atkSpell.mana;
       startSpellCd(atkSpellId, atkSpell.cd);
+      startAttackGroupCd();
       trainSkill('magic', atkSpell.mana * voc.magicMult);
       emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
       combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
