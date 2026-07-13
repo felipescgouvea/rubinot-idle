@@ -2,13 +2,13 @@
 // (ver domain/cities.js), depois vê as hunts daquela cidade. As cidades
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
-import { G } from '../application/gameStore.js?v=113';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=113';
-import { CITIES } from '../domain/cities.js?v=113';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=113';
-import { openModal, closeModal } from './shared.js?v=113';
-import { openBattleModal } from './battleModal.js?v=113';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=113';
+import { G } from '../application/gameStore.js?v=114';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=114';
+import { CITIES } from '../domain/cities.js?v=114';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=114';
+import { openModal, closeModal } from './shared.js?v=114';
+import { openBattleModal } from './battleModal.js?v=114';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=114';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -17,11 +17,9 @@ function todayStr() {
 // Qual cidade está aberta no picker (null = mostrando a grade de cidades).
 let openCityId = null;
 
-// Zonas de uma cidade, em ordem de nível.
+// Zonas de uma cidade, na ordem em que estão definidas em ZONES.
 function zonesOfCity(cityId) {
-  return Object.entries(ZONES)
-    .filter(([, z]) => z.city === cityId)
-    .sort((a, b) => a[1].minLevel - b[1].minLevel);
+  return Object.entries(ZONES).filter(([, z]) => z.city === cityId);
 }
 
 function unlockedCount(cityId) {
@@ -33,8 +31,6 @@ function unlockedCount(cityId) {
 function cityCard(city) {
   const zs = zonesOfCity(city.id);
   if (zs.length === 0) return '';
-  const minLv = Math.min(...zs.map(([, z]) => z.minLevel));
-  const maxLv = Math.max(...zs.map(([, z]) => z.minLevel));
   const { unlocked, total } = unlockedCount(city.id);
   const hasBoosted = zs.some(([id]) => id === boostedZoneForDate(todayStr()));
   const hasActive = zs.some(([id]) => id === G.activeZone);
@@ -45,7 +41,7 @@ function cityCard(city) {
     <div class="city-card-icon">${city.icon}</div>
     <div class="zone-card-name">${city.name}</div>
     <div class="city-card-blurb">${city.blurb}</div>
-    <div class="city-card-meta">🗺️ ${total} hunts · 🔓 ${unlocked} · ⚔️ sugerido Lv ${minLv}–${maxLv}</div>
+    <div class="city-card-meta">🗺️ ${total} hunts · 🔓 ${unlocked}</div>
   </div>`;
 }
 

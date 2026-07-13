@@ -1,23 +1,23 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=113';
-import { createDefaultState } from '../domain/gameState.js?v=113';
-import { createDefaultSkills } from '../domain/character.js?v=113';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=113';
-import { isSpellAvailable } from '../domain/spells.js?v=113';
-import { findOutfit } from '../domain/outfits.js?v=113';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=113';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=113';
-import { isRelicId } from '../domain/items.js?v=113';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=113';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=113';
-import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=113';
-import { emit, EVENTS } from '../shared/eventBus.js?v=113';
-import { getMaxHp, getMaxMana } from './stats.js?v=113';
-import { gainXp } from './huntUseCases.js?v=113';
-import { checkBpTier } from './battlePassUseCases.js?v=113';
-import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=113';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=113';
+import { G, replaceState } from './gameStore.js?v=114';
+import { createDefaultState } from '../domain/gameState.js?v=114';
+import { createDefaultSkills } from '../domain/character.js?v=114';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=114';
+import { isSpellAvailable } from '../domain/spells.js?v=114';
+import { findOutfit } from '../domain/outfits.js?v=114';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=114';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=114';
+import { isRelicId } from '../domain/items.js?v=114';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=114';
+import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=114';
+import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=114';
+import { emit, EVENTS } from '../shared/eventBus.js?v=114';
+import { getMaxHp, getMaxMana } from './stats.js?v=114';
+import { gainXp } from './huntUseCases.js?v=114';
+import { checkBpTier } from './battlePassUseCases.js?v=114';
+import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=114';
+import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=114';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
 // nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não
@@ -36,18 +36,7 @@ export function loadGame() {
 
   // migração: zona/tarefa de versões antigas do bestiário
   if (G.activeZone && !ZONES[G.activeZone]) G.activeZone = null;
-  // migração ONE-TIME: gate de boss de zona (requiresBossOf) é novo — sem isso,
-  // um jogador que já estava além do nível de uma zona pela regra ANTIGA (só
-  // nível+mundo) ficaria trancado retroativamente ao ligar o gate. Pra cada
-  // zona que já era acessível pelo nível dele, marca o boss dela como "já
-  // derrotado" — mesmo que ele nunca tenha efetivamente matado aquele boss.
-  // Roda em TODO load (idempotente via .includes()/Set — nunca duplica).
   if (!G.defeatedZoneBosses) G.defeatedZoneBosses = [];
-  const alreadyUnlocked = new Set(G.defeatedZoneBosses);
-  for (const [zoneId, zone] of Object.entries(ZONES)) {
-    if (zone.boss && G.level >= zone.minLevel) alreadyUnlocked.add(zoneId);
-  }
-  G.defeatedZoneBosses = [...alreadyUnlocked];
   if (G.activeTask && !MONSTERS[G.activeTask.monster]) G.activeTask = null;
   // migração: sistema antigo de pontos de skill → skills de treino Tibia
   if (!G.sk || !G.sk.magic) G.sk = createDefaultSkills();

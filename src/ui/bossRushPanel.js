@@ -3,12 +3,12 @@
 // ui/zonePicker.js: zoneCard) pro visual, e o mesmo modal de batalha da
 // caçada normal pra mostrar o combate (ver ui/battleModal.js) — é o mesmo
 // motor por baixo (ver application/bossRushUseCases.js).
-import { G } from '../application/gameStore.js?v=113';
-import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=113';
-import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=113';
-import { on, EVENTS } from '../shared/eventBus.js?v=113';
-import { monsterSpriteImg } from './huntPanel.js?v=113';
-import { openBattleModal } from './battleModal.js?v=113';
+import { G } from '../application/gameStore.js?v=114';
+import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=114';
+import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=114';
+import { on, EVENTS } from '../shared/eventBus.js?v=114';
+import { monsterSpriteImg } from './huntPanel.js?v=114';
+import { openBattleModal } from './battleModal.js?v=114';
 
 function bossCard(zoneId, zone) {
   const boss = MONSTERS[zone.boss];
@@ -22,7 +22,7 @@ function bossCard(zoneId, zone) {
     <div class="zone-card-icon">${monsterSpriteImg(zone.boss, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${boss.name}</div>
     <div class="zone-card-mults">${zone.name}</div>
-    <div class="zone-card-mults">Lv ${zone.minLevel}+ · ${hp.toLocaleString('pt-BR')} HP</div>
+    <div class="zone-card-mults">${hp.toLocaleString('pt-BR')} HP</div>
     <div class="zone-card-mults" style="font-weight:700">🔥 Tier ${tier}</div>
     <button class="skill-upgrade-btn" onclick="challengeBoss('${zoneId}')">${active ? '⚔️ Desafiando…' : `💀 Desafiar Tier ${tier}`}</button>
   </div>`;

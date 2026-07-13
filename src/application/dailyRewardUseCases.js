@@ -1,11 +1,11 @@
 // Caso de uso da Recompensa Diária (login streak). Ver domain/dailyReward.js
 // pra as regras puras de ciclo/streak.
-import { G } from './gameStore.js?v=113';
-import { dailyRewardState, rewardForStreak } from '../domain/dailyReward.js?v=113';
-import { isBoostActive } from '../domain/shopCatalog.js?v=113';
-import { emit, EVENTS } from '../shared/eventBus.js?v=113';
-import { getMaxHp, getMaxMana } from './stats.js?v=113';
-import { saveGame } from './saveGameUseCase.js?v=113';
+import { G } from './gameStore.js?v=114';
+import { dailyRewardState, rewardForStreak } from '../domain/dailyReward.js?v=114';
+import { isBoostActive } from '../domain/shopCatalog.js?v=114';
+import { emit, EVENTS } from '../shared/eventBus.js?v=114';
+import { getMaxHp, getMaxMana } from './stats.js?v=114';
+import { saveGame } from './saveGameUseCase.js?v=114';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
