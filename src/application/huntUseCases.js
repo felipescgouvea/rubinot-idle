@@ -27,7 +27,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=132';
+import { t } from '../i18n/i18n.js?v=133';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui

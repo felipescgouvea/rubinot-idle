@@ -1530,7 +1530,21 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .hs-table tbody tr:nth-child(even) { background: #f5e9cc; }
 .hs-table tbody tr:hover { background: #fdf0d5; }
 .hs-table tr.hs-me { background: #fdf4d7 !important; outline: 2px solid var(--gold); outline-offset: -2px; }
+.hs-table .hs-highlight-col { font-weight: 800; color: var(--gold-dim); }
 .hs-register { padding: 4px 0; }
+/* Seletor de categoria (Level/skills/Bestiário) — mesma ideia dos sub-tabs do
+   RTC/Admin, só que numa linha que pode quebrar (9 categorias). */
+.hs-category-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.hs-category-btn {
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  border: 1px solid var(--line-soft);
+  color: var(--ink-soft);
+  font-family: var(--serif); font-size: 11px; font-weight: 700;
+  padding: 5px 11px; border-radius: 6px; cursor: pointer;
+  transition: filter 0.15s;
+}
+.hs-category-btn:hover { filter: brightness(0.97); }
+.hs-category-btn.active { background: linear-gradient(180deg, #ffe9a3, var(--gold-bright)); border-color: var(--gold); color: #4a3300; }
 
 /* ============ MODAL ============ */
 #modal-overlay {

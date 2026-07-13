@@ -3,20 +3,30 @@
 // pelo Market (ver marketUseCases.js).
 import { G } from './gameStore.js?v=126';
 import { XP_TABLE } from '../domain/character.js?v=126';
+import { MONSTERS } from '../domain/bestiary.js?v=129';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
-import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=125';
+import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=126';
-import { t } from '../i18n/i18n.js?v=132';
+import { t } from '../i18n/i18n.js?v=133';
 
 let lastSubmitAt = 0;
-let highscoresCache = null;
-let highscoresCacheAt = 0;
+// Cache por CATEGORIA (level/skill/bestiário pedem ordenações diferentes do
+// mesmo ranking — ver ui/highscoresPanel.js) — cada uma com seu próprio relógio.
+const highscoresCache = new Map();
 
 export function ensurePlayerSecret() {
   if (!G.playerSecret) {
     G.playerSecret = crypto.randomUUID();
     saveGame();
   }
+}
+
+// Quantas criaturas DISTINTAS o jogador já matou ao menos 1 vez, do elenco
+// atual do bestiário (kill counters de monstros removidos/renomeados não contam
+// mais — ver domain/bestiary.js: MONSTERS). É o número que representa
+// "progresso no bestiário" pro ranking (ver ui/highscoresPanel.js).
+export function bestiaryProgressCount() {
+  return Object.keys(G.killCounters || {}).filter(id => MONSTERS[id]).length;
 }
 
 export async function submitScore(force = false) {
@@ -26,6 +36,7 @@ export async function submitScore(force = false) {
   lastSubmitAt = now;
   const tasksDone = Object.values(G.taskCompletion || {}).reduce((a, b) => a + b, 0);
   const totalXp = G.xp + XP_TABLE.slice(0, G.level - 1).reduce((a, b) => a + b, 0);
+  const sk = G.sk || {};
 
   const result = await submitScoreRequest({
     p_name: G.playerName,
@@ -37,6 +48,14 @@ export async function submitScore(force = false) {
     p_arena: G.arenaPoints,
     p_tasks: tasksDone,
     p_world: G.currentWorld,
+    p_skill_magic: (sk.magic && sk.magic.lv) || 0,
+    p_skill_fist: (sk.fist && sk.fist.lv) || 10,
+    p_skill_club: (sk.club && sk.club.lv) || 10,
+    p_skill_sword: (sk.sword && sk.sword.lv) || 10,
+    p_skill_axe: (sk.axe && sk.axe.lv) || 10,
+    p_skill_distance: (sk.distance && sk.distance.lv) || 10,
+    p_skill_shielding: (sk.shielding && sk.shielding.lv) || 10,
+    p_bestiary_count: bestiaryProgressCount(),
   });
 
   if (!result.ok) {
@@ -69,18 +88,21 @@ export async function registerPlayerName(name) {
   return true;
 }
 
-export async function fetchHighscores() {
+// `category` é uma chave de HIGHSCORE_CATEGORIES (ver ui/highscoresPanel.js) —
+// cada uma ordena o MESMO ranking por uma coluna diferente (level, uma skill,
+// ou bestiário). Default 'level' preserva o comportamento de antes.
+export async function fetchHighscores(category = 'level') {
   const now = Date.now();
-  if (highscoresCache && now - highscoresCacheAt < 30000) return highscoresCache;
-  const rows = await fetchHighscoresRequest();
+  const cached = highscoresCache.get(category);
+  if (cached && now - cached.at < 30000) return cached.rows;
+  const rows = await fetchHighscoresRequest(category);
   if (!rows) return null;
-  highscoresCache = rows;
-  highscoresCacheAt = now;
-  return highscoresCache;
+  highscoresCache.set(category, { rows, at: now });
+  return rows;
 }
 
 export function invalidateHighscoresCache() {
-  highscoresCacheAt = 0;
+  highscoresCache.clear();
 }
 
 // envio periódico junto do autosave

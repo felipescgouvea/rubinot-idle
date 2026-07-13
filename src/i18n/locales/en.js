@@ -449,6 +449,15 @@ export default {
   'highscores.colArena': 'Arena',
   'highscores.colTasks': 'Tasks',
   'highscores.colWorld': 'World',
+  'highscores.catLevel': 'Level',
+  'highscores.catMagic': 'Magic Level',
+  'highscores.catFist': 'Fist Fighting',
+  'highscores.catClub': 'Club Fighting',
+  'highscores.catSword': 'Sword Fighting',
+  'highscores.catAxe': 'Axe Fighting',
+  'highscores.catDistance': 'Distance Fighting',
+  'highscores.catShielding': 'Shielding',
+  'highscores.catBestiary': 'Bestiary',
   'highscores.scoreUpdated': 'Score updated!',
 
   // ---- battle pass panel (ui/battlePassPanel.js) ----
