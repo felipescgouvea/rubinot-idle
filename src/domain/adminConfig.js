@@ -26,11 +26,10 @@ export const DEFAULT_ADMIN_CONFIG = {
   // a caçada comum — o Boss Rush é sempre 1 boss. Ver resolveZoneSpawn() abaixo e
   // application/huntUseCases.js.
   huntSpawns: {}, // { [zoneId]: { weights: { [monsterId]: number }, packMin: number, packMax: number } }
-  // % (0..100) de cada raridade de Relíquia — editada DIRETO no Painel Admin
-  // (não é mais peso relativo arbitrário). Alimenta rollRarityTier() como peso,
-  // que normaliza pela soma — então funciona mesmo que a soma não feche em 100,
-  // mas o valor só corresponde exatamente à chance real quando soma = 100 (ver
-  // domain/rarity.js: rollRarityTier / ui/adminPanel.js: mostra a soma ao vivo).
+  // % (0..100) de cada raridade de Relíquia — editada DIRETO no Painel Admin,
+  // cada uma INDEPENDENTE das demais (não precisam somar 100, e não competem
+  // entre si: mais de uma pode bater no mesmo drop, virando relíquias
+  // separadas — ver domain/rarity.js: rollIndependentRarityTiers).
   rarityWeights: { uncommon: 52, rare: 28, epic: 15, legendary: 5 },
   // Override do dono por monstro+item da chance de loot normal (0..1, mesma
   // unidade de bestiary.js: MONSTERS[id].loot). Ausente = usa o valor padrão do
@@ -109,14 +108,6 @@ export function pickWeightedMonster(zoneMonsters, weights) {
 export function resolveMonsterLoot(cfg, monsterId, baseLoot) {
   const overrides = (cfg && cfg.lootOverrides && cfg.lootOverrides[monsterId]) || {};
   return baseLoot.map(([itemId, chance]) => [itemId, Number.isFinite(overrides[itemId]) ? overrides[itemId] : chance]);
-}
-
-// Converte os pesos de raridade em porcentagens (relativas à soma).
-export function rarityChancePercents(weights) {
-  const total = RARITY_TIER_ORDER.reduce((s, k) => s + Math.max(0, weights[k] || 0), 0) || 1;
-  const out = {};
-  RARITY_TIER_ORDER.forEach(k => { out[k] = +(100 * Math.max(0, weights[k] || 0) / total).toFixed(1); });
-  return out;
 }
 
 const asNum = (v, def) => (Number.isFinite(+v) && +v >= 0 ? +v : def);

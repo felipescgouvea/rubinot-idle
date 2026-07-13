@@ -16,7 +16,7 @@ import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=125';
 import { MONSTERS } from '../domain/bestiary.js?v=128';
-import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=125';
+import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
@@ -25,7 +25,7 @@ import { trainSkill } from './skillUseCases.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=125';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { getCombatBonuses } from './bonuses.js?v=125';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=126';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
 import { t } from '../i18n/i18n.js?v=125';
 
@@ -584,7 +584,10 @@ export function resolveMonsterKill(zone, victim) {
   // BOSS_MONSTER_IDS), com uma chance pequena por cima do loot normal acima.
   // Funciona igual num kill de caçada comum (zona cujo boss aparece no
   // elenco) e num kill de Boss Rush (ver bossRushUseCases.js) — os dois
-  // passam por aqui.
+  // passam por aqui. Cada raridade rola INDEPENDENTE das outras (ver
+  // domain/rarity.js: rollIndependentRarityTiers) — não é uma escolha única,
+  // então mais de uma pode bater no mesmo kill: vira uma relíquia PRA CADA
+  // raridade que bateu (podem ser 0, 1 ou várias).
   if (BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < getRelicDropChance()) {
     const equippablePool = mon.loot
       .map(([id]) => id)
@@ -593,17 +596,21 @@ export function resolveMonsterKill(zone, victim) {
       ? equippablePool
       : Object.keys(ITEMS).filter(id => EQUIPPABLE_TYPES.includes(ITEMS[id].type));
     if (pool.length > 0) {
-      const itemId = pool[Math.floor(Math.random() * pool.length)];
-      const rarity = rollRarityTier(getRarityWeights());
-      const tier = RARITY_TIERS[rarity];
-      G.relicSeq = (G.relicSeq || 0) + 1;
-      G.relics = G.relics || [];
-      G.relics.push({ id: 'relic_' + G.relicSeq, itemId, rarity, bonusPct: tier.bonusPct });
-      const item = ITEMS[itemId];
-      const pct = Math.round(tier.bonusPct * 100);
-      emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`);
-      emit(EVENTS.NOTIFY, { msg: t('hunt.notifyRelicDrop', { tier: t(tier.name), item: item.name, pct }), type: 'success' });
-      emit(EVENTS.INVENTORY);
+      const hitTiers = rollIndependentRarityTiers(getRarityWeights());
+      hitTiers.forEach(rarity => {
+        // Cada relíquia sorteia seu próprio item — duas relíquias do mesmo
+        // kill podem ser itens diferentes.
+        const itemId = pool[Math.floor(Math.random() * pool.length)];
+        const tier = RARITY_TIERS[rarity];
+        G.relicSeq = (G.relicSeq || 0) + 1;
+        G.relics = G.relics || [];
+        G.relics.push({ id: 'relic_' + G.relicSeq, itemId, rarity, bonusPct: tier.bonusPct });
+        const item = ITEMS[itemId];
+        const pct = Math.round(tier.bonusPct * 100);
+        emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`);
+        emit(EVENTS.NOTIFY, { msg: t('hunt.notifyRelicDrop', { tier: t(tier.name), item: item.name, pct }), type: 'success' });
+      });
+      if (hitTiers.length > 0) emit(EVENTS.INVENTORY);
     }
   }
 

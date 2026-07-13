@@ -5,7 +5,7 @@
 import { G } from '../application/gameStore.js?v=125';
 import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=128';
 import { CITIES } from '../domain/cities.js?v=125';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=126';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=127';
 import { openModal, closeModal } from './shared.js?v=125';
 import { openBattleModal } from './battleModal.js?v=125';
 import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=125';

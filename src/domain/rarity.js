@@ -11,6 +11,9 @@
 // escala de raridade original deste jogo (ver comentário acima), não um termo
 // de Tibia, então muda de idioma como qualquer outro texto de UI. Quem exibe
 // precisa chamar t(tier.name).
+// `weight` é a % PADRÃO (independente, 0..100) de cada raridade — usada só
+// quando o dono não tem override no Painel Admin (ver domain/adminConfig.js:
+// DEFAULT_ADMIN_CONFIG.rarityWeights e rollIndependentRarityTiers() abaixo).
 export const RARITY_TIERS = {
   uncommon:  { name: 'rarity.uncommon',  bonusPct: 0.08, weight: 52, color: '#4caf50' },
   rare:      { name: 'rarity.rare',      bonusPct: 0.15, weight: 28, color: '#4a90d9' },
@@ -41,16 +44,16 @@ export function primaryStatKeyForItem(item) {
   return PRIMARY_STAT_ORDER.find(key => item[key]) || null;
 }
 
-// Sorteio ponderado de raridade. Usa os pesos padrão de RARITY_TIERS, ou os
-// pesos vindos do Painel Admin (G.adminConfig.rarityWeights) quando passados
-// por quem chama (ver application/huntUseCases.js).
-export function rollRarityTier(weightsOverride) {
-  const entries = Object.keys(RARITY_TIERS).map(id => [id, weightsOverride && weightsOverride[id] != null ? Math.max(0, weightsOverride[id]) : RARITY_TIERS[id].weight]);
-  const totalWeight = entries.reduce((sum, [, w]) => sum + w, 0) || 1;
-  let roll = Math.random() * totalWeight;
-  for (const [id, w] of entries) {
-    if (roll < w) return id;
-    roll -= w;
-  }
-  return entries[entries.length - 1][0]; // fallback de arredondamento de ponto flutuante
+// Sorteio INDEPENDENTE de raridade: cada tier rola sua PRÓPRIA % (0..100),
+// sem concorrer com os demais — não é "escolhe 1 dos 4", é "cada um pode
+// bater ou não". Duas ou mais raridades podem bater no mesmo golpe (cada
+// uma vira uma relíquia separada — ver application/huntUseCases.js), ou
+// nenhuma pode bater (nenhuma relíquia extra além do drop base). Usa as %
+// padrão de RARITY_TIERS, ou as vindas do Painel Admin
+// (G.adminConfig.rarityWeights) quando passadas por quem chama.
+export function rollIndependentRarityTiers(pctOverride) {
+  return Object.keys(RARITY_TIERS).filter(id => {
+    const pct = pctOverride && pctOverride[id] != null ? Math.max(0, pctOverride[id]) : RARITY_TIERS[id].weight;
+    return Math.random() * 100 < pct;
+  });
 }

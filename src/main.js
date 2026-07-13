@@ -14,7 +14,7 @@ import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=125
 import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=125';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=125';
 import { selectVocation } from './application/characterUseCases.js?v=125';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=126';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=127';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=125';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=125';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
@@ -51,11 +51,11 @@ import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiary
 import { wireTrainingPanelEvents } from './ui/trainingPanel.js?v=125';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=125';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
-import { wireAdminPanelEvents } from './ui/adminPanel.js?v=126';
+import { wireAdminPanelEvents } from './ui/adminPanel.js?v=127';
 import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=125';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=125';
-import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=126';
-import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=126';
+import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=127';
+import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=127';
 import { wireTabs, applyMarketVisibility } from './ui/tabs.js?v=125';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----

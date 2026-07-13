@@ -2,12 +2,12 @@
 // monstros por hunt e os drops (relíquias + itens normais), em 3 sub-abas pra
 // não virar uma tela só gigante. Lê/escreve via application/adminUseCases.js;
 // as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=126';
-import { RARITY_TIERS } from '../domain/rarity.js?v=125';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, zoneSpawnPercents } from '../domain/adminConfig.js?v=127';
+import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { ZONES, MONSTERS } from '../domain/bestiary.js?v=128';
 import { ITEMS } from '../domain/items.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=126';
+import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=127';
 import { itemIconImg } from './shared.js?v=125';
 import { t } from '../i18n/i18n.js?v=125';
 
@@ -198,17 +198,14 @@ function renderSpawnSubPanel() {
 // Sub-aba "Loot": % direta de cada raridade de Relíquia (drop de boss) + a
 // chance de cada item normal cair, monstro a monstro (override do bestiário).
 function renderLootSubPanel(cfg) {
-  const pct = rarityChancePercents(cfg.rarityWeights);
-  const raritySum = RARITY_TIER_ORDER.reduce((s, id) => s + (Number(cfg.rarityWeights[id]) || 0), 0);
-  const sumOk = Math.abs(raritySum - 100) < 0.05;
   const rarityRows = RARITY_TIER_ORDER.map(id => {
     const tier = RARITY_TIERS[id];
     return `
     <div class="admin-rarity-row">
       <span class="admin-rarity-name" style="color:${tier.color}">💎 ${t(tier.name)}</span>
       <input type="number" min="0" max="100" step="0.1" value="${cfg.rarityWeights[id]}"
-        onchange="setRarityPercent('${id}', parseFloat(this.value))" title="% direta desta raridade" />
-      <span class="admin-rarity-pct">${pct[id]}%</span>
+        onchange="setRarityPercent('${id}', parseFloat(this.value))" title="% desta raridade, independente das outras" />
+      <span class="admin-x">%</span>
     </div>`;
   }).join('');
 
@@ -249,12 +246,11 @@ function renderLootSubPanel(cfg) {
           onchange="setRelicDropChancePct(parseFloat(this.value))" />
         <span class="admin-x">%</span>
       </div>
-      <small>Probabilidade de cair 1 relíquia ao matar um boss.</small>
+      <small>Probabilidade de cair PELO MENOS 1 relíquia ao matar um boss — se cair, cada raridade abaixo rola a sua própria % pra decidir quais relíquias saem.</small>
     </div>
     <div class="admin-field">
-      <label>% de cada raridade <small>defina direto — a coluna da direita mostra a chance real ("efetiva"); se a soma não fechar em 100%, o jogo normaliza sozinho por essa soma</small></label>
+      <label>% de cada raridade <small>cada uma é independente das outras — não precisam somar 100%, e mais de uma pode bater no mesmo drop (vira uma relíquia pra cada raridade que bateu)</small></label>
       <div class="admin-rarity-list">${rarityRows}</div>
-      <div class="admin-rarity-sum ${sumOk ? 'ok' : 'warn'}">Soma: ${raritySum.toFixed(1)}% ${sumOk ? '✓' : '⚠️ ajuste pra fechar 100%'}</div>
     </div>
 
     <h4>📦 Drop de itens normais por monstro</h4>

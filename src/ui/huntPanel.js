@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=125';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=125';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=126';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=127';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=125';
 

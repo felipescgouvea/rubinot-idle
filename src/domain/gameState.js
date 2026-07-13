@@ -6,7 +6,7 @@
 import { createDefaultSkills } from './character.js?v=125';
 import { createDefaultRtc } from './rtcConfig.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=125';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=126';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=127';
 
 export function createDefaultState() {
   return {

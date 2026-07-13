@@ -2151,7 +2151,6 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .admin-rarity-row { display: grid; grid-template-columns: 1fr 90px 52px; align-items: center; gap: 8px; }
 .admin-rarity-name { font-size: 12px; font-weight: 700; }
 .admin-rarity-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
-.admin-rarity-pct { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: right; }
 .admin-toggle-row { display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer; }
 .admin-toggle-row input { width: 16px; height: 16px; }
 .admin-zone-list { display: flex; flex-direction: column; gap: 5px; max-height: 300px; overflow-y: auto; margin-top: 8px; padding: 8px; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(0,0,0,0.03); }
@@ -2166,10 +2165,6 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .admin-spawn-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .admin-spawn-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
 .admin-spawn-pct { font-size: 12px; font-weight: 700; color: var(--ink-soft); text-align: right; }
-/* Soma ao vivo da % de raridade (sub-aba Loot) */
-.admin-rarity-sum { font-size: 11px; font-weight: 700; margin-top: 6px; text-align: right; }
-.admin-rarity-sum.ok { color: #2e7d32; }
-.admin-rarity-sum.warn { color: #b8860b; }
 /* Drop de itens normais por monstro (sub-aba Loot) */
 .admin-loot-list { display: flex; flex-direction: column; gap: 10px; max-height: 420px; overflow-y: auto; margin-top: 6px; padding: 8px; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(0,0,0,0.03); }
 .admin-loot-monster { display: flex; flex-direction: column; gap: 5px; }
