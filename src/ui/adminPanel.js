@@ -1,11 +1,11 @@
 // Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
 // de relíquia por boss e os pesos de cada raridade. Lê/escreve via
 // application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=123';
-import { RARITY_TIERS } from '../domain/rarity.js?v=123';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=123';
-import { on, EVENTS } from '../shared/eventBus.js?v=123';
-import { getAdminConfig, getZoneSpawn } from '../application/adminUseCases.js?v=123';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=124';
+import { RARITY_TIERS } from '../domain/rarity.js?v=124';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=124';
+import { on, EVENTS } from '../shared/eventBus.js?v=124';
+import { getAdminConfig, getZoneSpawn } from '../application/adminUseCases.js?v=124';
 
 // Zona selecionada no sub-painel de Spawn (estado só de UI, preservado entre
 // re-renders do painel). Começa na primeira zona.
