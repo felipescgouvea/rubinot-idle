@@ -15,9 +15,9 @@ export const ZONES = {
   wolf_trail:    { city: 'abdendriel', name: 'Trilha da Matilha', icon: '🐺', minLevel: 8,  worldReq: 'auroria', monsters: ['wolf', 'bear'], goldMult: 1.35, xpMult: 1.3, theme: ['#3d5c47', '#1a2b20'], boss: 'bear', requiresBossOf: 'dwarf_mines' },
   spider_burrow: { city: 'abdendriel', name: 'Buraco de Aranhas', icon: '🕷️', minLevel: 9,  worldReq: 'auroria', monsters: ['spider', 'tarantula'], goldMult: 1.38, xpMult: 1.32, theme: ['#4a3a3a', '#201616'], boss: 'spider', requiresBossOf: 'wolf_trail' },
   elf_woods:     { city: 'abdendriel', name: 'Bosque dos Elfos', icon: '🧝', minLevel: 10, worldReq: 'auroria', monsters: ['elf'], goldMult: 1.4, xpMult: 1.35, theme: ['#3f7052', '#1e3d2b'], boss: 'elf', requiresBossOf: 'spider_burrow' },
-  old_graveyard: { city: 'thais', name: 'Cemitério Antigo', icon: '💀', minLevel: 12, worldReq: 'auroria', monsters: ['skeleton', 'ghoul', 'dworc'], goldMult: 1.45, xpMult: 1.38, theme: ['#5a5560', '#211f28'], boss: 'ghoul', requiresBossOf: 'elf_woods' },
+  old_graveyard: { city: 'thais', name: 'Cemitério Antigo', icon: '💀', minLevel: 12, worldReq: 'auroria', monsters: ['skeleton', 'ghoul'], goldMult: 1.45, xpMult: 1.38, theme: ['#5a5560', '#211f28'], boss: 'ghoul', requiresBossOf: 'elf_woods' },
   minotaur_den:  { city: 'thais', name: 'Covil dos Minotauros', icon: '🐂', minLevel: 13, worldReq: 'auroria', monsters: ['minotaur', 'minotaur_archer', 'minotaur_mage', 'minotaur_guard'], goldMult: 1.48, xpMult: 1.39, theme: ['#7a5a3a', '#3a2818'], boss: 'minotaur_guard', requiresBossOf: 'old_graveyard' },
-  cyclops_camp:  { city: 'thais', name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'juvenile_cyclops', 'cyclops_drone', 'cyclops_smith', 'mutated_human'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops_smith', requiresBossOf: 'minotaur_den' },
+  cyclops_camp:  { city: 'thais', name: 'Acampamento Cyclops', icon: '🗿', minLevel: 14, worldReq: 'auroria', monsters: ['cyclops', 'juvenile_cyclops', 'cyclops_drone', 'cyclops_smith'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops_smith', requiresBossOf: 'minotaur_den' },
   amazon_camp:   { city: 'carlin', name: 'Acampamento Amazona', icon: '🏹', minLevel: 15, worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6, theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'cyclops_camp' },
   bandit_hideout:{ city: 'carlin', name: 'Esconderijo de Bandidos', icon: '🏴', minLevel: 17, worldReq: 'auroria', monsters: ['bandit', 'poacher'], goldMult: 1.9, xpMult: 1.7, theme: ['#6b5a3f', '#332a1c'], boss: 'poacher', requiresBossOf: 'amazon_camp' },
   scarab_desert: { city: 'ankrahmun', name: 'Deserto dos Scarabs', icon: '🪲', minLevel: 18, worldReq: 'auroria', monsters: ['scarab', 'ancient_scarab'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'], boss: 'scarab', requiresBossOf: 'bandit_hideout' },
@@ -43,7 +43,7 @@ export const ZONES = {
   // --- Solarian (PvP retro, reqLevel 35) ---
   poison_marsh:  { city: 'porthope', name: 'Pântano Venenoso', icon: '🕸️', minLevel: 35, worldReq: 'solarian', monsters: ['wasp', 'poison_spider'], goldMult: 3.5, xpMult: 3.0, theme: ['#5c7d3a', '#243315'], boss: 'poison_spider' },
   braindeath_bog:{ city: 'porthope', name: 'Pântano dos Braindeath', icon: '🧠', minLevel: 38, worldReq: 'solarian', monsters: ['braindeath', 'crypt_shambler'], goldMult: 3.7, xpMult: 3.2, theme: ['#3a4a35', '#161f14'], boss: 'braindeath', requiresBossOf: 'poison_marsh' },
-  hydra_swamp:   { city: 'porthope', name: 'Pântano das Hydras', icon: '🐍', minLevel: 45, worldReq: 'solarian', monsters: ['hydra', 'medusa', 'serpent_spawn', 'warlock'], goldMult: 4.2, xpMult: 3.8, theme: ['#3c6b5e', '#173a30'], boss: 'medusa', requiresBossOf: 'braindeath_bog' },
+  hydra_swamp:   { city: 'porthope', name: 'Pântano das Hydras', icon: '🐍', minLevel: 45, worldReq: 'solarian', monsters: ['hydra', 'medusa', 'serpent_spawn'], goldMult: 4.2, xpMult: 3.8, theme: ['#3c6b5e', '#173a30'], boss: 'medusa', requiresBossOf: 'braindeath_bog' },
   wraith_hollow: { city: 'edron', name: 'Covil dos Wraiths', icon: '👤', minLevel: 50, worldReq: 'solarian', monsters: ['betrayed_wraith', 'crypt_defiler'], goldMult: 4.6, xpMult: 4.0, theme: ['#4a3a5c', '#1a1424'], boss: 'betrayed_wraith', requiresBossOf: 'hydra_swamp' },
   nightmare_den: { city: 'edron', name: 'Covil dos Pesadelos', icon: '🌑', minLevel: 58, worldReq: 'solarian', monsters: ['nightmare', 'nightmare_scion'], goldMult: 5.6, xpMult: 4.6, theme: ['#3a1f2e', '#150a12'], boss: 'nightmare', requiresBossOf: 'wraith_hollow' },
   hellfire_bastion:{ city: 'cormaya', name: 'Bastião Infernal', icon: '🔥', minLevel: 63, worldReq: 'solarian', monsters: ['hellfire_fighter', 'dark_torturer'], goldMult: 6.5, xpMult: 5.2, theme: ['#a5391f', '#3a1208'], boss: 'hellfire_fighter', requiresBossOf: 'nightmare_den' },
@@ -80,6 +80,9 @@ export const ZONES = {
   crystal_nest:    { city: 'svargrond', name: 'Ninho de Aranhas de Cristal', icon: '🕸️', minLevel: 50, worldReq: 'bellum', monsters: ['crystal_spider'], goldMult: 4.6, xpMult: 4.0, theme: ['#a9c9e0', '#4a6b85'], boss: 'crystal_spider' },
   wyrm_cavern:     { city: 'darashia',  name: 'Caverna dos Wyrms', icon: '🐉', minLevel: 45, worldReq: 'spectrum', monsters: ['wyrm'], goldMult: 4.2, xpMult: 3.8, theme: ['#4a6b6b', '#1c2e2e'], boss: 'wyrm' },
   hero_tower:      { city: 'edron',     name: 'Torre dos Heróis', icon: '🦸', minLevel: 55, worldReq: 'elysian', monsters: ['hero'], goldMult: 5.0, xpMult: 4.2, theme: ['#4a3a5c', '#1a1424'], boss: 'hero' },
+  dworc_camp:      { city: 'porthope',  name: 'Acampamento Dworc', icon: '🌀', minLevel: 16, worldReq: 'auroria', monsters: ['dworc_venomsniper', 'dworc_fighter', 'dworc'], goldMult: 1.85, xpMult: 1.65, theme: ['#5c3a6b', '#241a33'], boss: 'dworc' },
+  mutant_ward:     { city: 'yalahar',   name: 'Ala dos Mutantes', icon: '🧟', minLevel: 16, worldReq: 'auroria', monsters: ['mutated_human', 'slime', 'mutated_rat'], goldMult: 1.55, xpMult: 1.45, theme: ['#4a6b3a', '#1f331a'], boss: 'mutated_human' },
+  warlock_tower:   { city: 'thais',     name: 'Torre do Warlock', icon: '🧙', minLevel: 45, worldReq: 'solarian', monsters: ['warlock'], goldMult: 4.3, xpMult: 3.9, theme: ['#3a1a5c', '#150a24'], boss: 'warlock' },
 };
 
 export const MONSTERS = {
@@ -92,6 +95,8 @@ export const MONSTERS = {
   dwarf_guard:   { name: 'Dwarf Guard', icon: '🛡️', hp: 245, atk: 140, def: 18, xp: 165, gold: [10,30], loot: [['dwarven_ring',0.03],['halberd',0.04]] },
   elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 25 }] },
   dworc:         { name: 'Dworc Voodoomaster', icon: '🌀', hp: 80,  atk: 20, def: 4,  xp: 55,  gold: [2,8],   loot: [['orc_tooth',0.4],['spider_fangs',0.2]], spells: [{ element: 'death', min: 0, max: 40 }, { element: 'earth', min: 6, max: 18 }] },
+  dworc_fighter: { name: 'Dworc Fighter', icon: '🪓', hp: 140, atk: 50, def: 8,  xp: 70,  gold: [3,10],  loot: [['orc_tooth',0.5],['studded_armor',0.05]] },
+  dworc_venomsniper:{ name: 'Dworc Venomsniper', icon: '🏹', hp: 70,  atk: 15, def: 3,  xp: 60,  gold: [2,9],   loot: [['orc_tooth',0.4],['spider_fangs',0.3]], spells: [{ element: 'earth', min: 10, max: 30 }] },
   scarab:        { name: 'Scarab', icon: '🪲', hp: 320, atk: 75, def: 12, xp: 120, gold: [8,25],  loot: [['scarab_coin',0.3],['meat',0.4]], spells: [{ element: 'earth', min: 0, max: 35 }] },
   mutated_human: { name: 'Mutated Human', icon: '🧟', hp: 240, atk: 90, def: 8,  xp: 150, gold: [10,28], loot: [['mutated_flesh',0.5],['studded_armor',0.04]], spells: [{ element: 'death', min: 50, max: 60 }, { element: 'earth', min: 190, max: 280 }] },
   frost_dragon:  { name: 'Frost Dragon', icon: '🧊', hp: 1800,atk: 225,def: 35, xp: 2100,gold: [90,190], loot: [['ice_rapier',0.02],['dragon_scale',0.4],['life_crystal',0.3]], spells: [{ element: 'death', min: 175, max: 380 }, { element: 'ice', min: 100, max: 240 }, { element: 'physical', min: 0, max: 220 }] },
@@ -143,6 +148,7 @@ export const MONSTERS = {
   // poucos bosses de endgame cujo XP não pôde ser confirmado mantêm valor
   // aproximado — ver .spec/90-regras-de-negocio-gerais.md.
   rat:                 { name: 'Rat', icon: '🐁', hp: 20, atk: 8, def: 2, xp: 5, gold: [0,3], loot: [['cheese',0.4],['bones',0.2]] },
+  mutated_rat:         { name: 'Mutated Rat', icon: '🐀', hp: 80, atk: 40, def: 3, xp: 70, gold: [2,8], loot: [['cheese',0.3],['mutated_flesh',0.15]] },
   bug:                 { name: 'Bug', icon: '🐛', hp: 29, atk: 23, def: 1, xp: 18, gold: [0,1], loot: [['worm_dirt',0.3],['cheese',0.2]] },
   slime:               { name: 'Slime', icon: '🟢', hp: 150, atk: 110, def: 3, xp: 160, gold: [2,6], loot: [['worm_dirt',0.3],['meat',0.2]] },
   snake:               { name: 'Snake', icon: '🐍', hp: 15, atk: 8, def: 4, xp: 10, gold: [3,8], loot: [['meat',0.4],['bones',0.2]] },
