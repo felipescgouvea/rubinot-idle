@@ -1,6 +1,6 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState } from './gameStore.js?v=125';
+import { G, replaceState, replaceAccount } from './gameStore.js?v=126';
 import { createDefaultState } from '../domain/gameState.js?v=125';
 import { createDefaultSkills } from '../domain/character.js?v=126';
 import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=125';
@@ -13,7 +13,7 @@ import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=125';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
 import { gainXp } from './huntUseCases.js?v=128';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
@@ -29,11 +29,26 @@ export function applyCloudSave(cloudData) {
   if (cloudData) saveState(cloudData);
 }
 
+// Normaliza o que veio do storage (local ou nuvem) pro formato de CONTA
+// { activeSlot, slots: [slot0, slot1] }. Saves de antes do multi-personagem
+// eram o personagem inteiro, direto na raiz (sem `slots`) — vira o slot 0,
+// sem perder nada, e o slot 1 começa vazio.
+function normalizeAccountData(parsed) {
+  if (parsed && Array.isArray(parsed.slots)) {
+    const slots = [parsed.slots[0] || null, parsed.slots[1] || null];
+    const activeSlot = parsed.activeSlot === 1 && slots[1] ? 1 : 0;
+    return { activeSlot, slots };
+  }
+  return { activeSlot: 0, slots: [parsed, null] }; // formato antigo (pré multi-personagem)
+}
+
 export function loadGame() {
   const parsed = loadRawState();
   if (!parsed) return;
 
-  replaceState({ ...createDefaultState(), ...parsed });
+  const account = normalizeAccountData(parsed);
+  replaceAccount(account);
+  replaceState({ ...createDefaultState(), ...(account.slots[account.activeSlot] || {}) });
 
   // migração: zona/tarefa de versões antigas do bestiário
   if (G.activeZone && !ZONES[G.activeZone]) G.activeZone = null;

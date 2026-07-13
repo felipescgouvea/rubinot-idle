@@ -4,7 +4,7 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=125';
+import { G } from './gameStore.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=125';
 import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=125';
@@ -12,8 +12,8 @@ import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisi
 import { bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=125';
 import { ITEMS } from '../domain/items.js?v=125';
-import { saveGame } from './saveGameUseCase.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { saveGame } from './saveGameUseCase.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 

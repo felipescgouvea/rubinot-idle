@@ -4,7 +4,7 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=125';
+import { G } from '../application/gameStore.js?v=126';
 import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=125';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=125';
 import { VOCATIONS } from '../domain/character.js?v=126';
@@ -16,7 +16,7 @@ import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125'
 import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=125';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 

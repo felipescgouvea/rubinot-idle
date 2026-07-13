@@ -96,6 +96,19 @@ export default {
   'settings.nicknameNone': "You haven't picked a name yet — without one, your character won't show up on the leaderboard.",
   'settings.nicknameSave': 'Save',
   'settings.nicknameHint': 'Your name shows on the character status bar and the leaderboard (Highscores). You can change it anytime, as long as it isn\'t already taken.',
+
+  // ---- multiple characters (up to 2 per account) ----
+  'account.title': 'Characters',
+  'account.hint': 'Your account can have up to 2 characters. Only one is active at a time — switching saves the current one before loading the other.',
+  'account.emptySlot': 'Empty',
+  'account.createHere': 'Create here',
+  'account.slotLevel': 'level {level}',
+  'account.activeSlot': 'active',
+  'account.playThis': 'Play',
+  'account.confirmCreateSlot': 'Create a 2nd character on this account? The current character is saved before switching.',
+  'account.confirmSwitchSlot': 'Switch to {name}? The current character is saved before switching.',
+  'account.switching': '🔄 Switching character...',
+
   'settings.save': 'Save',
   'settings.saveDesc': 'Saves locally every 30s · syncs to the cloud ~8s after each change.',
   'settings.lastSave': 'Last local save: {time}',

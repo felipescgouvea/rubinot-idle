@@ -3,7 +3,7 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=125';
+import { G } from './gameStore.js?v=126';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=128';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
@@ -27,7 +27,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui

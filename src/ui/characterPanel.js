@@ -1,6 +1,6 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=125';
+import { G } from '../application/gameStore.js?v=126';
 import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=126';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
@@ -17,7 +17,7 @@ import { isStaminaEnabled } from '../application/adminUseCases.js?v=127';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=125';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).

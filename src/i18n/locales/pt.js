@@ -97,6 +97,19 @@ export default {
   'settings.nicknameNone': 'Você ainda não escolheu um nome — sem ele, seu personagem não aparece no ranking.',
   'settings.nicknameSave': 'Salvar',
   'settings.nicknameHint': 'O nome aparece na barra de status do personagem e no ranking (Highscores). Pode trocar quando quiser, contanto que não esteja em uso.',
+
+  // ---- múltiplos personagens (até 2 por conta) ----
+  'account.title': 'Personagens',
+  'account.hint': 'Sua conta pode ter até 2 personagens. Só um fica ativo por vez — trocar salva o atual antes de carregar o outro.',
+  'account.emptySlot': 'Vazio',
+  'account.createHere': 'Criar aqui',
+  'account.slotLevel': 'nível {level}',
+  'account.activeSlot': 'ativo',
+  'account.playThis': 'Jogar',
+  'account.confirmCreateSlot': 'Criar um 2º personagem nesta conta? O personagem atual é salvo antes de trocar.',
+  'account.confirmSwitchSlot': 'Trocar para {name}? O personagem atual é salvo antes de trocar.',
+  'account.switching': '🔄 Trocando de personagem...',
+
   'settings.save': 'Save',
   'settings.saveDesc': 'Salva local a cada 30s · envia pra nuvem ~8s após cada mudança.',
   'settings.lastSave': 'Último save local: {time}',

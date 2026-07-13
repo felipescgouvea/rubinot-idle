@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=125';
+import { G } from '../application/gameStore.js?v=126';
 import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=125';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -87,7 +87,8 @@ function renderShopCard(s) {
   const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
   const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
-  const stats = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
+  const statKeys = item && item.type === 'potion' ? ['atk', 'def', 'magic'] : ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'];
+  const stats = item ? statKeys.filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
   const reqLabel = item ? potionReqLabel(item, t) : '';
   const statLine = reqLabel ? `${stats} · <span class="shop-req">🔒 ${reqLabel}</span>` : stats;
   const iconHtml = shopIconHtml(s);

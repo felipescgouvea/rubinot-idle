@@ -1,4 +1,4 @@
-import { G } from './gameStore.js?v=125';
+import { G } from './gameStore.js?v=126';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=125';
 import { ZONES } from '../domain/bestiary.js?v=128';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
@@ -9,9 +9,9 @@ import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUse
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { runeDamage } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';
-import { saveGame } from './saveGameUseCase.js?v=125';
+import { saveGame } from './saveGameUseCase.js?v=126';
 import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=126';
+import { t } from '../i18n/i18n.js?v=127';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];

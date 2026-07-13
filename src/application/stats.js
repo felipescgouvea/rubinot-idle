@@ -1,7 +1,7 @@
 // Atributos derivados do personagem atual — fininhas amarrações entre o
 // estado vivo (G) e as fórmulas puras do domínio. Sem efeito colateral:
 // seguro pra application E ui chamarem à vontade pra exibir/computar.
-import { G } from './gameStore.js?v=125';
+import { G } from './gameStore.js?v=126';
 import {
   computeMaxHp, computeMaxMana, computeAtk, computeDef, computeMagic, computeSpd,
   computeEquipBonus, equippedWeaponSkillId,

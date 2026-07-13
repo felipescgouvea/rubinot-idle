@@ -15,6 +15,7 @@ Todo jogador. O login é **obrigatório**: o jogo só abre depois de criar uma c
 - **Sair** da conta (logout).
 - Ter o **progresso salvo automaticamente na nuvem**, atrelado à sua conta.
 - Voltar depois (mesmo em outro dispositivo/navegador) e **continuar de onde parou** ao entrar.
+- **Ter até 2 personagens na mesma conta** e trocar entre eles quando quiser (ver Regra 7).
 
 ## Comportamento esperado
 
@@ -45,6 +46,9 @@ Todo jogador. O login é **obrigatório**: o jogo só abre depois de criar uma c
 
 6. **Login por Google fica para uma etapa futura** (o dono optou por começar só com e-mail/senha).
 
+7. **Cada conta pode ter até 2 personagens, cada um com seu próprio progresso completo** (vocação, nível, inventário, equipamento, skills — tudo independente entre os dois). Só um personagem fica ativo por vez; trocar de personagem salva o que está ativo antes de carregar o outro. Criar o 2º personagem funciona exatamente como criar o 1º (escolher vocação, dar um nome) — só que a partir de um slot vazio da mesma conta, em vez de uma conta nova.
+   *Por quê:* deixa o jogador experimentar uma vocação diferente sem abandonar o progresso já feito, sem precisar de uma segunda conta/e-mail pra isso.
+
 ## Critérios de aceitação
 
 - [ ] Sem estar logado, o jogo não abre — aparece a tela de login/cadastro.
@@ -57,3 +61,6 @@ Todo jogador. O login é **obrigatório**: o jogo só abre depois de criar uma c
 - [ ] Um jogador não consegue, de forma alguma, ler ou alterar o save de outro.
 - [ ] O botão de sair volta para a tela de login sem manter o progresso anterior na tela.
 - [ ] Mensagens de erro aparecem em português e são claras.
+- [ ] É possível ter 2 personagens na mesma conta, cada um com progresso totalmente independente do outro.
+- [ ] Trocar de personagem nunca perde progresso de nenhum dos dois — o que estava ativo é salvo antes da troca.
+- [ ] Uma conta nunca consegue ter mais de 2 personagens.
