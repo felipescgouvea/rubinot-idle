@@ -2,7 +2,7 @@
 // funções SECURITY DEFINER criadas no Supabase (rubinot_market_*) — ver
 // as migrações do projeto para o schema completo (listings + wallets).
 
-import { rpcRequest, selectRequest } from './supabaseClient.js?v=114';
+import { rpcRequest, selectRequest } from './supabaseClient.js?v=115';
 
 export async function fetchMyWalletRequest(secret) {
   const gold = await rpcRequest('rubinot_market_my_wallet', { p_secret: secret });

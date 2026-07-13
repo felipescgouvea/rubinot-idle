@@ -30,7 +30,13 @@ export const SPRITE_OVERRIDE = {
 // ~82% dele — antes o canvas nativo variava (32/64px) e o preenchimento
 // real ia de ~31% a ~107%, fazendo bichos de porte igual aparecerem em
 // tamanhos bem diferentes lado a lado (cena/Battle List).
-const MONSTER_SPRITE_VER = 3;
+// v4: unsharp mask (libvips sharpen) em cada frame — o CDN da Fandom só serve
+// WebP animado com compressão COM perda (VP8 lossy; testado até com origin
+// MISS e Accept:image/gif, sempre volta webp), o que deixava o pixel art
+// borrado comparado ao WebP estático antigo (esse sim lossless/VP8L). Não dá
+// pra recuperar detalhe perdido na compressão, só reduzir a sensação de
+// borrão — reencodado como WebP lossless pra não perder mais nada por cima.
+const MONSTER_SPRITE_VER = 4;
 export function monsterSpriteFile(monsterId, monster) {
   const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
   return 'monsters/' + localName(file) + '?sv=' + MONSTER_SPRITE_VER;
