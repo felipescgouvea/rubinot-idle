@@ -876,9 +876,9 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
-  margin: -4px;
+  width: 70px;
+  height: 70px;
+  margin: -9px;
   overflow: hidden;
 }
 .monster-sprite {
@@ -1941,8 +1941,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   75% { transform: translateX(2px); }
 }
 /* overflow:hidden clipa a correção de escala por monstro (ver
-   domain/monsterSpriteScale.js) sem deixá-la vazar em cima do nome ao lado. */
-.battle-list-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden; }
+   domain/monsterSpriteScale.js) sem deixá-la vazar em cima do nome ao lado —
+   caixa alargada pra caber o teto de 1.3x sem cortar a criatura (34*1.3≈44). */
+.battle-list-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden; }
 /* caixa FIXA + object-fit: contain padroniza o tamanho visual de todos os
    sprites (mesma abordagem do sprite principal), independente das dimensões
    nativas de cada gif — sem isso os monstros apareciam em tamanhos diferentes */

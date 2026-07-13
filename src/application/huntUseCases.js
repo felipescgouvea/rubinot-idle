@@ -290,6 +290,15 @@ export function doHuntTick() {
   let areaId = 'single';
   let element = null;
   let hitFn = null; // (target) => dano-base (antes do modificador elemental)
+  // Calculado aqui (não só lá embaixo, no bloco de cura) porque a magia de
+  // ataque precisa RESERVAR essa mana antes de gastar — sem isso, uma magia
+  // cara (ex.: Groundshaker do knight, 160 de mana, contra um manaRegen de
+  // só 1/tick) esvazia a mana e o RTC fica sem como curar depois no MESMO
+  // tick em que o monstro contra-ataca. Golpe físico nunca compete com isso
+  // (não usa mana); só a magia/runa de ataque respeita essa reserva.
+  const healSpellIdForReserve = G.rtc.healSpell || defaultHealSpellId(G.vocation);
+  const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, G.vocation, G.level) ? SPELLS[healSpellIdForReserve] : null;
+  const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
   if (G.rtc.attackType === 'rune' && G.rtc.attackRune && canUseAttackRune(G.rtc.attackRune, G.vocation, magic) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
     const rune = ITEMS[G.rtc.attackRune];
     areaId = rune.area || 'single';
@@ -307,11 +316,11 @@ export function doHuntTick() {
     emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   } else {
-    // Magias PRONTAS agora (nível/voc ok, com mana e fora de cooldown), na ordem
-    // de prioridade.
+    // Magias PRONTAS agora (nível/voc ok, com mana sobrando MESMO reservando
+    // o custo da cura, e fora de cooldown), na ordem de prioridade.
     const ready = normalizeAttackSpells(G.rtc)
       .map(id => ({ id, s: SPELLS[id] }))
-      .filter(({ id, s }) => s && isSpellAvailable(id, G.vocation, G.level) && G.mana >= s.mana && isSpellReady(id));
+      .filter(({ id, s }) => s && isSpellAvailable(id, G.vocation, G.level) && G.mana - healManaReserve >= s.mana && isSpellReady(id));
     let atkSpellId = null, atkSpell = null;
     if (ready.length) {
       let pick = ready[0]; // padrão: a primeira da prioridade
@@ -406,9 +415,11 @@ export function doHuntTick() {
 
   // RTC — Spell Healing: cura automática por magia, sempre ativa (spell configurada
   // na própria aba RTC, ou exura como padrão) ao cruzar o limiar de % de HP definido.
+  // (healSpellId/healSpell já calculados lá em cima, antes da magia de ataque, pra
+  // reservar essa mana antes dela ser gasta — ver comentário no bloco de ataque.)
   const hpPct = (G.hp / getMaxHp()) * 100;
-  const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation);
-  const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
+  const healSpellId = healSpellIdForReserve;
+  const healSpell = healSpellForReserve;
   if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana && isSpellReady(healSpellId)) {
     const heal = Math.min(getMaxHp() - G.hp, spellHealAmount({ spell: healSpell, level: G.level, magicLevel: getMagic() }));
     G.hp = Math.min(getMaxHp(), G.hp + heal);
