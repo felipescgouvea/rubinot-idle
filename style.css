@@ -333,9 +333,19 @@ body {
 .panel { display: none; gap: 14px; }
 .panel.active { display: flex; flex-wrap: wrap; }
 .panel-left { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 14px; }
-.panel-right { flex: 1.2; min-width: 340px; display: flex; flex-direction: column; gap: 14px; }
+/* Sem flex-grow nem min-width fixo: o card de Equipamento já encolhe pro
+   próprio conteúdo (ver #equip-card), então esta coluna precisa acompanhar
+   — senão sobra espaço "fantasma" reservado à toa entre Equipamento e a Bag
+   (a 3ª coluna, ver #backpack-inventory-card). Os 340px que a grade de
+   vocação (#char-card, some após criar o personagem) precisa ficam nela
+   mesma, não aqui — assim a coluna só é larga QUANDO precisa. */
+.panel-right { flex: 0 1 auto; display: flex; flex-direction: column; gap: 14px; }
 
 /* ============ VOCAÇÕES ============ */
+/* min-width mora AQUI (não em .panel-right) — o card some inteiro depois que
+   o personagem existe, então essa largura só é reservada enquanto realmente
+   precisa (grade 2x2 de vocação legível). */
+#char-card { min-width: 340px; }
 .vocation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 14px !important; }
 
 .voc-btn {
