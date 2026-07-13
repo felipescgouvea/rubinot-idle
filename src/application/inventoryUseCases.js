@@ -1,16 +1,16 @@
-import { G } from './gameStore.js?v=108';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=108';
-import { ZONES } from '../domain/bestiary.js?v=108';
-import { RARITY_TIERS } from '../domain/rarity.js?v=108';
-import { emit, EVENTS } from '../shared/eventBus.js?v=108';
-import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=108';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=108';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=108';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=108';
-import { runeDamage } from '../domain/combatFormulas.js?v=108';
-import { elementMod } from '../domain/elements.js?v=108';
-import { saveGame } from './saveGameUseCase.js?v=108';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=108';
+import { G } from './gameStore.js?v=109';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=109';
+import { ZONES } from '../domain/bestiary.js?v=109';
+import { RARITY_TIERS } from '../domain/rarity.js?v=109';
+import { emit, EVENTS } from '../shared/eventBus.js?v=109';
+import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=109';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=109';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=109';
+import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=109';
+import { runeDamage } from '../domain/combatFormulas.js?v=109';
+import { elementMod } from '../domain/elements.js?v=109';
+import { saveGame } from './saveGameUseCase.js?v=109';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=109';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -18,7 +18,7 @@ function itemLogIcon(itemId) {
     onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
 }
 
-export { addItemToInventory } from './inventoryCore.js?v=108';
+export { addItemToInventory } from './inventoryCore.js?v=109';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.

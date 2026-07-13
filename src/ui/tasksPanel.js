@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=108';
-import { MONSTERS } from '../domain/bestiary.js?v=108';
-import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=108';
-import { on, EVENTS } from '../shared/eventBus.js?v=108';
-import { monsterSpriteImg } from './huntPanel.js?v=108';
+import { G } from '../application/gameStore.js?v=109';
+import { MONSTERS } from '../domain/bestiary.js?v=109';
+import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=109';
+import { on, EVENTS } from '../shared/eventBus.js?v=109';
+import { monsterSpriteImg } from './huntPanel.js?v=109';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
 // tem sprite real via SPRITE_OVERRIDE em tibiaSprites.js) — só "corrupted" (id

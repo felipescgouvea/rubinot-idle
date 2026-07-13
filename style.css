@@ -2056,20 +2056,21 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 }
 .shop-req { color: #b1341f; font-weight: 700; }
 
-/* ============ BAG (janela do inventário abre fixa à direita) ============ */
+/* ============ BAG (janela do inventário encaixada ao lado de Equipamento) ============ */
+/* 3ª coluna do painel de Caçada (junto de .panel-left/.panel-right — ver
+   `.panel.active { display:flex; flex-wrap:wrap }`), não mais fixa por cima
+   do resto da página. display:none/block continua controlado por
+   toggleBackpack() (ui/inventoryAndEquipmentPanel.js). */
 #backpack-inventory-card {
-  position: fixed;
-  top: 214px; right: 14px; /* abaixo do widget Boosted (que termina ~199px) */
-  width: 320px; max-width: calc(100vw - 28px);
+  flex: 0 0 300px;
+  width: 300px; max-width: 100%;
+  align-self: flex-start;
   max-height: calc(100vh - 232px);
   overflow-y: auto;
-  z-index: 60;
-  box-shadow: 0 10px 34px #00000077;
-  margin: 0 !important;
 }
 
-@media (max-width: 720px) {
-  #backpack-inventory-card { position: static; width: auto; max-height: none; margin: 10px !important; }
+@media (max-width: 1080px) {
+  #backpack-inventory-card { flex-basis: 100%; width: auto; max-height: none; }
 }
 
 /* ============ PAINEL ADMIN ============ */
