@@ -4,7 +4,7 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=125';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=126';
 import { resolveEquippedItem } from './items.js?v=125';
 import { pickWeightedMonster } from './adminConfig.js?v=127';
 

@@ -50,13 +50,39 @@ export const TIBIA_SKILLS = {
   shielding: { name: 'Shielding',        icon: '🛡️', base: 10 },
 };
 
-// [skill primária de ataque, multiplicador de treino melee/dist, mult. de treino mágico]
+// Skill treinada por golpe/defesa e a fonte de dano da vocação — não muda
+// (fiel ao Tibia: quem escala Magic Level nunca escala melee ao mesmo tempo).
 export const VOC_TRAINING = {
-  knight:   { attackSkill: 'sword',    weaponMult: 1.0, magicMult: 0.1, shieldMult: 1.0 },
-  paladin:  { attackSkill: 'distance', weaponMult: 0.9, magicMult: 0.35, shieldMult: 0.9 },
-  sorcerer: { attackSkill: 'magic',    weaponMult: 0.3, magicMult: 1.0, shieldMult: 0.6 },
-  druid:    { attackSkill: 'magic',    weaponMult: 0.3, magicMult: 1.0, shieldMult: 0.6 },
+  knight:   { attackSkill: 'sword' },
+  paladin:  { attackSkill: 'distance' },
+  sorcerer: { attackSkill: 'magic' },
+  druid:    { attackSkill: 'magic' },
 };
+
+// Multiplicadores REAIS de skill do Tibia global, por vocação — fonte:
+// forgottenserver (TFS), data/XML/vocations.xml, tag <skill id multiplier>.
+// É isso (não um único "multiplicador de treino" genérico) que faz o Knight
+// treinar Sword/Axe/Club rápido (1.1) mas Distance devagar (1.4), o Paladin o
+// oposto (1.2 melee, 1.1 distance), e mago treinar QUALQUER combate devagar
+// (1.5–2.0) — cada skill tem seu próprio número, por vocação, igual ao Tibia.
+export const SKILL_MULTIPLIERS = {
+  knight:   { fist: 1.1, club: 1.1, sword: 1.1, axe: 1.1, distance: 1.4, shielding: 1.1 },
+  paladin:  { fist: 1.2, club: 1.2, sword: 1.2, axe: 1.2, distance: 1.1, shielding: 1.1 },
+  sorcerer: { fist: 1.5, club: 2.0, sword: 2.0, axe: 2.0, distance: 2.0, shielding: 1.5 },
+  druid:    { fist: 1.5, club: 1.8, sword: 1.8, axe: 1.8, distance: 1.8, shielding: 1.5 },
+};
+// manaMultiplier do Tibia (mesma fonte acima) — rege a velocidade de Magic
+// Level: mago sobe rápido (1.1), knight quase não sobe (3.0), paladin no meio (1.4).
+export const MANA_MULTIPLIER = { knight: 3.0, paladin: 1.4, sorcerer: 1.1, druid: 1.1 };
+
+// skillBase do Tibia (TFS: Vocation::skillBase) — o "custo inicial" de cada
+// skill antes do multiplicador de vocação entrar na conta. Shielding é o mais
+// caro (100); Distance o mais barato (30); os 4 melee ficam no meio (50).
+const SKILL_BASE = { fist: 50, club: 50, sword: 50, axe: 50, distance: 30, shielding: 100 };
+
+// Nível mínimo de toda skill corpo-a-corpo/shielding no Tibia (todo personagem
+// começa em 10) — usado no expoente da fórmula de tentativas abaixo.
+const MINIMUM_SKILL_LEVEL = 10;
 
 export function createDefaultSkills() {
   const sk = {};
@@ -64,25 +90,37 @@ export function createDefaultSkills() {
   return sk;
 }
 
-// tentativas necessárias para subir a skill (curva exponencial à la Tibia, encurtada pra idle)
-export function triesForNext(skillId, lv) {
-  if (skillId === 'magic') return Math.floor(60 * Math.pow(1.35, lv));       // mana gasta
-  return Math.floor(35 * Math.pow(1.22, lv - 10));                            // golpes/defesas
+// Tentativas necessárias pra passar do nível `lv` pro `lv+1` — fórmula REAL do
+// Tibia global (TFS: Vocation::getReqSkillTries / getReqMana):
+//   melee/shielding: skillBase[skill] · multiplicador[voc][skill] ^ (lv − 10)
+//   magic level:      1600 · manaMultiplier[voc] ^ lv
+// Sem vocação (personagem ainda não criado), cai no multiplicador mais lento
+// (2.0/3.0) só pra nunca dividir por algo indefinido.
+export function triesForNext(vocation, skillId, lv) {
+  if (skillId === 'magic') {
+    const manaMult = MANA_MULTIPLIER[vocation] || 3.0;
+    return Math.floor(1600 * Math.pow(manaMult, lv));
+  }
+  const mult = (SKILL_MULTIPLIERS[vocation] && SKILL_MULTIPLIERS[vocation][skillId]) || 2.0;
+  return Math.floor(SKILL_BASE[skillId] * Math.pow(mult, lv - MINIMUM_SKILL_LEVEL));
 }
 
 // Aplica o ganho de tentativas a uma skill e retorna se ela subiu de nível —
 // função pura: não muta nada fora do objeto retornado, quem chama decide o
-// que fazer com o resultado (log, notificação, etc.).
-export function applySkillGain(skillState, skillId, amount) {
+// que fazer com o resultado (log, notificação, etc.). Sobe MAIS de um nível
+// de uma vez se o ganho for grande o bastante (fiel ao Tibia: addSkillAdvance
+// usa um while, não um if — um cast caro pode virar 2+ níveis de Magic de uma vez).
+export function applySkillGain(skillState, skillId, amount, vocation) {
   const sk = skillState[skillId];
   if (!sk) return { sk: skillState, leveledUp: false };
   const next = { ...sk, tries: sk.tries + amount };
-  const needed = triesForNext(skillId, next.lv);
   let leveledUp = false;
-  if (next.tries >= needed) {
+  let needed = triesForNext(vocation, skillId, next.lv);
+  while (next.tries >= needed) {
     next.tries -= needed;
     next.lv += 1;
     leveledUp = true;
+    needed = triesForNext(vocation, skillId, next.lv);
   }
   return { sk: { ...skillState, [skillId]: next }, leveledUp, newLevel: next.lv };
 }

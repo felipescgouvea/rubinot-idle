@@ -2,7 +2,7 @@
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
 import { renderTasksPanel } from './tasksPanel.js?v=125';
-import { renderSkillsPanel } from './skillsPanel.js?v=125';
+import { renderSkillsPanel } from './skillsPanel.js?v=126';
 import { renderArenaPanel } from './arenaPanel.js?v=125';
 import { renderWorldsPanel } from './worldsPanel.js?v=125';
 import { renderBattlePassPanel } from './battlePassPanel.js?v=125';

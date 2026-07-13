@@ -1,7 +1,7 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
 import { G } from '../application/gameStore.js?v=125';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=125';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=126';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
@@ -12,7 +12,7 @@ import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../appli
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { formatNum } from './shared.js?v=125';
 import { renderZonePicker, fmtDuration } from './huntPanel.js?v=125';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=127';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=128';
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=127';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=125';
@@ -250,10 +250,10 @@ export function renderCharSkills() {
   const weaponSkillId = voc && !isMage ? getEquippedWeaponSkillId() : null;
   el.innerHTML = Object.entries(TIBIA_SKILLS).map(([id, s]) => {
     const sk = G.sk[id];
-    const needed = triesForNext(id, sk.lv);
+    const needed = triesForNext(G.vocation, id, sk.lv);
     const pct = Math.min(100, Math.round((sk.tries / needed) * 100));
     const active = (id === 'shielding' && !!G.equipment.shield) ||
-      (id === 'magic' && (isMage || voc.magicMult >= 0.35)) ||
+      (id === 'magic' && (isMage || MANA_MULTIPLIER[G.vocation] <= 1.4)) ||
       (!isMage && id === weaponSkillId);
     return `<div class="char-skill-chip${active ? ' active' : ''}" title="${s.name}: ${sk.lv} (${pct}%)">
       <span class="char-skill-icon">${skillIconImg(id, s.icon, 'char-skill-icon-img')}</span>

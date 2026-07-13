@@ -5,7 +5,7 @@
 // (ex.: usar uma runa de ataque no inventário).
 import { G } from './gameStore.js?v=125';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=128';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=125';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=125';
 import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=125';
@@ -21,7 +21,7 @@ import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=125';
-import { trainSkill } from './skillUseCases.js?v=125';
+import { trainSkill } from './skillUseCases.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=125';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { getCombatBonuses } from './bonuses.js?v=125';
@@ -198,7 +198,7 @@ export function stopHunt() {
 // jogador não entra na próxima batalha sem vida por ela só rodar em combate.
 // `trackSupplies` só soma o custo da poção ao Hunt Analyzer da sessão atual
 // (não faz sentido registrar gasto de "caçada" enquanto não se está caçando).
-function applyRtcHealing(voc, trackSupplies) {
+function applyRtcHealing(trackSupplies) {
   const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation);
   const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
   const hpPct = (G.hp / getMaxHp()) * 100;
@@ -207,7 +207,7 @@ function applyRtcHealing(voc, trackSupplies) {
     G.hp = Math.min(getMaxHp(), G.hp + heal);
     G.mana -= healSpell.mana;
     startSpellCd(healSpellId, healSpell.cd);
-    trainSkill('magic', healSpell.mana * voc.magicMult);
+    trainSkill('magic', healSpell.mana);
     emit(EVENTS.LOG, { html: t('log.rtcHealSpell', { words: healSpell.words, heal, mana: healSpell.mana }), cat: 'magia' });
     emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
   }
@@ -333,7 +333,14 @@ export function doHuntTick() {
     if (voc.attackSkill === 'magic') basicRaw *= 0.5;
   }
   const basicDmg = basicRaw * elementMod(primary.defKey, 'physical');
-  if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
+  // Fiel ao Tibia: golpe corpo-a-corpo/soco treina +1 tentativa; Distance treina
+  // +2 (dobro, ver domain/character.js: SKILL_MULTIPLIERS/triesForNext) — o
+  // multiplicador que difere POR VOCAÇÃO já mora no denominador (tentativas
+  // necessárias), não aqui no ganho por golpe.
+  if (voc.attackSkill !== 'magic') {
+    const meleeSkillId = getEquippedWeaponSkillId();
+    trainSkill(meleeSkillId, meleeSkillId === 'distance' ? 2 : 1);
+  }
   const basicHit = strike(primary, basicDmg);
   const basicLabel = outOfAmmo ? t('hunt.logOutOfAmmoPunch') : t('hunt.logBasicHit');
   emit(EVENTS.LOG, t('log.basicAttack', { label: basicLabel, dmg: basicHit, name: primary.name }));
@@ -414,7 +421,7 @@ export function doHuntTick() {
       G.mana -= atkSpell.mana;
       startSpellCd(atkSpellId, atkSpell.cd);
       startAttackGroupCd();
-      trainSkill('magic', atkSpell.mana * voc.magicMult);
+      trainSkill('magic', atkSpell.mana);
       emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
       combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
     }
@@ -476,7 +483,7 @@ export function doHuntTick() {
   // Tibia (só com escudo equipado).
   const atk = monsterAttack(currentMonster, getDef());
   G.hp = Math.max(0, G.hp - atk.dmg);
-  if (G.equipment.shield) trainSkill('shielding', 1 * voc.shieldMult);
+  if (G.equipment.shield) trainSkill('shielding', 1);
   const elKey = MONSTER_ELEMENT_KEYS[atk.element];
   const spellTag = atk.kind === 'spell' ? t('hunt.logElementTag', { element: elKey ? t(elKey) : atk.element }) : '';
   emit(EVENTS.LOG, t('log.monsterHitsYou', { name: currentMonster.name, dmg: atk.dmg, spellTag }));
@@ -484,7 +491,7 @@ export function doHuntTick() {
 
   // RTC — cura por spell/poção de vida/poção de mana: ver applyRtcHealing()
   // (compartilhada com o regen passivo fora de combate, ver startRegen()).
-  applyRtcHealing(voc, true);
+  applyRtcHealing(true);
 
   if (G.hp <= 0) {
     // Bênçãos reduzem a perda de XP e melhoram o revive; são consumidas na morte.
@@ -713,6 +720,6 @@ export function startRegen() {
   // real entre poções virava 2s (ou mais) em vez do 1s combinado.
   if (rtcHealInterval) clearInterval(rtcHealInterval);
   rtcHealInterval = setInterval(() => {
-    if (G.vocation && !currentMonster) applyRtcHealing(VOC_TRAINING[G.vocation], G.hunting);
+    if (G.vocation && !currentMonster) applyRtcHealing(G.hunting);
   }, 500);
 }

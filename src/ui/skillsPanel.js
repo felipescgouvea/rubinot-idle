@@ -1,7 +1,7 @@
 // Aba Skills. Só re-renderiza ao trocar de aba (o treino em si acontece
 // silenciosamente durante a caçada — ver application/skillUseCases.js).
 import { G } from '../application/gameStore.js?v=125';
-import { TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=125';
+import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=126';
 import { resolveEquippedItem } from '../domain/items.js?v=125';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
@@ -31,11 +31,11 @@ export function renderSkillsPanel() {
   const grid = document.getElementById('skills-grid');
   grid.innerHTML = Object.entries(TIBIA_SKILLS).map(([id, s]) => {
     const sk = G.sk[id];
-    const needed = triesForNext(id, sk.lv);
+    const needed = triesForNext(G.vocation, id, sk.lv);
     const pct = Math.min(100, Math.round((sk.tries / needed) * 100));
     const isPrimary = voc && (
       (id === 'shielding' && !!G.equipment.shield) ||
-      (id === 'magic' && (isMage || voc.magicMult >= 0.35)) ||
+      (id === 'magic' && (isMage || MANA_MULTIPLIER[G.vocation] <= 1.4)) ||
       (!isMage && id === weaponSkillId)
     );
     const reasonInactive = id === 'shielding' && voc && !G.equipment.shield ? t('skills.equipShieldToTrain')

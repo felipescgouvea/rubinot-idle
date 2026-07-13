@@ -1,12 +1,12 @@
 import { G } from './gameStore.js?v=125';
-import { applySkillGain, TIBIA_SKILLS } from '../domain/character.js?v=125';
+import { applySkillGain, TIBIA_SKILLS } from '../domain/character.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getSkillRate } from './adminUseCases.js?v=127';
 import { t } from '../i18n/i18n.js?v=126';
 
 export function trainSkill(skillId, amount) {
   if (!G.vocation || !G.sk[skillId]) return;
-  const { sk, leveledUp, newLevel } = applySkillGain(G.sk, skillId, amount * getSkillRate());
+  const { sk, leveledUp, newLevel } = applySkillGain(G.sk, skillId, amount * getSkillRate(), G.vocation);
   G.sk = sk;
   if (leveledUp) {
     const def = TIBIA_SKILLS[skillId];

@@ -5,7 +5,7 @@
 // dispara a sequência de inicialização do jogo.
 
 import { G } from './application/gameStore.js?v=125';
-import { VOCATIONS } from './domain/character.js?v=125';
+import { VOCATIONS } from './domain/character.js?v=126';
 import { emit, EVENTS } from './shared/eventBus.js?v=125';
 import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=126';
 
@@ -14,7 +14,7 @@ import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=125
 import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=125';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=125';
 import { selectVocation } from './application/characterUseCases.js?v=125';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=127';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=128';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=125';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=125';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
@@ -32,7 +32,7 @@ import { startTraining, stopTraining, resumeTrainingOnLoad } from './application
 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=125';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=125';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=125';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=125';
 import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=125';
