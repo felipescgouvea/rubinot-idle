@@ -1,12 +1,24 @@
-// Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, a chance
-// de relíquia por boss e os pesos de cada raridade. Lê/escreve via
-// application/adminUseCases.js; as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=125';
+// Painel Admin (aba ⚙️): o dono ajusta taxas de XP/skills/gold/loot, spawn de
+// monstros por hunt e os drops (relíquias + itens normais), em 3 sub-abas pra
+// não virar uma tela só gigante. Lê/escreve via application/adminUseCases.js;
+// as mudanças aplicam na hora e são salvas.
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, rarityChancePercents, zoneSpawnPercents } from '../domain/adminConfig.js?v=126';
 import { RARITY_TIERS } from '../domain/rarity.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=127';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=128';
+import { ITEMS } from '../domain/items.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { getAdminConfig, getZoneSpawn } from '../application/adminUseCases.js?v=125';
+import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=126';
+import { itemIconImg } from './shared.js?v=125';
 import { t } from '../i18n/i18n.js?v=125';
+
+// Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
+// — mesmo padrão do RTC, ver ui/rtcPanel.js: activeRtcTab).
+let adminActiveTab = 'general';
+export function setAdminTab(tab) {
+  if (!['general', 'spawn', 'loot'].includes(tab)) return;
+  adminActiveTab = tab;
+  renderAdminPanel();
+}
 
 // Zona selecionada no sub-painel de Spawn (estado só de UI, preservado entre
 // re-renders do painel). Começa na primeira zona.
@@ -16,8 +28,120 @@ export function setAdminSpawnZone(zoneId) {
   renderAdminPanel();
 }
 
-// Sub-painel "Spawn de monstros por hunt": escolhe a zona e configura a % de
-// cada monstro (peso relativo) e a faixa do tamanho do grupo (min..max).
+// Zona selecionada no sub-painel de Loot (mesma ideia do spawn acima, estado
+// próprio pra não interferir na seleção do spawn quando o dono troca de aba).
+let adminLootZone = null;
+export function setAdminLootZone(zoneId) {
+  adminLootZone = zoneId;
+  renderAdminPanel();
+}
+
+// Sub-aba "Geral": taxas globais, tempo de spawn, multiplicadores de zona,
+// mercado e fidelidades opcionais. Tudo que não é spawn por monstro nem loot.
+function renderGeneralSubPanel(cfg) {
+  const rateInputs = ADMIN_RATE_FIELDS.map(f => `
+    <div class="admin-field">
+      <label>${f.label}</label>
+      <div class="admin-input-row">
+        <input type="number" min="0" step="0.1" value="${cfg[f.key]}"
+          onchange="setAdminRate('${f.key}', parseFloat(this.value))" />
+        <span class="admin-x">×</span>
+      </div>
+      <small>${f.hint}</small>
+    </div>`).join('');
+
+  // Lista de zonas com override de XP/Gold — o input mostra o valor efetivo
+  // (override do dono se houver, senão a progressão embutida da zona).
+  const zoneMultRows = Object.entries(ZONES).map(([id, z]) => {
+    const ov = cfg.zoneMultipliers[id] || {};
+    const xpVal = ov.xp != null ? ov.xp : z.xpMult;
+    const goldVal = ov.gold != null ? ov.gold : z.goldMult;
+    return `
+    <div class="admin-zone-row">
+      <span class="admin-zone-name">${z.icon} ${t(z.name)}</span>
+      <label class="admin-zone-mult">XP ×<input type="number" min="0" step="0.1" value="${xpVal}"
+        onchange="setZoneMultiplier('${id}', 'xp', parseFloat(this.value))" /></label>
+      <label class="admin-zone-mult">Gold ×<input type="number" min="0" step="0.1" value="${goldVal}"
+        onchange="setZoneMultiplier('${id}', 'gold', parseFloat(this.value))" /></label>
+    </div>`;
+  }).join('');
+
+  return `
+    <h4>📈 Taxas (multiplicadores)</h4>
+    <div class="admin-grid">${rateInputs}</div>
+
+    <h4>⏱️ Tempo de aparição das criaturas</h4>
+    <div class="admin-grid">
+      <div class="admin-field">
+        <label>Mínimo</label>
+        <div class="admin-input-row">
+          <input type="number" min="0" step="0.1" value="${cfg.spawnDelayMin}"
+            onchange="setAdminRate('spawnDelayMin', parseFloat(this.value))" />
+          <span class="admin-x">s</span>
+        </div>
+        <small>Tempo mínimo procurando até o próximo grupo surgir.</small>
+      </div>
+      <div class="admin-field">
+        <label>Máximo</label>
+        <div class="admin-input-row">
+          <input type="number" min="0" step="0.1" value="${cfg.spawnDelayMax}"
+            onchange="setAdminRate('spawnDelayMax', parseFloat(this.value))" />
+          <span class="admin-x">s</span>
+        </div>
+        <small>Cada aparição sorteia um tempo aleatório nesse intervalo.</small>
+      </div>
+    </div>
+
+    <h4>🗺️ Multiplicadores de XP/Gold por hunt</h4>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.useZoneMultipliers ? 'checked' : ''}
+          onchange="setUseZoneMultipliers(this.checked)" />
+        Aplicar multiplicadores de zona
+      </label>
+      <small>${cfg.useZoneMultipliers
+        ? 'Cada zona multiplica a XP/gold base pela sua progressão — ou pelo valor que você definir abaixo.'
+        : '🛡️ Modo Tibia (padrão): XP e gold iguais ao valor-base de cada criatura, sem multiplicador de zona.'}</small>
+    </div>
+    ${cfg.useZoneMultipliers ? `<div class="admin-zone-list">${zoneMultRows}</div>` : ''}
+
+    <h4>🏪 Mercado entre jogadores</h4>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.marketEnabled ? 'checked' : ''}
+          onchange="setMarketEnabled(this.checked)" />
+        Ativar o Mercado entre jogadores
+      </label>
+      <small>${cfg.marketEnabled
+        ? 'A aba 🏪 Mercado está visível e os jogadores podem comprar/vender itens entre si.'
+        : '🚧 Desativado (padrão por enquanto): a aba 🏪 Mercado fica escondida e a economia player-to-player fica fechada.'}</small>
+    </div>
+
+    <h4>⚙️ Fidelidades opcionais (Tibia)</h4>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.staminaEnabled ? 'checked' : ''} onchange="setStaminaEnabled(this.checked)" />
+        Stamina (cai caçando, regenera descansando)
+      </label>
+      <small>${cfg.staminaEnabled
+        ? 'Ligada: abaixo de 14h de stamina a XP cai pela metade (como no Tibia).'
+        : 'Desligada (padrão): sem penalidade de stamina.'}</small>
+    </div>
+    <div class="admin-field">
+      <label class="admin-toggle-row">
+        <input type="checkbox" ${cfg.consumeAmmo ? 'checked' : ''} onchange="setConsumeAmmo(this.checked)" />
+        Consumo de munição do paladino
+      </label>
+      <small>${cfg.consumeAmmo
+        ? 'Ligado: cada tiro gasta 1 flecha/dardo; sem munição, o paladino só soca.'
+        : 'Desligado (padrão): munição infinita.'}</small>
+    </div>
+
+    <button class="btn-small danger" style="margin-top:14px" onclick="resetAdminConfig()">🔄 Restaurar padrões</button>`;
+}
+
+// Sub-aba "Spawn de Hunts": escolhe a zona e configura a % de cada monstro
+// (peso relativo) e a faixa do tamanho do grupo (min..max).
 function renderSpawnSubPanel() {
   const zoneIds = Object.keys(ZONES);
   if (!zoneIds.length) return '';
@@ -71,125 +195,52 @@ function renderSpawnSubPanel() {
     </div>`;
 }
 
-export function renderAdminPanel() {
-  const el = document.getElementById('admin-content');
-  if (!el) return;
-  const cfg = getAdminConfig();
+// Sub-aba "Loot": % direta de cada raridade de Relíquia (drop de boss) + a
+// chance de cada item normal cair, monstro a monstro (override do bestiário).
+function renderLootSubPanel(cfg) {
   const pct = rarityChancePercents(cfg.rarityWeights);
-
-  const rateInputs = ADMIN_RATE_FIELDS.map(f => `
-    <div class="admin-field">
-      <label>${f.label}</label>
-      <div class="admin-input-row">
-        <input type="number" min="0" step="0.1" value="${cfg[f.key]}"
-          onchange="setAdminRate('${f.key}', parseFloat(this.value))" />
-        <span class="admin-x">×</span>
-      </div>
-      <small>${f.hint}</small>
-    </div>`).join('');
-
-  // Lista de zonas com override de XP/Gold — o input mostra o valor efetivo
-  // (override do dono se houver, senão a progressão embutida da zona).
-  const zoneMultRows = Object.entries(ZONES).map(([id, z]) => {
-    const ov = cfg.zoneMultipliers[id] || {};
-    const xpVal = ov.xp != null ? ov.xp : z.xpMult;
-    const goldVal = ov.gold != null ? ov.gold : z.goldMult;
-    return `
-    <div class="admin-zone-row">
-      <span class="admin-zone-name">${z.icon} ${t(z.name)}</span>
-      <label class="admin-zone-mult">XP ×<input type="number" min="0" step="0.1" value="${xpVal}"
-        onchange="setZoneMultiplier('${id}', 'xp', parseFloat(this.value))" /></label>
-      <label class="admin-zone-mult">Gold ×<input type="number" min="0" step="0.1" value="${goldVal}"
-        onchange="setZoneMultiplier('${id}', 'gold', parseFloat(this.value))" /></label>
-    </div>`;
-  }).join('');
-
+  const raritySum = RARITY_TIER_ORDER.reduce((s, id) => s + (Number(cfg.rarityWeights[id]) || 0), 0);
+  const sumOk = Math.abs(raritySum - 100) < 0.05;
   const rarityRows = RARITY_TIER_ORDER.map(id => {
     const tier = RARITY_TIERS[id];
     return `
     <div class="admin-rarity-row">
       <span class="admin-rarity-name" style="color:${tier.color}">💎 ${t(tier.name)}</span>
-      <input type="number" min="0" step="1" value="${cfg.rarityWeights[id]}"
-        onchange="setRarityWeight('${id}', parseFloat(this.value))" title="Peso relativo" />
+      <input type="number" min="0" max="100" step="0.1" value="${cfg.rarityWeights[id]}"
+        onchange="setRarityPercent('${id}', parseFloat(this.value))" title="% direta desta raridade" />
       <span class="admin-rarity-pct">${pct[id]}%</span>
     </div>`;
   }).join('');
 
-  el.innerHTML = `
-    <div class="admin-warn">⚠️ Painel do dono — altera o balanceamento do jogo. As mudanças valem na hora e ficam salvas.</div>
+  const zoneIds = Object.keys(ZONES);
+  const sel = zoneIds.includes(adminLootZone) ? adminLootZone : zoneIds[0];
+  const zone = sel ? ZONES[sel] : null;
+  const options = zoneIds.map(id => `<option value="${id}" ${id === sel ? 'selected' : ''}>${ZONES[id].icon} ${t(ZONES[id].name)}</option>`).join('');
+  const monsterBlocks = zone ? zone.monsters.map(mid => {
+    const m = MONSTERS[mid];
+    if (!m || !m.loot || !m.loot.length) return '';
+    const effectiveLoot = getMonsterLoot(mid, m.loot); // [[itemId, chance0..1], ...] — mesma ordem de m.loot
+    const itemRows = effectiveLoot.map(([itemId, effective], idx) => {
+      const baseChance = m.loot[idx][1];
+      const item = ITEMS[itemId];
+      const overridden = !!(cfg.lootOverrides && cfg.lootOverrides[mid] && Number.isFinite(cfg.lootOverrides[mid][itemId]));
+      return `
+      <div class="admin-loot-row">
+        <span class="admin-loot-item">${itemIconImg(itemId, 'admin-loot-icon')} ${item ? item.name : itemId}</span>
+        <input type="number" min="0" step="0.01" value="${+(effective * 100).toFixed(2)}"
+          onchange="setLootChance('${mid}','${itemId}', parseFloat(this.value))" title="Padrão do jogo: ${+(baseChance * 100).toFixed(2)}%" />
+        <span class="admin-x">%</span>
+        ${overridden ? `<button class="admin-loot-reset" title="Voltar ao padrão (${+(baseChance * 100).toFixed(2)}%)" onclick="resetLootChance('${mid}','${itemId}')">↺</button>` : '<span class="admin-loot-reset-spacer"></span>'}
+      </div>`;
+    }).join('');
+    return `
+    <div class="admin-loot-monster">
+      <div class="admin-loot-monster-name">${m.icon} ${m.name}</div>
+      ${itemRows}
+    </div>`;
+  }).join('') : '';
 
-    <h4>📈 Taxas (multiplicadores)</h4>
-    <div class="admin-grid">${rateInputs}</div>
-
-    <h4>⏱️ Tempo de aparição das criaturas</h4>
-    <div class="admin-grid">
-      <div class="admin-field">
-        <label>Mínimo</label>
-        <div class="admin-input-row">
-          <input type="number" min="0" step="0.1" value="${cfg.spawnDelayMin}"
-            onchange="setAdminRate('spawnDelayMin', parseFloat(this.value))" />
-          <span class="admin-x">s</span>
-        </div>
-        <small>Tempo mínimo procurando até o próximo grupo surgir.</small>
-      </div>
-      <div class="admin-field">
-        <label>Máximo</label>
-        <div class="admin-input-row">
-          <input type="number" min="0" step="0.1" value="${cfg.spawnDelayMax}"
-            onchange="setAdminRate('spawnDelayMax', parseFloat(this.value))" />
-          <span class="admin-x">s</span>
-        </div>
-        <small>Cada aparição sorteia um tempo aleatório nesse intervalo.</small>
-      </div>
-    </div>
-
-    ${renderSpawnSubPanel()}
-
-    <h4>🗺️ Multiplicadores de XP/Gold por hunt</h4>
-    <div class="admin-field">
-      <label class="admin-toggle-row">
-        <input type="checkbox" ${cfg.useZoneMultipliers ? 'checked' : ''}
-          onchange="setUseZoneMultipliers(this.checked)" />
-        Aplicar multiplicadores de zona
-      </label>
-      <small>${cfg.useZoneMultipliers
-        ? 'Cada zona multiplica a XP/gold base pela sua progressão — ou pelo valor que você definir abaixo.'
-        : '🛡️ Modo Tibia (padrão): XP e gold iguais ao valor-base de cada criatura, sem multiplicador de zona.'}</small>
-    </div>
-    ${cfg.useZoneMultipliers ? `<div class="admin-zone-list">${zoneMultRows}</div>` : ''}
-
-    <h4>🏪 Mercado entre jogadores</h4>
-    <div class="admin-field">
-      <label class="admin-toggle-row">
-        <input type="checkbox" ${cfg.marketEnabled ? 'checked' : ''}
-          onchange="setMarketEnabled(this.checked)" />
-        Ativar o Mercado entre jogadores
-      </label>
-      <small>${cfg.marketEnabled
-        ? 'A aba 🏪 Mercado está visível e os jogadores podem comprar/vender itens entre si.'
-        : '🚧 Desativado (padrão por enquanto): a aba 🏪 Mercado fica escondida e a economia player-to-player fica fechada.'}</small>
-    </div>
-
-    <h4>⚙️ Fidelidades opcionais (Tibia)</h4>
-    <div class="admin-field">
-      <label class="admin-toggle-row">
-        <input type="checkbox" ${cfg.staminaEnabled ? 'checked' : ''} onchange="setStaminaEnabled(this.checked)" />
-        Stamina (cai caçando, regenera descansando)
-      </label>
-      <small>${cfg.staminaEnabled
-        ? 'Ligada: abaixo de 14h de stamina a XP cai pela metade (como no Tibia).'
-        : 'Desligada (padrão): sem penalidade de stamina.'}</small>
-    </div>
-    <div class="admin-field">
-      <label class="admin-toggle-row">
-        <input type="checkbox" ${cfg.consumeAmmo ? 'checked' : ''} onchange="setConsumeAmmo(this.checked)" />
-        Consumo de munição do paladino
-      </label>
-      <small>${cfg.consumeAmmo
-        ? 'Ligado: cada tiro gasta 1 flecha/dardo; sem munição, o paladino só soca.'
-        : 'Desligado (padrão): munição infinita.'}</small>
-    </div>
-
+  return `
     <h4>💎 Raridade das Relíquias</h4>
     <div class="admin-field">
       <label>Chance de relíquia por boss</label>
@@ -201,11 +252,37 @@ export function renderAdminPanel() {
       <small>Probabilidade de cair 1 relíquia ao matar um boss.</small>
     </div>
     <div class="admin-field">
-      <label>Peso de cada raridade <small>(a % é relativa à soma dos pesos)</small></label>
+      <label>% de cada raridade <small>defina direto — a coluna da direita mostra a chance real ("efetiva"); se a soma não fechar em 100%, o jogo normaliza sozinho por essa soma</small></label>
       <div class="admin-rarity-list">${rarityRows}</div>
+      <div class="admin-rarity-sum ${sumOk ? 'ok' : 'warn'}">Soma: ${raritySum.toFixed(1)}% ${sumOk ? '✓' : '⚠️ ajuste pra fechar 100%'}</div>
     </div>
 
-    <button class="btn-small danger" style="margin-top:14px" onclick="resetAdminConfig()">🔄 Restaurar padrões</button>
+    <h4>📦 Drop de itens normais por monstro</h4>
+    <div class="admin-field">
+      <label>Escolha a hunt</label>
+      <select class="admin-spawn-select" onchange="setAdminLootZone(this.value)">${options}</select>
+      <small>% de chance de CADA item cair ao matar o monstro (são independentes entre si, não precisam somar 100%). A Taxa de Loot da aba Geral multiplica tudo isso por cima. ↺ volta um item ao padrão do jogo.</small>
+    </div>
+    <div class="admin-loot-list">${monsterBlocks || '<p class="muted">Nenhum item de loot nesta hunt.</p>'}</div>`;
+}
+
+export function renderAdminPanel() {
+  const el = document.getElementById('admin-content');
+  if (!el) return;
+  const cfg = getAdminConfig();
+
+  el.innerHTML = `
+    <div class="admin-warn">⚠️ Painel do dono — altera o balanceamento do jogo. As mudanças valem na hora e ficam salvas.</div>
+
+    <div class="admin-subtabs">
+      <button class="admin-subtab-btn ${adminActiveTab === 'general' ? 'active' : ''}" onclick="setAdminTab('general')">⚙️ Geral</button>
+      <button class="admin-subtab-btn ${adminActiveTab === 'spawn' ? 'active' : ''}" onclick="setAdminTab('spawn')">🎯 Spawn de Hunts</button>
+      <button class="admin-subtab-btn ${adminActiveTab === 'loot' ? 'active' : ''}" onclick="setAdminTab('loot')">💰 Loot</button>
+    </div>
+
+    ${adminActiveTab === 'general' ? renderGeneralSubPanel(cfg) : ''}
+    ${adminActiveTab === 'spawn' ? renderSpawnSubPanel() : ''}
+    ${adminActiveTab === 'loot' ? renderLootSubPanel(cfg) : ''}
   `;
 }
 

@@ -7,14 +7,14 @@ import { renderArenaPanel } from './arenaPanel.js?v=125';
 import { renderWorldsPanel } from './worldsPanel.js?v=125';
 import { renderBattlePassPanel } from './battlePassPanel.js?v=125';
 import { renderRtcPanel } from './rtcPanel.js?v=125';
-import { renderShopPanel } from './shopPanel.js?v=125';
+import { renderShopPanel } from './shopPanel.js?v=128';
 import { renderMarketPanel } from './marketPanel.js?v=125';
 import { renderHighscoresPanel } from './highscoresPanel.js?v=125';
 import { renderBossRushPanel } from './bossRushPanel.js?v=125';
 import { renderBestiaryTab } from './bestiaryPanel.js?v=125';
 import { renderTrainingSection } from './trainingPanel.js?v=125';
-import { renderAdminPanel } from './adminPanel.js?v=125';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=125';
+import { renderAdminPanel } from './adminPanel.js?v=126';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 
 // A aba Skills renderiza também a seção de Treino Offline (que vive no topo

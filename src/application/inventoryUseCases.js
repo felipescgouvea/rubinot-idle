@@ -1,11 +1,11 @@
 import { G } from './gameStore.js?v=125';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=125';
-import { ZONES } from '../domain/bestiary.js?v=127';
+import { ZONES } from '../domain/bestiary.js?v=128';
 import { RARITY_TIERS } from '../domain/rarity.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=125';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=125';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=125';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { runeDamage } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';

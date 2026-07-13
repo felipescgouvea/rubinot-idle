@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G } from './gameStore.js?v=125';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=127';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=128';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=125';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=125';
@@ -15,7 +15,7 @@ import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=125';
-import { MONSTERS } from '../domain/bestiary.js?v=127';
+import { MONSTERS } from '../domain/bestiary.js?v=128';
 import { RARITY_TIERS, rollRarityTier } from '../domain/rarity.js?v=125';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
@@ -25,7 +25,7 @@ import { trainSkill } from './skillUseCases.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=125';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { getCombatBonuses } from './bonuses.js?v=125';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=125';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=126';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
 import { t } from '../i18n/i18n.js?v=125';
 
@@ -556,10 +556,12 @@ export function resolveMonsterKill(zone, victim) {
 
   emit(EVENTS.LOG, t('log.monsterDied', { name: mon.name, xp: xpGained, gold: goldGained }));
 
-  // Loot
+  // Loot — chance efetiva de cada item é a override do dono (Painel Admin,
+  // aba Loot) por cima do padrão do bestiário, quando houver (ver
+  // domain/adminConfig.js: resolveMonsterLoot).
   const lootLine = [];
   let soldGold = 0;
-  mon.loot.forEach(([itemId, chance]) => {
+  getMonsterLoot(mon.defKey, mon.loot).forEach(([itemId, chance]) => {
     if (Math.random() < (chance + boosts.loot + bonus.loot) * getLootRate()) {
       const item = ITEMS[itemId];
       // Auto-vender lixo: itens 'misc' baratos viram gold na hora, sem lotar a bag.
