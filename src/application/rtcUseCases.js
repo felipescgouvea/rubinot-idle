@@ -7,7 +7,7 @@ import { normalizeAttackSpells, canUseAttackRune, runeMinMl } from '../domain/rt
 import { getMagic } from './stats.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
-import { t } from '../i18n/i18n.js?v=131';
+import { t } from '../i18n/i18n.js?v=132';
 
 function refresh(msg) {
   emit(EVENTS.RTC_PANEL);

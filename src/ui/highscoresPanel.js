@@ -2,7 +2,7 @@ import { G } from '../application/gameStore.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { escapeHtml, notify } from './shared.js?v=125';
 import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=125';
-import { t } from '../i18n/i18n.js?v=131';
+import { t } from '../i18n/i18n.js?v=132';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 

@@ -9,9 +9,9 @@ import { ITEMS } from '../domain/items.js?v=132';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=125';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=129';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=130';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { t } from '../i18n/i18n.js?v=131';
+import { t } from '../i18n/i18n.js?v=132';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram

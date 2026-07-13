@@ -428,7 +428,7 @@ export default {
   'bossrush.tierLabel': 'Tier {tier}',
   'bossrush.challenging': 'Challenging…',
   'bossrush.challengeTier': 'Challenge Tier {tier}',
-  'bossrush.exit': 'Exit Boss Rush',
+  'bossrush.exit': 'Exit Boss Zone',
   'bossrush.chooseVocationFirst': 'Choose a vocation first.',
   'bossrush.noBossesUnlocked': "No bosses unlocked yet — progress through the regular hunting zones to unlock the first one.",
 
@@ -554,7 +554,7 @@ export default {
   // ---- hunt use-cases (application/huntUseCases.js) ----
   'hunt.needVocation': 'Choose a vocation first!',
   'hunt.needZone': 'Select a hunting zone!',
-  'hunt.logBossRushChallenge': '<span class="log-info">💀 Boss Rush: challenging {icon} {zone}...</span>',
+  'hunt.logBossRushChallenge': '<span class="log-info">💀 Boss Zone: challenging {icon} {zone}...</span>',
   'hunt.logEnterZone': '<span class="log-info">🗺️ Entering {icon} {zone}...</span>',
   'hunt.logPaused': '<span class="log-info">⏸ Hunt paused.</span>',
   'hunt.logBossTierAppeared': '{icon} <span class="log-info">{name} (Tier {tier}) appeared!</span>',

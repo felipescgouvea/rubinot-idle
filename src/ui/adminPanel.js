@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=132';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=127';
 import { itemIconImg } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=131';
+import { t } from '../i18n/i18n.js?v=132';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
 // — mesmo padrão do RTC, ver ui/rtcPanel.js: activeRtcTab).
@@ -167,7 +167,7 @@ function renderSpawnSubPanel() {
     <div class="admin-field">
       <label>Escolha a hunt</label>
       <select class="admin-spawn-select" onchange="setAdminSpawnZone(this.value)">${options}</select>
-      <small>Configure a % de cada monstro (peso relativo — a % é peso/soma) e a frequência do grupo. Só vale na caçada comum (o Boss Rush é sempre 1 boss).</small>
+      <small>Configure a % de cada monstro (peso relativo — a % é peso/soma) e a frequência do grupo. Só vale na caçada comum (o Boss Zone é sempre 1 boss).</small>
     </div>
     <div class="admin-grid">
       <div class="admin-field">

@@ -22,7 +22,7 @@ Jogador, na aba Caçada, depois de ter escolhido uma vocação.
 - **A criatura que aparece é sorteada entre as da zona**, sem ordem fixa.
 - **Cada encontro gera um grupo de 1 a 5 criaturas** ("sala"), listadas numa Battle List com a vida de cada uma. O jogador enfrenta uma criatura por vez (o alvo da frente); ao derrotá-la, a próxima do grupo assume, e só quando o grupo se esvazia um novo é gerado. Só a criatura da frente ataca de volta.
   *Por quê:* dá visibilidade de quantas criaturas há e da vida de cada uma, como a Battle List do Tibia. Grupos maiores dão valor aos ataques de área (ver [15-areas-de-ataque.md](15-areas-de-ataque.md)) sem aumentar o perigo simultâneo — cada morte paga o mesmo que pagaria sozinha.
-- **No Boss Rush o grupo é sempre de 1 boss** — o desafio de boss nunca vem acompanhado.
+- **No Boss Zone o grupo é sempre de 1 boss** — o desafio de boss nunca vem acompanhado.
 - **Os atributos das criaturas escalam com o nível do personagem** (ficam mais fortes e valem mais XP/gold conforme o jogador evolui), para que uma mesma zona continue relevante por mais tempo.
 - **A XP e o gold que cada criatura dá seguem, por padrão, o valor-base fiel ao Tibia global** (sem multiplicador por zona). O dono do jogo pode, opcionalmente, ligar multiplicadores de XP/Gold por zona e ajustá-los zona a zona — mas o estado padrão é "sem multiplicador", para fidelidade ao Tibia.
   *Por quê:* o pedido do dono é que a recompensa seja fiel ao original por padrão, deixando a progressão amplificada como uma opção consciente, não o comportamento automático.

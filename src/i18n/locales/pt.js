@@ -429,7 +429,7 @@ export default {
   'bossrush.tierLabel': 'Tier {tier}',
   'bossrush.challenging': 'Desafiando…',
   'bossrush.challengeTier': 'Desafiar Tier {tier}',
-  'bossrush.exit': 'Sair do Boss Rush',
+  'bossrush.exit': 'Sair do Boss Zone',
   'bossrush.chooseVocationFirst': 'Escolha uma vocação primeiro.',
   'bossrush.noBossesUnlocked': 'Nenhum boss desbloqueado ainda — avance nas zonas de caça normais para desbloquear o primeiro.',
 
@@ -555,7 +555,7 @@ export default {
   // ---- hunt use-cases (application/huntUseCases.js) ----
   'hunt.needVocation': 'Escolha uma vocação primeiro!',
   'hunt.needZone': 'Selecione uma zona de caça!',
-  'hunt.logBossRushChallenge': '<span class="log-info">💀 Boss Rush: desafiando {icon} {zone}...</span>',
+  'hunt.logBossRushChallenge': '<span class="log-info">💀 Boss Zone: desafiando {icon} {zone}...</span>',
   'hunt.logEnterZone': '<span class="log-info">🗺️ Entrando em {icon} {zone}...</span>',
   'hunt.logPaused': '<span class="log-info">⏸ Caçada pausada.</span>',
   'hunt.logBossTierAppeared': '{icon} <span class="log-info">{name} (Tier {tier}) apareceu!</span>',

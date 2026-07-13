@@ -27,7 +27,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=131';
+import { t } from '../i18n/i18n.js?v=132';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -178,7 +178,11 @@ export function startHunt() {
   emit(EVENTS.LOG, bossOnly
     ? t('hunt.logBossRushChallenge', { icon: monsterLogIcon(zone.boss), zone: t(zone.name) })
     : t('hunt.logEnterZone', { icon: monsterLogIcon(zone.monsters[0]), zone: t(zone.name) }));
-  huntInterval = setInterval(doHuntTick, Math.max(400, 1200 / getSpd()));
+  // Cooldown do golpe básico (o tick inteiro: golpe + magia/runa + poções, ver
+  // doHuntTick abaixo) — 2s de base (Knight, spd 1.2), escalando pela mesma
+  // velocidade que já modula o resto do jogo. Era 1s (1200/spd); dobrado pra
+  // 2s de propósito, mais fiel ao ritmo de ataque do Tibia real.
+  huntInterval = setInterval(doHuntTick, Math.max(400, 2400 / getSpd()));
 }
 
 export function stopHunt() {

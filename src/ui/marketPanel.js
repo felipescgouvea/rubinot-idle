@@ -5,7 +5,7 @@ import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=1
 import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=125';
 import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=125';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=127';
-import { t } from '../i18n/i18n.js?v=131';
+import { t } from '../i18n/i18n.js?v=132';
 
 export async function renderMarketPanel() {
   const el = document.getElementById('market-content');
