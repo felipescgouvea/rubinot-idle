@@ -7,6 +7,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=127';
 import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=125';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Credita a DIFERENÇA de Charm Points de uma criatura: total que ela já vale
 // (pelas mortes acumuladas) menos o que já foi creditado dela antes. Assim uma
@@ -21,8 +22,9 @@ function creditBestiary(monsterId) {
   G.bestiaryCredited[monsterId] = earned;
   G.charmPoints = (G.charmPoints || 0) + delta;
   const m = MONSTERS[monsterId];
-  emit(EVENTS.LOG, `<span class="log-loot">📖 Bestiário: ${m ? m.name : monsterId} avançou! +${delta} Charm Points.</span>`);
-  emit(EVENTS.NOTIFY, { msg: `📖 +${delta} Charm Points (${m ? m.name : monsterId})`, type: 'success' });
+  const monsterName = m ? m.name : monsterId;
+  emit(EVENTS.LOG, `<span class="log-loot">📖 ${t('bestiary.progressLog', { monster: monsterName, delta })}</span>`);
+  emit(EVENTS.NOTIFY, { msg: `📖 ${t('bestiary.progressNotify', { delta, monster: monsterName })}`, type: 'success' });
   emit(EVENTS.HEADER_STATS);
 }
 
@@ -32,12 +34,12 @@ export function unlockCharm(charmId) {
   G.charmsUnlocked = G.charmsUnlocked || [];
   if (G.charmsUnlocked.includes(charmId)) return;
   if ((G.charmPoints || 0) < charm.cost) {
-    emit(EVENTS.NOTIFY, { msg: `Charm Points insuficientes (precisa de ${charm.cost}).`, type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('bestiary.insufficientCharmPoints', { cost: charm.cost }), type: 'error' });
     return;
   }
   G.charmPoints -= charm.cost;
   G.charmsUnlocked.push(charmId);
-  emit(EVENTS.NOTIFY, { msg: `${charm.icon} Charm "${charm.name}" desbloqueado!`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: `${charm.icon} ${t('bestiary.charmUnlocked', { name: charm.name })}`, type: 'success' });
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.BESTIARY_PANEL);
   saveGame();
@@ -52,7 +54,7 @@ export function toggleCharmEquipped(charmId) {
     G.charmsEquipped.splice(i, 1);
   } else {
     if (G.charmsEquipped.length >= CHARM_EQUIP_SLOTS) {
-      emit(EVENTS.NOTIFY, { msg: `Máximo de ${CHARM_EQUIP_SLOTS} charms equipados.`, type: 'error' });
+      emit(EVENTS.NOTIFY, { msg: t('bestiary.maxCharmsEquipped', { max: CHARM_EQUIP_SLOTS }), type: 'error' });
       return;
     }
     G.charmsEquipped.push(charmId);

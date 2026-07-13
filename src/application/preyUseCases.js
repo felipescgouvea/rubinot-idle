@@ -8,6 +8,9 @@ import {
 } from '../domain/prey.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
+
+const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
 
 function ensurePreyArray() {
   if (!Array.isArray(G.prey)) G.prey = [];
@@ -33,8 +36,17 @@ export function activatePrey(slotIndex, monsterId) {
   if (!MONSTERS[monsterId]) return;
   G.prey[slotIndex] = makePrey(monsterId);
   const p = G.prey[slotIndex];
-  const t = PREY_BONUS_TYPES[p.bonusType];
-  emit(EVENTS.NOTIFY, { msg: `🐾 Presa: ${MONSTERS[monsterId].name} — ${t.icon} +${Math.round(p.bonusPct * 100)}% ${t.name} (${p.stars}★)`, type: 'success' });
+  const bt = PREY_BONUS_TYPES[p.bonusType];
+  emit(EVENTS.NOTIFY, {
+    msg: t('bestiary.preyLocked', {
+      monster: MONSTERS[monsterId].name,
+      icon: bt.icon,
+      pct: Math.round(p.bonusPct * 100),
+      bonus: t(PREY_BONUS_NAME_KEY[p.bonusType]),
+      stars: p.stars,
+    }),
+    type: 'success',
+  });
   emit(EVENTS.PREY_PANEL);
   saveGame();
 }
@@ -46,14 +58,14 @@ export function rerollPrey(slotIndex) {
   const slot = G.prey[slotIndex];
   if (!slot || !slot.monster) return;
   if (G.gold < PREY_REROLL_COST) {
-    emit(EVENTS.NOTIFY, { msg: `Gold insuficiente (precisa de ${PREY_REROLL_COST.toLocaleString()}).`, type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('bestiary.preyGoldInsufficient', { cost: PREY_REROLL_COST.toLocaleString() }), type: 'error' });
     return;
   }
   G.gold -= PREY_REROLL_COST;
   G.prey[slotIndex] = makePrey(slot.monster);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.PREY_PANEL);
-  emit(EVENTS.NOTIFY, { msg: '🎲 Bônus da presa rerolado!', type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('bestiary.preyRerolled'), type: 'success' });
   saveGame();
 }
 

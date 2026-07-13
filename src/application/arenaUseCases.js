@@ -13,6 +13,7 @@ import { bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=125';
 import { ITEMS } from '../domain/items.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
@@ -38,7 +39,7 @@ export function arenaAttemptsLeft() {
 export async function startArenaBattle() {
   ensureArenaDay();
   if (G.arenaBattlesToday >= ARENA_DAILY_LIMIT) {
-    emit(EVENTS.NOTIFY, { msg: `Você já lutou ${ARENA_DAILY_LIMIT}x na Arena hoje. Volte amanhã!`, type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('arena.dailyLimitReached', { limit: ARENA_DAILY_LIMIT }), type: 'error' });
     return { noAttemptsLeft: true };
   }
   G.arenaBattlesToday++;
@@ -52,7 +53,7 @@ export async function startArenaBattle() {
     enemyPts = real.arena_points;
     isReal = true;
   } else {
-    enemyName = NPC_NAMES[Math.floor(Math.random() * NPC_NAMES.length)] + ' (NPC)';
+    enemyName = NPC_NAMES[Math.floor(Math.random() * NPC_NAMES.length)] + ` ${t('arena.npcTag')}`;
     enemyLevel = G.level + Math.floor(Math.random() * 5) - 2;
     enemyPts = Math.max(0, G.arenaPoints + Math.floor(Math.random() * 30) - 15);
   }
@@ -61,21 +62,22 @@ export async function startArenaBattle() {
   const enemyAtk = getAtk() * (0.75 + Math.random() * 0.3) * levelRatio;
   const enemyHp = getMaxHp() * (0.85 + Math.random() * 0.3) * levelRatio;
 
-  const log = [`<span style="color:var(--arcane)">⚔️ Arena: Você vs ${enemyName}${isReal ? ' <strong>(jogador real!)</strong>' : ''}</span>`];
+  const realTag = isReal ? ` <strong>(${t('arena.realPlayerTag')})</strong>` : '';
+  const log = [`<span style="color:var(--arcane)">⚔️ ${t('arena.logVs', { enemy: enemyName })}${realTag}</span>`];
 
   // Simulate best-of-2
   let wins = 0, losses = 0;
   for (let round = 1; round <= 2; round++) {
     let playerHp = getMaxHp(), eHp = enemyHp;
-    log.push(`<span style="color:var(--muted)">— Round ${round} —</span>`);
-    for (let t = 0; t < 30; t++) {
+    log.push(`<span style="color:var(--muted)">${t('arena.roundHeader', { round })}</span>`);
+    for (let tick = 0; tick < 30; tick++) {
       const pd = Math.max(1, Math.floor((getAtk() + getMagic()) * (0.8 + Math.random() * 0.4) - getDef() * 0.3));
       const ed = Math.max(1, Math.floor(enemyAtk * (0.8 + Math.random() * 0.4) - getDef() * 0.5));
       eHp -= pd; playerHp -= ed;
-      if (eHp <= 0) { log.push(`<span class="log-heal">✅ Round ${round}: Você venceu!</span>`); wins++; break; }
-      if (playerHp <= 0) { log.push(`<span class="log-dmg">❌ Round ${round}: Você foi derrotado.</span>`); losses++; break; }
+      if (eHp <= 0) { log.push(`<span class="log-heal">✅ ${t('arena.roundWon', { round })}</span>`); wins++; break; }
+      if (playerHp <= 0) { log.push(`<span class="log-dmg">❌ ${t('arena.roundLost', { round })}</span>`); losses++; break; }
     }
-    if (wins > losses && round === 1) { log.push('<span style="color:var(--muted)">— Fim dos rounds —</span>'); break; }
+    if (wins > losses && round === 1) { log.push(`<span style="color:var(--muted)">${t('arena.roundsEnd')}</span>`); break; }
   }
 
   const won = wins > losses;
@@ -90,13 +92,14 @@ export async function startArenaBattle() {
     const rcGained = 25 + streakBonus;
     G.rubini += rcGained;
     bumpMissionProgress('arenaWins', 1);
-    log.push(`<span class="log-kill">🏆 Vitória! +${ptsDelta} pts, +${rcGained} Rubini Coins${streakBonus ? ` (streak x${G.arenaStreak})` : ''}</span>`);
-    emit(EVENTS.NOTIFY, { msg: `Vitória na Arena! +${rcGained} RC${streakBonus ? ` (streak x${G.arenaStreak})` : ''}`, type: 'success' });
+    const streakSuffix = streakBonus ? ` (${t('arena.streakLabel', { streak: G.arenaStreak })})` : '';
+    log.push(`<span class="log-kill">🏆 ${t('arena.victoryLog', { pts: ptsDelta, rc: rcGained })}${streakSuffix}</span>`);
+    emit(EVENTS.NOTIFY, { msg: `${t('arena.victoryNotify', { rc: rcGained })}${streakSuffix}`, type: 'success' });
   } else {
     G.arenaLosses++;
     G.arenaStreak = 0;
-    log.push(`<span class="log-dmg">💔 Derrota. ${ptsDelta} pts</span>`);
-    emit(EVENTS.NOTIFY, { msg: 'Derrota na Arena.', type: 'error' });
+    log.push(`<span class="log-dmg">💔 ${t('arena.defeatLog', { pts: ptsDelta })}</span>`);
+    emit(EVENTS.NOTIFY, { msg: t('arena.defeatNotify'), type: 'error' });
   }
   G.arenaPoints = Math.max(0, G.arenaPoints);
 
@@ -116,9 +119,9 @@ export function claimArenaDivisionReward(division) {
   const reward = ARENA_DIVISION_REWARDS[division];
   if (!reward) return;
   G.arenaDivisionsClaimed.push(division);
-  if (reward.type === 'gold') { G.gold += reward.amount; emit(EVENTS.NOTIFY, { msg: `+${reward.amount} 💰 (divisão ${division})!`, type: 'success' }); }
-  if (reward.type === 'rubini') { G.rubini += reward.amount; emit(EVENTS.NOTIFY, { msg: `+${reward.amount} Rubini Coins (divisão ${division})!`, type: 'success' }); }
-  if (reward.type === 'item') { addItemToInventory(reward.itemId); emit(EVENTS.NOTIFY, { msg: `Item recebido: ${ITEMS[reward.itemId]?.name} (divisão ${division})!`, type: 'success' }); }
+  if (reward.type === 'gold') { G.gold += reward.amount; emit(EVENTS.NOTIFY, { msg: t('arena.rewardGold', { amount: reward.amount, division }), type: 'success' }); }
+  if (reward.type === 'rubini') { G.rubini += reward.amount; emit(EVENTS.NOTIFY, { msg: t('arena.rewardRubini', { amount: reward.amount, division }), type: 'success' }); }
+  if (reward.type === 'item') { addItemToInventory(reward.itemId); emit(EVENTS.NOTIFY, { msg: t('arena.rewardItem', { item: ITEMS[reward.itemId]?.name, division }), type: 'success' }); }
   emit(EVENTS.HEADER_STATS);
   saveGame();
 }

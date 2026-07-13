@@ -16,11 +16,14 @@ export const PREY_DURATION_MS = 2 * 60 * 60 * 1000;
 export const PREY_REROLL_COST = 5000;
 
 // Tipos de bônus que uma presa pode conceder. `apply` diz em qual etapa da
-// caçada o multiplicador entra (ver application/bonuses.js).
+// caçada o multiplicador entra (ver application/bonuses.js). `name` é chave
+// de tradução (ver ui/bestiaryPanel.js e i18n/locales/*.js) — reaproveita as
+// mesmas chaves bestiary.bonusDamage/bonusXp/bonusLoot já usadas na notificação
+// de presa travada (ver application/preyUseCases.js).
 export const PREY_BONUS_TYPES = {
-  damage: { id: 'damage', name: 'Dano',        icon: '⚔️', apply: 'damage' },
-  xp:     { id: 'xp',     name: 'Experiência', icon: '⭐', apply: 'xp' },
-  loot:   { id: 'loot',   name: 'Loot',        icon: '🍀', apply: 'loot' },
+  damage: { id: 'damage', name: 'bestiary.bonusDamage', icon: '⚔️', apply: 'damage' },
+  xp:     { id: 'xp',     name: 'bestiary.bonusXp',     icon: '⭐', apply: 'xp' },
+  loot:   { id: 'loot',   name: 'bestiary.bonusLoot',   icon: '🍀', apply: 'loot' },
 };
 
 // Faixa de intensidade do bônus por estrelas (1★ a 5★) — sorteada ao travar a

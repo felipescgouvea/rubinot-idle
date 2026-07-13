@@ -9,6 +9,7 @@ import { G } from './gameStore.js?v=125';
 import { ZONES, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=127';
 import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Zona/estado de caçada "de fora" do Boss Rush — guardados só pra restaurar a
 // escolha normal do jogador (aba Caçada) quando ele sai do Boss Rush, em vez
@@ -35,7 +36,7 @@ export function startBossRush(zoneId) {
   const zone = ZONES[zoneId];
   if (!zone || !zone.boss) return;
   if (!isZoneUnlocked(zoneId, G.level, G.currentWorld, G.defeatedZoneBosses)) {
-    emit(EVENTS.NOTIFY, { msg: 'Zona ainda não desbloqueada.', type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('bossrush.zoneLocked'), type: 'error' });
     return;
   }
   // Guarda a zona/estado normal só na 1ª entrada no Boss Rush (trocar de boss

@@ -6,6 +6,7 @@ import { XP_TABLE } from '../domain/character.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 let lastSubmitAt = 0;
 let highscoresCache = null;
@@ -40,7 +41,7 @@ export async function submitScore(force = false) {
 
   if (!result.ok) {
     if ((result.message || '').includes('em uso')) {
-      emit(EVENTS.NOTIFY, { msg: 'Esse nome já pertence a outro jogador.', type: 'error' });
+      emit(EVENTS.NOTIFY, { msg: t('highscores.nameTaken'), type: 'error' });
     }
     return false;
   }
@@ -50,7 +51,7 @@ export async function submitScore(force = false) {
 export async function registerPlayerName(name) {
   name = (name || '').trim();
   if (name.length < 3 || name.length > 20) {
-    emit(EVENTS.NOTIFY, { msg: 'Nome deve ter entre 3 e 20 caracteres.', type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('highscores.nameLength'), type: 'error' });
     return false;
   }
   ensurePlayerSecret();
@@ -61,7 +62,7 @@ export async function registerPlayerName(name) {
     G.playerName = prev;
     return false;
   }
-  emit(EVENTS.NOTIFY, { msg: `Bem-vindo ao ranking, ${name}!`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('highscores.welcome', { name }), type: 'success' });
   saveGame();
   emit(EVENTS.HIGHSCORES_PANEL);
   emit(EVENTS.CHAR_INFO); // atualiza o nome na barra de status do personagem (ver ui/characterPanel.js)

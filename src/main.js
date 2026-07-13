@@ -7,6 +7,7 @@
 import { G } from './application/gameStore.js?v=125';
 import { VOCATIONS } from './domain/character.js?v=125';
 import { emit, EVENTS } from './shared/eventBus.js?v=125';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=125';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=125';
@@ -103,7 +104,7 @@ Object.assign(window, {
   openDailyReward, claimDailyReward,
   startTraining, stopTraining,
   setAdminRate, setRelicDropChancePct, setRarityWeight, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setAdminSpawnZone,
-  openSettingsPanel, logout,
+  openSettingsPanel, logout, setLocale,
   // utilitário de console pro dono do jogo ajustar o próprio save manualmente
   // (ex.: addGold(1000000000)) — não há UI pra isso de propósito
   addGold: (amount) => {
@@ -179,6 +180,11 @@ async function startAuthedSession() {
   hideAuthGate();
   bootGame();
 }
+
+// ---- idioma: aplica ANTES de qualquer render, senão a UI pisca em inglês e
+// troca pro idioma certo um instante depois ----
+document.documentElement.lang = getLocale();
+applyStaticTranslations();
 
 // ---- init ----
 wireTabs();

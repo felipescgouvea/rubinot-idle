@@ -3,6 +3,7 @@ import { VOCATIONS } from '../domain/character.js?v=125';
 import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=125';
 import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=125';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 function divisionRewardIcon(r) {
   if (r.type === 'gold') return goldIconImg('inline-icon');
@@ -14,12 +15,12 @@ function divisionRewardIcon(r) {
 function renderArenaSummary() {
   const division = arenaDivisionForPoints(G.arenaPoints);
   document.getElementById('arena-info').innerHTML = `
-    <div class="arena-stat"><div class="arena-stat-val">${division}</div><div class="arena-stat-lbl">Divisão</div></div>
-    <div class="arena-stat"><div class="arena-stat-val">${G.arenaPoints}</div><div class="arena-stat-lbl">Pontos Prestige</div></div>
-    <div class="arena-stat"><div class="arena-stat-val">${G.arenaWins}</div><div class="arena-stat-lbl">Vitórias</div></div>
-    <div class="arena-stat"><div class="arena-stat-val">${G.arenaLosses}</div><div class="arena-stat-lbl">Derrotas</div></div>
-    <div class="arena-stat"><div class="arena-stat-val">${G.arenaStreak || 0}🔥</div><div class="arena-stat-lbl">Sequência</div></div>
-    <div class="arena-stat"><div class="arena-stat-val">${arenaAttemptsLeft()}/15</div><div class="arena-stat-lbl">Lutas hoje</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${division}</div><div class="arena-stat-lbl">${t('arena.division')}</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${G.arenaPoints}</div><div class="arena-stat-lbl">${t('arena.prestigePoints')}</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${G.arenaWins}</div><div class="arena-stat-lbl">${t('arena.wins')}</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${G.arenaLosses}</div><div class="arena-stat-lbl">${t('arena.losses')}</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${G.arenaStreak || 0}🔥</div><div class="arena-stat-lbl">${t('arena.streak')}</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${arenaAttemptsLeft()}/15</div><div class="arena-stat-lbl">${t('arena.fightsToday')}</div></div>
   `;
 
   const currentIdx = ARENA_DIVISIONS.indexOf(division);
@@ -31,7 +32,7 @@ function renderArenaSummary() {
       <div class="bp-reward-tier">${div}</div>
       <div class="bp-reward-icon">${divisionRewardIcon(reward)}</div>
       <button class="bp-claim-btn" onclick="handleClaimArenaDivision('${div}')" ${(!reached || claimed) ? 'disabled' : ''}>
-        ${claimed ? '✓' : reached ? 'Coletar' : '🔒'}
+        ${claimed ? '✓' : reached ? t('arena.claim') : '🔒'}
       </button>
     </div>`;
   }).join('');
@@ -43,21 +44,21 @@ function renderArenaBattleShell() {
   const locked = G.level < 30;
   const noAttempts = arenaAttemptsLeft() <= 0;
   document.getElementById('arena-battle-area').innerHTML = locked
-    ? `<p style="color:var(--muted);text-align:center;padding:20px">🔒 Arena requer Nível 30+. (Você está no nível ${G.level})</p>`
+    ? `<p style="color:var(--muted);text-align:center;padding:20px">🔒 ${t('arena.levelRequirement', { level: G.level })}</p>`
     : `
       <div class="arena-vs">
         <div class="arena-fighter">
-          <div class="arena-fighter-name">${G.vocation ? VOCATIONS[G.vocation].icon : '⚔️'} Você</div>
-          <div style="font-size:12px;color:var(--muted)">Lv ${G.level} — ${G.arenaPoints} pts</div>
+          <div class="arena-fighter-name">${G.vocation ? VOCATIONS[G.vocation].icon : '⚔️'} ${t('arena.you')}</div>
+          <div style="font-size:12px;color:var(--muted)">${t('arena.levelPoints', { level: G.level, points: G.arenaPoints })}</div>
           <div class="bar-row" style="margin-top:8px"><div class="bar-track" style="flex:1"><div class="bar hp-bar" style="width:100%"></div></div></div>
         </div>
-        <div class="arena-vs-sep">VS</div>
+        <div class="arena-vs-sep">${t('arena.vs')}</div>
         <div class="arena-fighter enemy">
           <div class="arena-fighter-name" id="arena-enemy-name">???</div>
-          <div style="font-size:12px;color:var(--muted)" id="arena-enemy-info">Aguardando...</div>
+          <div style="font-size:12px;color:var(--muted)" id="arena-enemy-info">${t('arena.waiting')}</div>
         </div>
       </div>
-      <button class="arena-btn" onclick="startArenaBattle()" ${noAttempts ? 'disabled' : ''}>${noAttempts ? '⏳ Sem lutas hoje — volte amanhã' : '⚔️ Buscar Batalha'}</button>
+      <button class="arena-btn" onclick="startArenaBattle()" ${noAttempts ? 'disabled' : ''}>${noAttempts ? `⏳ ${t('arena.noFightsToday')}` : `⚔️ ${t('arena.findBattle')}`}</button>
       <div class="arena-log" id="arena-log"></div>
     `;
 }
@@ -87,7 +88,7 @@ export async function handleArenaBattleClick() {
   if (!nameEl || !infoEl || !logEl) return; // saiu da aba Arena antes da batalha resolver
 
   nameEl.textContent = `⚔️ ${result.enemyName}`;
-  infoEl.textContent = `Lv ${result.enemyLevel} — ${result.enemyPts} pts`;
+  infoEl.textContent = t('arena.levelPoints', { level: result.enemyLevel, points: result.enemyPts });
   logEl.innerHTML = result.logLines.map(line => `<div>${line}</div>`).join('');
   logEl.scrollTop = logEl.scrollHeight;
 }

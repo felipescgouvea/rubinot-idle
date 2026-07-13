@@ -7,11 +7,15 @@
 // próxima é o sistema de Imbuements do Tibia (que também adiciona bônus de
 // atributo a um item já equipado) — ver .spec/90-regras-de-negocio-gerais.md,
 // Regra 3, e .spec/20-itens-e-equipamento.md.
+// `name` é chave de tradução (ver i18n/locales/*.js: rarity.<id>) — é uma
+// escala de raridade original deste jogo (ver comentário acima), não um termo
+// de Tibia, então muda de idioma como qualquer outro texto de UI. Quem exibe
+// precisa chamar t(tier.name).
 export const RARITY_TIERS = {
-  uncommon:  { name: 'Incomum',  bonusPct: 0.08, weight: 52, color: '#4caf50' },
-  rare:      { name: 'Raro',     bonusPct: 0.15, weight: 28, color: '#4a90d9' },
-  epic:      { name: 'Épico',    bonusPct: 0.25, weight: 15, color: '#9b59b6' },
-  legendary: { name: 'Lendário', bonusPct: 0.40, weight: 5,  color: '#e0a020' },
+  uncommon:  { name: 'rarity.uncommon',  bonusPct: 0.08, weight: 52, color: '#4caf50' },
+  rare:      { name: 'rarity.rare',      bonusPct: 0.15, weight: 28, color: '#4a90d9' },
+  epic:      { name: 'rarity.epic',      bonusPct: 0.25, weight: 15, color: '#9b59b6' },
+  legendary: { name: 'rarity.legendary', bonusPct: 0.40, weight: 5,  color: '#e0a020' },
 };
 
 // Renomeação/expansão da escala de raridade: saves antigos guardam ids antigos

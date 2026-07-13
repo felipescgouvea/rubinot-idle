@@ -16,13 +16,14 @@ import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125'
 import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=125';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
 // Badge de área pra magia/runa de ataque: mostra se é alvo único ou AoE (e a
 // forma). Ver domain/attackAreas.js.
 function areaBadge(areaId) {
-  return isAreaAttack(areaId) ? `💥 ${areaName(areaId)}` : `🎯 ${areaName('single')}`;
+  return isAreaAttack(areaId) ? `💥 ${areaName(areaId, t)}` : `🎯 ${areaName('single', t)}`;
 }
 const HEAL_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.heal);
 const MANA_POTIONS = Object.entries(ITEMS).filter(([, i]) => i.type === 'potion' && i.mana);
@@ -38,11 +39,11 @@ function spellRow(id, s, selected, onclick) {
     <div class="rtc-row-info">
       <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
       <div class="rtc-row-desc">
-        ${s.type === 'attack' ? `⚔️ ${areaBadge(s.area)}` : `💚 Cura (escala nível+ML)`} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} mana · ⏱ CD ${s.cd}s · Nível ${s.level}+
+        ${s.type === 'attack' ? `⚔️ ${areaBadge(s.area)}` : `💚 ${t('rtc.healScaling')}`} · ${vitalIconImg('mana', 'inline-icon')} ${t('rtc.manaCost', { amount: s.mana })} · ⏱ ${t('rtc.cooldown', { sec: s.cd })} · ${t('rtc.levelReq', { level: s.level })}
       </div>
     </div>
     <button class="rtc-row-btn" onclick="${onclick}('${id}')" ${!unlocked ? 'disabled' : ''}>
-      ${!unlocked ? `🔒 Nível ${s.level}` : selected ? '✅ Ativa' : 'Usar'}
+      ${!unlocked ? `🔒 ${t('rtc.lockedLevel', { level: s.level })}` : selected ? `✅ ${t('rtc.active')}` : t('rtc.use')}
     </button>
   </div>`;
 }
@@ -58,9 +59,9 @@ function priorityRow(id, s, idx, total) {
       <div class="rtc-row-desc">⚔️ ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} · ⏱ ${s.cd}s</div>
     </div>
     <div class="rtc-prio-controls">
-      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', -1)" ${idx === 0 ? 'disabled' : ''} title="Subir prioridade">▲</button>
-      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', 1)" ${idx === total - 1 ? 'disabled' : ''} title="Descer prioridade">▼</button>
-      <button class="rtc-prio-btn remove" onclick="removeRtcAttackSpell('${id}')" title="Remover">✕</button>
+      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', -1)" ${idx === 0 ? 'disabled' : ''} title="${t('rtc.movePriorityUp')}">▲</button>
+      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', 1)" ${idx === total - 1 ? 'disabled' : ''} title="${t('rtc.movePriorityDown')}">▼</button>
+      <button class="rtc-prio-btn remove" onclick="removeRtcAttackSpell('${id}')" title="${t('rtc.remove')}">✕</button>
     </div>
   </div>`;
 }
@@ -71,16 +72,16 @@ function priorityRow(id, s, idx, total) {
 // alvo; preenchido mostra a poção escolhida (tocar troca/remove pelo modal).
 function potionDropSlot(kind, selectedId) {
   const item = selectedId ? ITEMS[selectedId] : null;
-  const label = kind === 'life' ? 'vida' : 'mana';
+  const label = kind === 'life' ? t('rtc.potionLife') : t('rtc.potionMana');
   return `<div class="rtc-potion-slot ${item ? 'filled' : 'empty'}"
       ondragover="event.preventDefault(); this.classList.add('drag-over')"
       ondragleave="this.classList.remove('drag-over')"
       ondrop="this.classList.remove('drag-over'); handleRtcPotionDrop(event, '${kind}')"
       onclick="openRtcPotionPicker('${kind}')"
-      title="${item ? `${item.name} — toque para trocar` : `Toque para escolher a poção de ${label}`}">
+      title="${item ? t('rtc.potionSlotFilledTitle', { name: item.name }) : t('rtc.potionSlotEmptyTitle', { label })}">
     ${item
       ? `<span class="rtc-potion-slot-icon">${itemIconImg(selectedId, 'item-icon')}</span><span class="rtc-potion-slot-name">${item.name}</span>`
-      : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">Toque para escolher a poção de ${label}</span>`}
+      : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">${t('rtc.potionSlotEmptyTitle', { label })}</span>`}
   </div>`;
 }
 
@@ -90,29 +91,29 @@ function potionDropSlot(kind, selectedId) {
 // selecionar. Também permite remover a poção atual.
 export function openRtcPotionPicker(kind) {
   const list = kind === 'life' ? HEAL_POTIONS : MANA_POTIONS;
-  const label = kind === 'life' ? 'vida' : 'mana';
+  const label = kind === 'life' ? t('rtc.potionLife') : t('rtc.potionMana');
   const selectedId = kind === 'life' ? G.rtc.healPotion : G.rtc.manaPotion;
   const rows = list.map(([id, item]) => {
     const qty = G.inventory[id] || 0;
     const sel = selectedId === id;
-    const amount = kind === 'life' ? `💚 +${item.heal} HP` : `${vitalIconImg('mana', 'inline-icon')} +${item.mana} mana`;
+    const amount = kind === 'life' ? `💚 ${t('rtc.healAmount', { amount: item.heal })}` : `${vitalIconImg('mana', 'inline-icon')} ${t('rtc.manaAmount', { amount: item.mana })}`;
     return `<div class="rtc-row ${sel ? 'selected' : ''}">
       <span class="rtc-row-icon">${itemIconImg(id, 'item-icon')}</span>
       <div class="rtc-row-info">
         <div class="rtc-row-name">${item.name}</div>
-        <div class="rtc-row-desc">${amount} · ${potionReqLabel(item)} · possui ${qty}</div>
+        <div class="rtc-row-desc">${amount} · ${potionReqLabel(item, t)} · ${t('rtc.owned', { qty })}</div>
       </div>
-      <button class="rtc-row-btn" onclick="pickRtcPotion('${kind}','${id}')">${sel ? '✅ Ativa' : 'Usar'}</button>
+      <button class="rtc-row-btn" onclick="pickRtcPotion('${kind}','${id}')">${sel ? `✅ ${t('rtc.active')}` : t('rtc.use')}</button>
     </div>`;
   }).join('');
   openModal(`
     <div class="rtc-potion-picker">
-      <h3>💊 Poção de ${label}</h3>
-      <p class="muted">Toque na poção que o RTC deve beber automaticamente.</p>
+      <h3>💊 ${t('rtc.potionOf', { label })}</h3>
+      <p class="muted">${t('rtc.potionPickerHint')}</p>
       <div class="rtc-rows">${rows}</div>
       <div class="rtc-potion-picker-actions">
-        ${selectedId ? `<button class="btn-small danger" onclick="pickRtcPotion('${kind}','')">Remover</button>` : ''}
-        <button class="btn-small" onclick="closeModal()">Fechar</button>
+        ${selectedId ? `<button class="btn-small danger" onclick="pickRtcPotion('${kind}','')">${t('rtc.remove')}</button>` : ''}
+        <button class="btn-small" onclick="closeModal()">${t('modal.close')}</button>
       </div>
     </div>
   `);
@@ -130,9 +131,9 @@ function itemRow(id, item, qty, selected, onclick, extraDesc) {
     <span class="rtc-row-icon">${itemIconImg(id, 'item-icon')}</span>
     <div class="rtc-row-info">
       <div class="rtc-row-name">${item.name}</div>
-      <div class="rtc-row-desc">${extraDesc} · possui ${qty}</div>
+      <div class="rtc-row-desc">${extraDesc} · ${t('rtc.owned', { qty })}</div>
     </div>
-    <button class="rtc-row-btn" onclick="${onclick}('${id}')">${selected ? '✅ Ativa' : 'Usar'}</button>
+    <button class="rtc-row-btn" onclick="${onclick}('${id}')">${selected ? `✅ ${t('rtc.active')}` : t('rtc.use')}</button>
   </div>`;
 }
 
@@ -153,7 +154,7 @@ function mountPortrait() {
 export function renderRtcPanel() {
   const el = document.getElementById('rtc-settings');
   if (!el) return;
-  if (!G.vocation) { el.innerHTML = '<p class="muted">Escolha uma vocação para configurar o RTC.</p>'; return; }
+  if (!G.vocation) { el.innerHTML = `<p class="muted">${t('rtc.chooseVocation')}</p>`; return; }
 
   const voc = G.vocation;
   const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
@@ -165,60 +166,60 @@ export function renderRtcPanel() {
   const prioSpells = normalizeAttackSpells(G.rtc);
   const atkSummary = prioSpells.length ? prioSpells.map((id, i) => `${i + 1}. "${SPELLS[id].words}"`).join(' → ')
     : G.rtc.attackType === 'rune' && G.rtc.attackRune ? ITEMS[G.rtc.attackRune].name
-    : 'nenhum (só ataque normal)';
-  const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : ' (padrão)'}`;
-  const healPotionName = G.rtc.healPotion ? ITEMS[G.rtc.healPotion].name : 'nenhuma';
-  const manaPotionName = G.rtc.manaPotion ? ITEMS[G.rtc.manaPotion].name : 'nenhuma';
+    : t('rtc.noAttackConfigured');
+  const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : t('rtc.defaultSuffix')}`;
+  const healPotionName = G.rtc.healPotion ? ITEMS[G.rtc.healPotion].name : t('rtc.none');
+  const manaPotionName = G.rtc.manaPotion ? ITEMS[G.rtc.manaPotion].name : t('rtc.none');
 
   el.innerHTML = `
     <div class="rtc-console">
       <div class="rtc-sidebar">
         <div class="rtc-portrait"><canvas id="rtc-portrait-canvas" width="64" height="64"></canvas></div>
         <div class="rtc-sidebar-name">${VOCATIONS[voc].name}</div>
-        <div class="rtc-sidebar-level">Level ${G.level}</div>
-        <div class="rtc-sidebar-status">Helper Status: Ativo ✔</div>
+        <div class="rtc-sidebar-level">${t('rtc.sidebarLevel', { level: G.level })}</div>
+        <div class="rtc-sidebar-status">${t('rtc.helperStatus')}</div>
       </div>
       <div class="rtc-main">
         <div class="rtc-summary">
-          <div><strong>⚔️ Ataque automático:</strong> ${atkSummary}</div>
-          <div><strong>💊 Cura automática:</strong> spell ${healSpellName} abaixo de ${G.rtc.healSpellThreshold}% · poção ${healPotionName} abaixo de ${G.rtc.healPotionThreshold}%</div>
-          <div><strong>🔵 Mana automática:</strong> poção ${manaPotionName} abaixo de ${G.rtc.manaPotionThreshold}% de mana</div>
+          <div><strong>⚔️ ${t('rtc.autoAttack')}:</strong> ${atkSummary}</div>
+          <div><strong>💊 ${t('rtc.autoHeal')}:</strong> ${t('rtc.healSummary', { spell: healSpellName, spellPct: G.rtc.healSpellThreshold, potion: healPotionName, potionPct: G.rtc.healPotionThreshold })}</div>
+          <div><strong>🔵 ${t('rtc.autoMana')}:</strong> ${t('rtc.manaSummary', { potion: manaPotionName, pct: G.rtc.manaPotionThreshold })}</div>
         </div>
 
         <div class="rtc-subtabs">
-          <button class="rtc-subtab-btn ${activeRtcTab === 'attack' ? 'active' : ''}" onclick="setRtcSubTab('attack')">⚔️ RTCaster</button>
-          <button class="rtc-subtab-btn ${activeRtcTab === 'heal' ? 'active' : ''}" onclick="setRtcSubTab('heal')">💊 Healing</button>
+          <button class="rtc-subtab-btn ${activeRtcTab === 'attack' ? 'active' : ''}" onclick="setRtcSubTab('attack')">⚔️ ${t('rtc.subtabAttack')}</button>
+          <button class="rtc-subtab-btn ${activeRtcTab === 'heal' ? 'active' : ''}" onclick="setRtcSubTab('heal')">💊 ${t('rtc.subtabHeal')}</button>
         </div>
 
         ${activeRtcTab === 'attack' ? `
-        <p class="muted">Configure VÁRIAS magias por prioridade — o RTC casta a primeira disponível (com mana e fora de cooldown) a cada golpe. As de baixo entram como fallback.</p>
-        <label class="rtc-smart-toggle"><input type="checkbox" ${G.rtc.smartElement ? 'checked' : ''} onchange="setRtcSmartElement(this.checked)" /> 🎯 Prioridade inteligente — castar a magia forte contra a fraqueza da criatura</label>
-        <h5>Prioridade de ataque ${prioSpells.length ? `(${prioSpells.length})` : ''}</h5>
+        <p class="muted">${t('rtc.attackPriorityHint')}</p>
+        <label class="rtc-smart-toggle"><input type="checkbox" ${G.rtc.smartElement ? 'checked' : ''} onchange="setRtcSmartElement(this.checked)" /> 🎯 ${t('rtc.smartPriority')}</label>
+        <h5>${t('rtc.attackPriorityTitle')} ${prioSpells.length ? `(${prioSpells.length})` : ''}</h5>
         <div class="rtc-rows">
-          ${prioSpells.map((id, i) => priorityRow(id, SPELLS[id], i, prioSpells.length)).join('') || '<p class="muted">Nenhuma magia na prioridade. Adicione abaixo (ou use uma runa).</p>'}
+          ${prioSpells.map((id, i) => priorityRow(id, SPELLS[id], i, prioSpells.length)).join('') || `<p class="muted">${t('rtc.noAttackSpells')}</p>`}
         </div>
-        <h5>Adicionar magia de ataque</h5>
+        <h5>${t('rtc.addAttackSpell')}</h5>
         <div class="rtc-rows">
-          ${attackSpells.filter(([id]) => !prioSpells.includes(id)).map(([id, s]) => spellRow(id, s, false, 'addRtcAttackSpell')).join('') || '<p class="muted">Todas as suas magias de ataque já estão na prioridade.</p>'}
+          ${attackSpells.filter(([id]) => !prioSpells.includes(id)).map(([id, s]) => spellRow(id, s, false, 'addRtcAttackSpell')).join('') || `<p class="muted">${t('rtc.allAttackSpellsAdded')}</p>`}
         </div>
-        <h5>Runas de ataque <span class="muted">(alternativa às magias)</span></h5>
+        <h5>${t('rtc.attackRunesTitle')} <span class="muted">${t('rtc.attackRunesSubtitle')}</span></h5>
         <div class="rtc-rows">
-          ${attackRunes.map(([id, item]) => { const lock = getMagic() < runeMinMl(id); return itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ ${areaBadge(item.area)} · 🔮 ML ${runeMinMl(id)}+${lock ? ' 🔒' : ''}`); }).join('') || '<p class="muted">Sua vocação não usa runas de ataque — mana insuficiente pra fazer efeito.</p>'}
+          ${attackRunes.map(([id, item]) => { const lock = getMagic() < runeMinMl(id); return itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ ${areaBadge(item.area)} · 🔮 ${t('rtc.mlReq', { ml: runeMinMl(id) })}${lock ? ' 🔒' : ''}`); }).join('') || `<p class="muted">${t('rtc.noAttackRunes')}</p>`}
         </div>
         ` : `
-        <h5>Spell de Cura <span class="muted">— casta abaixo de</span>
-          <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
+        <h5>${t('rtc.healSpellTitle')} <span class="muted">${t('rtc.castBelow')}</span>
+          <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" class="rtc-threshold-input" />${t('rtc.ofHp')}</h5>
         <div class="rtc-rows">
           ${healSpells.map(([id, s]) => spellRow(id, s, (G.rtc.healSpell || defaultHealSpellId(voc)) === id, 'setRtcHealSpell')).join('')}
         </div>
-        <button class="btn-small" style="margin:2px 0 4px" onclick="toggleBackpack()">🎒 Abrir Bag</button>
-        <h5>Poção de Cura <span class="muted">— bebe abaixo de</span>
-          <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
-        <p class="muted rtc-drag-hint">Toque no quadrado para escolher (ou arraste a poção de vida da bag).</p>
+        <button class="btn-small" style="margin:2px 0 4px" onclick="toggleBackpack()">🎒 ${t('rtc.openBag')}</button>
+        <h5>${t('rtc.healPotionTitle')} <span class="muted">${t('rtc.drinksBelow')}</span>
+          <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />${t('rtc.ofHp')}</h5>
+        <p class="muted rtc-drag-hint">${t('rtc.healPotionDragHint')}</p>
         ${potionDropSlot('life', G.rtc.healPotion)}
-        <h5>Poção de Mana <span class="muted">— bebe abaixo de</span>
-          <input type="number" min="5" max="95" value="${G.rtc.manaPotionThreshold}" onchange="setRtcThreshold('manaPotionThreshold', this.value)" class="rtc-threshold-input" />% de mana</h5>
-        <p class="muted rtc-drag-hint">Toque no quadrado para escolher (ou arraste a poção de mana da bag).</p>
+        <h5>${t('rtc.manaPotionTitle')} <span class="muted">${t('rtc.drinksBelow')}</span>
+          <input type="number" min="5" max="95" value="${G.rtc.manaPotionThreshold}" onchange="setRtcThreshold('manaPotionThreshold', this.value)" class="rtc-threshold-input" />${t('rtc.ofMana')}</h5>
+        <p class="muted rtc-drag-hint">${t('rtc.manaPotionDragHint')}</p>
         ${potionDropSlot('mana', G.rtc.manaPotion)}
         `}
       </div>
@@ -234,12 +235,12 @@ export function handleRtcPotionDrop(ev, kind) {
   ev.preventDefault();
   const id = ev.dataTransfer.getData('application/x-item-id') || ev.dataTransfer.getData('text/plain');
   const item = ITEMS[id];
-  if (!item || item.type !== 'potion') { emit(EVENTS.NOTIFY, { msg: 'Arraste uma poção da bag.', type: 'error' }); return; }
+  if (!item || item.type !== 'potion') { emit(EVENTS.NOTIFY, { msg: t('rtc.dragPotionError'), type: 'error' }); return; }
   if (kind === 'life') {
-    if (!item.heal) { emit(EVENTS.NOTIFY, { msg: `${item.name} não é poção de vida.`, type: 'error' }); return; }
+    if (!item.heal) { emit(EVENTS.NOTIFY, { msg: t('rtc.notLifePotion', { name: item.name }), type: 'error' }); return; }
     setRtcHealPotion(id);
   } else {
-    if (!item.mana) { emit(EVENTS.NOTIFY, { msg: `${item.name} não é poção de mana.`, type: 'error' }); return; }
+    if (!item.mana) { emit(EVENTS.NOTIFY, { msg: t('rtc.notManaPotion', { name: item.name }), type: 'error' }); return; }
     setRtcManaPotion(id);
   }
 }

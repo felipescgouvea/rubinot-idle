@@ -11,6 +11,7 @@ import { runeDamage } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
 import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
@@ -26,7 +27,7 @@ export function setAutoSell(enabled) {
   G.autoSell = G.autoSell || { enabled: false, maxValue: 50 };
   G.autoSell.enabled = !!enabled;
   emit(EVENTS.INVENTORY);
-  emit(EVENTS.NOTIFY, { msg: G.autoSell.enabled ? '🧹 Auto-vender lixo ligado.' : '🧹 Auto-vender lixo desligado.' });
+  emit(EVENTS.NOTIFY, { msg: G.autoSell.enabled ? t('inventory.autoSellOn') : t('inventory.autoSellOff') });
   saveGame();
 }
 export function setAutoSellMax(value) {
@@ -40,13 +41,13 @@ export function equipItem(itemId) {
   const item = ITEMS[itemId];
   // Restrição de vocação: cada profissão só empunha a sua classe de arma (e só
   // o paladino usa munição) — ver domain/items.js: canVocationEquip.
-  const block = equipBlockReason(item, G.vocation);
-  if (block) { emit(EVENTS.NOTIFY, { msg: `${item.name}: ${block}.`, type: 'error' }); return; }
+  const block = equipBlockReason(item, G.vocation, t);
+  if (block) { emit(EVENTS.NOTIFY, { msg: t('inventory.equipBlocked', { item: item.name, reason: block }), type: 'error' }); return; }
   G.equipment[item.type] = itemId;
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
-  emit(EVENTS.NOTIFY, { msg: `${item.name} equipado!`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.itemEquipped', { item: item.name }), type: 'success' });
   saveGame();
 }
 
@@ -61,7 +62,7 @@ export function unequipItem(itemId) {
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
-  emit(EVENTS.NOTIFY, { msg: `${item.name} desequipado.` });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.itemUnequipped', { item: item.name }) });
   saveGame();
 }
 
@@ -72,14 +73,14 @@ export function equipRelic(relicId) {
   if (!relic) return;
   const base = ITEMS[relic.itemId];
   if (!base) return;
-  const block = equipBlockReason(base, G.vocation);
-  if (block) { emit(EVENTS.NOTIFY, { msg: `${base.name}: ${block}.`, type: 'error' }); return; }
+  const block = equipBlockReason(base, G.vocation, t);
+  if (block) { emit(EVENTS.NOTIFY, { msg: t('inventory.equipBlocked', { item: base.name, reason: block }), type: 'error' }); return; }
   G.equipment[base.type] = relicId;
   const tier = RARITY_TIERS[relic.rarity];
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
-  emit(EVENTS.NOTIFY, { msg: `${base.name} (${tier.name}) equipado!`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.relicEquipped', { item: base.name, tier: t(tier.name) }), type: 'success' });
   saveGame();
 }
 
@@ -104,7 +105,7 @@ export function sellRelic(relicId) {
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.CHAR_INFO);
-  emit(EVENTS.NOTIFY, { msg: `Vendida relíquia ${base.name} (${tier.name}) por ${price} 💰`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.relicSold', { item: base.name, tier: t(tier.name), price }), type: 'success' });
   saveGame();
 }
 
@@ -118,7 +119,7 @@ export function sellItem(itemId) {
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
-  emit(EVENTS.NOTIFY, { msg: `Vendido ${item.name} por ${item.sell} 💰`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.itemSold', { item: item.name, price: item.sell }), type: 'success' });
   saveGame();
 }
 
@@ -132,7 +133,7 @@ export function sellAllItem(itemId) {
   emit(EVENTS.MODAL_CLOSE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
-  emit(EVENTS.NOTIFY, { msg: `Vendido ${qty}x ${item.name} por ${total} 💰`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.itemSoldAll', { qty, item: item.name, price: total }), type: 'success' });
   saveGame();
 }
 
@@ -146,7 +147,7 @@ export function useItem(itemId) {
 
   // Nível/vocação mínimos pra usar a poção (fiel ao Tibia — ver domain/items.js).
   const blockReason = potionUseBlockReason(item, G.vocation, G.level);
-  if (blockReason) { emit(EVENTS.NOTIFY, { msg: `${item.name}: ${blockReason}`, type: 'error' }); return; }
+  if (blockReason) { emit(EVENTS.NOTIFY, { msg: t('inventory.useBlocked', { item: item.name, reason: blockReason }), type: 'error' }); return; }
 
   const currentMonster = getCurrentMonster();
   let runeDeaths = null;
@@ -154,10 +155,10 @@ export function useItem(itemId) {
     // Runa de ataque exige a vocação certa E o Magic Level mínimo (fiel ao Tibia
     // — o mesmo gate do RTC; ver domain/rtcConfig.js: canUseAttackRune).
     if (item.type === 'rune' && !canUseAttackRune(itemId, G.vocation, getMagic())) {
-      emit(EVENTS.NOTIFY, { msg: `${item.name}: sua vocação/Magic Level não permite usar essa runa (precisa ML ${runeMinMl(itemId)}).`, type: 'error' });
+      emit(EVENTS.NOTIFY, { msg: t('inventory.runeVocationBlocked', { item: item.name, ml: runeMinMl(itemId) }), type: 'error' });
       return;
     }
-    if (!currentMonster) { emit(EVENTS.NOTIFY, { msg: 'Sem criatura em combate para mirar a runa.', type: 'error' }); return; }
+    if (!currentMonster) { emit(EVENTS.NOTIFY, { msg: t('inventory.noCreatureToTarget'), type: 'error' }); return; }
     // Runa mirada manualmente respeita a mesma FORMA de área da runa (ver
     // domain/attackAreas.js): SD acerta só o alvo; Avalanche/GFB pegam a sala.
     const pack = getCurrentPack();
@@ -165,25 +166,25 @@ export function useItem(itemId) {
     const targets = isAreaAttack(areaId) ? pack.slice(0, areaMaxTargets(areaId)) : [currentMonster];
     // Dano pela fórmula real do Tibia (nível/5 + ML·a + base), com a
     // resistência/fraqueza elemental do alvo por cima (ver domain/elements.js).
-    targets.forEach(t => {
-      const dmg = Math.max(1, Math.floor(runeDamage({ rune: item, level: G.level, magicLevel: getMagic() }) * elementMod(t.defKey, item.element || 'physical')));
-      t.hp -= dmg;
-      emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">Você usou ${item.name}: ${dmg} de dano em ${t.name}.</span>`, cat: 'suprimento' });
+    targets.forEach(mon => {
+      const dmg = Math.max(1, Math.floor(runeDamage({ rune: item, level: G.level, magicLevel: getMagic() }) * elementMod(mon.defKey, item.element || 'physical')));
+      mon.hp -= dmg;
+      emit(EVENTS.LOG, { html: `📜 ${t('inventory.logRuneDamage', { item: item.name, dmg, target: mon.name })}`, cat: 'suprimento' });
     });
     if (isAreaAttack(areaId) && targets.length > 1) {
-      emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${targets.length} criaturas.</span>`, cat: 'combate' });
+      emit(EVENTS.LOG, { html: t('inventory.logAreaHit', { area: areaName(areaId, t), count: targets.length }), cat: 'combate' });
     }
-    runeDeaths = targets.filter(t => t.hp <= 0);
+    runeDeaths = targets.filter(mon => mon.hp <= 0);
   }
   if (item.heal) {
     const before = G.hp;
     G.hp = Math.min(getMaxHp(), G.hp + item.heal);
-    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.hp - before} HP.</span>`, cat: 'suprimento' });
+    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealHp', { item: item.name, amount: G.hp - before })}`, cat: 'suprimento' });
   }
   if (item.mana) {
     const before = G.mana;
     G.mana = Math.min(getMaxMana(), G.mana + item.mana);
-    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} <span class="log-heal">Você usou ${item.name}: +${G.mana - before} mana.</span>`, cat: 'suprimento' });
+    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealMana', { item: item.name, amount: G.mana - before })}`, cat: 'suprimento' });
   }
 
   G.inventory[itemId]--;

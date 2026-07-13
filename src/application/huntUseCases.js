@@ -27,6 +27,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=125';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -44,8 +45,8 @@ function monsterLogIcon(monsterId) {
     onerror="this.outerHTML='<span>${m.icon}</span>'" />`;
 }
 
-// Rótulo em PT do elemento da magia do monstro, pro log de combate.
-const MONSTER_ELEMENT_PT = { fire: 'fogo', energy: 'energia', ice: 'gelo', earth: 'terra', death: 'morte', holy: 'sagrado', physical: 'físico' };
+// Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
+const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
 
 let huntInterval = null;
 let regenInterval = null;
@@ -163,8 +164,8 @@ export function toggleHunt() {
 }
 
 export function startHunt() {
-  if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: 'Escolha uma vocação primeiro!', type: 'error' }); return; }
-  if (!G.activeZone) { emit(EVENTS.NOTIFY, { msg: 'Selecione uma zona de caça!', type: 'error' }); return; }
+  if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('hunt.needVocation'), type: 'error' }); return; }
+  if (!G.activeZone) { emit(EVENTS.NOTIFY, { msg: t('hunt.needZone'), type: 'error' }); return; }
   const zone = ZONES[G.activeZone];
   // Sem restrição de nível pra caçar — as criaturas escalam com o nível do
   // jogador; entrar numa zona forte cedo é escolha (e risco) do jogador.
@@ -175,8 +176,8 @@ export function startHunt() {
   emit(EVENTS.HUNT_STATS);
   emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
   emit(EVENTS.LOG, bossOnly
-    ? `<span class="log-info">💀 Boss Rush: desafiando ${monsterLogIcon(zone.boss)} ${zone.name}...</span>`
-    : `<span class="log-info">🗺️ Entrando em ${monsterLogIcon(zone.monsters[0])} ${zone.name}...</span>`);
+    ? t('hunt.logBossRushChallenge', { icon: monsterLogIcon(zone.boss), zone: t(zone.name) })
+    : t('hunt.logEnterZone', { icon: monsterLogIcon(zone.monsters[0]), zone: t(zone.name) }));
   huntInterval = setInterval(doHuntTick, Math.max(400, 1200 / getSpd()));
 }
 
@@ -188,7 +189,7 @@ export function stopHunt() {
   recentDead = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
   emit(EVENTS.BATTLE_LIST);
-  emit(EVENTS.LOG, '<span class="log-info">⏸ Caçada pausada.</span>');
+  emit(EVENTS.LOG, t('hunt.logPaused'));
 }
 
 // RTC — cura por spell/poção de vida/poção de mana. Chamada tanto no tick de
@@ -207,7 +208,7 @@ function applyRtcHealing(voc, trackSupplies) {
     G.mana -= healSpell.mana;
     startSpellCd(healSpellId, healSpell.cd);
     trainSkill('magic', healSpell.mana * voc.magicMult);
-    emit(EVENTS.LOG, { html: `💊 <span class="log-heal">[RTC] "${healSpell.words}": +${heal} HP</span> (-${healSpell.mana} mana)`, cat: 'magia' });
+    emit(EVENTS.LOG, { html: t('log.rtcHealSpell', { words: healSpell.words, heal, mana: healSpell.mana }), cat: 'magia' });
     emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
   }
 
@@ -223,7 +224,7 @@ function applyRtcHealing(voc, trackSupplies) {
     G.inventory[G.rtc.healPotion]--;
     if (trackSupplies) huntSession.supplies += potion.sell || 0;
     if (G.inventory[G.rtc.healPotion] <= 0) delete G.inventory[G.rtc.healPotion];
-    emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.healPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.hp - before} HP</span>`, cat: 'suprimento' });
+    emit(EVENTS.LOG, { html: t('log.rtcHealPotion', { icon: itemLogIcon(G.rtc.healPotion), name: potion.name, amount: G.hp - before }), cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   }
 
@@ -238,7 +239,7 @@ function applyRtcHealing(voc, trackSupplies) {
     G.inventory[G.rtc.manaPotion]--;
     if (trackSupplies) huntSession.supplies += potion.sell || 0;
     if (G.inventory[G.rtc.manaPotion] <= 0) delete G.inventory[G.rtc.manaPotion];
-    emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.manaPotion)} <span class="log-heal">[RTC] ${potion.name}: +${G.mana - before} mana</span>`, cat: 'suprimento' });
+    emit(EVENTS.LOG, { html: t('log.rtcManaPotion', { icon: itemLogIcon(G.rtc.manaPotion), name: potion.name, amount: G.mana - before }), cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   }
 }
@@ -266,10 +267,10 @@ export function doHuntTick() {
     const packSize = bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
     currentPack = Array.from({ length: packSize }, () => { const m = spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult, spawnCfg && spawnCfg.weights); m.uid = ++spawnSeq; return m; });
     currentMonster = currentPack[0];
-    const extra = packSize > 1 ? ` <span class="log-info">(+${packSize - 1} na sala)</span>` : '';
+    const extra = packSize > 1 ? t('hunt.logExtraInRoom', { count: packSize - 1 }) : '';
     emit(EVENTS.LOG, bossOnly
-      ? `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} (Tier ${bossTier}) apareceu!</span>`
-      : `${monsterLogIcon(currentMonster.defKey)} <span class="log-info">${currentMonster.name} apareceu!</span>${extra}`);
+      ? t('hunt.logBossTierAppeared', { icon: monsterLogIcon(currentMonster.defKey), name: currentMonster.name, tier: bossTier })
+      : t('hunt.logMonsterAppeared', { icon: monsterLogIcon(currentMonster.defKey), name: currentMonster.name }) + extra);
     emit(EVENTS.MONSTER_DISPLAY, { bossAura: bossOnly ? bossAuraClass(bossTier) : null });
     emit(EVENTS.BATTLE_LIST);
     return; // o monstro aparece neste tick; o combate começa no próximo
@@ -317,7 +318,7 @@ export function doHuntTick() {
     if (ammoId && (G.inventory[ammoId] || 0) > 0) {
       G.inventory[ammoId]--;
       huntSession.supplies += (ITEMS[ammoId] && ITEMS[ammoId].sell) || 0;
-      if (G.inventory[ammoId] <= 0) { delete G.inventory[ammoId]; emit(EVENTS.NOTIFY, { msg: '🏹 Sua munição acabou!', type: 'error' }); }
+      if (G.inventory[ammoId] <= 0) { delete G.inventory[ammoId]; emit(EVENTS.NOTIFY, { msg: t('hunt.notifyOutOfAmmo'), type: 'error' }); }
       emit(EVENTS.INVENTORY);
       basicRaw = calcDamage(getAtk(), primary.def);
     } else {
@@ -334,7 +335,8 @@ export function doHuntTick() {
   const basicDmg = basicRaw * elementMod(primary.defKey, 'physical');
   if (voc.attackSkill !== 'magic') trainSkill(getEquippedWeaponSkillId(), 1 * voc.weaponMult);
   const basicHit = strike(primary, basicDmg);
-  emit(EVENTS.LOG, `⚔️ ${outOfAmmo ? 'Sem munição (soco)' : 'Golpe básico'}: <span class="log-dmg">${basicHit}</span> de dano ao ${primary.name}.`);
+  const basicLabel = outOfAmmo ? t('hunt.logOutOfAmmoPunch') : t('hunt.logBasicHit');
+  emit(EVENTS.LOG, t('log.basicAttack', { label: basicLabel, dmg: basicHit, name: primary.name }));
 
   // Projétil do golpe básico à distância/mágico: a flecha/virote do arco ou o
   // raio elemental da wand/rod voando do boneco até o alvo (ver ui/huntPanel.js).
@@ -374,9 +376,9 @@ export function doHuntTick() {
       delete G.inventory[G.rtc.attackRune];
       // Sem isso o RTC volta a bater só o golpe básico e o jogador não entende
       // por que o dano caiu — mesmo aviso já dado pra munição (ver acima).
-      emit(EVENTS.NOTIFY, { msg: `📜 Suas runas de ${rune.name} acabaram!`, type: 'error' });
+      emit(EVENTS.NOTIFY, { msg: t('hunt.notifyOutOfRunes', { name: rune.name }), type: 'error' });
     }
-    emit(EVENTS.LOG, { html: `📜 <span class="log-dmg">[RTC] ${rune.name} usada automaticamente.</span>`, cat: 'suprimento' });
+    emit(EVENTS.LOG, { html: t('log.rtcRuneUsed', { name: rune.name }), cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
   } else {
     // Magias PRONTAS agora (nível/voc ok, com mana sobrando MESMO reservando
@@ -413,7 +415,7 @@ export function doHuntTick() {
       startSpellCd(atkSpellId, atkSpell.cd);
       startAttackGroupCd();
       trainSkill('magic', atkSpell.mana * voc.magicMult);
-      emit(EVENTS.LOG, { html: `<span class="log-xp">🗣️ "${atkSpell.words}"</span>`, cat: 'magia' });
+      emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
       combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
     }
   }
@@ -423,17 +425,17 @@ export function doHuntTick() {
   if (hitFn) {
     if (primary.hp > 0) {
       const sHit = strike(primary, hitFn(primary) * elementMod(primary.defKey, element));
-      emit(EVENTS.LOG, `✨ Magia: <span class="log-dmg">${sHit}</span> de dano ao ${primary.name}.`);
+      emit(EVENTS.LOG, t('log.spellDamage', { dmg: sHit, name: primary.name }));
     }
     if (isAreaAttack(areaId) && currentPack.length > 1) {
       const maxTargets = areaMaxTargets(areaId);
       const splashTargets = currentPack.slice(1, maxTargets); // exclui o da frente
-      splashTargets.forEach(t => {
-        const d = strike(t, hitFn(t) * elementMod(t.defKey, element));
-        emit(EVENTS.LOG, `💥 <span class="log-dmg">${d}</span> em ${t.name} <span class="log-info">(área)</span>.`);
+      splashTargets.forEach(tgt => {
+        const d = strike(tgt, hitFn(tgt) * elementMod(tgt.defKey, element));
+        emit(EVENTS.LOG, t('log.splashDamage', { dmg: d, name: tgt.name }));
       });
       if (splashTargets.length > 0) {
-        emit(EVENTS.LOG, { html: `<span class="log-info">🎯 ${areaName(areaId)}: atingiu ${splashTargets.length + 1} criaturas.</span>`, cat: 'combate' });
+        emit(EVENTS.LOG, { html: t('log.areaHitCount', { area: areaName(areaId, t), count: splashTargets.length + 1 }), cat: 'combate' });
       }
     }
   }
@@ -475,8 +477,9 @@ export function doHuntTick() {
   const atk = monsterAttack(currentMonster, getDef());
   G.hp = Math.max(0, G.hp - atk.dmg);
   if (G.equipment.shield) trainSkill('shielding', 1 * voc.shieldMult);
-  const spellTag = atk.kind === 'spell' ? ` <span class="log-info">(${MONSTER_ELEMENT_PT[atk.element] || atk.element})</span>` : '';
-  emit(EVENTS.LOG, `🩸 ${currentMonster.name} causou <span class="log-dmg">${atk.dmg}</span> de dano em você${spellTag}.`);
+  const elKey = MONSTER_ELEMENT_KEYS[atk.element];
+  const spellTag = atk.kind === 'spell' ? t('hunt.logElementTag', { element: elKey ? t(elKey) : atk.element }) : '';
+  emit(EVENTS.LOG, t('log.monsterHitsYou', { name: currentMonster.name, dmg: atk.dmg, spellTag }));
   emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true, spellElement: atk.kind === 'spell' ? atk.element : null });
 
   // RTC — cura por spell/poção de vida/poção de mana: ver applyRtcHealing()
@@ -490,7 +493,8 @@ export function doHuntTick() {
     const xpLost = Math.floor(G.xp * lostPct);
     G.hp = Math.floor(getMaxHp() * reviveHpPct(bless));
     G.xp = Math.max(0, G.xp - xpLost);
-    emit(EVENTS.LOG, `<span class="log-kill">💔 Você morreu! Retornando ao templo... (-${xpLost} XP${bless > 0 ? `, ${bless} bênção(ões) consumida(s)` : ''})</span>`);
+    const blessNote = bless > 0 ? t('hunt.logBlessingsConsumed', { count: bless }) : '';
+    emit(EVENTS.LOG, t('hunt.logPlayerDied', { xpLost, blessNote }));
     if (bless > 0) { G.blessings = 0; emit(EVENTS.BLESSINGS); }
     currentMonster = null;
     stopHunt();
@@ -550,7 +554,7 @@ export function resolveMonsterKill(zone, victim) {
   bumpMissionProgress('kills', 1);
   bumpMissionProgress('gold', goldGained);
 
-  emit(EVENTS.LOG, `<span class="log-kill">💀 ${mon.name} morreu!</span> +${xpGained} XP, +${goldGained} <img src="assets/sprites/items/Gold_Coin.webp" class="inline-icon" alt="gold" />`);
+  emit(EVENTS.LOG, t('log.monsterDied', { name: mon.name, xp: xpGained, gold: goldGained }));
 
   // Loot
   const lootLine = [];
@@ -571,8 +575,8 @@ export function resolveMonsterKill(zone, victim) {
       }
     }
   });
-  if (lootLine.length > 0) emit(EVENTS.LOG, `<span class="log-loot">📦 Loot: ${lootLine.join(', ')}</span>`);
-  if (soldGold > 0) emit(EVENTS.LOG, { html: `<span class="log-loot">🧹 Lixo auto-vendido: +${soldGold} <img src="assets/sprites/items/Gold_Coin.webp" class="inline-icon" alt="gold" /></span>`, cat: 'suprimento' });
+  if (lootLine.length > 0) emit(EVENTS.LOG, t('log.lootLine', { items: lootLine.join(', ') }));
+  if (soldGold > 0) emit(EVENTS.LOG, { html: t('log.autoSoldTrash', { gold: soldGold }), cat: 'suprimento' });
 
   // Relíquia (raridade) — cai SÓ de boss (ver domain/bestiary.js:
   // BOSS_MONSTER_IDS), com uma chance pequena por cima do loot normal acima.
@@ -595,8 +599,8 @@ export function resolveMonsterKill(zone, victim) {
       G.relics.push({ id: 'relic_' + G.relicSeq, itemId, rarity, bonusPct: tier.bonusPct });
       const item = ITEMS[itemId];
       const pct = Math.round(tier.bonusPct * 100);
-      emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">💎 Relíquia ${tier.name}: ${item.name} +${pct}%! (drop de boss)</span>`);
-      emit(EVENTS.NOTIFY, { msg: `💎 Relíquia ${tier.name}: ${item.name} +${pct}%!`, type: 'success' });
+      emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`);
+      emit(EVENTS.NOTIFY, { msg: t('hunt.notifyRelicDrop', { tier: t(tier.name), item: item.name, pct }), type: 'success' });
       emit(EVENTS.INVENTORY);
     }
   }
@@ -612,7 +616,7 @@ export function resolveMonsterKill(zone, victim) {
   G.defeatedZoneBosses = G.defeatedZoneBosses || [];
   if (killedId === zone.boss && G.activeZone && !G.defeatedZoneBosses.includes(G.activeZone)) {
     G.defeatedZoneBosses.push(G.activeZone);
-    emit(EVENTS.NOTIFY, { msg: '🏆 Boss da zona derrotado! Nova zona desbloqueada.', type: 'success' });
+    emit(EVENTS.NOTIFY, { msg: t('hunt.notifyZoneBossDefeated'), type: 'success' });
     emit(EVENTS.ZONE_PICKER);
   }
 
@@ -623,7 +627,7 @@ export function resolveMonsterKill(zone, victim) {
     G.bossTiers = G.bossTiers || {};
     const nextTier = (G.bossTiers[G.activeZone] || 1) + 1;
     G.bossTiers[G.activeZone] = nextTier;
-    emit(EVENTS.NOTIFY, { msg: `💀 Tier ${nextTier - 1} vencido! Clique em "Batalhar Tier ${nextTier}" para continuar.`, type: 'success' });
+    emit(EVENTS.NOTIFY, { msg: t('hunt.notifyTierWon', { tier: nextTier - 1, nextTier }), type: 'success' });
     emit(EVENTS.BOSS_RUSH_PANEL);
   }
 
@@ -654,8 +658,8 @@ export function gainXp(amount) {
     G.level++;
     G.hp = getMaxHp();
     G.mana = getMaxMana();
-    emit(EVENTS.LOG, `<span class="log-xp">🎉 LEVEL UP! Você chegou ao nível ${G.level}!</span>`);
-    emit(EVENTS.NOTIFY, { msg: `Level Up! Nível ${G.level}`, type: 'success' });
+    emit(EVENTS.LOG, t('hunt.logLevelUp', { level: G.level }));
+    emit(EVENTS.NOTIFY, { msg: t('hunt.notifyLevelUp', { level: G.level }), type: 'success' });
     emit(EVENTS.LEVEL_UP, { level: G.level });
     emit(EVENTS.CHAR_INFO);
     emit(EVENTS.WORLDS_PANEL);

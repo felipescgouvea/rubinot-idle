@@ -6,6 +6,7 @@ import { RARITY_TIERS } from '../domain/rarity.js?v=125';
 import { ZONES, MONSTERS } from '../domain/bestiary.js?v=127';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAdminConfig, getZoneSpawn } from '../application/adminUseCases.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Zona selecionada no sub-painel de Spawn (estado só de UI, preservado entre
 // re-renders do painel). Começa na primeira zona.
@@ -24,7 +25,7 @@ function renderSpawnSubPanel() {
   const zone = ZONES[sel];
   const spawn = getZoneSpawn(sel, zone.monsters);
   const pcts = zoneSpawnPercents(spawn.weights, zone.monsters);
-  const options = zoneIds.map(id => `<option value="${id}" ${id === sel ? 'selected' : ''}>${ZONES[id].icon} ${ZONES[id].name}</option>`).join('');
+  const options = zoneIds.map(id => `<option value="${id}" ${id === sel ? 'selected' : ''}>${ZONES[id].icon} ${t(ZONES[id].name)}</option>`).join('');
   const monsterRows = zone.monsters.map(mid => {
     const m = MONSTERS[mid];
     const name = m ? m.name : mid;
@@ -95,7 +96,7 @@ export function renderAdminPanel() {
     const goldVal = ov.gold != null ? ov.gold : z.goldMult;
     return `
     <div class="admin-zone-row">
-      <span class="admin-zone-name">${z.icon} ${z.name}</span>
+      <span class="admin-zone-name">${z.icon} ${t(z.name)}</span>
       <label class="admin-zone-mult">XP ×<input type="number" min="0" step="0.1" value="${xpVal}"
         onchange="setZoneMultiplier('${id}', 'xp', parseFloat(this.value))" /></label>
       <label class="admin-zone-mult">Gold ×<input type="number" min="0" step="0.1" value="${goldVal}"
@@ -107,7 +108,7 @@ export function renderAdminPanel() {
     const tier = RARITY_TIERS[id];
     return `
     <div class="admin-rarity-row">
-      <span class="admin-rarity-name" style="color:${tier.color}">💎 ${tier.name}</span>
+      <span class="admin-rarity-name" style="color:${tier.color}">💎 ${t(tier.name)}</span>
       <input type="number" min="0" step="1" value="${cfg.rarityWeights[id]}"
         onchange="setRarityWeight('${id}', parseFloat(this.value))" title="Peso relativo" />
       <span class="admin-rarity-pct">${pct[id]}%</span>

@@ -1,6 +1,7 @@
 import { G } from '../application/gameStore.js?v=125';
 import { WORLDS } from '../domain/progression.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 export function renderWorldsPanel() {
   const grid = document.getElementById('worlds-grid');
@@ -10,9 +11,9 @@ export function renderWorldsPanel() {
     return `<div class="world-card ${active ? 'active-world' : ''} ${!unlocked ? 'locked' : ''}" onclick="${unlocked ? `selectWorld('${w.id}')` : ''}">
       <div class="world-icon">${w.icon}</div>
       <div class="world-name">${w.name} ${active ? '✓' : ''}</div>
-      <div class="world-type">${w.type} — ${w.players.toLocaleString()} jogadores</div>
+      <div class="world-type">${w.type} — ${t('worlds.playersCount', { n: w.players.toLocaleString() })}</div>
       <div class="world-bonus">🎁 ${w.bonus}</div>
-      ${!unlocked ? `<div class="world-req">🔒 Requer Nível ${w.reqLevel}</div>` : ''}
+      ${!unlocked ? `<div class="world-req">🔒 ${t('worlds.requiresLevel', { lvl: w.reqLevel })}</div>` : ''}
     </div>`;
   }).join('');
 }

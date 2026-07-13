@@ -32,14 +32,17 @@ export function nextBestiaryStage(kills) {
 // Charms desbloqueáveis com Charm Points. Cada um dá um bônus passivo GLOBAL
 // enquanto estiver equipado (no Tibia o charm é atribuído a uma criatura e
 // dispara em combate; aqui é um passivo global pra caber no modelo idle).
-// `effect` casa com uma chave agregada em application/bonuses.js.
+// `effect` casa com uma chave agregada em application/bonuses.js. `name` é o
+// nome real do charm em Tibia (não muda por idioma — ver .spec e o pedido de
+// padronizar naming com Tibia); `desc` é chave de tradução (ver ui/bestiaryPanel.js
+// e i18n/locales/*.js: charm.<id>.desc), porque é texto original deste jogo.
 export const CHARMS = {
-  wound:    { name: 'Ferida',    tibia: 'Wound',    icon: '🩸', cost: 600,  effect: 'damage',   value: 0.05, desc: '+5% de dano em toda caçada.' },
-  enflame:  { name: 'Inflamar',  tibia: 'Enflame',  icon: '🔥', cost: 1000, effect: 'damage',   value: 0.08, desc: '+8% de dano em toda caçada.' },
-  scavenge: { name: 'Vasculhar', tibia: 'Scavenge', icon: '🍀', cost: 800,  effect: 'loot',     value: 0.10, desc: '+10% de chance de loot.' },
-  gut:      { name: 'Estripar',  tibia: 'Gut',      icon: '💰', cost: 800,  effect: 'gold',     value: 0.15, desc: '+15% de gold por criatura.' },
-  divine:   { name: 'Divindade', tibia: 'Divine',   icon: '⭐', cost: 1200, effect: 'xp',       value: 0.10, desc: '+10% de XP por criatura.' },
-  vampiric: { name: 'Vampírico', tibia: 'Vampiric', icon: '🧛', cost: 1500, effect: 'lifeleech', value: 0.05, desc: 'Cura 5% do dano causado.' },
+  wound:    { name: 'Wound',    icon: '🩸', cost: 600,  effect: 'damage',   value: 0.05, desc: 'charm.wound.desc' },
+  enflame:  { name: 'Enflame',  icon: '🔥', cost: 1000, effect: 'damage',   value: 0.08, desc: 'charm.enflame.desc' },
+  scavenge: { name: 'Scavenge', icon: '🍀', cost: 800,  effect: 'loot',     value: 0.10, desc: 'charm.scavenge.desc' },
+  gut:      { name: 'Gut',      icon: '💰', cost: 800,  effect: 'gold',     value: 0.15, desc: 'charm.gut.desc' },
+  divine:   { name: 'Divine',   icon: '⭐', cost: 1200, effect: 'xp',       value: 0.10, desc: 'charm.divine.desc' },
+  vampiric: { name: 'Vampiric', icon: '🧛', cost: 1500, effect: 'lifeleech', value: 0.05, desc: 'charm.vampiric.desc' },
 };
 
 // Quantos charms podem ficar equipados ao mesmo tempo.

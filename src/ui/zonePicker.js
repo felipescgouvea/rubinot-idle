@@ -9,6 +9,7 @@ import { selectZone, startHunt } from '../application/huntUseCases.js?v=125';
 import { openModal, closeModal } from './shared.js?v=125';
 import { openBattleModal } from './battleModal.js?v=125';
 import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -35,13 +36,13 @@ function cityCard(city) {
   const hasBoosted = zs.some(([id]) => id === boostedZoneForDate(todayStr()));
   const hasActive = zs.some(([id]) => id === G.activeZone);
   const allLocked = unlocked === 0;
-  return `<div class="city-card ${hasActive ? 'active' : ''} ${allLocked ? 'locked' : ''}" title="${city.blurb}"
+  return `<div class="city-card ${hasActive ? 'active' : ''} ${allLocked ? 'locked' : ''}" title="${t(city.blurb)}"
       onclick="openCity('${city.id}')">
-    ${hasBoosted ? '<div class="zone-boosted-badge" title="Tem a Zona Bônus do Dia">🔥 Bônus do Dia</div>' : ''}
+    ${hasBoosted ? `<div class="zone-boosted-badge" title="${t('zonePicker.bonusZoneTooltip')}">🔥 ${t('zonePicker.bonusZoneBadge')}</div>` : ''}
     <div class="city-card-icon">${city.icon}</div>
     <div class="zone-card-name">${city.name}</div>
-    <div class="city-card-blurb">${city.blurb}</div>
-    <div class="city-card-meta">🗺️ ${total} hunts · 🔓 ${unlocked}</div>
+    <div class="city-card-blurb">${t(city.blurb)}</div>
+    <div class="city-card-meta">🗺️ ${t('zonePicker.cityStats', { total, unlocked })}</div>
   </div>`;
 }
 
@@ -54,16 +55,16 @@ function zoneCard(id, z) {
   const isBoostedToday = id === boostedZoneForDate(todayStr());
   const monsterTitle = z.monsters.map(mId => MONSTERS[mId]?.name || mId).join(', ');
   const monsterIcons = z.monsters.map(mId => monsterSpriteImg(mId, 'zone-card-monster-icon')).join('');
-  const bossZoneName = bossLocked ? (ZONES[z.requiresBossOf]?.name || z.requiresBossOf) : '';
-  const lockTitle = bossLocked ? `Derrote o boss de ${bossZoneName} primeiro` : monsterTitle;
+  const bossZoneName = bossLocked ? t(ZONES[z.requiresBossOf]?.name || z.requiresBossOf) : '';
+  const lockTitle = bossLocked ? t('zonePicker.defeatBossFirst', { zone: bossZoneName }) : monsterTitle;
   return `<div class="zone-card ${active ? 'active' : ''} ${locked ? 'locked' : ''}" title="${lockTitle}">
-    ${isBoostedToday ? '<div class="zone-boosted-badge" title="Zona Bônus do Dia: +50% XP/Gold">🔥 Bônus do Dia</div>' : ''}
+    ${isBoostedToday ? `<div class="zone-boosted-badge" title="${t('zonePicker.bonusZoneTooltipFull')}">🔥 ${t('zonePicker.bonusZoneBadge')}</div>` : ''}
     <div class="zone-card-icon">${zoneIconImg(z, 'zone-card-icon-img')}</div>
-    <div class="zone-card-name">${z.name}</div>
+    <div class="zone-card-name">${t(z.name)}</div>
     <div class="zone-card-monster-row">${monsterIcons}</div>
     ${locked
-      ? `<div class="zone-card-req">🔒 Boss: ${bossZoneName}</div>`
-      : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? '✅ Caçando' : 'Caçar aqui'}</button>`}
+      ? `<div class="zone-card-req">🔒 ${t('zonePicker.bossLabel', { zone: bossZoneName })}</div>`
+      : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? `✅ ${t('zonePicker.hunting')}` : t('zonePicker.huntHere')}</button>`}
   </div>`;
 }
 
@@ -73,8 +74,8 @@ export function renderZonePickerModal() {
   if (!openCityId) {
     // Passo 1: grade de cidades.
     openModal(`
-      <h3 style="margin-bottom:4px">🏙️ Escolher Cidade</h3>
-      <p class="muted" style="margin-bottom:10px">Escolha uma cidade para ver suas caçadas.</p>
+      <h3 style="margin-bottom:4px">🏙️ ${t('zonePicker.chooseCity')}</h3>
+      <p class="muted" style="margin-bottom:10px">${t('zonePicker.chooseCityHint')}</p>
       <div class="zone-picker-gallery">
         ${CITIES.map(cityCard).join('')}
       </div>
@@ -87,10 +88,10 @@ export function renderZonePickerModal() {
   const zs = zonesOfCity(openCityId);
   openModal(`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <button class="btn-small" onclick="backToCities()">← Cidades</button>
-      <h3 style="margin:0">${city ? city.icon + ' ' + city.name : 'Cidade'}</h3>
+      <button class="btn-small" onclick="backToCities()">${t('zonePicker.backToCities')}</button>
+      <h3 style="margin:0">${city ? city.icon + ' ' + city.name : t('zonePicker.cityFallback')}</h3>
     </div>
-    <p class="muted" style="margin-bottom:10px">${city ? city.blurb : ''}</p>
+    <p class="muted" style="margin-bottom:10px">${city ? t(city.blurb) : ''}</p>
     <div class="zone-picker-gallery">
       ${zs.map(([id, z]) => zoneCard(id, z)).join('')}
     </div>

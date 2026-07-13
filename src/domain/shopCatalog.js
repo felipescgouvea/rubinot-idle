@@ -14,19 +14,23 @@
 // o que é grátis-jogável com o que é pago. `priceBRL` ainda não está ligado a
 // um gateway de pagamento real (Stripe/Mercado Pago/PIX) — o botão de compra
 // sinaliza isso explicitamente até essa integração existir.
+// `desc` (e o `name` de 'refill') são chave de tradução (ver ui/shopPanel.js
+// e i18n/locales/*.js: shop.desc.*/shop.item.*) — texto de UI, não canon de
+// Tibia. Os demais `name` já são o nome real do item (ver domain/items.js) ou
+// texto já em inglês (XP Boost etc.), então ficam como string literal.
 export const SHOP_ITEMS = [
   // Loja Premium (dinheiro real) — pacotes de Rubini Coins
-  { id: 'rc_pack_s',  name: '100 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 4.90,  type: 'currency', rubiniAmount: 100,  shop: 'premium', desc: 'Pacote pequeno de Rubini Coins.' },
-  { id: 'rc_pack_m',  name: '300 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 12.90, type: 'currency', rubiniAmount: 300,  shop: 'premium', desc: 'Pacote médio de Rubini Coins.' },
-  { id: 'rc_pack_l',  name: '700 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 24.90, type: 'currency', rubiniAmount: 700,  shop: 'premium', desc: 'Pacote grande — +10% de bônus de Rubini Coins.' },
-  { id: 'rc_pack_xl', name: '1500 Rubini Coins', icon: '💎', currency: 'real', priceBRL: 47.90, type: 'currency', rubiniAmount: 1500, shop: 'premium', desc: 'Pacote extra grande — +15% de bônus de Rubini Coins.' },
+  { id: 'rc_pack_s',  name: '100 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 4.90,  type: 'currency', rubiniAmount: 100,  shop: 'premium', desc: 'shop.desc.rcPackS' },
+  { id: 'rc_pack_m',  name: '300 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 12.90, type: 'currency', rubiniAmount: 300,  shop: 'premium', desc: 'shop.desc.rcPackM' },
+  { id: 'rc_pack_l',  name: '700 Rubini Coins',  icon: '💎', currency: 'real', priceBRL: 24.90, type: 'currency', rubiniAmount: 700,  shop: 'premium', desc: 'shop.desc.rcPackL' },
+  { id: 'rc_pack_xl', name: '1500 Rubini Coins', icon: '💎', currency: 'real', priceBRL: 47.90, type: 'currency', rubiniAmount: 1500, shop: 'premium', desc: 'shop.desc.rcPackXl' },
 
   // Rubini Store — Boosts temporários (Rubini Coins)
-  { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, shop: 'rubini', desc: '+50% de XP por 30 minutos de caçada.' },
-  { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, shop: 'rubini', desc: '+15% de chance de loot por 30 minutos.' },
-  { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, shop: 'rubini', desc: '+30% de gold por 30 minutos.' },
+  { id: 'xp_boost',   name: 'XP Boost',        icon: '⭐', currency: 'rubini', price: 50,  type: 'boost', boost: 'xp',   minutes: 30, shop: 'rubini', desc: 'shop.desc.xpBoost' },
+  { id: 'loot_boost', name: 'Loot Boost',      icon: '🍀', currency: 'rubini', price: 40,  type: 'boost', boost: 'loot', minutes: 30, shop: 'rubini', desc: 'shop.desc.lootBoost' },
+  { id: 'gold_boost', name: 'Gold Boost',      icon: '💰', currency: 'rubini', price: 40,  type: 'boost', boost: 'gold', minutes: 30, shop: 'rubini', desc: 'shop.desc.goldBoost' },
   // Rubini Store — Suprimentos (gold)
-  { id: 'refill',     name: 'Supply Completo', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', shop: 'rubini', desc: 'Restaura HP e mana instantaneamente.' },
+  { id: 'refill',     name: 'shop.item.fullSupply', icon: '🧪', currency: 'gold',   price: 500, type: 'refill', shop: 'rubini', desc: 'shop.desc.refill' },
 
   // Loja de Equipamentos (gold) — preço = 4x o valor de venda do item
   { id: 'buy_dagger',       name: 'Dagger',           icon: '🗡️', currency: 'gold', price: 24,     type: 'item', itemId: 'dagger', shop: 'equipment' },
@@ -96,31 +100,34 @@ export const SHOP_ITEMS = [
   { id: 'buy_great_spirit_potion',  name: 'Great Spirit Potion',    icon: '🧪', currency: 'gold', price: 1280, type: 'item', itemId: 'great_spirit_potion', shop: 'magic' },
 ];
 
-// As quatro "lojas/NPCs" e como cada uma agrupa seus itens na tela.
+// `title`/`subtitle` são chave de tradução (ver ui/shopPanel.js e
+// i18n/locales/*.js: shop.premium.*/shop.rubini.*/shop.equipment.*/shop.magic.*)
+// — o emoji mora DENTRO da string traduzida (igual ao resto do jogo), então
+// title/subtitle continuam sendo só chaves passadas direto pra t().
 export const SHOPS = [
-  { key: 'premium', title: '💳 Loja Premium (Dinheiro Real)', subtitle: 'Compre Rubini Coins com dinheiro real — separado de tudo que se ganha jogando. Pagamento ainda não conectado a um gateway real.', sub: [
-      { title: '💎 Pacotes de Rubini Coins', filter: s => s.type === 'currency' },
+  { key: 'premium', title: 'shop.premium.title', subtitle: 'shop.premium.subtitle', sub: [
+      { title: 'shop.premium.subRcPacks', filter: s => s.type === 'currency' },
     ]},
-  { key: 'rubini', title: '💎 Rubini Store', subtitle: 'Boosts e supply — como o Ctrl+S do RubinOT. Pago com Rubini Coins ganhos jogando (tasks, Arena) ou gold. Outfits agora ficam na tela de Aparência (botão 👕 no card do personagem).', sub: [
-      { title: '⚡ Boosts & Suprimentos', filter: s => s.type === 'boost' || s.type === 'refill' },
+  { key: 'rubini', title: 'shop.rubini.title', subtitle: 'shop.rubini.subtitle', sub: [
+      { title: 'shop.rubini.subBoosts', filter: s => s.type === 'boost' || s.type === 'refill' },
     ]},
-  { key: 'equipment', title: '⚔️ Loja de Equipamentos', subtitle: 'Armas e armaduras clássicas de Tibia, pagas em gold.', sub: [
-      { title: '🗡️ Espadas', filter: (s, items) => items[s.itemId]?.weaponType === 'sword' },
-      { title: '🪓 Machados', filter: (s, items) => items[s.itemId]?.weaponType === 'axe' },
-      { title: '🔨 Clavas', filter: (s, items) => items[s.itemId]?.weaponType === 'club' },
-      { title: '🏹 Armas de Distância', filter: (s, items) => items[s.itemId]?.weaponType === 'distance' },
-      { title: '🎯 Munição', filter: (s, items) => items[s.itemId]?.type === 'ammo' },
-      { title: '🪄 Wands & Rods', filter: (s, items) => items[s.itemId]?.weaponType === 'magic' },
-      { title: '🥋 Armaduras', filter: (s, items) => items[s.itemId]?.type === 'armor' },
-      { title: '🛡️ Escudos', filter: (s, items) => items[s.itemId]?.type === 'shield' },
-      { title: '👑 Elmos', filter: (s, items) => items[s.itemId]?.type === 'helmet' },
-      { title: '🦵 Calças', filter: (s, items) => items[s.itemId]?.type === 'legs' },
-      { title: '👢 Botas', filter: (s, items) => items[s.itemId]?.type === 'boots' },
-      { title: '💍 Anéis', filter: (s, items) => items[s.itemId]?.type === 'ring' },
+  { key: 'equipment', title: 'shop.equipment.title', subtitle: 'shop.equipment.subtitle', sub: [
+      { title: 'shop.equipment.subSwords', filter: (s, items) => items[s.itemId]?.weaponType === 'sword' },
+      { title: 'shop.equipment.subAxes', filter: (s, items) => items[s.itemId]?.weaponType === 'axe' },
+      { title: 'shop.equipment.subClubs', filter: (s, items) => items[s.itemId]?.weaponType === 'club' },
+      { title: 'shop.equipment.subDistance', filter: (s, items) => items[s.itemId]?.weaponType === 'distance' },
+      { title: 'shop.equipment.subAmmo', filter: (s, items) => items[s.itemId]?.type === 'ammo' },
+      { title: 'shop.equipment.subWands', filter: (s, items) => items[s.itemId]?.weaponType === 'magic' },
+      { title: 'shop.equipment.subArmors', filter: (s, items) => items[s.itemId]?.type === 'armor' },
+      { title: 'shop.equipment.subShields', filter: (s, items) => items[s.itemId]?.type === 'shield' },
+      { title: 'shop.equipment.subHelmets', filter: (s, items) => items[s.itemId]?.type === 'helmet' },
+      { title: 'shop.equipment.subLegs', filter: (s, items) => items[s.itemId]?.type === 'legs' },
+      { title: 'shop.equipment.subBoots', filter: (s, items) => items[s.itemId]?.type === 'boots' },
+      { title: 'shop.equipment.subRings', filter: (s, items) => items[s.itemId]?.type === 'ring' },
     ]},
-  { key: 'magic', title: '🧪 Loja de Artigos Mágicos', subtitle: 'Poções e runas, pagas em gold.', sub: [
-      { title: '🧪 Poções', filter: (s, items) => items[s.itemId]?.type === 'potion' },
-      { title: '📜 Runas', filter: (s, items) => items[s.itemId]?.type === 'rune' },
+  { key: 'magic', title: 'shop.magic.title', subtitle: 'shop.magic.subtitle', sub: [
+      { title: 'shop.magic.subPotions', filter: (s, items) => items[s.itemId]?.type === 'potion' },
+      { title: 'shop.magic.subRunes', filter: (s, items) => items[s.itemId]?.type === 'rune' },
     ]},
 ];
 

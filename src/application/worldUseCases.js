@@ -3,6 +3,7 @@ import { WORLDS } from '../domain/progression.js?v=125';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { stopHunt, setBossOnlyMode } from './huntUseCases.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 export function selectWorld(worldId) {
   const world = WORLDS.find(w => w.id === worldId);
@@ -12,8 +13,8 @@ export function selectWorld(worldId) {
   G.currentWorld = worldId;
   emit(EVENTS.WORLDS_PANEL);
   emit(EVENTS.ZONE_PICKER);
-  emit(EVENTS.NOTIFY, { msg: `Viajou para ${world.name}!`, type: 'success' });
-  emit(EVENTS.LOG, `<span class="log-info">🌍 Viajando para ${world.icon} ${world.name}...</span>`);
+  emit(EVENTS.NOTIFY, { msg: t('worlds.traveled', { world: world.name }), type: 'success' });
+  emit(EVENTS.LOG, `<span class="log-info">${t('worlds.traveling', { icon: world.icon, world: world.name })}</span>`);
   saveGame();
 }
 
@@ -21,7 +22,7 @@ export function checkWorldUnlocks() {
   WORLDS.forEach(w => {
     if (G.level >= w.reqLevel && !w._notified) {
       w._notified = true;
-      emit(EVENTS.NOTIFY, { msg: `🌍 Mundo desbloqueado: ${w.name}!`, type: 'success' });
+      emit(EVENTS.NOTIFY, { msg: t('worlds.unlocked', { world: w.name }), type: 'success' });
     }
   });
 }

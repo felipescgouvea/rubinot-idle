@@ -6,6 +6,7 @@ import { isBoostActive } from '../domain/shopCatalog.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -20,7 +21,7 @@ export function getDailyState() {
 export function claimDailyReward() {
   const state = getDailyState();
   if (!state.canClaim) {
-    emit(EVENTS.NOTIFY, { msg: 'Você já resgatou a recompensa de hoje. Volte amanhã!', type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('daily.alreadyClaimed', { day: state.streak }), type: 'error' });
     return;
   }
   const reward = rewardForStreak(state.streak);
@@ -40,8 +41,8 @@ export function claimDailyReward() {
     G.boosts[reward.boost] = base + reward.minutes * 60000;
   }
 
-  emit(EVENTS.NOTIFY, { msg: `${reward.icon} Recompensa do dia ${state.streak}: ${reward.name}!`, type: 'success' });
-  emit(EVENTS.LOG, `<span class="log-loot">🎁 Recompensa diária (dia ${state.streak} da sequência): ${reward.name}.</span>`);
+  emit(EVENTS.NOTIFY, { msg: t('daily.rewardClaimed', { icon: reward.icon, day: state.streak, name: reward.name }), type: 'success' });
+  emit(EVENTS.LOG, `<span class="log-loot">${t('daily.logClaimed', { day: state.streak, name: reward.name })}</span>`);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.DAILY_REWARD_PANEL);

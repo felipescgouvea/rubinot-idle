@@ -13,6 +13,7 @@ import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { trainSkill } from './skillUseCases.js?v=125';
 import { stopHunt } from './huntUseCases.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 let trainingInterval = null;
 
@@ -46,13 +47,13 @@ function stopTrainingLoop() {
 }
 
 export function startTraining(skillId) {
-  if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: 'Escolha uma vocação primeiro!', type: 'error' }); return; }
+  if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('training.chooseVocationFirst'), type: 'error' }); return; }
   if (!TRAINABLE_SKILLS.includes(skillId)) return;
   stopHunt(); // treino e caçada são mutuamente exclusivos
   G.trainingSkill = skillId;
   G.trainingSince = Date.now();
   startTrainingLoop();
-  emit(EVENTS.NOTIFY, { msg: `🏋️ Treinando ${TIBIA_SKILLS[skillId].name}. Volte depois pra colher o progresso!`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('training.startedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
   emit(EVENTS.TRAINING_PANEL);
   saveGame();
 }
@@ -64,7 +65,7 @@ export function stopTraining() {
   const skillId = G.trainingSkill;
   G.trainingSkill = null;
   G.trainingSince = null;
-  emit(EVENTS.NOTIFY, { msg: `Treino de ${TIBIA_SKILLS[skillId].name} encerrado.`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('training.stoppedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
   emit(EVENTS.TRAINING_PANEL);
   saveGame();
 }
@@ -76,7 +77,7 @@ export function resumeTrainingOnLoad() {
   const tries = accrueTraining({ offline: true });
   if (tries > 0) {
     const s = TIBIA_SKILLS[G.trainingSkill];
-    emit(EVENTS.NOTIFY, { msg: `🏋️ Treino offline: +${tries} tentativas de ${s ? s.name : G.trainingSkill}.`, type: 'success' });
+    emit(EVENTS.NOTIFY, { msg: t('training.offlineGain', { tries, skill: s ? s.name : G.trainingSkill }), type: 'success' });
   }
   startTrainingLoop();
 }

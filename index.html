@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,8 +23,8 @@
       </div>
       <div id="header-btns">
         <span id="auth-user" class="auth-user"></span>
-        <button class="btn-small" onclick="openSettingsPanel()">⚙️ Config</button>
-        <button class="btn-small daily-btn" onclick="openDailyReward()">🎁 Diário<span id="daily-reward-badge" class="daily-badge">!</span></button>
+        <button class="btn-small" onclick="openSettingsPanel()">⚙️ <span data-i18n="shell.config">Settings</span></button>
+        <button class="btn-small daily-btn" onclick="openDailyReward()">🎁 <span data-i18n="shell.daily">Daily</span><span id="daily-reward-badge" class="daily-badge">!</span></button>
       </div>
     </header>
 
@@ -38,17 +38,17 @@
 
     <!-- TABS -->
     <nav id="tabs">
-      <button class="tab active" data-tab="hunt">🗺️ Caçada</button>
+      <button class="tab active" data-tab="hunt">🗺️ <span data-i18n="shell.tabHunt">Hunt</span></button>
       <button class="tab" data-tab="rtc">🖥️ RTC</button>
-      <button class="tab" data-tab="tasks">📜 Tarefas</button>
+      <button class="tab" data-tab="tasks">📜 <span data-i18n="shell.tabTasks">Tasks</span></button>
       <button class="tab" data-tab="skills" style="display:none">⚡ Skills</button>
-      <button class="tab" data-tab="bestiary">📖 Bestiário</button>
+      <button class="tab" data-tab="bestiary">📖 <span data-i18n="shell.tabBestiary">Bestiary</span></button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="bossrush">💀 Boss Rush</button>
-      <button class="tab" data-tab="worlds" style="display:none">🌍 Mundos</button>
+      <button class="tab" data-tab="worlds" style="display:none">🌍 <span data-i18n="shell.tabWorlds">Worlds</span></button>
       <button class="tab" data-tab="battlepass">🎖️ Battle Pass</button>
       <button class="tab" data-tab="shop">🛒 Shop</button>
-      <button class="tab" data-tab="market">🏪 Mercado</button>
+      <button class="tab" data-tab="market">🏪 <span data-i18n="shell.tabMarket">Market</span></button>
       <button class="tab" data-tab="highscores">🏆 Highscores</button>
       <button class="tab" data-tab="admin">⚙️ Admin</button>
     </nav>
@@ -79,10 +79,10 @@
         </div>
       </div>
       <div class="char-status-stats">
-        <div class="stat-chip" title="Ataque"><span id="stat-atk">0</span><small>ATK</small></div>
-        <div class="stat-chip" title="Defesa"><span id="stat-def">0</span><small>DEF</small></div>
-        <div class="stat-chip" title="Velocidade"><span id="stat-spd">0</span><small>SPD</small></div>
-        <div class="stat-chip" title="Magia"><span id="stat-magic">0</span><small>MGC</small></div>
+        <div class="stat-chip" data-i18n-attr="title:shell.attack"><span id="stat-atk">0</span><small>ATK</small></div>
+        <div class="stat-chip" data-i18n-attr="title:shell.defense"><span id="stat-def">0</span><small>DEF</small></div>
+        <div class="stat-chip" data-i18n-attr="title:shell.speed"><span id="stat-spd">0</span><small>SPD</small></div>
+        <div class="stat-chip" data-i18n-attr="title:shell.magic"><span id="stat-magic">0</span><small>MGC</small></div>
       </div>
       <button class="btn-small" onclick="openOutfitPicker()">👕 Outfit</button>
       <!-- Skills compactas, à direita do botão Outfit (treino silencioso durante
@@ -97,14 +97,14 @@
       <section id="tab-hunt" class="panel active">
         <div class="panel-left">
           <div class="card" id="hunt-status-card">
-            <h3>🗺️ Caçada</h3>
+            <h3>🗺️ <span data-i18n="shell.tabHunt">Hunt</span></h3>
             <div id="hunt-status-body">
               <div id="zone-current-bar" onclick="openZonePicker()">
                 <span id="zone-current-icon">🗺️</span>
-                <span id="zone-current-name">Escolher zona de caça…</span>
-                <span class="zone-current-change">Trocar ▾</span>
+                <span id="zone-current-name" data-i18n="hunt.chooseZone">Choose a hunting ground…</span>
+                <span class="zone-current-change" data-i18n="hunt.change">Change ▾</span>
               </div>
-              <button id="hunt-status-battle-btn" class="btn-blue" onclick="openBattleModal()">⚔️ Ver Batalha</button>
+              <button id="hunt-status-battle-btn" class="btn-blue" onclick="openBattleModal()">⚔️ <span data-i18n="hunt.viewBattle">View Battle</span></button>
             </div>
           </div>
           <div class="hunt-mid-row">
@@ -113,45 +113,45 @@
               <div id="hunt-analyzer-body"></div>
             </div>
             <div class="card" id="loot-card" style="display:none">
-              <h3>Loot Recente</h3>
+              <h3 data-i18n="hunt.recentLoot">Recent Loot</h3>
               <div id="loot-display"></div>
             </div>
           </div>
           <div class="card" id="blessings-card">
-            <h3>🛡️ Bênçãos</h3>
+            <h3>🛡️ <span data-i18n="hunt.blessings">Blessings</span></h3>
             <div id="blessings-body"></div>
           </div>
         </div>
         <div class="panel-right">
           <div class="card" id="equip-card">
-            <h3>⚔️ Equipamento</h3>
+            <h3>⚔️ <span data-i18n="hunt.equipment">Equipment</span></h3>
             <div class="equipment-slots"></div>
           </div>
           <div class="card" id="char-card">
             <div id="char-name-field">
-              <label for="char-name-input">Nome do personagem</label>
-              <input type="text" id="char-name-input" maxlength="20" placeholder="Ex.: Gandalf" autocomplete="off" />
+              <label for="char-name-input" data-i18n="hunt.characterName">Character name</label>
+              <input type="text" id="char-name-input" maxlength="20" placeholder="e.g. Gandalf" autocomplete="off" data-i18n-attr="placeholder:hunt.characterNamePlaceholder" />
             </div>
             <div id="vocation-select" class="vocation-grid">
               <div class="voc-btn" data-voc="knight" onclick="createCharacter('knight')">
                 <div class="voc-icon">🛡️</div>
                 <div class="voc-name">Knight</div>
-                <div class="voc-desc">Tanque corpo-a-corpo. Alta HP, ataque constante.</div>
+                <div class="voc-desc" data-i18n="hunt.vocKnight">Melee tank. High HP, steady damage.</div>
               </div>
               <div class="voc-btn" data-voc="paladin" onclick="createCharacter('paladin')">
                 <div class="voc-icon">🏹</div>
                 <div class="voc-name">Paladin</div>
-                <div class="voc-desc">Distância equilibrada. Mana e HP balanceados.</div>
+                <div class="voc-desc" data-i18n="hunt.vocPaladin">Balanced ranged fighter. Even mana and HP.</div>
               </div>
               <div class="voc-btn" data-voc="sorcerer" onclick="createCharacter('sorcerer')">
                 <div class="voc-icon">🔮</div>
                 <div class="voc-name">Sorcerer</div>
-                <div class="voc-desc">Mago ofensivo. Alto dano, frágil. Usa mana.</div>
+                <div class="voc-desc" data-i18n="hunt.vocSorcerer">Offensive mage. High damage, fragile. Uses mana.</div>
               </div>
               <div class="voc-btn" data-voc="druid" onclick="createCharacter('druid')">
                 <div class="voc-icon">🌿</div>
                 <div class="voc-name">Druid</div>
-                <div class="voc-desc">Mago de cura. Suporte + dano elemental.</div>
+                <div class="voc-desc" data-i18n="hunt.vocDruid">Healing mage. Support plus elemental damage.</div>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@
              não mais flutuando por cima do resto da página. -->
         <div class="card" id="backpack-inventory-card" style="display:none">
           <h3>🎒 Bag</h3>
-          <p class="muted">Clique num item para equipar, vender ou ver detalhes. Botão direito na Bag fecha.</p>
+          <p class="muted" data-i18n="hunt.bagHint">Click an item to equip, sell, or see details. Right-click the Bag to close it.</p>
           <div id="autosell-controls"></div>
           <div id="inventory-grid"></div>
         </div>
@@ -172,7 +172,7 @@
       <section id="tab-rtc" class="panel">
         <div class="card full-card">
           <h3>🖥️ RTC — Rubinot Custom Client</h3>
-          <p class="muted">Configure o ataque e a cura automáticos da caçada, como no RTCaster real do RubinOT.</p>
+          <p class="muted" data-i18n="rtc.intro">Configure automatic attack and healing for your hunt, just like the real RTCaster in RubinOT.</p>
           <div id="rtc-settings"></div>
         </div>
       </section>
@@ -181,7 +181,7 @@
       <section id="tab-tasks" class="panel">
         <div class="card full-card">
           <h3>📜 Linked Tasks</h3>
-          <p class="muted">Complete tarefas de criaturas para ganhar XP bônus e recompensas exclusivas.</p>
+          <p class="muted" data-i18n="tasks.intro">Complete creature tasks to earn bonus XP and exclusive rewards.</p>
           <div id="active-task-display"></div>
           <div id="task-rooms"></div>
         </div>
@@ -190,12 +190,12 @@
       <!-- SKILLS -->
       <section id="tab-skills" class="panel">
         <div class="card full-card">
-          <h3>🏋️ Treino Offline</h3>
+          <h3>🏋️ <span data-i18n="skills.offlineTraining">Offline Training</span></h3>
           <div id="training-body"></div>
         </div>
         <div class="card full-card">
-          <h3>⚡ Habilidades & Upgrades</h3>
-          <p class="muted">Skills sobem por uso durante a caçada — ou treine uma escolhida acima, inclusive offline.</p>
+          <h3>⚡ <span data-i18n="skills.skillsUpgrades">Skills & Upgrades</span></h3>
+          <p class="muted" data-i18n="skills.intro">Skills level up through use while hunting — or train a chosen one above, even offline.</p>
           <div id="skill-points-display"></div>
           <div id="skills-grid"></div>
         </div>
@@ -204,19 +204,19 @@
       <!-- BESTIARY (Prey + Bestiário + Charms) -->
       <section id="tab-bestiary" class="panel">
         <div class="card full-card">
-          <h3>🐾 Presas (Prey)</h3>
-          <p class="muted">Escolha uma criatura por slot e ganhe bônus de dano, XP ou loot contra ela por 2 horas.</p>
+          <h3>🐾 Prey</h3>
+          <p class="muted" data-i18n="bestiary.preyIntro">Choose one creature per slot and gain a damage, XP, or loot bonus against it for 2 hours.</p>
           <div id="prey-slots" class="prey-slots"></div>
         </div>
         <div class="card full-card">
           <h3>✨ Charms</h3>
           <div id="charm-points-display" class="charm-points-row"></div>
-          <p class="muted">Desbloqueie charms com Charm Points (ganhos ao preencher o bestiário) e equipe até 3 para bônus passivos.</p>
+          <p class="muted" data-i18n="bestiary.charmsIntro">Unlock charms with Charm Points (earned by filling out the bestiary) and equip up to 3 for passive bonuses.</p>
           <div id="charms-list" class="charms-grid"></div>
         </div>
         <div class="card full-card">
-          <h3>📖 Bestiário</h3>
-          <p class="muted">Cada criatura tem etapas de mortes que rendem Charm Points ao serem cruzadas.</p>
+          <h3>📖 <span data-i18n="shell.tabBestiary">Bestiary</span></h3>
+          <p class="muted" data-i18n="bestiary.intro">Each creature has kill milestones that award Charm Points when reached.</p>
           <div id="bestiary-list" class="bestiary-grid"></div>
         </div>
       </section>
@@ -225,9 +225,9 @@
       <section id="tab-arena" class="panel">
         <div class="card full-card">
           <h3>🏟️ Prestige Arena</h3>
-          <p class="muted">Batalhe contra oponentes da sua divisão. Requer Level 30+.</p>
+          <p class="muted" data-i18n="arena.intro">Battle opponents in your division. Requires Level 30+.</p>
           <div id="arena-info"></div>
-          <h4 style="margin:14px 0 8px">🏆 Recompensas de Divisão</h4>
+          <h4 style="margin:14px 0 8px">🏆 <span data-i18n="arena.divisionRewards">Division Rewards</span></h4>
           <div id="arena-division-rewards"></div>
           <div id="arena-battle-area"></div>
         </div>
@@ -237,7 +237,7 @@
       <section id="tab-bossrush" class="panel">
         <div class="card full-card">
           <h3>💀 Boss Rush</h3>
-          <p class="muted">Desafie diretamente o boss de qualquer zona que você já desbloqueou — sem os monstros comuns dela pelo caminho.</p>
+          <p class="muted" data-i18n="bossrush.intro">Challenge the boss of any zone you've already unlocked directly — skip its regular monsters along the way.</p>
           <div id="bossrush-stop-area" style="padding:0 14px 8px"></div>
           <div id="bossrush-grid"></div>
         </div>
@@ -247,8 +247,8 @@
       <!-- WORLDS -->
       <section id="tab-worlds" class="panel">
         <div class="card full-card">
-          <h3>🌍 Mundos de Rubinot</h3>
-          <p class="muted">Cada mundo desbloqueia novas zonas de caça e bônus exclusivos.</p>
+          <h3>🌍 <span data-i18n="worlds.title">Worlds of Rubinot</span></h3>
+          <p class="muted" data-i18n="worlds.intro">Each world unlocks new hunting grounds and exclusive bonuses.</p>
           <div id="worlds-grid"></div>
         </div>
       </section>
@@ -256,11 +256,11 @@
       <!-- BATTLE PASS -->
       <section id="tab-battlepass" class="panel">
         <div class="card full-card">
-          <h3>🎖️ Battle Pass — Temporada Atual</h3>
+          <h3>🎖️ <span data-i18n="battlepass.title">Battle Pass — Current Season</span></h3>
           <div id="bp-progress-area"></div>
-          <h4 style="margin:14px 0 8px">📋 Missões Diárias</h4>
+          <h4 style="margin:14px 0 8px">📋 <span data-i18n="battlepass.dailyMissions">Daily Missions</span></h4>
           <div id="bp-missions-area" class="bp-missions-grid"></div>
-          <h4 style="margin:14px 0 8px">🎁 Recompensas por Tier</h4>
+          <h4 style="margin:14px 0 8px">🎁 <span data-i18n="battlepass.tierRewards">Tier Rewards</span></h4>
           <div id="bp-rewards-track"></div>
         </div>
       </section>
@@ -268,8 +268,8 @@
       <!-- SHOP -->
       <section id="tab-shop" class="panel">
         <div class="card full-card">
-          <h3>🛒 Lojas</h3>
-          <p class="muted">Rubini Store, Loja de Equipamentos e Loja de Artigos Mágicos — cada uma como um NPC diferente do RubinOT.</p>
+          <h3>🛒 <span data-i18n="shop.title">Shops</span></h3>
+          <p class="muted" data-i18n="shop.intro">Rubini Store, Equipment Shop, and Magic Supplies Shop — each one a different NPC from RubinOT.</p>
           <div id="shop-content"></div>
         </div>
       </section>
@@ -277,8 +277,8 @@
       <!-- MARKET -->
       <section id="tab-market" class="panel">
         <div class="card full-card">
-          <h3>🏪 Mercado — Compra e Venda de Itens entre Jogadores</h3>
-          <p class="muted">Anuncie itens do seu inventário e compre itens que outros jogadores estão vendendo, tudo em gold. Personagens não são negociáveis aqui — só os itens.</p>
+          <h3>🏪 <span data-i18n="market.title">Market — Buy and Sell Items Between Players</span></h3>
+          <p class="muted" data-i18n="market.intro">List items from your inventory and buy items other players are selling, all in gold. Characters aren't tradeable here — only items.</p>
           <div id="market-content"></div>
         </div>
       </section>
@@ -286,7 +286,7 @@
       <!-- HIGHSCORES -->
       <section id="tab-highscores" class="panel">
         <div class="card full-card">
-          <h3>🏆 Highscores — Ranking Global</h3>
+          <h3>🏆 <span data-i18n="highscores.title">Highscores — Global Ranking</span></h3>
           <div id="highscores-content"></div>
         </div>
       </section>
@@ -305,7 +305,7 @@
     <div id="modal-overlay" style="display:none" onclick="closeModal()">
       <div id="modal-box" onclick="event.stopPropagation()">
         <div id="modal-content"></div>
-        <button onclick="closeModal()">Fechar</button>
+        <button onclick="closeModal()" data-i18n="modal.close">Close</button>
       </div>
     </div>
 
@@ -316,7 +316,7 @@
     <div id="battle-modal-overlay" style="display:none" onclick="closeBattleModal()">
       <div id="battle-modal-box" onclick="event.stopPropagation()">
         <div class="battle-modal-header">
-          <h3 id="battle-card-title">⚔️ Batalha</h3>
+          <h3 id="battle-card-title">⚔️ <span data-i18n="battle.title">Battle</span></h3>
           <button class="battle-modal-close-x" onclick="closeBattleModal()">✕</button>
         </div>
         <!-- Corpo: uma linha de 2 colunas (esquerda = cena + botão; direita =
@@ -350,25 +350,25 @@
                 <div class="player-hp-label" id="player-xp-label">-- XP</div>
               </div>
             </div>
-            <button id="hunt-toggle" onclick="toggleHunt()">▶ Iniciar Caçada</button>
+            <button id="hunt-toggle" onclick="toggleHunt()">▶ <span data-i18n="battle.startHunt">Start Hunt</span></button>
           </div>
           <div class="battle-col battle-col-right">
             <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma.
                  Preenche a coluna direita até embaixo, onde começa o Log. -->
             <div class="card" id="battle-list-card">
               <h3>🎯 Battle List</h3>
-              <div id="battle-list"><div class="battle-list-empty">Sem criaturas.</div></div>
+              <div id="battle-list"><div class="battle-list-empty" data-i18n="battle.noCreatures">No creatures.</div></div>
             </div>
           </div>
           </div>
           <!-- Log de Combate: abaixo do botão de caçada, ocupando a linha inteira -->
           <div class="card" id="combat-log-card">
-            <h3>Log de Combate</h3>
+            <h3 data-i18n="battle.combatLog">Combat Log</h3>
             <div id="combat-log-tabs">
-              <button class="log-tab active" data-cat="tudo" onclick="setLogFilter('tudo')">Tudo</button>
-              <button class="log-tab" data-cat="combate" onclick="setLogFilter('combate')">⚔️ Combate</button>
-              <button class="log-tab" data-cat="magia" onclick="setLogFilter('magia')">🗣️ Magias</button>
-              <button class="log-tab" data-cat="suprimento" onclick="setLogFilter('suprimento')">🧪 Suprimentos</button>
+              <button class="log-tab active" data-cat="tudo" onclick="setLogFilter('tudo')" data-i18n="battle.logAll">All</button>
+              <button class="log-tab" data-cat="combate" onclick="setLogFilter('combate')">⚔️ <span data-i18n="battle.logCombat">Combat</span></button>
+              <button class="log-tab" data-cat="magia" onclick="setLogFilter('magia')">🗣️ <span data-i18n="battle.logSpells">Spells</span></button>
+              <button class="log-tab" data-cat="suprimento" onclick="setLogFilter('suprimento')">🧪 <span data-i18n="battle.logSupplies">Supplies</span></button>
             </div>
             <div id="combat-log" data-filter="tudo"></div>
           </div>

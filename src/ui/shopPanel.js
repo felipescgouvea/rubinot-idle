@@ -3,6 +3,7 @@ import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=125
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -76,7 +77,7 @@ function renderShopCard(s) {
   const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const stats = item ? ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'].filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
-  const reqLabel = item ? potionReqLabel(item) : '';
+  const reqLabel = item ? potionReqLabel(item, t) : '';
   const statLine = reqLabel ? `${stats} · <span class="shop-req">🔒 ${reqLabel}</span>` : stats;
   const iconHtml = shopIconHtml(s);
   // Poções/runas podem ser compradas em quantidade: campo numérico + barra de
@@ -90,24 +91,24 @@ function renderShopCard(s) {
   const buyArea = isBulk
     ? `<div class="shop-buy-row">
         <div class="shop-qty-widget" onclick="event.stopPropagation()" onwheel="scrollShopQty(event, '${s.id}')">
-          <input type="number" id="shop-qty-num-${s.id}" class="shop-qty-num" min="1" max="9999" value="${qtyVal}" title="Quantidade" oninput="onShopQtyInput('${s.id}', this.value)" />
+          <input type="number" id="shop-qty-num-${s.id}" class="shop-qty-num" min="1" max="9999" value="${qtyVal}" title="${t('shop.quantity')}" oninput="onShopQtyInput('${s.id}', this.value)" />
           <button type="button" class="shop-qty-arrow" onclick="stepShopQty('${s.id}', -1)">◀</button>
           <input type="range" id="shop-qty-range-${s.id}" class="shop-qty-range" min="1" max="9999" value="${qtyVal}" oninput="onShopQtyInput('${s.id}', this.value)" />
           <button type="button" class="shop-qty-arrow" onclick="stepShopQty('${s.id}', 1)">▶</button>
         </div>
         <button class="skill-upgrade-btn shop-buy-btn" onclick="buyShopItem('${s.id}', getShopQty('${s.id}'))" ${!canAfford ? 'disabled' : ''}>
-          ${canAfford ? 'Comprar' : 'Sem saldo'}
+          ${canAfford ? t('shop.buy') : t('shop.noBalance')}
         </button>
       </div>`
     : `<button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}')" ${(!canAfford && !owned) ? 'disabled' : ''}>
-        ${owned ? (wearing ? '✅ Em uso — clique p/ tirar' : 'Vestir outfit') : isReal ? 'Comprar' : canAfford ? 'Comprar' : 'Saldo insuficiente'}
+        ${owned ? (wearing ? `✅ ${t('shop.wearingClickToRemove')}` : t('shop.wearOutfit')) : isReal ? t('shop.buy') : canAfford ? t('shop.buy') : t('shop.insufficientBalance')}
       </button>`;
   return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
     <div class="skill-card-header">
-      <span class="skill-card-name">${iconHtml} ${s.name}</span>
+      <span class="skill-card-name">${iconHtml} ${t(s.name)}</span>
       <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
     </div>
-    <div class="skill-card-desc">${s.desc || statLine || ''}</div>
+    <div class="skill-card-desc">${s.desc ? t(s.desc) : statLine || ''}</div>
     ${buyArea}
   </div>`;
 }
@@ -131,14 +132,14 @@ function renderShopContent(shop) {
     const items = shopItems.filter(s => sub.filter(s, ITEMS));
     if (!items.length) return '';
     return `
-      ${sub.title ? `<h4 style="margin: 12px 0 8px !important">${sub.title}</h4>` : ''}
+      ${sub.title ? `<h4 style="margin: 12px 0 8px !important">${t(sub.title)}</h4>` : ''}
       <div id="skills-grid" style="margin: 0 0 8px !important">
         ${items.map(renderShopCard).join('')}
       </div>`;
   }).join('');
   return `
-    <h3 style="margin:0 0 2px !important">${shop.title}</h3>
-    <p class="muted" style="margin:0 0 6px !important;font-size:12px">${shop.subtitle}</p>
+    <h3 style="margin:0 0 2px !important">${t(shop.title)}</h3>
+    <p class="muted" style="margin:0 0 6px !important;font-size:12px">${t(shop.subtitle)}</p>
     ${subs}`;
 }
 
@@ -149,18 +150,18 @@ export function renderShopPanel() {
   const now = Date.now();
   const activeBoosts = ['xp', 'loot', 'gold'].filter(k => isBoostActive(G.boosts, k, now)).map(k => {
     const mins = Math.ceil((G.boosts[k] - now) / 60000);
-    return `${k.toUpperCase()} (${mins}min restantes)`;
+    return `${k.toUpperCase()} (${t('shop.minutesLeft', { mins })})`;
   });
   const shop = SHOPS.find(s => s.key === activeShop) || SHOPS[0];
 
   el.innerHTML = `
     <div id="skill-points-display" style="margin: 0 0 12px !important">
-      <strong>Seu saldo:</strong> <span>${formatNum(G.gold)} ${goldIconImg('inline-icon')} gold</span> · <span>${formatNum(G.rubini)} ${rubiniIconImg('inline-icon')} Rubini Coins</span>
-      ${activeBoosts.length ? `<br/><strong>Boosts ativos:</strong> <span>${activeBoosts.join(' · ')}</span>` : ''}
+      <strong>${t('shop.yourBalance')}</strong> <span>${formatNum(G.gold)} ${goldIconImg('inline-icon')} gold</span> · <span>${formatNum(G.rubini)} ${rubiniIconImg('inline-icon')} Rubini Coins</span>
+      ${activeBoosts.length ? `<br/><strong>${t('shop.activeBoosts')}</strong> <span>${activeBoosts.join(' · ')}</span>` : ''}
     </div>
     <div class="shop-layout">
       <div class="shop-sidebar">
-        ${SHOPS.map(s => `<button class="shop-tab-btn ${s.key === shop.key ? 'active' : ''}" onclick="setShopTab('${s.key}')">${s.title}</button>`).join('')}
+        ${SHOPS.map(s => `<button class="shop-tab-btn ${s.key === shop.key ? 'active' : ''}" onclick="setShopTab('${s.key}')">${t(s.title)}</button>`).join('')}
       </div>
       <div class="shop-main">
         ${renderShopContent(shop)}

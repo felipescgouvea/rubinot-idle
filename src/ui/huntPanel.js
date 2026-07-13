@@ -11,6 +11,7 @@ import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=125';
 import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=125';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -127,8 +128,8 @@ export function renderMonsterDisplay(hit = false, killed = null, spellElement = 
   }
   if (!currentMonster) {
     el.innerHTML = G.hunting
-      ? '<div class="monster-empty">Procurando próxima criatura…</div>'
-      : '<div class="monster-empty">Nenhuma criatura. Inicie uma caçada!</div>';
+      ? `<div class="monster-empty">${t('hunt.searchingNext')}</div>`
+      : `<div class="monster-empty">${t('hunt.noCreatureStart')}</div>`;
     return;
   }
   const pct = Math.max(0, Math.round((currentMonster.hp / currentMonster.maxHp) * 100));
@@ -174,17 +175,17 @@ export function renderZonePicker() {
 
   const zone = ZONES[G.activeZone];
   const isBoostedToday = G.activeZone && G.activeZone === boostedZoneForDate(todayStr());
-  const boostedBadge = isBoostedToday ? ' <span class="zone-boosted-badge" title="Zona Bônus do Dia: +50% XP/Gold">🔥 Bônus do Dia</span>' : '';
+  const boostedBadge = isBoostedToday ? ` <span class="zone-boosted-badge" title="${t('zonePicker.bonusZoneTooltipFull')}">🔥 ${t('zonePicker.bonusZoneBadge')}</span>` : '';
   const iconEl = document.getElementById('zone-current-icon');
   const nameEl = document.getElementById('zone-current-name');
   const titleEl = document.getElementById('battle-card-title');
   if (iconEl && nameEl) {
     iconEl.innerHTML = zone ? zoneIconImg(zone, 'zone-current-icon-img') : '🗺️';
     const cityPrefix = zone && zone.city ? `<span class="zone-current-city">${cityName(zone.city)}</span> · ` : '';
-    nameEl.innerHTML = (zone ? cityPrefix + zone.name : 'Escolher cidade de caça…') + boostedBadge;
+    nameEl.innerHTML = (zone ? cityPrefix + t(zone.name) : t('hunt.chooseZone')) + boostedBadge;
   }
   if (titleEl) {
-    titleEl.innerHTML = zone ? `⚔️ Batalha — ${zoneIconImg(zone, 'zone-current-icon-img')} ${zone.name}${boostedBadge}` : '⚔️ Batalha';
+    titleEl.innerHTML = zone ? `⚔️ ${t('battle.title')} — ${zoneIconImg(zone, 'zone-current-icon-img')} ${t(zone.name)}${boostedBadge}` : `⚔️ ${t('battle.title')}`;
   }
   renderZoneTheme();
 }
@@ -236,14 +237,14 @@ export function renderHuntAnalyzer() {
   const profitColor = st.profit >= 0 ? 'var(--positive, #2ecc71)' : '#e05a5a';
   el.innerHTML = `
     <div class="hunt-analyzer-grid">
-      <div class="ha-cell"><span class="ha-label">💀 Kills</span><span class="ha-val">${formatNum(st.kills)}</span></div>
+      <div class="ha-cell"><span class="ha-label">💀 ${t('hunt.analyzerKills')}</span><span class="ha-val">${formatNum(st.kills)}</span></div>
       <div class="ha-cell"><span class="ha-label">${xi} XP</span><span class="ha-val">${formatNum(st.xp)}</span><span class="ha-rate">${formatNum(st.xpH)}/h</span></div>
-      <div class="ha-cell"><span class="ha-label">${gi} Gold</span><span class="ha-val">${formatNum(st.gold)}</span><span class="ha-rate">${formatNum(st.goldH)}/h</span></div>
-      <div class="ha-cell"><span class="ha-label">📦 Loot</span><span class="ha-val">${formatNum(st.loot)}</span></div>
-      <div class="ha-cell"><span class="ha-label">🧪 Suprimentos</span><span class="ha-val">-${formatNum(st.supplies)}</span></div>
-      <div class="ha-cell"><span class="ha-label">💰 Lucro</span><span class="ha-val" style="color:${profitColor}">${formatNum(st.profit)}</span><span class="ha-rate">${formatNum(st.profitH)}/h</span></div>
+      <div class="ha-cell"><span class="ha-label">${gi} ${t('hunt.analyzerGold')}</span><span class="ha-val">${formatNum(st.gold)}</span><span class="ha-rate">${formatNum(st.goldH)}/h</span></div>
+      <div class="ha-cell"><span class="ha-label">📦 ${t('hunt.analyzerLoot')}</span><span class="ha-val">${formatNum(st.loot)}</span></div>
+      <div class="ha-cell"><span class="ha-label">🧪 ${t('hunt.analyzerSupplies')}</span><span class="ha-val">-${formatNum(st.supplies)}</span></div>
+      <div class="ha-cell"><span class="ha-label">💰 ${t('hunt.analyzerProfit')}</span><span class="ha-val" style="color:${profitColor}">${formatNum(st.profit)}</span><span class="ha-rate">${formatNum(st.profitH)}/h</span></div>
     </div>
-    <div class="ha-note muted">Loot/suprimentos pelo valor de venda. Zera ao iniciar uma caçada.</div>`;
+    <div class="ha-note muted">${t('hunt.analyzerNote')}</div>`;
 }
 
 // Bênçãos: mostra quantas estão ativas (X/5), o que reduzem na morte e o botão
@@ -259,10 +260,9 @@ export function renderBlessings() {
   const pips = Array.from({ length: MAX_BLESSINGS }, (_, i) => `<span class="bless-pip ${i < b ? 'on' : ''}">🛡️</span>`).join('');
   el.innerHTML = `
     <div class="bless-pips">${pips} <strong>${b}/${MAX_BLESSINGS}</strong></div>
-    <div class="muted bless-info">Na morte: perde <strong>${lossPct}%</strong> do XP · revive com <strong>${hpPct}%</strong> HP.
-      As bênçãos são consumidas ao morrer.</div>
+    <div class="muted bless-info">${t('hunt.blessingsInfo', { lossPct: `<strong>${lossPct}%</strong>`, hpPct: `<strong>${hpPct}%</strong>` })}</div>
     <button class="skill-upgrade-btn" onclick="buyBlessing()" ${full || G.gold < cost ? 'disabled' : ''}>
-      ${full ? '✅ Todas as bênçãos' : `Comprar bênção — ${formatNum(cost)} ${goldIconImg('inline-icon')}`}
+      ${full ? `✅ ${t('hunt.allBlessings')}` : `${t('hunt.buyBlessing')} — ${formatNum(cost)} ${goldIconImg('inline-icon')}`}
     </button>`;
 }
 
@@ -273,9 +273,9 @@ function renderHuntButton({ hunting }) {
   // o jogador desafiar o próximo tier explicitamente (não sobe automático).
   if (isBossOnlyHunt()) {
     const tier = (G.bossTiers && G.bossTiers[G.activeZone]) || 1;
-    btn.textContent = hunting ? `⏹ Parar (Tier ${tier})` : `💀 Batalhar Tier ${tier}`;
+    btn.textContent = hunting ? `⏹ ${t('hunt.stopTier', { tier })}` : `💀 ${t('bossrush.challengeTier', { tier })}`;
   } else {
-    btn.textContent = hunting ? '⏹ Parar Caçada' : '▶ Iniciar Caçada';
+    btn.textContent = hunting ? `⏹ ${t('battle.stopHunt')}` : `▶ ${t('battle.startHunt')}`;
   }
   btn.classList.toggle('stop', hunting);
 }
@@ -283,12 +283,12 @@ function renderHuntButton({ hunting }) {
 function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes, kills, xpGained, goldGained }) {
   const zoneIcon = zoneMainMonster ? monsterSpriteImg(zoneMainMonster, 'zone-current-icon-img') : '🗺️';
   openModal(`
-    <h3>🌙 Enquanto você esteve fora…</h3>
-    <p>Seu personagem continuou caçando em <strong>${zoneIcon} ${zoneName}</strong> por <strong>${hours}h ${minutes}min</strong>.</p>
+    <h3>🌙 ${t('hunt.whileAwayTitle')}</h3>
+    <p>${t('hunt.whileAwayBody', { zone: `<strong>${zoneIcon} ${zoneName}</strong>`, duration: `<strong>${hours}h ${minutes}min</strong>` })}</p>
     <div class="item-detail-stats">
-      💀 Criaturas abatidas: <span>${kills.toLocaleString()}</span><br/>
-      ${vitalIconImg('xp', 'inline-icon')} Experiência ganha: <span>${xpGained.toLocaleString()}</span><br/>
-      ${goldIconImg('inline-icon')} Gold coletado: <span>${goldGained.toLocaleString()}</span>
+      💀 ${t('hunt.creaturesSlain')}: <span>${kills.toLocaleString()}</span><br/>
+      ${vitalIconImg('xp', 'inline-icon')} ${t('hunt.xpGained')}: <span>${xpGained.toLocaleString()}</span><br/>
+      ${goldIconImg('inline-icon')} ${t('hunt.goldCollected')}: <span>${goldGained.toLocaleString()}</span>
     </div>
   `);
 }
@@ -313,7 +313,7 @@ export function renderBattleList() {
   if (!el) return;
   const pack = getCurrentPack() || [];
   const dead = getRecentDead() || [];
-  if (!pack.length && !dead.length) { el.innerHTML = '<div class="battle-list-empty">Sem criaturas.</div>'; return; }
+  if (!pack.length && !dead.length) { el.innerHTML = `<div class="battle-list-empty">${t('battle.noCreatures')}</div>`; return; }
   const now = Date.now();
   const rows = pack.map((m, i) => battleListEntry({
     defKey: m.defKey, name: `${i === 0 ? '⚔️ ' : ''}${m.name}`,

@@ -10,9 +10,10 @@ import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
 import { ZONES, MONSTERS } from '../domain/bestiary.js?v=127';
 import { isRelicId } from '../domain/items.js?v=125';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=125';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=125';
+import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=125';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
 import { gainXp } from './huntUseCases.js?v=125';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
@@ -74,6 +75,13 @@ export function loadGame() {
   // indefinido. O bônus efetivo (bonusPct) já vive na própria relíquia, então
   // o poder de itens antigos não muda — só o rótulo/cor.
   G.relics.forEach(r => { if (LEGACY_RARITY_MAP[r.rarity]) r.rarity = LEGACY_RARITY_MAP[r.rarity]; });
+  // migração: divisões da Arena viraram nomes em inglês (Bronze/Silver/Gold/...
+  // — ver domain/progression.js: LEGACY_ARENA_DIVISION_MAP). Sem isso, quem já
+  // resgatou a recompensa de uma divisão em português conseguiria resgatar de
+  // novo sob o nome novo.
+  if (Array.isArray(G.arenaDivisionsClaimed)) {
+    G.arenaDivisionsClaimed = G.arenaDivisionsClaimed.map(d => LEGACY_ARENA_DIVISION_MAP[d] || d);
+  }
   // migração defensiva: um slot de equipamento apontando pra uma relíquia que
   // não existe mais em G.relics (save corrompido/editado à mão) travaria o
   // slot pra sempre — solta o slot em vez de propagar o id fantasma.
@@ -140,11 +148,11 @@ export function applyOfflineProgress() {
   gainXp(xpGained);
 
   const hours = Math.floor(cappedSec / 3600), minutes = Math.floor((cappedSec % 3600) / 60);
-  emit(EVENTS.OFFLINE_PROGRESS, { zoneName: zone.name, zoneMainMonster: zone.monsters[0], hours, minutes, kills, xpGained, goldGained });
+  emit(EVENTS.OFFLINE_PROGRESS, { zoneName: t(zone.name), zoneMainMonster: zone.monsters[0], hours, minutes, kills, xpGained, goldGained });
 }
 
 export function confirmReset() {
-  if (confirm('Tem certeza? Todo o progresso será perdido!')) {
+  if (confirm(t('persistence.resetConfirm'))) {
     clearState();
     location.reload();
   }

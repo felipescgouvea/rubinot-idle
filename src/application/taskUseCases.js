@@ -7,15 +7,16 @@ import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { gainXp } from './huntUseCases.js?v=125';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 export function startTask(monsterId, required) {
   if (G.activeTask) {
-    emit(EVENTS.NOTIFY, { msg: 'Só uma task ativa por vez (como no RubinOT). Cancele a atual primeiro.', type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('tasks.onlyOneActive'), type: 'error' });
     return;
   }
   G.activeTask = { monster: monsterId, required, started: Date.now() };
   G.taskKills[monsterId] = G.taskKills[monsterId] || 0;
-  emit(EVENTS.NOTIFY, { msg: `Task iniciada: ${required}x ${MONSTERS[monsterId].name}`, type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('tasks.started', { required, monster: MONSTERS[monsterId].name }), type: 'success' });
   emit(EVENTS.TASKS_PANEL);
   saveGame();
 }
@@ -36,8 +37,8 @@ export function checkTaskProgress() {
     gainXp(xpReward);
     G.rubini += rcReward;
     bumpMissionProgress('tasks', 1);
-    emit(EVENTS.NOTIFY, { msg: `${firstTime ? '🟢 1ª VEZ! ' : '🔴 '}Task completa! +${goldReward} 💰, +${xpReward} XP, +${rcReward} RC`, type: 'success' });
-    emit(EVENTS.LOG, `<span class="${firstTime ? 'log-heal' : 'log-loot'}">📜 Task ${MONSTERS[monster].name} completa${firstTime ? ' (bônus de primeira vez!)' : ''} — próxima task da sala desbloqueada.</span>`);
+    emit(EVENTS.NOTIFY, { msg: t(firstTime ? 'tasks.completeFirstTime' : 'tasks.completeRepeat', { gold: goldReward, xp: xpReward, rc: rcReward }), type: 'success' });
+    emit(EVENTS.LOG, `<span class="${firstTime ? 'log-heal' : 'log-loot'}">${t(firstTime ? 'tasks.logCompleteFirstTime' : 'tasks.logComplete', { monster: MONSTERS[monster].name })}</span>`);
     G.taskKills[monster] = 0;
     G.activeTask = null;
     emit(EVENTS.TASKS_PANEL);
@@ -50,7 +51,7 @@ export function checkTaskProgress() {
 export function cancelTask() {
   G.activeTask = null;
   emit(EVENTS.TASKS_PANEL);
-  emit(EVENTS.NOTIFY, { msg: 'Tarefa cancelada.', type: 'error' });
+  emit(EVENTS.NOTIFY, { msg: t('tasks.cancelled'), type: 'error' });
   saveGame();
 }
 

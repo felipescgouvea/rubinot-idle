@@ -8,11 +8,12 @@ import { TRAINABLE_SKILLS, triesPerMinuteFor } from '../domain/training.js?v=125
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { skillIconImg } from './shared.js?v=125';
 import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 export function renderTrainingSection() {
   const el = document.getElementById('training-body');
   if (!el) return;
-  if (!G.vocation) { el.innerHTML = '<p class="muted">Escolha uma vocação para treinar.</p>'; return; }
+  if (!G.vocation) { el.innerHTML = `<p class="muted">${t('training.chooseVocation')}</p>`; return; }
 
   if (G.trainingSkill) {
     const s = TIBIA_SKILLS[G.trainingSkill];
@@ -22,24 +23,24 @@ export function renderTrainingSection() {
         <div class="training-active-info">
           ${skillIconImg(G.trainingSkill, s.icon, 'training-skill-icon')}
           <div>
-            <div class="training-active-title">🏋️ Treinando ${s.name}</div>
-            <div class="muted">+${rate} tentativas/min · continua enquanto você está fora (até 8h). Iniciar uma caçada encerra o treino.</div>
+            <div class="training-active-title">🏋️ ${t('training.trainingSkill', { skill: s.name })}</div>
+            <div class="muted">${t('training.rateInfo', { rate })}</div>
           </div>
         </div>
-        <button class="btn-small danger" onclick="stopTraining()">⏹ Encerrar Treino</button>
+        <button class="btn-small danger" onclick="stopTraining()">⏹ ${t('training.stopTraining')}</button>
       </div>`;
     return;
   }
 
   el.innerHTML = `
-    <p class="muted">Escolha uma skill para treinar nas dummies. O treino roda em segundo plano (inclusive offline) e pausa a caçada.</p>
+    <p class="muted">${t('training.intro')}</p>
     <div class="training-skill-grid">
       ${TRAINABLE_SKILLS.map(id => {
         const s = TIBIA_SKILLS[id];
         return `<button class="training-skill-btn" onclick="startTraining('${id}')">
           ${skillIconImg(id, s.icon, 'training-skill-icon')}
           <span>${s.name}</span>
-          <small>Nv ${G.sk[id]?.lv ?? s.base}</small>
+          <small>${t('training.level', { lvl: G.sk[id]?.lv ?? s.base })}</small>
         </button>`;
       }).join('')}
     </div>`;

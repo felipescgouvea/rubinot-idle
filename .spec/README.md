@@ -42,6 +42,10 @@ Não é aqui que ficam nomes de função, estrutura de arquivos ou stack técnic
 
 - [40-progresso-offline-e-persistencia.md](40-progresso-offline-e-persistencia.md) — salvamento automático e ganhos enquanto o jogador está fora.
 
+## Interface
+
+- [41-idioma-e-localizacao.md](41-idioma-e-localizacao.md) — idioma padrão inglês, detecção automática pelo navegador e troca manual em Configurações.
+
 ## Regras Transversais
 
 - [90-regras-de-negocio-gerais.md](90-regras-de-negocio-gerais.md) — regras que atravessam todas as áreas, incluindo os **4 princípios de fidelidade a Tibia/RubinOT**.

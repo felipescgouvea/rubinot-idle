@@ -7,11 +7,13 @@ import { RARITY_TIERS } from '../domain/rarity.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from '../application/saveGameUseCase.js?v=125';
 import { openModal, itemIconImg, goldIconImg } from './shared.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
 // Rótulos e conjunto de atributos comparáveis entre peças de equipamento.
-const STAT_LABEL = { atk: 'ATK', wandDmg: 'DANO', distanceBonus: 'DIST', def: 'DEF', magic: 'MAGIC', heal: 'HEAL', mana: 'MANA', dmg: 'DMG', spd: 'SPD' };
+const STAT_LABEL_KEYS = { atk: 'inventory.statAtk', wandDmg: 'inventory.statWandDmg', distanceBonus: 'inventory.statDist', def: 'inventory.statDef', magic: 'inventory.statMagic', heal: 'inventory.statHeal', mana: 'inventory.statMana', dmg: 'inventory.statDmg', spd: 'inventory.statSpd' };
+const statLabel = s => t(STAT_LABEL_KEYS[s]);
 const COMPARE_STATS = ['atk', 'wandDmg', 'distanceBonus', 'def', 'magic', 'spd'];
 
 // Comparativo de status ao equipar: mostra, pra cada atributo relevante, o valor
@@ -29,9 +31,9 @@ function statCompareHtml(newItem, slotType, alreadyEquipped = false) {
     const cls = d > 0 ? 'stat-up' : d < 0 ? 'stat-down' : 'stat-same';
     const arrow = (current && !isEquippedItself) ? `${cv} → ${nv}` : `${nv}`;
     const delta = (current && !isEquippedItself && d !== 0) ? ` <span class="${cls}">(${d > 0 ? '+' : ''}${d})</span>` : '';
-    return `<div class="stat-cmp-row"><span class="stat-cmp-label">${STAT_LABEL[s]}</span><span class="stat-cmp-val">${arrow}${delta}</span></div>`;
+    return `<div class="stat-cmp-row"><span class="stat-cmp-label">${statLabel(s)}</span><span class="stat-cmp-val">${arrow}${delta}</span></div>`;
   }).join('');
-  const head = isEquippedItself ? 'Equipado' : current ? `Comparar com: ${current.name}` : 'Nenhum item equipado no slot';
+  const head = isEquippedItself ? t('inventory.equipped') : current ? t('inventory.compareWith', { name: current.name }) : t('inventory.noItemInSlot');
   return `<div class="stat-cmp"><div class="stat-cmp-head">${head}</div>${rows}</div>`;
 }
 
@@ -65,10 +67,10 @@ function renderAutoSellControls() {
   if (!el) return;
   const as = G.autoSell || { enabled: false, maxValue: 50 };
   el.innerHTML = `<div class="autosell-row">
-    <label class="autosell-toggle"><input type="checkbox" ${as.enabled ? 'checked' : ''} onchange="setAutoSell(this.checked)" /> 🧹 Auto-vender lixo</label>
+    <label class="autosell-toggle"><input type="checkbox" ${as.enabled ? 'checked' : ''} onchange="setAutoSell(this.checked)" /> 🧹 ${t('inventory.autoSellLabel')}</label>
     <span class="autosell-max">≤ <input type="number" min="0" class="autosell-input" value="${as.maxValue}" onchange="setAutoSellMax(this.value)" /> ${goldIconImg('inline-icon')}</span>
   </div>
-  <div class="muted autosell-hint">Vende na hora itens de material (misc) até esse valor, sem lotar a bag.</div>`;
+  <div class="muted autosell-hint">${t('inventory.autoSellHint')}</div>`;
 }
 
 export function renderInventory() {
@@ -118,7 +120,7 @@ export function renderInventory() {
     div.className = 'inv-item relic-item';
     div.style.borderColor = tier.color;
     div.style.boxShadow = `0 0 9px ${tier.color}99`;
-    div.innerHTML = `<div class="item-icon">${itemIconImg(relic.itemId, 'item-icon')}</div><div class="item-name">${base.name}</div><div class="relic-tier-badge" style="color:${tier.color}">${tier.name}</div>`;
+    div.innerHTML = `<div class="item-icon">${itemIconImg(relic.itemId, 'item-icon')}</div><div class="item-name">${base.name}</div><div class="relic-tier-badge" style="color:${tier.color}">${t(tier.name)}</div>`;
     div.onclick = () => openRelicModal(relic.id);
     grid.appendChild(div);
   });
@@ -137,12 +139,12 @@ export function openRelicModal(relicId) {
   const sellPrice = Math.round(base.sell * (1 + relic.bonusPct * 2));
   openModal(`
     <h3>${itemIconImg(relic.itemId)} ${base.name}</h3>
-    <p style="color:${tier.color};font-weight:700">Relíquia ${tier.name}</p>
+    <p style="color:${tier.color};font-weight:700">${t('inventory.relicTier', { tier: t(tier.name) })}</p>
     ${EQUIPPABLE_TYPES.includes(base.type) ? statCompareHtml(resolved, base.type, equipped) : ''}
-    <p style="margin-top:8px; color:#6272a4; font-size:12px">Venda: ${sellPrice} ${goldIconImg('inline-icon')}</p>
-    ${!equipped ? `<button onclick="equipRelic('${relic.id}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Equipar</button>` : ''}
-    ${equipped ? `<button onclick="unequipItem('${relic.id}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Desequipar</button>` : ''}
-    <button onclick="sellRelic('${relic.id}')" style="margin-top:6px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Vender (${sellPrice} ${goldIconImg('inline-icon')})</button>
+    <p style="margin-top:8px; color:#6272a4; font-size:12px">${t('inventory.sellLabel')} ${sellPrice} ${goldIconImg('inline-icon')}</p>
+    ${!equipped ? `<button onclick="equipRelic('${relic.id}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('inventory.equip')}</button>` : ''}
+    ${equipped ? `<button onclick="unequipItem('${relic.id}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('inventory.unequip')}</button>` : ''}
+    <button onclick="sellRelic('${relic.id}')" style="margin-top:6px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('inventory.sellFor', { price: sellPrice, icon: goldIconImg('inline-icon') })}</button>
   `);
 }
 
@@ -154,25 +156,26 @@ export function openItemModal(itemId) {
   const equipped = Object.values(G.equipment).includes(itemId);
   // Equipável: mostra o COMPARATIVO de status com o que está no slot. Demais
   // itens (consumíveis/materiais): só a lista simples de atributos.
-  const simpleStats = ['heal', 'mana', 'dmg'].filter(s => item[s]).map(s => `<span>${STAT_LABEL[s]} +${item[s]}</span>`).join(' | ');
+  const simpleStats = ['heal', 'mana', 'dmg'].filter(s => item[s]).map(s => `<span>${statLabel(s)} +${item[s]}</span>`).join(' | ');
   const statsHtml = isEquippable ? statCompareHtml(item, item.type, equipped) : `<div class="item-detail-stats">${simpleStats}</div>`;
   openModal(`
     <h3>${itemIconImg(itemId)} ${item.name}</h3>
-    <p class="muted" style="font-size:12px">Qtd: ${qty}</p>
+    <p class="muted" style="font-size:12px">${t('inventory.qtyLabel', { qty })}</p>
     ${statsHtml}
-    <p style="margin-top:8px; color:#6272a4; font-size:12px">Venda: ${item.sell} ${goldIconImg('inline-icon')}</p>
-    ${isConsumable ? `<button onclick="useItem('${itemId}')" style="margin-top:8px;background:#3a7bd5;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Usar</button>` : ''}
-    ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">Equipar</button>` : ''}
-    ${equipped ? `<button onclick="unequipItem('${itemId}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Desequipar</button>` : ''}
-    <button onclick="sellItem('${itemId}')" style="margin-top:6px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Vender (${item.sell} ${goldIconImg('inline-icon')})</button>
-    ${qty > 1 ? `<button onclick="sellAllItem('${itemId}')" style="margin-top:6px;background:#27ae60;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">Vender Todos (${qty}x — ${item.sell * qty} ${goldIconImg('inline-icon')})</button>` : ''}
+    <p style="margin-top:8px; color:#6272a4; font-size:12px">${t('inventory.sellLabel')} ${item.sell} ${goldIconImg('inline-icon')}</p>
+    ${isConsumable ? `<button onclick="useItem('${itemId}')" style="margin-top:8px;background:#3a7bd5;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('inventory.use')}</button>` : ''}
+    ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('inventory.equip')}</button>` : ''}
+    ${equipped ? `<button onclick="unequipItem('${itemId}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('inventory.unequip')}</button>` : ''}
+    <button onclick="sellItem('${itemId}')" style="margin-top:6px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('inventory.sellFor', { price: item.sell, icon: goldIconImg('inline-icon') })}</button>
+    ${qty > 1 ? `<button onclick="sellAllItem('${itemId}')" style="margin-top:6px;background:#27ae60;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('inventory.sellAllFor', { qty, total: item.sell * qty, icon: goldIconImg('inline-icon') })}</button>` : ''}
   `);
 }
 
 // Ícone-fantasma de cada slot vazio, ao estilo Tibia (silhueta acinzentada do
 // que vai ali) — o CSS deixa em cinza/baixa opacidade (ver .equip-slot-ghost).
 const SLOT_PLACEHOLDER = { weapon: '🗡️', armor: '🧥', shield: '🛡️', helmet: '⛑️', ammo: '🏹', ring: '💍', legs: '👖', boots: '🥾' };
-const SLOT_LABEL = { weapon: 'Arma', armor: 'Armadura', shield: 'Escudo', helmet: 'Elmo', ammo: 'Munição', ring: 'Anel', legs: 'Calças', boots: 'Botas' };
+const SLOT_LABEL_KEYS = { weapon: 'inventory.slotWeapon', armor: 'inventory.slotArmor', shield: 'inventory.slotShield', helmet: 'inventory.slotHelmet', ammo: 'inventory.slotAmmo', ring: 'inventory.slotRing', legs: 'inventory.slotLegs', boots: 'inventory.slotBoots' };
+const slotLabel = slot => t(SLOT_LABEL_KEYS[slot]);
 
 export function renderEquipmentSlots() {
   const areas = document.querySelectorAll('.equipment-slots');
@@ -193,7 +196,7 @@ export function renderEquipmentSlots() {
     // Munição: mostra a QUANTIDADE num contador no slot (ela sai da Bag ao ser
     // equipada, então é o único lugar que mostra quantas flechas/virotes restam).
     const ammoQty = slot === 'ammo' && item ? (G.inventory[slotValue] || 0) : 0;
-    const title = item ? `${item.name}${relic && tier ? ` — ${tier.name}` : ''}${slot === 'ammo' ? ` (${ammoQty})` : ''}` : SLOT_LABEL[slot];
+    const title = item ? `${item.name}${relic && tier ? ` — ${t(tier.name)}` : ''}${slot === 'ammo' ? ` (${ammoQty})` : ''}` : slotLabel(slot);
     return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}"${style} title="${title}" onclick="${clickTarget}">
       ${item
         ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>${slot === 'ammo' ? `<div class="equip-slot-ammo-qty">${ammoQty}</div>` : ''}`
@@ -205,8 +208,8 @@ export function renderEquipmentSlots() {
   // inventário (que abre à direita — ver toggleBackpack / index.html). Clique
   // esquerdo faz o mesmo, por conveniência.
   const bagId = G.backpack || 'bag';
-  const bagName = (ITEMS[bagId] && ITEMS[bagId].name) || 'Bag';
-  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="${bagName} — botão direito abre/fecha a Bag"
+  const bagName = (ITEMS[bagId] && ITEMS[bagId].name) || t('inventory.bagFallbackName');
+  const backpackHtml = `<div class="equip-slot slot-backpack filled" title="${t('inventory.bagHintTitle', { name: bagName })}"
       onclick="toggleBackpack()" oncontextmenu="event.preventDefault(); toggleBackpack(); return false;">
       <div class="equip-slot-icon">${itemIconImg(bagId, 'equip-slot-icon')}</div>
     </div>`;

@@ -1,15 +1,16 @@
 // Painel de Configurações (⚙️): resume num só lugar informações e opções que
 // hoje ficam espalhadas pelo jogo — conta logada, status do save (local +
-// nuvem) e o auto-vender lixo (que só existia dentro da Bag). Não introduz
-// estado novo: reaproveita G.autoSell e setAutoSell/setAutoSellMax (mesmas
-// funções da Bag, ver ui/inventoryAndEquipmentPanel.js) e G.lastSave (grava-
-// do em cada saveGame, ver application/saveGameUseCase.js).
+// nuvem), o idioma da interface e o auto-vender lixo (que só existia dentro
+// da Bag). Não introduz estado novo: reaproveita G.autoSell e setAutoSell/
+// setAutoSellMax (mesmas funções da Bag, ver ui/inventoryAndEquipmentPanel.js)
+// e G.lastSave (gravado em cada saveGame, ver application/saveGameUseCase.js).
 import { G } from '../application/gameStore.js?v=125';
 import { currentUser } from '../infrastructure/authClient.js?v=125';
 import { goldIconImg, openModal } from './shared.js?v=125';
+import { t, getLocale, LOCALE_NAMES } from '../i18n/i18n.js?v=125';
 
 function fmtLastSave() {
-  if (!G.lastSave) return 'ainda não salvo nesta sessão';
+  if (!G.lastSave) return t('settings.neverSavedThisSession');
   const d = new Date(G.lastSave);
   const p = n => String(n).padStart(2, '0');
   return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
@@ -30,31 +31,40 @@ function gameVersion() {
 export function openSettingsPanel() {
   const user = currentUser();
   const as = G.autoSell || { enabled: false, maxValue: 50 };
+  const locale = getLocale();
+  const langBtns = Object.entries(LOCALE_NAMES)
+    .map(([code, label]) => `<button class="btn-small${code === locale ? ' active-lang' : ''}" onclick="setLocale('${code}')">${label}</button>`)
+    .join('');
   openModal(`
-    <h3>⚙️ Configurações</h3>
+    <h3>⚙️ ${t('settings.title')}</h3>
 
     <div class="settings-section">
-      <h4>Conta</h4>
-      <p class="settings-row">👤 ${user?.email || 'não logado'}</p>
-      <button class="btn-small danger" onclick="closeModal(); logout()">Sair da conta</button>
+      <h4>${t('settings.account')}</h4>
+      <p class="settings-row">👤 ${user?.email || t('settings.notLoggedIn')}</p>
+      <button class="btn-small danger" onclick="closeModal(); logout()">${t('settings.signOut')}</button>
     </div>
 
     <div class="settings-section">
-      <h4>Save</h4>
-      <p class="settings-row">Salva local a cada 30s · envia pra nuvem ~8s após cada mudança.</p>
-      <p class="settings-row">Último save local: <strong>${fmtLastSave()}</strong></p>
-      <button class="btn-small" onclick="saveGame(); openSettingsPanel()">💾 Salvar agora</button>
+      <h4>${t('settings.language')}</h4>
+      <div class="settings-lang-row">${langBtns}</div>
     </div>
 
     <div class="settings-section">
-      <h4>Auto-vender lixo <span class="muted">(itens de material na Bag)</span></h4>
+      <h4>${t('settings.save')}</h4>
+      <p class="settings-row">${t('settings.saveDesc')}</p>
+      <p class="settings-row">${t('settings.lastSave', { time: `<strong>${fmtLastSave()}</strong>` })}</p>
+      <button class="btn-small" onclick="saveGame(); openSettingsPanel()">💾 ${t('settings.saveNow')}</button>
+    </div>
+
+    <div class="settings-section">
+      <h4>${t('settings.autoSell')} <span class="muted">${t('settings.autoSellDesc')}</span></h4>
       <div class="autosell-row">
-        <label class="autosell-toggle"><input type="checkbox" ${as.enabled ? 'checked' : ''} onchange="setAutoSell(this.checked)" /> 🧹 Vender automaticamente</label>
+        <label class="autosell-toggle"><input type="checkbox" ${as.enabled ? 'checked' : ''} onchange="setAutoSell(this.checked)" /> 🧹 ${t('settings.autoSellToggle')}</label>
         <span class="autosell-max">≤ <input type="number" min="0" class="autosell-input" value="${as.maxValue}" onchange="setAutoSellMax(this.value)" /> ${goldIconImg('inline-icon')}</span>
       </div>
-      <p class="muted settings-hint">Vende na hora itens de material até esse valor de venda, sem lotar a bag.</p>
+      <p class="muted settings-hint">${t('settings.autoSellHint')}</p>
     </div>
 
-    <p class="settings-version muted">Rubinot Idle · build ${gameVersion()}</p>
+    <p class="settings-version muted">${t('settings.build', { v: gameVersion() })}</p>
   `);
 }

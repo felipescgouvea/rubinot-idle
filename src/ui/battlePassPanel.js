@@ -3,6 +3,7 @@ import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=125';
 import { currentMissions } from '../application/battlePassUseCases.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 function bpRewardIcon(r) {
   if (r.type === 'item') return itemIconImg(r.itemId);
@@ -21,14 +22,14 @@ function renderBpMissions() {
     const claimed = G.bpMissionClaimed.includes(m.id);
     const done = progress >= m.goal;
     return `<div class="bp-mission ${claimed ? 'claimed' : ''}">
-      <div class="bp-mission-name">${m.name}</div>
+      <div class="bp-mission-name">${t(m.name)}</div>
       <div class="bp-xp-row">
         <span style="font-size:11px;color:var(--muted)">${progress}/${m.goal}</span>
         <div class="bp-xp-bar-track" style="height:10px"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
         <span style="font-size:11px;color:var(--muted)">+${m.xp} XP</span>
       </div>
       <button class="bp-claim-btn" style="margin-top:6px" onclick="claimMissionReward('${m.id}')" ${(!done || claimed) ? 'disabled' : ''}>
-        ${claimed ? '✓ Coletada' : done ? 'Coletar' : 'Em progresso'}
+        ${claimed ? `✓ ${t('battlepass.claimed')}` : done ? t('battlepass.claim') : t('battlepass.inProgress')}
       </button>
     </div>`;
   }).join('');
@@ -39,13 +40,13 @@ export function renderBattlePassPanel() {
   const pct = Math.round((xpInTier / BP_XP_PER_TIER) * 100);
 
   document.getElementById('bp-progress-area').innerHTML = `
-    <div><strong>Tier Atual: <span style="color:var(--accent)">${G.bpTier}</span></strong></div>
+    <div><strong>${t('battlepass.currentTier', { tier: `<span style="color:var(--accent)">${G.bpTier}</span>` })}</strong></div>
     <div class="bp-xp-row">
       <span style="font-size:12px;color:var(--muted)">${xpInTier}/${BP_XP_PER_TIER} XP</span>
       <div class="bp-xp-bar-track"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
       <span style="font-size:12px;color:var(--muted)">${pct}%</span>
     </div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px">XP do Battle Pass ganho ao matar monstros — e mais XP completando as missões diárias abaixo.</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">${t('battlepass.xpHint')}</div>
   `;
 
   renderBpMissions();
@@ -55,11 +56,11 @@ export function renderBattlePassPanel() {
     const claimed = G.bpClaimed.includes(r.tier);
     const available = G.bpTier >= r.tier && !claimed;
     return `<div class="bp-reward ${claimed ? 'claimed' : ''} ${available ? 'available' : ''}">
-      <div class="bp-reward-tier">Tier ${r.tier}</div>
+      <div class="bp-reward-tier">${t('battlepass.tierLabel', { tier: r.tier })}</div>
       <div class="bp-reward-icon">${bpRewardIcon(r)}</div>
-      <div class="bp-reward-name">${r.name}</div>
+      <div class="bp-reward-name">${t(r.name)}</div>
       <button class="bp-claim-btn" onclick="claimBpReward(${r.tier})" ${!available ? 'disabled' : ''}>
-        ${claimed ? '✓' : available ? 'Coletar' : '🔒'}
+        ${claimed ? '✓' : available ? t('battlepass.claim') : '🔒'}
       </button>
     </div>`;
   }).join('');

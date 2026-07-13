@@ -17,6 +17,7 @@ import { isStaminaEnabled } from '../application/adminUseCases.js?v=125';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=125';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -34,7 +35,7 @@ export async function createCharacter(voc) {
   const input = document.getElementById('char-name-input');
   const name = (input?.value || '').trim();
   if (name.length < 3 || name.length > 20) {
-    emit(EVENTS.NOTIFY, { msg: 'Escolha um nome de personagem (3 a 20 caracteres).', type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('character.nameRequired'), type: 'error' });
     input?.focus();
     return;
   }
@@ -279,8 +280,8 @@ export function renderBars() {
   // XP mostra o número atual/próximo E a porcentagem (igual HP/mana mostram números).
   const xpNext = XP_TABLE[G.level - 1];
   document.getElementById('xp-text').textContent = (G.level < 100 && xpNext)
-    ? `${formatNum(G.xp)}/${formatNum(xpNext)} · ${xpPct}%`
-    : 'MAX';
+    ? t('character.xpFractionPct', { xp: formatNum(G.xp), xpNext: formatNum(xpNext), pct: xpPct })
+    : t('character.max');
   renderPlayerBattleSide();
 }
 
@@ -298,11 +299,11 @@ export function renderHeaderStats() {
     const st = getHuntStats();
     huntPill.style.display = 'inline-block';
     huntPill.className = `stat-pill hunt-status-pill ${st.hunting ? 'on' : 'off'}`;
-    huntPill.textContent = `${st.hunting ? '🟢 Caçando' : '⏸ Parado'} · ${fmtDuration(st.elapsedMs)}`;
+    huntPill.textContent = `${st.hunting ? `🟢 ${t('character.hunting')}` : `⏸ ${t('character.stopped')}`} · ${fmtDuration(st.elapsedMs)}`;
     if (isStaminaEnabled()) {
       staminaPill.style.display = 'inline-block';
       staminaPill.className = `stat-pill stamina-pill tier-${staminaTier(G.stamina)}`;
-      staminaPill.textContent = `🔋 Stamina ${formatStamina(G.stamina)} · XP ×${staminaXpMult(G.stamina)}`;
+      staminaPill.textContent = `🔋 ${t('character.staminaStatus', { stamina: formatStamina(G.stamina), mult: staminaXpMult(G.stamina) })}`;
     } else {
       staminaPill.style.display = 'none';
     }
@@ -329,7 +330,7 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
     document.getElementById('player-mana-fill').style.width = '0%';
     document.getElementById('player-mana-label').textContent = '--/--';
     document.getElementById('player-xp-fill').style.width = '0%';
-    document.getElementById('player-xp-label').textContent = '-- XP';
+    document.getElementById('player-xp-label').textContent = t('character.noXp');
     return;
   }
 
@@ -341,7 +342,7 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
 
   const maxHp = getMaxHp();
   const pct = Math.max(0, Math.round((G.hp / maxHp) * 100));
-  document.getElementById('player-battle-name').textContent = `${VOCATIONS[G.vocation].name} — Lv ${G.level}`;
+  document.getElementById('player-battle-name').textContent = t('character.battleNameLevel', { name: VOCATIONS[G.vocation].name, level: G.level });
   const hpFill = document.getElementById('player-hp-fill');
   hpFill.style.width = pct + '%';
   applyHpState(hpFill, pct);
@@ -355,7 +356,7 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
   const xpNext = XP_TABLE[G.level - 1];
   const xpPct = (G.level < 100 && xpNext) ? Math.max(0, Math.round((G.xp / xpNext) * 100)) : 100;
   document.getElementById('player-xp-fill').style.width = xpPct + '%';
-  document.getElementById('player-xp-label').textContent = (G.level < 100 && xpNext) ? `${G.xp}/${xpNext} XP` : 'MAX';
+  document.getElementById('player-xp-label').textContent = (G.level < 100 && xpNext) ? t('character.xpFraction', { xp: G.xp, xpNext }) : t('character.max');
 }
 
 export function wireCharacterPanelEvents() {

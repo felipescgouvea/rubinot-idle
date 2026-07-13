@@ -19,6 +19,7 @@ import { openModal, closeModal } from './shared.js?v=125';
 import { monsterSpriteImg } from './huntPanel.js?v=125';
 import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=125';
 import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -41,22 +42,22 @@ function renderPreySection() {
   el.innerHTML = slots.map((slot, i) => {
     if (isPreyActive(slot, now)) {
       const m = MONSTERS[slot.monster];
-      const t = PREY_BONUS_TYPES[slot.bonusType];
+      const bt = PREY_BONUS_TYPES[slot.bonusType];
       const stars = '★'.repeat(slot.stars) + '☆'.repeat(5 - slot.stars);
       return `<div class="prey-slot active">
         <div class="prey-slot-monster">${monsterSpriteImg(slot.monster, 'prey-monster-icon')}<span>${m.name}</span></div>
-        <div class="prey-bonus">${t.icon} +${Math.round(slot.bonusPct * 100)}% ${t.name}</div>
+        <div class="prey-bonus">${bt.icon} +${Math.round(slot.bonusPct * 100)}% ${t(bt.name)}</div>
         <div class="prey-stars">${stars}</div>
         <div class="prey-timer">⏳ ${fmtRemaining(slot.expires - now)}</div>
         <div class="prey-actions">
-          <button class="btn-small" onclick="rerollPrey(${i})" title="Custa ${PREY_REROLL_COST.toLocaleString()} gold">🎲 Rerolar</button>
+          <button class="btn-small" onclick="rerollPrey(${i})" title="${t('bestiary.rerollTooltip', { cost: PREY_REROLL_COST.toLocaleString() })}">🎲 ${t('bestiary.reroll')}</button>
           <button class="btn-small danger" onclick="clearPrey(${i})">✕</button>
         </div>
       </div>`;
     }
     return `<div class="prey-slot empty">
-      <div class="prey-slot-empty-label">🐾 Slot ${i + 1} livre</div>
-      <button class="btn-blue" onclick="openPreySelect(${i})">Escolher Presa</button>
+      <div class="prey-slot-empty-label">🐾 ${t('bestiary.slotFree', { n: i + 1 })}</div>
+      <button class="btn-blue" onclick="openPreySelect(${i})">${t('bestiary.choosePrey')}</button>
     </div>`;
   }).join('');
 }
@@ -68,9 +69,9 @@ export function openPreySelect(slotIndex) {
     ? mons.map(id => `<button class="prey-pick" onclick="pickPrey(${slotIndex},'${id}')">
         ${monsterSpriteImg(id, 'prey-monster-icon')}<span>${MONSTERS[id].name}</span>
       </button>`).join('')
-    : '<p class="muted">Você ainda não enfrentou nenhuma criatura. Cace um pouco primeiro!</p>';
-  openModal(`<h3>🐾 Escolher Presa — Slot ${slotIndex + 1}</h3>
-    <p class="muted">O bônus (dano, XP ou loot) e a intensidade (★) são sorteados ao travar a presa, válidos por 2h.</p>
+    : `<p class="muted">${t('bestiary.noCreaturesYet')}</p>`;
+  openModal(`<h3>🐾 ${t('bestiary.choosePreySlot', { n: slotIndex + 1 })}</h3>
+    <p class="muted">${t('bestiary.preyPickHint')}</p>
     <div class="prey-pick-grid">${list}</div>`);
 }
 
@@ -84,7 +85,7 @@ function renderBestiarySection() {
   const el = document.getElementById('bestiary-list');
   if (!el) return;
   const mons = encounteredMonsters().sort((a, b) => (G.killCounters[b] || 0) - (G.killCounters[a] || 0));
-  if (!mons.length) { el.innerHTML = '<p class="muted">Cace criaturas para preencher seu bestiário e ganhar Charm Points.</p>'; return; }
+  if (!mons.length) { el.innerHTML = `<p class="muted">${t('bestiary.huntToFill')}</p>`; return; }
   el.innerHTML = mons.map(id => {
     const kills = G.killCounters[id] || 0;
     const done = bestiaryStagesCompleted(kills);
@@ -95,15 +96,18 @@ function renderBestiarySection() {
     const chip = (e, cls) => `<span class="elem-chip ${cls}" title="${ELEMENT_LABEL[e]}">${ELEMENT_ICON[e]}</span>`;
     const elemLine = (prof.weak.length || prof.resist.length || prof.immune.length)
       ? `<div class="bestiary-elems">
-          ${prof.weak.length ? `<span class="elem-tag weak">Fraco:</span>${prof.weak.map(e => chip(e, 'weak')).join('')}` : ''}
-          ${prof.resist.length ? `<span class="elem-tag resist">Resiste:</span>${prof.resist.map(e => chip(e, 'resist')).join('')}` : ''}
-          ${prof.immune.length ? `<span class="elem-tag immune">Imune:</span>${prof.immune.map(e => chip(e, 'immune')).join('')}` : ''}
+          ${prof.weak.length ? `<span class="elem-tag weak">${t('bestiary.weak')}</span>${prof.weak.map(e => chip(e, 'weak')).join('')}` : ''}
+          ${prof.resist.length ? `<span class="elem-tag resist">${t('bestiary.resist')}</span>${prof.resist.map(e => chip(e, 'resist')).join('')}` : ''}
+          ${prof.immune.length ? `<span class="elem-tag immune">${t('bestiary.immune')}</span>${prof.immune.map(e => chip(e, 'immune')).join('')}` : ''}
         </div>`
       : '';
+    const progressText = next
+      ? t('bestiary.stageProgressWithNext', { stage: stageLabel, kills: kills.toLocaleString(), nextKills: next.kills.toLocaleString() })
+      : t('bestiary.stageProgressComplete', { stage: stageLabel, kills: kills.toLocaleString() });
     return `<div class="bestiary-entry ${done >= BESTIARY_STAGES.length ? 'complete' : ''}">
       <div class="bestiary-monster">${monsterSpriteImg(id, 'prey-monster-icon')}<span>${MONSTERS[id].name}</span></div>
       <div class="bestiary-progress">
-        <div class="bestiary-stage">Etapa ${stageLabel} · ${kills.toLocaleString()} mortes${next ? ` / ${next.kills.toLocaleString()}` : ' · ✅ completo'}</div>
+        <div class="bestiary-stage">${progressText}</div>
         <div class="task-progress-bar-track"><div class="task-progress-bar" style="width:${pct}%"></div></div>
         ${elemLine}
       </div>
@@ -123,18 +127,18 @@ function renderCharmsSection() {
     const affordable = (G.charmPoints || 0) >= c.cost;
     return `<div class="charm-card ${isEquipped ? 'equipped' : ''}">
       <div class="charm-head"><span class="charm-icon">${c.icon}</span>
-        <div><div class="charm-name">${c.name} <small>(${c.tibia})</small></div>
-        <div class="charm-desc">${c.desc}</div></div></div>
+        <div><div class="charm-name">${c.name}</div>
+        <div class="charm-desc">${t(c.desc)}</div></div></div>
       ${isUnlocked
-        ? `<button class="btn-small ${isEquipped ? 'danger' : 'btn-blue'}" onclick="toggleCharmEquipped('${id}')">${isEquipped ? 'Desequipar' : 'Equipar'}</button>`
-        : `<button class="btn-small" ${affordable ? '' : 'disabled'} onclick="unlockCharm('${id}')">🔓 ${c.cost} CP</button>`}
+        ? `<button class="btn-small ${isEquipped ? 'danger' : 'btn-blue'}" onclick="toggleCharmEquipped('${id}')">${isEquipped ? t('bestiary.unequip') : t('bestiary.equip')}</button>`
+        : `<button class="btn-small" ${affordable ? '' : 'disabled'} onclick="unlockCharm('${id}')">🔓 ${t('bestiary.unlockCost', { cost: c.cost })}</button>`}
     </div>`;
   }).join('');
 }
 
 export function renderBestiaryTab() {
   const cpEl = document.getElementById('charm-points-display');
-  if (cpEl) cpEl.innerHTML = `<span class="charm-points-badge">✨ ${(G.charmPoints || 0).toLocaleString()} Charm Points</span> · ${(G.charmsEquipped || []).length}/${CHARM_EQUIP_SLOTS} charms equipados`;
+  if (cpEl) cpEl.innerHTML = `<span class="charm-points-badge">✨ ${t('bestiary.charmPointsBadge', { n: (G.charmPoints || 0).toLocaleString() })}</span> · ${t('bestiary.charmsEquippedCount', { equipped: (G.charmsEquipped || []).length, total: CHARM_EQUIP_SLOTS })}`;
   renderPreySection();
   renderBestiarySection();
   renderCharmsSection();

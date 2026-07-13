@@ -5,6 +5,7 @@ import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyRewa
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal } from './shared.js?v=125';
 import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Atualiza o selo "!" do botão do header conforme há ou não resgate hoje.
 export function renderDailyBadge() {
@@ -19,19 +20,19 @@ export function openDailyReward() {
   const cards = DAILY_REWARDS.map(r => {
     const isToday = state.canClaim && r.day === ((state.streak - 1) % DAILY_CYCLE) + 1;
     return `<div class="daily-card ${isToday ? 'today' : ''}">
-      <div class="daily-day">Dia ${r.day}</div>
+      <div class="daily-day">${t('daily.day', { day: r.day })}</div>
       <div class="daily-icon">${r.icon}</div>
       <div class="daily-name">${r.name}</div>
     </div>`;
   }).join('');
   openModal(`
-    <h3>🎁 Recompensa Diária</h3>
-    <p class="muted">Volte todo dia para manter a sequência. Faltar um dia reinicia o ciclo de 7 dias.</p>
+    <h3>🎁 ${t('daily.title')}</h3>
+    <p class="muted">${t('daily.intro')}</p>
     <div class="daily-grid">${cards}</div>
     <div class="daily-claim-row">
       ${state.canClaim
-        ? `<button class="btn-blue daily-claim-btn" onclick="claimDailyReward()">Resgatar dia ${state.streak}: ${todayReward.icon} ${todayReward.name}</button>`
-        : `<span class="muted">✅ Recompensa de hoje já resgatada (sequência: dia ${state.streak}). Volte amanhã!</span>`}
+        ? `<button class="btn-blue daily-claim-btn" onclick="claimDailyReward()">${t('daily.claimDay', { day: state.streak, icon: todayReward.icon, name: todayReward.name })}</button>`
+        : `<span class="muted">✅ ${t('daily.alreadyClaimed', { day: state.streak })}</span>`}
     </div>`);
 }
 

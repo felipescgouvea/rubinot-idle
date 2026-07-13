@@ -10,12 +10,13 @@ import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal, rubiniIconImg } from './shared.js?v=125';
+import { t } from '../i18n/i18n.js?v=125';
 
 // Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
 // parte do save (não é uma decisão de jogo, é só onde o clique da paleta vai).
 let activeColorChannel = 'head';
 
-const CHANNEL_LABEL = { head: 'Cabeça', body: 'Corpo', legs: 'Pernas', feet: 'Pés' };
+const CHANNEL_LABEL = { head: t('outfit.channelHead'), body: t('outfit.channelBody'), legs: t('outfit.channelLegs'), feet: t('outfit.channelFeet') };
 
 function currentOutfitId() {
   return G.outfit || (G.vocation ? VOCATION_DEFAULT_OUTFIT[G.vocation] : null);
@@ -46,17 +47,17 @@ function customizeSection() {
   if (!outfitId) return '';
   const colors = G.outfitColors;
   return `
-    <h3 style="margin-bottom:10px">🎨 Customizar Aparência</h3>
+    <h3 style="margin-bottom:10px">🎨 ${t('outfit.customizeTitle')}</h3>
     <div class="outfit-customize-row">
       <div class="outfit-preview-wrap">
         <canvas id="outfit-preview-canvas" width="64" height="64" class="outfit-preview-canvas"></canvas>
       </div>
       <div class="outfit-addon-toggles">
         <label class="outfit-addon-toggle">
-          <input type="checkbox" ${G.outfitAddon1 ? 'checked' : ''} onchange="toggleOutfitAddon(1)" /> Addon 1
+          <input type="checkbox" ${G.outfitAddon1 ? 'checked' : ''} onchange="toggleOutfitAddon(1)" /> ${t('outfit.addonLabel', { n: 1 })}
         </label>
         <label class="outfit-addon-toggle">
-          <input type="checkbox" ${G.outfitAddon2 ? 'checked' : ''} onchange="toggleOutfitAddon(2)" /> Addon 2
+          <input type="checkbox" ${G.outfitAddon2 ? 'checked' : ''} onchange="toggleOutfitAddon(2)" /> ${t('outfit.addonLabel', { n: 2 })}
         </label>
       </div>
     </div>
@@ -86,15 +87,15 @@ export function renderOutfitPicker() {
 
   const html = `
     <div class="outfit-gender-toggle">
-      <button class="task-btn ${gender === 'male' ? 'done' : ''}" onclick="setOutfitGender('male')">♂ Masculino</button>
-      <button class="task-btn ${gender === 'female' ? 'done' : ''}" onclick="setOutfitGender('female')">♀ Feminino</button>
+      <button class="task-btn ${gender === 'male' ? 'done' : ''}" onclick="setOutfitGender('male')">♂ ${t('outfit.male')}</button>
+      <button class="task-btn ${gender === 'female' ? 'done' : ''}" onclick="setOutfitGender('female')">♀ ${t('outfit.female')}</button>
     </div>
     <div class="outfit-picker-layout">
       <div class="outfit-picker-col">
         ${customizeSection()}
       </div>
       <div class="outfit-picker-col">
-        <h3 style="margin-bottom:10px">👕 Escolher Outfit</h3>
+        <h3 style="margin-bottom:10px">👕 ${t('outfit.chooseOutfit')}</h3>
         <div class="outfit-gallery">
           ${OUTFITS.map(o => {
             const owned = o.free || G.outfitsOwned.includes(o.id);
@@ -102,9 +103,9 @@ export function renderOutfitPicker() {
             return `<div class="outfit-card ${wearing ? 'wearing' : ''}">
               <div class="outfit-card-sprite-wrap">${outfitCardSprite(o.id, gender)}</div>
               <div class="outfit-card-name">${o.name}</div>
-              <div class="outfit-card-price">${o.free ? 'Grátis' : owned ? 'Possui' : `${o.price} ${rubiniIconImg('inline-icon')} RC`}</div>
+              <div class="outfit-card-price">${o.free ? t('outfit.free') : owned ? t('outfit.owned') : `${o.price} ${rubiniIconImg('inline-icon')} RC`}</div>
               <button class="skill-upgrade-btn" onclick="${owned ? `selectOutfit('${o.id}')` : `buyOutfit('${o.id}')`}">
-                ${wearing ? '✅ Vestindo' : owned ? 'Vestir' : 'Comprar'}
+                ${wearing ? `✅ ${t('outfit.wearing')}` : owned ? t('outfit.wear') : t('outfit.buy')}
               </button>
             </div>`;
           }).join('')}

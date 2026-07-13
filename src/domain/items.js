@@ -5,10 +5,10 @@ export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila
   // (ver domain/gameState.js: backpack), não é equipável nos slots de atributo.
   bag:            { name: 'Bag', icon: '🎒', type: 'container', sell: 1 },
-  bones:          { name: 'Ossos', icon: '🦴', type: 'misc', sell: 1 },
-  minotaur_horn:  { name: 'Chifre Minotauro', icon: '📯', type: 'misc', sell: 80 },
-  chain_armor:    { name: 'Armadura de Correntes', icon: '⛓️', type: 'armor', def: 8, sell: 300, rare: false },
-  guardian_halberd:{ name: 'Alabarda Guardiã', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 35, sell: 800, rare: true },
+  bones:          { name: 'Bones', icon: '🦴', type: 'misc', sell: 1 },
+  minotaur_horn:  { name: 'Minotaur Horn', icon: '📯', type: 'misc', sell: 80 },
+  chain_armor:    { name: 'Chain Armor', icon: '⛓️', type: 'armor', def: 8, sell: 300, rare: false },
+  guardian_halberd:{ name: 'Guardian Halberd', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 35, sell: 800, rare: true },
   amazon_armor:   { name: 'Amazon Armor', icon: '🥊', type: 'armor', def: 12, sell: 500, rare: true },
   cheese:         { name: 'Cheese', icon: '🧀', type: 'food', heal: 10, sell: 2 },
   meat:           { name: 'Meat', icon: '🍖', type: 'food', heal: 20, sell: 3 },
@@ -55,19 +55,19 @@ export const ITEMS = {
   bolt:           { name: 'Bolt', icon: '🏹', type: 'ammo', atk: 27, sell: 1 },
   sniper_arrow:   { name: 'Sniper Arrow', icon: '🏹', type: 'ammo', atk: 20, sell: 2 },
   power_bolt:     { name: 'Power Bolt', icon: '🏹', type: 'ammo', atk: 33, sell: 5 },
-  gold_coin:      { name: 'Moeda de Ouro', icon: '🪙', type: 'currency', sell: 1 },
-  dragon_scale:   { name: 'Escama de Dragão', icon: '🐉', type: 'misc', sell: 200 },
-  dragon_ham:     { name: 'Presunto de Dragão', icon: '🍖', type: 'food', heal: 120, sell: 150 },
-  dragonbone_staff:{ name: 'Cajado Osso de Dragão', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 42, sell: 5000, rare: true },
-  royal_helmet:   { name: 'Elmo Real', icon: '👑', type: 'helmet', def: 20, sell: 8000, rare: true },
-  life_crystal:   { name: 'Cristal de Vida', icon: '💎', type: 'misc', sell: 400 },
-  demon_dust:     { name: 'Pó de Demônio', icon: '✨', type: 'misc', sell: 500 },
-  demon_shield:   { name: 'Escudo Demoníaco', icon: '😈', type: 'shield', def: 30, sell: 15000, rare: true },
-  platinum_coin:  { name: 'Moeda de Platina', icon: '⚪', type: 'currency', sell: 100 },
-  titan_axe:      { name: 'Machado Titã', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 55, sell: 30000, rare: true },
-  death_ring:     { name: 'Anel da Morte', icon: '💍', type: 'ring', def: 5, magic: 10, sell: 12000, rare: true },
-  necromancer_shield:{ name: 'Escudo Necromante', icon: '🛡️', type: 'shield', def: 28, magic: 8, sell: 18000, rare: true },
-  tentacle_piece: { name: 'Tentáculo de N\'Zoth', icon: '🦑', type: 'misc', sell: 500 },
+  gold_coin:      { name: 'Gold Coin', icon: '🪙', type: 'currency', sell: 1 },
+  dragon_scale:   { name: 'Dragon Scale', icon: '🐉', type: 'misc', sell: 200 },
+  dragon_ham:     { name: 'Dragon Ham', icon: '🍖', type: 'food', heal: 120, sell: 150 },
+  dragonbone_staff:{ name: 'Dragonbone Staff', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 42, sell: 5000, rare: true },
+  royal_helmet:   { name: 'Royal Helmet', icon: '👑', type: 'helmet', def: 20, sell: 8000, rare: true },
+  life_crystal:   { name: 'Life Crystal', icon: '💎', type: 'misc', sell: 400 },
+  demon_dust:     { name: 'Demon Dust', icon: '✨', type: 'misc', sell: 500 },
+  demon_shield:   { name: 'Demon Shield', icon: '😈', type: 'shield', def: 30, sell: 15000, rare: true },
+  platinum_coin:  { name: 'Platinum Coin', icon: '⚪', type: 'currency', sell: 100 },
+  titan_axe:      { name: 'Titan Axe', icon: '🪓', type: 'weapon', weaponType: 'axe', atk: 55, sell: 30000, rare: true },
+  death_ring:     { name: 'Death Ring', icon: '💍', type: 'ring', def: 5, magic: 10, sell: 12000, rare: true },
+  necromancer_shield:{ name: 'Necromancer Shield', icon: '🛡️', type: 'shield', def: 28, magic: 8, sell: 18000, rare: true },
+  tentacle_piece: { name: 'N\'Zoth Tentacle Piece', icon: '🦑', type: 'misc', sell: 500 },
 
   // --- Kit inicial por vocação (entregue automaticamente ao escolher a vocação) ---
   dagger:         { name: 'Dagger', icon: '🗡️', type: 'weapon', weaponType: 'sword', atk: 6, sell: 6 },
@@ -164,25 +164,30 @@ export function canVocationEquip(item, vocation) {
   if (item.type === 'ammo') return vocation === 'paladin'; // só o paladino usa munição
   return true; // demais peças (armadura/elmo/anel/calças/botas/escudo) livres
 }
-// Motivo do bloqueio (pra mensagem), ou null se pode equipar.
-export function equipBlockReason(item, vocation) {
+// Motivo do bloqueio (pra mensagem), ou null se pode equipar. `t` é o
+// tradutor (ver i18n/i18n.js) injetado por quem chama — este arquivo é dado
+// puro (sem DOM/localStorage), então não importa i18n.js diretamente.
+export function equipBlockReason(item, vocation, t) {
   if (canVocationEquip(item, vocation)) return null;
-  if (item.type === 'weapon') return 'sua vocação não usa esse tipo de arma';
-  if (item.type === 'ammo') return 'só o paladino usa munição';
-  return 'não pode equipar';
+  if (item.type === 'weapon') return t('items.blockWrongWeapon');
+  if (item.type === 'ammo') return t('items.blockAmmoOnly');
+  return t('items.blockCannotEquip');
 }
 
 // Requisito de nível/vocação de uma poção, fiel ao Tibia (ver reqLevel/reqVoc
 // nas poções acima). Retorna null se PODE usar, ou uma string com o motivo do
 // bloqueio (pra mostrar ao jogador). Poções sem requisito (Health/Mana Potion)
 // nunca bloqueiam. Usado no uso manual (inventoryUseCases), no auto-uso do RTC
-// (huntUseCases) e na exibição (loja/RTC).
+// (huntUseCases) e na exibição (loja/RTC). `t` é o tradutor injetado (ver acima).
 const VOC_DISPLAY = { knight: 'Knight', paladin: 'Paladin', sorcerer: 'Sorcerer', druid: 'Druid' };
-export function potionUseBlockReason(item, vocation, level) {
+// `t` é opcional: quando ausente (ver canUsePotion abaixo, que só quer saber
+// SE está bloqueado, não a mensagem), retorna um valor truthy qualquer em vez
+// de chamar t() — evita exigir o tradutor de quem só precisa do booleano.
+export function potionUseBlockReason(item, vocation, level, t) {
   if (!item) return null;
-  if (item.reqLevel && level < item.reqLevel) return `Requer nível ${item.reqLevel}.`;
+  if (item.reqLevel && level < item.reqLevel) return t ? t('items.reqLevel', { level: item.reqLevel }) : true;
   if (item.reqVoc && vocation && !item.reqVoc.includes(vocation)) {
-    return `Só ${item.reqVoc.map(v => VOC_DISPLAY[v] || v).join('/')} podem usar.`;
+    return t ? t('items.reqVocOnly', { vocs: item.reqVoc.map(v => VOC_DISPLAY[v] || v).join('/') }) : true;
   }
   return null;
 }
@@ -191,11 +196,12 @@ export function canUsePotion(item, vocation, level) {
 }
 
 // Rótulo estático do requisito de uma poção (pra loja/RTC), ex.:
-// "Nível 50 · Knight/Paladin". Vazio quando não há requisito.
-export function potionReqLabel(item) {
+// "Level 50 · Knight/Paladin". Vazio quando não há requisito. `t` é o
+// tradutor injetado (ver acima).
+export function potionReqLabel(item, t) {
   if (!item || (!item.reqLevel && !item.reqVoc)) return '';
   const parts = [];
-  if (item.reqLevel) parts.push(`Nível ${item.reqLevel}`);
+  if (item.reqLevel) parts.push(t('items.levelLabel', { level: item.reqLevel }));
   if (item.reqVoc) parts.push(item.reqVoc.map(v => VOC_DISPLAY[v] || v).join('/'));
   return parts.join(' · ');
 }

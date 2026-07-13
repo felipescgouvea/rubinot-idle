@@ -59,7 +59,12 @@ export function isTaskUnlocked(room, index, level, taskCompletion) {
   return (taskCompletion[prev.m] || 0) >= 1;
 }
 
-export const ARENA_DIVISIONS = ['Bronze', 'Prata', 'Ouro', 'Platina', 'Diamante', 'Mestre', 'Grão-Mestre'];
+// Nomes de divisão em inglês nos dois idiomas de propósito — são termos
+// padrão de ranking competitivo (Bronze/Silver/Gold/...), universais mesmo em
+// clientes de jogo em português (como em League of Legends, Valorant etc).
+// Não persiste em G (G só guarda arenaPoints; a divisão é sempre recalculada
+// por arenaDivisionForPoints), então renomear aqui não quebra save antigo.
+export const ARENA_DIVISIONS = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'Grandmaster'];
 
 export function arenaDivisionForPoints(points) {
   const index = Math.min(ARENA_DIVISIONS.length - 1, Math.floor(points / 100));
@@ -73,28 +78,40 @@ export const ARENA_DAILY_LIMIT = 15;
 // Recompensa única ao alcançar cada divisão pela primeira vez (não repete,
 // mesmo se cair de divisão depois) — dá um motivo extra pra subir, além dos
 // pontos em si.
+// Migração: os nomes de divisão eram em português (ver comentário acima de
+// ARENA_DIVISIONS) — saves antigos têm essas strings em G.arenaDivisionsClaimed
+// (ver application/persistenceUseCases.js). Sem isso, quem já resgatou a
+// divisão antiga conseguiria resgatar de novo sob o novo nome.
+export const LEGACY_ARENA_DIVISION_MAP = {
+  Prata: 'Silver', Ouro: 'Gold', Platina: 'Platinum', Diamante: 'Diamond',
+  Mestre: 'Master', 'Grão-Mestre': 'Grandmaster',
+};
+
 export const ARENA_DIVISION_REWARDS = {
   Bronze: { type: 'gold', amount: 300 },
-  Prata: { type: 'gold', amount: 800 },
-  Ouro: { type: 'rubini', amount: 40 },
-  Platina: { type: 'rubini', amount: 100 },
-  Diamante: { type: 'item', itemId: 'crown_helmet' },
-  Mestre: { type: 'item', itemId: 'crown_shield' },
-  'Grão-Mestre': { type: 'rubini', amount: 500 },
+  Silver: { type: 'gold', amount: 800 },
+  Gold: { type: 'rubini', amount: 40 },
+  Platinum: { type: 'rubini', amount: 100 },
+  Diamond: { type: 'item', itemId: 'crown_helmet' },
+  Master: { type: 'item', itemId: 'crown_shield' },
+  Grandmaster: { type: 'rubini', amount: 500 },
 };
 
 export const BP_XP_PER_TIER = 500;
 
+// `name` dos tiers de item é chave de tradução (ver ui/battlePassPanel.js e
+// i18n/locales/*.js: battlepass.reward.*) — os de gold/rubini já são só
+// número+unidade, iguais nos dois idiomas, então ficam como string literal.
 export const BP_REWARDS = [
   { tier: 1,  icon: '💰', name: '500 Gold', type: 'gold', amount: 500 },
   { tier: 3,  icon: '💰', name: '1000 Gold', type: 'gold', amount: 1000 },
   { tier: 5,  icon: '💎', name: '50 Rubini Coins', type: 'rubini', amount: 50 },
-  { tier: 7,  icon: '🗡️', name: 'Espada Sazonal', type: 'item', itemId: 'guardian_halberd' },
+  { tier: 7,  icon: '🗡️', name: 'battlepass.reward.seasonalSword', type: 'item', itemId: 'guardian_halberd' },
   { tier: 10, icon: '💰', name: '2000 Gold', type: 'gold', amount: 2000 },
   { tier: 12, icon: '💎', name: '100 Rubini Coins', type: 'rubini', amount: 100 },
   { tier: 15, icon: '💎', name: '200 Rubini Coins', type: 'rubini', amount: 200 },
-  { tier: 18, icon: '🛡️', name: 'Armadura Sazonal', type: 'item', itemId: 'amazon_armor' },
-  { tier: 20, icon: '👑', name: 'Elmo Real', type: 'item', itemId: 'royal_helmet' },
+  { tier: 18, icon: '🛡️', name: 'battlepass.reward.seasonalArmor', type: 'item', itemId: 'amazon_armor' },
+  { tier: 20, icon: '👑', name: 'battlepass.reward.royalHelmet', type: 'item', itemId: 'royal_helmet' },
 ];
 
 export function bpTierForXp(bpXp) {
@@ -105,16 +122,18 @@ export function bpTierForXp(bpXp) {
 // monstros, ligadas a ações que o jogador já faz no jogo (caçar, tasks,
 // Arena) — não é busywork inventado à parte. `track` casa com uma chave de
 // G.bpMissionProgress (ver application/battlePassUseCases.js).
+// `name` é chave de tradução (ver ui/battlePassPanel.js e i18n/locales/*.js:
+// battlepass.mission.<id>) — texto original deste jogo, não canon de Tibia.
 export const BP_MISSION_POOL = [
-  { id: 'kill_50',   name: 'Mate 50 criaturas',        goal: 50,   track: 'kills',     xp: 150 },
-  { id: 'kill_150',  name: 'Mate 150 criaturas',       goal: 150,  track: 'kills',     xp: 350 },
-  { id: 'kill_300',  name: 'Mate 300 criaturas',       goal: 300,  track: 'kills',     xp: 600 },
-  { id: 'gold_1000', name: 'Ganhe 1000 gold caçando',  goal: 1000, track: 'gold',      xp: 150 },
-  { id: 'gold_5000', name: 'Ganhe 5000 gold caçando',  goal: 5000, track: 'gold',      xp: 350 },
-  { id: 'task_1',    name: 'Complete 1 Linked Task',   goal: 1,    track: 'tasks',     xp: 250 },
-  { id: 'task_2',    name: 'Complete 2 Linked Tasks',  goal: 2,    track: 'tasks',     xp: 450 },
-  { id: 'arena_1',   name: 'Vença 1 luta na Arena',    goal: 1,    track: 'arenaWins', xp: 200 },
-  { id: 'arena_3',   name: 'Vença 3 lutas na Arena',   goal: 3,    track: 'arenaWins', xp: 450 },
+  { id: 'kill_50',   name: 'battlepass.mission.kill_50',   goal: 50,   track: 'kills',     xp: 150 },
+  { id: 'kill_150',  name: 'battlepass.mission.kill_150',  goal: 150,  track: 'kills',     xp: 350 },
+  { id: 'kill_300',  name: 'battlepass.mission.kill_300',  goal: 300,  track: 'kills',     xp: 600 },
+  { id: 'gold_1000', name: 'battlepass.mission.gold_1000', goal: 1000, track: 'gold',      xp: 150 },
+  { id: 'gold_5000', name: 'battlepass.mission.gold_5000', goal: 5000, track: 'gold',      xp: 350 },
+  { id: 'task_1',    name: 'battlepass.mission.task_1',    goal: 1,    track: 'tasks',     xp: 250 },
+  { id: 'task_2',    name: 'battlepass.mission.task_2',    goal: 2,    track: 'tasks',     xp: 450 },
+  { id: 'arena_1',   name: 'battlepass.mission.arena_1',   goal: 1,    track: 'arenaWins', xp: 200 },
+  { id: 'arena_3',   name: 'battlepass.mission.arena_3',   goal: 3,    track: 'arenaWins', xp: 450 },
 ];
 
 export const BP_MISSIONS_PER_DAY = 3;

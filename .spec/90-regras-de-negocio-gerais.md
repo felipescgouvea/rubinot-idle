@@ -51,6 +51,14 @@ Todo sistema, fórmula ou comportamento de jogo novo deve ter um equivalente rea
 - **Exceção deliberada confirmada:** o sistema de **Relíquias** (itens de equipamento com modificador de raridade — ver [20-itens-e-equipamento.md](20-itens-e-equipamento.md)) não tem um equivalente 1:1 no Tibia oficial nem no RubinOT. Foi pedido explicitamente pelo dono do produto como uma liberdade de design consciente para este jogo idle; a analogia real mais próxima é o sistema de **Imbuements** do Tibia, que também aplica um bônus de atributo a um item de equipamento já existente. Registrado aqui como exceção, não como pendência — não precisa de revisão futura.
 - **Pontos a revisar (correspondência com o real ainda não confirmada por esta especificação):** o sistema de "Mundos" com bônus fixos de XP/Gold por mundo, a progressão de Battle Pass sazonal, o ranking global de Highscores dentro do próprio jogo idle, e o **Boss Rush** (desafiar um boss já desbloqueado diretamente, fora do bestiário comum da zona — ver [35-boss-rush.md](35-boss-rush.md); a analogia mais próxima é o Bosstiary real do Tibia, mas a correspondência exata não foi confirmada). Convém confirmar com o dono do produto se esses sistemas replicam algo real do RubinOT/Tibia ou se são liberdades de design assumidas conscientemente para este jogo idle — e, neste segundo caso, registrá-los aqui como exceção deliberada em vez de deixá-los como pendência.
 
+### Regra 4.1 — Todo nome exibido de criatura/item/magia é o nome real do Tibia
+
+O texto do nome mostrado ao jogador (não só a existência da criatura/item, já coberta pela Regra 1) deve ser o nome oficial em inglês do Tibia — o mesmo em qualquer idioma da interface (ver [41-idioma-e-localizacao.md](41-idioma-e-localizacao.md)).
+
+- **Por quê:** um nome traduzido ou inventado (ex.: um item chamado "Elmo Real" em vez de "Royal Helmet") quebra o reconhecimento imediato por quem já jogou Tibia — mesmo que o item em si seja fiel ao original.
+- **Resolvido:** auditoria completa encontrou e corrigiu itens, moedas (Gold Coin, Platinum Coin) e Charms com nome em português em vez do nome real de Tibia — incluindo os Charms, que já guardavam o nome real do Tibia num campo interno não exibido (`tibia`) enquanto mostravam um nome inventado em português como principal. Passaram a mostrar sempre o nome real.
+- **Conteúdo original deste jogo (não canônico de Tibia)** — nomes de dungeon/zona de caça, categorias de loja, missões do Battle Pass e descrições — não é abrangido por esta regra (não tem "nome real de Tibia" pra seguir); esse texto muda de idioma normalmente, como qualquer outro texto de interface.
+
 ### Regra 4 — Todo ícone deve existir em Tibia/RubinOT
 
 Todo ícone de interface (itens, slots de equipamento, moedas, skills, magias, configurações de RTC, mundos, outfits) deve usar arte extraída do Tibia ou do RubinOT — nunca emojis genéricos nem ícones de bibliotecas de terceiros.

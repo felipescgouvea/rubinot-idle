@@ -9,6 +9,7 @@ import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { monsterSpriteImg } from './huntPanel.js?v=125';
 import { openBattleModal } from './battleModal.js?v=125';
+import { t, getLocale } from '../i18n/i18n.js?v=125';
 
 function bossCard(zoneId, zone) {
   const boss = MONSTERS[zone.boss];
@@ -18,13 +19,13 @@ function bossCard(zoneId, zone) {
   const mult = bossTierMultiplier(tier);
   const auraClass = bossAuraClass(tier);
   const hp = Math.floor(boss.hp * mult);
-  return `<div class="zone-card ${auraClass} ${active ? 'active' : ''}" title="${boss.name} — ${zone.name} — Tier ${tier}">
+  return `<div class="zone-card ${auraClass} ${active ? 'active' : ''}" title="${t('bossrush.tierTitle', { name: boss.name, zone: t(zone.name), tier })}">
     <div class="zone-card-icon">${monsterSpriteImg(zone.boss, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${boss.name}</div>
-    <div class="zone-card-mults">${zone.name}</div>
-    <div class="zone-card-mults">${hp.toLocaleString('pt-BR')} HP</div>
-    <div class="zone-card-mults" style="font-weight:700">🔥 Tier ${tier}</div>
-    <button class="skill-upgrade-btn" onclick="challengeBoss('${zoneId}')">${active ? '⚔️ Desafiando…' : `💀 Desafiar Tier ${tier}`}</button>
+    <div class="zone-card-mults">${t(zone.name)}</div>
+    <div class="zone-card-mults">${hp.toLocaleString(getLocale() === 'pt' ? 'pt-BR' : 'en-US')} HP</div>
+    <div class="zone-card-mults" style="font-weight:700">🔥 ${t('bossrush.tierLabel', { tier })}</div>
+    <button class="skill-upgrade-btn" onclick="challengeBoss('${zoneId}')">${active ? `⚔️ ${t('bossrush.challenging')}` : `💀 ${t('bossrush.challengeTier', { tier })}`}</button>
   </div>`;
 }
 
@@ -35,15 +36,15 @@ export function renderBossRushPanel() {
 
   if (stopArea) {
     stopArea.innerHTML = isBossRushActive()
-      ? `<button class="btn-small danger" onclick="stopBossRushClick()">⏹ Sair do Boss Rush</button>`
+      ? `<button class="btn-small danger" onclick="stopBossRushClick()">⏹ ${t('bossrush.exit')}</button>`
       : '';
   }
 
-  if (!G.vocation) { grid.innerHTML = '<p class="muted">Escolha uma vocação primeiro.</p>'; return; }
+  if (!G.vocation) { grid.innerHTML = `<p class="muted">${t('bossrush.chooseVocationFirst')}</p>`; return; }
 
   const bosses = unlockedBossZones();
   if (bosses.length === 0) {
-    grid.innerHTML = '<p class="muted">Nenhum boss desbloqueado ainda — avance nas zonas de caça normais para desbloquear o primeiro.</p>';
+    grid.innerHTML = `<p class="muted">${t('bossrush.noBossesUnlocked')}</p>`;
     return;
   }
   grid.innerHTML = `<div class="zone-picker-gallery">${bosses.map(({ zoneId, zone }) => bossCard(zoneId, zone)).join('')}</div>`;
