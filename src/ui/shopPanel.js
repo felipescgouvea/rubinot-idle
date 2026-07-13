@@ -1,8 +1,8 @@
-import { G } from '../application/gameStore.js?v=115';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=115';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=115';
-import { on, EVENTS } from '../shared/eventBus.js?v=115';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=115';
+import { G } from '../application/gameStore.js?v=116';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=116';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=116';
+import { on, EVENTS } from '../shared/eventBus.js?v=116';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg } from './shared.js?v=116';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -22,6 +22,29 @@ function shopIconHtml(s) {
   return s.icon;
 }
 
+// Quantidade digitada por item da loja (poções/runas), sobrevive a
+// re-renders do painel — ver comentário em renderShopCard/buyArea.
+const shopQty = new Map();
+
+export function updateShopQty(id, value) {
+  shopQty.set(id, Math.max(1, Math.min(9999, Math.floor(Number(value) || 1))));
+}
+
+// Scroll horizontal sobre o campo ajusta a quantidade de 1 em 1, no lugar das
+// setinhas nativas do input number (que exigem clique preciso e só mudam 1
+// por clique). Cai pra deltaY quando o dispositivo não manda deltaX (mouse
+// comum sem scroll horizontal).
+export function scrollShopQty(e, id, input) {
+  e.preventDefault();
+  const delta = e.deltaX !== 0 ? e.deltaX : -e.deltaY;
+  const step = Math.sign(delta);
+  if (!step) return;
+  const current = Math.max(1, Math.min(9999, Math.floor(Number(input.value) || 1)));
+  const next = Math.max(1, Math.min(9999, current + step));
+  input.value = next;
+  shopQty.set(id, next);
+}
+
 function renderShopCard(s) {
   const isReal = s.currency === 'real';
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
@@ -34,11 +57,15 @@ function renderShopCard(s) {
   const statLine = reqLabel ? `${stats} · <span class="shop-req">🔒 ${reqLabel}</span>` : stats;
   const iconHtml = shopIconHtml(s);
   // Poções/runas podem ser compradas em quantidade: um seletor (input number,
-  // com setas/scroll) ao lado do Comprar. Equipamento/boost/outfit compram 1.
+  // ajustável via scroll horizontal) ao lado do Comprar. Equipamento/boost/outfit
+  // compram 1. A quantidade digitada fica em `shopQty` (fora do innerHTML) porque
+  // buyShopItem() reemite EVENTS.SHOP_PANEL, que recria este HTML do zero — sem
+  // isso o valor voltaria pra 1 a cada clique em "Comprar".
   const isBulk = s.type === 'item' && item && (item.type === 'potion' || item.type === 'rune');
+  const qtyVal = shopQty.get(s.id) || 1;
   const buyArea = isBulk
     ? `<div class="shop-buy-row">
-        <input type="number" class="shop-qty" min="1" value="1" title="Quantidade" onclick="event.stopPropagation()" />
+        <input type="number" class="shop-qty" min="1" max="9999" value="${qtyVal}" title="Quantidade — role o scroll sobre o campo pra ajustar" onclick="event.stopPropagation()" oninput="updateShopQty('${s.id}', this.value)" onwheel="scrollShopQty(event, '${s.id}', this)" />
         <button class="skill-upgrade-btn" onclick="buyShopItem('${s.id}', this.previousElementSibling.value)" ${!canAfford ? 'disabled' : ''}>
           ${canAfford ? 'Comprar' : 'Saldo insuficiente'}
         </button>

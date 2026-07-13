@@ -2026,7 +2026,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #boosted-card .boosted-sprite-img { max-height: 24px; max-width: 24px; }
 #boosted-card .boosted-name { font-size: 8px; line-height: 1.05; }
 
-/* Seletor de quantidade na loja (poções/runas): input number com setas ao lado do Comprar */
+/* Seletor de quantidade na loja (poções/runas): ajustável via scroll horizontal
+   sobre o campo, ao lado do Comprar. Setas nativas do input number ficam
+   escondidas — a interação é rolar o scroll, não clicar num botão direcional. */
 .shop-buy-row { display: flex; gap: 6px; align-items: stretch; }
 .shop-buy-row .skill-upgrade-btn { flex: 1; }
 .shop-qty {
@@ -2034,6 +2036,13 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   border: 1px solid var(--line-soft); border-radius: 6px;
   text-align: center; font-weight: 700; font-size: 13px;
   color: var(--ink); background: #fff;
+  cursor: ew-resize;
+  -moz-appearance: textfield;
+}
+.shop-qty::-webkit-outer-spin-button,
+.shop-qty::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 .shop-req { color: #b1341f; font-weight: 700; }
 
