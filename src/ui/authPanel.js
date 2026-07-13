@@ -2,7 +2,7 @@
 // de usuário logado no cabeçalho. Fala com o Supabase via infrastructure/
 // authClient.js. Enquanto não há sessão válida, o #auth-gate cobre a tela toda
 // e o jogo não inicia.
-import { signIn, signUp, signOut, currentUser, resendConfirmation } from '../infrastructure/authClient.js?v=122';
+import { signIn, signUp, signOut, currentUser, resendConfirmation } from '../infrastructure/authClient.js?v=123';
 
 // Callback disparado quando o login/cadastro dá certo (main.js liga o boot do
 // jogo aqui, depois de puxar o save da nuvem).
@@ -134,17 +134,15 @@ async function finishSuccess() {
   hideAuthGate();
 }
 
-// Indicador de usuário logado no cabeçalho (e-mail + sair).
+// Indicador de usuário logado no cabeçalho (só o e-mail — sair mora no
+// painel de Configurações agora, ver ui/settingsPanel.js).
 export function renderAuthUser() {
   const el = document.getElementById('auth-user');
   if (!el) return;
   const user = currentUser();
   el.innerHTML = user
-    ? `<span class="auth-user-email" title="${user.email || ''}">👤 ${user.email || 'conta'}</span>
-       <button class="btn-small" id="auth-logout-btn">Sair</button>`
+    ? `<span class="auth-user-email" title="${user.email || ''}">👤 ${user.email || 'conta'}</span>`
     : '';
-  const btn = document.getElementById('auth-logout-btn');
-  if (btn) btn.addEventListener('click', logout);
 }
 
 // Exportado (em vez de local) pra também ser chamado pelo botão "Sair da

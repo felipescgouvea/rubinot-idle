@@ -4,9 +4,9 @@
 // estado novo: reaproveita G.autoSell e setAutoSell/setAutoSellMax (mesmas
 // funções da Bag, ver ui/inventoryAndEquipmentPanel.js) e G.lastSave (grava-
 // do em cada saveGame, ver application/saveGameUseCase.js).
-import { G } from '../application/gameStore.js?v=122';
-import { currentUser } from '../infrastructure/authClient.js?v=122';
-import { goldIconImg, openModal } from './shared.js?v=122';
+import { G } from '../application/gameStore.js?v=123';
+import { currentUser } from '../infrastructure/authClient.js?v=123';
+import { goldIconImg, openModal } from './shared.js?v=123';
 
 function fmtLastSave() {
   if (!G.lastSave) return 'ainda não salvo nesta sessão';
@@ -53,11 +53,6 @@ export function openSettingsPanel() {
         <span class="autosell-max">≤ <input type="number" min="0" class="autosell-input" value="${as.maxValue}" onchange="setAutoSellMax(this.value)" /> ${goldIconImg('inline-icon')}</span>
       </div>
       <p class="muted settings-hint">Vende na hora itens de material até esse valor de venda, sem lotar a bag.</p>
-    </div>
-
-    <div class="settings-section">
-      <h4>Zona de perigo</h4>
-      <button class="btn-small danger" onclick="closeModal(); confirmReset()">🔄 Resetar progresso</button>
     </div>
 
     <p class="settings-version muted">Rubinot Idle · build ${gameVersion()}</p>
