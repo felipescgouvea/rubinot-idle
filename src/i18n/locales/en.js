@@ -123,6 +123,7 @@ export default {
 
   // ---- cities (domain/cities.js: blurb) ----
   'city.rookgaard': 'The rookie island — your first creatures.',
+  'city.dawnport': 'The former newbie island, now a training outpost across the strait.',
   'city.thais': "The kingdom's capital and its surroundings.",
   'city.abdendriel': 'The elven city hidden in the forest.',
   'city.carlin': 'The northern city — Amazons and bandits.',
@@ -139,10 +140,14 @@ export default {
   'city.ferumbras': "The archmage's lair — the end of the world.",
 
   // ---- hunting grounds / dungeons (domain/bestiary.js: ZONES[id].name) ----
-  'zone.rotworm_cave': 'Rotworm Cave',
-  'zone.sewer_rats': 'Rat Sewers',
-  'zone.goblin_village': 'Troll Cave',
-  'zone.swamp_slimes': 'Snake Marsh',
+  'zone.rat_nest': 'Rat Nest',
+  'zone.rat_cellar': 'Rat Cellar',
+  'zone.bug_hole': 'Bug Hole',
+  'zone.spider_den': 'Spider Den',
+  'zone.wolf_den': 'Wolf Den',
+  'zone.dawnport_outpost': 'Dawnport Outpost',
+  'zone.dawnport_orc_cave': 'Dawnport Orc Cave',
+  'zone.dawnport_crystal_dungeon': 'Dawnport Crystal Dungeon',
   'zone.dwarf_mines': 'Dwarf Mines',
   'zone.wolf_trail': 'Wolf Pack Trail',
   'zone.spider_burrow': 'Spider Burrow',
@@ -363,6 +368,7 @@ export default {
   'zonePicker.bonusZoneTooltip': "Has today's Bonus Zone",
   'zonePicker.bonusZoneBadge': 'Bonus of the Day',
   'zonePicker.cityStats': '{total} hunts · 🔓 {unlocked}',
+  'zonePicker.cityLevelLocked': 'Unlocks at level {level}',
   'zonePicker.backToCities': '← Cities',
   'zonePicker.cityFallback': 'City',
   'zonePicker.defeatBossFirst': 'Defeat the boss of {zone} first',

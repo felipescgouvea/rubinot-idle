@@ -1,6 +1,6 @@
 import { G } from './gameStore.js?v=126';
 import { BP_REWARDS, bpTierForXp, dailyMissionsFor } from '../domain/progression.js?v=125';
-import { ITEMS } from '../domain/items.js?v=132';
+import { ITEMS } from '../domain/items.js?v=134';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=126';

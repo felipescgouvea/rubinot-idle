@@ -1,5 +1,5 @@
 import { G } from '../application/gameStore.js?v=126';
-import { MONSTERS } from '../domain/bestiary.js?v=129';
+import { MONSTERS } from '../domain/bestiary.js?v=131';
 import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { monsterSpriteImg } from './huntPanel.js?v=126';

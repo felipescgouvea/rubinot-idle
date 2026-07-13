@@ -45,7 +45,7 @@ import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPic
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=127';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=125';
 import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=125';
-import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicker.js?v=125';
+import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicker.js?v=130';
 import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
 import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=125';
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=125';

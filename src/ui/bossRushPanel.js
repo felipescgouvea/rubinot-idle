@@ -4,7 +4,7 @@
 // caçada normal pra mostrar o combate (ver ui/battleModal.js) — é o mesmo
 // motor por baixo (ver application/bossRushUseCases.js).
 import { G } from '../application/gameStore.js?v=126';
-import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=129';
+import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=131';
 import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { monsterSpriteImg } from './huntPanel.js?v=126';

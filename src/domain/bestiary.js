@@ -11,12 +11,23 @@
 // UI (diferente de MONSTERS/ITEMS, cujo `name` é o nome real da criatura/item
 // em Tibia e nunca muda de idioma).
 export const ZONES = {
-  // --- Auroria (mundo inicial, sempre desbloqueado) ---
-  rotworm_cave:  { city: 'rookgaard', name: 'zone.rotworm_cave', icon: '🪱',  worldReq: 'auroria', monsters: ['rotworm', 'cave_rat'], goldMult: 1.0, xpMult: 1.0, theme: ['#5a4a35', '#2e2419'], boss: 'rotworm' },
-  sewer_rats:    { city: 'rookgaard', name: 'zone.sewer_rats', icon: '🐁',  worldReq: 'auroria', monsters: ['rat', 'bug'], goldMult: 1.02, xpMult: 1.02, theme: ['#4a4234', '#231f18'], boss: 'rat', requiresBossOf: 'rotworm_cave' },
-  goblin_village:{ city: 'rookgaard', name: 'zone.goblin_village', icon: '🧌',  worldReq: 'auroria', monsters: ['troll'], goldMult: 1.1, xpMult: 1.1, theme: ['#5c6b3a', '#33401f'], boss: 'troll', requiresBossOf: 'sewer_rats' },
-  swamp_slimes:  { city: 'rookgaard', name: 'zone.swamp_slimes', icon: '🟢',  worldReq: 'auroria', monsters: ['snake', 'slime'], goldMult: 1.2, xpMult: 1.15, theme: ['#4a6b3f', '#1f331b'], boss: 'snake', requiresBossOf: 'goblin_village' },
-  dwarf_mines:   { city: 'thais', name: 'zone.dwarf_mines', icon: '⛏️',  worldReq: 'auroria', monsters: ['dwarf', 'dwarf_soldier', 'dwarf_geomancer', 'dwarf_guard'], goldMult: 1.3, xpMult: 1.25, theme: ['#6b5a44', '#3a2f22'], boss: 'dwarf_guard', requiresBossOf: 'swamp_slimes' },
+  // --- Rookgaard (ilha inicial, sempre desbloqueada — única cidade disponível
+  // até o nível 8, ver domain/cities.js: ROOKGAARD_LEVEL_CAP). As 5 hunts
+  // seguem a progressão real de criaturas de Rookgaard no Tibia global (fonte:
+  // otland/forgottenserver), encadeadas por boss igual às demais cidades. ---
+  rat_nest:      { city: 'rookgaard', name: 'zone.rat_nest', icon: '🐁',  worldReq: 'auroria', monsters: ['rat'], goldMult: 1.0, xpMult: 1.0, theme: ['#4a4234', '#231f18'], boss: 'rat' },
+  rat_cellar:    { city: 'rookgaard', name: 'zone.rat_cellar', icon: '🐀',  worldReq: 'auroria', monsters: ['rat', 'cave_rat'], goldMult: 1.05, xpMult: 1.04, theme: ['#4a4234', '#231f18'], boss: 'cave_rat', requiresBossOf: 'rat_nest' },
+  bug_hole:      { city: 'rookgaard', name: 'zone.bug_hole', icon: '🐛',  worldReq: 'auroria', monsters: ['bug'], goldMult: 1.1, xpMult: 1.08, theme: ['#4a4234', '#2e2419'], boss: 'bug', requiresBossOf: 'rat_cellar' },
+  spider_den:    { city: 'rookgaard', name: 'zone.spider_den', icon: '🕷️',  worldReq: 'auroria', monsters: ['spider', 'poison_spider'], goldMult: 1.15, xpMult: 1.12, theme: ['#4a3a3a', '#201616'], boss: 'poison_spider', requiresBossOf: 'bug_hole' },
+  wolf_den:      { city: 'rookgaard', name: 'zone.wolf_den', icon: '🐺',  worldReq: 'auroria', monsters: ['wolf'], goldMult: 1.2, xpMult: 1.15, theme: ['#3d5c47', '#1a2b20'], boss: 'wolf', requiresBossOf: 'spider_den' },
+
+  // --- Dawnport (ilha inicial removida do Tibia global — travada até nível 8
+  // como qualquer outra cidade do mainland, ver domain/cities.js: isCityUnlocked) ---
+  dawnport_outpost:      { city: 'dawnport', name: 'zone.dawnport_outpost', icon: '🌅', worldReq: 'auroria', monsters: ['sacred_snake', 'rabbit', 'sheep', 'squirrel', 'deer', 'badger', 'mountain_troll', 'dawn_bat', 'muglex_clan_footman', 'muglex_clan_assassin'], goldMult: 1.05, xpMult: 1.05, theme: ['#c9a35c', '#8a6a30'], boss: 'muglex_clan_assassin' },
+  dawnport_orc_cave:     { city: 'dawnport', name: 'zone.dawnport_orc_cave', icon: '🏴', worldReq: 'auroria', monsters: ['brittle_skeleton', 'muglex_clan_scavenger', 'dawn_scorpion', 'troll_trained_salamander', 'troll_marauder', 'woodling', 'dawnfly', 'minotaur_bruiser', 'meadow_strider'], goldMult: 1.15, xpMult: 1.12, theme: ['#6b5a3f', '#332a1c'], boss: 'minotaur_bruiser', requiresBossOf: 'dawnport_outpost' },
+  dawnport_crystal_dungeon:{ city: 'dawnport', name: 'zone.dawnport_crystal_dungeon', icon: '🗿', worldReq: 'auroria', monsters: ['crazed_dwarf', 'dwarf_miner', 'scar_tribe_shaman', 'minotaur_occultist', 'scar_tribe_warrior', 'minotaur_poacher', 'lesser_fire_devil', 'salamander_trainer', 'juvenile_cyclops'], goldMult: 1.3, xpMult: 1.25, theme: ['#a9c9e0', '#4a6b85'], boss: 'juvenile_cyclops', requiresBossOf: 'dawnport_orc_cave' },
+
+  dwarf_mines:   { city: 'thais', name: 'zone.dwarf_mines', icon: '⛏️',  worldReq: 'auroria', monsters: ['dwarf', 'dwarf_soldier', 'dwarf_geomancer', 'dwarf_guard'], goldMult: 1.3, xpMult: 1.25, theme: ['#6b5a44', '#3a2f22'], boss: 'dwarf_guard', requiresBossOf: 'wolf_den' },
   wolf_trail:    { city: 'abdendriel', name: 'zone.wolf_trail', icon: '🐺',  worldReq: 'auroria', monsters: ['wolf', 'bear'], goldMult: 1.35, xpMult: 1.3, theme: ['#3d5c47', '#1a2b20'], boss: 'bear', requiresBossOf: 'dwarf_mines' },
   spider_burrow: { city: 'abdendriel', name: 'zone.spider_burrow', icon: '🕷️',  worldReq: 'auroria', monsters: ['spider', 'tarantula'], goldMult: 1.38, xpMult: 1.32, theme: ['#4a3a3a', '#201616'], boss: 'spider', requiresBossOf: 'wolf_trail' },
   elf_woods:     { city: 'abdendriel', name: 'zone.elf_woods', icon: '🧝', worldReq: 'auroria', monsters: ['elf', 'elf_scout', 'elf_arcanist'], goldMult: 1.4, xpMult: 1.35, theme: ['#3f7052', '#1e3d2b'], boss: 'elf', requiresBossOf: 'spider_burrow' },
@@ -269,6 +280,40 @@ export const MONSTERS = {
   draken_spellweaver:  { name: 'Draken Spellweaver', icon: '🪄', hp: 3200, atk: 250, def: 110, xp: 3100, gold: [1400,2000], loot: [['dragon_scale',0.25],['crystal_coin',0.3]], spells: [{ element: 'energy', min: 200, max: 450 }, { element: 'fire', min: 150, max: 350 }] },
   frazzlemaw:          { name: 'Frazzlemaw', icon: '🟤', hp: 4200, atk: 380, def: 90, xp: 3740, gold: [1600,2200], loot: [['demon_dust',0.3],['crystal_coin',0.3]], spells: [{ element: 'physical', min: 0, max: 350 }] },
   guzzlemaw:           { name: 'Guzzlemaw', icon: '🟫', hp: 7000, atk: 560, def: 95, xp: 6050, gold: [2400,3200], loot: [['demon_dust',0.35],['platinum_coin',0.6],['crystal_coin',0.35]], spells: [{ element: 'physical', min: 0, max: 500 }] },
+
+  // --- Criaturas exclusivas de Dawnport (ilha inicial removida do Tibia
+  // global, patch 15.12 — ver domain/cities.js: city 'dawnport'). Não estão
+  // no forgottenserver (engine genérica, sem o mapa de Dawnport), então hp/
+  // exp/armor vêm do TibiaWiki (Infobox Creature de cada uma); atk é o teto
+  // do dano de melee documentado (campo `abilities`, ex. {{Melee|0-12}}). ---
+  badger:              { name: 'Badger', icon: '🦡', hp: 23, atk: 12, def: 1, xp: 5, gold: [0,3], loot: [['badger_fur',0.4]] },
+  rabbit:              { name: 'Rabbit', icon: '🐇', hp: 15, atk: 0, def: 1, xp: 0, gold: [0,0], loot: [['cheese',0.2]] },
+  sheep:               { name: 'Sheep', icon: '🐑', hp: 20, atk: 1, def: 1, xp: 0, gold: [0,0], loot: [['wool',0.5]] },
+  squirrel:            { name: 'Squirrel', icon: '🐿️', hp: 20, atk: 0, def: 1, xp: 0, gold: [0,0], loot: [['acorn',0.6]] },
+  deer:                { name: 'Deer', icon: '🦌', hp: 25, atk: 1, def: 2, xp: 0, gold: [0,0], loot: [['antlers',0.3],['meat',0.4]] },
+  dawn_bat:            { name: 'Dawn Bat', icon: '🦇', hp: 30, atk: 8, def: 1, xp: 10, gold: [0,4], loot: [['bones',0.3]] },
+  mountain_troll:      { name: 'Mountain Troll', icon: '👹', hp: 30, atk: 9, def: 0, xp: 12, gold: [1,5], loot: [['bones',0.6],['leather_boots',0.05]] },
+  sacred_snake:        { name: 'Sacred Snake', icon: '🐍', hp: 10, atk: 8, def: 0, xp: 0, gold: [0,0], loot: [['meat',0.3]] },
+  muglex_clan_footman: { name: 'Muglex Clan Footman', icon: '🛡️', hp: 30, atk: 10, def: 0, xp: 24, gold: [1,6], loot: [['orc_tooth',0.3]], spells: [{ element: 'earth', min: 0, max: 10 }] },
+  muglex_clan_assassin:{ name: 'Muglex Clan Assassin', icon: '🗡️', hp: 45, atk: 12, def: 0, xp: 34, gold: [2,8], loot: [['orc_tooth',0.4],['spider_fangs',0.2]] },
+  muglex_clan_scavenger:{ name: 'Muglex Clan Scavenger', icon: '🏴', hp: 60, atk: 15, def: 7, xp: 37, gold: [2,9], loot: [['orc_tooth',0.4]] },
+  brittle_skeleton:    { name: 'Brittle Skeleton', icon: '🦴', hp: 50, atk: 17, def: 2, xp: 35, gold: [3,10], loot: [['bones',0.9]], spells: [{ element: 'death', min: 5, max: 15 }] },
+  dawn_scorpion:       { name: 'Dawn Scorpion', icon: '🦂', hp: 65, atk: 20, def: 11, xp: 45, gold: [3,10], loot: [['spider_fangs',0.35]] },
+  troll_trained_salamander:{ name: 'Troll-Trained Salamander', icon: '🦎', hp: 70, atk: 13, def: 1, xp: 23, gold: [2,8], loot: [['bones',0.4]], spells: [{ element: 'earth', min: 4, max: 6 }] },
+  troll_marauder:      { name: 'Troll Marauder', icon: '👹', hp: 70, atk: 29, def: 8, xp: 40, gold: [3,10], loot: [['bones',0.6]] },
+  woodling:            { name: 'Woodling', icon: '🌳', hp: 80, atk: 15, def: 2, xp: 40, gold: [2,8], loot: [['worm_dirt',0.3]], spells: [{ element: 'earth', min: 0, max: 8 }] },
+  dawnfly:             { name: 'Dawnfly', icon: '🪰', hp: 90, atk: 20, def: 3, xp: 35, gold: [1,6], loot: [['worm_dirt',0.2]], spells: [{ element: 'earth', min: 4, max: 8 }] },
+  minotaur_bruiser:    { name: 'Minotaur Bruiser', icon: '🐂', hp: 100, atk: 45, def: 11, xp: 50, gold: [5,15], loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
+  meadow_strider:      { name: 'Meadow Strider', icon: '🦗', hp: 100, atk: 16, def: 1, xp: 50, gold: [3,10], loot: [['meat',0.4]], spells: [{ element: 'physical', min: 8, max: 19 }] },
+  crazed_dwarf:        { name: 'Crazed Dwarf', icon: '⛏️', hp: 105, atk: 15, def: 9, xp: 50, gold: [3,10], loot: [['iron_ore',0.4],['studded_armor',0.05]] },
+  dwarf_miner:         { name: 'Dwarf Miner', icon: '⛏️', hp: 120, atk: 35, def: 7, xp: 60, gold: [5,16], loot: [['iron_ore',0.5],['studded_armor',0.05]] },
+  scar_tribe_shaman:   { name: 'Scar Tribe Shaman', icon: '🪄', hp: 115, atk: 20, def: 6, xp: 85, gold: [6,18], loot: [['elvish_talisman',0.15]], spells: [{ element: 'energy', min: 10, max: 30 }] },
+  minotaur_occultist:  { name: 'Minotaur Occultist', icon: '🐂', hp: 125, atk: 29, def: 8, xp: 100, gold: [8,22], loot: [['minotaur_horn',0.4],['wand_of_vortex',0.02]], spells: [{ element: 'energy', min: 16, max: 27 }, { element: 'fire', min: 24, max: 64 }] },
+  scar_tribe_warrior:  { name: 'Scar Tribe Warrior', icon: '🪓', hp: 125, atk: 45, def: 7, xp: 85, gold: [7,18], loot: [['studded_armor',0.05]] },
+  minotaur_poacher:    { name: 'Minotaur Poacher', icon: '🐂', hp: 160, atk: 40, def: 6, xp: 55, gold: [6,17], loot: [['minotaur_horn',0.4],['power_bolt',0.4]] },
+  lesser_fire_devil:   { name: 'Lesser Fire Devil', icon: '🔥', hp: 175, atk: 33, def: 9, xp: 110, gold: [10,26], loot: [['demon_dust',0.15]], spells: [{ element: 'fire', min: 4, max: 38 }] },
+  salamander_trainer:  { name: 'Salamander Trainer', icon: '🦎', hp: 220, atk: 23, def: 7, xp: 70, gold: [8,22], loot: [['bones',0.3]] },
+  juvenile_cyclops:    { name: 'Juvenile Cyclops', icon: '👁️', hp: 260, atk: 70, def: 11, xp: 130, gold: [12,32], loot: [['cyclops_toe',0.4],['halberd',0.03]], spells: [{ element: 'physical', min: 0, max: 45 }] },
 };
 
 // Definição única de "o que conta como boss" no jogo inteiro — reaproveitada

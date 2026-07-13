@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G } from './gameStore.js?v=126';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=129';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=131';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=126';
@@ -14,8 +14,8 @@ import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, r
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=132';
-import { MONSTERS } from '../domain/bestiary.js?v=129';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=134';
+import { MONSTERS } from '../domain/bestiary.js?v=131';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';

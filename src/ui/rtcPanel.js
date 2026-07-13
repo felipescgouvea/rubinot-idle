@@ -6,7 +6,7 @@
 // domain/rtcConfig.js (runas por vocação).
 import { G } from '../application/gameStore.js?v=126';
 import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=125';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=132';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=134';
 import { VOCATIONS } from '../domain/character.js?v=126';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
 import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=125';

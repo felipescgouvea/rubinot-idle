@@ -124,6 +124,7 @@ export default {
 
   // ---- cities (domain/cities.js: blurb) ----
   'city.rookgaard': 'A ilha dos novatos — as primeiras criaturas.',
+  'city.dawnport': 'A antiga ilha de novatos, agora um posto de treinamento do outro lado do estreito.',
   'city.thais': 'A capital do reino e seus arredores.',
   'city.abdendriel': 'A cidade élfica escondida na floresta.',
   'city.carlin': 'A cidade do norte — amazonas e bandidos.',
@@ -140,10 +141,14 @@ export default {
   'city.ferumbras': 'O covil do arquimago — o fim do mundo.',
 
   // ---- hunting grounds / dungeons (domain/bestiary.js: ZONES[id].name) ----
-  'zone.rotworm_cave': 'Caverna de Rotworms',
-  'zone.sewer_rats': 'Esgoto de Ratos',
-  'zone.goblin_village': 'Caverna dos Trolls',
-  'zone.swamp_slimes': 'Charco das Cobras',
+  'zone.rat_nest': 'Ninho de Ratos',
+  'zone.rat_cellar': 'Porão dos Ratos',
+  'zone.bug_hole': 'Toca dos Bugs',
+  'zone.spider_den': 'Covil das Aranhas',
+  'zone.wolf_den': 'Covil dos Lobos',
+  'zone.dawnport_outpost': 'Posto Avançado de Dawnport',
+  'zone.dawnport_orc_cave': 'Caverna dos Orcs de Dawnport',
+  'zone.dawnport_crystal_dungeon': 'Masmorra de Cristal de Dawnport',
   'zone.dwarf_mines': 'Minas dos Dwarfs',
   'zone.wolf_trail': 'Trilha da Matilha',
   'zone.spider_burrow': 'Buraco de Aranhas',
@@ -364,6 +369,7 @@ export default {
   'zonePicker.bonusZoneTooltip': 'Tem a Zona Bônus do Dia',
   'zonePicker.bonusZoneBadge': 'Bônus do Dia',
   'zonePicker.cityStats': '{total} hunts · 🔓 {unlocked}',
+  'zonePicker.cityLevelLocked': 'Libera no nível {level}',
   'zonePicker.backToCities': '← Cidades',
   'zonePicker.cityFallback': 'Cidade',
   'zonePicker.defeatBossFirst': 'Derrote o boss de {zone} primeiro',

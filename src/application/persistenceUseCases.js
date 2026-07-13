@@ -7,8 +7,8 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } fr
 import { isSpellAvailable } from '../domain/spells.js?v=125';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=129';
-import { isRelicId } from '../domain/items.js?v=132';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=131';
+import { isRelicId } from '../domain/items.js?v=134';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=125';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';

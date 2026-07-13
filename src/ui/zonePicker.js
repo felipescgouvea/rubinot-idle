@@ -3,8 +3,8 @@
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
 import { G } from '../application/gameStore.js?v=126';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=129';
-import { CITIES } from '../domain/cities.js?v=125';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=131';
+import { CITIES, isCityUnlocked, ROOKGAARD_LEVEL_CAP } from '../domain/cities.js?v=131';
 import { selectZone, startHunt } from '../application/huntUseCases.js?v=130';
 import { openModal, closeModal } from './shared.js?v=125';
 import { openBattleModal } from './battleModal.js?v=125';
@@ -35,14 +35,15 @@ function cityCard(city) {
   const { unlocked, total } = unlockedCount(city.id);
   const hasBoosted = zs.some(([id]) => id === boostedZoneForDate(todayStr()));
   const hasActive = zs.some(([id]) => id === G.activeZone);
-  const allLocked = unlocked === 0;
-  return `<div class="city-card ${hasActive ? 'active' : ''} ${allLocked ? 'locked' : ''}" title="${t(city.blurb)}"
-      onclick="openCity('${city.id}')">
+  const levelLocked = !isCityUnlocked(city.id, G.level);
+  const allLocked = unlocked === 0 || levelLocked;
+  return `<div class="city-card ${hasActive ? 'active' : ''} ${allLocked ? 'locked' : ''}" title="${levelLocked ? t('zonePicker.cityLevelLocked', { level: ROOKGAARD_LEVEL_CAP }) : t(city.blurb)}"
+      onclick="${levelLocked ? '' : `openCity('${city.id}')`}">
     ${hasBoosted ? `<div class="zone-boosted-badge" title="${t('zonePicker.bonusZoneTooltip')}">🔥 ${t('zonePicker.bonusZoneBadge')}</div>` : ''}
     <div class="city-card-icon">${city.icon}</div>
     <div class="zone-card-name">${city.name}</div>
-    <div class="city-card-blurb">${t(city.blurb)}</div>
-    <div class="city-card-meta">🗺️ ${t('zonePicker.cityStats', { total, unlocked })}</div>
+    <div class="city-card-blurb">${levelLocked ? `🔒 ${t('zonePicker.cityLevelLocked', { level: ROOKGAARD_LEVEL_CAP })}` : t(city.blurb)}</div>
+    ${!levelLocked ? `<div class="city-card-meta">🗺️ ${t('zonePicker.cityStats', { total, unlocked })}</div>` : ''}
   </div>`;
 }
 
@@ -106,6 +107,7 @@ export function openZonePicker() {
 }
 
 export function openCity(cityId) {
+  if (!isCityUnlocked(cityId, G.level)) return;
   openCityId = cityId;
   renderZonePickerModal();
 }

@@ -9,6 +9,7 @@
 // e i18n/locales/*.js: city.<id>) em vez de string literal.
 export const CITIES = [
   { id: 'rookgaard',  name: 'Rookgaard',            icon: '🏝️', blurb: 'city.rookgaard' },
+  { id: 'dawnport',   name: 'Dawnport',              icon: '🌅', blurb: 'city.dawnport' },
   { id: 'thais',      name: 'Thais',                icon: '🏰', blurb: 'city.thais' },
   { id: 'abdendriel', name: "Ab'Dendriel",          icon: '🌳', blurb: 'city.abdendriel' },
   { id: 'carlin',     name: 'Carlin',               icon: '🏹', blurb: 'city.carlin' },
@@ -30,4 +31,12 @@ export const CITY_BY_ID = Object.fromEntries(CITIES.map(c => [c.id, c]));
 export function cityName(cityId) {
   const c = CITY_BY_ID[cityId];
   return c ? c.name : cityId;
+}
+
+// Fiel ao Tibia global: personagem novo fica preso na ilha inicial (Rookgaard)
+// até nível 8 — só então pode viajar pro mainland (ver ui/zonePicker.js: cityCard).
+export const ROOKGAARD_LEVEL_CAP = 8;
+
+export function isCityUnlocked(cityId, level) {
+  return cityId === 'rookgaard' || level >= ROOKGAARD_LEVEL_CAP;
 }

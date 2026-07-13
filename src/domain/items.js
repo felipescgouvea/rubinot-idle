@@ -11,6 +11,12 @@ export const ITEMS = {
   // (ver domain/gameState.js: backpack), não é equipável nos slots de atributo.
   bag:            { name: 'Bag', icon: '🎒', type: 'container', sell: 1 },
   bones:          { name: 'Bones', icon: '🦴', type: 'misc', sell: 1 },
+  // --- Loot das criaturas de Dawnport (ver domain/bestiary.js: ilha do Dawnport) ---
+  badger_fur:     { name: 'Badger Fur', icon: '🦡', type: 'misc', sell: 8 },
+  iron_ore:       { name: 'Iron Ore', icon: '⛏️', type: 'misc', sell: 12 },
+  wool:           { name: 'Wool', icon: '🧶', type: 'misc', sell: 4 },
+  acorn:          { name: 'Acorn', icon: '🌰', type: 'misc', sell: 2 },
+  antlers:        { name: 'Antlers', icon: '🦌', type: 'misc', sell: 15 },
   minotaur_horn:  { name: 'Minotaur Horn', icon: '📯', type: 'misc', sell: 80 },
   chain_armor:    { name: 'Chain Armor', icon: '⛓️', type: 'armor', def: 8, sell: 300, rare: false },
   guardian_halberd:{ name: 'Guardian Halberd', icon: '🗡️', type: 'weapon', weaponType: 'axe', atk: 35, sell: 800, rare: true },
@@ -82,6 +88,8 @@ export const ITEMS = {
   wooden_shield:  { name: 'Wooden Shield', icon: '🛡️', type: 'shield', def: 3, sell: 8 },
   leather_armor:  { name: 'Leather Armor', icon: '🥋', type: 'armor', def: 3, sell: 6 },
   leather_legs:   { name: 'Leather Legs', icon: '🦵', type: 'legs', def: 2, sell: 6 },
+  leather_helmet: { name: 'Leather Helmet', icon: '🪖', type: 'helmet', def: 1, sell: 6 },
+  spellbook_of_the_novice: { name: 'Spellbook of the Novice', icon: '📖', type: 'shield', def: 8, sell: 20 },
   robe:           { name: 'Robe', icon: '👘', type: 'armor', def: 3, sell: 15 },
 
   // --- Poções (curam HP/mana ao usar — não ocupam slot de equipamento) ---
@@ -150,11 +158,16 @@ export const ITEMS = {
 
 // Kit inicial por vocação — entregue e equipado automaticamente na 1ª escolha de vocação,
 // como o equipamento que o RubinOT dá ao personagem recém-criado.
+// Fiel ao Dawnport Training Set real do Tibia (TibiaWiki: Dawnport Set) — o kit
+// que cada vocação recebe ao passar pelo portão da vocação na ilha inicial:
+// Leather Helmet/Legs/Boots + Jacket (nosso leather_armor) em todas, arma e
+// peça de mão específica de cada uma (escudo pro knight, aljava+arco pro
+// paladino, Spellbook of the Novice pros dois magos).
 export const STARTER_KITS = {
-  knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor', legs: 'leather_legs', boots: 'leather_boots' },
-  sorcerer: { weapon: 'wand_of_vortex',armor: 'robe',                                    boots: 'leather_boots' },
-  druid:    { weapon: 'snakebite_rod', armor: 'robe',                                    boots: 'leather_boots' },
+  knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield',             helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor',                                  helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  sorcerer: { weapon: 'wand_of_vortex',armor: 'robe',           shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  druid:    { weapon: 'snakebite_rod', armor: 'robe',           shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
