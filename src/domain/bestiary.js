@@ -14,29 +14,29 @@ export const ZONES = {
   dwarf_mines:   { city: 'thais', name: 'Minas dos Dwarfs', icon: '⛏️',  worldReq: 'auroria', monsters: ['dwarf', 'dwarf_soldier', 'dwarf_geomancer', 'dwarf_guard'], goldMult: 1.3, xpMult: 1.25, theme: ['#6b5a44', '#3a2f22'], boss: 'dwarf_guard', requiresBossOf: 'swamp_slimes' },
   wolf_trail:    { city: 'abdendriel', name: 'Trilha da Matilha', icon: '🐺',  worldReq: 'auroria', monsters: ['wolf', 'bear'], goldMult: 1.35, xpMult: 1.3, theme: ['#3d5c47', '#1a2b20'], boss: 'bear', requiresBossOf: 'dwarf_mines' },
   spider_burrow: { city: 'abdendriel', name: 'Buraco de Aranhas', icon: '🕷️',  worldReq: 'auroria', monsters: ['spider', 'tarantula'], goldMult: 1.38, xpMult: 1.32, theme: ['#4a3a3a', '#201616'], boss: 'spider', requiresBossOf: 'wolf_trail' },
-  elf_woods:     { city: 'abdendriel', name: 'Bosque dos Elfos', icon: '🧝', worldReq: 'auroria', monsters: ['elf'], goldMult: 1.4, xpMult: 1.35, theme: ['#3f7052', '#1e3d2b'], boss: 'elf', requiresBossOf: 'spider_burrow' },
+  elf_woods:     { city: 'abdendriel', name: 'Bosque dos Elfos', icon: '🧝', worldReq: 'auroria', monsters: ['elf', 'elf_scout', 'elf_arcanist'], goldMult: 1.4, xpMult: 1.35, theme: ['#3f7052', '#1e3d2b'], boss: 'elf', requiresBossOf: 'spider_burrow' },
   old_graveyard: { city: 'thais', name: 'Cemitério Antigo', icon: '💀', worldReq: 'auroria', monsters: ['skeleton', 'ghoul'], goldMult: 1.45, xpMult: 1.38, theme: ['#5a5560', '#211f28'], boss: 'ghoul', requiresBossOf: 'elf_woods' },
   minotaur_den:  { city: 'thais', name: 'Covil dos Minotauros', icon: '🐂', worldReq: 'auroria', monsters: ['minotaur', 'minotaur_archer', 'minotaur_mage', 'minotaur_guard'], goldMult: 1.48, xpMult: 1.39, theme: ['#7a5a3a', '#3a2818'], boss: 'minotaur_guard', requiresBossOf: 'old_graveyard' },
   cyclops_camp:  { city: 'thais', name: 'Acampamento Cyclops', icon: '🗿', worldReq: 'auroria', monsters: ['cyclops', 'juvenile_cyclops', 'cyclops_drone', 'cyclops_smith'], goldMult: 1.5, xpMult: 1.4, theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops_smith', requiresBossOf: 'minotaur_den' },
   amazon_camp:   { city: 'carlin', name: 'Acampamento Amazona', icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], goldMult: 1.8, xpMult: 1.6, theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'cyclops_camp' },
   bandit_hideout:{ city: 'carlin', name: 'Esconderijo de Bandidos', icon: '🏴', worldReq: 'auroria', monsters: ['bandit', 'poacher'], goldMult: 1.9, xpMult: 1.7, theme: ['#6b5a3f', '#332a1c'], boss: 'poacher', requiresBossOf: 'amazon_camp' },
-  scarab_desert: { city: 'ankrahmun', name: 'Deserto dos Scarabs', icon: '🪲', worldReq: 'auroria', monsters: ['scarab', 'ancient_scarab'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'], boss: 'scarab', requiresBossOf: 'bandit_hideout' },
-  orc_fortress:  { city: 'carlin', name: 'Forte dos Orcs', icon: '🏹', worldReq: 'auroria', monsters: ['orc', 'orc_rider', 'orc_shaman'], goldMult: 2.1, xpMult: 1.9, theme: ['#6b3f2f', '#2e1a12'], boss: 'orc_shaman', requiresBossOf: 'scarab_desert' },
+  scarab_desert: { city: 'ankrahmun', name: 'Deserto dos Scarabs', icon: '🪲', worldReq: 'auroria', monsters: ['scarab', 'ancient_scarab', 'larva'], goldMult: 2.0, xpMult: 1.8, theme: ['#c9a35c', '#8a6a30'], boss: 'scarab', requiresBossOf: 'bandit_hideout' },
+  orc_fortress:  { city: 'venore', name: 'Forte dos Orcs', icon: '🏹', worldReq: 'auroria', monsters: ['orc', 'orc_rider', 'orc_shaman'], goldMult: 2.1, xpMult: 1.9, theme: ['#6b3f2f', '#2e1a12'], boss: 'orc_shaman', requiresBossOf: 'scarab_desert' },
 
   // --- Spectrum (PvP opcional, reqLevel 20) ---
   spider_lair:   { city: 'venore', name: 'Ninho de Giant Spiders', icon: '🕷️', worldReq: 'spectrum', monsters: ['giant_spider', 'tarantula'], goldMult: 2.2, xpMult: 2.0, theme: ['#4a3a5c', '#1c1526'], boss: 'giant_spider' },
-  wyvern_ridge:  { city: 'venore', name: 'Penhasco das Wyverns', icon: '🐲', worldReq: 'spectrum', monsters: ['wyvern'], goldMult: 2.5, xpMult: 2.2, theme: ['#4a6b6b', '#1c2e2e'], boss: 'wyvern', requiresBossOf: 'spider_lair' },
-  haunted_ruins: { city: 'ankrahmun', name: 'Ruínas Assombradas', icon: '👻', worldReq: 'spectrum', monsters: ['ghost', 'mummy'], goldMult: 2.8, xpMult: 2.4, theme: ['#4a3a5c', '#1c1526'], boss: 'mummy', requiresBossOf: 'wyvern_ridge' },
-  golem_workshop:{ city: 'darashia', name: 'Oficina dos Golens', icon: '🗿', worldReq: 'spectrum', monsters: ['stone_golem', 'ice_golem'], goldMult: 3.2, xpMult: 2.7, theme: ['#5a5a52', '#232320'], boss: 'stone_golem', requiresBossOf: 'haunted_ruins' },
+  wyvern_ridge:  { city: 'carlin', name: 'Penhasco das Wyverns', icon: '🐲', worldReq: 'spectrum', monsters: ['wyvern'], goldMult: 2.5, xpMult: 2.2, theme: ['#4a6b6b', '#1c2e2e'], boss: 'wyvern', requiresBossOf: 'spider_lair' },
+  haunted_ruins: { city: 'ankrahmun', name: 'Ruínas Assombradas', icon: '👻', worldReq: 'spectrum', monsters: ['ghost', 'mummy', 'bonelord'], goldMult: 2.8, xpMult: 2.4, theme: ['#4a3a5c', '#1c1526'], boss: 'mummy', requiresBossOf: 'wyvern_ridge' },
+  golem_workshop:{ city: 'darashia', name: 'Oficina dos Golens', icon: '🗿', worldReq: 'spectrum', monsters: ['stone_golem', 'ice_golem', 'fire_elemental'], goldMult: 3.2, xpMult: 2.7, theme: ['#5a5a52', '#232320'], boss: 'stone_golem', requiresBossOf: 'haunted_ruins' },
   djinn_oasis:   { city: 'darashia', name: 'Oásis dos Djinns', icon: '🧞', worldReq: 'spectrum', monsters: ['efreet', 'marid'], goldMult: 3.6, xpMult: 3.1, theme: ['#c9a35c', '#1f4a45'], boss: 'marid', requiresBossOf: 'golem_workshop' },
-  worm_hive:     { city: 'venore', name: 'Colmeia de Vermes', icon: '🪱', worldReq: 'spectrum', monsters: ['larva', 'carrion_worm'], goldMult: 3.9, xpMult: 3.3, theme: ['#5a4a35', '#2e2419'], boss: 'carrion_worm', requiresBossOf: 'djinn_oasis' },
+  worm_hive:     { city: 'venore', name: 'Colmeia de Vermes', icon: '🪱', worldReq: 'spectrum', monsters: ['larva', 'carrion_worm', 'rotworm'], goldMult: 3.9, xpMult: 3.3, theme: ['#5a4a35', '#2e2419'], boss: 'carrion_worm', requiresBossOf: 'djinn_oasis' },
 
   // --- Bellum (PvP opcional, reqLevel 25) ---
-  scorpion_flats:{ city: 'ankrahmun', name: 'Planície dos Escorpiões', icon: '🦂', worldReq: 'bellum', monsters: ['scorpion', 'centipede'], goldMult: 2.6, xpMult: 2.3, theme: ['#c98a4a', '#5c3a1a'], boss: 'scorpion' },
+  scorpion_flats:{ city: 'ankrahmun', name: 'Planície dos Escorpiões', icon: '🦂', worldReq: 'bellum', monsters: ['scorpion', 'centipede', 'cobra'], goldMult: 2.6, xpMult: 2.3, theme: ['#c98a4a', '#5c3a1a'], boss: 'scorpion' },
   crypt_shamblers_den:{ city: 'darashia', name: 'Covil dos Crypt Shamblers', icon: '⚰️', worldReq: 'bellum', monsters: ['crypt_shambler', 'priestess'], goldMult: 2.85, xpMult: 2.45, theme: ['#4a4a5c', '#1c1c26'], boss: 'crypt_shambler', requiresBossOf: 'scorpion_flats' },
   dragon_lair:   { city: 'darashia', name: 'Covil dos Dragões', icon: '🔥', worldReq: 'bellum',  monsters: ['dragon', 'dragon_lord'], goldMult: 3.0, xpMult: 2.5, theme: ['#a53d2b', '#4a1810'], boss: 'dragon_lord', requiresBossOf: 'crypt_shamblers_den' },
-  frost_peak:    { city: 'svargrond', name: 'Pico Congelado', icon: '🧊', worldReq: 'bellum',  monsters: ['frost_dragon'], goldMult: 3.5, xpMult: 3.0, theme: ['#6fa3c9', '#294a63'], boss: 'frost_dragon', requiresBossOf: 'dragon_lair' },
-  black_knight_hall:{ city: 'svargrond', name: 'Salão dos Cavaleiros Negros', icon: '⚔️', worldReq: 'bellum', monsters: ['black_knight'], goldMult: 3.9, xpMult: 3.35, theme: ['#3a4a5c', '#151c26'], boss: 'black_knight', requiresBossOf: 'frost_peak' },
+  frost_peak:    { city: 'svargrond', name: 'Pico Congelado', icon: '🧊', worldReq: 'bellum',  monsters: ['frost_dragon', 'frost_dragon_hatchling'], goldMult: 3.5, xpMult: 3.0, theme: ['#6fa3c9', '#294a63'], boss: 'frost_dragon', requiresBossOf: 'dragon_lair' },
+  black_knight_hall:{ city: 'venore', name: 'Salão dos Cavaleiros Negros', icon: '⚔️', worldReq: 'bellum', monsters: ['black_knight'], goldMult: 3.9, xpMult: 3.35, theme: ['#3a4a5c', '#151c26'], boss: 'black_knight', requiresBossOf: 'frost_peak' },
   werewolf_woods:{ city: 'svargrond', name: 'Floresta dos Lobisomens', icon: '🌕', worldReq: 'bellum', monsters: ['werewolf', 'werelion'], goldMult: 4.3, xpMult: 3.9, theme: ['#2e3d24', '#141c10'], boss: 'werewolf', requiresBossOf: 'black_knight_hall' },
   ghastly_ruins: { city: 'porthope', name: 'Ruínas Sombrias', icon: '🐉', worldReq: 'bellum', monsters: ['ghastly_dragon', 'undead_dragon'], goldMult: 4.8, xpMult: 4.1, theme: ['#5c2b3a', '#26101a'], boss: 'ghastly_dragon', requiresBossOf: 'werewolf_woods' },
 
@@ -49,40 +49,46 @@ export const ZONES = {
   hellfire_bastion:{ city: 'cormaya', name: 'Bastião Infernal', icon: '🔥', worldReq: 'solarian', monsters: ['hellfire_fighter', 'dark_torturer'], goldMult: 6.5, xpMult: 5.2, theme: ['#a5391f', '#3a1208'], boss: 'hellfire_fighter', requiresBossOf: 'nightmare_den' },
 
   // --- Elysian (PvP retro, reqLevel 40) ---
-  undead_crypt:  { city: 'edron', name: 'Cripta Profana', icon: '🦴', worldReq: 'elysian', monsters: ['bonebeast', 'banshee', 'vampire', 'blightwalker'], goldMult: 3.8, xpMult: 3.3, theme: ['#5a5560', '#211f28'], boss: 'banshee' },
+  undead_crypt:  { city: 'edron', name: 'Cripta Profana', icon: '🦴', worldReq: 'elysian', monsters: ['bonebeast', 'banshee', 'vampire', 'blightwalker', 'vampire_bride'], goldMult: 3.8, xpMult: 3.3, theme: ['#5a5560', '#211f28'], boss: 'banshee' },
   lich_lair:     { city: 'edron', name: 'Cripta dos Liches', icon: '☠️', worldReq: 'elysian', monsters: ['lich', 'grim_reaper', 'undead_dragon'], goldMult: 4.0, xpMult: 3.5, theme: ['#4a3a63', '#1a1424'], boss: 'undead_dragon', requiresBossOf: 'undead_crypt' },
   demon_fortress:{ city: 'cormaya', name: 'Fortaleza Demoníaca', icon: '💀', worldReq: 'elysian', monsters: ['demon', 'fury', 'hellhound'], goldMult: 5.0, xpMult: 4.0, theme: ['#7a1f1f', '#2b0a0a'], boss: 'demon', requiresBossOf: 'lich_lair' },
-  war_golem_yard:{ city: 'cormaya', name: 'Pátio dos War Golems', icon: '🤖', worldReq: 'elysian', monsters: ['war_golem'], goldMult: 6.8, xpMult: 5.4, theme: ['#5c5c52', '#242420'], boss: 'war_golem', requiresBossOf: 'demon_fortress' },
-  falcon_bastion:{ city: 'cormaya', name: 'Bastião Falcão', icon: '🦅', worldReq: 'elysian', monsters: ['falcon_knight'], goldMult: 7.6, xpMult: 5.9, theme: ['#4a6b8a', '#1c2e3f'], boss: 'falcon_knight', requiresBossOf: 'war_golem_yard' },
-  vexclaw_canyon:{ city: 'yalahar', name: 'Desfiladeiro dos Vexclaw', icon: '🦞', worldReq: 'elysian', monsters: ['vexclaw', 'retching_horror'], goldMult: 9.0, xpMult: 6.5, theme: ['#8a4a2f', '#3a1c10'], boss: 'vexclaw', requiresBossOf: 'falcon_bastion' },
+  war_golem_yard:{ city: 'cormaya', name: 'Pátio dos War Golems', icon: '🤖', worldReq: 'elysian', monsters: ['war_golem', 'rustheap_golem'], goldMult: 6.8, xpMult: 5.4, theme: ['#5c5c52', '#242420'], boss: 'war_golem', requiresBossOf: 'demon_fortress' },
+  falcon_bastion:{ city: 'cormaya', name: 'Bastião Falcão', icon: '🦅', worldReq: 'elysian', monsters: ['falcon_knight', 'falcon_paladin'], goldMult: 7.6, xpMult: 5.9, theme: ['#4a6b8a', '#1c2e3f'], boss: 'falcon_knight', requiresBossOf: 'war_golem_yard' },
+  vexclaw_canyon:{ city: 'yalahar', name: 'Desfiladeiro dos Vexclaw', icon: '🦞', worldReq: 'elysian', monsters: ['vexclaw', 'retching_horror', 'nightstalker'], goldMult: 9.0, xpMult: 6.5, theme: ['#8a4a2f', '#3a1c10'], boss: 'vexclaw', requiresBossOf: 'falcon_bastion' },
   feversleep_marsh:{ city: 'yalahar', name: 'Pântano Feversleep', icon: '💤', worldReq: 'elysian', monsters: ['feversleep', 'nightmare'], goldMult: 10.0, xpMult: 7.0, theme: ['#6b7d3a', '#2b3315'], boss: 'feversleep', requiresBossOf: 'vexclaw_canyon' },
   grorlam_grotto:{ city: 'yalahar', name: 'Gruta do Grorlam', icon: '🐖', worldReq: 'elysian', monsters: ['grorlam'], goldMult: 11.5, xpMult: 7.8, theme: ['#2f4a4a', '#101f1f'], boss: 'grorlam', requiresBossOf: 'feversleep_marsh' },
   zorvorax_sanctum:{ city: 'yalahar', name: 'Santuário de Zorvorax', icon: '🔮', worldReq: 'elysian', monsters: ['zorvorax'], goldMult: 13.0, xpMult: 8.5, theme: ['#6b4a8a', '#251536'], boss: 'zorvorax', requiresBossOf: 'grorlam_grotto' },
 
   // --- Mystian (PvP retro, reqLevel 60, o mundo com os melhores bônus) ---
-  hell_gate:     { city: 'roshamuul', name: 'Portão do Inferno', icon: '🔥', worldReq: 'mystian', monsters: ['juggernaut', 'plaguesmith', 'behemoth'], goldMult: 6.0, xpMult: 5.0, theme: ['#a52a1f', '#1f0a08'], boss: 'juggernaut' },
+  hell_gate:     { city: 'roshamuul', name: 'Portão do Inferno', icon: '🔥', worldReq: 'mystian', monsters: ['juggernaut', 'plaguesmith', 'behemoth', 'gazharagoth'], goldMult: 6.0, xpMult: 5.0, theme: ['#a52a1f', '#1f0a08'], boss: 'juggernaut' },
+  roshamuul_valley:{ city: 'roshamuul', name: 'Vale Guzzlemaw', icon: '👹', worldReq: 'mystian', monsters: ['frazzlemaw', 'guzzlemaw'], goldMult: 6.5, xpMult: 5.3, theme: ['#7a2a1f', '#2b0a08'], boss: 'guzzlemaw' },
   boss_sanctum:  { city: 'roshamuul', name: 'Santuário dos Bosses', icon: '🌀', worldReq: 'mystian', monsters: ['lothlorien', 'executioner', 'morgul', 'corrupted_one', 'nzoth'], goldMult: 8.0, xpMult: 6.0, theme: ['#6b4a9c', '#2a1a42'], boss: 'nzoth', requiresBossOf: 'hell_gate' },
   draken_wastes: { city: 'zao', name: 'Terras Draken', icon: '🐲', worldReq: 'mystian', monsters: ['draken_abomination', 'draken_warmaster'], goldMult: 14.0, xpMult: 9.0, theme: ['#5c2f2f', '#241010'], boss: 'draken_warmaster', requiresBossOf: 'boss_sanctum' },
   corruption_spire:{ city: 'zao', name: 'Torre da Corrupção', icon: '🕸️', worldReq: 'mystian', monsters: ['zulazza', 'latrivan'], goldMult: 15.5, xpMult: 9.8, theme: ['#3a2050', '#140a1f'], boss: 'latrivan', requiresBossOf: 'draken_wastes' },
   abyssal_throne:{ city: 'zao', name: 'Trono Abissal', icon: '😈', worldReq: 'mystian', monsters: ['ushuriel', 'madareth'], goldMult: 17.0, xpMult: 10.6, theme: ['#4a1520', '#1a060a'], boss: 'madareth', requiresBossOf: 'corruption_spire' },
   void_rift:     { city: 'zao', name: 'Fenda do Vazio', icon: '🔺', worldReq: 'mystian', monsters: ['zamulosh', 'shulgrax', 'tanjis'], goldMult: 18.5, xpMult: 11.5, theme: ['#1a1a3a', '#08081a'], boss: 'tanjis', requiresBossOf: 'abyssal_throne' },
-  ferumbras_citadel:{ city: 'ferumbras', name: 'Cidadela de Ferumbras', icon: '👑', worldReq: 'mystian', monsters: ['ferumbras', 'pale_worm', 'diblis', 'soul_despoiler', 'ferumbras_mortal_shell', 'devovorga', 'gazharagoth'], goldMult: 20.0, xpMult: 13.0, theme: ['#3a1a5c', '#12081f'], boss: 'ferumbras', requiresBossOf: 'void_rift' },
+  zao_draken_walls:{ city: 'zao', name: 'Muralhas Draken', icon: '🐲', worldReq: 'mystian', monsters: ['draken_elite', 'draken_spellweaver', 'draptor'], goldMult: 13.0, xpMult: 8.5, theme: ['#5c2f2f', '#241010'], boss: 'draken_elite' },
+  ferumbras_citadel:{ city: 'ferumbras', name: 'Cidadela de Ferumbras', icon: '👑', worldReq: 'mystian', monsters: ['ferumbras', 'pale_worm', 'diblis', 'soul_despoiler', 'ferumbras_mortal_shell', 'devovorga'], goldMult: 20.0, xpMult: 13.0, theme: ['#3a1a5c', '#12081f'], boss: 'ferumbras', requiresBossOf: 'void_rift' },
 
   // --- Novas hunts das cidades (criaturas adicionadas acima). São hunts
   // "avulsas": liberadas só pelo nível mínimo (sem cadeia de boss), pra dar mais
   // opções de caçada em cada cidade sem travar atrás da progressão principal. ---
-  fibula_dungeon:  { city: 'thais',     name: 'Masmorra de Fibula', icon: '🐾',  worldReq: 'auroria', monsters: ['stalker', 'cave_rat', 'rotworm'], goldMult: 1.1, xpMult: 1.1, theme: ['#4a4234', '#231f18'], boss: 'stalker' },
-  terror_valley:   { city: 'ankrahmun', name: 'Vale dos Terror Birds', icon: '🦤', worldReq: 'spectrum', monsters: ['terror_bird'], goldMult: 2.4, xpMult: 2.1, theme: ['#c9a35c', '#8a6a30'], boss: 'terror_bird' },
+  fibula_dungeon:  { city: 'thais',     name: 'Masmorra de Fibula', icon: '🐾',  worldReq: 'auroria', monsters: ['stalker', 'cave_rat', 'rotworm', 'bat'], goldMult: 1.1, xpMult: 1.1, theme: ['#4a4234', '#231f18'], boss: 'stalker' },
+  terror_valley:   { city: 'porthope', name: 'Vale dos Terror Birds', icon: '🦤', worldReq: 'spectrum', monsters: ['terror_bird'], goldMult: 2.4, xpMult: 2.1, theme: ['#c9a35c', '#8a6a30'], boss: 'terror_bird' },
   terramite_hive:  { city: 'ankrahmun', name: 'Formigueiro Terramite', icon: '🐜', worldReq: 'solarian', monsters: ['terramite', 'ancient_scarab'], goldMult: 4.2, xpMult: 3.7, theme: ['#c98a4a', '#5c3a1a'], boss: 'ancient_scarab' },
   tiquanda_jungle: { city: 'porthope',  name: 'Selva de Tiquanda', icon: '🌴', worldReq: 'solarian', monsters: ['sibang', 'kongra', 'merlkin'], goldMult: 3.3, xpMult: 2.9, theme: ['#2e5c2e', '#0f2b0f'], boss: 'kongra' },
   ice_caves:       { city: 'svargrond', name: 'Cavernas de Gelo', icon: '❄️', worldReq: 'bellum', monsters: ['frost_troll', 'ice_golem'], goldMult: 3.0, xpMult: 2.6, theme: ['#6fa3c9', '#294a63'], boss: 'ice_golem' },
-  yeti_peak:       { city: 'svargrond', name: 'Pico dos Yetis', icon: '🦣', worldReq: 'bellum', monsters: ['yeti', 'crystal_wolf'], goldMult: 4.0, xpMult: 3.5, theme: ['#8fb8d9', '#3a5a73'], boss: 'yeti' },
+  yeti_peak:       { city: 'svargrond', name: 'Pico dos Yetis', icon: '🦣', worldReq: 'bellum', monsters: ['yeti', 'crystal_wolf', 'frost_giant'], goldMult: 4.0, xpMult: 3.5, theme: ['#8fb8d9', '#3a5a73'], boss: 'yeti' },
   crystal_nest:    { city: 'svargrond', name: 'Ninho de Aranhas de Cristal', icon: '🕸️', worldReq: 'bellum', monsters: ['crystal_spider'], goldMult: 4.6, xpMult: 4.0, theme: ['#a9c9e0', '#4a6b85'], boss: 'crystal_spider' },
   wyrm_cavern:     { city: 'darashia',  name: 'Caverna dos Wyrms', icon: '🐉', worldReq: 'spectrum', monsters: ['wyrm'], goldMult: 4.2, xpMult: 3.8, theme: ['#4a6b6b', '#1c2e2e'], boss: 'wyrm' },
-  hero_tower:      { city: 'edron',     name: 'Torre dos Heróis', icon: '🦸', worldReq: 'elysian', monsters: ['hero'], goldMult: 5.0, xpMult: 4.2, theme: ['#4a3a5c', '#1a1424'], boss: 'hero' },
+  hero_tower:      { city: 'edron',     name: 'Torre dos Heróis', icon: '🦸', worldReq: 'elysian', monsters: ['hero', 'dark_magician', 'dark_apprentice'], goldMult: 5.0, xpMult: 4.2, theme: ['#4a3a5c', '#1a1424'], boss: 'hero' },
   dworc_camp:      { city: 'porthope',  name: 'Acampamento Dworc', icon: '🌀', worldReq: 'auroria', monsters: ['dworc_venomsniper', 'dworc_fighter', 'dworc'], goldMult: 1.85, xpMult: 1.65, theme: ['#5c3a6b', '#241a33'], boss: 'dworc' },
   mutant_ward:     { city: 'yalahar',   name: 'Ala dos Mutantes', icon: '🧟', worldReq: 'auroria', monsters: ['mutated_human', 'slime', 'mutated_rat'], goldMult: 1.55, xpMult: 1.45, theme: ['#4a6b3a', '#1f331a'], boss: 'mutated_human' },
-  warlock_tower:   { city: 'thais',     name: 'Torre do Warlock', icon: '🧙', worldReq: 'solarian', monsters: ['warlock'], goldMult: 4.3, xpMult: 3.9, theme: ['#3a1a5c', '#150a24'], boss: 'warlock' },
+  warlock_tower:   { city: 'carlin',    name: 'Torre do Warlock', icon: '🧙', worldReq: 'solarian', monsters: ['warlock'], goldMult: 4.3, xpMult: 3.9, theme: ['#3a1a5c', '#150a24'], boss: 'warlock' },
+  carlin_sewers:   { city: 'carlin',    name: 'Esgoto de Carlin', icon: '🐛', worldReq: 'auroria', monsters: ['bug', 'poison_spider', 'slime'], goldMult: 1.15, xpMult: 1.12, theme: ['#4a4234', '#231f18'], boss: 'slime' },
+  ankrahmun_tombs: { city: 'ankrahmun', name: 'Túmulo da Península', icon: '🏺', worldReq: 'solarian', monsters: ['fleshcrawler', 'omruc'], goldMult: 5.0, xpMult: 4.3, theme: ['#c9a35c', '#5c3a1a'], boss: 'omruc' },
+  porthope_water_dungeon:{ city: 'porthope', name: 'Calabouço dos Elementais', icon: '💧', worldReq: 'bellum', monsters: ['crocodile', 'massive_water_elemental'], goldMult: 3.0, xpMult: 2.6, theme: ['#2a5c6b', '#0f2e33'], boss: 'massive_water_elemental' },
+  yalahar_sunken_quarter:{ city: 'yalahar', name: 'Bairro Afundado', icon: '🦑', worldReq: 'spectrum', monsters: ['quara_pincher', 'quara_hydromancer'], goldMult: 3.3, xpMult: 2.9, theme: ['#1f3a5c', '#0a1826'], boss: 'quara_pincher' },
 };
 
 export const MONSTERS = {
@@ -238,6 +244,25 @@ export const MONSTERS = {
   wyrm:            { name: 'Wyrm', icon: '🐉', hp: 1825, atk: 235, def: 40, xp: 1600, gold: [80,170], loot: [['dragon_scale',0.3],['life_crystal',0.15]], spells: [{ element: 'energy', min: 100, max: 220 }, { element: 'death', min: 98, max: 145 }] },
   hero:            { name: 'Hero', icon: '🦸', hp: 1400, atk: 240,  def: 35, xp: 1500, gold: [70,160], loot: [['plate_legs',0.05],['giant_sword',0.005]], spells: [{ element: 'physical', min: 0, max: 120 }] },
   nightstalker:    { name: 'Nightstalker', icon: '🌚', hp: 1150, atk: 88,  def: 30, xp: 1200, gold: [50,130], loot: [['demon_dust',0.1]], spells: [{ element: 'death', min: 60, max: 170 }] },
+
+  // --- Auditoria de hunts (2026-07-13): família real de criaturas 1-monstro +
+  // moradas dos órfãos, verificado via TibiaWiki antes de entrar aqui (ver
+  // .spec/90-regras-de-negocio-gerais.md). xp é o valor oficial do Tibia; hp/
+  // atk/def seguem a mesma curva escalada dos demais (não são o hp real).
+  elf_scout:           { name: 'Elf Scout', icon: '🏹', hp: 160, atk: 35, def: 6, xp: 75, gold: [5,14], loot: [['elvish_talisman',0.35],['power_bolt',0.5]], spells: [{ element: 'physical', min: 0, max: 45 }] },
+  elf_arcanist:        { name: 'Elf Arcanist', icon: '🪄', hp: 220, atk: 20, def: 8, xp: 175, gold: [8,20], loot: [['elvish_talisman',0.4],['wand_of_vortex',0.03],['crystal_coin',0.02]], spells: [{ element: 'energy', min: 30, max: 70 }, { element: 'earth', min: 20, max: 50 }] },
+  dark_magician:       { name: 'Dark Magician', icon: '🧙', hp: 200, atk: 20, def: 10, xp: 185, gold: [10,22], loot: [['bones',0.4],['life_crystal',0.05]], spells: [{ element: 'death', min: 20, max: 50 }, { element: 'energy', min: 15, max: 40 }] },
+  dark_apprentice:     { name: 'Dark Apprentice', icon: '📕', hp: 90, atk: 15, def: 5, xp: 90, gold: [4,12], loot: [['bones',0.3]], spells: [{ element: 'death', min: 10, max: 25 }] },
+  rustheap_golem:      { name: 'Rustheap Golem', icon: '⚙️', hp: 2600, atk: 260, def: 60, xp: 2350, gold: [180,280], loot: [['chain_armor',0.08],['crystal_coin',0.1]], spells: [{ element: 'earth', min: 80, max: 150 }] },
+  falcon_paladin:      { name: 'Falcon Paladin', icon: '🦅', hp: 8500, atk: 380, def: 90, xp: 6900, gold: [780,1100], loot: [['chain_armor',0.1],['studded_shield',0.1],['crystal_coin',0.2]], spells: [{ element: 'physical', min: 0, max: 300 }, { element: 'holy', min: 200, max: 300 }] },
+  frost_dragon_hatchling:{ name: 'Frost Dragon Hatchling', icon: '🐣', hp: 700, atk: 90, def: 20, xp: 745, gold: [30,70], loot: [['dragon_scale',0.2],['meat',0.4]], spells: [{ element: 'ice', min: 40, max: 90 }] },
+  frost_giant:         { name: 'Frost Giant', icon: '🏔️', hp: 220, atk: 60, def: 12, xp: 150, gold: [20,55], loot: [['meat',0.3],['leather_boots',0.05]], spells: [{ element: 'ice', min: 0, max: 70 }] },
+  fire_elemental:      { name: 'Fire Elemental', icon: '🔥', hp: 260, atk: 70, def: 14, xp: 220, gold: [15,40], loot: [['demon_dust',0.1],['meat',0.2]], spells: [{ element: 'fire', min: 30, max: 80 }] },
+  vampire_bride:       { name: 'Vampire Bride', icon: '🧛‍♀️', hp: 900, atk: 160, def: 25, xp: 1200, gold: [60,140], loot: [['vampire_dust',0.4],['life_crystal',0.15]], spells: [{ element: 'death', min: 60, max: 150 }] },
+  draken_elite:        { name: 'Draken Elite', icon: '🐲', hp: 5400, atk: 420, def: 130, xp: 4750, gold: [1900,2650], loot: [['dragon_scale',0.35],['crystal_coin',0.4]], spells: [{ element: 'fire', min: 250, max: 500 }, { element: 'physical', min: 0, max: 300 }] },
+  draken_spellweaver:  { name: 'Draken Spellweaver', icon: '🪄', hp: 3200, atk: 250, def: 110, xp: 3100, gold: [1400,2000], loot: [['dragon_scale',0.25],['crystal_coin',0.3]], spells: [{ element: 'energy', min: 200, max: 450 }, { element: 'fire', min: 150, max: 350 }] },
+  frazzlemaw:          { name: 'Frazzlemaw', icon: '🟤', hp: 4200, atk: 380, def: 90, xp: 3740, gold: [1600,2200], loot: [['demon_dust',0.3],['crystal_coin',0.3]], spells: [{ element: 'physical', min: 0, max: 350 }] },
+  guzzlemaw:           { name: 'Guzzlemaw', icon: '🟫', hp: 7000, atk: 560, def: 95, xp: 6050, gold: [2400,3200], loot: [['demon_dust',0.35],['platinum_coin',0.6],['crystal_coin',0.35]], spells: [{ element: 'physical', min: 0, max: 500 }] },
 };
 
 // Definição única de "o que conta como boss" no jogo inteiro — reaproveitada
