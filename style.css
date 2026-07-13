@@ -867,20 +867,9 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 /* tamanho PADRONIZADO do monstro no palco: caixa fixa 52x52 + object-fit
    contain, pra todo bicho aparecer no mesmo tamanho (independente do sprite
-   nativo) e não dominar/encostar no boneco. Além disso, cada sprite baixado
-   do TibiaWiki preenche uma fração diferente do próprio canvas (sobra de
-   quadro de animação, não o tamanho real do bicho) — domain/monsterSpriteScale.js
-   corrige isso com um scale por monstro; o clip abaixo evita que essa correção
-   vaze por cima do vizinho quando vários bichos ficam lado a lado na sala. */
-.monster-sprite-clip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 70px;
-  height: 70px;
-  margin: -9px;
-  overflow: hidden;
-}
+   nativo) e não dominar/encostar no boneco. O sprite em si já vem recortado/
+   recentralizado (ver infrastructure/tibiaSprites.js), então não precisa de
+   nenhum ajuste extra de escala aqui. */
 .monster-sprite {
   width: 52px;
   height: 52px;
@@ -1940,10 +1929,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   25% { transform: translateX(-2px); }
   75% { transform: translateX(2px); }
 }
-/* overflow:hidden clipa a correção de escala por monstro (ver
-   domain/monsterSpriteScale.js) sem deixá-la vazar em cima do nome ao lado —
-   caixa alargada pra caber o teto de 1.3x sem cortar a criatura (34*1.3≈44). */
-.battle-list-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex: none; overflow: hidden; }
+.battle-list-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; }
 /* caixa FIXA + object-fit: contain padroniza o tamanho visual de todos os
    sprites (mesma abordagem do sprite principal), independente das dimensões
    nativas de cada gif — sem isso os monstros apareciam em tamanhos diferentes */

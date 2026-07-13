@@ -13,41 +13,18 @@ import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossO
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=111';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=111';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=111';
-import { monsterSpriteScale } from '../domain/monsterSpriteScale.js?v=111';
 
-// Correção de tamanho (ver domain/monsterSpriteScale.js) — só nos dois
-// lugares que o jogador vê vários bichos lado a lado e onde a inconsistência
-// de enquadramento do sprite real fica óbvia (cena de batalha e Battle
-// List). Ícones soltos (Bestiário, Tarefas, card de zona…) ficam como
-// estavam, sem a correção.
-//
-// IMPORTANTE sobre ONDE o transform:scale entra — nunca no mesmo elemento
-// que tem overflow:hidden (clip) nem no mesmo que já tem uma animação
-// própria setando `transform` (ela sobrescreveria o scale estático a cada
-// frame, silenciosamente):
-//  - cena: .monster-sprite-wrap (animação de passo, do CALLER) > span de
-//    clip (sem transform próprio) > <img> (recebe o scale aqui).
-//  - Battle List: <img> já tem a PRÓPRIA animação de respirar (mon-walk-sm)
-//    — por isso o scale vai num span NOVO entre ela e o .battle-list-icon
-//    (que já faz o clip, no CALLER), nunca na própria <img>.
-function scaledSpriteHtml(img, scale) {
-  if (scale === 1) return img;
-  // display:inline-block explícito — <span> é inline por padrão e transform
-  // em elemento inline "puro" não é garantido em todo navegador.
-  return `<span style="display:inline-block;transform:scale(${scale})">${img}</span>`;
-}
-
+// O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
+// já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
+// reprocessados (recorte do transparente + recentralização + reescala pra
+// preencher ~82% do canvas), então object-fit:contain sozinho já basta. Ver
+// infrastructure/tibiaSprites.js: MONSTER_SPRITE_VER pro histórico disso.
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
   const file = monsterSpriteFile(monsterId, m);
-  const scale = (cls === 'monster-sprite' || cls === 'battle-list-sprite') ? monsterSpriteScale(monsterId) : 1;
   // fallback para o emoji se o sprite não carregar
-  const imgStyle = cls === 'monster-sprite' && scale !== 1 ? ` style="transform:scale(${scale})"` : '';
-  const img = `<img src="${spriteUrl(file)}" alt="${m.name}" class="${cls}"${imgStyle}
+  return `<img src="${spriteUrl(file)}" alt="${m.name}" class="${cls}"
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${m.icon}</span>'" />`;
-  if (cls === 'monster-sprite') return `<span class="monster-sprite-clip">${img}</span>`;
-  if (cls === 'battle-list-sprite') return scaledSpriteHtml(img, scale);
-  return img;
 }
 
 // Ícone da zona = sprite real do monstro principal da caçada (o primeiro do

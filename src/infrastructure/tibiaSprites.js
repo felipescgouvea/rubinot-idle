@@ -25,7 +25,12 @@ export const SPRITE_OVERRIDE = {
 // enquadramento — recorte do transparente + re-quadrado). Bumpe ao reprocessar.
 // v2: sprites re-baixados como WebP ANIMADO (preservando os frames de
 // caminhada do TibiaWiki) em vez do frame único estático anterior.
-const MONSTER_SPRITE_VER = 2;
+// v3: cada sprite recortado no bounding-box real (união de todos os frames,
+// não só o primeiro) e recentralizado num canvas 64x64 comum, preenchendo
+// ~82% dele — antes o canvas nativo variava (32/64px) e o preenchimento
+// real ia de ~31% a ~107%, fazendo bichos de porte igual aparecerem em
+// tamanhos bem diferentes lado a lado (cena/Battle List).
+const MONSTER_SPRITE_VER = 3;
 export function monsterSpriteFile(monsterId, monster) {
   const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
   return 'monsters/' + localName(file) + '?sv=' + MONSTER_SPRITE_VER;
