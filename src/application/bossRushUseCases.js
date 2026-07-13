@@ -6,7 +6,7 @@
 // explicitamente pra não deixar a caçada normal do jogador "vazada" quando
 // ele entra/sai do Boss Rush — ver startBossRush()/stopBossRush() abaixo.
 import { G } from './gameStore.js?v=125';
-import { ZONES, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=125';
+import { ZONES, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=126';
 import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 
