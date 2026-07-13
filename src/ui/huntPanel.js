@@ -1,19 +1,19 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=109';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=109';
-import { MONSTERS } from '../domain/bestiary.js?v=109';
-import { cityName } from '../domain/cities.js?v=109';
-import { ITEMS } from '../domain/items.js?v=109';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=109';
-import { on, EVENTS } from '../shared/eventBus.js?v=109';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=109';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=109';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=109';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=109';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=109';
-import { monsterSpriteScale } from '../domain/monsterSpriteScale.js?v=109';
+import { G } from '../application/gameStore.js?v=110';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=110';
+import { MONSTERS } from '../domain/bestiary.js?v=110';
+import { cityName } from '../domain/cities.js?v=110';
+import { ITEMS } from '../domain/items.js?v=110';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=110';
+import { on, EVENTS } from '../shared/eventBus.js?v=110';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=110';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=110';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=110';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=110';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=110';
+import { monsterSpriteScale } from '../domain/monsterSpriteScale.js?v=110';
 
 // Correção de tamanho (ver domain/monsterSpriteScale.js) — só nos dois
 // lugares que o jogador vê vários bichos lado a lado e onde a inconsistência

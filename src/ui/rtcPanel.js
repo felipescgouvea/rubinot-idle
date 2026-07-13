@@ -4,18 +4,18 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=109';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=109';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=109';
-import { VOCATIONS } from '../domain/character.js?v=109';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=109';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=109';
-import { getMagic } from '../application/stats.js?v=109';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=109';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=109';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=109';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=109';
-import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=109';
+import { G } from '../application/gameStore.js?v=110';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=110';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=110';
+import { VOCATIONS } from '../domain/character.js?v=110';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=110';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=110';
+import { getMagic } from '../application/stats.js?v=110';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=110';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=110';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=110';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=110';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=110';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 

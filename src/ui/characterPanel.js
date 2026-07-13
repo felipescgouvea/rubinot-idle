@@ -1,18 +1,18 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=109';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=109';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=109';
-import { skillIconImg } from './shared.js?v=109';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=109';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=109';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=109';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=109';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=109';
-import { on, EVENTS } from '../shared/eventBus.js?v=109';
-import { formatNum } from './shared.js?v=109';
-import { renderZonePicker } from './huntPanel.js?v=109';
-import { getCurrentMonster } from '../application/huntUseCases.js?v=109';
+import { G } from '../application/gameStore.js?v=110';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, triesForNext } from '../domain/character.js?v=110';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=110';
+import { skillIconImg } from './shared.js?v=110';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=110';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=110';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=110';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=110';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=110';
+import { on, EVENTS } from '../shared/eventBus.js?v=110';
+import { formatNum } from './shared.js?v=110';
+import { renderZonePicker } from './huntPanel.js?v=110';
+import { getCurrentMonster } from '../application/huntUseCases.js?v=110';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
