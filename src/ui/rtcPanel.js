@@ -211,7 +211,7 @@ export function renderRtcPanel() {
         <div class="rtc-rows">
           ${healSpells.map(([id, s]) => spellRow(id, s, (G.rtc.healSpell || defaultHealSpellId(voc)) === id, 'setRtcHealSpell')).join('')}
         </div>
-        <button class="btn-small" style="margin:2px 0 8px" onclick="toggleBackpack()">🎒 Abrir Bag</button>
+        <button class="btn-small" style="margin:2px 0 4px" onclick="toggleBackpack()">🎒 Abrir Bag</button>
         <h5>Poção de Cura <span class="muted">— bebe abaixo de</span>
           <input type="number" min="5" max="95" value="${G.rtc.healPotionThreshold}" onchange="setRtcThreshold('healPotionThreshold', this.value)" class="rtc-threshold-input" />% de HP</h5>
         <p class="muted rtc-drag-hint">Toque no quadrado para escolher (ou arraste a poção de vida da bag).</p>

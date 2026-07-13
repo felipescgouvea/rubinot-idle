@@ -1111,7 +1111,7 @@ img.tibia-icon {
 }
 #skill-points-display span, #skill-points-display strong span { color: var(--navy-1); }
 #skills-grid, .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 11px; margin: 0 14px 14px !important; }
-#rtc-settings { margin: 12px 14px 14px !important; }
+#rtc-settings { margin: 8px 12px 10px !important; }
 #rtc-settings .skills-grid { margin: 0 0 8px !important; }
 #rtc-settings > div:first-child { margin: 0 0 12px !important; }
 #rtc-settings h4 { font-family: var(--serif); color: var(--navy-2); }
@@ -1151,42 +1151,42 @@ img.tibia-icon {
    real do RubinOT), deliberadamente diferente do resto do jogo: no jogo
    real o RTCaster também é uma janela separada, com seu próprio estilo ============ */
 #tab-rtc .card { background: linear-gradient(180deg, #3a4048, #22262b); border-color: var(--gold); }
-#tab-rtc .card h3 { background: linear-gradient(180deg, #262a2f, #16181b); }
-#tab-rtc > .card > p.muted { color: #9aa3ad; margin: 10px 14px 0; }
-.rtc-console { display: flex; gap: 14px; padding: 14px; align-items: flex-start; }
+#tab-rtc .card h3 { background: linear-gradient(180deg, #262a2f, #16181b); padding: 7px 34px; }
+#tab-rtc > .card > p.muted { color: #9aa3ad; margin: 6px 14px 0; }
+.rtc-console { display: flex; gap: 10px; padding: 10px; align-items: flex-start; }
 .rtc-sidebar {
-  width: 130px;
+  width: 110px;
   flex-shrink: 0;
   background: linear-gradient(180deg, #2b2f34, #1c1f22);
   border: 1px solid #4a5058;
   border-radius: 8px;
-  padding: 12px 10px;
+  padding: 8px 8px;
   text-align: center;
 }
 .rtc-portrait {
-  width: 76px; height: 76px; margin: 0 auto 8px;
+  width: 60px; height: 60px; margin: 0 auto 6px;
   background: #14171a; border: 1px solid #4a5058; border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
 }
-.rtc-portrait canvas { width: 68px; height: 68px; image-rendering: pixelated; }
-.rtc-sidebar-name { color: #e8c766; font-family: var(--serif); font-size: 12.5px; font-weight: 700; }
-.rtc-sidebar-level { color: #9aa3ad; font-size: 10.5px; margin: 2px 0 10px; }
+.rtc-portrait canvas { width: 54px; height: 54px; image-rendering: pixelated; }
+.rtc-sidebar-name { color: #e8c766; font-family: var(--serif); font-size: 12px; font-weight: 700; }
+.rtc-sidebar-level { color: #9aa3ad; font-size: 10.5px; margin: 2px 0 6px; }
 .rtc-sidebar-status { font-size: 10px; color: #7cc576; }
 .rtc-main { flex: 1; min-width: 0; }
 .rtc-summary {
   background: #14171a; border: 1px solid #4a5058; border-radius: 6px;
-  padding: 10px 12px; margin-bottom: 16px; font-size: 11.5px; color: #cfd6dc; line-height: 1.7;
+  padding: 6px 10px; margin-bottom: 8px; font-size: 11px; color: #cfd6dc; line-height: 1.5;
 }
 .rtc-summary strong { color: #e8c766; }
 #tab-rtc h4 { color: #e8c766; font-family: var(--serif); font-size: 13px; letter-spacing: 1px; margin: 0 0 4px; }
-#tab-rtc h5 { color: #b8c0c8; font-family: var(--serif); font-size: 11.5px; font-weight: 700; margin: 14px 0 6px; }
+#tab-rtc h5 { color: #b8c0c8; font-family: var(--serif); font-size: 11.5px; font-weight: 700; margin: 8px 0 4px; }
 #tab-rtc h5 .muted { color: #7d848b; font-weight: 400; font-size: 11px; margin: 0 4px; }
-#tab-rtc .rtc-main .muted { color: #838b93; }
-.rtc-rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+#tab-rtc .rtc-main .muted { color: #838b93; margin-bottom: 4px; }
+.rtc-rows { display: flex; flex-direction: column; gap: 4px; margin-bottom: 2px; }
 .rtc-row {
   display: flex; align-items: center; gap: 10px;
   background: linear-gradient(180deg, #2b2f34, #22262b);
-  border: 1px solid #454b52; border-radius: 6px; padding: 8px 10px;
+  border: 1px solid #454b52; border-radius: 6px; padding: 5px 10px;
 }
 .rtc-row.selected { border-color: var(--gold-bright); background: linear-gradient(180deg, #3a3420, #2b2712); }
 .rtc-row.locked { opacity: 0.5; }
@@ -1234,18 +1234,18 @@ img.tibia-icon {
 .rtc-prio-btn.remove { background: #5a2530; border-color: #8a3a48; color: #ffd0d8; }
 
 /* Slot de drop de poção (Healing) */
-.rtc-drag-hint { font-size: 11px; margin: 2px 0 6px !important; }
+.rtc-drag-hint { font-size: 10px; margin: 1px 0 4px !important; }
 .rtc-potion-slot {
-  display: flex; align-items: center; gap: 10px;
-  min-height: 52px; padding: 8px 12px; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  min-height: 36px; padding: 5px 10px; margin-bottom: 4px;
   border: 2px dashed #4a5178; border-radius: 8px; background: #1c2032; cursor: pointer;
 }
 .rtc-potion-slot.filled { border-style: solid; border-color: var(--gold-bright); background: #23283f; }
 .rtc-potion-slot.drag-over { border-color: #7cffb2; background: #22322a; }
-.rtc-potion-slot-icon img, .rtc-potion-slot-icon { width: 30px; height: 30px; image-rendering: pixelated; }
+.rtc-potion-slot-icon img, .rtc-potion-slot-icon { width: 24px; height: 24px; image-rendering: pixelated; }
 .rtc-potion-slot-name { font-weight: 700; color: #f0e6c8; }
-.rtc-potion-slot-ghost { font-size: 26px; color: #4a5178; }
-.rtc-potion-slot-hint { color: #8a92b8; font-size: 12px; }
+.rtc-potion-slot-ghost { font-size: 20px; color: #4a5178; }
+.rtc-potion-slot-hint { color: #8a92b8; font-size: 11px; }
 /* janelinha de opções de poção (alternativa mobile ao drag) */
 .rtc-potion-picker h3 { margin: 0 0 4px; color: var(--gold-bright); }
 .rtc-potion-picker .rtc-rows { max-height: 52vh; overflow-y: auto; margin: 8px 0; }
@@ -1254,13 +1254,13 @@ img.tibia-icon {
   width: 46px; background: #14171a; border: 1px solid #4a5058; color: #eef1f4;
   border-radius: 4px; padding: 3px 5px; font-size: 11px; text-align: center;
 }
-.rtc-subtabs { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid #454b52; padding-bottom: 10px; }
+.rtc-subtabs { display: flex; gap: 6px; margin-bottom: 8px; border-bottom: 1px solid #454b52; padding-bottom: 6px; }
 .rtc-subtab-btn {
   background: linear-gradient(180deg, #2b2f34, #1c1f22);
   border: 1px solid #4a5058;
   color: #b8c0c8;
   font-family: var(--serif); font-size: 12px; font-weight: 700;
-  padding: 8px 16px; border-radius: 6px; cursor: pointer;
+  padding: 5px 14px; border-radius: 6px; cursor: pointer;
   transition: filter 0.15s;
 }
 .rtc-subtab-btn:hover { filter: brightness(1.2); }
