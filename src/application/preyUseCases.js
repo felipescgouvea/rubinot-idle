@@ -8,7 +8,7 @@ import {
 } from '../domain/prey.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
-import { t } from '../i18n/i18n.js?v=134';
+import { t } from '../i18n/i18n.js?v=135';
 
 const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
 

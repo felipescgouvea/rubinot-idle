@@ -10,7 +10,7 @@ import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=128';
 import { itemIconImg } from './shared.js?v=126';
 import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=128';
-import { t } from '../i18n/i18n.js?v=134';
+import { t } from '../i18n/i18n.js?v=135';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
 // — mesmo padrão do RTC, ver ui/rtcPanel.js: activeRtcTab).

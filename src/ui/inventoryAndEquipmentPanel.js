@@ -6,8 +6,8 @@ import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, 
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from '../application/saveGameUseCase.js?v=126';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=126';
-import { t } from '../i18n/i18n.js?v=134';
+import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=126';
+import { t } from '../i18n/i18n.js?v=135';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -210,9 +210,8 @@ export function renderEquipmentSlots() {
     </div>`;
   }).join('');
   // Slot da Bag — guarda um item de verdade (o "bag" inicial do Tibia, ver
-  // G.backpack) e funciona como container: botão direito abre/fecha a janela do
-  // inventário (que abre à direita — ver toggleBackpack / index.html). Clique
-  // esquerdo faz o mesmo, por conveniência.
+  // G.backpack) e funciona como container: abre a Bag num modal (ver
+  // toggleBackpack abaixo). Clique esquerdo e direito fazem a mesma coisa.
   const bagId = G.backpack || 'bag';
   const bagName = (ITEMS[bagId] && ITEMS[bagId].name) || t('inventory.bagFallbackName');
   const backpackHtml = `<div class="equip-slot slot-backpack filled" title="${t('inventory.bagHintTitle', { name: bagName })}"
@@ -222,14 +221,21 @@ export function renderEquipmentSlots() {
   areas.forEach(a => { a.innerHTML = html + backpackHtml; });
 }
 
-// Abre/fecha a janela da Bag (inventário), que aparece fixa à direita da tela.
-// Renderiza o inventário ao abrir pra refletir o estado atual.
+// Abre a Bag (inventário) num modal — antes era uma janela fixa ao lado do
+// Equipamento; agora usa o modal genérico (ver ui/shared.js: openModal), que
+// já tem seu próprio botão de fechar. Os ids internos (#inventory-grid,
+// #autosell-controls, #bag-slot-counter) são os MESMOS de antes, então
+// renderInventory() e renderAutoSellControls() funcionam sem mudança —
+// eventos como EVENTS.INVENTORY (ex.: depois de vender um item) continuam
+// atualizando o conteúdo enquanto o modal estiver aberto.
 export function toggleBackpack() {
-  const card = document.getElementById('backpack-inventory-card');
-  if (!card) return;
-  const willShow = card.style.display === 'none' || !card.style.display;
-  card.style.display = willShow ? 'block' : 'none';
-  if (willShow) renderInventory();
+  openModal(`
+    <h3>🎒 ${t('inventory.bagTitle')} <span id="bag-slot-counter" class="bag-slot-counter"></span></h3>
+    <p class="muted">${t('hunt.bagHint')}</p>
+    <div id="autosell-controls"></div>
+    <div id="inventory-grid"></div>
+  `);
+  renderInventory();
 }
 
 export function wireInventoryAndEquipmentEvents() {

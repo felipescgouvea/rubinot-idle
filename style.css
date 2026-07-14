@@ -347,10 +347,10 @@ body {
 .hunt-mid-row > .card { flex: 1; min-width: 0; }
 /* Sem flex-grow nem min-width fixo: o card de Equipamento já encolhe pro
    próprio conteúdo (ver #equip-card), então esta coluna precisa acompanhar
-   — senão sobra espaço "fantasma" reservado à toa entre Equipamento e a Bag
-   (a 3ª coluna, ver #backpack-inventory-card). Os 340px que a grade de
+   — senão sobra espaço "fantasma" reservado à toa. Os 340px que a grade de
    vocação (#char-card, some após criar o personagem) precisa ficam nela
-   mesma, não aqui — assim a coluna só é larga QUANDO precisa. */
+   mesma, não aqui — assim a coluna só é larga QUANDO precisa. (A Bag era a
+   3ª coluna antes; agora é modal, ver toggleBackpack.) */
 .panel-right { flex: 0 1 auto; display: flex; flex-direction: column; gap: 14px; }
 
 /* ============ VOCAÇÕES ============ */
@@ -551,6 +551,10 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 /* :has() só escala esse modal específico; os demais (outfit picker, detalhe
    de item...) continuam com a largura padrão de #modal-box. */
 #modal-box:has(.zone-picker-gallery) { max-width: 1160px; }
+/* Bag num modal (ver toggleBackpack) — mais larga que o padrão de 480px pra
+   caber mais itens por linha, com scroll interno se a lista for grande. */
+#modal-box:has(#inventory-grid) { max-width: 620px; }
+#modal-box:has(#inventory-grid) #inventory-grid { max-height: 55vh; overflow-y: auto; }
 .zone-picker-gallery {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -2119,24 +2123,11 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 }
 .shop-req { color: #b1341f; font-weight: 700; }
 
-/* ============ BAG (janela do inventário encaixada ao lado de Equipamento) ============ */
-/* 3ª coluna do painel de Caçada (junto de .panel-left/.panel-right — ver
-   `.panel.active { display:flex; flex-wrap:wrap }`), não mais fixa por cima
-   do resto da página. display:none/block continua controlado por
-   toggleBackpack() (ui/inventoryAndEquipmentPanel.js). */
-#backpack-inventory-card {
-  flex: 0 0 300px;
-  width: 300px; max-width: 100%;
-  align-self: flex-start;
-  max-height: calc(100vh - 232px);
-  overflow-y: auto;
-}
+/* ============ BAG (agora um modal — ver toggleBackpack em
+   ui/inventoryAndEquipmentPanel.js — em vez de uma janela encaixada ao lado
+   de Equipamento) ============ */
 .bag-slot-counter { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
 .bag-slot-counter-full { color: #c0392b; }
-
-@media (max-width: 1080px) {
-  #backpack-inventory-card { flex-basis: 100%; width: auto; max-height: none; }
-}
 
 /* ============ PAINEL ADMIN ============ */
 #admin-content { margin: 12px 14px !important; }

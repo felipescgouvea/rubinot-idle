@@ -13,7 +13,7 @@ import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { trainSkill } from './skillUseCases.js?v=126';
 import { stopHunt } from './huntUseCases.js?v=131';
 import { saveGame } from './saveGameUseCase.js?v=126';
-import { t } from '../i18n/i18n.js?v=134';
+import { t } from '../i18n/i18n.js?v=135';
 
 let trainingInterval = null;
 

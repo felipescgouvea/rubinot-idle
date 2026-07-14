@@ -28,7 +28,7 @@ export default {
   'hunt.vocPaladin': 'Distância equilibrada. Mana e HP balanceados.',
   'hunt.vocSorcerer': 'Mago ofensivo. Alto dano, frágil. Usa mana.',
   'hunt.vocDruid': 'Mago de cura. Suporte + dano elemental.',
-  'hunt.bagHint': 'Clique num item para equipar, vender ou ver detalhes. Botão direito na Bag fecha.',
+  'hunt.bagHint': 'Clique num item para equipar, vender ou ver detalhes.',
 
   // ---- rtc tab ----
   'rtc.intro': 'Configure o ataque e a cura automáticos da caçada, como no RTCaster real do RubinOT.',
@@ -288,6 +288,7 @@ export default {
   'rtc.notManaPotion': '{name} não é poção de mana.',
 
   // ---- inventory & equipment panel (ui/inventoryAndEquipmentPanel.js) ----
+  'inventory.bagTitle': 'Bag',
   'inventory.statAtk': 'ATK',
   'inventory.statWandDmg': 'DANO',
   'inventory.statDist': 'DIST',

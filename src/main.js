@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=126';
 import { VOCATIONS } from './domain/character.js?v=126';
 import { emit, EVENTS } from './shared/eventBus.js?v=125';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=134';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=135';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=126';
@@ -35,7 +35,7 @@ import { startTraining, stopTraining, resumeTrainingOnLoad } from './application
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=126';
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=128';
-import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=126';
+import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=127';
 import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=125';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=125';

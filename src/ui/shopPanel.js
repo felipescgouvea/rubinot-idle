@@ -4,7 +4,7 @@ import { ITEMS, potionReqLabel } from '../domain/items.js?v=135';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=126';
 import { buyShopItem } from '../application/shopUseCases.js?v=130';
-import { t } from '../i18n/i18n.js?v=134';
+import { t } from '../i18n/i18n.js?v=135';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;

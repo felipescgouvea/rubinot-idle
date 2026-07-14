@@ -27,7 +27,7 @@ export default {
   'hunt.vocPaladin': 'Balanced ranged fighter. Even mana and HP.',
   'hunt.vocSorcerer': 'Offensive mage. High damage, fragile. Uses mana.',
   'hunt.vocDruid': 'Healing mage. Support plus elemental damage.',
-  'hunt.bagHint': 'Click an item to equip, sell, or see details. Right-click the Bag to close it.',
+  'hunt.bagHint': 'Click an item to equip, sell, or see details.',
 
   // ---- rtc tab ----
   'rtc.intro': 'Configure automatic attack and healing for your hunt, just like the real RTCaster in RubinOT.',
@@ -287,6 +287,7 @@ export default {
   'rtc.notManaPotion': '{name} is not a mana potion.',
 
   // ---- inventory & equipment panel (ui/inventoryAndEquipmentPanel.js) ----
+  'inventory.bagTitle': 'Bag',
   'inventory.statAtk': 'ATK',
   'inventory.statWandDmg': 'DMG',
   'inventory.statDist': 'DIST',
