@@ -3,9 +3,18 @@
 // vermelho no botão avisa quando há recompensa disponível hoje.
 import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { openModal } from './shared.js?v=125';
+import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=125';
 import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=125';
 import { t } from '../i18n/i18n.js?v=134';
+
+// Sprite real pro gold/Rubini Coin (mesmo dispatcher do Battle Pass, ver
+// ui/battlePassPanel.js: bpRewardIcon); XP Boost e Supply Completo não têm
+// item único equivalente no Tibia, ficam de emoji mesmo.
+function dailyRewardIcon(r, cls = 'daily-icon-img') {
+  if (r.type === 'gold') return goldIconImg(cls);
+  if (r.type === 'rubini') return rubiniIconImg(cls);
+  return r.icon;
+}
 
 // Atualiza o selo "!" do botão do header conforme há ou não resgate hoje.
 export function renderDailyBadge() {
@@ -21,7 +30,7 @@ export function openDailyReward() {
     const isToday = state.canClaim && r.day === ((state.streak - 1) % DAILY_CYCLE) + 1;
     return `<div class="daily-card ${isToday ? 'today' : ''}">
       <div class="daily-day">${t('daily.day', { day: r.day })}</div>
-      <div class="daily-icon">${r.icon}</div>
+      <div class="daily-icon">${dailyRewardIcon(r)}</div>
       <div class="daily-name">${r.name}</div>
     </div>`;
   }).join('');
@@ -31,7 +40,7 @@ export function openDailyReward() {
     <div class="daily-grid">${cards}</div>
     <div class="daily-claim-row">
       ${state.canClaim
-        ? `<button class="btn-blue daily-claim-btn" onclick="claimDailyReward()">${t('daily.claimDay', { day: state.streak, icon: todayReward.icon, name: todayReward.name })}</button>`
+        ? `<button class="btn-blue daily-claim-btn" onclick="claimDailyReward()">${t('daily.claimDay', { day: state.streak, icon: dailyRewardIcon(todayReward, 'daily-icon-img-inline'), name: todayReward.name })}</button>`
         : `<span class="muted">✅ ${t('daily.alreadyClaimed', { day: state.streak })}</span>`}
     </div>`);
 }

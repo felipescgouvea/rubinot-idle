@@ -1551,6 +1551,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   transition: filter 0.15s;
 }
 .hs-category-btn:hover { filter: brightness(0.97); }
+.hs-category-icon-img { width: 14px; height: 14px; object-fit: contain; image-rendering: pixelated; vertical-align: -2px; }
 .hs-category-btn.active { background: linear-gradient(180deg, #ffe9a3, var(--gold-bright)); border-color: var(--gold); color: #4a3300; }
 
 /* ============ MODAL ============ */
@@ -1953,6 +1954,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .daily-card.today { border: 2px solid var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); box-shadow: 0 0 8px #d4a01766; }
 .daily-day { font-size: 10px; font-weight: 700; color: var(--ink-soft); }
 .daily-icon { font-size: 22px; margin: 3px 0; }
+.daily-icon-img { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; }
+.daily-icon-img-inline { width: 16px; height: 16px; object-fit: contain; image-rendering: pixelated; vertical-align: -3px; }
 .daily-name { font-size: 10px; color: var(--ink); line-height: 1.2; }
 .daily-claim-row { text-align: center; margin-top: 8px; }
 .daily-claim-btn { font-size: 13px; }
@@ -2181,7 +2184,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .admin-toggle-row input { width: 16px; height: 16px; }
 .admin-zone-list { display: flex; flex-direction: column; gap: 5px; max-height: 300px; overflow-y: auto; margin-top: 8px; padding: 8px; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(0,0,0,0.03); }
 .admin-zone-row { display: grid; grid-template-columns: 1fr 110px 110px; align-items: center; gap: 8px; }
-.admin-zone-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-zone-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+.admin-zone-icon-img, .admin-spawn-icon-img, .admin-loot-monster-icon { width: 18px; height: 18px; object-fit: contain; image-rendering: pixelated; vertical-align: -4px; }
 .admin-zone-mult { font-size: 11px; font-weight: 700; color: var(--ink-soft); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .admin-zone-mult input { width: 100%; padding: 4px 6px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
 /* Sub-painel de spawn por hunt */

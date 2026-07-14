@@ -9,11 +9,11 @@ import { renderBattlePassPanel } from './battlePassPanel.js?v=125';
 import { renderRtcPanel } from './rtcPanel.js?v=127';
 import { renderShopPanel } from './shopPanel.js?v=130';
 import { renderMarketPanel } from './marketPanel.js?v=125';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=127';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=128';
 import { renderBossRushPanel } from './bossRushPanel.js?v=125';
 import { renderBestiaryTab } from './bestiaryPanel.js?v=125';
 import { renderTrainingSection } from './trainingPanel.js?v=125';
-import { renderAdminPanel } from './adminPanel.js?v=128';
+import { renderAdminPanel } from './adminPanel.js?v=129';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 

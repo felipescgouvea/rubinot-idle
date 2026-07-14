@@ -9,6 +9,7 @@ import { ITEMS } from '../domain/items.js?v=134';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=128';
 import { itemIconImg } from './shared.js?v=125';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=127';
 import { t } from '../i18n/i18n.js?v=134';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
@@ -58,7 +59,7 @@ function renderGeneralSubPanel(cfg) {
     const goldVal = ov.gold != null ? ov.gold : 1;
     return `
     <div class="admin-zone-row">
-      <span class="admin-zone-name">${z.icon} ${t(z.name)}</span>
+      <span class="admin-zone-name">${zoneIconImg(z, 'admin-zone-icon-img')} ${t(z.name)}</span>
       <label class="admin-zone-mult">XP ×<input type="number" min="0" step="0.1" value="${xpVal}"
         onchange="setZoneMultiplier('${id}', 'xp', parseFloat(this.value))" /></label>
       <label class="admin-zone-mult">Gold ×<input type="number" min="0" step="0.1" value="${goldVal}"
@@ -153,7 +154,7 @@ function renderSpawnSubPanel() {
   const monsterRows = zone.monsters.map(mid => {
     const m = MONSTERS[mid];
     const name = m ? m.name : mid;
-    const icon = m ? m.icon : '❓';
+    const icon = m ? monsterSpriteImg(mid, 'admin-spawn-icon-img') : '❓';
     return `
     <div class="admin-spawn-row">
       <span class="admin-spawn-name">${icon} ${name}</span>
@@ -232,7 +233,7 @@ function renderLootSubPanel(cfg) {
     }).join('');
     return `
     <div class="admin-loot-monster">
-      <div class="admin-loot-monster-name">${m.icon} ${m.name}</div>
+      <div class="admin-loot-monster-name">${monsterSpriteImg(mid, 'admin-loot-monster-icon')} ${m.name}</div>
       ${itemRows}
     </div>`;
   }).join('') : '';

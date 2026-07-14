@@ -2,7 +2,7 @@ import { G } from '../application/gameStore.js?v=126';
 import { MONSTERS } from '../domain/bestiary.js?v=132';
 import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { monsterSpriteImg } from './huntPanel.js?v=126';
+import { monsterSpriteImg } from './huntPanel.js?v=127';
 import { t } from '../i18n/i18n.js?v=134';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já

@@ -2,7 +2,7 @@ import { G } from '../application/gameStore.js?v=126';
 import { MONSTERS } from '../domain/bestiary.js?v=132';
 import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { escapeHtml, notify } from './shared.js?v=125';
+import { escapeHtml, notify, skillIconImg } from './shared.js?v=125';
 import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=127';
 import { t } from '../i18n/i18n.js?v=134';
 
@@ -11,6 +11,14 @@ const TOTAL_BESTIARY = Object.keys(MONSTERS).length;
 // 🥇🥈🥉 pros 3 primeiros — mesmo padrão pra QUALQUER categoria (level, skill
 // ou bestiário), não só o ranking geral.
 const RANK_MEDAL = ['🥇', '🥈', '🥉'];
+
+// Categorias de skill têm sprite real do Tibia (mesmos ids de
+// domain/character.js: skills treináveis) — level/bestiário ficam de emoji,
+// não têm equivalente real (ver skillIconFile em infrastructure/tibiaSprites.js).
+const SKILL_CATEGORY_KEYS = new Set(['magic', 'fist', 'club', 'sword', 'axe', 'distance', 'shielding']);
+function categoryIcon(c) {
+  return SKILL_CATEGORY_KEYS.has(c.key) ? skillIconImg(c.key, c.icon, 'hs-category-icon-img') : c.icon;
+}
 
 // Categoria ativa (estado só de UI, sobrevive a re-renders — mesmo padrão do
 // RTC/Admin, ver ui/rtcPanel.js: activeRtcTab).
@@ -62,7 +70,7 @@ function skillOrBestiaryTable(category, rows) {
   return `
     <table class="hs-table">
       <thead><tr>
-        <th>#</th><th>${t('highscores.colName')}</th><th>${t('highscores.colVocation')}</th><th>${t('highscores.colLevel')}</th><th>${category.icon} ${t(category.labelKey)}</th><th>${t('highscores.colWorld')}</th>
+        <th>#</th><th>${t('highscores.colName')}</th><th>${t('highscores.colVocation')}</th><th>${t('highscores.colLevel')}</th><th>${categoryIcon(category)} ${t(category.labelKey)}</th><th>${t('highscores.colWorld')}</th>
       </tr></thead>
       <tbody>
         ${rows.map((r, i) => `
@@ -84,7 +92,7 @@ export async function renderHighscoresPanel() {
   const category = highscoreCategory(activeCategory);
 
   const categoryBtns = HIGHSCORE_CATEGORIES.map(c => `
-    <button class="hs-category-btn ${c.key === category.key ? 'active' : ''}" onclick="setHighscoresCategory('${c.key}')">${c.icon} ${t(c.labelKey)}</button>
+    <button class="hs-category-btn ${c.key === category.key ? 'active' : ''}" onclick="setHighscoresCategory('${c.key}')">${categoryIcon(c)} ${t(c.labelKey)}</button>
   `).join('');
 
   if (!G.playerName) {
