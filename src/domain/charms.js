@@ -4,25 +4,29 @@
 // puras: nada aqui toca DOM, storage ou G (a contagem de mortes vem de
 // G.killCounters, passada pelos casos de uso).
 
-// Etapas de progresso do bestiário por criatura (contagem acumulada de mortes).
-// Cada etapa alcançada concede Charm Points uma única vez. No Tibia as etapas
-// variam por dificuldade; aqui usamos limiares fixos e proporcionais, mais
-// curtos que os oficiais por ser um idle.
+// Etapas de progresso do bestiário por criatura (contagem acumulada de mortes)
+// — 3 estágios, fiel ao Tibia real. Os Charm Points só são pagos quando o
+// ÚLTIMO estágio (III) é concluído, não em cada etapa cruzada — matar até a
+// etapa II não paga nada ainda, só a soma inteira quando a criatura fica
+// 100% completa no bestiário (ver charmPointsForKills abaixo).
 export const BESTIARY_STAGES = [
   { kills: 10,   charmPoints: 5,  label: 'I' },
   { kills: 50,   charmPoints: 10, label: 'II' },
   { kills: 250,  charmPoints: 15, label: 'III' },
-  { kills: 1000, charmPoints: 25, label: 'IV' },
 ];
 
 // Quantas etapas do bestiário uma criatura já tem completas, dada a contagem
-// de mortes — e quantos Charm Points isso representa no total.
+// de mortes.
 export function bestiaryStagesCompleted(kills) {
   return BESTIARY_STAGES.filter(s => kills >= s.kills).length;
 }
 
+// Charm Points de uma criatura: 0 até completar TODOS os estágios (o último,
+// III) — só então paga a soma cheia dos 3 de uma vez, nunca parcial.
 export function charmPointsForKills(kills) {
-  return BESTIARY_STAGES.reduce((sum, s) => sum + (kills >= s.kills ? s.charmPoints : 0), 0);
+  const last = BESTIARY_STAGES[BESTIARY_STAGES.length - 1];
+  if (kills < last.kills) return 0;
+  return BESTIARY_STAGES.reduce((sum, s) => sum + s.charmPoints, 0);
 }
 
 export function nextBestiaryStage(kills) {

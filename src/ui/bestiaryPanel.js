@@ -12,10 +12,10 @@ import {
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=125';
+} from '../domain/charms.js?v=126';
 import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { openModal, closeModal } from './shared.js?v=125';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=126';
 import { monsterSpriteImg } from './huntPanel.js?v=128';
 import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=125';
 import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=125';
@@ -131,14 +131,14 @@ function renderCharmsSection() {
         <div class="charm-desc">${t(c.desc)}</div></div></div>
       ${isUnlocked
         ? `<button class="btn-small ${isEquipped ? 'danger' : 'btn-blue'}" onclick="toggleCharmEquipped('${id}')">${isEquipped ? t('bestiary.unequip') : t('bestiary.equip')}</button>`
-        : `<button class="btn-small" ${affordable ? '' : 'disabled'} onclick="unlockCharm('${id}')">🔓 ${t('bestiary.unlockCost', { cost: c.cost })}</button>`}
+        : `<button class="btn-small" ${affordable ? '' : 'disabled'} onclick="unlockCharm('${id}')">🔓 ${t('bestiary.unlockCost', { cost: c.cost })} ${charmPointsIconImg('inline-icon')}</button>`}
     </div>`;
   }).join('');
 }
 
 export function renderBestiaryTab() {
   const cpEl = document.getElementById('charm-points-display');
-  if (cpEl) cpEl.innerHTML = `<span class="charm-points-badge">✨ ${t('bestiary.charmPointsBadge', { n: (G.charmPoints || 0).toLocaleString() })}</span> · ${t('bestiary.charmsEquippedCount', { equipped: (G.charmsEquipped || []).length, total: CHARM_EQUIP_SLOTS })}`;
+  if (cpEl) cpEl.innerHTML = `<span class="charm-points-badge">${charmPointsIconImg('inline-icon')} ${t('bestiary.charmPointsBadge', { n: (G.charmPoints || 0).toLocaleString() })}</span> · ${t('bestiary.charmsEquippedCount', { equipped: (G.charmsEquipped || []).length, total: CHARM_EQUIP_SLOTS })}`;
   renderPreySection();
   renderBestiarySection();
   renderCharmsSection();

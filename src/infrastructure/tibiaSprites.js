@@ -143,3 +143,7 @@ export function missileSpriteFile(name) {
 // então usa a sprite real mais próxima em conceito (Tibia Coin, a moeda
 // premium oficial) em vez de um emoji genérico.
 export const RUBINI_COIN_FILE = 'currency/Tibia_Coin.webp';
+
+// Charm Points: símbolo roxo real do Tibia (o mesmo ícone da barra de status
+// do cliente), em vez da sigla genérica "CP".
+export const CHARM_POINTS_ICON_FILE = 'currency/Charm_Points_Icon.gif';

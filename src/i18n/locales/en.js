@@ -414,7 +414,7 @@ export default {
   'bestiary.stageProgressComplete': 'Stage {stage} · {kills} kills · ✅ complete',
   'bestiary.unequip': 'Unequip',
   'bestiary.equip': 'Equip',
-  'bestiary.unlockCost': '{cost} CP',
+  'bestiary.unlockCost': '{cost}',
   'bestiary.charmPointsBadge': '{n} Charm Points',
   'bestiary.charmsEquippedCount': '{equipped}/{total} charms equipped',
 

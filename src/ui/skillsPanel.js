@@ -4,7 +4,7 @@ import { G } from '../application/gameStore.js?v=126';
 import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=126';
 import { resolveEquippedItem } from '../domain/items.js?v=135';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
-import { skillIconImg } from './shared.js?v=125';
+import { skillIconImg } from './shared.js?v=126';
 import { t } from '../i18n/i18n.js?v=134';
 
 export function renderSkillsPanel() {

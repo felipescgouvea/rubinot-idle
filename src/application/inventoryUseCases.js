@@ -10,7 +10,7 @@ import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js
 import { runeDamage, potionRestore } from '../domain/combatFormulas.js?v=126';
 import { elementMod } from '../domain/elements.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
-import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
+import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=126';
 import { t } from '../i18n/i18n.js?v=134';
 
 function itemLogIcon(itemId) {

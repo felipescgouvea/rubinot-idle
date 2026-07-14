@@ -4,7 +4,7 @@
 // nem de charm, só pedir os multiplicadores prontos.
 import { G } from './gameStore.js?v=126';
 import { isPreyActive, PREY_BONUS_TYPES } from '../domain/prey.js?v=125';
-import { CHARMS } from '../domain/charms.js?v=125';
+import { CHARMS } from '../domain/charms.js?v=126';
 
 // Soma o valor de todos os charms equipados que tenham um dado efeito.
 function charmSum(effect) {
