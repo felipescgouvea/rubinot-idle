@@ -24,6 +24,7 @@ import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeap
 import { trainSkill } from './skillUseCases.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
+import { saveGame } from './saveGameUseCase.js?v=126';
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=128';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=128';
@@ -672,6 +673,13 @@ export function resolveMonsterKill(zone, victim) {
   emit(EVENTS.KILL_COUNTERS);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.INVENTORY);
+  // Salva a cada kill (não só no setInterval de 30s do main.js) — G.lastSave
+  // precisa ficar sempre "fresco" durante a caçada. Sem isso, um F5 logo
+  // depois de uma janela de até ~30s sem save fazia applyOfflineProgress()
+  // (ver persistenceUseCases.js) reconstruir esse intervalo como "progresso
+  // offline" por cima da XP que a caçada AO VIVO já tinha dado — contava a
+  // mesma janela de tempo duas vezes (uma vez de verdade, outra aproximada).
+  saveGame();
 }
 
 export function gainXp(amount) {
