@@ -6,7 +6,7 @@
 import { G } from './gameStore.js?v=126';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=131';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=126';
 import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=126';

@@ -5,7 +5,7 @@
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
 import { G } from '../application/gameStore.js?v=126';
-import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=125';
+import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=134';
 import { VOCATIONS } from '../domain/character.js?v=126';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
@@ -89,10 +89,7 @@ export function openRtcAttackSpellPicker(idx) {
       <h3>⚔️ ${t('rtc.attackSlotPickerTitle', { n: idx + 1 })}</h3>
       <p class="muted">${t('rtc.attackSlotPickerHint')}</p>
       <div class="rtc-rows">${rows || `<p class="muted">${t('rtc.allAttackSpellsAdded')}</p>`}</div>
-      <div class="rtc-potion-picker-actions">
-        ${currentId ? `<button class="btn-small danger" onclick="clearRtcAttackSpellSlot(${idx}); closeModal();">${t('rtc.remove')}</button>` : ''}
-        <button class="btn-small" onclick="closeModal()">${t('modal.close')}</button>
-      </div>
+      ${currentId ? `<div class="rtc-potion-picker-actions"><button class="btn-small danger" onclick="clearRtcAttackSpellSlot(${idx}); closeModal();">${t('rtc.remove')}</button></div>` : ''}
     </div>
   `);
 }
@@ -152,10 +149,7 @@ export function openRtcPotionPicker(kind) {
       <h3>💊 ${t('rtc.potionOf', { label })}</h3>
       <p class="muted">${t('rtc.potionPickerHint')}</p>
       <div class="rtc-rows">${rows}</div>
-      <div class="rtc-potion-picker-actions">
-        ${selectedId ? `<button class="btn-small danger" onclick="pickRtcPotion('${kind}','')">${t('rtc.remove')}</button>` : ''}
-        <button class="btn-small" onclick="closeModal()">${t('modal.close')}</button>
-      </div>
+      ${selectedId ? `<div class="rtc-potion-picker-actions"><button class="btn-small danger" onclick="pickRtcPotion('${kind}','')">${t('rtc.remove')}</button></div>` : ''}
     </div>
   `);
 }

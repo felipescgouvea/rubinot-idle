@@ -2,7 +2,7 @@
 // runa, mutuamente exclusivos) e cura automática (spell E poção, cada uma
 // com seu limiar de % de HP) — ver domain/rtcConfig.js e a UI em rtcPanel.js.
 import { G } from './gameStore.js?v=126';
-import { isSpellAvailable } from '../domain/spells.js?v=125';
+import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { normalizeAttackSpells, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=126';
 import { getMagic } from './stats.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';

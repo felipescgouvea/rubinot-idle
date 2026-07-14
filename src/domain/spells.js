@@ -48,6 +48,19 @@ export const SPELLS = {
   exori_san:        { name: 'Divine Missile', words: 'exori san', icon: '☄️', voc: ['paladin'], level: 40, mana: 20,  type: 'attack', power: [1.9, 8, 3.0, 18], element: 'holy', area: 'single', cd: 2 },
   exevo_mas_san:    { name: 'Divine Caldera', words: 'exevo mas san', icon: '🌟', voc: ['paladin'], level: 50, mana: 160, type: 'attack', power: [5, 25, 6.2, 45], element: 'holy', area: 'ball', cd: 4 },
 
+  // --- Magias de Dawnport (Choose your Character, patch 10.55): antes delas,
+  // sorcerer e druid ficavam sem NENHUMA magia de ataque do nível 1 ao 12 (só
+  // o golpe básico da wand/rod). São versões fracas dos Strikes/Waves reais,
+  // liberadas desde o nível 1 (fiel ao Tibia — ficaram disponíveis a
+  // qualquer personagem a partir de 19/nov/2014, não só em Dawnport). Knight
+  // (Bruise Bane) e Paladin (Arrow Call) não entram aqui: são cura/conjurar
+  // munição, não dano — knight já bate com a arma e paladin já atira desde o
+  // nível 1, sem esse buraco.
+  buzz:             { name: 'Buzz', words: 'exori infir vis', icon: '🐝', voc: ['sorcerer'], level: 1, mana: 6, type: 'attack', power: [0.4, 2, 0.7, 4], element: 'energy', area: 'single', cd: 2 },
+  scorch:           { name: 'Scorch', words: 'exevo infir flam hur', icon: '🔥', voc: ['sorcerer'], level: 1, mana: 8, type: 'attack', power: [0.4, 2, 0.6, 4], element: 'fire', area: 'wave', cd: 4 },
+  mud_attack:       { name: 'Mud Attack', words: 'exori infir tera', icon: '🟫', voc: ['druid'], level: 1, mana: 6, type: 'attack', power: [0.4, 2, 0.7, 4], element: 'earth', area: 'single', cd: 2 },
+  chill_out:        { name: 'Chill Out', words: 'exevo infir frigo hur', icon: '🧊', voc: ['druid'], level: 1, mana: 8, type: 'attack', power: [0.4, 2, 0.6, 4], element: 'ice', area: 'wave', cd: 4 },
+
   // --- Strikes básicos (fire/energy/ice/earth): desde a atualização de
   // magias do Tibia, sorcerer E druid têm acesso aos 4, alvo único. Death
   // Strike é exclusivo do sorcerer (não existe versão druida).
