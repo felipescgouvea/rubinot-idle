@@ -8,7 +8,7 @@ import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAu
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=125';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=126';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=125';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=126';
 import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';

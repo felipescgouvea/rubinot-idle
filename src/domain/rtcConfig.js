@@ -31,11 +31,17 @@ export function canUseAttackRune(itemId, vocation, magicLevel) {
   return isRuneAvailableToVocation(itemId, vocation) && (magicLevel || 0) >= runeMinMl(itemId);
 }
 
+// Quantidade de "caixinhas" de prioridade de ataque na UI (ver ui/rtcPanel.js:
+// attackSpellSlot) — cada uma é um slot fixo (1ª a Nª prioridade), em vez de
+// listar todas as magias disponíveis (ficava enorme com muitas magias).
+export const ATTACK_SLOT_COUNT = 4;
+
 // Lista de magias de ataque em ordem de PRIORIDADE (como o RTCaster real, que
 // deixa configurar várias e usa a primeira disponível). Migra saves antigos que
-// tinham uma única `attackSpell`.
+// tinham uma única `attackSpell`. Filtra slots vazios (null) do modelo de
+// caixinhas fixas — a ordem dos não-nulos é a prioridade real de combate.
 export function normalizeAttackSpells(rtc) {
-  if (rtc && Array.isArray(rtc.attackSpells)) return rtc.attackSpells;
+  if (rtc && Array.isArray(rtc.attackSpells)) return rtc.attackSpells.filter(Boolean);
   return rtc && rtc.attackSpell ? [rtc.attackSpell] : [];
 }
 

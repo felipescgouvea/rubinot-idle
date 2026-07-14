@@ -3,7 +3,7 @@
 // com seu limiar de % de HP) — ver domain/rtcConfig.js e a UI em rtcPanel.js.
 import { G } from './gameStore.js?v=126';
 import { isSpellAvailable } from '../domain/spells.js?v=125';
-import { normalizeAttackSpells, canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=125';
+import { normalizeAttackSpells, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=126';
 import { getMagic } from './stats.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
@@ -15,34 +15,29 @@ function refresh(msg) {
   saveGame();
 }
 
-// Adiciona uma magia à lista de prioridade do ataque automático (no fim da
-// fila). Escolher magias desliga a runa (ataque é magias OU runa, como no RTC).
-export function addRtcAttackSpell(spellId) {
+// Define a magia de uma caixinha de prioridade específica (idx = 0..ATTACK_SLOT_COUNT-1).
+// Escolher magia desliga a runa (ataque é magias OU runa, como no RTC). Se a
+// magia já estiver noutra caixinha, ela é removida de lá (sem duplicata).
+export function setRtcAttackSpellSlot(idx, spellId) {
   if (!isSpellAvailable(spellId, G.vocation, G.level)) return;
-  const list = normalizeAttackSpells(G.rtc);
-  if (list.includes(spellId)) return;
-  G.rtc.attackSpells = [...list, spellId];
+  const arr = Array.isArray(G.rtc.attackSpells) ? G.rtc.attackSpells.slice() : [];
+  while (arr.length < ATTACK_SLOT_COUNT) arr.push(null);
+  const dupIdx = arr.indexOf(spellId);
+  if (dupIdx !== -1) arr[dupIdx] = null;
+  arr[idx] = spellId;
+  G.rtc.attackSpells = arr;
   G.rtc.attackType = 'spell';
   G.rtc.attackRune = null;
   refresh(t('rtc.spellAddedToPriority'));
 }
 
-export function removeRtcAttackSpell(spellId) {
-  const list = normalizeAttackSpells(G.rtc).filter(id => id !== spellId);
-  G.rtc.attackSpells = list;
-  if (!list.length) G.rtc.attackType = G.rtc.attackRune ? 'rune' : null;
+// Esvazia uma caixinha de prioridade (idx = 0..ATTACK_SLOT_COUNT-1).
+export function clearRtcAttackSpellSlot(idx) {
+  const arr = Array.isArray(G.rtc.attackSpells) ? G.rtc.attackSpells.slice() : [];
+  if (idx < arr.length) arr[idx] = null;
+  G.rtc.attackSpells = arr;
+  if (!arr.some(Boolean)) G.rtc.attackType = G.rtc.attackRune ? 'rune' : null;
   refresh(t('rtc.spellRemovedFromPriority'));
-}
-
-// Sobe/desce uma magia na ordem de prioridade (dir = -1 sobe, +1 desce).
-export function moveRtcAttackSpell(spellId, dir) {
-  const list = normalizeAttackSpells(G.rtc);
-  const i = list.indexOf(spellId);
-  const j = i + dir;
-  if (i === -1 || j < 0 || j >= list.length) return;
-  [list[i], list[j]] = [list[j], list[i]];
-  G.rtc.attackSpells = [...list];
-  refresh(t('rtc.priorityUpdated'));
 }
 
 export function setRtcAttackRune(itemId) {

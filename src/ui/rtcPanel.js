@@ -9,11 +9,11 @@ import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=125';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=134';
 import { VOCATIONS } from '../domain/character.js?v=126';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl } from '../domain/rtcConfig.js?v=125';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=126';
 import { getMagic } from '../application/stats.js?v=125';
 import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion } from '../application/rtcUseCases.js?v=125';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=126';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=125';
 import { t } from '../i18n/i18n.js?v=133';
@@ -48,22 +48,59 @@ function spellRow(id, s, selected, onclick) {
   </div>`;
 }
 
-// Linha de uma magia JÁ escolhida, com o número de prioridade e os controles
-// pra subir/descer na ordem e remover (o RTC casta a primeira disponível).
-function priorityRow(id, s, idx, total) {
-  return `<div class="rtc-row selected rtc-prio-row">
-    <span class="rtc-prio-num">${idx + 1}</span>
-    <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
-    <div class="rtc-row-info">
-      <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
-      <div class="rtc-row-desc">⚔️ ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${s.mana} · ⏱ ${s.cd}s</div>
-    </div>
-    <div class="rtc-prio-controls">
-      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', -1)" ${idx === 0 ? 'disabled' : ''} title="${t('rtc.movePriorityUp')}">▲</button>
-      <button class="rtc-prio-btn" onclick="moveRtcAttackSpell('${id}', 1)" ${idx === total - 1 ? 'disabled' : ''} title="${t('rtc.movePriorityDown')}">▼</button>
-      <button class="rtc-prio-btn remove" onclick="removeRtcAttackSpell('${id}')" title="${t('rtc.remove')}">✕</button>
-    </div>
+// Caixinha de prioridade de ataque (idx = posição 0..ATTACK_SLOT_COUNT-1): um
+// quadrado onde o jogador escolhe a magia, igual ao slot de poção do Healing.
+// Vazio mostra a posição; preenchido mostra a magia (tocar troca/remove pelo modal).
+function attackSpellSlot(idx, spellId) {
+  const s = spellId ? SPELLS[spellId] : null;
+  return `<div class="rtc-potion-slot ${s ? 'filled' : 'empty'}"
+      onclick="openRtcAttackSpellPicker(${idx})"
+      title="${s ? t('rtc.attackSlotFilledTitle', { name: s.name }) : t('rtc.attackSlotEmptyTitle', { n: idx + 1 })}">
+    ${s
+      ? `<span class="rtc-potion-slot-icon">${spellIconImg(s.name, s.icon, 'item-icon')}</span><span class="rtc-potion-slot-name">${idx + 1}. ${s.name}</span>`
+      : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">${t('rtc.attackSlotEmptyTitle', { n: idx + 1 })}</span>`}
   </div>`;
+}
+
+// Janelinha de opções pra escolher a magia da caixinha de prioridade idx —
+// mesma UX do seletor de poção (openRtcPotionPicker), pra não depender de
+// arrastar e listar todas as magias de uma vez na tela principal.
+export function openRtcAttackSpellPicker(idx) {
+  const voc = G.vocation;
+  const attackSpells = Object.entries(SPELLS).filter(([, s]) => s.type === 'attack' && s.voc.includes(voc));
+  const prioSpells = normalizeAttackSpells(G.rtc);
+  const currentId = prioSpells[idx];
+  const rows = attackSpells.map(([id, s]) => {
+    const unlocked = G.level >= s.level;
+    const sel = currentId === id;
+    return `<div class="rtc-row ${sel ? 'selected' : ''} ${!unlocked ? 'locked' : ''}">
+      <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
+      <div class="rtc-row-info">
+        <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
+        <div class="rtc-row-desc">⚔️ ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${t('rtc.manaCost', { amount: s.mana })} · ⏱ ${t('rtc.cooldown', { sec: s.cd })} · ${t('rtc.levelReq', { level: s.level })}</div>
+      </div>
+      <button class="rtc-row-btn" onclick="pickRtcAttackSpell(${idx}, '${id}')" ${!unlocked ? 'disabled' : ''}>
+        ${!unlocked ? `🔒 ${t('rtc.lockedLevel', { level: s.level })}` : sel ? `✅ ${t('rtc.active')}` : t('rtc.use')}
+      </button>
+    </div>`;
+  }).join('');
+  openModal(`
+    <div class="rtc-potion-picker">
+      <h3>⚔️ ${t('rtc.attackSlotPickerTitle', { n: idx + 1 })}</h3>
+      <p class="muted">${t('rtc.attackSlotPickerHint')}</p>
+      <div class="rtc-rows">${rows || `<p class="muted">${t('rtc.allAttackSpellsAdded')}</p>`}</div>
+      <div class="rtc-potion-picker-actions">
+        ${currentId ? `<button class="btn-small danger" onclick="clearRtcAttackSpellSlot(${idx}); closeModal();">${t('rtc.remove')}</button>` : ''}
+        <button class="btn-small" onclick="closeModal()">${t('modal.close')}</button>
+      </div>
+    </div>
+  `);
+}
+
+// Aplica a escolha do modal e fecha a janelinha.
+export function pickRtcAttackSpell(idx, spellId) {
+  setRtcAttackSpellSlot(idx, spellId);
+  closeModal();
 }
 
 // Slot de poção do Healing: um quadrado onde o jogador escolhe a poção. No
@@ -162,7 +199,6 @@ export function renderRtcPanel() {
 
   const voc = G.vocation;
   const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
-  const attackSpells = mySpells.filter(([, s]) => s.type === 'attack');
   const healSpells = mySpells.filter(([, s]) => s.type === 'heal');
   const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
 
@@ -199,12 +235,8 @@ export function renderRtcPanel() {
         <p class="muted">${t('rtc.attackPriorityHint')}</p>
         <label class="rtc-smart-toggle"><input type="checkbox" ${G.rtc.smartElement ? 'checked' : ''} onchange="setRtcSmartElement(this.checked)" /> 🎯 ${t('rtc.smartPriority')}</label>
         <h5>${t('rtc.attackPriorityTitle')} ${prioSpells.length ? `(${prioSpells.length})` : ''}</h5>
-        <div class="rtc-rows">
-          ${prioSpells.map((id, i) => priorityRow(id, SPELLS[id], i, prioSpells.length)).join('') || `<p class="muted">${t('rtc.noAttackSpells')}</p>`}
-        </div>
-        <h5>${t('rtc.addAttackSpell')}</h5>
-        <div class="rtc-rows">
-          ${attackSpells.filter(([id]) => !prioSpells.includes(id)).map(([id, s]) => spellRow(id, s, false, 'addRtcAttackSpell')).join('') || `<p class="muted">${t('rtc.allAttackSpellsAdded')}</p>`}
+        <div class="rtc-slots-grid">
+          ${Array.from({ length: ATTACK_SLOT_COUNT }, (_, idx) => attackSpellSlot(idx, prioSpells[idx])).join('')}
         </div>
         <h5>${t('rtc.attackRunesTitle')} <span class="muted">${t('rtc.attackRunesSubtitle')}</span></h5>
         <div class="rtc-rows">

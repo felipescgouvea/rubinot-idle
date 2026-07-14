@@ -22,7 +22,7 @@ import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=125';
 import { buyShopItem } from './application/shopUseCases.js?v=130';
 import { buyBlessing } from './application/blessingUseCases.js?v=125';
-import { addRtcAttackSpell, removeRtcAttackSpell, moveRtcAttackSpell, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold } from './application/rtcUseCases.js?v=125';
+import { setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold } from './application/rtcUseCases.js?v=126';
 import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=127';
 import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=125';
 import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=125';
@@ -41,7 +41,7 @@ import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPane
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=125';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=125';
 import { wireShopPanelEvents, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=130';
-import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion } from './ui/rtcPanel.js?v=126';
+import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=127';
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=127';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=125';
 import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=125';
@@ -93,7 +93,7 @@ Object.assign(window, {
   selectWorld,
   claimBpReward, claimMissionReward,
   buyShopItem, confirmBuyShopItem, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing,
-  addRtcAttackSpell, removeRtcAttackSpell, moveRtcAttackSpell, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion,
+  setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell,
   registerPlayerName, refreshHighscoresClick, setHighscoresCategory,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,
   openOutfitPicker, setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor, setActiveColorChannel,

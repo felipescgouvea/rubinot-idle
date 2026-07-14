@@ -1243,6 +1243,11 @@ img.tibia-icon {
   border: 2px dashed #4a5178; border-radius: 8px; background: #1c2032; cursor: pointer;
 }
 .rtc-potion-slot.filled { border-style: solid; border-color: var(--gold-bright); background: #23283f; }
+/* 4 caixinhas de prioridade de ataque (RTCaster) lado a lado em vez de uma lista
+   crescente com todas as magias — ver ui/rtcPanel.js: attackSpellSlot. */
+.rtc-slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+.rtc-slots-grid .rtc-potion-slot { margin-bottom: 0; }
+@media (max-width: 480px) { .rtc-slots-grid { grid-template-columns: 1fr; } }
 .rtc-potion-slot.drag-over { border-color: #7cffb2; background: #22322a; }
 .rtc-potion-slot-icon img, .rtc-potion-slot-icon { width: 24px; height: 24px; image-rendering: pixelated; }
 .rtc-potion-slot-name { font-weight: 700; color: #f0e6c8; }

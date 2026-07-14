@@ -3,7 +3,7 @@
 import { G, replaceState, replaceAccount } from './gameStore.js?v=126';
 import { createDefaultState } from '../domain/gameState.js?v=125';
 import { createDefaultSkills } from '../domain/character.js?v=126';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=125';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=126';
 import { isSpellAvailable } from '../domain/spells.js?v=125';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
