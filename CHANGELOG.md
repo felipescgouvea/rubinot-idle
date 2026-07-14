@@ -4,6 +4,7 @@ Registro das releases feitas nesta sessão, mais recente primeiro. Cada linha te
 
 ## 2026-07-14
 
+- **fix** — XP contando em dobro ao dar F5 durante a caçada (save só rodava a cada 30s, agora roda a cada kill); baixa os sprites reais de Buzz/Scorch/Mud Attack/Chill Out que caíam no fallback de emoji (`42625cb`)
 - **fix** — Vender/equipar/desequipar/usar item dentro do modal da Bag fechava a Bag inteira junto; agora volta pra Bag em vez de fechar tudo (`8a24354`)
 - **feat** — Linked Tasks reconstruído com as 94 tasks reais do RubinOT nas 5 salas (Lothlorien/Executioner/Morgul/Corrupted/N'Zoth): moeda Task Coin, 265 criaturas novas, 46 itens novos de recompensa, recompensa dupla (1ª vez + repetição). Salas 1 e 2 (tasks #1-40) com todas as criaturas caçáveis em zona; Salas 3-5 ainda pendentes de spawn (`87a95d3`)
 - **feat** — Treino Offline mostra a estátua real de treino (Training Dummy) na escolha de skill, em vez do ícone abstrato sozinho (`571dcc5`)
