@@ -1,7 +1,7 @@
 // Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
 import { G } from './gameStore.js?v=126';
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=127';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
 
@@ -23,9 +23,10 @@ export function getSpawnDelayRange() {
   return { min: c.spawnDelayMin * 1000, max: c.spawnDelayMax * 1000 };
 }
 
-// Multiplicador efetivo de XP/Gold de uma zona (kind = 'xp' | 'gold'). O
-// `builtIn` é o valor de progressão embutido na zona (ZONES[id].xpMult/goldMult),
-// usado só quando os multiplicadores estão ligados e sem override. Padrão: 1.
+// Multiplicador efetivo de XP/Gold de uma zona (kind = 'xp' | 'gold'). Zonas
+// não têm mais multiplicador embutido (removido — só existe o override do
+// dono no Painel Admin); `builtIn` é sempre 1 na prática, mantido como
+// parâmetro pra não acoplar esta função ao Painel Admin.
 export const isUsingZoneMultipliers = () => getAdminConfig().useZoneMultipliers;
 export function getZoneMultiplier(zoneId, kind, builtIn) {
   return zoneMultiplier(getAdminConfig(), zoneId, kind, builtIn);

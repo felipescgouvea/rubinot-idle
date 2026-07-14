@@ -160,6 +160,7 @@ export default {
   'zone.bandit_hideout': 'Esconderijo de Bandidos',
   'zone.scarab_desert': 'Deserto dos Scarabs',
   'zone.orc_fortress': 'Forte dos Orcs',
+  'zone.orc_warlord_camp': 'Acampamento do Warlord Orc',
   'zone.spider_lair': 'Ninho de Giant Spiders',
   'zone.wyvern_ridge': 'Penhasco das Wyverns',
   'zone.haunted_ruins': 'Ruínas Assombradas',

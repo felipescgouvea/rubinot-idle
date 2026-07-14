@@ -1,6 +1,6 @@
 import { G } from './gameStore.js?v=126';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=134';
-import { ZONES } from '../domain/bestiary.js?v=131';
+import { ZONES } from '../domain/bestiary.js?v=132';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=125';
@@ -11,7 +11,7 @@ import { runeDamage, potionRestore } from '../domain/combatFormulas.js?v=125';
 import { elementMod } from '../domain/elements.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { itemSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=133';
+import { t } from '../i18n/i18n.js?v=134';
 
 function itemLogIcon(itemId) {
   const item = ITEMS[itemId];

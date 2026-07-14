@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=126';
 import { VOCATIONS } from './domain/character.js?v=126';
 import { emit, EVENTS } from './shared/eventBus.js?v=125';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=133';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=134';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=126';
@@ -55,7 +55,7 @@ import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=128';
 import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=125';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=127';
-import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=127';
+import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=128';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=128';
 import { wireTabs, applyMarketVisibility } from './ui/tabs.js?v=125';
 

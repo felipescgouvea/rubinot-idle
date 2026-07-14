@@ -15,10 +15,11 @@ export const DEFAULT_ADMIN_CONFIG = {
   spawnDelayMin: 1.2,
   spawnDelayMax: 3,
   // Multiplicadores de XP/Gold por zona de caça. Por padrão DESLIGADO: a XP e o
-  // gold ficam iguais ao valor-base de cada criatura (fiel ao Tibia global). Ao
-  // ligar, as zonas usam sua progressão embutida (ZONES[id].xpMult/goldMult) —
-  // ou, se houver override aqui, o valor definido pelo dono. Ver
-  // zoneMultiplier() abaixo e application/huntUseCases.js: resolveMonsterKill.
+  // gold ficam iguais ao valor-base de cada criatura (fiel ao Tibia global,
+  // sem bônus/penalidade por zona). Ao ligar, só o override do dono aqui
+  // definido (zoneMultipliers) tem efeito — zonas não têm mais progressão
+  // embutida própria. Ver zoneMultiplier() abaixo e
+  // application/huntUseCases.js: resolveMonsterKill.
   useZoneMultipliers: false,
   zoneMultipliers: {}, // { [zoneId]: { xp?: number, gold?: number } } — overrides opcionais
   // Spawn por hunt: peso (%) de cada monstro na zona e faixa do tamanho do grupo

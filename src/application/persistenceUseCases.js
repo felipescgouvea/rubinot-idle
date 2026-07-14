@@ -7,18 +7,18 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } fr
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=131';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=132';
 import { isRelicId, STARTER_KITS } from '../domain/items.js?v=134';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=126';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
-import { t } from '../i18n/i18n.js?v=133';
+import { t } from '../i18n/i18n.js?v=134';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
 import { gainXp } from './huntUseCases.js?v=130';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
-import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=127';
+import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=128';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
@@ -162,8 +162,8 @@ export function applyOfflineProgress() {
   const scaleFactor = 1 + (G.level - 1) * 0.05;
   const killsPerMin = 6; // ritmo offline reduzido (~metade do ativo)
   const kills = Math.floor((cappedSec / 60) * killsPerMin);
-  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', zone.xpMult);
-  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', zone.goldMult);
+  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', 1);
+  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', 1);
   // Stamina offline: caçar offline também consome stamina (se ligada) e a XP
   // sofre o mesmo multiplicador da stamina. Consome pelo tempo caçado.
   const staminaMult = isStaminaEnabled() ? staminaXpMult(G.stamina) : 1;

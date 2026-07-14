@@ -159,6 +159,7 @@ export default {
   'zone.bandit_hideout': 'Bandit Hideout',
   'zone.scarab_desert': 'Scarab Desert',
   'zone.orc_fortress': 'Orc Fortress',
+  'zone.orc_warlord_camp': "Orc Warlord's Camp",
   'zone.spider_lair': 'Giant Spider Lair',
   'zone.wyvern_ridge': 'Wyvern Ridge',
   'zone.haunted_ruins': 'Haunted Ruins',

@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G } from './gameStore.js?v=126';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=131';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=132';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=126';
@@ -15,7 +15,7 @@ import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=134';
-import { MONSTERS } from '../domain/bestiary.js?v=131';
+import { MONSTERS } from '../domain/bestiary.js?v=132';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
@@ -25,9 +25,9 @@ import { trainSkill } from './skillUseCases.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { getCombatBonuses } from './bonuses.js?v=125';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=127';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=128';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=125';
-import { t } from '../i18n/i18n.js?v=133';
+import { t } from '../i18n/i18n.js?v=134';
 
 // Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
 // outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
@@ -540,8 +540,8 @@ export function resolveMonsterKill(zone, victim) {
   const bonus = getCombatBonuses(mon.defKey, Date.now());
   // Multiplicador de XP/Gold da zona: por padrão 1 (fiel ao Tibia); só difere
   // se o dono ligou os multiplicadores no Painel Admin (ver adminUseCases).
-  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', zone.goldMult);
-  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', zone.xpMult);
+  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', 1);
+  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', 1);
   const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
   const staminaMult = isStaminaEnabled() ? staminaXpMult(G.stamina) : 1;
   const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate() * staminaMult);

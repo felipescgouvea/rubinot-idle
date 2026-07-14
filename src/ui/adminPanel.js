@@ -2,14 +2,14 @@
 // monstros por hunt e os drops (relíquias + itens normais), em 3 sub-abas pra
 // não virar uma tela só gigante. Lê/escreve via application/adminUseCases.js;
 // as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, zoneSpawnPercents } from '../domain/adminConfig.js?v=127';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, zoneSpawnPercents } from '../domain/adminConfig.js?v=128';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=131';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=132';
 import { ITEMS } from '../domain/items.js?v=134';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=127';
+import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=128';
 import { itemIconImg } from './shared.js?v=125';
-import { t } from '../i18n/i18n.js?v=133';
+import { t } from '../i18n/i18n.js?v=134';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
 // — mesmo padrão do RTC, ver ui/rtcPanel.js: activeRtcTab).
@@ -54,8 +54,8 @@ function renderGeneralSubPanel(cfg) {
   // (override do dono se houver, senão a progressão embutida da zona).
   const zoneMultRows = Object.entries(ZONES).map(([id, z]) => {
     const ov = cfg.zoneMultipliers[id] || {};
-    const xpVal = ov.xp != null ? ov.xp : z.xpMult;
-    const goldVal = ov.gold != null ? ov.gold : z.goldMult;
+    const xpVal = ov.xp != null ? ov.xp : 1;
+    const goldVal = ov.gold != null ? ov.gold : 1;
     return `
     <div class="admin-zone-row">
       <span class="admin-zone-name">${z.icon} ${t(z.name)}</span>

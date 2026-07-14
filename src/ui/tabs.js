@@ -14,7 +14,7 @@ import { renderBossRushPanel } from './bossRushPanel.js?v=125';
 import { renderBestiaryTab } from './bestiaryPanel.js?v=125';
 import { renderTrainingSection } from './trainingPanel.js?v=125';
 import { renderAdminPanel } from './adminPanel.js?v=128';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=127';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 
 // A aba Skills renderiza também a seção de Treino Offline (que vive no topo
