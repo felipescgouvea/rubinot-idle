@@ -15,7 +15,7 @@ import {
 } from '../domain/charms.js?v=126';
 import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=126';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=127';
 import { monsterSpriteImg } from './huntPanel.js?v=128';
 import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=125';
 import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=125';

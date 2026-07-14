@@ -509,6 +509,7 @@ export default {
   'training.stopTraining': 'Encerrar Treino',
   'training.intro': 'Escolha uma skill para treinar nas dummies. O treino roda em segundo plano (inclusive offline) e pausa a caçada.',
   'training.level': 'Nv {lvl}',
+  'training.dummyTitle': 'Treinar {skill} nesse boneco',
 
   // ---- daily reward panel (ui/dailyRewardPanel.js) ----
   'daily.day': 'Dia {day}',

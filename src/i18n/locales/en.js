@@ -508,6 +508,7 @@ export default {
   'training.stopTraining': 'Stop Training',
   'training.intro': 'Choose a skill to train on the dummies. Training runs in the background (even offline) and pauses hunting.',
   'training.level': 'Lv {lvl}',
+  'training.dummyTitle': 'Train {skill} on this dummy',
 
   // ---- daily reward panel (ui/dailyRewardPanel.js) ----
   'daily.day': 'Day {day}',

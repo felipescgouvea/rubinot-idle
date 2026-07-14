@@ -8,7 +8,7 @@ import { ZONES, MONSTERS } from '../domain/bestiary.js?v=133';
 import { ITEMS } from '../domain/items.js?v=135';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=128';
-import { itemIconImg } from './shared.js?v=126';
+import { itemIconImg } from './shared.js?v=127';
 import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=128';
 import { t } from '../i18n/i18n.js?v=135';
 

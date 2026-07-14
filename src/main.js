@@ -32,7 +32,7 @@ import { claimDailyReward } from './application/dailyRewardUseCases.js?v=125';
 import { startTraining, stopTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=125';
 
 // ui
-import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=126';
+import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=127';
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=128';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=127';
@@ -49,7 +49,7 @@ import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicke
 import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
 import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=125';
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=126';
-import { wireTrainingPanelEvents } from './ui/trainingPanel.js?v=125';
+import { wireTrainingPanelEvents } from './ui/trainingPanel.js?v=126';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=126';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=129';

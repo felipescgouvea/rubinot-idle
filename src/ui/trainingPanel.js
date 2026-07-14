@@ -6,7 +6,7 @@ import { G } from '../application/gameStore.js?v=126';
 import { TIBIA_SKILLS } from '../domain/character.js?v=126';
 import { TRAINABLE_SKILLS, triesPerMinuteFor } from '../domain/training.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { skillIconImg } from './shared.js?v=126';
+import { skillIconImg, trainingDummyImg } from './shared.js?v=127';
 import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
 
@@ -21,7 +21,10 @@ export function renderTrainingSection() {
     el.innerHTML = `
       <div class="training-active">
         <div class="training-active-info">
-          ${skillIconImg(G.trainingSkill, s.icon, 'training-skill-icon')}
+          <div class="training-dummy-wrap">
+            ${trainingDummyImg('training-dummy-icon')}
+            ${skillIconImg(G.trainingSkill, s.icon, 'training-dummy-badge')}
+          </div>
           <div>
             <div class="training-active-title">🏋️ ${t('training.trainingSkill', { skill: s.name })}</div>
             <div class="muted">${t('training.rateInfo', { rate })}</div>
@@ -37,8 +40,11 @@ export function renderTrainingSection() {
     <div class="training-skill-grid">
       ${TRAINABLE_SKILLS.map(id => {
         const s = TIBIA_SKILLS[id];
-        return `<button class="training-skill-btn" onclick="startTraining('${id}')">
-          ${skillIconImg(id, s.icon, 'training-skill-icon')}
+        return `<button class="training-skill-btn" onclick="startTraining('${id}')" title="${t('training.dummyTitle', { skill: s.name })}">
+          <div class="training-dummy-wrap">
+            ${trainingDummyImg('training-dummy-icon')}
+            ${skillIconImg(id, s.icon, 'training-dummy-badge')}
+          </div>
           <span>${s.name}</span>
           <small>${t('training.level', { lvl: G.sk[id]?.lv ?? s.base })}</small>
         </button>`;

@@ -102,6 +102,13 @@ export function skillIconFile(skillId) {
   return 'skills/' + localName(SKILL_ICON_FILES[skillId]);
 }
 
+// Estátua/boneco real de treino do Tibia (Training Dummy) — mostrado na
+// escolha de skill do Treino Offline em vez do ícone abstrato da skill,
+// igual ao Tibia real (onde cada boneco de treino é um objeto físico no
+// depot). O Tibia real não tem um boneco DISTINTO por skill (todas usam o
+// mesmo modelo de Training Dummy), então é a mesma sprite pras 7 skills.
+export const TRAINING_DUMMY_FILE = 'skills/Training_Dummy.gif';
+
 // Ícone de magia: cada spell tem sua própria sprite no TibiaWiki, nomeada
 // pelo nome em inglês da magia (ex.: "Light Healing" -> Light_Healing.gif).
 export function spellIconFile(spellName) {

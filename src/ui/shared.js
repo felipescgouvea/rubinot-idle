@@ -3,7 +3,7 @@
 // liga esses mecanismos aos eventos emitidos pela camada application.
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { ITEMS } from '../domain/items.js?v=135';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE } from '../infrastructure/tibiaSprites.js?v=126';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=127';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -54,6 +54,13 @@ export function rubiniIconImg(cls = '') {
 export function charmPointsIconImg(cls = '') {
   return `<img src="${spriteUrl(CHARM_POINTS_ICON_FILE)}" alt="Charm Points" class="${cls} tibia-icon"
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>✨</span>'" />`;
+}
+
+// Boneco/estátua real de treino do Tibia (Training Dummy), mostrado na
+// escolha de skill do Treino Offline — ver infrastructure/tibiaSprites.js.
+export function trainingDummyImg(cls = '') {
+  return `<img src="${spriteUrl(TRAINING_DUMMY_FILE)}" alt="Training Dummy" class="${cls} tibia-icon"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>🏋️</span>'" />`;
 }
 
 export function formatNum(n) {
