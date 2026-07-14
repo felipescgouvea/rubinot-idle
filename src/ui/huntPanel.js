@@ -5,11 +5,11 @@ import { G } from '../application/gameStore.js?v=126';
 import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=132';
 import { MONSTERS } from '../domain/bestiary.js?v=132';
 import { cityName } from '../domain/cities.js?v=131';
-import { ITEMS } from '../domain/items.js?v=134';
+import { ITEMS } from '../domain/items.js?v=135';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=125';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=130';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=131';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=134';
 

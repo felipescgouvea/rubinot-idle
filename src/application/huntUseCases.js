@@ -8,13 +8,13 @@ import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAu
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=126';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=126';
+import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=127';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=126';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=125';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=126';
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem } from '../domain/items.js?v=134';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=135';
 import { MONSTERS } from '../domain/bestiary.js?v=132';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
@@ -593,21 +593,22 @@ export function resolveMonsterKill(zone, victim) {
   if (lootLine.length > 0) emit(EVENTS.LOG, t('log.lootLine', { items: lootLine.join(', ') }));
   if (soldGold > 0) emit(EVENTS.LOG, { html: t('log.autoSoldTrash', { gold: soldGold }), cat: 'suprimento' });
 
-  // Relíquia (raridade) — cai SÓ de boss (ver domain/bestiary.js:
-  // BOSS_MONSTER_IDS), com uma chance pequena por cima do loot normal acima.
-  // Funciona igual num kill de caçada comum (zona cujo boss aparece no
-  // elenco) e num kill de Boss Rush (ver bossRushUseCases.js) — os dois
-  // passam por aqui. Cada raridade rola INDEPENDENTE das outras (ver
-  // domain/rarity.js: rollIndependentRarityTiers) — não é uma escolha única,
-  // então mais de uma pode bater no mesmo kill: vira uma relíquia PRA CADA
-  // raridade que bateu (podem ser 0, 1 ou várias).
-  if (BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < getRelicDropChance()) {
+  // Relíquia (raridade) — cai SÓ no Boss Rush (bossOnly), nunca numa caçada
+  // comum. O boss de uma zona (ver domain/bestiary.js: BOSS_MONSTER_IDS)
+  // aparece no elenco normal daquela hunt — sem esse gate, matar ele
+  // caçando normalmente também sorteava relíquia, deixando hunts comuns
+  // dropar item raro (ex.: Wolf, boss de wolf_den, chegou a dropar Demon
+  // Shield numa caçada comum). Cada raridade rola INDEPENDENTE das outras
+  // (ver domain/rarity.js: rollIndependentRarityTiers) — não é uma escolha
+  // única, então mais de uma pode bater no mesmo kill: vira uma relíquia PRA
+  // CADA raridade que bateu (podem ser 0, 1 ou várias).
+  if (bossOnly && BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < getRelicDropChance()) {
     const equippablePool = mon.loot
       .map(([id]) => id)
       .filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
     const pool = equippablePool.length > 0
       ? equippablePool
-      : Object.keys(ITEMS).filter(id => EQUIPPABLE_TYPES.includes(ITEMS[id].type));
+      : equippableFallbackPool(mon.xp);
     if (pool.length > 0) {
       const hitTiers = rollIndependentRarityTiers(getRarityWeights());
       hitTiers.forEach(rarity => {

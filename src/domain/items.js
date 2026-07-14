@@ -174,6 +174,19 @@ export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', '
 export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ammo', 'ring', 'legs', 'boots'];
 export const CONSUMABLE_TYPES = ['potion', 'rune', 'food'];
 
+// Pool de fallback pra relíquia de boss SEM item equipável no próprio loot
+// (ver application/huntUseCases.js: resolveMonsterKill) — em vez de sortear
+// entre TODOS os itens equipáveis do jogo (bug real: Wolf, boss de zona sem
+// loot equipável, chegou a dropar Demon Shield, item de 15000g), o teto de
+// preço escala com a XP do monstro, então um bicho fraco só sorteia
+// equipamento de tier compatível.
+const RELIC_FALLBACK_MIN_SELL_CAP = 50;
+const RELIC_FALLBACK_XP_TO_SELL = 5;
+export function equippableFallbackPool(xp) {
+  const cap = Math.max(RELIC_FALLBACK_MIN_SELL_CAP, (xp || 0) * RELIC_FALLBACK_XP_TO_SELL);
+  return Object.keys(ITEMS).filter(id => EQUIPPABLE_TYPES.includes(ITEMS[id].type) && (ITEMS[id].sell || 0) <= cap);
+}
+
 // Tipos de ARMA que cada vocação pode empunhar (fiel ao Tibia: cada profissão
 // usa sua classe de arma). Armadura/elmo/anel/etc. não são restritos aqui. A
 // munição (ammo) é exclusiva do paladino. Ver equipItem em inventoryUseCases.
