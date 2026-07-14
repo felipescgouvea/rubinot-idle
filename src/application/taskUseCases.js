@@ -2,7 +2,7 @@
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
 import { G } from './gameStore.js?v=126';
-import { MONSTERS } from '../domain/bestiary.js?v=132';
+import { MONSTERS } from '../domain/bestiary.js?v=133';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { gainXp } from './huntUseCases.js?v=131';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=125';

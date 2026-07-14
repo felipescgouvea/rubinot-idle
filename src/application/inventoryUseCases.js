@@ -1,6 +1,6 @@
 import { G } from './gameStore.js?v=126';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=135';
-import { ZONES } from '../domain/bestiary.js?v=132';
+import { ZONES } from '../domain/bestiary.js?v=133';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=125';
