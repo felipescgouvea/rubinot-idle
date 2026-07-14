@@ -191,14 +191,16 @@ export function renderZonePicker() {
   renderHuntStatusButton();
 }
 
-// Botão único (embaixo da barra de zona atual) com dupla função, conforme a
-// situação — caçando, mostra "Ver Batalha" (abre a cena de combate); parado,
-// mostra "Trocar de Hunt" (abre o seletor de zona). Existir só este botão
-// evita duplicar a mesma ação de trocar de zona em dois controles diferentes.
+// Dois botões lado a lado (embaixo da barra de zona atual): "Ver Hunt" (abre
+// a cena de combate — só faz sentido caçando, fica desabilitado parado) e
+// "Trocar de Hunt" (abre o seletor de zona, sempre disponível).
 export function renderHuntStatusButton() {
-  const btn = document.getElementById('hunt-status-battle-btn');
-  if (!btn) return;
-  btn.innerHTML = G.hunting ? `⚔️ ${t('hunt.viewBattle')}` : `🗺️ ${t('hunt.switchHunt')}`;
+  const viewBtn = document.getElementById('hunt-status-view-btn');
+  const switchBtn = document.getElementById('hunt-status-switch-btn');
+  if (!viewBtn || !switchBtn) return;
+  viewBtn.innerHTML = `⚔️ ${t('hunt.viewBattle')}`;
+  viewBtn.disabled = !G.hunting;
+  switchBtn.innerHTML = `🗺️ ${t('hunt.switchHunt')}`;
 }
 
 // Cada dungeon tinge o fundo da cena de batalha com sua própria paleta (ver

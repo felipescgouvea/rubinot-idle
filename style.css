@@ -525,10 +525,12 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 
 /* ---- card compacto "Caçada" (panel-left): zona atual + entrar na batalha ---- */
 #hunt-status-body { padding: 14px; }
-#hunt-status-battle-btn { width: 100%; margin-top: 10px; }
+.hunt-status-btn-row { display: flex; gap: 8px; margin-top: 10px; }
+.hunt-status-btn-row button { flex: 1; margin-top: 0; }
+.hunt-status-btn-row button:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* barra de exibição (só leitura) da zona/hunt atual — trocar de hunt é só
-   pelo botão único abaixo dela (ver #hunt-status-battle-btn/renderHuntStatusButton). */
+/* barra de exibição (só leitura) da zona/hunt atual — trocar/ver a hunt é
+   pelos 2 botões abaixo dela (ver .hunt-status-btn-row/renderHuntStatusButton). */
 #zone-current-bar {
   display: flex;
   align-items: center;
