@@ -9,7 +9,7 @@
 import { G } from './gameStore.js?v=126';
 import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, triesForTraining } from '../domain/training.js?v=125';
 import { TIBIA_SKILLS } from '../domain/character.js?v=126';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { trainSkill } from './skillUseCases.js?v=126';
 import { stopHunt } from './huntUseCases.js?v=131';
 import { saveGame } from './saveGameUseCase.js?v=126';

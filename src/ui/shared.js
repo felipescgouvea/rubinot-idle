@@ -1,7 +1,7 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=125';
+import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { ITEMS } from '../domain/items.js?v=136';
 import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=128';
 

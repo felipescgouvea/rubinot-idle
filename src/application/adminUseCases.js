@@ -2,7 +2,7 @@
 // consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
 import { G } from './gameStore.js?v=126';
 import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
-import { emit, EVENTS } from '../shared/eventBus.js?v=125';
+import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=126';
 
 export function getAdminConfig() {

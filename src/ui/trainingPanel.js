@@ -5,7 +5,7 @@
 import { G } from '../application/gameStore.js?v=126';
 import { TIBIA_SKILLS } from '../domain/character.js?v=126';
 import { TRAINABLE_SKILLS, triesPerMinuteFor } from '../domain/training.js?v=125';
-import { on, EVENTS } from '../shared/eventBus.js?v=125';
+import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { skillIconImg, trainingDummyImg } from './shared.js?v=128';
 import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';

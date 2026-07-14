@@ -5,7 +5,7 @@
 import { G } from './gameStore.js?v=126';
 import { MONSTERS } from '../domain/bestiary.js?v=134';
 import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=126';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 

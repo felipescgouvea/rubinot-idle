@@ -15,7 +15,7 @@ import { renderBestiaryTab } from './bestiaryPanel.js?v=126';
 import { renderTrainingSection } from './trainingPanel.js?v=126';
 import { renderAdminPanel } from './adminPanel.js?v=129';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=128';
-import { on, EVENTS } from '../shared/eventBus.js?v=125';
+import { on, EVENTS } from '../shared/eventBus.js?v=126';
 
 // A aba Skills renderiza também a seção de Treino Offline (que vive no topo
 // dela) — as duas coisas são "progressão de skill", então dividem a aba.

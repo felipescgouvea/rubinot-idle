@@ -23,6 +23,7 @@ export const EVENTS = {
   LOG: 'log',
   MODAL_OPEN: 'modalOpen',
   MODAL_CLOSE: 'modalClose',
+  ITEM_MODAL_DONE: 'itemModalDone',
   CHAR_PANEL: 'charPanel',
   CHAR_INFO: 'charInfo',
   BARS: 'bars',

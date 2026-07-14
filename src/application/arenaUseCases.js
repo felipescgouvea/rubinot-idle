@@ -5,7 +5,7 @@
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
 import { G } from './gameStore.js?v=126';
-import { emit, EVENTS } from '../shared/eventBus.js?v=125';
+import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=125';
 import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=127';
 import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=127';

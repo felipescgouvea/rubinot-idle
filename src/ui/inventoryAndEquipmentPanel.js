@@ -4,7 +4,7 @@
 import { G } from '../application/gameStore.js?v=126';
 import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=136';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
-import { on, EVENTS } from '../shared/eventBus.js?v=125';
+import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from '../application/saveGameUseCase.js?v=126';
 import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=128';
 import { t } from '../i18n/i18n.js?v=135';
@@ -98,7 +98,7 @@ export function renderInventory() {
     div.draggable = true;
     div.dataset.itemId = id;
     div.innerHTML = `<div class="item-qty">${qty}</div><div class="item-icon">${itemIconImg(id, 'item-icon')}</div><div class="item-name">${item.name}</div>`;
-    div.onclick = () => openItemModal(id);
+    div.onclick = () => openItemModal(id, true);
     // drag-and-drop pra organizar a ordem dos itens dentro da mochila
     div.addEventListener('dragstart', e => {
       dragId = id; div.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
@@ -127,14 +127,15 @@ export function renderInventory() {
     div.style.borderColor = tier.color;
     div.style.boxShadow = `0 0 9px ${tier.color}99`;
     div.innerHTML = `<div class="item-icon">${itemIconImg(relic.itemId, 'item-icon')}</div><div class="item-name">${base.name}</div><div class="relic-tier-badge" style="color:${tier.color}">${t(tier.name)}</div>`;
-    div.onclick = () => openRelicModal(relic.id);
+    div.onclick = () => openRelicModal(relic.id, true);
     grid.appendChild(div);
   });
 
   renderEquipmentSlots();
 }
 
-export function openRelicModal(relicId) {
+export function openRelicModal(relicId, fromBag = false) {
+  itemModalOpenedFromBag = fromBag;
   const relic = (G.relics || []).find(r => r.id === relicId);
   if (!relic) return;
   const base = ITEMS[relic.itemId];
@@ -154,7 +155,15 @@ export function openRelicModal(relicId) {
   `);
 }
 
-export function openItemModal(itemId) {
+// true quando o modal de detalhe do item/relíquia atual foi aberto de DENTRO
+// do modal da Bag (clique na lista, ver renderInventory acima) — nesse caso,
+// vender/equipar/desequipar/usar deve VOLTAR pra Bag em vez de fechar tudo
+// (ver EVENTS.ITEM_MODAL_DONE abaixo). Aberto pelo slot de equipamento (fora
+// da Bag) fica false: aí sim fecha tudo.
+let itemModalOpenedFromBag = false;
+
+export function openItemModal(itemId, fromBag = false) {
+  itemModalOpenedFromBag = fromBag;
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   const isEquippable = EQUIPPABLE_TYPES.includes(item.type);
@@ -238,7 +247,17 @@ export function toggleBackpack() {
   renderInventory();
 }
 
+// Vender/equipar/desequipar/usar fecha só o modal de DETALHE do item/relíquia
+// — se ele tinha sido aberto de dentro da Bag, volta pra Bag (não fecha tudo);
+// se veio do slot de equipamento, aí sim fecha (ver openItemModal/
+// openRelicModal acima e application/inventoryUseCases.js).
+function handleItemModalDone() {
+  if (itemModalOpenedFromBag) toggleBackpack();
+  else closeModal();
+}
+
 export function wireInventoryAndEquipmentEvents() {
   on(EVENTS.INVENTORY, renderInventory);
   on(EVENTS.EQUIPMENT_SLOTS, renderEquipmentSlots);
+  on(EVENTS.ITEM_MODAL_DONE, handleItemModalDone);
 }

@@ -2,7 +2,7 @@ import { G } from './gameStore.js?v=126';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=136';
 import { ZONES } from '../domain/bestiary.js?v=134';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
-import { emit, EVENTS } from '../shared/eventBus.js?v=125';
+import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=125';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=127';
 import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=131';
@@ -44,7 +44,7 @@ export function equipItem(itemId) {
   const block = equipBlockReason(item, G.vocation, t);
   if (block) { emit(EVENTS.NOTIFY, { msg: t('inventory.equipBlocked', { item: item.name, reason: block }), type: 'error' }); return; }
   G.equipment[item.type] = itemId;
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemEquipped', { item: item.name }), type: 'success' });
@@ -59,7 +59,7 @@ export function unequipItem(itemId) {
   const item = resolveEquippedItem(itemId, G.relics);
   if (!item) return;
   G.equipment[item.type] = null;
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemUnequipped', { item: item.name }) });
@@ -77,7 +77,7 @@ export function equipRelic(relicId) {
   if (block) { emit(EVENTS.NOTIFY, { msg: t('inventory.equipBlocked', { item: base.name, reason: block }), type: 'error' }); return; }
   G.equipment[base.type] = relicId;
   const tier = RARITY_TIERS[relic.rarity];
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: t('inventory.relicEquipped', { item: base.name, tier: t(tier.name) }), type: 'success' });
@@ -101,7 +101,7 @@ export function sellRelic(relicId) {
   G.relics.splice(idx, 1);
   G.gold += price;
   const tier = RARITY_TIERS[relic.rarity];
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.CHAR_INFO);
@@ -109,6 +109,13 @@ export function sellRelic(relicId) {
   saveGame();
 }
 
+// EVENTS.ITEM_MODAL_DONE (não MODAL_CLOSE) de propósito, aqui e em
+// equipItem/unequipItem/equipRelic/sellRelic/useItem: o modal de detalhe do
+// item/relíquia pode ter sido aberto de DENTRO do modal da Bag (ver
+// ui/inventoryAndEquipmentPanel.js: toggleBackpack/openItemModal/
+// openRelicModal, que agora compartilham o mesmo modal genérico) — fechar
+// tudo incondicionalmente levaria a Bag junto. Quem decide se volta pra Bag
+// ou fecha de vez é a UI, que sabe de onde o modal foi aberto.
 export function sellItem(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
@@ -116,7 +123,7 @@ export function sellItem(itemId) {
   G.gold += item.sell;
   G.inventory[itemId]--;
   if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemSold', { item: item.name, price: item.sell }), type: 'success' });
@@ -130,7 +137,7 @@ export function sellAllItem(itemId) {
   const total = item.sell * qty;
   G.gold += total;
   delete G.inventory[itemId];
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemSoldAll', { qty, item: item.name, price: total }), type: 'success' });
@@ -193,7 +200,7 @@ export function useItem(itemId) {
 
   G.inventory[itemId]--;
   if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
-  emit(EVENTS.MODAL_CLOSE);
+  emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
