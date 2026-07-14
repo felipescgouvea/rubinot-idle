@@ -2,7 +2,7 @@
 // sorteados pra hoje, no mesmo espírito do bloco BOOSTED do site oficial do
 // RubinOT. Renderizado na aba Caçada; troca sozinho quando o dia vira.
 import { MONSTERS, boostedCreatureForDate, boostedBossForDate } from '../domain/bestiary.js?v=132';
-import { monsterSpriteImg } from './huntPanel.js?v=127';
+import { monsterSpriteImg } from './huntPanel.js?v=128';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

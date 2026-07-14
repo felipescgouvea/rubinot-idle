@@ -192,14 +192,13 @@ export function renderZonePicker() {
 }
 
 // Dois botões lado a lado (embaixo da barra de zona atual): "Ver Hunt" (abre
-// a cena de combate — só faz sentido caçando, fica desabilitado parado) e
-// "Trocar de Hunt" (abre o seletor de zona, sempre disponível).
+// a cena de combate — sempre disponível, mesmo parado, mostra o estado ocioso
+// da cena) e "Trocar de Hunt" (abre o seletor de zona, sempre disponível).
 export function renderHuntStatusButton() {
   const viewBtn = document.getElementById('hunt-status-view-btn');
   const switchBtn = document.getElementById('hunt-status-switch-btn');
   if (!viewBtn || !switchBtn) return;
   viewBtn.innerHTML = `⚔️ ${t('hunt.viewBattle')}`;
-  viewBtn.disabled = !G.hunting;
   switchBtn.innerHTML = `🗺️ ${t('hunt.switchHunt')}`;
 }
 
