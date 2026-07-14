@@ -2,8 +2,8 @@
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { ITEMS } from '../domain/items.js?v=135';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=127';
+import { ITEMS } from '../domain/items.js?v=136';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=128';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -48,6 +48,12 @@ export function goldIconImg(cls = '') {
 export function rubiniIconImg(cls = '') {
   return `<img src="${spriteUrl(RUBINI_COIN_FILE)}" alt="Rubini Coin" class="${cls} tibia-icon"
     onerror="this.outerHTML='<span class=&quot;${cls}&quot;>💎</span>'" />`;
+}
+
+// Task Coin: moeda das Linked Tasks (ver domain/gameState.js: G.taskCoins).
+export function taskCoinIconImg(cls = '') {
+  return `<img src="${spriteUrl(TASK_COIN_FILE)}" alt="Task Coin" class="${cls} tibia-icon"
+    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>🟡</span>'" />`;
 }
 
 // Charm Points: símbolo roxo real do Tibia, em vez da sigla genérica "CP".

@@ -216,6 +216,22 @@ export default {
   'zone.thais_dragon_cave': 'Caverna dos Dragões',
   'zone.femor_hills': 'Colinas de Femor',
   'zone.yalahar_sunken_quarter': 'Bairro Afundado',
+  'zone.troll_cave': 'Caverna dos Trolls',
+  'zone.dark_cathedral': 'Catedral Sombria',
+  'zone.corym_camp': 'Acampamento Corym',
+  'zone.pirate_cove': 'Enseada Pirata',
+  'zone.barbarian_camp': 'Acampamento Bárbaro',
+  'zone.stonerefiner_quarry': 'Pedreira do Refinador',
+  'zone.oramond_camp': 'Acampamento de Oramond',
+  'zone.cult_sanctum': 'Santuário do Culto',
+  'zone.deepling_trench': 'Fossa dos Deeplings',
+  'zone.minotaur_cult_lair': 'Covil do Culto Minotauro',
+  'zone.glooth_factory': 'Fábrica de Glooth',
+  'zone.exotic_cave': 'Caverna Exótica',
+  'zone.pirat_cove': 'Enseada dos Pirats',
+  'zone.werehyaena_den': 'Covil da Werehyaena',
+  'zone.lizard_city': 'Cidade dos Lagartos',
+  'zone.the_hive': 'A Colmeia',
 
   // ---- character panel (ui/characterPanel.js) ----
   'character.nameRequired': 'Escolha um nome de personagem (3 a 20 caracteres).',
@@ -723,10 +739,10 @@ export default {
   // ---- task use-cases (application/taskUseCases.js) ----
   'tasks.onlyOneActive': 'Só uma task ativa por vez (como no RubinOT). Cancele a atual primeiro.',
   'tasks.started': 'Task iniciada: {required}x {monster}',
-  'tasks.completeFirstTime': '🟢 1ª VEZ! Task completa! +{gold} 💰, +{xp} XP, +{rc} RC',
-  'tasks.completeRepeat': '🔴 Task completa! +{gold} 💰, +{xp} XP, +{rc} RC',
-  'tasks.logCompleteFirstTime': '📜 Task {monster} completa (bônus de primeira vez!) — próxima task da sala desbloqueada.',
-  'tasks.logComplete': '📜 Task {monster} completa — próxima task da sala desbloqueada.',
+  'tasks.completeFirstTime': '🟢 1ª VEZ! Task completa! {rewards}',
+  'tasks.completeRepeat': '🔴 Task completa! {rewards}',
+  'tasks.logCompleteFirstTime': '📜 Task {task} completa (bônus de primeira vez!) — próxima task da sala desbloqueada.',
+  'tasks.logComplete': '📜 Task {task} completa — próxima task da sala desbloqueada.',
   'tasks.cancelled': 'Tarefa cancelada.',
 
   // ---- prey use-cases (application/preyUseCases.js) ----

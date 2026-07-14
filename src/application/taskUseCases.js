@@ -2,44 +2,95 @@
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
 import { G } from './gameStore.js?v=126';
-import { MONSTERS } from '../domain/bestiary.js?v=133';
+import { MONSTERS } from '../domain/bestiary.js?v=134';
+import { ITEMS } from '../domain/items.js?v=136';
+import { TASK_ROOMS, taskKey } from '../domain/progression.js?v=127';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=125';
 import { gainXp } from './huntUseCases.js?v=131';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=125';
+import { addItemToInventory } from './inventoryCore.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 
-export function startTask(monsterId, required) {
+function findTask(roomId, taskIndex) {
+  const room = TASK_ROOMS.find(r => r.id === roomId);
+  if (!room) return null;
+  const task = room.tasks[taskIndex];
+  if (!task) return null;
+  return { room, task };
+}
+
+export function startTask(roomId, taskIndex) {
   if (G.activeTask) {
     emit(EVENTS.NOTIFY, { msg: t('tasks.onlyOneActive'), type: 'error' });
     return;
   }
-  G.activeTask = { monster: monsterId, required, started: Date.now() };
-  G.taskKills[monsterId] = G.taskKills[monsterId] || 0;
-  emit(EVENTS.NOTIFY, { msg: t('tasks.started', { required, monster: MONSTERS[monsterId].name }), type: 'success' });
+  const found = findTask(roomId, taskIndex);
+  if (!found) return;
+  const { task } = found;
+  const key = taskKey(task);
+  G.activeTask = { roomId, taskIndex, key, monsters: task.m, required: task.n, started: Date.now() };
+  G.taskKills[key] = G.taskKills[key] || 0;
+  const monsterNames = task.m.map(id => MONSTERS[id]?.name || id).join(', ');
+  emit(EVENTS.NOTIFY, { msg: t('tasks.started', { required: task.n, monster: monsterNames }), type: 'success' });
   emit(EVENTS.TASKS_PANEL);
   saveGame();
 }
 
+// Concede uma lista de rewards ({type, amount|itemId|qty|itemIds}) ao jogador.
+// Tipos suportados: xp, gold, item, taskCoin, randomItem (sorteia 1 item da
+// lista itemIds e credita qty 1). Retorna um resumo textual pro log/notificação.
+function grantRewards(rewards) {
+  const parts = [];
+  for (const r of rewards || []) {
+    if (!r) continue;
+    if (r.type === 'xp') {
+      gainXp(r.amount);
+      parts.push(`+${r.amount.toLocaleString()} XP`);
+    } else if (r.type === 'gold') {
+      G.gold += r.amount;
+      G.totalGoldEarned += r.amount;
+      parts.push(`+${r.amount.toLocaleString()} Gold`);
+    } else if (r.type === 'taskCoin') {
+      G.taskCoins += r.qty;
+      parts.push(`+${r.qty} Task Coin${r.qty > 1 ? 's' : ''}`);
+    } else if (r.type === 'item') {
+      const qty = r.qty || 1;
+      for (let i = 0; i < qty; i++) addItemToInventory(r.itemId);
+      const itemName = ITEMS[r.itemId]?.name || r.itemId;
+      parts.push(`+${qty}x ${itemName}`);
+    } else if (r.type === 'randomItem') {
+      const pool = r.itemIds || [];
+      if (pool.length) {
+        const picked = pool[Math.floor(Math.random() * pool.length)];
+        addItemToInventory(picked, 1);
+        const itemName = ITEMS[picked]?.name || picked;
+        parts.push(`+1x ${itemName}`);
+      }
+    }
+  }
+  return parts.join(', ');
+}
+
 export function checkTaskProgress() {
   if (!G.activeTask) return;
-  const { monster, required } = G.activeTask;
-  const kills = G.taskKills[monster] || 0;
+  const { roomId, taskIndex, key, required } = G.activeTask;
+  const kills = G.taskKills[key] || 0;
   if (kills >= required) {
-    const firstTime = (G.taskCompletion[monster] || 0) === 0;
-    G.taskCompletion[monster] = (G.taskCompletion[monster] || 0) + 1;
-    // Recompensa exclusiva de 1ª vez (verde) vs repetível (vermelha), como no RubinOT
-    const mult = firstTime ? 2 : 1;
-    const goldReward = required * 5 * mult;
-    const xpReward = required * 20 * mult;
-    const rcReward = firstTime ? 25 : 10;
-    G.gold += goldReward;
-    gainXp(xpReward);
-    G.rubini += rcReward;
+    const found = findTask(roomId, taskIndex);
+    if (!found) { G.activeTask = null; return; }
+    const { task } = found;
+    const firstTime = (G.taskCompletion[key] || 0) === 0;
+    G.taskCompletion[key] = (G.taskCompletion[key] || 0) + 1;
+    // Recompensa exclusiva de 1ª vez (verde) É ADICIONAL à repetível (vermelha):
+    // na 1ª conclusão o jogador recebe firstReward + repeatReward juntos; da 2ª
+    // em diante só repeatReward — fiel ao padrão real do RubinOT (Linked Tasks).
+    const rewards = firstTime ? [...(task.firstReward || []), ...(task.repeatReward || [])] : (task.repeatReward || []);
+    const summary = grantRewards(rewards);
     bumpMissionProgress('tasks', 1);
-    emit(EVENTS.NOTIFY, { msg: t(firstTime ? 'tasks.completeFirstTime' : 'tasks.completeRepeat', { gold: goldReward, xp: xpReward, rc: rcReward }), type: 'success' });
-    emit(EVENTS.LOG, `<span class="${firstTime ? 'log-heal' : 'log-loot'}">${t(firstTime ? 'tasks.logCompleteFirstTime' : 'tasks.logComplete', { monster: MONSTERS[monster].name })}</span>`);
-    G.taskKills[monster] = 0;
+    emit(EVENTS.NOTIFY, { msg: t(firstTime ? 'tasks.completeFirstTime' : 'tasks.completeRepeat', { rewards: summary }), type: 'success' });
+    emit(EVENTS.LOG, `<span class="${firstTime ? 'log-heal' : 'log-loot'}">${t(firstTime ? 'tasks.logCompleteFirstTime' : 'tasks.logComplete', { task: task.name })}</span>`);
+    G.taskKills[key] = 0;
     G.activeTask = null;
     emit(EVENTS.TASKS_PANEL);
     emit(EVENTS.HEADER_STATS);
@@ -56,8 +107,8 @@ export function cancelTask() {
 }
 
 on(EVENTS.MONSTER_KILLED, ({ monsterId }) => {
-  if (G.activeTask && G.activeTask.monster === monsterId) {
-    G.taskKills[G.activeTask.monster] = (G.taskKills[G.activeTask.monster] || 0) + 1;
+  if (G.activeTask && G.activeTask.monsters.includes(monsterId)) {
+    G.taskKills[G.activeTask.key] = (G.taskKills[G.activeTask.key] || 0) + 1;
   }
   checkTaskProgress();
 });

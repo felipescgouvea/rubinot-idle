@@ -215,6 +215,22 @@ export default {
   'zone.thais_dragon_cave': 'Dragon Cave',
   'zone.femor_hills': 'Femor Hills',
   'zone.yalahar_sunken_quarter': 'Sunken Quarter',
+  'zone.troll_cave': 'Troll Cave',
+  'zone.dark_cathedral': 'Dark Cathedral',
+  'zone.corym_camp': 'Corym Camp',
+  'zone.pirate_cove': 'Pirate Cove',
+  'zone.barbarian_camp': 'Barbarian Camp',
+  'zone.stonerefiner_quarry': 'Stonerefiner Quarry',
+  'zone.oramond_camp': 'Oramond Camp',
+  'zone.cult_sanctum': 'Cult Sanctum',
+  'zone.deepling_trench': 'Deepling Trench',
+  'zone.minotaur_cult_lair': 'Minotaur Cult Lair',
+  'zone.glooth_factory': 'Glooth Factory',
+  'zone.exotic_cave': 'Exotic Cave',
+  'zone.pirat_cove': 'Pirat Cove',
+  'zone.werehyaena_den': "Werehyaena's Den",
+  'zone.lizard_city': 'Lizard City',
+  'zone.the_hive': 'The Hive',
 
   // ---- character panel (ui/characterPanel.js) ----
   'character.nameRequired': 'Choose a character name (3 to 20 characters).',
@@ -722,10 +738,10 @@ export default {
   // ---- task use-cases (application/taskUseCases.js) ----
   'tasks.onlyOneActive': 'Only one active task at a time (like in RubinOT). Cancel the current one first.',
   'tasks.started': 'Task started: {required}x {monster}',
-  'tasks.completeFirstTime': '🟢 FIRST TIME! Task complete! +{gold} 💰, +{xp} XP, +{rc} RC',
-  'tasks.completeRepeat': '🔴 Task complete! +{gold} 💰, +{xp} XP, +{rc} RC',
-  'tasks.logCompleteFirstTime': '📜 Task {monster} complete (first-time bonus!) — next room task unlocked.',
-  'tasks.logComplete': '📜 Task {monster} complete — next room task unlocked.',
+  'tasks.completeFirstTime': '🟢 FIRST TIME! Task complete! {rewards}',
+  'tasks.completeRepeat': '🔴 Task complete! {rewards}',
+  'tasks.logCompleteFirstTime': '📜 Task {task} complete (first-time bonus!) — next room task unlocked.',
+  'tasks.logComplete': '📜 Task {task} complete — next room task unlocked.',
   'tasks.cancelled': 'Task cancelled.',
 
   // ---- prey use-cases (application/preyUseCases.js) ----

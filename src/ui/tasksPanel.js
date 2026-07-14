@@ -1,14 +1,37 @@
 import { G } from '../application/gameStore.js?v=126';
-import { MONSTERS } from '../domain/bestiary.js?v=133';
-import { TASK_ROOMS, isTaskUnlocked } from '../domain/progression.js?v=126';
+import { MONSTERS } from '../domain/bestiary.js?v=134';
+import { ITEMS } from '../domain/items.js?v=136';
+import { TASK_ROOMS, isTaskUnlocked, taskKey } from '../domain/progression.js?v=127';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
 import { monsterSpriteImg } from './huntPanel.js?v=128';
-import { t } from '../i18n/i18n.js?v=135';
+import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=128';
+import { t } from '../i18n/i18n.js?v=136';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
 // tem sprite real via SPRITE_OVERRIDE em tibiaSprites.js) — só "corrupted" (id
 // da sala) difere de "corrupted_one" (id do monstro) por causa da palavra reservada.
 const ROOM_BOSS_ID = { lothlorien: 'lothlorien', executioner: 'executioner', morgul: 'morgul', corrupted: 'corrupted_one', nzoth: 'nzoth' };
+
+// Um único reward vira um pedaço de texto/ícone curto pra listagem da task
+// (ex.: "🎁 +5.000 XP", "🎁 +10.000 Gold", "🎁 2x Prey Cards", "🎁 1 Task Coin").
+function rewardChip(r) {
+  if (r.type === 'xp') return `${formatNum(r.amount)} XP`;
+  if (r.type === 'gold') return `${itemIconImg('gold_coin', 'reward-icon')}${formatNum(r.amount)}`;
+  if (r.type === 'taskCoin') return `${taskCoinIconImg('reward-icon')}${r.qty}`;
+  if (r.type === 'item') {
+    const name = ITEMS[r.itemId]?.name || r.itemId;
+    return `${itemIconImg(r.itemId, 'reward-icon')}${r.qty > 1 ? r.qty + 'x ' : ''}${name}`;
+  }
+  if (r.type === 'randomItem') {
+    return `🎲 ${r.itemIds.map(id => ITEMS[id]?.name || id).join(' / ')}`;
+  }
+  return '';
+}
+
+function rewardsLine(rewards, cls) {
+  if (!rewards || !rewards.length) return '';
+  return `<div class="task-rewards-row ${cls}">${rewards.map(r => `<span class="reward-chip">${rewardChip(r)}</span>`).join('')}</div>`;
+}
 
 export function renderTasksPanel() {
   const roomsEl = document.getElementById('task-rooms');
@@ -17,15 +40,21 @@ export function renderTasksPanel() {
     <div class="task-room">
       <h4>${monsterSpriteImg(ROOM_BOSS_ID[room.id], 'inline-icon')} ${room.name}</h4>
       ${room.tasks.map((task, i) => {
-        const m = MONSTERS[task.m];
-        const kills = G.taskKills[task.m] || 0;
-        const done = (G.taskCompletion[task.m] || 0);
-        const isActive = G.activeTask?.monster === task.m;
+        const key = taskKey(task);
+        const kills = G.taskKills[key] || 0;
+        const done = (G.taskCompletion[key] || 0);
+        const isActive = G.activeTask?.roomId === room.id && G.activeTask?.taskIndex === i;
         const unlocked = isTaskUnlocked(room, i, G.taskCompletion);
+        const monsterIcons = task.m.map(id => monsterSpriteImg(id, 'inline-icon')).join('');
+        const monsterNames = task.m.map(id => MONSTERS[id]?.name || id).join(', ');
         return `<div class="task-entry" ${!unlocked ? 'style="opacity:0.45"' : ''}>
-          <span class="task-name">${i + 1}. ${monsterSpriteImg(task.m, 'inline-icon')} ${m.name} (${kills}/${task.n})</span>
-          <span class="task-status">${done > 0 ? `${done}x ✅` : done === 0 && unlocked ? `<span style="color:#8fc47a">${t('tasks.firstTimeBonus')}</span>` : ''}</span>
-          <button class="task-btn ${isActive ? 'done' : ''}" onclick="startTask('${task.m}', ${task.n})" ${isActive || !unlocked ? 'disabled' : ''}>
+          <div class="task-entry-row">
+            <span class="task-name">${task.name} — <span class="task-monsters" title="${monsterNames}">${monsterIcons}</span> ${monsterNames} (${kills}/${task.n})</span>
+            <span class="task-status">${done > 0 ? `${done}x ✅` : done === 0 && unlocked ? `<span style="color:#8fc47a">${t('tasks.firstTimeBonus')}</span>` : ''}</span>
+          </div>
+          ${rewardsLine(task.firstReward, 'task-reward-first')}
+          ${rewardsLine(task.repeatReward, 'task-reward-repeat')}
+          <button class="task-btn ${isActive ? 'done' : ''}" onclick="startTask('${room.id}', ${i})" ${isActive || !unlocked ? 'disabled' : ''}>
             ${isActive ? `✓ ${t('tasks.active')}` : unlocked ? t('tasks.start') : '🔒'}
           </button>
         </div>`;
@@ -40,12 +69,14 @@ export function renderActiveTask() {
   const el = document.getElementById('active-task-display');
   if (!G.activeTask) { el.style.display = 'none'; return; }
   el.style.display = 'block';
-  const { monster, required } = G.activeTask;
-  const kills = G.taskKills[monster] || 0;
+  const { roomId, taskIndex, key, required, monsters } = G.activeTask;
+  const room = TASK_ROOMS.find(r => r.id === roomId);
+  const task = room?.tasks[taskIndex];
+  const kills = G.taskKills[key] || 0;
   const pct = Math.min(100, Math.round((kills / required) * 100));
-  const m = MONSTERS[monster];
+  const monsterIcons = (monsters || []).map(id => monsterSpriteImg(id, 'inline-icon')).join('');
   el.innerHTML = `
-    <div class="active-task-header">📋 ${t('tasks.activeTaskLabel')}: ${monsterSpriteImg(monster, 'inline-icon')} ${m.name}</div>
+    <div class="active-task-header">📋 ${t('tasks.activeTaskLabel')}: ${task ? task.name : ''} — ${monsterIcons}</div>
     <div>${t('tasks.killsProgress', { kills, required, pct })}</div>
     <div class="task-progress-bar-track"><div class="task-progress-bar" style="width:${pct}%"></div></div>
     <button onclick="cancelTask()" style="margin-top:6px;background:#e74c3c;border:none;color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px">${t('tasks.cancelTask')}</button>

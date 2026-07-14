@@ -5,7 +5,7 @@
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
 import { G } from '../application/gameStore.js?v=126';
-import { MONSTERS } from '../domain/bestiary.js?v=133';
+import { MONSTERS } from '../domain/bestiary.js?v=134';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, isPreyActive,
 } from '../domain/prey.js?v=125';
@@ -15,7 +15,7 @@ import {
 } from '../domain/charms.js?v=126';
 import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=125';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=127';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=128';
 import { monsterSpriteImg } from './huntPanel.js?v=128';
 import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=125';
 import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=125';

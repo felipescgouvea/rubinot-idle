@@ -154,3 +154,10 @@ export const RUBINI_COIN_FILE = 'currency/Tibia_Coin.webp';
 // Charm Points: símbolo roxo real do Tibia (o mesmo ícone da barra de status
 // do cliente), em vez da sigla genérica "CP".
 export const CHARM_POINTS_ICON_FILE = 'currency/Charm_Points_Icon.gif';
+
+// Task Coin: moeda das Linked Tasks (RubinOT). Não existe página "Task Coin"/
+// "Task Point" no TibiaWiki (é uma moeda exclusiva de servidor OT, não do
+// Tibia oficial) — usa como fallback razoável a arte do Gold Token real do
+// Tibia (mesmo conceito visual: ficha/token dourado de recompensa de conteúdo
+// endgame), em vez de cair no emoji genérico.
+export const TASK_COIN_FILE = 'currency/Task_Coin.webp';

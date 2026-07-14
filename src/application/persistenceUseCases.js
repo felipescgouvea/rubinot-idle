@@ -1,17 +1,17 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
 import { G, replaceState, replaceAccount } from './gameStore.js?v=126';
-import { createDefaultState } from '../domain/gameState.js?v=125';
+import { createDefaultState } from '../domain/gameState.js?v=126';
 import { createDefaultSkills } from '../domain/character.js?v=126';
 import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=127';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=133';
-import { isRelicId, STARTER_KITS } from '../domain/items.js?v=135';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=134';
+import { isRelicId, STARTER_KITS } from '../domain/items.js?v=136';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
-import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP } from '../domain/progression.js?v=126';
+import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=127';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
@@ -59,7 +59,13 @@ export function loadGame() {
   // migração: zona/tarefa de versões antigas do bestiário
   if (G.activeZone && !ZONES[G.activeZone]) G.activeZone = null;
   if (!G.defeatedZoneBosses) G.defeatedZoneBosses = [];
-  if (G.activeTask && !MONSTERS[G.activeTask.monster]) G.activeTask = null;
+  // migração: TASK_ROOMS foi reescrito (94 tasks reais do RubinOT, ver
+  // domain/progression.js) — o shape de G.activeTask mudou de
+  // { monster, required } pra { roomId, taskIndex, key, monsters, required }.
+  // Uma task ativa de antes da migração não bate mais no formato novo (sem
+  // roomId/key) nem existe mais na lista atual de salas — descarta em vez de
+  // deixar a UI travada num estado inválido.
+  if (G.activeTask && (!G.activeTask.roomId || !TASK_ROOMS.find(r => r.id === G.activeTask.roomId))) G.activeTask = null;
   // migração: sistema antigo de pontos de skill → skills de treino Tibia
   if (!G.sk || !G.sk.magic) G.sk = createDefaultSkills();
   // migração: RTC ganhou ataque (spell/runa) e cura por poção — saves antigos têm só

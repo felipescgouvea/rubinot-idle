@@ -1076,10 +1076,21 @@ img.tibia-icon {
   padding: 7px 12px;
   text-shadow: 0 1px 2px #00000088;
 }
-.task-entry { display: flex; justify-content: space-between; align-items: center; padding: 5px 12px; border-bottom: 1px solid #3d322514; font-size: 11px; gap: 6px; }
+.task-entry { display: flex; flex-direction: column; align-items: stretch; padding: 6px 12px; border-bottom: 1px solid #3d322514; font-size: 11px; gap: 4px; }
 .task-entry:last-child { border-bottom: none; }
 .task-entry .task-name { flex: 1; color: var(--ink); }
 .task-entry .task-status { font-size: 9.5px; color: var(--ink-faint); }
+.task-entry-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.task-monsters { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
+.task-rewards { display: flex; flex-direction: column; gap: 1px; font-size: 9.5px; }
+.task-rewards-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 9.5px; }
+.reward-chip { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+.reward-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; margin-right: 1px; }
+/* Cores fiéis ao Tibia real das duas linhas de recompensa de task: verde para
+   a recompensa exclusiva da 1ª conclusão, vermelho para a recompensa que
+   repete a cada conclusão (mesma paleta usada no cliente oficial). */
+.task-reward-first { color: var(--green-badge, #4caf50); }
+.task-reward-repeat { color: #e05252; }
 .task-btn {
   background: linear-gradient(180deg, var(--navy-1), var(--navy-2));
   border: 1px solid var(--navy-deep);

@@ -15,6 +15,12 @@ export function createDefaultState() {
     xp: 0,
     gold: 0,
     rubini: 0,
+    // Task Coin: moeda paralela ao Rubini Coin, ganha só nas Linked Tasks a
+    // partir da sala Morgul's Room em diante (ver domain/progression.js:
+    // TASK_ROOMS) — usada aqui só como acúmulo/contador (não há loja própria
+    // pra ela ainda, é fiel ao RubinOT real onde Task Coins trocam por itens
+    // específicos do baú de tasks).
+    taskCoins: 0,
     hp: 0,
     mana: 0,
     sk: createDefaultSkills(),
