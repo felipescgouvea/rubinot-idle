@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=136';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=128';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=134';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=135';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
 
@@ -357,11 +357,15 @@ export function renderBattleList() {
   const dead = getRecentDead() || [];
   if (!pack.length && !dead.length) { el.innerHTML = `<div class="battle-list-empty">${t('battle.noCreatures')}</div>`; return; }
   const now = Date.now();
-  const rows = pack.map((m, i) => battleListEntry({
-    uid: m.uid, defKey: m.defKey, name: `${i === 0 ? '⚔️ ' : ''}${m.name}`,
-    pct: Math.max(0, Math.round((m.hp / m.maxHp) * 100)), hp: Math.max(0, m.hp), maxHp: m.maxHp, target: i === 0,
-    hit: (now - (m._hitAt || 0)) < 350, // flash de dano (inclui os atingidos em área)
-  }));
+  const targetUid = (getCurrentMonster() || {}).uid;
+  const rows = pack.map((m) => {
+    const isTarget = m.uid === targetUid;
+    return battleListEntry({
+      uid: m.uid, defKey: m.defKey, name: `${isTarget ? '⚔️ ' : ''}${m.name}`,
+      pct: Math.max(0, Math.round((m.hp / m.maxHp) * 100)), hp: Math.max(0, m.hp), maxHp: m.maxHp, target: isTarget,
+      hit: (now - (m._hitAt || 0)) < 350, // flash de dano (inclui os atingidos em área)
+    });
+  });
   // Mortos recentes (vida zerada) ficam ao fim da lista por 1s antes de sumir.
   dead.forEach(d => rows.push(battleListEntry({ defKey: d.defKey, name: `☠️ ${d.name}`, pct: 0, hp: 0, maxHp: d.maxHp, dead: true })));
   el.innerHTML = rows.join('');
@@ -405,10 +409,13 @@ function renderStagePack(stage) {
   }
   if (!pack.length) return; // sala vazia: deixa os que morreram tombarem e sumirem
   const box = cont || (() => { const c = document.createElement('div'); c.id = 'stage-pack'; c.className = 'stage-pack'; stage.appendChild(c); return c; })();
-  // adiciona os novos (materializando) e mantém a ordem (alvo = primeiro à esquerda).
-  // O anchor de posição ignora elementos "leaving" (corpo ainda tombando/sumindo)
-  // — indexar direto em box.children (que ainda contém o corpo por ~650ms) fazia
-  // os SOBREVIVENTES pularem de posição na tela assim que um deles morria, como
+  const targetUid = (getCurrentMonster() || {}).uid;
+  // adiciona os novos (materializando) e mantém a ordem de SPAWN (nunca muda
+  // por causa de clique/seleção de alvo — só o destaque ".is-target" muda,
+  // ver ui/huntUseCases.js: selectTarget). O anchor de posição ignora
+  // elementos "leaving" (corpo ainda tombando/sumindo) — indexar direto em
+  // box.children (que ainda contém o corpo por ~650ms) fazia os
+  // SOBREVIVENTES pularem de posição na tela assim que um deles morria, como
   // se tivessem sido "teleportados" (bug reportado pelo Felipe).
   pack.forEach((m, i) => {
     const uid = String(m.uid || m.defKey);
@@ -418,6 +425,7 @@ function renderStagePack(stage) {
       el.className = 'stage-monster spawning';
       el.dataset.uid = uid;
       el.dataset.rawUid = String(m.uid);
+      el.style.pointerEvents = 'auto'; // .stage-pack tem pointer-events:none; sem isso o clique não chega no monstro
       el.setAttribute('onclick', `selectTarget('${m.uid}')`);
       el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>
         <div class="stage-monster-hp"><div class="stage-monster-hp-fill" style="width:100%"></div></div>`;
@@ -425,7 +433,7 @@ function renderStagePack(stage) {
     // vida atualizada a cada tick, inclusive nos que já estavam na tela.
     const fill = el.querySelector('.stage-monster-hp-fill');
     if (fill) fill.style.width = Math.max(0, Math.round((m.hp / m.maxHp) * 100)) + '%';
-    el.classList.toggle('is-target', i === 0);
+    el.classList.toggle('is-target', m.uid === targetUid);
     const livingSiblings = [...box.children].filter(c => c !== el && !c.classList.contains('leaving'));
     const anchor = livingSiblings[i] || null;
     if (el.nextSibling !== anchor) box.insertBefore(el, anchor);

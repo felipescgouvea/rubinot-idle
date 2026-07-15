@@ -143,17 +143,17 @@ export function getCurrentPack() {
 
 // Jogador escolhe manualmente qual criatura da sala atacar (clique na Battle
 // List ou no palco) — igual ao Tibia real, onde clicar num monstro o torna o
-// alvo. O "alvo" é sempre currentPack[0] (golpe básico/magia/runa sempre miram
-// primary = currentMonster), então trocar de alvo é só reordenar a array
-// trazendo o escolhido pra frente; ninguém morre/desaparece com isso.
+// alvo. currentMonster é só uma REFERÊNCIA dentro de currentPack — a ordem
+// da array (posição na Battle List/palco) nunca muda por causa disso, só
+// troca QUEM currentMonster aponta (golpe básico/magia/runa sempre miram
+// currentMonster). Reordenar a array fazia a Battle List inteira "pular" de
+// posição a cada clique — bug reportado pelo Felipe.
 export function selectTarget(uid) {
   if (!G.hunting || !currentPack.length) return;
   const key = String(uid);
-  const idx = currentPack.findIndex(m => String(m.uid) === key);
-  if (idx <= 0) return; // já é o alvo, ou uid não existe na sala
-  const [picked] = currentPack.splice(idx, 1);
-  currentPack.unshift(picked);
-  currentMonster = currentPack[0];
+  const picked = currentPack.find(m => String(m.uid) === key);
+  if (!picked || picked === currentMonster) return; // já é o alvo, ou uid não existe na sala
+  currentMonster = picked;
   emit(EVENTS.MONSTER_DISPLAY, {});
 }
 
@@ -672,11 +672,13 @@ export function resolveMonsterKill(zone, victim) {
   }
 
   // Remove a vítima da sala (por identidade — num ataque de área ela pode não
-  // ser a da frente). O alvo passa a ser sempre o primeiro sobrevivente. Só
-  // quando a sala esvazia (currentMonster null) o próximo tick gera novo grupo.
+  // ser a que está sendo mirada). Só troca o alvo se quem morreu FOI o alvo
+  // (senão o jogador que escolheu manualmente um alvo específico o perderia
+  // sempre que outro bicho da sala morresse). Só quando a sala esvazia
+  // (currentMonster null) o próximo tick gera novo grupo.
   const idx = currentPack.indexOf(mon);
   if (idx >= 0) currentPack.splice(idx, 1);
-  currentMonster = currentPack[0] || null;
+  if (currentMonster === mon) currentMonster = currentPack[0] || null;
   // Deixa o morto 1s na Battle List com a vida zerada (indica que morreu), depois some.
   const deadEntry = { defKey: mon.defKey, name: mon.name, maxHp: mon.maxHp, uid: ++deadSeq };
   recentDead.push(deadEntry);
