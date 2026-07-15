@@ -1,13 +1,47 @@
 // Aba Skills. Só re-renderiza ao trocar de aba (o treino em si acontece
 // silenciosamente durante a caçada — ver application/skillUseCases.js).
+// Dividida em 2 subtabs: Atributos (ATK/DEF/SPD/MGC, antes fixos na barra
+// de status — pedido do Felipe pra tirar da tela principal) e Skills
+// (treino de cada skill, conteúdo que já existia aqui).
 import { G } from '../application/gameStore.js?v=126';
 import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=126';
 import { resolveEquippedItem } from '../domain/items.js?v=136';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
+import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=128';
 import { t } from '../i18n/i18n.js?v=135';
 
+let activeSkillsSubtab = 'attributes';
+export function setSkillsSubtab(tab) {
+  if (tab !== 'attributes' && tab !== 'upgrades') return;
+  activeSkillsSubtab = tab;
+  renderSkillsPanel();
+}
+
+function renderSkillsSubtabs() {
+  const el = document.getElementById('skills-subtabs');
+  if (!el) return;
+  el.innerHTML = `
+    <button class="admin-subtab-btn ${activeSkillsSubtab === 'attributes' ? 'active' : ''}" onclick="setSkillsSubtab('attributes')">📊 ${t('skills.subtabAttributes')}</button>
+    <button class="admin-subtab-btn ${activeSkillsSubtab === 'upgrades' ? 'active' : ''}" onclick="setSkillsSubtab('upgrades')">⚡ ${t('skills.subtabTraining')}</button>
+  `;
+  const attrEl = document.getElementById('skills-subtab-attributes');
+  const upgEl = document.getElementById('skills-subtab-upgrades');
+  if (attrEl) attrEl.style.display = activeSkillsSubtab === 'attributes' ? 'block' : 'none';
+  if (upgEl) upgEl.style.display = activeSkillsSubtab === 'upgrades' ? 'block' : 'none';
+}
+
+function renderAttributesSubtab() {
+  const atk = document.getElementById('stat-atk');
+  if (!atk) return;
+  document.getElementById('stat-atk').textContent = getAtk();
+  document.getElementById('stat-def').textContent = getDef();
+  document.getElementById('stat-spd').textContent = getSpd().toFixed(1);
+  document.getElementById('stat-magic').textContent = getMagic();
+}
+
 export function renderSkillsPanel() {
+  renderSkillsSubtabs();
+  renderAttributesSubtab();
   const pts = document.getElementById('skill-points-display');
   const voc = G.vocation ? VOC_TRAINING[G.vocation] : null;
   const isMage = voc && voc.attackSkill === 'magic';

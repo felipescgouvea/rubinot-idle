@@ -6,6 +6,7 @@ export default {
   'shell.daily': 'Daily',
   'shell.tabHunt': 'Hunt',
   'shell.tabTasks': 'Tasks',
+  'shell.tabTraining': 'Training',
   'shell.tabBestiary': 'Bestiary',
   'shell.tabWorlds': 'Worlds',
   'shell.tabMarket': 'Market',
@@ -38,6 +39,8 @@ export default {
   // ---- skills tab ----
   'skills.offlineTraining': 'Offline Training',
   'skills.skillsUpgrades': 'Skills & Upgrades',
+  'skills.subtabAttributes': 'Attributes',
+  'skills.subtabTraining': 'Skills',
   'skills.intro': 'Skills level up through use while hunting — or train a chosen one above, even offline.',
 
   // ---- bestiary tab ----

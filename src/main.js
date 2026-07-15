@@ -50,6 +50,7 @@ import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
 import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=125';
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=126';
 import { wireTrainingPanelEvents } from './ui/trainingPanel.js?v=126';
+import { setSkillsSubtab } from './ui/skillsPanel.js?v=127';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=126';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=129';
@@ -57,7 +58,7 @@ import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logo
 import { openSettingsPanel } from './ui/settingsPanel.js?v=127';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=128';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=129';
-import { wireTabs, applyMarketVisibility } from './ui/tabs.js?v=125';
+import { wireTabs, applyMarketVisibility } from './ui/tabs.js?v=126';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();
@@ -96,7 +97,7 @@ Object.assign(window, {
   setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell,
   registerPlayerName, refreshHighscoresClick, setHighscoresCategory,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,
-  openOutfitPicker, setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor, setActiveColorChannel,
+  openOutfitPicker, setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor, setActiveColorChannel, setSkillsSubtab,
   openZonePicker, pickZone, openCity, backToCities,
   openBattleModal, closeBattleModal,
   setLogFilter,

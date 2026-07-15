@@ -42,6 +42,7 @@
       <button class="tab" data-tab="rtc">🖥️ RTC</button>
       <button class="tab" data-tab="tasks">📜 <span data-i18n="shell.tabTasks">Tasks</span></button>
       <button class="tab" data-tab="skills" style="display:none">⚡ Skills</button>
+      <button class="tab" data-tab="training">🏋️ <span data-i18n="shell.tabTraining">Training</span></button>
       <button class="tab" data-tab="bestiary">📖 <span data-i18n="shell.tabBestiary">Bestiary</span></button>
       <button class="tab" data-tab="arena">🏟️ Arena</button>
       <button class="tab" data-tab="bossrush">💀 Boss Zone</button>
@@ -78,12 +79,6 @@
           <div class="bar-track"><div id="xp-bar" class="bar xp-bar" style="width:0%"></div></div>
           <span id="xp-text">0%</span>
         </div>
-      </div>
-      <div class="char-status-stats">
-        <div class="stat-chip" data-i18n-attr="title:shell.attack"><span id="stat-atk">0</span><small>ATK</small></div>
-        <div class="stat-chip" data-i18n-attr="title:shell.defense"><span id="stat-def">0</span><small>DEF</small></div>
-        <div class="stat-chip" data-i18n-attr="title:shell.speed"><span id="stat-spd">0</span><small>SPD</small></div>
-        <div class="stat-chip" data-i18n-attr="title:shell.magic"><span id="stat-magic">0</span><small>MGC</small></div>
       </div>
       <button class="btn-small" onclick="openOutfitPicker()">👕 Outfit</button>
       <!-- Skills compactas, à direita do botão Outfit (treino silencioso durante
@@ -183,14 +178,29 @@
       <!-- SKILLS -->
       <section id="tab-skills" class="panel">
         <div class="card full-card">
+          <div class="admin-subtabs" id="skills-subtabs"></div>
+          <div id="skills-subtab-attributes">
+            <div class="char-status-stats">
+              <div class="stat-chip" data-i18n-attr="title:shell.attack"><span id="stat-atk">0</span><small>ATK</small></div>
+              <div class="stat-chip" data-i18n-attr="title:shell.defense"><span id="stat-def">0</span><small>DEF</small></div>
+              <div class="stat-chip" data-i18n-attr="title:shell.speed"><span id="stat-spd">0</span><small>SPD</small></div>
+              <div class="stat-chip" data-i18n-attr="title:shell.magic"><span id="stat-magic">0</span><small>MGC</small></div>
+            </div>
+          </div>
+          <div id="skills-subtab-upgrades">
+            <h3>⚡ <span data-i18n="skills.skillsUpgrades">Skills & Upgrades</span></h3>
+            <p class="muted" data-i18n="skills.intro">Skills level up through use while hunting — or train a chosen one above, even offline.</p>
+            <div id="skill-points-display"></div>
+            <div id="skills-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRAINING (Treino Offline) — aba própria, antes ficava dentro de Skills -->
+      <section id="tab-training" class="panel">
+        <div class="card full-card">
           <h3>🏋️ <span data-i18n="skills.offlineTraining">Offline Training</span></h3>
           <div id="training-body"></div>
-        </div>
-        <div class="card full-card">
-          <h3>⚡ <span data-i18n="skills.skillsUpgrades">Skills & Upgrades</span></h3>
-          <p class="muted" data-i18n="skills.intro">Skills level up through use while hunting — or train a chosen one above, even offline.</p>
-          <div id="skill-points-display"></div>
-          <div id="skills-grid"></div>
         </div>
       </section>
 
@@ -376,6 +386,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=147"></script>
+  <script type="module" src="src/main.js?v=148"></script>
 </body>
 </html>

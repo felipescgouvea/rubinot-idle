@@ -2,7 +2,7 @@
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
 import { renderTasksPanel } from './tasksPanel.js?v=126';
-import { renderSkillsPanel } from './skillsPanel.js?v=126';
+import { renderSkillsPanel } from './skillsPanel.js?v=127';
 import { renderArenaPanel } from './arenaPanel.js?v=125';
 import { renderWorldsPanel } from './worldsPanel.js?v=125';
 import { renderBattlePassPanel } from './battlePassPanel.js?v=125';
@@ -17,16 +17,10 @@ import { renderAdminPanel } from './adminPanel.js?v=129';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 
-// A aba Skills renderiza também a seção de Treino Offline (que vive no topo
-// dela) — as duas coisas são "progressão de skill", então dividem a aba.
-function renderSkillsTab() {
-  renderTrainingSection();
-  renderSkillsPanel();
-}
-
 const RENDER_BY_TAB = {
   tasks: renderTasksPanel,
-  skills: renderSkillsTab,
+  skills: renderSkillsPanel,
+  training: renderTrainingSection,
   bestiary: renderBestiaryTab,
   arena: renderArenaPanel,
   worlds: renderWorldsPanel,
