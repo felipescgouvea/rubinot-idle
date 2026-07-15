@@ -124,6 +124,37 @@ export const ITEMS = {
   avalanche_rune:       { name: 'Avalanche Rune', icon: '📜', type: 'rune', dmg: 180, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'ice', reqMl: 9, sell: 90 },
   fireball_rune:        { name: 'Fireball Rune', icon: '📜', type: 'rune', dmg: 40, power: [1.8, 12, 3.0, 17], area: 'single', element: 'fire', reqMl: 4, sell: 15 },
   great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'fire', reqMl: 7, sell: 45 },
+  // --- Demais runas reais de Tibia, completando o catálogo de Artigos
+  // Mágicos (auditoria 2026-07-14). Runas de dano seguem o mesmo `power`
+  // (base power real do TFS) usado acima; as runas utilitárias (sem dano —
+  // ex.: Convince Creature, Create Food) não participam de combate, então
+  // ficam só com `sell`/ícone pra serem colecionáveis/comerciáveis. ---
+  light_magic_missile_rune:  { name: 'Light Magic Missile Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'energy', reqMl: 0, sell: 6 },
+  heavy_magic_missile_rune:  { name: 'Heavy Magic Missile Rune', icon: '📜', type: 'rune', dmg: 35, power: [1.0, 6, 2.0, 12], area: 'single', element: 'energy', reqMl: 5, sell: 20 },
+  fire_field_rune:      { name: 'Fire Field Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.6, 3, 1.2, 7], area: 'single', element: 'fire', reqMl: 2, sell: 10 },
+  fire_wall_rune:        { name: 'Fire Wall Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.6, 3, 1.2, 7], area: 'single', element: 'fire', reqMl: 2, sell: 10 },
+  fire_bomb_rune:        { name: 'Fire Bomb Rune', icon: '📜', type: 'rune', dmg: 140, power: [1.3, 8, 2.6, 16], area: 'ball', element: 'fire', reqMl: 8, sell: 120 },
+  poison_field_rune:     { name: 'Poison Field Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'earth', reqMl: 1, sell: 8 },
+  poison_wall_rune:      { name: 'Poison Wall Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'earth', reqMl: 1, sell: 8 },
+  poison_bomb_rune:      { name: 'Poison Bomb Rune', icon: '📜', type: 'rune', dmg: 100, power: [1.1, 6, 2.2, 13], area: 'ball', element: 'earth', reqMl: 9, sell: 140 },
+  energy_field_rune:     { name: 'Energy Field Rune', icon: '📜', type: 'rune', dmg: 30, power: [0.8, 4, 1.6, 9], area: 'single', element: 'energy', reqMl: 5, sell: 25 },
+  energy_wall_rune:      { name: 'Energy Wall Rune', icon: '📜', type: 'rune', dmg: 30, power: [0.8, 4, 1.6, 9], area: 'single', element: 'energy', reqMl: 5, sell: 25 },
+  energy_bomb_rune:      { name: 'Energy Bomb Rune', icon: '📜', type: 'rune', dmg: 200, power: [1.6, 10, 3.2, 20], area: 'ball', element: 'energy', reqMl: 11, sell: 350, rare: true },
+  icicle_rune:           { name: 'Icicle Rune', icon: '📜', type: 'rune', dmg: 55, power: [1.2, 7, 2.4, 14], area: 'single', element: 'ice', reqMl: 6, sell: 30 },
+  stalagmite_rune:       { name: 'Stalagmite Rune', icon: '📜', type: 'rune', dmg: 45, power: [1.0, 6, 2.0, 12], area: 'single', element: 'earth', reqMl: 4, sell: 25 },
+  stone_shower_rune:     { name: 'Stone Shower Rune', icon: '📜', type: 'rune', dmg: 80, power: [1.2, 7, 2.4, 14], area: 'ball', element: 'earth', reqMl: 6, sell: 60 },
+  thunderstorm_rune:     { name: 'Thunderstorm Rune', icon: '📜', type: 'rune', dmg: 130, power: [1.3, 8, 2.6, 16], area: 'ball', element: 'energy', reqMl: 9, sell: 150 },
+  soulfire_rune:         { name: 'Soulfire Rune', icon: '📜', type: 'rune', dmg: 170, power: [1.7, 11, 3.4, 22], area: 'single', element: 'fire', reqMl: 13, sell: 220 },
+  desintegrate_rune:     { name: 'Desintegrate Rune', icon: '📜', type: 'rune', dmg: 115, power: [1.4, 8, 2.8, 17], area: 'single', element: 'physical', reqMl: 6, sell: 50 },
+  cure_poison_rune:      { name: 'Cure Poison Rune', icon: '📜', type: 'rune', sell: 15 },
+  create_food_rune:      { name: 'Create Food Rune', icon: '📜', type: 'rune', sell: 20 },
+  chameleon_rune:        { name: 'Chameleon Rune', icon: '📜', type: 'rune', sell: 200 },
+  convince_creature_rune:{ name: 'Convince Creature Rune', icon: '📜', type: 'rune', sell: 250 },
+  animate_dead_rune:     { name: 'Animate Dead Rune', icon: '📜', type: 'rune', sell: 500, rare: true },
+  magic_wall_rune:       { name: 'Magic Wall Rune', icon: '📜', type: 'rune', sell: 80 },
+  wild_growth_rune:      { name: 'Wild Growth Rune', icon: '📜', type: 'rune', sell: 60 },
+  paralyze_rune:         { name: 'Paralyze Rune', icon: '📜', type: 'rune', sell: 400, rare: true },
+  great_light_rune:      { name: 'Great Light Rune', icon: '📜', type: 'rune', sell: 15 },
   great_spirit_potion:  { name: 'Great Spirit Potion', icon: '🧪', type: 'potion', heal: 300, mana: 150, sell: 320, reqLevel: 80, reqVoc: ['paladin'] },
 
   // --- Loja de Equipamentos: mais opções reais de Tibia por categoria ---
@@ -137,6 +168,18 @@ export const ITEMS = {
   wand_of_inferno: { name: 'Wand of Inferno', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 38, sell: 3500, rare: true },
   moonlight_rod:   { name: 'Moonlight Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 18, sell: 900 },
   underworld_rod:  { name: 'Underworld Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 38, sell: 3500, rare: true },
+  // --- Demais wands (sorcerer) e rods (druid) reais de Tibia, completando a
+  // progressão ao lado de Wand of Vortex/Cosmic Energy/Inferno e Snakebite/
+  // Moonlight/Underworld Rod já existentes acima (auditoria 2026-07-14). ---
+  wand_of_decay:      { name: 'Wand of Decay', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 15, sell: 500 },
+  wand_of_draconia:   { name: 'Wand of Draconia', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 17, sell: 650 },
+  wand_of_starstorm:  { name: 'Wand of Starstorm', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 20, sell: 900 },
+  wand_of_voodoo:     { name: 'Wand of Voodoo', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 23, sell: 1300 },
+  wand_of_dementia:   { name: 'Wand of Dementia', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 31, sell: 3800, rare: true },
+  necrotic_rod:       { name: 'Necrotic Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 31, sell: 3800, rare: true },
+  terra_rod:          { name: 'Terra Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 15, sell: 500 },
+  springsprout_rod:   { name: 'Springsprout Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 20, sell: 900 },
+  hailstorm_rod:      { name: 'Hailstorm Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 23, sell: 1300 },
   brass_armor:     { name: 'Brass Armor', icon: '🥋', type: 'armor', def: 8, sell: 180 },
   scale_armor:     { name: 'Scale Armor', icon: '🥋', type: 'armor', def: 8, sell: 90 },
   golden_armor:    { name: 'Golden Armor', icon: '🥋', type: 'armor', def: 12, sell: 1200 },
