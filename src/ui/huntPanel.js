@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=136';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=128';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=133';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=134';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
 
@@ -335,8 +335,10 @@ function renderOfflineProgressModal({ zoneName, zoneMainMonster, hours, minutes,
 
 // Battle List (como a do Tibia): lista todos os monstros da "sala" atual com a
 // vida de cada um, destacando o alvo da frente. Some quando não há ninguém.
-function battleListEntry({ defKey, name, pct, hp, maxHp, target, dead, hit }) {
-  return `<div class="battle-list-entry ${target ? 'target' : ''} ${dead ? 'dead' : ''} ${hit ? 'hit-flash' : ''}">
+// Clicar numa criatura viva troca o alvo (ver application/huntUseCases.js:
+// selectTarget) — igual ao Tibia real.
+function battleListEntry({ uid, defKey, name, pct, hp, maxHp, target, dead, hit }) {
+  return `<div class="battle-list-entry ${target ? 'target' : ''} ${dead ? 'dead' : ''} ${hit ? 'hit-flash' : ''}" ${!dead ? `onclick="selectTarget('${uid}')"` : ''}>
     <div class="battle-list-icon">${monsterSpriteImg(defKey, 'battle-list-sprite')}</div>
     <div class="battle-list-info">
       <div class="battle-list-name">${name}</div>
@@ -356,7 +358,7 @@ export function renderBattleList() {
   if (!pack.length && !dead.length) { el.innerHTML = `<div class="battle-list-empty">${t('battle.noCreatures')}</div>`; return; }
   const now = Date.now();
   const rows = pack.map((m, i) => battleListEntry({
-    defKey: m.defKey, name: `${i === 0 ? '⚔️ ' : ''}${m.name}`,
+    uid: m.uid, defKey: m.defKey, name: `${i === 0 ? '⚔️ ' : ''}${m.name}`,
     pct: Math.max(0, Math.round((m.hp / m.maxHp) * 100)), hp: Math.max(0, m.hp), maxHp: m.maxHp, target: i === 0,
     hit: (now - (m._hitAt || 0)) < 350, // flash de dano (inclui os atingidos em área)
   }));
@@ -403,7 +405,11 @@ function renderStagePack(stage) {
   }
   if (!pack.length) return; // sala vazia: deixa os que morreram tombarem e sumirem
   const box = cont || (() => { const c = document.createElement('div'); c.id = 'stage-pack'; c.className = 'stage-pack'; stage.appendChild(c); return c; })();
-  // adiciona os novos (materializando) e mantém a ordem (alvo = primeiro à esquerda)
+  // adiciona os novos (materializando) e mantém a ordem (alvo = primeiro à esquerda).
+  // O anchor de posição ignora elementos "leaving" (corpo ainda tombando/sumindo)
+  // — indexar direto em box.children (que ainda contém o corpo por ~650ms) fazia
+  // os SOBREVIVENTES pularem de posição na tela assim que um deles morria, como
+  // se tivessem sido "teleportados" (bug reportado pelo Felipe).
   pack.forEach((m, i) => {
     const uid = String(m.uid || m.defKey);
     let el = box.querySelector(`[data-uid="${CSS.escape(uid)}"]`);
@@ -411,6 +417,8 @@ function renderStagePack(stage) {
       el = document.createElement('div');
       el.className = 'stage-monster spawning';
       el.dataset.uid = uid;
+      el.dataset.rawUid = String(m.uid);
+      el.setAttribute('onclick', `selectTarget('${m.uid}')`);
       el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>
         <div class="stage-monster-hp"><div class="stage-monster-hp-fill" style="width:100%"></div></div>`;
     }
@@ -418,7 +426,9 @@ function renderStagePack(stage) {
     const fill = el.querySelector('.stage-monster-hp-fill');
     if (fill) fill.style.width = Math.max(0, Math.round((m.hp / m.maxHp) * 100)) + '%';
     el.classList.toggle('is-target', i === 0);
-    if (box.children[i] !== el) box.insertBefore(el, box.children[i] || null);
+    const livingSiblings = [...box.children].filter(c => c !== el && !c.classList.contains('leaving'));
+    const anchor = livingSiblings[i] || null;
+    if (el.nextSibling !== anchor) box.insertBefore(el, anchor);
   });
 }
 

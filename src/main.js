@@ -15,7 +15,7 @@ import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=126';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=125';
 import { selectVocation } from './application/characterUseCases.js?v=125';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=133';
+import { toggleHunt, startRegen, selectTarget } from './application/huntUseCases.js?v=134';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=127';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=127';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
@@ -34,7 +34,7 @@ import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=128';
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=129';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=130';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=128';
 import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=128';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';
@@ -84,7 +84,7 @@ wireAdminPanelEvents();
 // HTML é gerado como string e usa onclick inline — não há outra forma de ligar
 // eventos a conteúdo que nem existe no DOM ainda no momento em que o módulo carrega.
 Object.assign(window, {
-  saveGame, confirmReset, selectVocation, createCharacter, toggleHunt, closeModal,
+  saveGame, confirmReset, selectVocation, createCharacter, toggleHunt, selectTarget, closeModal,
   openItemModal, equipItem, unequipItem, sellItem, sellAllItem, useItem, setAutoSell, setAutoSellMax,
   openRelicModal, equipRelic, sellRelic, toggleBackpack,
   challengeBoss, stopBossRushClick,

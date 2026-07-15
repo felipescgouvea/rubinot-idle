@@ -141,6 +141,22 @@ export function getCurrentPack() {
   return currentPack;
 }
 
+// Jogador escolhe manualmente qual criatura da sala atacar (clique na Battle
+// List ou no palco) — igual ao Tibia real, onde clicar num monstro o torna o
+// alvo. O "alvo" é sempre currentPack[0] (golpe básico/magia/runa sempre miram
+// primary = currentMonster), então trocar de alvo é só reordenar a array
+// trazendo o escolhido pra frente; ninguém morre/desaparece com isso.
+export function selectTarget(uid) {
+  if (!G.hunting || !currentPack.length) return;
+  const key = String(uid);
+  const idx = currentPack.findIndex(m => String(m.uid) === key);
+  if (idx <= 0) return; // já é o alvo, ou uid não existe na sala
+  const [picked] = currentPack.splice(idx, 1);
+  currentPack.unshift(picked);
+  currentMonster = currentPack[0];
+  emit(EVENTS.MONSTER_DISPLAY, {});
+}
+
 export function isBossOnlyHunt() {
   return bossOnly;
 }

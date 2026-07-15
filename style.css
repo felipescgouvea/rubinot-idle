@@ -771,7 +771,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 }
 /* cada criatura: item da fila. Surge DE BAIXO PRA CIMA via .spawning; o
    .monster-sprite-wrap interno cuida da marcha (monster-walk). */
-.stage-monster { position: relative; flex: 0 0 auto; }
+.stage-monster { position: relative; flex: 0 0 auto; cursor: pointer; }
+.stage-monster.leaving { cursor: default; pointer-events: none; }
 .stage-monster.spawning { animation: monster-rise 0.55s cubic-bezier(0.18, 0.9, 0.3, 1.2); }
 /* barrinha de vida sob cada criatura da sala — compacta, sem número, só a
    proporção (o valor exato já mora na Battle List ao lado). */
@@ -1698,8 +1699,16 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   flex-direction: column; /* linha de 2 colunas em cima; Log full-width embaixo */
   gap: 14px;
   padding: 14px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
+/* #combat-log-card é um .card, que por padrão tem overflow:hidden (pros
+   cantos arredondados) — mas isso cortava o fim do Log quando a linha de
+   cima (cena + Battle List) era alta o bastante pra espremer o card abaixo
+   do min-height de #combat-log (texto "cortado embaixo"). Como o card já
+   não precisa de cantos internos escondendo nada além do próprio #combat-log
+   (que rola sozinho), soltar o overflow aqui resolve sem afetar o visual. */
+#battle-modal-box #combat-log-card { overflow: visible; }
 /* Linha de cima: 2 colunas (cena+botão | Battle List). Altura natural da coluna
    esquerda; a direita estica pra igualar (a Battle List preenche até embaixo). */
 .battle-top-row {
@@ -2012,7 +2021,10 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   padding: 4px 6px; border-radius: 5px;
   background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
   border: 1px solid var(--line-soft);
+  cursor: pointer;
 }
+.battle-list-entry:hover:not(.dead):not(.target) { border-color: var(--gold); filter: brightness(1.03); }
+.battle-list-entry.dead { cursor: default; }
 .battle-list-entry.target { border-color: var(--gold); background: linear-gradient(180deg, #fbf1d6, #f2e2b8); box-shadow: 0 0 6px #d4a01755; }
 /* flash de dano — pisca em CADA monstro atingido no tick (inclui os de área) */
 .battle-list-entry.hit-flash { animation: bl-hit 0.32s ease-out; }
