@@ -55,7 +55,7 @@ import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/d
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=129';
 import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=125';
-import { openSettingsPanel } from './ui/settingsPanel.js?v=127';
+import { openSettingsPanel } from './ui/settingsPanel.js?v=128';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=128';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=129';
 import { wireTabs, applyMarketVisibility } from './ui/tabs.js?v=126';

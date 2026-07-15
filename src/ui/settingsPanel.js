@@ -61,19 +61,6 @@ export function openSettingsPanel() {
     </div>
 
     <div class="settings-section">
-      <h4>${t('settings.nickname')}</h4>
-      <p class="settings-row">${G.playerName
-        ? t('settings.nicknameCurrent', { name: `<strong>${G.playerName}</strong>` })
-        : t('settings.nicknameNone')}</p>
-      <div style="display:flex; gap:8px; max-width:380px">
-        <input id="settings-name-input" type="text" maxlength="20" placeholder="${t('highscores.namePlaceholder')}"
-               style="flex:1" onkeydown="if(event.key==='Enter')registerPlayerName(document.getElementById('settings-name-input').value).then(ok => { if (ok) openSettingsPanel(); })" />
-        <button class="btn-small" onclick="registerPlayerName(document.getElementById('settings-name-input').value).then(ok => { if (ok) openSettingsPanel(); })">${t('settings.nicknameSave')}</button>
-      </div>
-      <p class="muted settings-hint">${t('settings.nicknameHint')}</p>
-    </div>
-
-    <div class="settings-section">
       <h4>${t('account.title')}</h4>
       <div class="settings-slot-list">${slotRows}</div>
       <p class="muted settings-hint">${t('account.hint')}</p>
