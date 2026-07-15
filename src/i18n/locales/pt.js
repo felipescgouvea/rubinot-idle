@@ -509,6 +509,7 @@ export default {
 
   // ---- tasks panel (ui/tasksPanel.js) ----
   'tasks.firstTimeBonus': '1ª vez: 2x prêmio',
+  'tasks.roomLocked': 'Complete todas as tasks da sala anterior pra desbloquear essa.',
   'tasks.active': 'Ativa',
   'tasks.start': 'Iniciar',
   'tasks.activeTaskLabel': 'Tarefa Ativa',
@@ -536,6 +537,15 @@ export default {
   'training.intro': 'Escolha uma skill para treinar nas dummies. O treino roda em segundo plano (inclusive offline) e pausa a caçada.',
   'training.level': 'Nv {lvl}',
   'training.dummyTitle': 'Treinar {skill} nesse boneco',
+  'training.onlineTraining': 'Treino Online',
+  'training.onlineIntro': 'Escolha qual skill de arma treinar no boneco — treina mais rápido que o offline, mas só com o jogo aberto.',
+  'training.onlineIntroFixed': 'Ataque o boneco com seu arco/crossbow pra treinar {skill} — mais rápido que o offline, mas só com o jogo aberto.',
+  'training.onlineIntroMage': 'Escolha a magia de ataque que você vai lançar no boneco pra treinar Magic Level — mais rápido que o offline, mas só com o jogo aberto.',
+  'training.startOnlineTraining': 'Iniciar Treino Online',
+  'training.usingSpell': 'Lançando {spell} no boneco',
+  'training.onlineMustStayOpen': '⚠️ Mantenha o jogo aberto — o treino online não acumula enquanto você está fora.',
+  'training.onlineBlockedByOffline': 'O treino offline está ativo. Pare ele abaixo pra iniciar o Treino Online.',
+  'training.offlineBlockedByOnline': 'O treino online está ativo acima. Pare ele pra trocar pro Treino Offline.',
 
   // ---- daily reward panel (ui/dailyRewardPanel.js) ----
   'daily.day': 'Dia {day}',

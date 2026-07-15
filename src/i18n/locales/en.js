@@ -508,6 +508,7 @@ export default {
 
   // ---- tasks panel (ui/tasksPanel.js) ----
   'tasks.firstTimeBonus': 'First time: 2x reward',
+  'tasks.roomLocked': 'Complete every task in the previous room to unlock this one.',
   'tasks.active': 'Active',
   'tasks.start': 'Start',
   'tasks.activeTaskLabel': 'Active Task',
@@ -535,6 +536,15 @@ export default {
   'training.intro': 'Choose a skill to train on the dummies. Training runs in the background (even offline) and pauses hunting.',
   'training.level': 'Lv {lvl}',
   'training.dummyTitle': 'Train {skill} on this dummy',
+  'training.onlineTraining': 'Online Training',
+  'training.onlineIntro': 'Pick which weapon skill to train on the dummy — trains faster than offline, but only while the game is open.',
+  'training.onlineIntroFixed': 'Attack the dummy with your bow/crossbow to train {skill} — faster than offline, but only while the game is open.',
+  'training.onlineIntroMage': 'Pick the attack spell you\'ll cast on the dummy to train Magic Level — faster than offline, but only while the game is open.',
+  'training.startOnlineTraining': 'Start Online Training',
+  'training.usingSpell': 'Casting {spell} on the dummy',
+  'training.onlineMustStayOpen': '⚠️ Keep the game open — online training doesn\'t accrue while away.',
+  'training.onlineBlockedByOffline': 'Offline training is active. Stop it below to start Online Training instead.',
+  'training.offlineBlockedByOnline': 'Online training is active above. Stop it to switch to Offline Training.',
 
   // ---- daily reward panel (ui/dailyRewardPanel.js) ----
   'daily.day': 'Day {day}',

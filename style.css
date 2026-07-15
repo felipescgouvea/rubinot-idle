@@ -668,7 +668,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .zone-card-icon { font-size: 2.2rem; filter: drop-shadow(0 2px 3px #00000033); }
 .zone-card-icon-img { width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #00000033); }
 .zone-card-name { font-family: var(--serif); font-size: 13px; line-height: 1.3; color: var(--navy-2); font-weight: 700; margin-top: 8px; min-height: 34px; overflow-wrap: break-word; word-break: break-word; width: 100%; }
-.zone-card-monster-row { display: flex; justify-content: center; gap: 4px; margin: 6px 0; }
+.zone-card-monster-row { display: grid; grid-template-columns: repeat(4, 1fr); justify-items: center; gap: 4px; margin: 6px 0; }
 .zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
 .zone-card-req { font-size: 11.5px; color: var(--red-hot); font-weight: 700; padding: 8px 0; }
 .zone-card .skill-upgrade-btn { font-size: 11.5px; padding: 8px 6px; width: 100%; }
@@ -1058,7 +1058,8 @@ img.tibia-icon {
 /* ============ TAREFAS ============ */
 #task-rooms { margin: 12px 14px !important; }
 #task-room-tabs { flex-wrap: wrap; }
-.task-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.admin-subtab-btn.locked { opacity: 0.55; cursor: not-allowed; }
+.task-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; align-items: start; }
 .task-card {
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
   border: 1px solid var(--line-soft);
@@ -1073,17 +1074,15 @@ img.tibia-icon {
 .task-card-done { border-color: #8fc47a; background: linear-gradient(180deg, #f3f9ec, var(--parch-3)); }
 .task-card-locked { opacity: 0.5; }
 .task-card-head { display: flex; align-items: baseline; gap: 6px; }
-.task-card-num { font-family: var(--serif); font-weight: 700; color: var(--gold-dark, #8a6408); font-size: 11px; flex-shrink: 0; }
 .task-card-title { font-family: var(--serif); font-weight: 700; color: var(--ink); flex: 1; }
 .task-card-status { font-size: 9.5px; color: var(--ink-faint); white-space: nowrap; }
 .task-card-first { color: #6a9a52; font-weight: 600; }
-.task-card-monsters { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
-.task-card-monster-names { font-size: 9.5px; color: var(--ink-faint); margin-left: 2px; }
+.task-card-monsters { display: flex; flex-wrap: wrap; gap: 8px; }
+.task-card-monster-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 44px; }
+.task-card-monster-icon { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
+.task-card-monster-name { font-size: 8.5px; color: var(--ink-faint); text-align: center; line-height: 1.15; }
 .task-card-bar { margin: 0; height: 9px; }
 .task-card-kills { font-size: 9.5px; color: var(--ink-faint); text-align: right; margin-top: -4px; }
-.task-entry-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
-.task-monsters { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
-.task-rewards { display: flex; flex-direction: column; gap: 1px; font-size: 9.5px; }
 .task-rewards-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 9.5px; }
 .reward-chip { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
 .reward-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; margin-right: 1px; }
@@ -1971,6 +1970,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 }
 .training-skill-btn:hover { border-color: var(--gold); background: #fff; }
 .training-skill-btn small { color: var(--ink-soft); font-weight: 600; }
+.training-online-hint { color: #a85d1f; font-weight: 600; }
+/* ---- Treino Online: picker de magia (Sorcerer/Druid) ---- */
+.training-spell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
+.training-spell-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 6px;
+  border: 1px solid var(--line-soft); border-radius: 8px; background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  color: var(--ink); font-size: 11px; font-weight: 700; cursor: pointer;
+}
+.training-spell-btn:hover:not(:disabled) { border-color: var(--gold); background: #fff; }
+.training-spell-btn.selected { border: 2px solid var(--gold); background: #fdf4d7; }
+.training-spell-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.training-spell-btn small { color: var(--ink-soft); font-weight: 600; }
 
 /* ---- Modal da Recompensa Diária ---- */
 .daily-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 10px 0; }

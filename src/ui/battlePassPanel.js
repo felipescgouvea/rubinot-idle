@@ -1,5 +1,5 @@
-import { G } from '../application/gameStore.js?v=126';
-import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=127';
+import { G } from '../application/gameStore.js?v=127';
+import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=128';
 import { currentMissions } from '../application/battlePassUseCases.js?v=125';

@@ -197,8 +197,12 @@
         </div>
       </section>
 
-      <!-- TRAINING (Treino Offline) — aba própria, antes ficava dentro de Skills -->
+      <!-- TRAINING (Online + Offline) — aba própria, antes ficava dentro de Skills -->
       <section id="tab-training" class="panel">
+        <div class="card full-card">
+          <h3>⚔️ <span data-i18n="training.onlineTraining">Online Training</span></h3>
+          <div id="online-training-body"></div>
+        </div>
         <div class="card full-card">
           <h3>🏋️ <span data-i18n="skills.offlineTraining">Offline Training</span></h3>
           <div id="training-body"></div>
@@ -387,6 +391,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=151"></script>
+  <script type="module" src="src/main.js?v=153"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=126';
+import { G } from '../application/gameStore.js?v=127';
 import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=135';
 import { MONSTERS } from '../domain/bestiary.js?v=135';
 import { cityName } from '../domain/cities.js?v=131';

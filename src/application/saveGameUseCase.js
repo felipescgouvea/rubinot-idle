@@ -3,7 +3,7 @@
 // módulo "persistence" mais encorpado (load/offline/reset) precisa chamar
 // gainXp/checkBpTier de outras camadas — se saveGame morasse junto, isso
 // criaria import circular entre metade dos casos de uso do jogo.
-import { G, ACCOUNT } from './gameStore.js?v=126';
+import { G, ACCOUNT } from './gameStore.js?v=127';
 import { saveState } from '../infrastructure/storage.js?v=125';
 import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=125';
 

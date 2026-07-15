@@ -20,7 +20,25 @@ export function triesPerMinuteFor(skillId) {
   return skillId === 'magic' ? MAGIC_TRIES_PER_MINUTE : TRIES_PER_MINUTE;
 }
 
+// Treino Online (jogador ativo assistindo o dummy sendo atacado, igual ao
+// treino offline do Tibia mas exigindo o jogo aberto) rende mais rápido que
+// o offline — recompensa a atenção — mas NÃO acumula enquanto o jogo está
+// fechado (ver application/trainingUseCases.js: resumeTrainingOnLoad).
+export const ONLINE_RATE_MULTIPLIER = 2;
+
 // Total de tentativas ganhas em `seconds` de treino da skill.
-export function triesForTraining(skillId, seconds) {
-  return Math.floor((seconds / 60) * triesPerMinuteFor(skillId));
+export function triesForTraining(skillId, seconds, multiplier = 1) {
+  return Math.floor((seconds / 60) * triesPerMinuteFor(skillId) * multiplier);
+}
+
+// Quais skills cada vocação pode treinar no modo ONLINE (o dummy "sabe" só
+// reagir ao que a vocação de verdade usa em combate — sword/axe/club pro
+// Knight escolher, Distance fixo pro Paladin, Magic Level fixo pro
+// Sorcerer/Druid). O treino OFFLINE continua livre pra qualquer skill,
+// como já era (dummy passivo, sem exigir animação de ataque real).
+export function onlineTrainableSkills(vocation) {
+  if (vocation === 'knight') return ['sword', 'axe', 'club'];
+  if (vocation === 'paladin') return ['distance'];
+  if (vocation === 'sorcerer' || vocation === 'druid') return ['magic'];
+  return TRAINABLE_SKILLS;
 }

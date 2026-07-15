@@ -4,7 +4,7 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=126';
+import { G } from '../application/gameStore.js?v=127';
 import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=136';
 import { VOCATIONS } from '../domain/character.js?v=126';

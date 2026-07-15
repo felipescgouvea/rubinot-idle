@@ -1,5 +1,5 @@
-import { G } from './gameStore.js?v=126';
-import { WORLDS } from '../domain/progression.js?v=127';
+import { G } from './gameStore.js?v=127';
+import { WORLDS } from '../domain/progression.js?v=128';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { stopHunt, setBossOnlyMode } from './huntUseCases.js?v=133';
 import { saveGame } from './saveGameUseCase.js?v=126';

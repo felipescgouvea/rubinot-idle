@@ -1,4 +1,4 @@
-import { G } from './gameStore.js?v=126';
+import { G } from './gameStore.js?v=127';
 import { VOCATIONS } from '../domain/character.js?v=126';
 import { STARTER_KITS } from '../domain/items.js?v=136';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';

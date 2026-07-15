@@ -154,6 +154,16 @@ export function isTaskUnlocked(room, index, taskCompletion) {
   return (taskCompletion[taskKey(prev)] || 0) >= 1;
 }
 
+// Sala só libera quando TODAS as tasks da sala anterior foram concluídas
+// ≥1x (pedido do Felipe: a cadeia Linked não é só dentro da sala, é entre
+// salas também — Executioner's Room só abre depois de fechar a Lothlorien's
+// Room inteira, e assim por diante).
+export function isRoomUnlocked(roomIndex, taskCompletion) {
+  if (roomIndex === 0) return true;
+  const prevRoom = TASK_ROOMS[roomIndex - 1];
+  return prevRoom.tasks.every(task => (taskCompletion[taskKey(task)] || 0) >= 1);
+}
+
 // Nomes de divisão em inglês nos dois idiomas de propósito — são termos
 // padrão de ranking competitivo (Bronze/Silver/Gold/...), universais mesmo em
 // clientes de jogo em português (como em League of Legends, Valorant etc).

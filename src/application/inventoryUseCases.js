@@ -1,4 +1,4 @@
-import { G } from './gameStore.js?v=126';
+import { G } from './gameStore.js?v=127';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=136';
 import { ZONES } from '../domain/bestiary.js?v=135';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';

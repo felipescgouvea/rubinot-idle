@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js?v=126';
+import { G } from '../application/gameStore.js?v=127';
 import { MONSTERS } from '../domain/bestiary.js?v=135';
 import { ITEMS } from '../domain/items.js?v=136';
-import { TASK_ROOMS, isTaskUnlocked, taskKey } from '../domain/progression.js?v=127';
+import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { monsterSpriteImg } from './huntPanel.js?v=129';
 import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=128';
@@ -41,6 +41,8 @@ function roomProgress(room) {
 }
 
 export function setTaskRoom(roomId) {
+  const ri = TASK_ROOMS.findIndex(r => r.id === roomId);
+  if (ri < 0 || !isRoomUnlocked(ri, G.taskCompletion)) return;
   activeTaskRoom = roomId;
   renderTasksPanel();
 }
@@ -48,10 +50,11 @@ export function setTaskRoom(roomId) {
 function renderRoomTabs() {
   const tabsEl = document.getElementById('task-room-tabs');
   if (!tabsEl) return;
-  tabsEl.innerHTML = TASK_ROOMS.map(room => {
+  tabsEl.innerHTML = TASK_ROOMS.map((room, ri) => {
     const { done, total } = roomProgress(room);
-    return `<button class="admin-subtab-btn ${room.id === activeTaskRoom ? 'active' : ''}" onclick="setTaskRoom('${room.id}')">
-      ${monsterSpriteImg(ROOM_BOSS_ID[room.id], 'inline-icon')} ${room.name} <span class="muted">(${done}/${total})</span>
+    const roomLocked = !isRoomUnlocked(ri, G.taskCompletion);
+    return `<button class="admin-subtab-btn ${room.id === activeTaskRoom ? 'active' : ''} ${roomLocked ? 'locked' : ''}" onclick="${roomLocked ? '' : `setTaskRoom('${room.id}')`}">
+      ${roomLocked ? '🔒' : monsterSpriteImg(ROOM_BOSS_ID[room.id], 'inline-icon')} ${room.name} <span class="muted">(${done}/${total})</span>
     </button>`;
   }).join('');
 }
@@ -61,8 +64,12 @@ export function renderTasksPanel() {
   renderRoomTabs();
 
   const roomsEl = document.getElementById('task-rooms');
-  const room = TASK_ROOMS.find(r => r.id === activeTaskRoom);
-  roomsEl.innerHTML = !room ? '' : `
+  const roomIndex = TASK_ROOMS.findIndex(r => r.id === activeTaskRoom);
+  const room = TASK_ROOMS[roomIndex];
+  const roomLocked = !room || !isRoomUnlocked(roomIndex, G.taskCompletion);
+  roomsEl.innerHTML = !room ? '' : roomLocked ? `
+    <p class="muted">🔒 ${t('tasks.roomLocked')}</p>
+  ` : `
     <div class="task-card-grid">
       ${room.tasks.map((task, i) => {
         const key = taskKey(task);
@@ -71,15 +78,16 @@ export function renderTasksPanel() {
         const isActive = G.activeTask?.roomId === room.id && G.activeTask?.taskIndex === i;
         const unlocked = isTaskUnlocked(room, i, G.taskCompletion);
         const pct = Math.min(100, Math.round((kills / task.n) * 100));
-        const monsterIcons = task.m.map(id => monsterSpriteImg(id, 'inline-icon')).join('');
-        const monsterNames = task.m.map(id => MONSTERS[id]?.name || id).join(', ');
+        const monsterCells = task.m.map(id => `<div class="task-card-monster-cell">
+          ${monsterSpriteImg(id, 'task-card-monster-icon')}
+          <span class="task-card-monster-name">${MONSTERS[id]?.name || id}</span>
+        </div>`).join('');
         return `<div class="task-card ${done > 0 ? 'task-card-done' : ''} ${!unlocked ? 'task-card-locked' : ''}">
           <div class="task-card-head">
-            <span class="task-card-num">#${i + 1}</span>
             <span class="task-card-title">${task.name}</span>
             <span class="task-card-status">${done > 0 ? `${done}x ✅` : unlocked ? `<span class="task-card-first">${t('tasks.firstTimeBonus')}</span>` : '🔒'}</span>
           </div>
-          <div class="task-card-monsters" title="${monsterNames}">${monsterIcons}<span class="task-card-monster-names">${monsterNames}</span></div>
+          <div class="task-card-monsters">${monsterCells}</div>
           <div class="task-progress-bar-track task-card-bar"><div class="task-progress-bar" style="width:${pct}%"></div></div>
           <div class="task-card-kills">${kills}/${task.n}</div>
           ${rewardsLine(task.firstReward, 'task-reward-first')}

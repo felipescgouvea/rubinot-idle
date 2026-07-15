@@ -105,10 +105,14 @@ export function createDefaultState() {
     // Recompensa diária (login streak) — ver domain/dailyReward.js.
     dailyLastClaim: null,
     dailyStreak: 0,
-    // Treino offline de skill — id da skill em treino (null = caçando) e
-    // instante em que o treino começou — ver domain/training.js.
+    // Treino de skill (offline OU online) — id da skill em treino (null = não
+    // treinando), instante em que o treino começou, modo ('offline'/'online',
+    // só o online exige o jogo aberto pra render mas rende mais rápido) e a
+    // magia escolhida pra treino online de mago — ver domain/training.js.
     trainingSkill: null,
     trainingSince: null,
+    trainingMode: 'offline',
+    trainingSpell: null,
     // Config de balanceamento do Painel Admin (taxas + raridade) — ver
     // domain/adminConfig.js. Ausente em saves antigos (migrado no load).
     adminConfig: { ...DEFAULT_ADMIN_CONFIG, rarityWeights: { ...DEFAULT_ADMIN_CONFIG.rarityWeights } },

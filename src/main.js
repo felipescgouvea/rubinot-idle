@@ -4,7 +4,7 @@
 // dinamicamente via innerHTML) precisa chamar via onclick/onchange, e
 // dispara a sequência de inicialização do jogo.
 
-import { G } from './application/gameStore.js?v=126';
+import { G } from './application/gameStore.js?v=127';
 import { VOCATIONS } from './domain/character.js?v=126';
 import { emit, EVENTS } from './shared/eventBus.js?v=126';
 import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=135';
@@ -17,7 +17,7 @@ import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from
 import { selectVocation } from './application/characterUseCases.js?v=125';
 import { toggleHunt, startRegen } from './application/huntUseCases.js?v=133';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=127';
-import { startTask, cancelTask } from './application/taskUseCases.js?v=126';
+import { startTask, cancelTask } from './application/taskUseCases.js?v=127';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=125';
 import { buyShopItem } from './application/shopUseCases.js?v=130';
@@ -29,14 +29,14 @@ import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitC
 import { rerollPrey, clearPrey } from './application/preyUseCases.js?v=125';
 import { unlockCharm, toggleCharmEquipped } from './application/bestiaryUseCases.js?v=125';
 import { claimDailyReward } from './application/dailyRewardUseCases.js?v=125';
-import { startTraining, stopTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=125';
+import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=126';
 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=128';
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=129';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=128';
-import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=127';
+import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=128';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=125';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=125';
@@ -49,7 +49,7 @@ import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicke
 import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
 import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=125';
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=126';
-import { wireTrainingPanelEvents } from './ui/trainingPanel.js?v=126';
+import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=127';
 import { setSkillsSubtab } from './ui/skillsPanel.js?v=127';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=126';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
@@ -104,7 +104,7 @@ Object.assign(window, {
   openPreySelect, pickPrey, rerollPrey, clearPrey,
   unlockCharm, toggleCharmEquipped,
   openDailyReward, claimDailyReward,
-  startTraining, stopTraining,
+  startTraining, stopTraining, startOnlineTraining, pickTrainingSpell, pickedTrainingSpellId,
   setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setAdminSpawnZone, setAdminTab, setAdminLootZone, setLootChance, resetLootChance,
   openSettingsPanel, logout, setLocale, confirmSwitchCharacterSlot,
   // utilitário de console pro dono do jogo ajustar o próprio save manualmente

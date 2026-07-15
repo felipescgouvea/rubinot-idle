@@ -6,9 +6,10 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G } from './gameStore.js?v=126';
-import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, triesForTraining } from '../domain/training.js?v=125';
+import { G } from './gameStore.js?v=127';
+import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesForTraining } from '../domain/training.js?v=126';
 import { TIBIA_SKILLS } from '../domain/character.js?v=126';
+import { SPELLS } from '../domain/spells.js?v=126';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { trainSkill } from './skillUseCases.js?v=126';
 import { stopHunt } from './huntUseCases.js?v=133';
@@ -25,8 +26,12 @@ export function accrueTraining({ offline = false } = {}) {
   const now = Date.now();
   let elapsedSec = Math.floor((now - G.trainingSince) / 1000);
   if (elapsedSec <= 0) return 0;
+  // Treino Online exige o jogo aberto — tempo que passou com o jogo fechado
+  // não conta (só reancora), diferente do Offline que credita normalmente.
+  if (offline && G.trainingMode === 'online') { G.trainingSince = now; return 0; }
   if (offline) elapsedSec = Math.min(elapsedSec, TRAINING_MAX_OFFLINE_SEC);
-  const tries = triesForTraining(G.trainingSkill, elapsedSec);
+  const multiplier = G.trainingMode === 'online' ? ONLINE_RATE_MULTIPLIER : 1;
+  const tries = triesForTraining(G.trainingSkill, elapsedSec, multiplier);
   if (tries > 0) trainSkill(G.trainingSkill, tries);
   G.trainingSince = now;
   return tries;
@@ -52,6 +57,30 @@ export function startTraining(skillId) {
   stopHunt(); // treino e caçada são mutuamente exclusivos
   G.trainingSkill = skillId;
   G.trainingSince = Date.now();
+  G.trainingMode = 'offline';
+  G.trainingSpell = null;
+  startTrainingLoop();
+  emit(EVENTS.NOTIFY, { msg: t('training.startedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
+  emit(EVENTS.TRAINING_PANEL);
+  saveGame();
+}
+
+// Treino Online: exige escolher a skill (dentre as que a vocação treina de
+// verdade — ver onlineTrainableSkills) e, pro mago, a magia usada no dummy
+// (só cosmético/estado — a matemática de ganho é igual, o que muda é o
+// multiplicador e não acumular offline).
+export function startOnlineTraining(skillId, spellId = null) {
+  if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('training.chooseVocationFirst'), type: 'error' }); return; }
+  if (!onlineTrainableSkills(G.vocation).includes(skillId)) return;
+  if (skillId === 'magic') {
+    const spell = spellId ? SPELLS[spellId] : null;
+    if (!spell || spell.type !== 'attack' || !spell.voc.includes(G.vocation) || G.level < spell.level) return;
+  }
+  stopHunt();
+  G.trainingSkill = skillId;
+  G.trainingSince = Date.now();
+  G.trainingMode = 'online';
+  G.trainingSpell = skillId === 'magic' ? spellId : null;
   startTrainingLoop();
   emit(EVENTS.NOTIFY, { msg: t('training.startedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
   emit(EVENTS.TRAINING_PANEL);
@@ -65,6 +94,8 @@ export function stopTraining() {
   const skillId = G.trainingSkill;
   G.trainingSkill = null;
   G.trainingSince = null;
+  G.trainingMode = 'offline';
+  G.trainingSpell = null;
   emit(EVENTS.NOTIFY, { msg: t('training.stoppedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
   emit(EVENTS.TRAINING_PANEL);
   saveGame();

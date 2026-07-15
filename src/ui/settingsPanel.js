@@ -4,7 +4,7 @@
 // da Bag). Não introduz estado novo: reaproveita G.autoSell e setAutoSell/
 // setAutoSellMax (mesmas funções da Bag, ver ui/inventoryAndEquipmentPanel.js)
 // e G.lastSave (gravado em cada saveGame, ver application/saveGameUseCase.js).
-import { G } from '../application/gameStore.js?v=126';
+import { G } from '../application/gameStore.js?v=127';
 import { currentUser } from '../infrastructure/authClient.js?v=125';
 import { getCharacterSlots } from '../application/accountUseCases.js?v=126';
 import { VOCATIONS } from '../domain/character.js?v=126';

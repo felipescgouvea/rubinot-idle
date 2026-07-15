@@ -1,10 +1,10 @@
 // Linked Tasks: iniciar, progredir e cancelar. Escuta MONSTER_KILLED (emitido
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
-import { G } from './gameStore.js?v=126';
+import { G } from './gameStore.js?v=127';
 import { MONSTERS } from '../domain/bestiary.js?v=135';
 import { ITEMS } from '../domain/items.js?v=136';
-import { TASK_ROOMS, taskKey } from '../domain/progression.js?v=127';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=128';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { gainXp } from './huntUseCases.js?v=133';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=125';
@@ -27,6 +27,8 @@ export function startTask(roomId, taskIndex) {
   }
   const found = findTask(roomId, taskIndex);
   if (!found) return;
+  const roomIndex = TASK_ROOMS.findIndex(r => r.id === roomId);
+  if (!isRoomUnlocked(roomIndex, G.taskCompletion) || !isTaskUnlocked(found.room, taskIndex, G.taskCompletion)) return;
   const { task } = found;
   const key = taskKey(task);
   G.activeTask = { roomId, taskIndex, key, monsters: task.m, required: task.n, started: Date.now() };
