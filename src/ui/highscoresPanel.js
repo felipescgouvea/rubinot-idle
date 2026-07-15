@@ -1,5 +1,5 @@
 import { G } from '../application/gameStore.js?v=126';
-import { MONSTERS } from '../domain/bestiary.js?v=134';
+import { MONSTERS } from '../domain/bestiary.js?v=135';
 import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { escapeHtml, notify, skillIconImg } from './shared.js?v=128';

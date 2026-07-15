@@ -3,7 +3,7 @@
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
 import { G } from '../application/gameStore.js?v=126';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=134';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=135';
 import { CITIES, isCityUnlocked, ROOKGAARD_LEVEL_CAP } from '../domain/cities.js?v=131';
 import { selectZone, startHunt } from '../application/huntUseCases.js?v=132';
 import { openModal, closeModal } from './shared.js?v=128';
@@ -19,8 +19,19 @@ function todayStr() {
 let openCityId = null;
 
 // Zonas de uma cidade, na ordem em que estão definidas em ZONES.
+// Dificuldade de uma zona: média de XP dos monstros comuns dela (não do
+// boss — o boss só aparece isolado no Boss Rush, não define o "nível" da
+// hunt normal). Usada só pra ORDENAR a lista da cidade, do mais fácil pro
+// mais difícil — não trava mais nada (ver domain/bestiary.js: isZoneUnlocked).
+function zoneDifficulty(zone) {
+  const xps = zone.monsters.map(id => MONSTERS[id]?.xp || 0);
+  return xps.length ? xps.reduce((a, b) => a + b, 0) / xps.length : 0;
+}
+
 function zonesOfCity(cityId) {
-  return Object.entries(ZONES).filter(([, z]) => z.city === cityId);
+  return Object.entries(ZONES)
+    .filter(([, z]) => z.city === cityId)
+    .sort(([, a], [, b]) => zoneDifficulty(a) - zoneDifficulty(b));
 }
 
 function unlockedCount(cityId) {
@@ -48,23 +59,22 @@ function cityCard(city) {
 }
 
 function zoneCard(id, z) {
-  // Sem trava de nível: a única trava é a cadeia de boss (uma hunt encadeada só
-  // abre depois de derrotar o boss da anterior).
-  const bossLocked = z.requiresBossOf && !(G.defeatedZoneBosses || []).includes(z.requiresBossOf);
-  const locked = bossLocked;
+  // Trava de boss encadeado DESLIGADA de propósito (pedido do Felipe) — toda
+  // hunt fica livre, sem precisar derrotar o boss da anterior primeiro. Ver
+  // domain/bestiary.js: isZoneUnlocked (mesma decisão, pro Boss Rush).
+  const locked = false;
   const active = G.activeZone === id;
   const isBoostedToday = id === boostedZoneForDate(todayStr());
   const monsterTitle = z.monsters.map(mId => MONSTERS[mId]?.name || mId).join(', ');
   const monsterIcons = z.monsters.map(mId => monsterSpriteImg(mId, 'zone-card-monster-icon')).join('');
-  const bossZoneName = bossLocked ? t(ZONES[z.requiresBossOf]?.name || z.requiresBossOf) : '';
-  const lockTitle = bossLocked ? t('zonePicker.defeatBossFirst', { zone: bossZoneName }) : monsterTitle;
+  const lockTitle = monsterTitle;
   return `<div class="zone-card ${active ? 'active' : ''} ${locked ? 'locked' : ''}" title="${lockTitle}">
     ${isBoostedToday ? `<div class="zone-boosted-badge" title="${t('zonePicker.bonusZoneTooltipFull')}">🔥 ${t('zonePicker.bonusZoneBadge')}</div>` : ''}
     <div class="zone-card-icon">${zoneIconImg(z, 'zone-card-icon-img')}</div>
     <div class="zone-card-name">${t(z.name)}</div>
     <div class="zone-card-monster-row">${monsterIcons}</div>
     ${locked
-      ? `<div class="zone-card-req">🔒 ${t('zonePicker.bossLabel', { zone: bossZoneName })}</div>`
+      ? `<div class="zone-card-req">🔒</div>`
       : `<button class="skill-upgrade-btn" onclick="pickZone('${id}')">${active ? `✅ ${t('zonePicker.hunting')}` : t('zonePicker.huntHere')}</button>`}
   </div>`;
 }

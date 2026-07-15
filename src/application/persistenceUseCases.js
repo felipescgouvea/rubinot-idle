@@ -7,7 +7,7 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } fr
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=134';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=135';
 import { isRelicId, STARTER_KITS } from '../domain/items.js?v=136';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
@@ -71,6 +71,10 @@ export function loadGame() {
   // migração: RTC ganhou ataque (spell/runa) e cura por poção — saves antigos têm só
   // os ajustes antigos (autoLoot/graphics/etc., já removidos) ou nenhum rtc ainda.
   G.rtc = { ...createDefaultRtc(), ...G.rtc };
+  // Smart Priority desligada de propósito (pedido do Felipe) — força false
+  // mesmo pra saves antigos que já tinham ligado antes do toggle virar
+  // somente-leitura na UI (ver ui/rtcPanel.js).
+  G.rtc.smartElement = false;
   // migração: seleção de spell de ataque/cura morava em G.spells (aba "Spells",
   // removida) — agora mora dentro do próprio G.rtc, junto do resto da automação.
   if (G.spells) {

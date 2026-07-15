@@ -277,6 +277,8 @@ export default {
   'rtc.subtabHeal': 'Healing',
   'rtc.attackPriorityHint': 'Configure VÁRIAS magias por prioridade — o RTC casta a primeira disponível (com mana e fora de cooldown) a cada golpe. As de baixo entram como fallback.',
   'rtc.smartPriority': 'Prioridade inteligente — castar a magia forte contra a fraqueza da criatura',
+  'rtc.smartPriorityDisabled': 'desativada por enquanto',
+  'rtc.smartPriorityDisabledHint': 'Esse recurso está desativado por enquanto.',
   'rtc.attackPriorityTitle': 'Prioridade de ataque',
   'rtc.noAttackSpells': 'Nenhuma magia na prioridade. Adicione abaixo (ou use uma runa).',
   'rtc.addAttackSpell': 'Adicionar magia de ataque',

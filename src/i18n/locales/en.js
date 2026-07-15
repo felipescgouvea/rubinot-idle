@@ -276,6 +276,8 @@ export default {
   'rtc.subtabHeal': 'Healing',
   'rtc.attackPriorityHint': "Configure MULTIPLE spells by priority — the RTC casts the first one available (with mana and off cooldown) on each hit. The ones below act as fallback.",
   'rtc.smartPriority': "Smart priority — cast the spell strong against the creature's weakness",
+  'rtc.smartPriorityDisabled': 'temporarily disabled',
+  'rtc.smartPriorityDisabledHint': 'This feature is temporarily disabled.',
   'rtc.attackPriorityTitle': 'Attack priority',
   'rtc.noAttackSpells': 'No spells in the priority list. Add one below (or use a rune).',
   'rtc.addAttackSpell': 'Add attack spell',

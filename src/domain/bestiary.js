@@ -689,7 +689,11 @@ export function bossAuraClass(tier) {
 export function isZoneUnlocked(zoneId, level, worldId, defeatedZoneBosses) {
   const zone = ZONES[zoneId];
   if (!zone) return false;
-  if (zone.requiresBossOf && !(defeatedZoneBosses || []).includes(zone.requiresBossOf)) return false;
+  // Trava de "boss da zona anterior" desligada de propósito (pedido do
+  // Felipe) — todas as hunts ficam livres, sem precisar encadear derrotando
+  // boss por boss. `requiresBossOf` continua nos dados de ZONES (usado só
+  // pra decidir a ORDEM de exibição, ver zonePicker.js), só não bloqueia
+  // mais o acesso.
   return true;
 }
 

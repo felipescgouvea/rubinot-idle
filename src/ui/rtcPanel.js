@@ -227,7 +227,7 @@ export function renderRtcPanel() {
 
         ${activeRtcTab === 'attack' ? `
         <p class="muted">${t('rtc.attackPriorityHint')}</p>
-        <label class="rtc-smart-toggle"><input type="checkbox" ${G.rtc.smartElement ? 'checked' : ''} onchange="setRtcSmartElement(this.checked)" /> 🎯 ${t('rtc.smartPriority')}</label>
+        <label class="rtc-smart-toggle disabled" title="${t('rtc.smartPriorityDisabledHint')}"><input type="checkbox" disabled /> 🎯 ${t('rtc.smartPriority')} <span class="muted">(${t('rtc.smartPriorityDisabled')})</span></label>
         <h5>${t('rtc.attackPriorityTitle')} ${prioSpells.length ? `(${prioSpells.length})` : ''}</h5>
         <div class="rtc-slots-grid">
           ${Array.from({ length: ATTACK_SLOT_COUNT }, (_, idx) => attackSpellSlot(idx, prioSpells[idx])).join('')}

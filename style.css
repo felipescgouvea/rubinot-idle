@@ -1235,6 +1235,7 @@ img.tibia-icon {
   background: #23283f; border: 1px solid #3a4160; border-radius: 6px;
   padding: 7px 10px; margin: 0 0 10px;
 }
+.rtc-smart-toggle.disabled { cursor: not-allowed; opacity: 0.55; }
 
 /* Prioridade das magias de ataque (RTC) */
 .rtc-prio-row { align-items: center; }
