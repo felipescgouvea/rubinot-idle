@@ -33,12 +33,37 @@ function rewardsLine(rewards, cls) {
   return `<div class="task-rewards-row ${cls}">${rewards.map(r => `<span class="reward-chip">${rewardChip(r)}</span>`).join('')}</div>`;
 }
 
+let activeTaskRoom = null;
+
+function roomProgress(room) {
+  const done = room.tasks.filter((_, i) => (G.taskCompletion[taskKey(room.tasks[i])] || 0) > 0).length;
+  return { done, total: room.tasks.length };
+}
+
+export function setTaskRoom(roomId) {
+  activeTaskRoom = roomId;
+  renderTasksPanel();
+}
+
+function renderRoomTabs() {
+  const tabsEl = document.getElementById('task-room-tabs');
+  if (!tabsEl) return;
+  tabsEl.innerHTML = TASK_ROOMS.map(room => {
+    const { done, total } = roomProgress(room);
+    return `<button class="admin-subtab-btn ${room.id === activeTaskRoom ? 'active' : ''}" onclick="setTaskRoom('${room.id}')">
+      ${monsterSpriteImg(ROOM_BOSS_ID[room.id], 'inline-icon')} ${room.name} <span class="muted">(${done}/${total})</span>
+    </button>`;
+  }).join('');
+}
+
 export function renderTasksPanel() {
+  if (!activeTaskRoom) activeTaskRoom = TASK_ROOMS[0]?.id;
+  renderRoomTabs();
+
   const roomsEl = document.getElementById('task-rooms');
-  roomsEl.innerHTML = TASK_ROOMS.map(room => {
-    return `
+  const room = TASK_ROOMS.find(r => r.id === activeTaskRoom);
+  roomsEl.innerHTML = !room ? '' : `
     <div class="task-room">
-      <h4>${monsterSpriteImg(ROOM_BOSS_ID[room.id], 'inline-icon')} ${room.name}</h4>
       ${room.tasks.map((task, i) => {
         const key = taskKey(task);
         const kills = G.taskKills[key] || 0;
@@ -47,7 +72,7 @@ export function renderTasksPanel() {
         const unlocked = isTaskUnlocked(room, i, G.taskCompletion);
         const monsterIcons = task.m.map(id => monsterSpriteImg(id, 'inline-icon')).join('');
         const monsterNames = task.m.map(id => MONSTERS[id]?.name || id).join(', ');
-        return `<div class="task-entry" ${!unlocked ? 'style="opacity:0.45"' : ''}>
+        return `<div class="task-entry ${done > 0 ? 'task-entry-done' : ''}" ${!unlocked ? 'style="opacity:0.45"' : ''}>
           <div class="task-entry-row">
             <span class="task-name">${task.name} — <span class="task-monsters" title="${monsterNames}">${monsterIcons}</span> ${monsterNames} (${kills}/${task.n})</span>
             <span class="task-status">${done > 0 ? `${done}x ✅` : done === 0 && unlocked ? `<span style="color:#8fc47a">${t('tasks.firstTimeBonus')}</span>` : ''}</span>
@@ -60,7 +85,7 @@ export function renderTasksPanel() {
         </div>`;
       }).join('')}
     </div>
-  `; }).join('');
+  `;
 
   renderActiveTask();
 }

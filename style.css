@@ -1079,6 +1079,8 @@ img.tibia-icon {
 }
 .task-entry { display: flex; flex-direction: column; align-items: stretch; padding: 6px 12px; border-bottom: 1px solid #3d322514; font-size: 11px; gap: 4px; }
 .task-entry:last-child { border-bottom: none; }
+.task-entry-done { background: #8fc47a1a; }
+#task-room-tabs { flex-wrap: wrap; }
 .task-entry .task-name { flex: 1; color: var(--ink); }
 .task-entry .task-status { font-size: 9.5px; color: var(--ink-faint); }
 .task-entry-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }

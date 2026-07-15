@@ -36,7 +36,7 @@ import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=128
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=129';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=128';
-import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=126';
+import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=127';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=125';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=125';
@@ -88,7 +88,7 @@ Object.assign(window, {
   openItemModal, equipItem, unequipItem, sellItem, sellAllItem, useItem, setAutoSell, setAutoSellMax,
   openRelicModal, equipRelic, sellRelic, toggleBackpack,
   challengeBoss, stopBossRushClick,
-  startTask, cancelTask,
+  startTask, cancelTask, setTaskRoom,
   startArenaBattle: handleArenaBattleClick,
   handleClaimArenaDivision,
   selectWorld,
