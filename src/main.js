@@ -15,7 +15,7 @@ import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=126';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=125';
 import { selectVocation } from './application/characterUseCases.js?v=125';
-import { toggleHunt, startRegen } from './application/huntUseCases.js?v=132';
+import { toggleHunt, startRegen } from './application/huntUseCases.js?v=133';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=127';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=126';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
@@ -34,7 +34,7 @@ import { startTraining, stopTraining, resumeTrainingOnLoad } from './application
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=128';
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=128';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=129';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=128';
 import { wireTasksPanelEvents } from './ui/tasksPanel.js?v=126';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';

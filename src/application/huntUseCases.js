@@ -381,7 +381,7 @@ export function doHuntTick() {
     areaId = rune.area || 'single';
     element = rune.element || 'physical';
     hitFn = () => runeDamage({ rune, level: G.level, magicLevel: magic }); // fórmula do Tibia (nível/5 + ML·a + base)
-    combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId };
+    combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId, targetUid: primary.uid };
     G.inventory[G.rtc.attackRune]--;
     huntSession.supplies += rune.sell || 0;
     if (G.inventory[G.rtc.attackRune] <= 0) {
@@ -428,7 +428,7 @@ export function doHuntTick() {
       startAttackGroupCd();
       trainSkill('magic', atkSpell.mana);
       emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
-      combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId };
+      combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId, targetUid: primary.uid };
     }
   }
 

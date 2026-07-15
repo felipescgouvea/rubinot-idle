@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=136';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=128';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=132';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=133';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
 
@@ -77,16 +77,39 @@ function areaOffsets(shape) {
 // Toca o efeito REAL da magia/runa: espalha o sprite de efeito (fogo/gelo/
 // groundshaker/…) nos tiles ao redor do boneco conforme a forma da área — igual
 // ao Tibia, onde a animação cobre cada tile atingido. Não há monstro na cena.
-export function playAreaEffect({ effect, shape } = {}) {
+//
+// Alvo único ('single', ex.: Flame Strike): o efeito precisa aparecer EM CIMA
+// da criatura de verdade, não num tile fixo "1 à frente" do jogador — a sala
+// pode ter vários monstros espalhados e o alvo raramente está bem naquele
+// tile. Com targetUid (ver application/huntUseCases.js: combatFx.targetUid),
+// busca a posição real do sprite do alvo na Battle List (mesma técnica de
+// playProjectile) em vez de usar o offset fixo de areaOffsets.
+export function playAreaEffect({ effect, shape, targetUid } = {}) {
   const file = effect ? effectSpriteFile(effect) : null;
   const stage = document.getElementById('dungeon-stage');
   const playerWrap = document.getElementById('player-sprite-wrap');
   if (!file || !stage || !playerWrap) return;
   const sr = stage.getBoundingClientRect();
+  const url = spriteUrl(file);
+
+  if (shape === 'single' || !shape) {
+    const cont = document.getElementById('stage-pack');
+    const targetEl = (targetUid && cont && cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`)) || (cont && cont.firstElementChild);
+    const tr = (targetEl || playerWrap).getBoundingClientRect();
+    const img = document.createElement('img');
+    img.className = 'combat-area-tile';
+    img.src = url;
+    img.alt = '';
+    img.style.left = (tr.left - sr.left + tr.width / 2) + 'px';
+    img.style.top = (tr.top - sr.top + tr.height / 2) + 'px';
+    stage.appendChild(img);
+    setTimeout(() => img.remove(), 720);
+    return;
+  }
+
   const pr = playerWrap.getBoundingClientRect();
   const cx = pr.left - sr.left + pr.width / 2;
   const cy = pr.top - sr.top + pr.height / 2;
-  const url = spriteUrl(file);
   areaOffsets(shape).forEach(([dx, dy]) => {
     const img = document.createElement('img');
     img.className = 'combat-area-tile';
@@ -103,8 +126,13 @@ export function renderMonsterDisplay(hit = false, killed = null, spellElement = 
   const el = document.getElementById('monster-display');
   if (!el) return;
   const currentMonster = getCurrentMonster();
-  // monstro recém-morto continua visível (mesmo em hit kill) até o próximo spawn
-  if (!currentMonster && killed) {
+  // Monstro recém-morto fica visível um instante (mesmo quando a sala NÃO
+  // esvaziou — antes só mostrava a "morte" quando currentMonster ficava null,
+  // então matar um alvo com outros na fila pulava DIRETO pro próximo já com
+  // vida cheia, sem confirmar a morte do que você realmente atacou — parecia
+  // uma troca bagunçada pro monstro errado). O próximo tick natural do
+  // currentMonster (hit/render normal) substitui esse ghost sozinho.
+  if (killed) {
     // se o morto já está na tela, só acinzenta in-place (preserva o <img> carregado)
     if (el.dataset.monsterId === killed && el.querySelector('.monster-sprite-wrap')) {
       const wrap = el.querySelector('.monster-sprite-wrap');

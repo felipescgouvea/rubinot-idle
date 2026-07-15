@@ -1024,12 +1024,13 @@ img.tibia-icon {
 #combat-log {
   height: 215px;
   overflow-y: auto;
+  overflow-x: hidden;
   font-size: 11px;
   line-height: 1.8;
   background: #fdf6e3;
   border: 1px solid var(--line-soft);
   border-radius: 6px;
-  padding: 9px 11px;
+  padding: 9px 16px 9px 11px;
   margin: 12px 14px !important;
   box-shadow: inset 0 1px 3px #00000018;
   color: var(--ink-soft);
@@ -2055,6 +2056,10 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .log-tab.active { color: var(--ink); background: var(--cream); border-color: var(--gold); border-bottom-color: var(--cream); }
 /* filtragem por aba: esconde as linhas que não batem com o filtro atual */
 .log-time { color: var(--ink-faint, #9b8a6a); font-size: 10px; font-variant-numeric: tabular-nums; margin-right: 3px; }
+/* Linha do log podia ficar cortada na borda direita (perto da scrollbar) em
+   mensagens mais longas (várias criaturas/itens numa linha só de loot) —
+   força quebra de linha em vez de estourar a largura da caixa. */
+.log-line { white-space: normal; overflow-wrap: break-word; word-break: break-word; }
 #combat-log[data-filter="combate"] .log-line:not([data-cat="combate"]) { display: none; }
 #combat-log[data-filter="magia"] .log-line:not([data-cat="magia"]) { display: none; }
 #combat-log[data-filter="suprimento"] .log-line:not([data-cat="suprimento"]) { display: none; }

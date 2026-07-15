@@ -5,10 +5,10 @@
 import { G } from '../application/gameStore.js?v=126';
 import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=135';
 import { CITIES, isCityUnlocked, ROOKGAARD_LEVEL_CAP } from '../domain/cities.js?v=131';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=132';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=133';
 import { openModal, closeModal } from './shared.js?v=128';
 import { openBattleModal } from './battleModal.js?v=125';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=128';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=129';
 import { t } from '../i18n/i18n.js?v=135';
 
 function todayStr() {
