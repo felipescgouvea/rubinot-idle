@@ -63,20 +63,25 @@ export function renderTasksPanel() {
   const roomsEl = document.getElementById('task-rooms');
   const room = TASK_ROOMS.find(r => r.id === activeTaskRoom);
   roomsEl.innerHTML = !room ? '' : `
-    <div class="task-room">
+    <div class="task-card-grid">
       ${room.tasks.map((task, i) => {
         const key = taskKey(task);
         const kills = G.taskKills[key] || 0;
         const done = (G.taskCompletion[key] || 0);
         const isActive = G.activeTask?.roomId === room.id && G.activeTask?.taskIndex === i;
         const unlocked = isTaskUnlocked(room, i, G.taskCompletion);
+        const pct = Math.min(100, Math.round((kills / task.n) * 100));
         const monsterIcons = task.m.map(id => monsterSpriteImg(id, 'inline-icon')).join('');
         const monsterNames = task.m.map(id => MONSTERS[id]?.name || id).join(', ');
-        return `<div class="task-entry ${done > 0 ? 'task-entry-done' : ''}" ${!unlocked ? 'style="opacity:0.45"' : ''}>
-          <div class="task-entry-row">
-            <span class="task-name">${task.name} — <span class="task-monsters" title="${monsterNames}">${monsterIcons}</span> ${monsterNames} (${kills}/${task.n})</span>
-            <span class="task-status">${done > 0 ? `${done}x ✅` : done === 0 && unlocked ? `<span style="color:#8fc47a">${t('tasks.firstTimeBonus')}</span>` : ''}</span>
+        return `<div class="task-card ${done > 0 ? 'task-card-done' : ''} ${!unlocked ? 'task-card-locked' : ''}">
+          <div class="task-card-head">
+            <span class="task-card-num">#${i + 1}</span>
+            <span class="task-card-title">${task.name}</span>
+            <span class="task-card-status">${done > 0 ? `${done}x ✅` : unlocked ? `<span class="task-card-first">${t('tasks.firstTimeBonus')}</span>` : '🔒'}</span>
           </div>
+          <div class="task-card-monsters" title="${monsterNames}">${monsterIcons}<span class="task-card-monster-names">${monsterNames}</span></div>
+          <div class="task-progress-bar-track task-card-bar"><div class="task-progress-bar" style="width:${pct}%"></div></div>
+          <div class="task-card-kills">${kills}/${task.n}</div>
           ${rewardsLine(task.firstReward, 'task-reward-first')}
           ${rewardsLine(task.repeatReward, 'task-reward-repeat')}
           <button class="task-btn ${isActive ? 'done' : ''}" onclick="startTask('${room.id}', ${i})" ${isActive || !unlocked ? 'disabled' : ''}>

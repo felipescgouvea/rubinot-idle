@@ -1,5 +1,5 @@
 import { G } from './gameStore.js?v=126';
-import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=126';
+import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=127';
 import { ITEMS } from '../domain/items.js?v=136';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';

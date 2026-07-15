@@ -1,5 +1,5 @@
 import { G } from '../application/gameStore.js?v=126';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=126';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=127';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=136';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=128';
@@ -160,11 +160,25 @@ export function setShopTab(key) {
   renderShopPanel();
 }
 
+// Grupo ativo dentro da loja atual (só lojas com `groups` usam isso — hoje só
+// a Loja de Equipamentos, que virou grande demais pra ficar tudo numa lista
+// só: Armas/Armaduras, Arcos/Crossbows/Munição, Wands/Rods).
+const activeShopGroup = new Map();
+
+export function setShopGroup(shopKey, groupKey) {
+  activeShopGroup.set(shopKey, groupKey);
+  renderShopPanel();
+}
+
 // Conteúdo (itens agrupados por sub-seção) de UMA loja — o painel principal à
 // direita do menu lateral.
 function renderShopContent(shop) {
   const shopItems = SHOP_ITEMS.filter(s => s.shop === shop.key);
-  const subs = shop.sub.map(sub => {
+  const groupTabs = shop.groups ? `<div class="admin-subtabs">
+      ${shop.groups.map(g => `<button class="admin-subtab-btn ${g.key === (activeShopGroup.get(shop.key) || shop.groups[0].key) ? 'active' : ''}" onclick="setShopGroup('${shop.key}', '${g.key}')">${t(g.title)}</button>`).join('')}
+    </div>` : '';
+  const activeGroup = shop.groups ? (activeShopGroup.get(shop.key) || shop.groups[0].key) : null;
+  const subs = shop.sub.filter(sub => !activeGroup || sub.group === activeGroup).map(sub => {
     const items = shopItems.filter(s => sub.filter(s, ITEMS));
     if (!items.length) return '';
     return `
@@ -176,6 +190,7 @@ function renderShopContent(shop) {
   return `
     <h3 style="margin:0 0 2px !important">${t(shop.title)}</h3>
     <p class="muted" style="margin:0 0 6px !important;font-size:12px">${t(shop.subtitle)}</p>
+    ${groupTabs}
     ${subs}`;
 }
 

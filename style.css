@@ -550,21 +550,19 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 /* ---- galeria de zonas (dentro do modal) — grade horizontal 8x2 ---- */
 /* :has() só escala esse modal específico; os demais (outfit picker, detalhe
    de item...) continuam com a largura padrão de #modal-box. */
-#modal-box:has(.zone-picker-gallery) { max-width: 1160px; }
+#modal-box:has(.zone-picker-gallery) { max-width: 1160px; max-height: 88vh; overflow-y: auto; }
 /* Bag num modal (ver toggleBackpack) — mais larga que o padrão de 480px pra
    caber mais itens por linha, com scroll interno se a lista for grande. */
 #modal-box:has(#inventory-grid) { max-width: 620px; }
 #modal-box:has(#inventory-grid) #inventory-grid { max-height: 55vh; overflow-y: auto; }
 .zone-picker-gallery {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-auto-flow: row;
   gap: 12px;
-  max-height: none;
-  overflow: visible;
 }
 @media (max-width: 900px) {
-  .zone-picker-gallery { grid-template-columns: repeat(3, 1fr); max-height: 520px; overflow-y: auto; }
+  .zone-picker-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 .zone-card {
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
@@ -575,6 +573,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 0;
 }
 .zone-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
 .zone-card.locked { opacity: 0.55; }
@@ -668,7 +667,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 #zone-current-name .zone-boosted-badge { margin-left: 6px; vertical-align: middle; }
 .zone-card-icon { font-size: 2.2rem; filter: drop-shadow(0 2px 3px #00000033); }
 .zone-card-icon-img { width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #00000033); }
-.zone-card-name { font-family: var(--serif); font-size: 13px; line-height: 1.3; color: var(--navy-2); font-weight: 700; margin-top: 8px; min-height: 34px; }
+.zone-card-name { font-family: var(--serif); font-size: 13px; line-height: 1.3; color: var(--navy-2); font-weight: 700; margin-top: 8px; min-height: 34px; overflow-wrap: break-word; word-break: break-word; width: 100%; }
 .zone-card-monster-row { display: flex; justify-content: center; gap: 4px; margin: 6px 0; }
 .zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
 .zone-card-req { font-size: 11.5px; color: var(--red-hot); font-weight: 700; padding: 8px 0; }
@@ -1057,32 +1056,31 @@ img.tibia-icon {
 .loot-item.epic { border-color: var(--gold); color: #8a6408; background: #fdf4d7; }
 
 /* ============ TAREFAS ============ */
-#task-rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 11px; margin: 12px 14px !important; }
-.task-room {
+#task-rooms { margin: 12px 14px !important; }
+#task-room-tabs { flex-wrap: wrap; }
+.task-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.task-card {
   background: linear-gradient(180deg, #faf0d8, var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
-  padding: 0 0 8px;
-  overflow: hidden;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   box-shadow: 0 1px 4px #00000022;
-}
-.task-room h4 {
-  background: linear-gradient(180deg, var(--navy-1), var(--navy-2));
-  border-bottom: 2px solid var(--gold);
-  color: var(--cream);
-  font-family: var(--serif);
   font-size: 11px;
-  letter-spacing: 1px;
-  margin: 0 0 6px;
-  padding: 7px 12px;
-  text-shadow: 0 1px 2px #00000088;
 }
-.task-entry { display: flex; flex-direction: column; align-items: stretch; padding: 6px 12px; border-bottom: 1px solid #3d322514; font-size: 11px; gap: 4px; }
-.task-entry:last-child { border-bottom: none; }
-.task-entry-done { background: #8fc47a1a; }
-#task-room-tabs { flex-wrap: wrap; }
-.task-entry .task-name { flex: 1; color: var(--ink); }
-.task-entry .task-status { font-size: 9.5px; color: var(--ink-faint); }
+.task-card-done { border-color: #8fc47a; background: linear-gradient(180deg, #f3f9ec, var(--parch-3)); }
+.task-card-locked { opacity: 0.5; }
+.task-card-head { display: flex; align-items: baseline; gap: 6px; }
+.task-card-num { font-family: var(--serif); font-weight: 700; color: var(--gold-dark, #8a6408); font-size: 11px; flex-shrink: 0; }
+.task-card-title { font-family: var(--serif); font-weight: 700; color: var(--ink); flex: 1; }
+.task-card-status { font-size: 9.5px; color: var(--ink-faint); white-space: nowrap; }
+.task-card-first { color: #6a9a52; font-weight: 600; }
+.task-card-monsters { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
+.task-card-monster-names { font-size: 9.5px; color: var(--ink-faint); margin-left: 2px; }
+.task-card-bar { margin: 0; height: 9px; }
+.task-card-kills { font-size: 9.5px; color: var(--ink-faint); text-align: right; margin-top: -4px; }
 .task-entry-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .task-monsters { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
 .task-rewards { display: flex; flex-direction: column; gap: 1px; font-size: 9.5px; }

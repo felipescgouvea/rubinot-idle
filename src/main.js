@@ -40,7 +40,7 @@ import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=127';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=125';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=125';
-import { wireShopPanelEvents, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=130';
+import { wireShopPanelEvents, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=131';
 import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=128';
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=128';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=125';
@@ -93,7 +93,7 @@ Object.assign(window, {
   handleClaimArenaDivision,
   selectWorld,
   claimBpReward, claimMissionReward,
-  buyShopItem, confirmBuyShopItem, setShopTab, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing,
+  buyShopItem, confirmBuyShopItem, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing,
   setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcAttackRune, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell,
   registerPlayerName, refreshHighscoresClick, setHighscoresCategory,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,
