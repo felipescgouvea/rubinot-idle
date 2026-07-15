@@ -1,5 +1,5 @@
 import { G } from '../application/gameStore.js?v=127';
-import { VOCATIONS } from '../domain/character.js?v=126';
+import { VOCATIONS } from '../domain/character.js?v=156';
 import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=128';
 import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=125';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=128';

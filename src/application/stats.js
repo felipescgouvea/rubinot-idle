@@ -5,7 +5,7 @@ import { G } from './gameStore.js?v=127';
 import {
   computeMaxHp, computeMaxMana, computeAtk, computeDef, computeMagic, computeSpd,
   computeEquipBonus, equippedWeaponSkillId,
-} from '../domain/combatFormulas.js?v=126';
+} from '../domain/combatFormulas.js?v=156';
 
 export function getMaxHp() {
   return computeMaxHp({ vocation: G.vocation, level: G.level, equipment: G.equipment, relics: G.relics });

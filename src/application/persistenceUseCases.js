@@ -2,7 +2,7 @@
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
 import { G, replaceState, replaceAccount } from './gameStore.js?v=127';
 import { createDefaultState } from '../domain/gameState.js?v=127';
-import { createDefaultSkills } from '../domain/character.js?v=126';
+import { createDefaultSkills } from '../domain/character.js?v=156';
 import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=127';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';

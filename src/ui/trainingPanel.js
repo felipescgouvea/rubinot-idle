@@ -2,7 +2,7 @@
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
 import { G } from '../application/gameStore.js?v=127';
-import { TIBIA_SKILLS } from '../domain/character.js?v=126';
+import { TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=126';
 import { SPELLS } from '../domain/spells.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';

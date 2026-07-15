@@ -1,5 +1,5 @@
 import { G } from './gameStore.js?v=127';
-import { VOCATIONS } from '../domain/character.js?v=126';
+import { VOCATIONS } from '../domain/character.js?v=156';
 import { STARTER_KITS } from '../domain/items.js?v=136';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=126';

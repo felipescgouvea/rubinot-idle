@@ -5,7 +5,7 @@
 // dispara a sequência de inicialização do jogo.
 
 import { G } from './application/gameStore.js?v=127';
-import { VOCATIONS } from './domain/character.js?v=126';
+import { VOCATIONS } from './domain/character.js?v=156';
 import { emit, EVENTS } from './shared/eventBus.js?v=126';
 import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=135';
 
