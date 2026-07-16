@@ -24,7 +24,7 @@ export function triesPerMinuteFor(skillId) {
 // treino offline do Tibia mas exigindo o jogo aberto) rende mais rápido que
 // o offline — recompensa a atenção — mas NÃO acumula enquanto o jogo está
 // fechado (ver application/trainingUseCases.js: resumeTrainingOnLoad).
-export const ONLINE_RATE_MULTIPLIER = 2;
+export const ONLINE_RATE_MULTIPLIER = 10;
 
 // Total de tentativas ganhas em `seconds` de treino da skill.
 export function triesForTraining(skillId, seconds, multiplier = 1) {

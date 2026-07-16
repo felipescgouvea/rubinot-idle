@@ -3,11 +3,11 @@
 // aba Training. Ver application/trainingUseCases.js pras regras.
 import { G } from '../application/gameStore.js?v=127';
 import { TIBIA_SKILLS } from '../domain/character.js?v=156';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=126';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=127';
 import { SPELLS } from '../domain/spells.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=129';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=126';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=127';
 import { t } from '../i18n/i18n.js?v=135';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar

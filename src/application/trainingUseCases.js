@@ -7,7 +7,7 @@
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
 import { G } from './gameStore.js?v=127';
-import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesForTraining } from '../domain/training.js?v=126';
+import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesForTraining } from '../domain/training.js?v=127';
 import { TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { SPELLS } from '../domain/spells.js?v=126';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';

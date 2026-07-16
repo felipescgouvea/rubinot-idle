@@ -29,7 +29,7 @@ import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitC
 import { rerollPrey, clearPrey } from './application/preyUseCases.js?v=125';
 import { unlockCharm, toggleCharmEquipped } from './application/bestiaryUseCases.js?v=125';
 import { claimDailyReward } from './application/dailyRewardUseCases.js?v=125';
-import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=126';
+import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=127';
 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=129';
@@ -49,7 +49,7 @@ import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicke
 import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
 import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=125';
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=126';
-import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=127';
+import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=128';
 import { setSkillsSubtab } from './ui/skillsPanel.js?v=127';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=126';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
@@ -58,7 +58,7 @@ import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logo
 import { openSettingsPanel } from './ui/settingsPanel.js?v=128';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance, initGameConfig } from './application/adminUseCases.js?v=129';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=129';
-import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=127';
+import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=128';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();
