@@ -3,9 +3,13 @@
 // hunt-start não aceita mais esses valores do cliente, lê de
 // player_equipment/player_skills (ver src/huntEngine.js). Equipar um item
 // vira uma ação validada (/equip) que confere posse antes de aceitar.
+// Marco 5: hunt-start também monta hp/mana/maxHp/maxMana (retomam de
+// player_stats) e passa vocation/skills/equipment/relics/rtc pro motor de
+// combate de verdade em huntEngine.js (magia/runa por prioridade, cura,
+// contra-ataque, morte).
 import http from 'node:http';
 import { ZONES } from '../vendor/domain/bestiary.js?v=135';
-import { computeAtk, computeDef, computeSpd } from '../vendor/domain/combatFormulas.js?v=156';
+import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../vendor/domain/combatFormulas.js?v=156';
 import { TIBIA_SKILLS } from '../vendor/domain/character.js?v=156';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
@@ -81,7 +85,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
 
     if (url.pathname === '/health') {
-      return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-4' });
+      return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-5' });
     }
 
     if (url.pathname === '/whoami') {
@@ -123,6 +127,12 @@ const server = http.createServer(async (req, res) => {
       const atk = computeAtk({ vocation: body.vocation, level, skills, equipment, relics });
       const def = computeDef({ skills, equipment, relics });
       const spd = computeSpd({ vocation: body.vocation, equipment, relics });
+      const maxHp = computeMaxHp({ vocation: body.vocation, level, equipment, relics });
+      const maxMana = computeMaxMana({ vocation: body.vocation, level });
+      // hp/mana retomam de onde a sessão anterior deixou (ver flushVitals em
+      // huntEngine.js); sem valor salvo ainda (personagem novo), começa cheio.
+      const hp = stats && stats.hp != null ? Math.min(maxHp, stats.hp) : maxHp;
+      const mana = stats && stats.mana != null ? Math.min(maxMana, stats.mana) : maxMana;
 
       const inserted = await insertRow('hunt_sessions', {
         user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
@@ -131,7 +141,9 @@ const server = http.createServer(async (req, res) => {
 
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
-        atk, def, spd, level, world: body.world || 'auroria',
+        vocation: body.vocation, level, skills, equipment, relics,
+        spd, maxHp, maxMana, hp, mana, world: body.world || 'auroria',
+        rtc: body.rtc || {},
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }
@@ -163,7 +175,7 @@ const server = http.createServer(async (req, res) => {
         ok: true,
         hunting: !!activeRow,
         zoneId: activeRow ? activeRow.zone_id : null,
-        stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0 },
+        stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null },
         inventory,
         relics: relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
         currentMonster: liveSession && liveSession.currentMonster ? { name: liveSession.currentMonster.name, hp: liveSession.currentMonster.hp, maxHp: liveSession.currentMonster.maxHp } : null,
@@ -205,6 +217,6 @@ const server = http.createServer(async (req, res) => {
 
 reapStaleSessionsOnBoot().finally(() => {
   server.listen(PORT, () => {
-    console.log(`rubinot-idle-hunt-server (marco 4) ouvindo na porta ${PORT}`);
+    console.log(`rubinot-idle-hunt-server (marco 5) ouvindo na porta ${PORT}`);
   });
 });

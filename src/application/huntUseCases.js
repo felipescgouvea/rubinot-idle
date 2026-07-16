@@ -198,7 +198,11 @@ const RECONCILE_MS = 5000;
 // Só vocação/zona/mundo continuam vindo do cliente (ver authClient.js:
 // startHuntSession).
 function buildHuntSnapshot() {
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld };
+  // rtc (prioridade de magia/runa, limiares de cura) é só PREFERÊNCIA — sem
+  // risco de forjar valor, o servidor sempre valida mana/cooldown/posse do
+  // item na hora de usar (ver server/src/huntEngine.js). Travado pra sessão
+  // inteira: mudar o RTC no meio da caçada só vale a partir da próxima.
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc };
 }
 
 async function reconcileWithServer() {
@@ -218,6 +222,12 @@ async function reconcileWithServer() {
     emit(EVENTS.CHAR_INFO);
     emit(EVENTS.WORLDS_PANEL);
     emit(EVENTS.ZONE_PICKER);
+  } else if (s.hp != null && s.mana != null) {
+    // HP/mana reais (Marco 5) — o servidor agora simula contra-ataque/cura de
+    // verdade; sem level-up no meio, só espelha o que ele diz (clamp defensivo
+    // contra o teto local, caso o cálculo de equipamento diverja por um instante).
+    G.hp = Math.min(getMaxHp(), s.hp);
+    G.mana = Math.min(getMaxMana(), s.mana);
   }
   // Inventário e relíquias (Marco 3) — mesma troca de fonte de verdade: o
   // servidor decide o loot/relic drop, o cliente só espelha. inventoryOrder
