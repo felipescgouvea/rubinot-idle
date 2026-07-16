@@ -8,6 +8,10 @@
 // segredo aqui — é o modelo padrão do Supabase para apps de front-end.
 const SUPABASE_URL = 'https://qrkqhqdfneumymhiczki.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFya3FocWRmbmV1bXltaGljemtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3OTk0NjIsImV4cCI6MjA5OTM3NTQ2Mn0.iBf7aQBVj583Q1TzRw1NeIuKK5jYpLuxByLFmkSnkhk';
+// Servidor sempre-ligado (Railway) que roda a caçada autoritativa (XP/ouro
+// de verdade — ver server/src/huntEngine.js). Domínio público, sem segredo:
+// toda chamada exige o access_token do próprio jogador, verificado lá.
+const HUNT_SERVER_URL = 'https://rubinot-idle-hunt-server-production.up.railway.app';
 
 const SESSION_KEY = 'rubinot_session';
 
@@ -258,4 +262,35 @@ export async function checkIsAdmin() {
     const rows = await res.json().catch(() => null);
     return !!(rows && rows.length);
   } catch { return false; }
+}
+
+// ---- servidor de caçada autoritativo (Railway, ver server/) ----
+// Toda chamada exige o access_token do jogador — o servidor verifica direto
+// no GoTrue do Supabase (mesmo token que já usamos aqui, ver server/src/index.js).
+async function huntFetch(path, { method = 'GET', body } = {}) {
+  const token = await ensureValidToken();
+  if (!token) return { ok: false, error: 'não logado' };
+  try {
+    const res = await fetch(`${HUNT_SERVER_URL}${path}`, {
+      method, headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const json = await res.json().catch(() => null);
+    if (!res.ok) return { ok: false, error: (json && json.error) || `HTTP ${res.status}` };
+    return { ok: true, ...json };
+  } catch (e) { return { ok: false, error: String(e) }; }
+}
+
+// snapshot: { slot, zoneId, bossOnly, vocation, level, skills, equipment, relics, world }
+// — travado pra sessão inteira (ver server/src/huntEngine.js: limitação documentada).
+export function startHuntSession(snapshot) {
+  return huntFetch('/hunt/start', { method: 'POST', body: snapshot });
+}
+
+export function stopHuntSession(slot) {
+  return huntFetch('/hunt/stop', { method: 'POST', body: { slot } });
+}
+
+export function getHuntState(slot) {
+  return huntFetch(`/hunt/state?slot=${slot}`);
 }

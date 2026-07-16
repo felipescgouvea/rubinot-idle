@@ -5,7 +5,7 @@
 // setAutoSellMax (mesmas funções da Bag, ver ui/inventoryAndEquipmentPanel.js)
 // e G.lastSave (gravado em cada saveGame, ver application/saveGameUseCase.js).
 import { G } from '../application/gameStore.js?v=127';
-import { currentUser } from '../infrastructure/authClient.js?v=126';
+import { currentUser } from '../infrastructure/authClient.js?v=127';
 import { getCharacterSlots } from '../application/accountUseCases.js?v=126';
 import { VOCATIONS } from '../domain/character.js?v=156';
 import { goldIconImg, openModal } from './shared.js?v=128';

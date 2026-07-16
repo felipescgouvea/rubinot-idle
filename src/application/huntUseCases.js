@@ -3,7 +3,8 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G } from './gameStore.js?v=127';
+import { G, ACCOUNT } from './gameStore.js?v=127';
+import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=127';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=135';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
@@ -180,6 +181,63 @@ export function toggleHunt() {
   if (G.hunting) stopHunt(); else startHunt();
 }
 
+// ---- reconciliação com o servidor de caçada autoritativo (ver
+// infrastructure/authClient.js: startHuntSession/stopHuntSession/getHuntState
+// e server/src/huntEngine.js) ----
+// O servidor roda seu PRÓPRIO combate (simplificado, sem magia/RTC ainda —
+// Marco 2) independente de qualquer request; é ele quem decide de verdade
+// quanto de gold/XP o jogador ganhou. A cada poll, o que ele diz SOBRESCREVE
+// G.gold/xp/level — de propósito, mesmo que ande pra trás em relação ao
+// combate rico que a UI mostra localmente (aceito conscientemente até o
+// Marco 4 trazer paridade de combate no servidor).
+let reconcileInterval = null;
+const RECONCILE_MS = 5000;
+
+function buildHuntSnapshot() {
+  return {
+    slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly,
+    vocation: G.vocation, level: G.level, skills: G.sk,
+    equipment: G.equipment, relics: G.relics || [], world: G.currentWorld,
+  };
+}
+
+async function reconcileWithServer() {
+  const res = await getHuntState(ACCOUNT.activeSlot);
+  if (!res.ok || !res.stats) return;
+  const s = res.stats;
+  const leveledUp = s.level > G.level;
+  G.gold = s.gold;
+  G.xp = s.xp;
+  G.level = s.level;
+  G.totalGoldEarned = s.total_gold_earned;
+  G.totalKills = s.total_kills;
+  if (leveledUp) {
+    G.hp = getMaxHp();
+    G.mana = getMaxMana();
+    emit(EVENTS.LEVEL_UP, { level: G.level });
+    emit(EVENTS.CHAR_INFO);
+    emit(EVENTS.WORLDS_PANEL);
+    emit(EVENTS.ZONE_PICKER);
+  }
+  emit(EVENTS.BARS);
+  emit(EVENTS.HEADER_STATS);
+}
+
+// Liga o loop local (animação/log/combate cosmético) + o polling de
+// reconciliação com o servidor — compartilhado entre um início normal
+// (startHunt) e a retomada no boot de uma sessão que sobreviveu no servidor
+// enquanto a aba estava fechada (ver checkAndResumeHuntSession abaixo).
+function beginLocalLoop() {
+  huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
+  nextSpawnAt = Date.now() + searchDelay(); // começa procurando (boneco anda)
+  emit(EVENTS.HUNT_BUTTON, { hunting: true });
+  emit(EVENTS.HUNT_STATS);
+  emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
+  huntInterval = setInterval(doHuntTick, Math.max(400, 2400 / getSpd()));
+  if (reconcileInterval) clearInterval(reconcileInterval);
+  reconcileInterval = setInterval(reconcileWithServer, RECONCILE_MS);
+}
+
 export function startHunt() {
   if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('hunt.needVocation'), type: 'error' }); return; }
   if (!G.activeZone) { emit(EVENTS.NOTIFY, { msg: t('hunt.needZone'), type: 'error' }); return; }
@@ -187,30 +245,45 @@ export function startHunt() {
   // Sem restrição de nível pra caçar — as criaturas escalam com o nível do
   // jogador; entrar numa zona forte cedo é escolha (e risco) do jogador.
   G.hunting = true;
-  huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
-  nextSpawnAt = Date.now() + searchDelay(); // começa procurando (boneco anda)
-  emit(EVENTS.HUNT_BUTTON, { hunting: true });
-  emit(EVENTS.HUNT_STATS);
-  emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
   emit(EVENTS.LOG, bossOnly
     ? t('hunt.logBossRushChallenge', { icon: monsterLogIcon(zone.boss), zone: t(zone.name) })
     : t('hunt.logEnterZone', { icon: monsterLogIcon(zone.monsters[0]), zone: t(zone.name) }));
-  // Cooldown do golpe básico (o tick inteiro: golpe + magia/runa + poções, ver
-  // doHuntTick abaixo) — 2s de base (Knight, spd 1.2), escalando pela mesma
-  // velocidade que já modula o resto do jogo. Era 1s (1200/spd); dobrado pra
-  // 2s de propósito, mais fiel ao ritmo de ataque do Tibia real.
-  huntInterval = setInterval(doHuntTick, Math.max(400, 2400 / getSpd()));
+  beginLocalLoop();
+
+  startHuntSession(buildHuntSnapshot()).then(res => {
+    if (!res.ok) emit(EVENTS.NOTIFY, { msg: `⚠️ Caçada não confirmada pelo servidor: ${res.error}`, type: 'error' });
+  });
+}
+
+// Chamado UMA VEZ no boot (ver main.js: bootGame), antes de applyOfflineProgress().
+// O servidor de caçada continua tickando sozinho mesmo com a aba fechada (ver
+// server/src/huntEngine.js) — se a sessão ainda está ativa lá, o tempo fechado
+// JÁ foi contado de verdade pelo servidor; rodar TAMBÉM o cálculo aproximado de
+// applyOfflineProgress contaria a mesma janela duas vezes. Retorna true se
+// retomou (quem chamou deve pular o applyOfflineProgress local nesse caso).
+export async function checkAndResumeHuntSession() {
+  if (!G.vocation) return false;
+  const res = await getHuntState(ACCOUNT.activeSlot);
+  if (!res.ok || !res.hunting) return false;
+  G.activeZone = res.zoneId || G.activeZone;
+  G.hunting = true;
+  await reconcileWithServer();
+  beginLocalLoop();
+  emit(EVENTS.LOG, t('hunt.logEnterZone', { icon: '⚔️', zone: t(ZONES[G.activeZone] ? ZONES[G.activeZone].name : G.activeZone) }));
+  return true;
 }
 
 export function stopHunt() {
   G.hunting = false;
   if (huntInterval) { clearInterval(huntInterval); huntInterval = null; }
+  if (reconcileInterval) { clearInterval(reconcileInterval); reconcileInterval = null; }
   currentMonster = null;
   currentPack = [];
   recentDead = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
   emit(EVENTS.BATTLE_LIST);
   emit(EVENTS.LOG, t('hunt.logPaused'));
+  stopHuntSession(ACCOUNT.activeSlot).then(reconcileWithServer);
 }
 
 // RTC — cura por spell/poção de vida/poção de mana. Chamada tanto no tick de

@@ -13,9 +13,9 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=126';
 import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=158';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=126';
-import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=126';
+import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=127';
 import { selectVocation } from './application/characterUseCases.js?v=125';
-import { toggleHunt, startRegen, selectTarget } from './application/huntUseCases.js?v=158';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=159';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=127';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=127';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=125';
@@ -129,13 +129,18 @@ document.addEventListener('keydown', (e) => {
 // Sobe o estado da sessão do usuário e liga tudo. Chamado uma única vez, após
 // o login puxar o save da nuvem (ver bootGame no fluxo de auth abaixo).
 let gameBooted = false;
-function bootGame() {
+async function bootGame() {
   if (gameBooted) return; // idempotente — nunca inicia o jogo duas vezes
   gameBooted = true;
 
   loadGame();
-  G.hunting = false; // caçada nunca retoma sozinha — o ganho offline cobre o intervalo
-  applyOfflineProgress();
+  G.hunting = false; // só fica true de novo se o servidor confirmar sessão viva (ver abaixo)
+  // O servidor de caçada (Railway) continua tickando sozinho mesmo com a aba
+  // fechada — se a sessão ainda está ativa lá, aquele tempo JÁ foi contado de
+  // verdade; só roda o cálculo aproximado de offline se NÃO havia sessão viva
+  // (senão contaria a mesma janela duas vezes, ver huntUseCases.js).
+  const resumed = await checkAndResumeHuntSession();
+  if (!resumed) applyOfflineProgress();
   renderAuthUser();
   renderCharPanel();
   emit(EVENTS.HEADER_STATS);
@@ -186,7 +191,7 @@ async function startAuthedSession() {
   }
   applyAdminTabVisibility();
   hideAuthGate();
-  bootGame();
+  await bootGame();
 }
 
 // ---- idioma: aplica ANTES de qualquer render, senão a UI pisca em inglês e
