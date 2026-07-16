@@ -304,3 +304,9 @@ export function getHuntState(slot) {
 export function syncEquipment(slot, eqSlot, itemId) {
   return huntFetch('/equip', { method: 'POST', body: { slot, eqSlot, itemId } });
 }
+
+// Compra de bênção validada no servidor (gold e teto de 5 conferidos lá —
+// ver server/src/index.js: /buy-blessing). Retorna { ok, gold, blessings }.
+export function buyBlessingOnServer(slot) {
+  return huntFetch('/buy-blessing', { method: 'POST', body: { slot } });
+}

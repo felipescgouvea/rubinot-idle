@@ -7,10 +7,15 @@
 // player_stats) e passa vocation/skills/equipment/relics/rtc pro motor de
 // combate de verdade em huntEngine.js (magia/runa por prioridade, cura,
 // contra-ataque, morte).
+// Marco 6: bênçãos autoritativas (/buy-blessing, consumidas na morte com o
+// valor REAL) e stamina autoritativa (regenera aqui no hunt-start pelo tempo
+// real parado, cai durante a caçada em huntEngine.js).
 import http from 'node:http';
 import { ZONES } from '../vendor/domain/bestiary.js?v=135';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../vendor/domain/combatFormulas.js?v=156';
 import { TIBIA_SKILLS } from '../vendor/domain/character.js?v=156';
+import { STAMINA_MAX } from '../vendor/domain/stamina.js?v=125';
+import { MAX_BLESSINGS, blessingCost } from '../vendor/domain/blessings.js?v=125';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
 
@@ -85,7 +90,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
 
     if (url.pathname === '/health') {
-      return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-5' });
+      return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-6' });
     }
 
     if (url.pathname === '/whoami') {
@@ -133,6 +138,14 @@ const server = http.createServer(async (req, res) => {
       // huntEngine.js); sem valor salvo ainda (personagem novo), começa cheio.
       const hp = stats && stats.hp != null ? Math.min(maxHp, stats.hp) : maxHp;
       const mana = stats && stats.mana != null ? Math.min(maxMana, stats.mana) : maxMana;
+      // Stamina regenera (1/3 da taxa de queda) pelo tempo REAL que passou
+      // desde o último flush — cobre tanto "parado no jogo" quanto "com a
+      // aba fechada", igual seria descansando (não caçando) nesse intervalo.
+      let stamina = stats && stats.stamina != null ? Number(stats.stamina) : STAMINA_MAX;
+      if (stats && stats.updated_at) {
+        const idleMinutes = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
+        stamina = Math.min(STAMINA_MAX, stamina + idleMinutes / 3);
+      }
 
       const inserted = await insertRow('hunt_sessions', {
         user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
@@ -142,7 +155,7 @@ const server = http.createServer(async (req, res) => {
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
         vocation: body.vocation, level, skills, equipment, relics,
-        spd, maxHp, maxMana, hp, mana, world: body.world || 'auroria',
+        spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
         rtc: body.rtc || {},
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
@@ -175,7 +188,7 @@ const server = http.createServer(async (req, res) => {
         ok: true,
         hunting: !!activeRow,
         zoneId: activeRow ? activeRow.zone_id : null,
-        stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null },
+        stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX },
         inventory,
         relics: relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
         currentMonster: liveSession && liveSession.currentMonster ? { name: liveSession.currentMonster.name, hp: liveSession.currentMonster.hp, maxHp: liveSession.currentMonster.maxHp } : null,
@@ -208,6 +221,26 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
+    // Comprar bênção — valida gold/teto no servidor (mesma regra de
+    // src/application/blessingUseCases.js), nunca aceita o cliente só
+    // declarando "comprei". Consumida na morte (ver huntEngine.js).
+    if (url.pathname === '/buy-blessing' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const level = stats ? stats.level : 1;
+      const gold = stats ? Number(stats.gold) : 0;
+      const blessings = stats ? Number(stats.blessings) || 0 : 0;
+      if (blessings >= MAX_BLESSINGS) return send(res, 400, { error: 'já no máximo de bênçãos' });
+      const cost = blessingCost(level);
+      if (gold < cost) return send(res, 400, { error: 'gold insuficiente' });
+      await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - cost, blessings: blessings + 1, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, gold: gold - cost, blessings: blessings + 1 });
+    }
+
     send(res, 404, { error: 'not found' });
   } catch (err) {
     console.error('erro não tratado numa requisição', err);
@@ -217,6 +250,6 @@ const server = http.createServer(async (req, res) => {
 
 reapStaleSessionsOnBoot().finally(() => {
   server.listen(PORT, () => {
-    console.log(`rubinot-idle-hunt-server (marco 5) ouvindo na porta ${PORT}`);
+    console.log(`rubinot-idle-hunt-server (marco 6) ouvindo na porta ${PORT}`);
   });
 });

@@ -2,34 +2,27 @@
 //
 // Marco 2: cada kill é decidido por ESTE processo, rodando sozinho, contra o
 // relógio real do servidor. Marco 3: loot + relíquias. Marco 4: atk/def/spd
-// vêm de player_stats/player_skills/player_equipment, nunca mais de um
-// snapshot declarado pelo cliente.
-//
-// Marco 5: combate de verdade — magia/runa por prioridade (RTC), dano
-// elemental, cura automática (spell/poção), contra-ataque do monstro, morte
-// e HP/mana persistidos entre ticks, treino de skill real. Simplificações
-// deliberadas (documentadas, não escondidas):
-//  - Só alvo único: sem respingo de área (ataques de área causam dano só no
-//    alvo da frente aqui, mesmo que no cliente atinjam vários). Zonas com
-//    salas cheias rendem menos no servidor que pareceria no combate visual.
-//  - Bênçãos: tratadas como 0 (ninguém perde menos XP na morte por ter
-//    comprado bênção) — a contagem de bênçãos ainda não é autoritativa.
-//  - Stamina: multiplicador sempre 1 (a stamina do jogador ainda não é
-//    autoritativa) — igual ou melhor que o esperado, nunca pior.
+// vêm de player_stats/player_skills/player_equipment. Marco 5: combate real
+// (magia/runa por prioridade RTC, cura, contra-ataque, morte, treino de
+// skill). Marco 6: respingo de área (pack de monstros, não só alvo único),
+// bênçãos e stamina autoritativas — fecha as 3 limitações que ainda
+// restavam (documentadas antes, agora corrigidas).
 import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../vendor/domain/bestiary.js?v=135';
 import {
   spawnMonsterInstance, calcDamage, monsterAttack, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
 } from '../vendor/domain/combatFormulas.js?v=156';
 import { worldXpMultiplier, worldGoldMultiplier } from '../vendor/domain/progression.js?v=128';
-import { zoneMultiplier, resolveMonsterLoot } from '../vendor/domain/adminConfig.js?v=128';
+import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../vendor/domain/adminConfig.js?v=128';
 import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../vendor/domain/character.js?v=156';
 import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../vendor/domain/items.js?v=136';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../vendor/domain/rarity.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../vendor/domain/spells.js?v=126';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../vendor/domain/rtcConfig.js?v=158';
 import { elementMod } from '../vendor/domain/elements.js?v=125';
-import { deathXpLossPct, reviveHpPct } from '../vendor/domain/blessings.js?v=125';
+import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../vendor/domain/blessings.js?v=125';
+import { areaMaxTargets, isAreaAttack } from '../vendor/domain/attackAreas.js?v=125';
+import { staminaXpMult } from '../vendor/domain/stamina.js?v=125';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, selectMany, insertRow, upsertRow, updateRows } from './db.js';
 
@@ -45,8 +38,7 @@ function todayStr() {
 }
 
 // atk/def são recalculados a cada tick a partir de session.skills (que MUDA
-// com o treino, ver trainSkill) — só equipamento/relíquias ficam travados
-// pra sessão inteira (mudar de item exige parar e começar de novo a caçada).
+// com o treino) — só equipamento/relíquias ficam travados pra sessão inteira.
 function getAtk(session) {
   return computeAtk({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics });
 }
@@ -117,15 +109,22 @@ async function applyRtcHealing(session, cfg) {
   }
 }
 
-// Persiste hp/mana/skills desta sessão em player_stats/player_skills — chamado
-// a cada kill e periodicamente (ver startSession: flushInterval), pra não
-// perder mais que alguns segundos de estado se o processo cair no meio de uma
-// luta sem matar nada.
+// Persiste hp/mana/skills/stamina desta sessão — a cada kill e periodicamente
+// (ver startSession: flushTimer), pra não perder mais que alguns segundos de
+// estado se o processo cair no meio de uma luta sem matar nada.
 async function flushVitals(session) {
   try {
-    await updateRows('player_stats', { user_id: session.userId, slot: session.slot }, { hp: session.hp, mana: session.mana });
+    await updateRows('player_stats', { user_id: session.userId, slot: session.slot }, { hp: session.hp, mana: session.mana, stamina: session.stamina });
     await upsertRow('player_skills', { user_id: session.userId, slot: session.slot, skills: session.skills, updated_at: new Date().toISOString() }, 'user_id,slot');
   } catch (e) { console.error('flushVitals falhou', session.id, e.message); }
+}
+
+// Stamina cai com o tempo REAL de caçada decorrido (não por tick nominal —
+// ticks podem atrasar) e só se o Admin ligou (cfg.staminaEnabled). Mesma
+// taxa do cliente: 1 minuto de stamina por minuto caçando.
+function decayStamina(session, cfg, elapsedMs) {
+  if (!cfg.staminaEnabled) return;
+  session.stamina = Math.max(0, session.stamina - elapsedMs / 60000);
 }
 
 async function settleKill(session, mon, cfg) {
@@ -133,8 +132,9 @@ async function settleKill(session, mon, cfg) {
   const zoneXpMult = zoneMultiplier(cfg, session.zoneId, 'xp', 1);
   const isBoostedToday = session.zoneId === boostedZoneForDate(todayStr());
   const boostedMult = isBoostedToday ? 1.5 : 1;
+  const staminaMult = cfg.staminaEnabled ? staminaXpMult(session.stamina) : 1;
   const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(session.world) * boostedMult * cfg.goldRate);
-  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * cfg.xpRate);
+  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * cfg.xpRate * staminaMult);
 
   const row = await selectOne('player_stats', { user_id: session.userId, slot: session.slot });
   const gold = (row ? Number(row.gold) : 0) + goldGained;
@@ -158,7 +158,7 @@ async function settleKill(session, mon, cfg) {
   await upsertRow('player_stats', {
     user_id: session.userId, slot: session.slot, gold, xp, level,
     total_gold_earned: totalGoldEarned, total_kills: totalKills,
-    hp: session.hp, mana: session.mana, updated_at: new Date().toISOString(),
+    hp: session.hp, mana: session.mana, stamina: session.stamina, updated_at: new Date().toISOString(),
   }, 'user_id,slot');
   await updateRows('hunt_sessions', { id: session.id }, { last_settled_at: new Date().toISOString() });
   await upsertRow('player_skills', { user_id: session.userId, slot: session.slot, skills: session.skills, updated_at: new Date().toISOString() }, 'user_id,slot');
@@ -193,33 +193,38 @@ async function settleKill(session, mon, cfg) {
   session.lastKill = { monster: mon.name, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
 }
 
-// Um "tick" inteiro: golpe básico + magia/runa (por prioridade RTC) + cura +
-// contra-ataque do monstro + morte — igual em espírito ao doHuntTick do
-// cliente (src/application/huntUseCases.js), só sem respingo de área.
+// Um "tick" inteiro: golpe básico (só no alvo da frente) + magia/runa por
+// prioridade RTC — COM respingo de área real quando a magia/runa é de área
+// (isAreaAttack/areaMaxTargets, ver domain/attackAreas.js) — + cura +
+// contra-ataque + morte. Fiel ao doHuntTick do cliente.
 async function resolveTick(session) {
   const cfg = await getGameConfig();
-  const zone = ZONES[session.zoneId];
   const voc = VOC_TRAINING[session.vocation];
-  const mon = session.currentMonster;
+  const pack = session.currentPack;
+  const primary = pack[0];
+  const now = Date.now();
+  decayStamina(session, cfg, now - (session.lastTickAt || now));
+  session.lastTickAt = now;
 
-  // (1) golpe básico
+  // (1) golpe básico — só o alvo da frente (fiel ao cliente: o básico nunca
+  // tem área, só magia/runa podem ter).
   const atk = getAtk(session);
-  let basicDmg = calcDamage(atk, mon.def) * elementMod(mon.defKey, 'physical');
+  let basicDmg = calcDamage(atk, primary.def) * elementMod(primary.defKey, 'physical');
   if (voc.attackSkill === 'magic') basicDmg *= 0.5; // poke fraco do mago, mesma calibragem do cliente
-  mon.hp -= Math.max(1, Math.floor(basicDmg));
+  primary.hp -= Math.max(1, Math.floor(basicDmg));
   if (voc.attackSkill !== 'magic') {
     const meleeSkillId = equippedWeaponSkillId(session.equipment, session.relics);
     trainSkill(session, meleeSkillId, meleeSkillId === 'distance' ? 2 : 1, cfg);
   }
 
-  // (2) magia/runa por prioridade (RTC)
+  // (2) magia/runa por prioridade (RTC), com respingo de área real
   const rtc = session.rtc || {};
   const magic = (session.skills.magic && session.skills.magic.lv) || 0;
   const healSpellIdForReserve = rtc.healSpell || defaultHealSpellId(session.vocation);
   const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, session.vocation, session.level) ? SPELLS[healSpellIdForReserve] : null;
   const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
 
-  if (isAttackGroupReady(session) && mon.hp > 0) {
+  if (isAttackGroupReady(session) && primary.hp > 0) {
     const ready = normalizeAttackSpells(rtc).map(entry => {
       if (isRuneEntry(entry)) {
         const id = runeEntryId(entry);
@@ -231,8 +236,7 @@ async function resolveTick(session) {
       return ok ? { kind: 'spell', id: entry, s } : null;
     }).filter(Boolean);
 
-    // Runa: precisa ESTAR no inventário de verdade (checagem live — é
-    // consumível, não dá pra confiar num snapshot do início da sessão).
+    // Runa: precisa ESTAR no inventário de verdade (checagem live).
     let pick = null;
     for (const cand of ready) {
       if (cand.kind === 'spell') { pick = cand; break; }
@@ -240,73 +244,106 @@ async function resolveTick(session) {
       if (row && Number(row.qty) > 0) { pick = cand; break; }
     }
 
+    let areaId = 'single', element = null, hitFn = null;
     if (pick && pick.kind === 'rune') {
       const rune = pick.rune;
-      const dmg = runeDamage({ rune, level: session.level, magicLevel: magic }) * elementMod(mon.defKey, rune.element || 'physical');
-      mon.hp -= Math.max(1, Math.floor(dmg));
+      areaId = rune.area || 'single';
+      element = rune.element || 'physical';
+      hitFn = () => runeDamage({ rune, level: session.level, magicLevel: magic });
       await incrementInventory(session.userId, session.slot, pick.id, -1);
       startAttackGroupCd(session);
     } else if (pick && pick.kind === 'spell') {
       const atkSpell = pick.s;
+      areaId = atkSpell.area || 'single';
+      element = atkSpell.element;
       const meleeSkillId = equippedWeaponSkillId(session.equipment, session.relics);
       const meleeSkill = (session.skills[meleeSkillId] && session.skills[meleeSkillId].lv) || 0;
       const eqWeapon = resolveEquippedItem(session.equipment.weapon, session.relics);
       const weaponAtk = (eqWeapon && eqWeapon.atk) || 7;
       const distanceSkill = (session.skills.distance && session.skills.distance.lv) || 0;
-      const dmg = spellAttackDamage({ spell: atkSpell, level: session.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill }) * elementMod(mon.defKey, atkSpell.element);
-      mon.hp -= Math.max(1, Math.floor(dmg));
+      hitFn = () => spellAttackDamage({ spell: atkSpell, level: session.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
       session.mana -= atkSpell.mana;
       startSpellCd(session, pick.id, atkSpell.cd);
       startAttackGroupCd(session);
       trainSkill(session, 'magic', atkSpell.mana, cfg);
     }
+
+    if (hitFn) {
+      if (primary.hp > 0) primary.hp -= Math.max(1, Math.floor(hitFn() * elementMod(primary.defKey, element)));
+      if (isAreaAttack(areaId) && pack.length > 1) {
+        const maxTargets = areaMaxTargets(areaId);
+        pack.slice(1, maxTargets).forEach(tgt => {
+          tgt.hp -= Math.max(1, Math.floor(hitFn() * elementMod(tgt.defKey, element)));
+        });
+      }
+    }
   }
 
-  // Morte do monstro (só o alvo — sem respingo de área neste marco).
-  if (mon.hp <= 0) {
-    await settleKill(session, mon, cfg);
-    session.currentMonster = null;
-    session.nextSpawnAt = Date.now() + 1500;
+  // Resolve TODAS as mortes deste tick (o alvo da frente e/ou os atingidos
+  // pelo respingo de área) — mesmo espírito de doHuntTick no cliente.
+  const primaryDied = primary.hp <= 0;
+  const deaths = pack.filter(m => m.hp <= 0);
+  for (const m of deaths) await settleKill(session, m, cfg);
+  session.currentPack = pack.filter(m => m.hp > 0);
+
+  if (primaryDied || !session.currentPack.length) {
+    if (!session.currentPack.length) session.nextSpawnAt = Date.now() + 1500;
+    await flushVitals(session);
     return;
   }
 
-  // (3) contra-ataque do monstro + cura automática
-  const atkResult = monsterAttack(mon, getDef(session));
+  // (3) contra-ataque do monstro da frente (o que sobrou) + cura automática
+  const newPrimary = session.currentPack[0];
+  const atkResult = monsterAttack(newPrimary, getDef(session));
   session.hp = Math.max(0, session.hp - atkResult.dmg);
   await applyRtcHealing(session, cfg);
 
   if (session.hp <= 0) {
-    // Bênçãos ainda não autoritativas (ver comentário no topo) — perda de XP
-    // sempre no valor SEM bênção (pior caso pro jogador, nunca melhor).
-    const lostPct = deathXpLossPct(0);
+    // Bênçãos AUTORITATIVAS (lidas ao vivo — podem ter sido compradas a
+    // qualquer momento, ver server/src/index.js: /buy-blessing) e consumidas
+    // na morte (não recuperam sozinhas — precisa comprar de novo).
     const row = await selectOne('player_stats', { user_id: session.userId, slot: session.slot });
+    const blessings = row ? Math.min(MAX_BLESSINGS, Number(row.blessings) || 0) : 0;
     const curXp = row ? Number(row.xp) : 0;
-    const xpLost = Math.floor(curXp * lostPct);
-    session.hp = Math.floor(session.maxHp * reviveHpPct(0));
-    await upsertRow('player_stats', { user_id: session.userId, slot: session.slot, xp: Math.max(0, curXp - xpLost), hp: session.hp, mana: session.mana, updated_at: new Date().toISOString() }, 'user_id,slot');
-    session.currentMonster = null;
+    const xpLost = Math.floor(curXp * deathXpLossPct(blessings));
+    session.hp = Math.floor(session.maxHp * reviveHpPct(blessings));
+    await upsertRow('player_stats', {
+      user_id: session.userId, slot: session.slot, xp: Math.max(0, curXp - xpLost),
+      hp: session.hp, mana: session.mana, stamina: session.stamina, blessings: 0, updated_at: new Date().toISOString(),
+    }, 'user_id,slot');
+    session.currentPack = [];
     session.nextSpawnAt = Date.now() + 1500;
   }
 }
 
 function doTick(session) {
+  if (session.busy) return;
+  session.busy = true;
+  tick(session).catch(err => console.error('tick falhou', session.id, err.message)).finally(() => { session.busy = false; });
+}
+
+async function tick(session) {
   const zone = ZONES[session.zoneId];
-  if (!zone || session.busy) return;
-  if (!session.currentMonster) {
+  if (!zone) return;
+  if (!session.currentPack || !session.currentPack.length) {
     if (Date.now() < session.nextSpawnAt) return;
-    session.currentMonster = spawnMonsterInstance(zone, MONSTERS, session.level, 1, null);
+    const cfg = await getGameConfig();
+    const spawnCfg = resolveZoneSpawn(cfg, session.zoneId, zone.monsters);
+    const packSize = spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1));
+    session.currentPack = Array.from({ length: packSize }, () => spawnMonsterInstance(zone, MONSTERS, session.level, 1, spawnCfg.weights));
+    session.lastTickAt = Date.now();
     return;
   }
-  session.busy = true;
-  resolveTick(session).catch(err => console.error('resolveTick falhou', session.id, err.message)).finally(() => { session.busy = false; });
+  await resolveTick(session);
 }
 
 export function startSession(session) {
-  session.currentMonster = null;
+  session.currentPack = [];
   session.nextSpawnAt = Date.now();
   session.spellCdUntil = {};
   session.attackGroupCdUntil = 0;
   session.potionCdUntil = 0;
+  session.lastTickAt = Date.now();
   const tickMs = Math.max(400, 2400 / Math.max(0.1, session.spd));
   session.timer = setInterval(() => doTick(session), tickMs);
   session.flushTimer = setInterval(() => flushVitals(session).catch(() => {}), 5000);

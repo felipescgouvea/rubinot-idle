@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=127';
-import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=128';
+import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=129';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=135';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
@@ -243,6 +243,11 @@ async function reconcileWithServer() {
     G.relics = res.relics;
     emit(EVENTS.INVENTORY);
   }
+  // Bênçãos e stamina (Marco 6) — autoritativas: bênçãos só mudam por compra
+  // (ver blessingUseCases.js: buyBlessing) ou morte (consumidas no servidor);
+  // stamina cai caçando e regenera parada, sempre calculada lá.
+  if (s.blessings != null) { G.blessings = s.blessings; emit(EVENTS.BLESSINGS); }
+  if (s.stamina != null) { G.stamina = s.stamina; }
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
 }

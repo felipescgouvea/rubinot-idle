@@ -1,12 +1,15 @@
 // Compra de bênçãos (Blessings) — pagas em gold, reduzem a perda de XP na morte
-// e melhoram o revive. Consumidas ao morrer (ver application/huntUseCases.js).
-import { G } from './gameStore.js?v=127';
+// e melhoram o revive. Consumidas ao morrer (ver server/src/huntEngine.js —
+// desde o Marco 6, a contagem de bênçãos e o gasto de gold são validados no
+// servidor, não só declarados pelo cliente).
+import { G, ACCOUNT } from './gameStore.js?v=127';
 import { MAX_BLESSINGS, blessingCost } from '../domain/blessings.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=126';
+import { buyBlessingOnServer } from '../infrastructure/authClient.js?v=129';
 import { t } from '../i18n/i18n.js?v=135';
 
-export function buyBlessing() {
+export async function buyBlessing() {
   G.blessings = G.blessings || 0;
   if (G.blessings >= MAX_BLESSINGS) {
     emit(EVENTS.NOTIFY, { msg: t('hunt.blessingsMaxed'), type: 'info' });
@@ -17,8 +20,13 @@ export function buyBlessing() {
     emit(EVENTS.NOTIFY, { msg: t('hunt.blessingGoldInsufficient', { cost }), type: 'error' });
     return;
   }
-  G.gold -= cost;
-  G.blessings += 1;
+  const res = await buyBlessingOnServer(ACCOUNT.activeSlot);
+  if (!res.ok) {
+    emit(EVENTS.NOTIFY, { msg: `⚠️ Não confirmado pelo servidor: ${res.error}`, type: 'error' });
+    return;
+  }
+  G.gold = res.gold;
+  G.blessings = res.blessings;
   emit(EVENTS.NOTIFY, { msg: t('hunt.blessingBought', { count: G.blessings, max: MAX_BLESSINGS }), type: 'success' });
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.BLESSINGS);
