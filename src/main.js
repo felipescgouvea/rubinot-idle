@@ -13,7 +13,7 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=126';
 import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=158';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=126';
-import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=125';
+import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=126';
 import { selectVocation } from './application/characterUseCases.js?v=125';
 import { toggleHunt, startRegen, selectTarget } from './application/huntUseCases.js?v=158';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=127';
@@ -56,9 +56,9 @@ import { renderBoostedPanel } from './ui/boostedPanel.js?v=125';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=129';
 import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=125';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=128';
-import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance } from './application/adminUseCases.js?v=128';
+import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance, initGameConfig } from './application/adminUseCases.js?v=129';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=129';
-import { wireTabs, applyMarketVisibility } from './ui/tabs.js?v=126';
+import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=127';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();
@@ -167,7 +167,12 @@ function bootGame() {
 // Puxa o save da nuvem do usuário logado e inicia o jogo. Usado tanto no load
 // (sessão já existente) quanto logo após um login/cadastro bem-sucedido.
 async function startAuthedSession() {
-  const cloud = await loadCloudSave(); // { ok, data }
+  // Config privilegiada (taxas de XP/gold/loot etc.) e checagem de admin vêm
+  // do servidor (public.game_config/public.admins) — nunca mais do save do
+  // próprio jogador. Roda em paralelo com o load da nuvem e precisa terminar
+  // ANTES do bootGame(), porque loadGame()/applyOfflineProgress() já chamam
+  // getXpRate() etc. (ver application/adminUseCases.js).
+  const [cloud] = await Promise.all([loadCloudSave(), initGameConfig()]); // { ok, data }
   if (cloud.ok) {
     // Leitura OK: se há save na nuvem, ele vira a fonte de verdade; se não há
     // (conta nova), mantém o local (importa progresso de quem jogava sem conta).
@@ -179,6 +184,7 @@ async function startAuthedSession() {
     // vazio. Avisa o jogador pra recarregar.
     emit(EVENTS.NOTIFY, { msg: '⚠️ Não consegui carregar seu save da nuvem agora. Seu progresso na nuvem está preservado — recarregue a página. O envio pra nuvem está pausado nesta sessão por segurança.', type: 'error' });
   }
+  applyAdminTabVisibility();
   hideAuthGate();
   bootGame();
 }

@@ -26,7 +26,7 @@ import { addItemToInventory } from './inventoryCore.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { getCombatBonuses } from './bonuses.js?v=125';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=128';
+import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=128';
 import { t } from '../i18n/i18n.js?v=135';
 

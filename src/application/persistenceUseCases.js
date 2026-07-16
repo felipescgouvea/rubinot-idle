@@ -18,7 +18,7 @@ import { t } from '../i18n/i18n.js?v=135';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
 import { gainXp } from './huntUseCases.js?v=158';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
-import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=128';
+import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=129';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na

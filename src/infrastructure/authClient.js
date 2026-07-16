@@ -211,3 +211,51 @@ export async function saveCloudSave(data) {
   });
   return { ok: res.ok };
 }
+
+// ---- config privilegiada do jogo (public.game_config) ----
+// Leitura é pública (RLS: SELECT liberado — o jogo precisa das taxas mesmo sem
+// login), mas a ESCRITA só acontece pela Edge Function admin-config-set, que
+// confere no servidor se quem chamou está na tabela public.admins. Antes disso
+// (ver memória save-cloud/auth), a config vivia dentro do próprio save do
+// jogador — qualquer um podia se auto-conceder xpRate:1000.
+export async function fetchGameConfig() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/game_config?id=eq.1&select=config`, {
+      headers: { apikey: SUPABASE_ANON_KEY },
+    });
+    if (!res.ok) return null;
+    const rows = await res.json().catch(() => null);
+    return rows && rows.length ? rows[0].config : null;
+  } catch { return null; }
+}
+
+export async function pushGameConfig(config) {
+  const token = await ensureValidToken();
+  if (!token) return { ok: false, error: 'não logado' };
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/admin-config-set`, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(config),
+    });
+    const json = await res.json().catch(() => null);
+    if (!res.ok) return { ok: false, error: (json && json.error) || `HTTP ${res.status}` };
+    return { ok: true, config: json.config };
+  } catch (e) { return { ok: false, error: String(e) }; }
+}
+
+// Confere (server-side, tabela public.admins com RLS "só a própria linha") se
+// o usuário logado pode ver/usar o Painel Admin.
+export async function checkIsAdmin() {
+  const token = await ensureValidToken();
+  const user = currentUser();
+  if (!token || !user) return false;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/admins?user_id=eq.${user.id}&select=user_id`, {
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return false;
+    const rows = await res.json().catch(() => null);
+    return !!(rows && rows.length);
+  } catch { return false; }
+}

@@ -1,7 +1,7 @@
 import { G } from './gameStore.js?v=127';
 import { applySkillGain, TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { getSkillRate } from './adminUseCases.js?v=128';
+import { getSkillRate } from './adminUseCases.js?v=129';
 import { t } from '../i18n/i18n.js?v=135';
 
 export function trainSkill(skillId, amount) {

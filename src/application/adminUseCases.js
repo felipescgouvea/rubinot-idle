@@ -1,16 +1,35 @@
-// Painel Admin: lê/escreve G.adminConfig e expõe getters que o resto do jogo
-// consome (XP/skill/gold/loot/relíquia/raridade). Ver domain/adminConfig.js.
-import { G } from './gameStore.js?v=127';
+// Painel Admin: taxas/pesos que antes viviam em G.adminConfig (dentro do save
+// do próprio jogador — qualquer um podia se auto-conceder xpRate:1000) agora
+// vivem em public.game_config no Supabase, só gravável por quem está na
+// whitelist public.admins (ver infrastructure/authClient.js: pushGameConfig/
+// checkIsAdmin e supabase/functions/admin-config-set). O cliente mantém um
+// cache local (configCache) populado no boot por initGameConfig() — os
+// getters abaixo são síncronos de propósito (chamados no hot path da caçada),
+// então NUNCA fazem fetch, só leem o cache.
 import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { saveGame } from './saveGameUseCase.js?v=126';
+import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=126';
 
-export function getAdminConfig() {
-  G.adminConfig = sanitizeAdminConfig(G.adminConfig);
-  return G.adminConfig;
+// Antes do primeiro fetch resolver (ou se ele falhar), usa o default — nunca
+// trava o jogo por causa da config privilegiada ainda não ter chegado.
+let configCache = sanitizeAdminConfig(DEFAULT_ADMIN_CONFIG);
+let isAdminCache = false;
+
+// Chamado uma vez no boot (main.js: startAuthedSession), antes de liberar a
+// UI — busca a config real e confere se o usuário logado é admin. Retorna
+// isAdmin pra quem chamou decidir se mostra a aba ⚙️ Admin.
+export async function initGameConfig() {
+  const [remote, admin] = await Promise.all([fetchGameConfig(), checkIsAdmin()]);
+  if (remote) configCache = sanitizeAdminConfig(remote);
+  isAdminCache = admin;
+  return isAdminCache;
 }
 
-// Getters usados nas fórmulas (huntUseCases/skillUseCases/persistence).
+export function isAdminUser() { return isAdminCache; }
+export function getAdminConfig() { return configCache; }
+
+// Getters usados nas fórmulas (huntUseCases/skillUseCases/persistence) — mesma
+// assinatura de antes, só a fonte dos dados mudou.
 export const getXpRate = () => getAdminConfig().xpRate;
 export const getSkillRate = () => getAdminConfig().skillRate;
 export const getGoldRate = () => getAdminConfig().goldRate;
@@ -23,167 +42,122 @@ export function getSpawnDelayRange() {
   return { min: c.spawnDelayMin * 1000, max: c.spawnDelayMax * 1000 };
 }
 
-// Multiplicador efetivo de XP/Gold de uma zona (kind = 'xp' | 'gold'). Zonas
-// não têm mais multiplicador embutido (removido — só existe o override do
-// dono no Painel Admin); `builtIn` é sempre 1 na prática, mantido como
-// parâmetro pra não acoplar esta função ao Painel Admin.
 export const isUsingZoneMultipliers = () => getAdminConfig().useZoneMultipliers;
 export function getZoneMultiplier(zoneId, kind, builtIn) {
   return zoneMultiplier(getAdminConfig(), zoneId, kind, builtIn);
 }
 
-// Config efetiva de spawn de uma zona (pesos por monstro + faixa do grupo),
-// consumida pelo motor de caçada (huntUseCases) e pelo painel Admin.
 export function getZoneSpawn(zoneId, zoneMonsters) {
   return resolveZoneSpawn(getAdminConfig(), zoneId, zoneMonsters);
 }
 
-// Loot efetivo de UM monstro (override do dono por cima do padrão do
-// bestiário), consumido pelo motor de caçada (huntUseCases) e pelo painel Admin.
 export function getMonsterLoot(monsterId, baseLoot) {
   return resolveMonsterLoot(getAdminConfig(), monsterId, baseLoot);
 }
 
-// Define o peso (%) de UM monstro numa zona. O peso é relativo (a % exibida é
-// peso/soma). Zerar tira o monstro do sorteio daquela zona.
+// Envia a config INTEIRA pra Edge Function (só passa se o usuário for admin —
+// checado no servidor, não aqui) e, se aceita, atualiza o cache local com o
+// que voltou (já sanitizado pelo servidor). Toda ação de escrita do painel
+// passa por aqui — nenhuma delas mexe em G/localStorage/saveGame mais.
+async function pushConfig(cfg, onSuccess) {
+  const { ok, config, error } = await pushGameConfig(cfg);
+  if (!ok) {
+    emit(EVENTS.NOTIFY, { msg: `⚠️ Não foi possível salvar a configuração: ${error}`, type: 'error' });
+    return false;
+  }
+  configCache = config;
+  emit(EVENTS.ADMIN_PANEL);
+  if (onSuccess) onSuccess(configCache);
+  return true;
+}
+
 export function setZoneSpawnWeight(zoneId, monsterId, value) {
-  const cfg = getAdminConfig();
-  cfg.huntSpawns = cfg.huntSpawns || {};
-  cfg.huntSpawns[zoneId] = cfg.huntSpawns[zoneId] || {};
-  cfg.huntSpawns[zoneId].weights = cfg.huntSpawns[zoneId].weights || {};
+  const cfg = { ...getAdminConfig(), huntSpawns: { ...getAdminConfig().huntSpawns } };
+  cfg.huntSpawns[zoneId] = { ...(cfg.huntSpawns[zoneId] || {}) };
+  cfg.huntSpawns[zoneId].weights = { ...(cfg.huntSpawns[zoneId].weights || {}) };
   cfg.huntSpawns[zoneId].weights[monsterId] = Math.max(0, Number(value) || 0);
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  saveGame();
+  pushConfig(cfg);
 }
 
-// Define a faixa do tamanho do grupo de uma zona (field = 'packMin' | 'packMax').
 export function setZonePackRange(zoneId, field, value) {
-  const cfg = getAdminConfig();
-  cfg.huntSpawns = cfg.huntSpawns || {};
-  cfg.huntSpawns[zoneId] = cfg.huntSpawns[zoneId] || {};
+  const cfg = { ...getAdminConfig(), huntSpawns: { ...getAdminConfig().huntSpawns } };
+  cfg.huntSpawns[zoneId] = { ...(cfg.huntSpawns[zoneId] || {}) };
   cfg.huntSpawns[zoneId][field] = Math.max(1, Math.floor(Number(value) || 1));
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  saveGame();
+  pushConfig(cfg);
 }
 
-// Define a chance de loot (em %, 0..100) de UM item de UM monstro. Sobrescreve
-// a chance padrão do bestiário (ver domain/bestiary.js: MONSTERS[id].loot).
 export function setLootChance(monsterId, itemId, pct) {
-  const cfg = getAdminConfig();
-  cfg.lootOverrides = cfg.lootOverrides || {};
-  cfg.lootOverrides[monsterId] = cfg.lootOverrides[monsterId] || {};
+  const cfg = { ...getAdminConfig(), lootOverrides: { ...getAdminConfig().lootOverrides } };
+  cfg.lootOverrides[monsterId] = { ...(cfg.lootOverrides[monsterId] || {}) };
   cfg.lootOverrides[monsterId][itemId] = Math.max(0, (Number(pct) || 0) / 100);
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  saveGame();
+  pushConfig(cfg);
 }
 
-// Remove o override de UM item de UM monstro — volta a usar a chance padrão
-// do bestiário pra aquele item.
 export function resetLootChance(monsterId, itemId) {
-  const cfg = getAdminConfig();
-  if (cfg.lootOverrides && cfg.lootOverrides[monsterId]) {
+  const cfg = { ...getAdminConfig(), lootOverrides: { ...getAdminConfig().lootOverrides } };
+  if (cfg.lootOverrides[monsterId]) {
+    cfg.lootOverrides[monsterId] = { ...cfg.lootOverrides[monsterId] };
     delete cfg.lootOverrides[monsterId][itemId];
     if (!Object.keys(cfg.lootOverrides[monsterId]).length) delete cfg.lootOverrides[monsterId];
   }
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  saveGame();
+  pushConfig(cfg);
 }
 
 export function setAdminRate(key, value) {
-  const cfg = getAdminConfig();
-  cfg[key] = value;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.NOTIFY, { msg: '⚙️ Configuração aplicada.', type: 'success' });
-  saveGame();
+  const cfg = { ...getAdminConfig(), [key]: value };
+  pushConfig(cfg, () => emit(EVENTS.NOTIFY, { msg: '⚙️ Configuração aplicada.', type: 'success' }));
 }
 
-// Chance de relíquia recebida em PORCENTAGEM (0..100) pela UI.
 export function setRelicDropChancePct(pct) {
-  const cfg = getAdminConfig();
-  cfg.relicDropChance = (Number(pct) || 0) / 100;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.NOTIFY, { msg: '⚙️ Chance de relíquia aplicada.', type: 'success' });
-  saveGame();
+  const cfg = { ...getAdminConfig(), relicDropChance: (Number(pct) || 0) / 100 };
+  pushConfig(cfg, () => emit(EVENTS.NOTIFY, { msg: '⚙️ Chance de relíquia aplicada.', type: 'success' }));
 }
 
-// % (0..100) editada DIRETO pelo dono — não é mais peso relativo arbitrário
-// (ver comentário em domain/adminConfig.js: rarityWeights).
 export function setRarityPercent(tier, pct) {
-  const cfg = getAdminConfig();
+  const cfg = { ...getAdminConfig(), rarityWeights: { ...getAdminConfig().rarityWeights } };
   cfg.rarityWeights[tier] = Math.max(0, Number(pct) || 0);
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  saveGame();
+  pushConfig(cfg);
 }
 
-// Liga/desliga o uso dos multiplicadores de XP/Gold por zona. Desligado (padrão)
-// deixa XP e gold iguais ao Tibia (multiplicador 1 em todas as zonas).
 export function setUseZoneMultipliers(on) {
-  const cfg = getAdminConfig();
-  cfg.useZoneMultipliers = !!on;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.ZONE_PICKER); // os cards de zona mostram o multiplicador efetivo
-  emit(EVENTS.NOTIFY, { msg: cfg.useZoneMultipliers ? '⚙️ Multiplicadores de zona ligados.' : '⚙️ Modo Tibia: XP/Gold sem multiplicador.', type: 'success' });
-  saveGame();
+  const cfg = { ...getAdminConfig(), useZoneMultipliers: !!on };
+  pushConfig(cfg, (c) => {
+    emit(EVENTS.ZONE_PICKER);
+    emit(EVENTS.NOTIFY, { msg: c.useZoneMultipliers ? '⚙️ Multiplicadores de zona ligados.' : '⚙️ Modo Tibia: XP/Gold sem multiplicador.', type: 'success' });
+  });
 }
 
-// Define o override de XP ou Gold (kind = 'xp' | 'gold') de UMA zona.
 export function setZoneMultiplier(zoneId, kind, value) {
-  const cfg = getAdminConfig();
-  cfg.zoneMultipliers = cfg.zoneMultipliers || {};
-  cfg.zoneMultipliers[zoneId] = cfg.zoneMultipliers[zoneId] || {};
+  const cfg = { ...getAdminConfig(), zoneMultipliers: { ...getAdminConfig().zoneMultipliers } };
+  cfg.zoneMultipliers[zoneId] = { ...(cfg.zoneMultipliers[zoneId] || {}) };
   cfg.zoneMultipliers[zoneId][kind] = Number(value) || 0;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.ZONE_PICKER);
-  saveGame();
+  pushConfig(cfg, () => emit(EVENTS.ZONE_PICKER));
 }
 
-// Mercado entre jogadores ligado/desligado (padrão: desligado). Enquanto
-// desligado, a aba 🏪 fica escondida e o painel mostra aviso (ver ui/tabs.js:
-// applyMarketVisibility e ui/marketPanel.js).
 export const isMarketEnabled = () => getAdminConfig().marketEnabled;
 export function setMarketEnabled(on) {
-  const cfg = getAdminConfig();
-  cfg.marketEnabled = !!on;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.MARKET_VISIBILITY, { enabled: cfg.marketEnabled });
-  emit(EVENTS.NOTIFY, { msg: cfg.marketEnabled ? '🏪 Mercado entre jogadores ativado.' : '🏪 Mercado entre jogadores desativado.', type: 'success' });
-  saveGame();
+  const cfg = { ...getAdminConfig(), marketEnabled: !!on };
+  pushConfig(cfg, (c) => {
+    emit(EVENTS.MARKET_VISIBILITY, { enabled: c.marketEnabled });
+    emit(EVENTS.NOTIFY, { msg: c.marketEnabled ? '🏪 Mercado entre jogadores ativado.' : '🏪 Mercado entre jogadores desativado.', type: 'success' });
+  });
 }
 
-// Stamina e consumo de munição — fidelidades opcionais ligadas pelo dono.
 export const isStaminaEnabled = () => getAdminConfig().staminaEnabled;
 export const isConsumeAmmo = () => getAdminConfig().consumeAmmo;
 export function setStaminaEnabled(on) {
-  const cfg = getAdminConfig();
-  cfg.staminaEnabled = !!on;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.HUNT_STATS);
-  emit(EVENTS.NOTIFY, { msg: cfg.staminaEnabled ? '🔋 Stamina ativada.' : '🔋 Stamina desativada.', type: 'success' });
-  saveGame();
+  const cfg = { ...getAdminConfig(), staminaEnabled: !!on };
+  pushConfig(cfg, (c) => {
+    emit(EVENTS.HUNT_STATS);
+    emit(EVENTS.NOTIFY, { msg: c.staminaEnabled ? '🔋 Stamina ativada.' : '🔋 Stamina desativada.', type: 'success' });
+  });
 }
 export function setConsumeAmmo(on) {
-  const cfg = getAdminConfig();
-  cfg.consumeAmmo = !!on;
-  G.adminConfig = sanitizeAdminConfig(cfg);
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.NOTIFY, { msg: cfg.consumeAmmo ? '🏹 Consumo de munição ativado.' : '🏹 Munição infinita.', type: 'success' });
-  saveGame();
+  const cfg = { ...getAdminConfig(), consumeAmmo: !!on };
+  pushConfig(cfg, (c) => emit(EVENTS.NOTIFY, { msg: c.consumeAmmo ? '🏹 Consumo de munição ativado.' : '🏹 Munição infinita.', type: 'success' }));
 }
 
 export function resetAdminConfig() {
-  G.adminConfig = sanitizeAdminConfig({ ...DEFAULT_ADMIN_CONFIG, rarityWeights: { ...DEFAULT_ADMIN_CONFIG.rarityWeights } });
-  emit(EVENTS.ADMIN_PANEL);
-  emit(EVENTS.NOTIFY, { msg: '⚙️ Configurações restauradas ao padrão.', type: 'success' });
-  saveGame();
+  const cfg = { ...DEFAULT_ADMIN_CONFIG, rarityWeights: { ...DEFAULT_ADMIN_CONFIG.rarityWeights } };
+  pushConfig(cfg, () => emit(EVENTS.NOTIFY, { msg: '⚙️ Configurações restauradas ao padrão.', type: 'success' }));
 }

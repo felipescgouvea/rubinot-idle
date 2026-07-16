@@ -14,7 +14,7 @@ import { renderBossRushPanel } from './bossRushPanel.js?v=125';
 import { renderBestiaryTab } from './bestiaryPanel.js?v=126';
 import { renderTrainingSection } from './trainingPanel.js?v=127';
 import { renderAdminPanel } from './adminPanel.js?v=129';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=128';
+import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 
 const RENDER_BY_TAB = {
@@ -41,6 +41,20 @@ export function applyMarketVisibility() {
   const btn = document.querySelector('.tab[data-tab="market"]');
   if (btn) btn.style.display = enabled ? '' : 'none';
   if (!enabled && document.body.dataset.tab === 'market') {
+    document.querySelector('.tab[data-tab="hunt"]')?.click();
+  }
+}
+
+// Esconde a aba ⚙️ Admin pra quem não está na whitelist public.admins (checada
+// no servidor por initGameConfig(), ver application/adminUseCases.js). Chamado
+// uma vez no boot, depois que a checagem de admin resolveu. Sem isso, QUALQUER
+// jogador logado conseguia abrir o painel e mudar taxas de XP/gold/loot —
+// mesmo já com a escrita bloqueada no servidor, a aba não deveria nem aparecer.
+export function applyAdminTabVisibility() {
+  const admin = isAdminUser();
+  const btn = document.querySelector('.tab[data-tab="admin"]');
+  if (btn) btn.style.display = admin ? '' : 'none';
+  if (!admin && document.body.dataset.tab === 'admin') {
     document.querySelector('.tab[data-tab="hunt"]')?.click();
   }
 }
