@@ -1,4 +1,5 @@
-import { G } from './gameStore.js?v=127';
+import { G, ACCOUNT } from './gameStore.js?v=127';
+import { syncEquipment } from '../infrastructure/authClient.js?v=128';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=136';
 import { ZONES } from '../domain/bestiary.js?v=135';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
@@ -49,6 +50,10 @@ export function equipItem(itemId) {
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemEquipped', { item: item.name }), type: 'success' });
   saveGame();
+  // Confirma no servidor (valida posse — ver server/src/index.js: /equip). Se
+  // recusar, o próximo hunt-start simplesmente não usa esse item pro
+  // cálculo de atk/def/spd; a UI local já mudou, mas sem efeito real.
+  syncEquipment(ACCOUNT.activeSlot, item.type, itemId);
 }
 
 // Desequipa tanto um itemId comum quanto o id de uma Relíquia (formato
@@ -64,6 +69,7 @@ export function unequipItem(itemId) {
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemUnequipped', { item: item.name }) });
   saveGame();
+  syncEquipment(ACCOUNT.activeSlot, item.type, null);
 }
 
 // Equipar uma Relíquia (ver domain/gameState.js: G.relics) — mesmo padrão de
@@ -82,6 +88,7 @@ export function equipRelic(relicId) {
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.NOTIFY, { msg: t('inventory.relicEquipped', { item: base.name, tier: t(tier.name) }), type: 'success' });
   saveGame();
+  syncEquipment(ACCOUNT.activeSlot, base.type, relicId);
 }
 
 // Vender uma Relíquia é definitivo — some de G.relics e paga em gold, com um
@@ -97,7 +104,7 @@ export function sellRelic(relicId) {
   const price = Math.round(base.sell * (1 + relic.bonusPct * 2));
   // se a relíquia vendida estava equipada, o slot não pode continuar
   // apontando pra um id que não existe mais
-  if (G.equipment[base.type] === relicId) G.equipment[base.type] = null;
+  if (G.equipment[base.type] === relicId) { G.equipment[base.type] = null; syncEquipment(ACCOUNT.activeSlot, base.type, null); }
   G.relics.splice(idx, 1);
   G.gold += price;
   const tier = RARITY_TIERS[relic.rarity];

@@ -1,19 +1,18 @@
-// Motor de caçada AUTORITATIVO — Marco 2 da economia server-autoritativa.
+// Motor de caçada AUTORITATIVO.
 //
-// LIMITAÇÃO DELIBERADA deste marco (documentada, não escondida): atk/def/spd/
-// vocação/nível/mundo ainda vêm como SNAPSHOT enviado pelo cliente no
-// hunt-start (travado pra sessão inteira). Isso ainda não fecha 100% o buraco
-// — dá pra inflar esses números uma vez por sessão — mas fecha o principal:
-// o cliente não declara mais QUANTO ganhou. Cada kill é decidido por ESTE
-// processo, rodando sozinho, contra o relógio real do servidor; parar de
-// mandar requisições não gera ganho (o tick não depende de nenhum request).
-// Fechar o buraco do snapshot é o Marco 4 (equipamento/skills também
-// autoritativos, ver plano).
+// Marco 2: cada kill é decidido por ESTE processo, rodando sozinho, contra o
+// relógio real do servidor — parar de mandar requisições não gera ganho (o
+// tick não depende de nenhum request). Marco 3: loot + relíquias (mesmas
+// fórmulas de resolveMonsterKill em src/application/huntUseCases.js: chance
+// por item do bestiário + override do Painel Admin, relíquia só em Boss
+// Rush). Marco 4 (ver index.js: /hunt/start): atk/def/spd agora vêm de
+// player_stats/player_skills/player_equipment, nunca mais de um snapshot
+// declarado pelo cliente — o número que chega aqui em `session.atk/def/spd`
+// já é autoritativo de ponta a ponta.
 //
-// Marco 3 adiciona loot + relíquias (mesmas fórmulas de resolveMonsterKill em
-// src/application/huntUseCases.js: chance por item do bestiário + override do
-// Painel Admin, relíquia só em Boss Rush). Player HP/morte/RTC ainda não são
-// simulados (Marco 4).
+// Ainda não simulado: player HP/morte/RTC (motivo: exigiria replicar o
+// sistema de magia/runa/poção inteiro aqui — ver conversa sobre paridade de
+// combate). Combate real do servidor é só ataque básico.
 import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../vendor/domain/bestiary.js?v=135';
 import { spawnMonsterInstance, calcDamage } from '../vendor/domain/combatFormulas.js?v=156';
 import { worldXpMultiplier, worldGoldMultiplier } from '../vendor/domain/progression.js?v=128';

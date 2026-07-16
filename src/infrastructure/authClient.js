@@ -281,8 +281,11 @@ async function huntFetch(path, { method = 'GET', body } = {}) {
   } catch (e) { return { ok: false, error: String(e) }; }
 }
 
-// snapshot: { slot, zoneId, bossOnly, vocation, level, skills, equipment, relics, world }
-// — travado pra sessão inteira (ver server/src/huntEngine.js: limitação documentada).
+// snapshot: { slot, zoneId, bossOnly, vocation, world }. Desde o Marco 4,
+// nível/skills/equipamento NÃO vêm mais daqui — o servidor lê de
+// player_stats/player_skills/player_equipment (ver server/src/index.js). Só
+// vocação ainda é reportada pelo cliente (baixo risco: as fórmulas de combate
+// usam os valores de skill já autoritativos independente da vocação).
 export function startHuntSession(snapshot) {
   return huntFetch('/hunt/start', { method: 'POST', body: snapshot });
 }
@@ -293,4 +296,11 @@ export function stopHuntSession(slot) {
 
 export function getHuntState(slot) {
   return huntFetch(`/hunt/state?slot=${slot}`);
+}
+
+// Equipar/desequipar validado no servidor (confere posse antes de aceitar —
+// ver server/src/index.js: /equip). itemId=null desequipa. Chamado depois da
+// UI já ter mutado G.equipment localmente (mesmo padrão otimista do resto).
+export function syncEquipment(slot, eqSlot, itemId) {
+  return huntFetch('/equip', { method: 'POST', body: { slot, eqSlot, itemId } });
 }

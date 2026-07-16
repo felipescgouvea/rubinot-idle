@@ -10,7 +10,7 @@
 import { G, ACCOUNT } from './gameStore.js?v=127';
 import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=126';
 import { saveState } from '../infrastructure/storage.js?v=125';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=127';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=128';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 

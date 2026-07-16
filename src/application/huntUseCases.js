@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=127';
-import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=127';
+import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=128';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=135';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
@@ -193,12 +193,12 @@ export function toggleHunt() {
 let reconcileInterval = null;
 const RECONCILE_MS = 5000;
 
+// Desde o Marco 4, nível/skills/equipamento NÃO são mais enviados — o
+// servidor lê de player_stats/player_skills/player_equipment (autoritativos).
+// Só vocação/zona/mundo continuam vindo do cliente (ver authClient.js:
+// startHuntSession).
 function buildHuntSnapshot() {
-  return {
-    slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly,
-    vocation: G.vocation, level: G.level, skills: G.sk,
-    equipment: G.equipment, relics: G.relics || [], world: G.currentWorld,
-  };
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld };
 }
 
 async function reconcileWithServer() {
