@@ -1022,7 +1022,7 @@ export const ITEMS = {
   soulhexer:         { name: 'Soulhexer', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 37, sell: 4551, rare: true },
   stellar_moonsilver_sceptre: { name: 'Stellar Moonsilver Sceptre', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 19, sell: 969 },
   tempest_rod:       { name: 'Tempest Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 34, sell: 3774, rare: true },
-  the_chiller:       { name: 'The Chiller', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 37, sell: 4551, rare: true },
+  the_chiller:       { name: 'The Chiller', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 400 },
   valuable_carving_rod: { name: 'Valuable Carving Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 25, sell: 1875 },
   valuable_mayhem_rod: { name: 'Valuable Mayhem Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 22, sell: 1386 },
   valuable_remedy_rod: { name: 'Valuable Remedy Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 19, sell: 969 },
@@ -1063,7 +1063,7 @@ export const ITEMS = {
   sorcerer_test_weapon_test: { name: 'Sorcerer Test Weapon Test', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 22, sell: 1386 },
   soultainter:       { name: 'Soultainter', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 16, sell: 624 },
   stellar_moonsilver_channeler: { name: 'Stellar Moonsilver Channeler', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 19, sell: 969 },
-  the_scorcher:      { name: 'The Scorcher', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 31, sell: 3069 },
+  the_scorcher:      { name: 'The Scorcher', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 400 },
   valuable_carving_wand: { name: 'Valuable Carving Wand', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 34, sell: 3774, rare: true },
   valuable_mayhem_wand: { name: 'Valuable Mayhem Wand', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 351 },
   valuable_remedy_wand: { name: 'Valuable Remedy Wand', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 16, sell: 624 },
@@ -9836,18 +9836,16 @@ export const ITEMS = {
   wooden_spellbook: { name: 'Wooden Spellbook', icon: '📖', type: 'shield', def: 10, sell: 522 },
 };
 
-// Kit inicial por vocação — entregue e equipado automaticamente na 1ª escolha de vocação,
-// como o equipamento que o RubinOT dá ao personagem recém-criado.
-// Fiel ao Dawnport Training Set real do Tibia (TibiaWiki: Dawnport Set) — o kit
-// que cada vocação recebe ao passar pelo portão da vocação na ilha inicial:
-// Leather Helmet/Legs/Boots + Jacket (nosso leather_armor) em todas, arma e
-// peça de mão específica de cada uma (escudo pro knight, aljava+arco pro
-// paladino, Spellbook of the Novice pros dois magos).
+// Kit inicial por vocação — entregue e equipado automaticamente na 1ª escolha de vocação
+// (selectVocation, chamado na criação do personagem, ver characterUseCases.js). Fiel ao
+// Dawnport TRAINING Set real do Tibia (TibiaWiki: Dawnport Set) — o kit dado ao sair pelo
+// portão da vocação na ilha inicial, já que neste jogo não existe uma etapa de nível 8
+// separada da criação (o Graduate Set do Tibia real não se aplica aqui).
 export const STARTER_KITS = {
-  knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield',             helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor',                                  helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  sorcerer: { weapon: 'wand_of_vortex',armor: 'robe',           shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  druid:    { weapon: 'snakebite_rod', armor: 'robe',           shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor',                      helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  sorcerer: { weapon: 'the_scorcher',  armor: 'leather_armor',  shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  druid:    { weapon: 'the_chiller',   armor: 'leather_armor',  shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
