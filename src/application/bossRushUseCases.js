@@ -9,7 +9,7 @@ import { G } from './gameStore.js?v=129';
 import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=136';
 import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=165';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { t } from '../i18n/i18n.js?v=136';
+import { t } from '../i18n/i18n.js?v=137';
 
 // Zona/estado de caçada "de fora" do Boss Rush — guardados só pra restaurar a
 // escolha normal do jogador (aba Caçada) quando ele sai do Boss Rush, em vez

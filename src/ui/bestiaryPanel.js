@@ -19,7 +19,7 @@ import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=130';
 import { monsterSpriteImg } from './huntPanel.js?v=135';
 import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=127';
 import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=127';
-import { t } from '../i18n/i18n.js?v=136';
+import { t } from '../i18n/i18n.js?v=137';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.

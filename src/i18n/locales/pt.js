@@ -280,6 +280,7 @@ export default {
   'rtc.autoAttack': 'Ataque automático',
   'rtc.healSummary': 'spell {spell} abaixo de {spellPct}% · poção {potion} abaixo de {potionPct}%',
   'rtc.autoHeal': 'Cura automática',
+  'rtc.noHealAvailable': 'Você ainda não consegue curar automaticamente — nenhuma spell de cura até o nível {level} e nenhuma poção configurada. Arraste uma poção de cura abaixo.',
   'rtc.manaSummary': 'poção {potion} abaixo de {pct}% de mana',
   'rtc.autoMana': 'Mana automática',
   'rtc.subtabAttack': 'RTCaster',

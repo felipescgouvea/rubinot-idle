@@ -8,7 +8,7 @@ import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../do
 import { resolveEquippedItem } from '../domain/items.js?v=138';
 import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=126';
 import { skillIconImg } from './shared.js?v=130';
-import { t } from '../i18n/i18n.js?v=136';
+import { t } from '../i18n/i18n.js?v=137';
 
 let activeSkillsSubtab = 'attributes';
 export function setSkillsSubtab(tab) {

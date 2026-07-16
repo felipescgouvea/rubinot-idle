@@ -10,7 +10,7 @@ import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { openModal, rubiniIconImg } from './shared.js?v=130';
-import { t } from '../i18n/i18n.js?v=136';
+import { t } from '../i18n/i18n.js?v=137';
 
 // Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
 // parte do save (não é uma decisão de jogo, é só onde o clique da paleta vai).

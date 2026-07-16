@@ -279,6 +279,7 @@ export default {
   'rtc.autoAttack': 'Automatic attack',
   'rtc.healSummary': 'spell {spell} below {spellPct}% · potion {potion} below {potionPct}%',
   'rtc.autoHeal': 'Automatic healing',
+  'rtc.noHealAvailable': "You can't heal automatically yet — no heal spell until level {level} and no potion set. Drop a healing potion below.",
   'rtc.manaSummary': 'potion {potion} below {pct}% mana',
   'rtc.autoMana': 'Automatic mana',
   'rtc.subtabAttack': 'RTCaster',

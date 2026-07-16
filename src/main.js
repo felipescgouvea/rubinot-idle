@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=129';
 import { VOCATIONS } from './domain/character.js?v=156';
 import { emit, EVENTS } from './shared/eventBus.js?v=126';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=136';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=137';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=127';
@@ -41,7 +41,7 @@ import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPane
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=126';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=126';
 import { wireShopPanelEvents, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=132';
-import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=159';
+import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=160';
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=130';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=127';
 import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=126';
@@ -190,8 +190,13 @@ async function startAuthedSession() {
     emit(EVENTS.NOTIFY, { msg: '⚠️ Não consegui carregar seu save da nuvem agora. Seu progresso na nuvem está preservado — recarregue a página. O envio pra nuvem está pausado nesta sessão por segurança.', type: 'error' });
   }
   applyAdminTabVisibility();
-  hideAuthGate();
+  // hideAuthGate() só DEPOIS do bootGame() terminar — escondê-lo antes revela
+  // o #app ainda com o HTML estático padrão (tela de "criar personagem", 0
+  // gold, sem equipamento) por um instante, mesmo pra quem já tem personagem,
+  // até os renders do boot rodarem. Parece (e assusta) como se o personagem
+  // tivesse sumido.
   await bootGame();
+  hideAuthGate();
 }
 
 // ---- idioma: aplica ANTES de qualquer render, senão a UI pisca em inglês e

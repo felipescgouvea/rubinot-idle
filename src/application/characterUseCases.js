@@ -5,7 +5,7 @@ import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { startRegen } from './huntUseCases.js?v=165';
 import { saveGame } from './saveGameUseCase.js?v=127';
-import { t } from '../i18n/i18n.js?v=136';
+import { t } from '../i18n/i18n.js?v=137';
 
 export function selectVocation(voc) {
   if (G.vocation) return;
