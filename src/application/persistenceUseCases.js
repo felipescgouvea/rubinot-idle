@@ -3,7 +3,7 @@
 import { G, replaceState, replaceAccount } from './gameStore.js?v=127';
 import { createDefaultState } from '../domain/gameState.js?v=127';
 import { createDefaultSkills } from '../domain/character.js?v=156';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells } from '../domain/rtcConfig.js?v=127';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=158';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
@@ -16,7 +16,7 @@ import { loadRawState, clearState, saveState } from '../infrastructure/storage.j
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
-import { gainXp } from './huntUseCases.js?v=135';
+import { gainXp } from './huntUseCases.js?v=158';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
 import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=128';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
@@ -78,7 +78,7 @@ export function loadGame() {
   // migração: seleção de spell de ataque/cura morava em G.spells (aba "Spells",
   // removida) — agora mora dentro do próprio G.rtc, junto do resto da automação.
   if (G.spells) {
-    if (G.spells.attack && !normalizeAttackSpells(G.rtc).length) { G.rtc.attackType = 'spell'; G.rtc.attackSpells = [G.spells.attack]; }
+    if (G.spells.attack && !normalizeAttackSpells(G.rtc).length) { G.rtc.attackSpells = [G.spells.attack]; }
     if (G.spells.heal && !G.rtc.healSpell) G.rtc.healSpell = G.spells.heal;
     delete G.spells;
   }
@@ -143,10 +143,12 @@ export function loadGame() {
       }
     });
   }
-  // Tira da prioridade magias que a vocação/nível atual não pode usar.
-  G.rtc.attackSpells = normalizeAttackSpells(G.rtc).filter(id => isSpellAvailable(id, G.vocation, G.level));
-  if (G.rtc.attackRune && !isRuneAvailableToVocation(G.rtc.attackRune, G.vocation)) { G.rtc.attackType = null; G.rtc.attackRune = null; }
-  G.rtc.attackType = G.rtc.attackSpells.length ? 'spell' : (G.rtc.attackRune ? 'rune' : null);
+  // Tira da prioridade magias/runas que a vocação/nível atual não pode mais usar.
+  G.rtc.attackSpells = normalizeAttackSpells(G.rtc).filter(entry => isRuneEntry(entry)
+    ? isRuneAvailableToVocation(runeEntryId(entry), G.vocation)
+    : isSpellAvailable(entry, G.vocation, G.level));
+  delete G.rtc.attackType;
+  delete G.rtc.attackRune;
   if (G.rtc.healSpell && !isSpellAvailable(G.rtc.healSpell, G.vocation, G.level)) G.rtc.healSpell = null;
   // Clamp hp/mana to max on load
   if (G.vocation) {

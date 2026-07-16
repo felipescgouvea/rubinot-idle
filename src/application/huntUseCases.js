@@ -8,7 +8,7 @@ import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAu
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=127';
-import { isRuneAvailableToVocation, canUseAttackRune, normalizeAttackSpells } from '../domain/rtcConfig.js?v=127';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=158';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=128';
 import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=156';
 import { elementMod } from '../domain/elements.js?v=125';
@@ -392,60 +392,70 @@ export function doHuntTick() {
   const healSpellIdForReserve = G.rtc.healSpell || defaultHealSpellId(G.vocation);
   const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, G.vocation, G.level) ? SPELLS[healSpellIdForReserve] : null;
   const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
-  if (G.rtc.attackType === 'rune' && G.rtc.attackRune && canUseAttackRune(G.rtc.attackRune, G.vocation, magic) && (G.inventory[G.rtc.attackRune] || 0) > 0) {
-    const rune = ITEMS[G.rtc.attackRune];
+  // Fila de prioridade ÚNICA misturando magia e runa (igual ao RTCaster real:
+  // a caixinha 1 pode ser uma magia e a 2 uma runa — usa a primeira PRONTA,
+  // seja ela qual for) — ver domain/rtcConfig.js: normalizeAttackSpells/
+  // isRuneEntry. Ambas competem pelo mesmo cooldown de grupo (2s).
+  const ready = isAttackGroupReady()
+    ? normalizeAttackSpells(G.rtc).map(entry => {
+      if (isRuneEntry(entry)) {
+        const id = runeEntryId(entry);
+        const rune = ITEMS[id];
+        const ok = rune && canUseAttackRune(id, G.vocation, magic) && (G.inventory[id] || 0) > 0;
+        return ok ? { kind: 'rune', id, rune } : null;
+      }
+      const s = SPELLS[entry];
+      const ok = s && isSpellAvailable(entry, G.vocation, G.level) && G.mana - healManaReserve >= s.mana && isSpellReady(entry);
+      return ok ? { kind: 'spell', id: entry, s } : null;
+    }).filter(Boolean)
+    : [];
+  let pick = null;
+  if (ready.length) {
+    pick = ready[0]; // padrão: a primeira da prioridade
+    if (G.rtc.smartElement) {
+      // Prioridade inteligente: entre as prontas, a mais forte contra a
+      // fraqueza da criatura da frente (maior modificador elemental).
+      const elOf = e => e.kind === 'rune' ? (e.rune.element || 'physical') : e.s.element;
+      pick = ready.reduce((best, cur) =>
+        elementMod(primary.defKey, elOf(cur)) > elementMod(primary.defKey, elOf(best)) ? cur : best, ready[0]);
+    }
+  }
+  if (pick && pick.kind === 'rune') {
+    const rune = pick.rune;
     areaId = rune.area || 'single';
     element = rune.element || 'physical';
     hitFn = () => runeDamage({ rune, level: G.level, magicLevel: magic }); // fórmula do Tibia (nível/5 + ML·a + base)
-    combatFx = { effect: runeEffectName(G.rtc.attackRune), shape: areaId, targetUid: primary.uid };
-    G.inventory[G.rtc.attackRune]--;
+    combatFx = { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid };
+    G.inventory[pick.id]--;
     huntSession.supplies += rune.sell || 0;
-    if (G.inventory[G.rtc.attackRune] <= 0) {
-      delete G.inventory[G.rtc.attackRune];
+    if (G.inventory[pick.id] <= 0) {
+      delete G.inventory[pick.id];
       // Sem isso o RTC volta a bater só o golpe básico e o jogador não entende
       // por que o dano caiu — mesmo aviso já dado pra munição (ver acima).
       emit(EVENTS.NOTIFY, { msg: t('hunt.notifyOutOfRunes', { name: rune.name }), type: 'error' });
     }
+    startAttackGroupCd();
     emit(EVENTS.LOG, { html: t('log.rtcRuneUsed', { name: rune.name }), cat: 'suprimento' });
     emit(EVENTS.INVENTORY);
-  } else {
-    // Magias PRONTAS agora (nível/voc ok, com mana sobrando MESMO reservando
-    // o custo da cura, e fora de cooldown), na ordem de prioridade.
-    const ready = isAttackGroupReady()
-      ? normalizeAttackSpells(G.rtc)
-        .map(id => ({ id, s: SPELLS[id] }))
-        .filter(({ id, s }) => s && isSpellAvailable(id, G.vocation, G.level) && G.mana - healManaReserve >= s.mana && isSpellReady(id))
-      : [];
-    let atkSpellId = null, atkSpell = null;
-    if (ready.length) {
-      let pick = ready[0]; // padrão: a primeira da prioridade
-      if (G.rtc.smartElement) {
-        // Prioridade inteligente: entre as prontas, a mais forte contra a
-        // fraqueza da criatura da frente (maior modificador elemental).
-        pick = ready.reduce((best, cur) =>
-          elementMod(primary.defKey, cur.s.element) > elementMod(primary.defKey, best.s.element) ? cur : best, ready[0]);
-      }
-      atkSpellId = pick.id; atkSpell = pick.s;
-    }
-    if (atkSpell) {
-      areaId = atkSpell.area || 'single';
-      element = atkSpell.element;
-      // Contexto pra escala das magias FÍSICAS (fórmula do Tibia): melee usa
-      // skill·ataque da arma; distância usa a skill de distância. As demais só
-      // usam Magic Level. (Ver domain/combatFormulas.js: spellAttackDamage.)
-      const meleeSkillId = getEquippedWeaponSkillId();
-      const meleeSkill = (G.sk[meleeSkillId] && G.sk[meleeSkillId].lv) || 0;
-      const eqWeapon = resolveEquippedItem(G.equipment.weapon, G.relics);
-      const weaponAtk = (eqWeapon && eqWeapon.atk) || 7; // punho = ataque base 7
-      const distanceSkill = (G.sk.distance && G.sk.distance.lv) || 0;
-      hitFn = () => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
-      G.mana -= atkSpell.mana;
-      startSpellCd(atkSpellId, atkSpell.cd);
-      startAttackGroupCd();
-      trainSkill('magic', atkSpell.mana);
-      emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
-      combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId, targetUid: primary.uid };
-    }
+  } else if (pick && pick.kind === 'spell') {
+    const atkSpellId = pick.id, atkSpell = pick.s;
+    areaId = atkSpell.area || 'single';
+    element = atkSpell.element;
+    // Contexto pra escala das magias FÍSICAS (fórmula do Tibia): melee usa
+    // skill·ataque da arma; distância usa a skill de distância. As demais só
+    // usam Magic Level. (Ver domain/combatFormulas.js: spellAttackDamage.)
+    const meleeSkillId = getEquippedWeaponSkillId();
+    const meleeSkill = (G.sk[meleeSkillId] && G.sk[meleeSkillId].lv) || 0;
+    const eqWeapon = resolveEquippedItem(G.equipment.weapon, G.relics);
+    const weaponAtk = (eqWeapon && eqWeapon.atk) || 7; // punho = ataque base 7
+    const distanceSkill = (G.sk.distance && G.sk.distance.lv) || 0;
+    hitFn = () => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
+    G.mana -= atkSpell.mana;
+    startSpellCd(atkSpellId, atkSpell.cd);
+    startAttackGroupCd();
+    trainSkill('magic', atkSpell.mana);
+    emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
+    combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId, targetUid: primary.uid };
   }
 
   // Aplica a magia/runa: dano no alvo da frente (se sobreviveu ao básico) + o

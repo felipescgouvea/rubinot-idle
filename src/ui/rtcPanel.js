@@ -9,11 +9,11 @@ import { SPELLS, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=136';
 import { VOCATIONS } from '../domain/character.js?v=156';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=127';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAttackRune, isRuneEntry, runeEntryId, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=158';
 import { getMagic } from '../application/stats.js?v=125';
 import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=126';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=158';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=128';
 import { t } from '../i18n/i18n.js?v=135';
@@ -49,38 +49,60 @@ function spellRow(id, s, selected, onclick) {
 }
 
 // Caixinha de prioridade de ataque (idx = posição 0..ATTACK_SLOT_COUNT-1): um
-// quadrado onde o jogador escolhe a magia, igual ao slot de poção do Healing.
-// Vazio mostra a posição; preenchido mostra a magia (tocar troca/remove pelo modal).
-function attackSpellSlot(idx, spellId) {
-  const s = spellId ? SPELLS[spellId] : null;
-  return `<div class="rtc-potion-slot ${s ? 'filled' : 'empty'}"
+// quadrado onde o jogador escolhe a magia OU RUNA, igual ao slot de poção do
+// Healing. Vazio mostra a posição; preenchido mostra o que foi escolhido
+// (tocar troca/remove pelo modal) — magia e runa competem na MESMA lista de
+// prioridade, como no RTCaster real (ver domain/rtcConfig.js).
+function attackSpellSlot(idx, entry) {
+  const isRune = isRuneEntry(entry);
+  const s = entry && !isRune ? SPELLS[entry] : null;
+  const item = entry && isRune ? ITEMS[runeEntryId(entry)] : null;
+  const icon = s ? spellIconImg(s.name, s.icon, 'item-icon') : item ? itemIconImg(runeEntryId(entry), 'item-icon') : null;
+  const name = s ? s.name : item ? item.name : null;
+  return `<div class="rtc-potion-slot ${name ? 'filled' : 'empty'}"
       onclick="openRtcAttackSpellPicker(${idx})"
-      title="${s ? t('rtc.attackSlotFilledTitle', { name: s.name }) : t('rtc.attackSlotEmptyTitle', { n: idx + 1 })}">
-    ${s
-      ? `<span class="rtc-potion-slot-icon">${spellIconImg(s.name, s.icon, 'item-icon')}</span><span class="rtc-potion-slot-name">${idx + 1}. ${s.name}</span>`
+      title="${name ? t('rtc.attackSlotFilledTitle', { name }) : t('rtc.attackSlotEmptyTitle', { n: idx + 1 })}">
+    ${name
+      ? `<span class="rtc-potion-slot-icon">${icon}</span><span class="rtc-potion-slot-name">${idx + 1}. ${name}</span>`
       : `<span class="rtc-potion-slot-ghost">⬚</span><span class="rtc-potion-slot-hint">${t('rtc.attackSlotEmptyTitle', { n: idx + 1 })}</span>`}
   </div>`;
 }
 
-// Janelinha de opções pra escolher a magia da caixinha de prioridade idx —
-// mesma UX do seletor de poção (openRtcPotionPicker), pra não depender de
-// arrastar e listar todas as magias de uma vez na tela principal.
+// Janelinha de opções pra escolher a magia OU runa da caixinha de prioridade
+// idx — mesma UX do seletor de poção (openRtcPotionPicker). Lista as duas
+// juntas (magias primeiro, depois runas) em vez de espalhar as runas numa
+// seção própria na tela principal — ficava enorme com muitas runas.
 export function openRtcAttackSpellPicker(idx) {
   const voc = G.vocation;
   const attackSpells = Object.entries(SPELLS).filter(([, s]) => s.type === 'attack' && s.voc.includes(voc));
+  const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
   const prioSpells = normalizeAttackSpells(G.rtc);
-  const currentId = prioSpells[idx];
-  const rows = attackSpells.map(([id, s]) => {
+  const currentEntry = prioSpells[idx];
+  const spellRows = attackSpells.map(([id, s]) => {
     const unlocked = G.level >= s.level;
-    const sel = currentId === id;
+    const sel = currentEntry === id;
     return `<div class="rtc-row ${sel ? 'selected' : ''} ${!unlocked ? 'locked' : ''}">
       <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
       <div class="rtc-row-info">
         <div class="rtc-row-name">${s.name} <em>"${s.words}"</em></div>
         <div class="rtc-row-desc">⚔️ ${areaBadge(s.area)} · ${vitalIconImg('mana', 'inline-icon')} ${t('rtc.manaCost', { amount: s.mana })} · ⏱ ${t('rtc.cooldown', { sec: s.cd })} · ${t('rtc.levelReq', { level: s.level })}</div>
       </div>
-      <button class="rtc-row-btn" onclick="pickRtcAttackSpell(${idx}, '${id}')" ${!unlocked ? 'disabled' : ''}>
+      <button class="rtc-row-btn" onclick="pickRtcAttackSpell(${idx}, '${id}', 'spell')" ${!unlocked ? 'disabled' : ''}>
         ${!unlocked ? `🔒 ${t('rtc.lockedLevel', { level: s.level })}` : sel ? `✅ ${t('rtc.active')}` : t('rtc.use')}
+      </button>
+    </div>`;
+  }).join('');
+  const runeRows = attackRunes.map(([id, item]) => {
+    const unlocked = canUseAttackRune(id, voc, getMagic());
+    const sel = currentEntry === `rune:${id}`;
+    return `<div class="rtc-row ${sel ? 'selected' : ''} ${!unlocked ? 'locked' : ''}">
+      <span class="rtc-row-icon">${itemIconImg(id, 'rtc-row-icon-img')}</span>
+      <div class="rtc-row-info">
+        <div class="rtc-row-name">${item.name}</div>
+        <div class="rtc-row-desc">⚔️ ${areaBadge(item.area)} · 🔮 ${t('rtc.mlReq', { ml: runeMinMl(id) })} · ${t('rtc.owned', { qty: G.inventory[id] || 0 })}</div>
+      </div>
+      <button class="rtc-row-btn" onclick="pickRtcAttackSpell(${idx}, '${id}', 'rune')" ${!unlocked ? 'disabled' : ''}>
+        ${!unlocked ? `🔒 ${t('rtc.mlReq', { ml: runeMinMl(id) })}` : sel ? `✅ ${t('rtc.active')}` : t('rtc.use')}
       </button>
     </div>`;
   }).join('');
@@ -88,15 +110,17 @@ export function openRtcAttackSpellPicker(idx) {
     <div class="rtc-potion-picker">
       <h3>⚔️ ${t('rtc.attackSlotPickerTitle', { n: idx + 1 })}</h3>
       <p class="muted">${t('rtc.attackSlotPickerHint')}</p>
-      <div class="rtc-rows">${rows || `<p class="muted">${t('rtc.allAttackSpellsAdded')}</p>`}</div>
-      ${currentId ? `<div class="rtc-potion-picker-actions"><button class="btn-small danger" onclick="clearRtcAttackSpellSlot(${idx}); closeModal();">${t('rtc.remove')}</button></div>` : ''}
+      <div class="rtc-rows">${spellRows || `<p class="muted">${t('rtc.allAttackSpellsAdded')}</p>`}</div>
+      <h5>${t('rtc.attackRunesTitle')}</h5>
+      <div class="rtc-rows">${runeRows || `<p class="muted">${t('rtc.noAttackRunes')}</p>`}</div>
+      ${currentEntry ? `<div class="rtc-potion-picker-actions"><button class="btn-small danger" onclick="clearRtcAttackSpellSlot(${idx}); closeModal();">${t('rtc.remove')}</button></div>` : ''}
     </div>
   `);
 }
 
-// Aplica a escolha do modal e fecha a janelinha.
-export function pickRtcAttackSpell(idx, spellId) {
-  setRtcAttackSpellSlot(idx, spellId);
+// Aplica a escolha do modal e fecha a janelinha. kind = 'spell' | 'rune'.
+export function pickRtcAttackSpell(idx, id, kind = 'spell') {
+  setRtcAttackSpellSlot(idx, id, kind);
   closeModal();
 }
 
@@ -161,17 +185,6 @@ export function pickRtcPotion(kind, id) {
   closeModal();
 }
 
-function itemRow(id, item, qty, selected, onclick, extraDesc) {
-  return `<div class="rtc-row ${selected ? 'selected' : ''}">
-    <span class="rtc-row-icon">${itemIconImg(id, 'item-icon')}</span>
-    <div class="rtc-row-info">
-      <div class="rtc-row-name">${item.name}</div>
-      <div class="rtc-row-desc">${extraDesc} · ${t('rtc.owned', { qty })}</div>
-    </div>
-    <button class="rtc-row-btn" onclick="${onclick}('${id}')">${selected ? `✅ ${t('rtc.active')}` : t('rtc.use')}</button>
-  </div>`;
-}
-
 function mountPortrait() {
   const canvas = document.getElementById('rtc-portrait-canvas');
   if (!canvas || !G.vocation) return;
@@ -194,12 +207,11 @@ export function renderRtcPanel() {
   const voc = G.vocation;
   const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
   const healSpells = mySpells.filter(([, s]) => s.type === 'heal');
-  const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
 
   const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc);
   const prioSpells = normalizeAttackSpells(G.rtc);
-  const atkSummary = prioSpells.length ? prioSpells.map((id, i) => `${i + 1}. "${SPELLS[id].words}"`).join(' → ')
-    : G.rtc.attackType === 'rune' && G.rtc.attackRune ? ITEMS[G.rtc.attackRune].name
+  const atkSummary = prioSpells.length
+    ? prioSpells.map((entry, i) => `${i + 1}. "${isRuneEntry(entry) ? ITEMS[runeEntryId(entry)].name : SPELLS[entry].words}"`).join(' → ')
     : t('rtc.noAttackConfigured');
   const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : t('rtc.defaultSuffix')}`;
   const healPotionName = G.rtc.healPotion ? ITEMS[G.rtc.healPotion].name : t('rtc.none');
@@ -231,10 +243,6 @@ export function renderRtcPanel() {
         <h5>${t('rtc.attackPriorityTitle')} ${prioSpells.length ? `(${prioSpells.length})` : ''}</h5>
         <div class="rtc-slots-grid">
           ${Array.from({ length: ATTACK_SLOT_COUNT }, (_, idx) => attackSpellSlot(idx, prioSpells[idx])).join('')}
-        </div>
-        <h5>${t('rtc.attackRunesTitle')} <span class="muted">${t('rtc.attackRunesSubtitle')}</span></h5>
-        <div class="rtc-rows">
-          ${attackRunes.map(([id, item]) => { const lock = getMagic() < runeMinMl(id); return itemRow(id, item, G.inventory[id] || 0, G.rtc.attackType === 'rune' && G.rtc.attackRune === id, 'setRtcAttackRune', `⚔️ ${areaBadge(item.area)} · 🔮 ${t('rtc.mlReq', { ml: runeMinMl(id) })}${lock ? ' 🔒' : ''}`); }).join('') || `<p class="muted">${t('rtc.noAttackRunes')}</p>`}
         </div>
         ` : `
         <h5>${t('rtc.healSpellTitle')} <span class="muted">${t('rtc.castBelow')}</span>

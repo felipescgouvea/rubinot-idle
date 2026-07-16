@@ -1,9 +1,10 @@
-// Configuração do RTC (Rubinot Custom Client): ataque automático (spell OU
-// runa, mutuamente exclusivos) e cura automática (spell E poção, cada uma
-// com seu limiar de % de HP) — ver domain/rtcConfig.js e a UI em rtcPanel.js.
+// Configuração do RTC (Rubinot Custom Client): ataque automático (uma lista
+// de prioridade que mistura magias E runas livremente — ver domain/rtcConfig.js
+// sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
+// limiar de % de HP) — a UI mora em rtcPanel.js.
 import { G } from './gameStore.js?v=127';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
-import { normalizeAttackSpells, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=127';
+import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=158';
 import { getMagic } from './stats.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=126';
@@ -15,20 +16,25 @@ function refresh(msg) {
   saveGame();
 }
 
-// Define a magia de uma caixinha de prioridade específica (idx = 0..ATTACK_SLOT_COUNT-1).
-// Escolher magia desliga a runa (ataque é magias OU runa, como no RTC). Se a
-// magia já estiver noutra caixinha, ela é removida de lá (sem duplicata).
-export function setRtcAttackSpellSlot(idx, spellId) {
-  if (!isSpellAvailable(spellId, G.vocation, G.level)) return;
+// Define a magia OU runa de uma caixinha de prioridade específica
+// (idx = 0..ATTACK_SLOT_COUNT-1). `kind` distingue as duas ('spell' | 'rune').
+// Se a mesma magia/runa já estiver noutra caixinha, ela é removida de lá
+// (sem duplicata) — igual ao RTCaster real.
+export function setRtcAttackSpellSlot(idx, id, kind = 'spell') {
+  if (kind === 'rune') {
+    if (!canUseAttackRune(id, G.vocation, getMagic())) {
+      emit(EVENTS.NOTIFY, { msg: t('rtc.insufficientMlForRune', { ml: runeMinMl(id) }), type: 'error' });
+      return;
+    }
+  } else if (!isSpellAvailable(id, G.vocation, G.level)) return;
+  const entry = kind === 'rune' ? runeEntry(id) : id;
   const arr = Array.isArray(G.rtc.attackSpells) ? G.rtc.attackSpells.slice() : [];
   while (arr.length < ATTACK_SLOT_COUNT) arr.push(null);
-  const dupIdx = arr.indexOf(spellId);
+  const dupIdx = arr.indexOf(entry);
   if (dupIdx !== -1) arr[dupIdx] = null;
-  arr[idx] = spellId;
+  arr[idx] = entry;
   G.rtc.attackSpells = arr;
-  G.rtc.attackType = 'spell';
-  G.rtc.attackRune = null;
-  refresh(t('rtc.spellAddedToPriority'));
+  refresh(kind === 'rune' ? t('rtc.runeConfigured') : t('rtc.spellAddedToPriority'));
 }
 
 // Esvazia uma caixinha de prioridade (idx = 0..ATTACK_SLOT_COUNT-1).
@@ -36,21 +42,7 @@ export function clearRtcAttackSpellSlot(idx) {
   const arr = Array.isArray(G.rtc.attackSpells) ? G.rtc.attackSpells.slice() : [];
   if (idx < arr.length) arr[idx] = null;
   G.rtc.attackSpells = arr;
-  if (!arr.some(Boolean)) G.rtc.attackType = G.rtc.attackRune ? 'rune' : null;
   refresh(t('rtc.spellRemovedFromPriority'));
-}
-
-export function setRtcAttackRune(itemId) {
-  const clearing = G.rtc.attackType === 'rune' && G.rtc.attackRune === itemId;
-  // Magic Level mínimo pra usar a runa (fiel ao Tibia — ver domain/rtcConfig.js).
-  if (!clearing && !canUseAttackRune(itemId, G.vocation, getMagic())) {
-    emit(EVENTS.NOTIFY, { msg: t('rtc.insufficientMlForRune', { ml: runeMinMl(itemId) }), type: 'error' });
-    return;
-  }
-  G.rtc.attackType = clearing ? null : 'rune';
-  G.rtc.attackRune = clearing ? null : itemId;
-  if (!clearing) G.rtc.attackSpells = []; // runa desliga as magias
-  refresh(clearing ? t('rtc.autoAttackRemoved') : t('rtc.runeConfigured'));
 }
 
 // Prioridade inteligente por elemento: quando ligada, entre as magias PRONTAS
