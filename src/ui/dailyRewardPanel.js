@@ -3,7 +3,7 @@
 // vermelho no botão avisa quando há recompensa disponível hoje.
 import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=128';
+import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=129';
 import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
 

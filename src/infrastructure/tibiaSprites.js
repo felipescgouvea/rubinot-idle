@@ -87,6 +87,29 @@ export function spriteUrl(file) {
   return SPRITE_BASE + file;
 }
 
+// Cache de sprites que já falharam (404/503/etc.) — sem isso, toda vez que um
+// painel reabre ou re-renderiza (ex.: o polling de reconciliação do servidor
+// de caçada, a cada ~5s), o navegador tenta a MESMA imagem quebrada de novo,
+// gerando um "pisca-pisca" entre o ícone quebrado e o emoji de fallback em
+// vez de assentar direto no emoji. Chave = URL final do sprite (não o id),
+// então serve genericamente pra item/monstro/skill/spell/outfit/etc.
+const failedSprites = new Set();
+export function isSpriteFailed(url) { return failedSprites.has(url); }
+export function markSpriteFailed(url) { failedSprites.add(url); }
+// Exposto global pra o onerror inline (atributo HTML, roda no escopo global)
+// conseguir registrar a falha antes de trocar pelo emoji.
+if (typeof window !== 'undefined') window.__markSpriteFailed = markSpriteFailed;
+
+// Monta o par <img onerror=fallback>/<span> comum a todo ícone de conteúdo do
+// jogo: se a URL já falhou antes nesta sessão, nem tenta de novo — vai direto
+// pro emoji. Senão, tenta a imagem real e registra a falha (pro futuro) se
+// ela quebrar. `cls` vai tanto na <img> (+ "tibia-icon") quanto no <span>.
+export function spriteImgOrFallback(url, alt, emoji, cls = '') {
+  if (isSpriteFailed(url)) return `<span class="${cls}">${emoji}</span>`;
+  return `<img src="${url}" alt="${alt}" class="${cls} tibia-icon"
+    onerror="window.__markSpriteFailed && window.__markSpriteFailed('${url}'); this.outerHTML='<span class=&quot;${cls}&quot;>${emoji}</span>'" />`;
+}
+
 // Ícones de skill: arquivo real do Tibia (nome não deriva do id da skill,
 // por isso é uma tabela em vez de convenção — ver domain/character.js).
 const SKILL_ICON_FILES = {

@@ -28,24 +28,8 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=128';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
-
-// Ícones inline pro log de combate — mesmo padrão gracioso de fallback dos
-// outros lugares (sprite real, emoji só se a imagem falhar), construído aqui
-// direto na infraestrutura porque a application não pode importar de ui/*.js
-// (ver ui/shared.js: itemIconImg/monsterSpriteImg, que fazem a mesma coisa
-// pro resto da UI — duplicado de propósito, não uma dependência cruzada).
-function itemLogIcon(itemId) {
-  const item = ITEMS[itemId];
-  return `<img src="${spriteUrl(itemSpriteFile(itemId))}" alt="${item.name}" class="inline-icon"
-    onerror="this.outerHTML='<span>${item.icon}</span>'" />`;
-}
-function monsterLogIcon(monsterId) {
-  const m = MONSTERS[monsterId];
-  return `<img src="${spriteUrl(monsterSpriteFile(monsterId, m))}" alt="${m.name}" class="inline-icon"
-    onerror="this.outerHTML='<span>${m.icon}</span>'" />`;
-}
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };

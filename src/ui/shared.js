@@ -3,19 +3,20 @@
 // liga esses mecanismos aos eventos emitidos pela camada application.
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { ITEMS } from '../domain/items.js?v=136';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE } from '../infrastructure/tibiaSprites.js?v=128';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
 // classe do contexto (ex.: "item-icon", "equip-slot-icon") quando existir
 // uma — ela já define o font-size usado pra dimensionar a imagem em `em`;
 // passe '' quando o ícone só aparece embutido no texto de outro elemento.
+// Sprites que já falharam antes ficam em cache (ver tibiaSprites.js:
+// spriteImgOrFallback) — nem tenta a imagem de novo, vai direto pro emoji,
+// evitando o "pisca-pisca" de re-render tentando a mesma URL quebrada.
 export function itemIconImg(itemId, cls = '') {
   const item = ITEMS[itemId];
   if (!item) return `<span class="${cls}">❓</span>`;
-  const file = itemSpriteFile(itemId);
-  return `<img src="${spriteUrl(file)}" alt="${item.name}" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${item.icon}</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(itemSpriteFile(itemId)), item.name, item.icon, cls);
 }
 
 // Mesmo padrão gracioso de fallback, pros demais tipos de ícone "de conteúdo
@@ -24,21 +25,19 @@ export function itemIconImg(itemId, cls = '') {
 export function skillIconImg(skillId, fallbackEmoji, cls = '') {
   const file = skillIconFile(skillId);
   if (!file) return `<span class="${cls}">${fallbackEmoji}</span>`;
-  return `<img src="${spriteUrl(file)}" alt="${skillId}" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${fallbackEmoji}</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(file), skillId, fallbackEmoji, cls);
 }
 
 export function spellIconImg(spellName, fallbackEmoji, cls = '') {
   const file = spellIconFile(spellName);
-  return `<img src="${spriteUrl(file)}" alt="${spellName}" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${fallbackEmoji}</span>'" />`;
+  if (!file) return `<span class="${cls}">${fallbackEmoji}</span>`;
+  return spriteImgOrFallback(spriteUrl(file), spellName, fallbackEmoji, cls);
 }
 
 export function vitalIconImg(kind, cls = '') {
   const file = VITAL_ICON_FILES[kind];
   const fallback = kind === 'hp' ? '❤️' : kind === 'mana' ? '🔵' : '⭐';
-  return `<img src="${spriteUrl(file)}" alt="${kind}" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${fallback}</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(file), kind, fallback, cls);
 }
 
 export function goldIconImg(cls = '') {
@@ -46,27 +45,23 @@ export function goldIconImg(cls = '') {
 }
 
 export function rubiniIconImg(cls = '') {
-  return `<img src="${spriteUrl(RUBINI_COIN_FILE)}" alt="Rubini Coin" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>💎</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(RUBINI_COIN_FILE), 'Rubini Coin', '💎', cls);
 }
 
 // Task Coin: moeda das Linked Tasks (ver domain/gameState.js: G.taskCoins).
 export function taskCoinIconImg(cls = '') {
-  return `<img src="${spriteUrl(TASK_COIN_FILE)}" alt="Task Coin" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>🟡</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(TASK_COIN_FILE), 'Task Coin', '🟡', cls);
 }
 
 // Charm Points: símbolo roxo real do Tibia, em vez da sigla genérica "CP".
 export function charmPointsIconImg(cls = '') {
-  return `<img src="${spriteUrl(CHARM_POINTS_ICON_FILE)}" alt="Charm Points" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>✨</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(CHARM_POINTS_ICON_FILE), 'Charm Points', '✨', cls);
 }
 
 // Boneco/estátua real de treino do Tibia (Training Dummy), mostrado na
 // escolha de skill do Treino Offline — ver infrastructure/tibiaSprites.js.
 export function trainingDummyImg(cls = '') {
-  return `<img src="${spriteUrl(TRAINING_DUMMY_FILE)}" alt="Training Dummy" class="${cls} tibia-icon"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>🏋️</span>'" />`;
+  return spriteImgOrFallback(spriteUrl(TRAINING_DUMMY_FILE), 'Training Dummy', '🏋️', cls);
 }
 
 export function formatNum(n) {

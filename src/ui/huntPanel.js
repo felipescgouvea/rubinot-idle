@@ -6,10 +6,10 @@ import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js
 import { MONSTERS } from '../domain/bestiary.js?v=135';
 import { cityName } from '../domain/cities.js?v=131';
 import { ITEMS } from '../domain/items.js?v=136';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile } from '../infrastructure/tibiaSprites.js?v=128';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=128';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=162';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=129';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=163';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=135';
 
@@ -21,9 +21,9 @@ import { t } from '../i18n/i18n.js?v=135';
 export function monsterSpriteImg(monsterId, cls = '') {
   const m = MONSTERS[monsterId];
   const file = monsterSpriteFile(monsterId, m);
-  // fallback para o emoji se o sprite não carregar
-  return `<img src="${spriteUrl(file)}" alt="${m.name}" class="${cls}"
-    onerror="this.outerHTML='<span class=&quot;${cls}&quot;>${m.icon}</span>'" />`;
+  // fallback para o emoji se o sprite não carregar (cache de falha — ver
+  // tibiaSprites.js: spriteImgOrFallback — evita retry/pisca-pisca a cada re-render)
+  return spriteImgOrFallback(spriteUrl(file), m.name, m.icon, cls);
 }
 
 // Ícone da zona = sprite real do monstro principal da caçada (o primeiro do
