@@ -5,7 +5,7 @@
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=127';
 import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=129';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=135';
+import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=136';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=127';
@@ -16,7 +16,7 @@ import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=137';
-import { MONSTERS } from '../domain/bestiary.js?v=135';
+import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
@@ -28,7 +28,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125'
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { getCombatBonuses } from './bonuses.js?v=125';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=125';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.

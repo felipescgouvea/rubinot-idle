@@ -148,6 +148,7 @@ export default {
   'zone.bug_hole': 'Bug Hole',
   'zone.spider_den': 'Spider Den',
   'zone.wolf_den': 'Wolf Den',
+  'zone.snake_pit': 'Snake Pit',
   'zone.dawnport_coast_meadows': 'Dawnport Coast Meadows',
   'zone.dawnport_high_hills': 'Dawnport High Hills',
   'zone.dawnport_marsh_cave': 'Dawnport Marsh Cave',

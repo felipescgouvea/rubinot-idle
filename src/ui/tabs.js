@@ -1,19 +1,19 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=128';
+import { renderTasksPanel } from './tasksPanel.js?v=129';
 import { renderSkillsPanel } from './skillsPanel.js?v=127';
 import { renderArenaPanel } from './arenaPanel.js?v=125';
 import { renderWorldsPanel } from './worldsPanel.js?v=125';
 import { renderBattlePassPanel } from './battlePassPanel.js?v=125';
 import { renderRtcPanel } from './rtcPanel.js?v=158';
 import { renderShopPanel } from './shopPanel.js?v=131';
-import { renderMarketPanel } from './marketPanel.js?v=125';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=128';
-import { renderBossRushPanel } from './bossRushPanel.js?v=125';
-import { renderBestiaryTab } from './bestiaryPanel.js?v=126';
-import { renderTrainingSection } from './trainingPanel.js?v=128';
-import { renderAdminPanel } from './adminPanel.js?v=129';
+import { renderMarketPanel } from './marketPanel.js?v=126';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=129';
+import { renderBossRushPanel } from './bossRushPanel.js?v=126';
+import { renderBestiaryTab } from './bestiaryPanel.js?v=127';
+import { renderTrainingSection } from './trainingPanel.js?v=129';
+import { renderAdminPanel } from './adminPanel.js?v=130';
 import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 

@@ -3,7 +3,7 @@ import { VOCATIONS } from '../domain/character.js?v=156';
 import { STARTER_KITS } from '../domain/items.js?v=137';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=126';
-import { startRegen } from './huntUseCases.js?v=163';
+import { startRegen } from './huntUseCases.js?v=164';
 import { saveGame } from './saveGameUseCase.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 

@@ -7,7 +7,7 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isR
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=135';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=136';
 import { isRelicId, STARTER_KITS } from '../domain/items.js?v=137';
 import { addItemToInventory } from './inventoryCore.js?v=126';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
@@ -16,7 +16,7 @@ import { loadRawState, clearState, saveState } from '../infrastructure/storage.j
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 import { getMaxHp, getMaxMana } from './stats.js?v=125';
-import { gainXp } from './huntUseCases.js?v=163';
+import { gainXp } from './huntUseCases.js?v=164';
 import { checkBpTier } from './battlePassUseCases.js?v=125';
 import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=129';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';

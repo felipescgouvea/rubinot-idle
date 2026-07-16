@@ -149,6 +149,7 @@ export default {
   'zone.bug_hole': 'Toca dos Bugs',
   'zone.spider_den': 'Covil das Aranhas',
   'zone.wolf_den': 'Covil dos Lobos',
+  'zone.snake_pit': 'Poço das Cobras',
   'zone.dawnport_coast_meadows': 'Prados da Costa de Dawnport',
   'zone.dawnport_high_hills': 'Colinas Altas de Dawnport',
   'zone.dawnport_marsh_cave': 'Caverna do Pântano de Dawnport',

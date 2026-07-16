@@ -10,7 +10,7 @@ import {
   listItemRequest, cancelListingRequest, buyListingRequest,
 } from '../infrastructure/marketApi.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=126';
-import { ensurePlayerSecret } from './highscoresUseCases.js?v=127';
+import { ensurePlayerSecret } from './highscoresUseCases.js?v=128';
 import { saveGame } from './saveGameUseCase.js?v=126';
 
 export async function fetchMyMarketWallet() {

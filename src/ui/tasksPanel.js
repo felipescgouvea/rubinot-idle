@@ -1,9 +1,9 @@
 import { G } from '../application/gameStore.js?v=127';
-import { MONSTERS } from '../domain/bestiary.js?v=135';
+import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { ITEMS } from '../domain/items.js?v=137';
 import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { monsterSpriteImg } from './huntPanel.js?v=133';
+import { monsterSpriteImg } from './huntPanel.js?v=134';
 import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=129';
 import { t } from '../i18n/i18n.js?v=136';
 

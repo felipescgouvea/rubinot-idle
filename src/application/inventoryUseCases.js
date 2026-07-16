@@ -1,17 +1,17 @@
 import { G, ACCOUNT } from './gameStore.js?v=127';
 import { syncEquipment } from '../infrastructure/authClient.js?v=129';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=137';
-import { ZONES } from '../domain/bestiary.js?v=135';
+import { ZONES } from '../domain/bestiary.js?v=136';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=125';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=158';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=163';
+import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=164';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { runeDamage, potionRestore } from '../domain/combatFormulas.js?v=156';
 import { elementMod } from '../domain/elements.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=126';
-import { itemLogIcon } from './logIcons.js?v=125';
+import { itemLogIcon } from './logIcons.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
 
 export { addItemToInventory } from './inventoryCore.js?v=126';
