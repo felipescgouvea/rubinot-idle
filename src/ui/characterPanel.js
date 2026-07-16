@@ -1,22 +1,22 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=127';
+import { G } from '../application/gameStore.js?v=128';
 import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=156';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=125';
-import { skillIconImg } from './shared.js?v=129';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=126';
+import { skillIconImg } from './shared.js?v=130';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
 import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=125';
 import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=125';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=125';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=126';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { formatNum } from './shared.js?v=129';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=134';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=164';
+import { formatNum } from './shared.js?v=130';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=135';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=165';
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=129';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
-import { selectVocation } from '../application/characterUseCases.js?v=126';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=128';
+import { selectVocation } from '../application/characterUseCases.js?v=127';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
 import { t } from '../i18n/i18n.js?v=135';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto

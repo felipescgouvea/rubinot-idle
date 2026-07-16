@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=127';
+import { G } from '../application/gameStore.js?v=128';
 import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { escapeHtml, notify, skillIconImg } from './shared.js?v=129';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=128';
+import { escapeHtml, notify, skillIconImg } from './shared.js?v=130';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=129';
 import { t } from '../i18n/i18n.js?v=135';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };

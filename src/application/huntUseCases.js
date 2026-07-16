@@ -3,32 +3,32 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=127';
+import { G, ACCOUNT } from './gameStore.js?v=128';
 import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=129';
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=136';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { computeBoostMods } from '../domain/shopCatalog.js?v=127';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=158';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=128';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=156';
+import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, runeDamage, potionRestore, monsterAttack } from '../domain/combatFormulas.js?v=157';
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=137';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=138';
 import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=125';
-import { trainSkill } from './skillUseCases.js?v=126';
-import { addItemToInventory } from './inventoryCore.js?v=126';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=125';
-import { saveGame } from './saveGameUseCase.js?v=126';
-import { getCombatBonuses } from './bonuses.js?v=125';
+import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=126';
+import { trainSkill } from './skillUseCases.js?v=127';
+import { addItemToInventory } from './inventoryCore.js?v=127';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
+import { saveGame } from './saveGameUseCase.js?v=127';
+import { getCombatBonuses } from './bonuses.js?v=126';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=126';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
 import { t } from '../i18n/i18n.js?v=135';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.

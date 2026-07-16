@@ -2,7 +2,7 @@
 // único que a caçada consulta pra saber "quanto a mais" de dano/XP/gold/loot
 // aplicar num kill — assim huntUseCases não precisa conhecer as regras de prey
 // nem de charm, só pedir os multiplicadores prontos.
-import { G } from './gameStore.js?v=127';
+import { G } from './gameStore.js?v=128';
 import { isPreyActive, PREY_BONUS_TYPES } from '../domain/prey.js?v=125';
 import { CHARMS } from '../domain/charms.js?v=126';
 

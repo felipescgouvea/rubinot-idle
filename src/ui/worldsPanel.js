@@ -1,4 +1,4 @@
-import { G } from '../application/gameStore.js?v=127';
+import { G } from '../application/gameStore.js?v=128';
 import { WORLDS } from '../domain/progression.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';

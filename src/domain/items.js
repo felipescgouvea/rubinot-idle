@@ -9846,8 +9846,8 @@ export const ITEMS = {
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield',             helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor',                                  helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  sorcerer: { weapon: 'wand_of_vortex',armor: 'robe',           shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  druid:    { weapon: 'snakebite_rod', armor: 'robe',           shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  sorcerer: { weapon: 'wand_of_vortex',armor: 'leather_armor',  shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  druid:    { weapon: 'snakebite_rod', armor: 'leather_armor',  shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];

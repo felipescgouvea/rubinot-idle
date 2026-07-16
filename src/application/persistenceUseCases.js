@@ -1,23 +1,23 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState, replaceAccount } from './gameStore.js?v=127';
-import { createDefaultState } from '../domain/gameState.js?v=127';
+import { G, replaceState, replaceAccount } from './gameStore.js?v=128';
+import { createDefaultState } from '../domain/gameState.js?v=128';
 import { createDefaultSkills } from '../domain/character.js?v=156';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=158';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
 import { ZONES, MONSTERS } from '../domain/bestiary.js?v=136';
-import { isRelicId, STARTER_KITS } from '../domain/items.js?v=137';
-import { addItemToInventory } from './inventoryCore.js?v=126';
+import { isRelicId, STARTER_KITS } from '../domain/items.js?v=138';
+import { addItemToInventory } from './inventoryCore.js?v=127';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
 import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=128';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=135';
-import { getMaxHp, getMaxMana } from './stats.js?v=125';
-import { gainXp } from './huntUseCases.js?v=164';
-import { checkBpTier } from './battlePassUseCases.js?v=125';
+import { getMaxHp, getMaxMana } from './stats.js?v=126';
+import { gainXp } from './huntUseCases.js?v=165';
+import { checkBpTier } from './battlePassUseCases.js?v=126';
 import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=129';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 
