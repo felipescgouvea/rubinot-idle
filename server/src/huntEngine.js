@@ -10,22 +10,40 @@
 // Fechar o buraco do snapshot é o Marco 4 (equipamento/skills também
 // autoritativos, ver plano).
 //
-// Player HP/morte/loot/relíquias/RTC NÃO são simulados ainda (Marcos 3/4) —
-// aqui só XP e ouro, com a MESMA fórmula de src/application/huntUseCases.js:
-// resolveMonsterKill (zona/mundo/admin rate), sem boosts/bônus/stamina ainda.
-import { ZONES, MONSTERS, boostedZoneForDate } from '../vendor/domain/bestiary.js?v=135';
+// Marco 3 adiciona loot + relíquias (mesmas fórmulas de resolveMonsterKill em
+// src/application/huntUseCases.js: chance por item do bestiário + override do
+// Painel Admin, relíquia só em Boss Rush). Player HP/morte/RTC ainda não são
+// simulados (Marco 4).
+import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../vendor/domain/bestiary.js?v=135';
 import { spawnMonsterInstance, calcDamage } from '../vendor/domain/combatFormulas.js?v=156';
 import { worldXpMultiplier, worldGoldMultiplier } from '../vendor/domain/progression.js?v=128';
-import { zoneMultiplier } from '../vendor/domain/adminConfig.js?v=128';
+import { zoneMultiplier, resolveMonsterLoot } from '../vendor/domain/adminConfig.js?v=128';
 import { XP_TABLE } from '../vendor/domain/character.js?v=156';
+import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, BAG_MAX_SLOTS } from '../vendor/domain/items.js?v=136';
+import { RARITY_TIERS, rollIndependentRarityTiers } from '../vendor/domain/rarity.js?v=126';
 import { getGameConfig } from './gameConfig.js';
-import { selectOne, upsertRow, updateRows } from './db.js';
+import { selectOne, selectMany, insertRow, upsertRow, updateRows } from './db.js';
 
 // sessionId -> { userId, slot, zoneId, atk, def, spd, level, world, timer, currentMonster, nextSpawnAt }
 const live = new Map();
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
+}
+
+// Incrementa (ou cria) uma linha de player_inventory. Respeita o mesmo teto
+// de 20 tipos distintos do cliente (ver src/application/inventoryCore.js:
+// addItemToInventory) — item NOVO só entra se ainda houver espaço; item que
+// a conta já tem sempre pode empilhar.
+async function incrementInventory(userId, slot, itemId, qty) {
+  const existing = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
+  if (!existing) {
+    const rows = await selectMany('player_inventory', { user_id: userId, slot });
+    if (rows.length >= BAG_MAX_SLOTS) return false; // bag cheia — loot não capturado, igual ao cliente
+  }
+  const newQty = (existing ? Number(existing.qty) : 0) + qty;
+  await upsertRow('player_inventory', { user_id: userId, slot, item_id: itemId, qty: newQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+  return true;
 }
 
 async function settleKill(session, mon) {
@@ -61,7 +79,39 @@ async function settleKill(session, mon) {
   }, 'user_id,slot');
   await updateRows('hunt_sessions', { id: session.id }, { last_settled_at: new Date().toISOString() });
 
-  session.lastKill = { monster: mon.name, gold: goldGained, xp: xpGained, at: Date.now() };
+  // Loot — chance efetiva por item (override do dono por cima do padrão do
+  // bestiário, ver domain/adminConfig.js: resolveMonsterLoot), igual ao cliente.
+  const lootTable = resolveMonsterLoot(cfg, mon.defKey, mon.loot);
+  const lootGained = [];
+  for (const [itemId, chance] of lootTable) {
+    if (Math.random() < chance * cfg.lootRate) {
+      const captured = await incrementInventory(session.userId, session.slot, itemId, 1);
+      if (captured) lootGained.push(itemId);
+    }
+  }
+
+  // Relíquia — só em Boss Rush (bossOnly), só no boss da zona, cada raridade
+  // rola INDEPENDENTE (ver domain/rarity.js: rollIndependentRarityTiers) —
+  // fielmente portado de resolveMonsterKill em src/application/huntUseCases.js.
+  const relicsGained = [];
+  if (session.bossOnly && BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < cfg.relicDropChance) {
+    const equippablePool = mon.loot.map(([id]) => id).filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
+    const pool = equippablePool.length > 0 ? equippablePool : equippableFallbackPool(mon.xp);
+    if (pool.length > 0) {
+      const hitTiers = rollIndependentRarityTiers(cfg.rarityWeights);
+      for (const rarity of hitTiers) {
+        const itemId = pool[Math.floor(Math.random() * pool.length)];
+        const tier = RARITY_TIERS[rarity];
+        const relic = await insertRow('player_relics', {
+          user_id: session.userId, slot: session.slot, item_id: itemId, rarity,
+          bonus_pct: tier.bonusPct, source_session_id: session.id, awarded_at: new Date().toISOString(),
+        });
+        relicsGained.push(relic);
+      }
+    }
+  }
+
+  session.lastKill = { monster: mon.name, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
 }
 
 function doTick(session) {

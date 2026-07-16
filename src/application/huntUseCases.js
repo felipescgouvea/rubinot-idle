@@ -219,6 +219,20 @@ async function reconcileWithServer() {
     emit(EVENTS.WORLDS_PANEL);
     emit(EVENTS.ZONE_PICKER);
   }
+  // Inventário e relíquias (Marco 3) — mesma troca de fonte de verdade: o
+  // servidor decide o loot/relic drop, o cliente só espelha. inventoryOrder
+  // (ordem de arraste da UI) ganha os ids novos no fim e perde os que
+  // zeraram, sem embaralhar o resto (mesmo espírito do loadGame original).
+  if (res.inventory) {
+    G.inventory = res.inventory;
+    Object.keys(G.inventory).forEach(id => { if (!G.inventoryOrder.includes(id)) G.inventoryOrder.push(id); });
+    G.inventoryOrder = G.inventoryOrder.filter(id => (G.inventory[id] || 0) > 0);
+    emit(EVENTS.INVENTORY);
+  }
+  if (res.relics) {
+    G.relics = res.relics;
+    emit(EVENTS.INVENTORY);
+  }
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
 }

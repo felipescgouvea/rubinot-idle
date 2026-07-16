@@ -6,7 +6,7 @@ import http from 'node:http';
 import { ZONES } from '../vendor/domain/bestiary.js?v=135';
 import { computeAtk, computeDef, computeSpd } from '../vendor/domain/combatFormulas.js?v=156';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot } from './huntEngine.js';
-import { selectOne, insertRow, updateRows } from './db.js';
+import { selectOne, selectMany, insertRow, updateRows } from './db.js';
 
 const PORT = process.env.PORT || 3000;
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -71,7 +71,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
 
     if (url.pathname === '/health') {
-      return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-2' });
+      return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-3' });
     }
 
     if (url.pathname === '/whoami') {
@@ -105,7 +105,7 @@ const server = http.createServer(async (req, res) => {
       });
 
       startSession({
-        id: inserted.id, userId: user.id, slot, zoneId: body.zoneId,
+        id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
         atk, def, spd, level: body.level, world: body.world || 'auroria',
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
@@ -129,12 +129,18 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const invRows = await selectMany('player_inventory', { user_id: user.id, slot });
+      const relicRows = await selectMany('player_relics', { user_id: user.id, slot });
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
+      const inventory = {};
+      invRows.forEach(r => { inventory[r.item_id] = Number(r.qty); });
       return send(res, 200, {
         ok: true,
         hunting: !!activeRow,
         zoneId: activeRow ? activeRow.zone_id : null,
         stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0 },
+        inventory,
+        relics: relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
         currentMonster: liveSession && liveSession.currentMonster ? { name: liveSession.currentMonster.name, hp: liveSession.currentMonster.hp, maxHp: liveSession.currentMonster.maxHp } : null,
         lastKill: liveSession ? liveSession.lastKill || null : null,
       });

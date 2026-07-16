@@ -27,6 +27,12 @@ export async function selectOne(table, filters) {
   return rows.length ? rows[0] : null;
 }
 
+export async function selectMany(table, filters) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs(filters)}&select=*`, { headers: headers() });
+  if (!res.ok) throw new Error(`selectMany ${table} falhou: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
 export async function insertRow(table, row) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
     method: 'POST', headers: headers({ Prefer: 'return=representation' }), body: JSON.stringify(row),
