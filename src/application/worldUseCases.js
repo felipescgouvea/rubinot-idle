@@ -20,12 +20,18 @@ export function selectWorld(worldId) {
 
 export function checkWorldUnlocks() {
   G.notifiedWorlds = G.notifiedWorlds || [];
+  let changed = false;
   WORLDS.forEach(w => {
     if (G.level >= w.reqLevel && !G.notifiedWorlds.includes(w.id)) {
       G.notifiedWorlds.push(w.id);
+      changed = true;
       emit(EVENTS.NOTIFY, { msg: t('worlds.unlocked', { world: w.name }), type: 'success' });
     }
   });
+  // Sem isso, uma sessão curta (login, olha o jogo, fecha a aba antes do
+  // autosave de ~8s pra nuvem) nunca grava a marcação e o toast reaparece do
+  // zero no próximo login — saveGame() já é local-imediato + nuvem debounced.
+  if (changed) saveGame();
 }
 
 on(EVENTS.LEVEL_UP, checkWorldUnlocks);
