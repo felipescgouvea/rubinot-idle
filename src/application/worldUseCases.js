@@ -1,4 +1,4 @@
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { WORLDS } from '../domain/progression.js?v=128';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { stopHunt, setBossOnlyMode } from './huntUseCases.js?v=165';
@@ -19,9 +19,10 @@ export function selectWorld(worldId) {
 }
 
 export function checkWorldUnlocks() {
+  G.notifiedWorlds = G.notifiedWorlds || [];
   WORLDS.forEach(w => {
-    if (G.level >= w.reqLevel && !w._notified) {
-      w._notified = true;
+    if (G.level >= w.reqLevel && !G.notifiedWorlds.includes(w.id)) {
+      G.notifiedWorlds.push(w.id);
       emit(EVENTS.NOTIFY, { msg: t('worlds.unlocked', { world: w.name }), type: 'success' });
     }
   });

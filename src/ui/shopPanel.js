@@ -1,4 +1,4 @@
-import { G } from '../application/gameStore.js?v=128';
+import { G } from '../application/gameStore.js?v=129';
 import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=127';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=138';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';

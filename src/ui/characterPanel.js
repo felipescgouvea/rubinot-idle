@@ -1,6 +1,6 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=128';
+import { G } from '../application/gameStore.js?v=129';
 import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=156';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=126';
 import { skillIconImg } from './shared.js?v=130';

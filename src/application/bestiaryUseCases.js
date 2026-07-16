@@ -2,7 +2,7 @@
 // criatura cruza etapas do bestiário, desbloquear charms e equipá-los.
 // Escuta MONSTER_KILLED (como taskUseCases) — a caçada não precisa saber que
 // bestiário existe, só anuncia a morte.
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=126';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';

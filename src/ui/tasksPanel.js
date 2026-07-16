@@ -1,4 +1,4 @@
-import { G } from '../application/gameStore.js?v=128';
+import { G } from '../application/gameStore.js?v=129';
 import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { ITEMS } from '../domain/items.js?v=138';
 import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=128';

@@ -1,4 +1,4 @@
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=127';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';

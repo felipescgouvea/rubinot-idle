@@ -1,4 +1,4 @@
-import { G } from '../application/gameStore.js?v=128';
+import { G } from '../application/gameStore.js?v=129';
 import { VOCATIONS } from '../domain/character.js?v=156';
 import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=128';
 import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=126';

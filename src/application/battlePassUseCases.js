@@ -1,4 +1,4 @@
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { BP_REWARDS, bpTierForXp, dailyMissionsFor } from '../domain/progression.js?v=128';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';

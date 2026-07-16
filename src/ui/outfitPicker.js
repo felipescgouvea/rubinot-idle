@@ -3,7 +3,7 @@
 // customização do jogo real — 2 addons (toggle) e cor por região (cabeça,
 // corpo, pernas, pés) escolhida na paleta oficial de 133 cores — com preview
 // ao vivo, recolorido de verdade por região (ver infrastructure/outfitRenderer.js).
-import { G } from '../application/gameStore.js?v=128';
+import { G } from '../application/gameStore.js?v=129';
 import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
 import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=125';
 import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=125';

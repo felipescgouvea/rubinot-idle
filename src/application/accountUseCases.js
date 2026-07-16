@@ -7,7 +7,7 @@
 // dois independentemente de quando cada um foi jogado por último. Evita
 // duplicar toda a lógica de start/stop de intervalos (caçada/treino/regen)
 // que só faz sentido rodar uma vez, no boot.
-import { G, ACCOUNT } from './gameStore.js?v=128';
+import { G, ACCOUNT } from './gameStore.js?v=129';
 import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=127';
 import { saveState } from '../infrastructure/storage.js?v=125';
 import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=129';

@@ -6,7 +6,7 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesForTraining } from '../domain/training.js?v=127';
 import { TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { SPELLS } from '../domain/spells.js?v=126';

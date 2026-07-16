@@ -1,7 +1,7 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState, replaceAccount } from './gameStore.js?v=128';
-import { createDefaultState } from '../domain/gameState.js?v=128';
+import { G, replaceState, replaceAccount } from './gameStore.js?v=129';
+import { createDefaultState } from '../domain/gameState.js?v=129';
 import { createDefaultSkills } from '../domain/character.js?v=156';
 import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
@@ -59,6 +59,7 @@ export function loadGame() {
   // migração: zona/tarefa de versões antigas do bestiário
   if (G.activeZone && !ZONES[G.activeZone]) G.activeZone = null;
   if (!G.defeatedZoneBosses) G.defeatedZoneBosses = [];
+  if (!G.notifiedWorlds) G.notifiedWorlds = [];
   // migração: TASK_ROOMS foi reescrito (94 tasks reais do RubinOT, ver
   // domain/progression.js) — o shape de G.activeTask mudou de
   // { monster, required } pra { roomId, taskIndex, key, monsters, required }.

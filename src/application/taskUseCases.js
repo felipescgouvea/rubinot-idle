@@ -1,7 +1,7 @@
 // Linked Tasks: iniciar, progredir e cancelar. Escuta MONSTER_KILLED (emitido
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { MONSTERS } from '../domain/bestiary.js?v=136';
 import { ITEMS } from '../domain/items.js?v=138';
 import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=128';

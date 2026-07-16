@@ -56,6 +56,11 @@ export function createDefaultState() {
     // pra uma zona sob a regra antiga (só level+mundo) não pode ficar trancado
     // retroativamente.
     defeatedZoneBosses: [],
+    // ids de mundo já notificados como desbloqueados (ver worldUseCases.js) —
+    // sem persistir isso, todo refresh de página reexibia o toast "World
+    // unlocked" pra qualquer mundo já disponível (ex.: Auroria, liberado
+    // desde o nível 1, notificava em TODO boot do jogo).
+    notifiedWorlds: [],
     // tier atual do Boss Rush por zona (ver domain/bestiary.js: bossTierMultiplier/
     // bossAuraClass) — começa em 1 assim que a zona é desbloqueada; vencer o tier
     // atual sobe pro próximo, mais forte e com aura diferente (nunca regride).

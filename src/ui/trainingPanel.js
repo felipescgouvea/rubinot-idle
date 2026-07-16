@@ -1,7 +1,7 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=128';
+import { G } from '../application/gameStore.js?v=129';
 import { TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=127';
 import { SPELLS } from '../domain/spells.js?v=126';

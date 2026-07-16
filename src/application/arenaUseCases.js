@@ -4,7 +4,7 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=128';
+import { G } from './gameStore.js?v=129';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=126';
 import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=127';
