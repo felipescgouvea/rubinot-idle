@@ -5,7 +5,7 @@
 // (treino de cada skill, conteúdo que já existia aqui).
 import { G } from '../application/gameStore.js?v=127';
 import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=156';
-import { resolveEquippedItem } from '../domain/items.js?v=136';
+import { resolveEquippedItem } from '../domain/items.js?v=137';
 import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=125';
 import { skillIconImg } from './shared.js?v=129';
 import { t } from '../i18n/i18n.js?v=135';

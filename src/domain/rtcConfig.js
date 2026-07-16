@@ -8,7 +8,7 @@
 // Knight fica de fora de todas: sem investimento em magia, runa de ataque
 // não rende dano nenhum (igual ao Tibia real, onde o dano da runa escala
 // com Magic Level).
-import { ITEMS } from './items.js?v=136';
+import { ITEMS } from './items.js?v=137';
 
 export const ATTACK_RUNE_VOCATIONS = {
   sudden_death_rune: ['paladin', 'sorcerer', 'druid'],

@@ -15,7 +15,7 @@ import { calcDamage, spawnMonsterInstance, spellAttackDamage, spellHealAmount, r
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
 import { deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=136';
+import { ITEMS, EQUIPPABLE_TYPES, canUsePotion, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=137';
 import { MONSTERS } from '../domain/bestiary.js?v=135';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';

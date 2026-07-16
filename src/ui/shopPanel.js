@@ -1,6 +1,6 @@
 import { G } from '../application/gameStore.js?v=127';
 import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=127';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=136';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=137';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=129';
 import { buyShopItem } from '../application/shopUseCases.js?v=130';

@@ -1,6 +1,6 @@
 import { G, ACCOUNT } from './gameStore.js?v=127';
 import { syncEquipment } from '../infrastructure/authClient.js?v=129';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=136';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=137';
 import { ZONES } from '../domain/bestiary.js?v=135';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';

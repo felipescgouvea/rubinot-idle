@@ -2,7 +2,7 @@
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { ITEMS } from '../domain/items.js?v=136';
+import { ITEMS } from '../domain/items.js?v=137';
 import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
