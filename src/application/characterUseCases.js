@@ -1,6 +1,6 @@
 import { G } from './gameStore.js?v=129';
 import { VOCATIONS } from '../domain/character.js?v=156';
-import { STARTER_KITS } from '../domain/items.js?v=138';
+import { STARTER_KITS, STARTER_SUPPLIES } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { startRegen } from './huntUseCases.js?v=165';
@@ -18,6 +18,11 @@ export function selectVocation(voc) {
   Object.entries(kit).forEach(([slot, itemId]) => {
     addItemToInventory(itemId);
     G.equipment[slot] = itemId;
+  });
+  // supply inicial (poções/comida), fiel ao Dawnport real (ver domain/items.js)
+  const supplies = STARTER_SUPPLIES[voc] || {};
+  Object.entries(supplies).forEach(([itemId, qty]) => {
+    for (let i = 0; i < qty; i++) addItemToInventory(itemId);
   });
   emit(EVENTS.CHAR_PANEL);
   emit(EVENTS.EQUIPMENT_SLOTS);

@@ -9848,6 +9848,19 @@ export const STARTER_KITS = {
   druid:    { weapon: 'the_chiller',   armor: 'leather_armor',  shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
+// Supply inicial por vocação (poções/comida), entregue junto com o STARTER_KITS na
+// 1ª escolha de vocação. Fiel às quantidades reais do TibiaWiki (Dawnport): cada
+// vocação recebia 1 Meat + Mana/Small Health Potions em proporção diferente (mago
+// ganha mais mana, paladino é o meio-termo, knight ganha mais cura). As runas de
+// Light Stone Shower/Lightest Missile do Dawnport real não entram aqui — são itens
+// exclusivos daquela ilha (dano irrisório, nível 1 só) sem equivalente no catálogo.
+export const STARTER_SUPPLIES = {
+  knight:   { meat: 1, mana_potion: 2,  small_health_potion: 10 },
+  paladin:  { meat: 1, mana_potion: 5,  small_health_potion: 7 },
+  sorcerer: { meat: 1, mana_potion: 10, small_health_potion: 2 },
+  druid:    { meat: 1, mana_potion: 10, small_health_potion: 2 },
+};
+
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
 export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ammo', 'ring', 'legs', 'boots'];
 export const CONSUMABLE_TYPES = ['potion', 'rune', 'food'];
