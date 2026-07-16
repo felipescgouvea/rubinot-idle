@@ -22,8 +22,14 @@
 // (`scale:'melee'`) ou skill de distância do paladino (`scale:'distance'`).
 // Valores extraídos dos scripts oficiais do TFS (otland/forgottenserver).
 export const SPELLS = {
+  // --- Cura de nível 1, do Dawnport (TibiaWiki: Dawnport) — sem elas, um personagem
+  // recém-criado ficava sem NENHUMA spell de cura disponível até nível 8 (só sobrava
+  // poção). Bruise Bane é exclusiva do knight; Magic Patch é dos outros 3.
+  bruise_bane:      { name: 'Bruise Bane', words: 'exura infir ico', icon: '🩹', voc: ['knight'], level: 1, mana: 10, type: 'heal', power: [1, 6, 2, 13], cd: 1 },
+  magic_patch:      { name: 'Magic Patch', words: 'exura infir', icon: '✨', voc: ['paladin','sorcerer','druid'], level: 1, mana: 6, type: 'heal', power: [0.4, 2, 0.5, 3], cd: 1 },
+
   // universais (exceto knight, que tem a própria cura — exura ico, abaixo)
-  exura:            { name: 'Light Healing', words: 'exura', icon: '✨', voc: ['paladin','sorcerer','druid'], level: 9,  mana: 20,  type: 'heal',   power: [1.4, 8, 1.8, 11], cd: 1 },
+  exura:            { name: 'Light Healing', words: 'exura', icon: '✨', voc: ['paladin','sorcerer','druid'], level: 8,  mana: 20,  type: 'heal',   power: [1.4, 8, 1.8, 11], cd: 1 },
   exura_gran:       { name: 'Intense Healing', words: 'exura gran', icon: '💚', voc: ['sorcerer','druid'], level: 20, mana: 70, type: 'heal', power: [3.2, 20, 5.4, 40], cd: 1 },
   exura_vita:       { name: 'Ultimate Healing', words: 'exura vita', icon: '💖', voc: ['sorcerer','druid'], level: 30, mana: 160, type: 'heal', power: [6.8, 42, 12.9, 90], cd: 1 },
   exura_san:        { name: 'Divine Healing', words: 'exura san', icon: '🙏', voc: ['paladin'], level: 35, mana: 160, type: 'heal',   power: [6.9, 40, 13.2, 82], cd: 1 },
@@ -32,7 +38,7 @@ export const SPELLS = {
   // exori/exori gran são área 3x3 (square); exori mas é a área gigante
   // (Groundshaker cobre até 36 sqm, bem mais que o 3x3 do Berserk); o resto é
   // alvo único, exceto Front Sweep (cone à frente).
-  exura_ico:        { name: 'Wound Cleansing', words: 'exura ico', icon: '🩹', voc: ['knight'], level: 10, mana: 40,  type: 'heal',   power: [4, 25, 8, 50], cd: 1 },
+  exura_ico:        { name: 'Wound Cleansing', words: 'exura ico', icon: '🩹', voc: ['knight'], level: 8, mana: 40,  type: 'heal',   power: [4, 25, 8, 50], cd: 1 },
   exori:            { name: 'Berserk', words: 'exori', icon: '💢', voc: ['knight'], level: 35, mana: 115, type: 'attack', power: [0.03, 7, 0.05, 11], scale: 'melee', element: 'physical', area: 'square', cd: 4 },
   exori_ico:        { name: 'Brutal Strike', words: 'exori ico', icon: '🗡️', voc: ['knight'], level: 16, mana: 30, type: 'attack', power: [0.02, 4, 0.04, 9], scale: 'melee', element: 'physical', area: 'single', cd: 6 },
   exori_hur:        { name: 'Whirlwind Throw', words: 'exori hur', icon: '🪓', voc: ['knight'], level: 28, mana: 40, type: 'attack', power: [0.01, 1, 0.03, 6], scale: 'melee', element: 'physical', area: 'single', cd: 6 },
@@ -107,6 +113,9 @@ export function isSpellAvailable(spellId, vocation, level) {
 
 // Cura padrão quando o jogador não escolheu nenhuma no RTC — knight não tem
 // acesso a "exura" (usa a própria, exura ico), as demais vocações usam exura.
-export function defaultHealSpellId(vocation) {
+// Abaixo do nível 8 (antes de exura/exura_ico destravarem), cai pra cura de
+// nível 1 do Dawnport (bruise_bane/magic_patch) em vez de mostrar cadeado.
+export function defaultHealSpellId(vocation, level = 0) {
+  if (level < 8) return vocation === 'knight' ? 'bruise_bane' : 'magic_patch';
   return vocation === 'knight' ? 'exura_ico' : 'exura';
 }

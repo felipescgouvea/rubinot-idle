@@ -208,7 +208,7 @@ export function renderRtcPanel() {
   const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
   const healSpells = mySpells.filter(([, s]) => s.type === 'heal');
 
-  const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc);
+  const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc, G.level);
   const prioSpells = normalizeAttackSpells(G.rtc);
   const atkSummary = prioSpells.length
     ? prioSpells.map((entry, i) => `${i + 1}. "${isRuneEntry(entry) ? ITEMS[runeEntryId(entry)].name : SPELLS[entry].words}"`).join(' → ')
@@ -250,7 +250,7 @@ export function renderRtcPanel() {
         <h5>${t('rtc.healSpellTitle')} <span class="muted">${t('rtc.castBelow')}</span>
           <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" class="rtc-threshold-input" />${t('rtc.ofHp')}</h5>
         <div class="rtc-rows">
-          ${healSpells.map(([id, s]) => spellRow(id, s, (G.rtc.healSpell || defaultHealSpellId(voc)) === id, 'setRtcHealSpell')).join('')}
+          ${healSpells.map(([id, s]) => spellRow(id, s, (G.rtc.healSpell || defaultHealSpellId(voc, G.level)) === id, 'setRtcHealSpell')).join('')}
         </div>
         <button class="btn-small" style="margin:2px 0 4px" onclick="toggleBackpack()">🎒 ${t('rtc.openBag')}</button>
         <h5>${t('rtc.healPotionTitle')} <span class="muted">${t('rtc.drinksBelow')}</span>

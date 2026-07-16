@@ -306,7 +306,7 @@ export function stopHunt() {
 // `trackSupplies` só soma o custo da poção ao Hunt Analyzer da sessão atual
 // (não faz sentido registrar gasto de "caçada" enquanto não se está caçando).
 function applyRtcHealing(trackSupplies) {
-  const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation);
+  const healSpellId = G.rtc.healSpell || defaultHealSpellId(G.vocation, G.level);
   const healSpell = isSpellAvailable(healSpellId, G.vocation, G.level) ? SPELLS[healSpellId] : null;
   const hpPct = (G.hp / getMaxHp()) * 100;
   if (healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana && isSpellReady(healSpellId)) {
@@ -475,7 +475,7 @@ export function doHuntTick() {
   // só 1/tick) esvazia a mana e o RTC fica sem como curar depois no MESMO
   // tick em que o monstro contra-ataca. Golpe físico nunca compete com isso
   // (não usa mana); só a magia/runa de ataque respeita essa reserva.
-  const healSpellIdForReserve = G.rtc.healSpell || defaultHealSpellId(G.vocation);
+  const healSpellIdForReserve = G.rtc.healSpell || defaultHealSpellId(G.vocation, G.level);
   const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, G.vocation, G.level) ? SPELLS[healSpellIdForReserve] : null;
   const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
   // Fila de prioridade ÚNICA misturando magia e runa (igual ao RTCaster real:

@@ -130,6 +130,11 @@ export const ITEMS = {
   // ex.: Convince Creature, Create Food) não participam de combate, então
   // ficam só com `sell`/ícone pra serem colecionáveis/comerciáveis. ---
   light_magic_missile_rune:  { name: 'Light Magic Missile Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'energy', reqMl: 0, sell: 6 },
+  // Runas exclusivas do Dawnport (TibiaWiki: Dawnport) — dadas de supply inicial pros
+  // magos/paladino (ver STARTER_SUPPLIES abaixo), mais fracas que qualquer rune do
+  // catálogo normal (level 1, reqMl 0, sem equivalente de dano forte no jogo atual).
+  lightest_missile_rune: { name: 'Lightest Missile Rune', icon: '📜', type: 'rune', dmg: 8, power: [0.2, 1, 0.3, 3], area: 'single', element: 'energy', reqMl: 0, sell: 5 },
+  light_stone_shower_rune: { name: 'Light Stone Shower Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.3, 2, 0.5, 4], area: 'ball', element: 'earth', reqMl: 0, sell: 8 },
   heavy_magic_missile_rune:  { name: 'Heavy Magic Missile Rune', icon: '📜', type: 'rune', dmg: 35, power: [1.0, 6, 2.0, 12], area: 'single', element: 'energy', reqMl: 5, sell: 20 },
   fire_field_rune:      { name: 'Fire Field Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.6, 3, 1.2, 7], area: 'single', element: 'fire', reqMl: 2, sell: 10 },
   fire_wall_rune:        { name: 'Fire Wall Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.6, 3, 1.2, 7], area: 'single', element: 'fire', reqMl: 2, sell: 10 },
@@ -9848,17 +9853,17 @@ export const STARTER_KITS = {
   druid:    { weapon: 'the_chiller',   armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
-// Supply inicial por vocação (poções/comida), entregue junto com o STARTER_KITS na
-// 1ª escolha de vocação. Fiel às quantidades reais do TibiaWiki (Dawnport): cada
+// Supply inicial por vocação (poções/comida/runas), entregue junto com o STARTER_KITS
+// na 1ª escolha de vocação. Fiel às quantidades reais do TibiaWiki (Dawnport): cada
 // vocação recebia 1 Meat + Mana/Small Health Potions em proporção diferente (mago
-// ganha mais mana, paladino é o meio-termo, knight ganha mais cura). As runas de
-// Light Stone Shower/Lightest Missile do Dawnport real não entram aqui — são itens
-// exclusivos daquela ilha (dano irrisório, nível 1 só) sem equivalente no catálogo.
+// ganha mais mana, paladino é o meio-termo, knight ganha mais cura), mais 1-2
+// Light Stone Shower/Lightest Missile Rune pros vocacionados que usam magia
+// (paladino, sorcerer, druid — knight não recebe runas no Dawnport real).
 export const STARTER_SUPPLIES = {
   knight:   { meat: 1, mana_potion: 2,  small_health_potion: 10 },
-  paladin:  { meat: 1, mana_potion: 5,  small_health_potion: 7 },
-  sorcerer: { meat: 1, mana_potion: 10, small_health_potion: 2 },
-  druid:    { meat: 1, mana_potion: 10, small_health_potion: 2 },
+  paladin:  { meat: 1, mana_potion: 5,  small_health_potion: 7, light_stone_shower_rune: 1, lightest_missile_rune: 1 },
+  sorcerer: { meat: 1, mana_potion: 10, small_health_potion: 2, light_stone_shower_rune: 2, lightest_missile_rune: 2 },
+  druid:    { meat: 1, mana_potion: 10, small_health_potion: 2, light_stone_shower_rune: 2, lightest_missile_rune: 2 },
 };
 
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
