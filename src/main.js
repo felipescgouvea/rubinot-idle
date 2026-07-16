@@ -34,7 +34,7 @@ import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=128';
 import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=126';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=131';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=132';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=128';
 import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=128';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=125';

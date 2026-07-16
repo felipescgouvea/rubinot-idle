@@ -8,7 +8,7 @@ import { CITIES, isCityUnlocked, ROOKGAARD_LEVEL_CAP } from '../domain/cities.js
 import { selectZone, startHunt } from '../application/huntUseCases.js?v=158';
 import { openModal, closeModal } from './shared.js?v=128';
 import { openBattleModal } from './battleModal.js?v=125';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=131';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=132';
 import { t } from '../i18n/i18n.js?v=135';
 
 function todayStr() {

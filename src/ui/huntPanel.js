@@ -436,7 +436,13 @@ function renderStagePack(stage) {
     el.classList.toggle('is-target', m.uid === targetUid);
     const livingSiblings = [...box.children].filter(c => c !== el && !c.classList.contains('leaving'));
     const anchor = livingSiblings[i] || null;
-    if (el.nextSibling !== anchor) box.insertBefore(el, anchor);
+    // Elemento recém-criado (spawn) ainda não está no DOM: nextSibling dá
+    // `null`, que empatava com `anchor === null` (sala com 1 monstro, ou o
+    // 1º de um grupo maior) e o insertBefore era pulado — o monstro NUNCA
+    // entrava na tela, só existia no objeto (Battle List funcionava porque
+    // ela não depende do DOM anterior). Precisa checar se `el` já está
+    // anexado a `box` antes de comparar posição.
+    if (el.parentNode !== box || el.nextSibling !== anchor) box.insertBefore(el, anchor);
   });
 }
 

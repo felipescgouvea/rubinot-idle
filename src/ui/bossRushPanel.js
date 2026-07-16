@@ -7,7 +7,7 @@ import { G } from '../application/gameStore.js?v=127';
 import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=135';
 import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { monsterSpriteImg } from './huntPanel.js?v=131';
+import { monsterSpriteImg } from './huntPanel.js?v=132';
 import { openBattleModal } from './battleModal.js?v=125';
 import { t, getLocale } from '../i18n/i18n.js?v=135';
 
