@@ -9838,16 +9838,14 @@ export const ITEMS = {
 
 // Kit inicial por vocação — entregue e equipado automaticamente na 1ª escolha de vocação,
 // como o equipamento que o RubinOT dá ao personagem recém-criado.
-// Fiel ao Dawnport Training Set real do Tibia (TibiaWiki: Dawnport Set) — o kit
-// que cada vocação recebe ao passar pelo portão da vocação na ilha inicial:
-// Leather Helmet/Legs/Boots + Jacket (nosso leather_armor) em todas, arma e
-// peça de mão específica de cada uma (escudo pro knight, aljava+arco pro
-// paladino, Spellbook of the Novice pros dois magos).
+// Fiel ao Dawnport GRADUATE Set real do Tibia (TibiaWiki: Dawnport Set) — o kit
+// que a Oressa dá no baú ao escolher vocação no nível 8 (o que o personagem
+// LEVA pro continente), não o Training Set temporário dos portões da ilha.
 export const STARTER_KITS = {
-  knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield',             helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor',                                  helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  sorcerer: { weapon: 'wand_of_vortex',armor: 'leather_armor',  shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  druid:    { weapon: 'snakebite_rod', armor: 'leather_armor',  shield: 'spellbook_of_the_novice',    helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  knight:   { weapon: 'jagged_sword',  armor: 'brass_armor',    shield: 'steel_shield',  helmet: 'soldier_helmet', legs: 'brass_legs',    boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'rangers_cloak',                       helmet: 'leather_helmet', legs: 'ranger_legs',   boots: 'leather_boots' },
+  sorcerer: { weapon: 'wand_of_vortex',armor: 'magicians_robe', shield: 'spellbook',      helmet: 'mage_hat',       legs: 'leather_legs',  boots: 'leather_boots' },
+  druid:    { weapon: 'snakebite_rod', armor: 'magicians_robe', shield: 'spellbook',      helmet: 'mage_hat',       legs: 'leather_legs',  boots: 'leather_boots' },
 };
 
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
