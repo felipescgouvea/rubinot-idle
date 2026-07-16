@@ -305,6 +305,14 @@ export function syncEquipment(slot, eqSlot, itemId) {
   return huntFetch('/equip', { method: 'POST', body: { slot, eqSlot, itemId } });
 }
 
+// Concede o kit inicial da vocação NO SERVIDOR (ver server/src/index.js:
+// /character/starter-kit) — chamado uma vez em selectVocation(). Sem isso o
+// servidor nunca sabia que o personagem tinha o kit equipado (hunt-start lia
+// player_equipment vazio) mesmo o cliente mostrando o kit na tela.
+export function grantStarterKit(slot, vocation) {
+  return huntFetch('/character/starter-kit', { method: 'POST', body: { slot, vocation } });
+}
+
 // Compra de bênção validada no servidor (gold e teto de 5 conferidos lá —
 // ver server/src/index.js: /buy-blessing). Retorna { ok, gold, blessings }.
 export function buyBlessingOnServer(slot) {

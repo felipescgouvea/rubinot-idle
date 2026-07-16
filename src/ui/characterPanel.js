@@ -15,7 +15,7 @@ import { renderZonePicker, fmtDuration } from './huntPanel.js?v=135';
 import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=165';
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=129';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
-import { selectVocation } from '../application/characterUseCases.js?v=127';
+import { selectVocation } from '../application/characterUseCases.js?v=128';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
 import { t } from '../i18n/i18n.js?v=137';
 

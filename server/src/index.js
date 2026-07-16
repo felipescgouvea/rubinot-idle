@@ -16,6 +16,7 @@ import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from
 import { TIBIA_SKILLS } from '../vendor/domain/character.js?v=156';
 import { STAMINA_MAX } from '../vendor/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../vendor/domain/blessings.js?v=125';
+import { STARTER_KITS, STARTER_SUPPLIES } from '../vendor/domain/items.js?v=138';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
 
@@ -217,6 +218,46 @@ const server = http.createServer(async (req, res) => {
         await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
       } else {
         await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: null, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+      }
+      return send(res, 200, { ok: true });
+    }
+
+    // Kit inicial da vocação — concedido pelo SERVIDOR na criação do
+    // personagem (nunca aceita o cliente declarando "já equipei X"). Antes,
+    // selectVocation() só mutava G.equipment/G.inventory no cliente e nunca
+    // sincronizava — hunt-start lia player_equipment vazio e computava atk/def
+    // como se o personagem estivesse desarmado, mesmo o cliente mostrando o
+    // kit equipado (o combate real do servidor ficava travado por baixíssimo
+    // dano, embora o preview local do cliente parecesse normal). Só concede o
+    // kit uma vez: se já existe QUALQUER equipamento ou item neste slot,
+    // recusa — impede chamar a rota repetidamente pra farmar itens de graça.
+    if (url.pathname === '/character/starter-kit' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      const vocation = typeof body.vocation === 'string' ? body.vocation : null;
+      if (slot === null || !vocation || !STARTER_KITS[vocation]) return send(res, 400, { error: 'slot ou vocation inválido' });
+
+      const existingEq = await selectMany('player_equipment', { user_id: user.id, slot });
+      const existingInv = await selectMany('player_inventory', { user_id: user.id, slot });
+      if (existingEq.length > 0 || existingInv.length > 0) {
+        return send(res, 409, { error: 'kit inicial já foi concedido pra este personagem' });
+      }
+
+      const kit = STARTER_KITS[vocation] || {};
+      for (const [eqSlot, itemId] of Object.entries(kit)) {
+        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty: 1, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+      }
+      const supplies = STARTER_SUPPLIES[vocation] || {};
+      for (const [itemId, qty] of Object.entries(supplies)) {
+        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+      }
+
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      if (!stats) {
+        await insertRow('player_stats', { user_id: user.id, slot, gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, blessings: 0, stamina: STAMINA_MAX });
       }
       return send(res, 200, { ok: true });
     }

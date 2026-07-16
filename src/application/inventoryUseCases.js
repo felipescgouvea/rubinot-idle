@@ -1,5 +1,5 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { syncEquipment } from '../infrastructure/authClient.js?v=129';
+import { syncEquipment } from '../infrastructure/authClient.js?v=130';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=138';
 import { ZONES } from '../domain/bestiary.js?v=136';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
