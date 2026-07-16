@@ -17,6 +17,7 @@ import { ZONES, MONSTERS, boostedZoneForDate } from '../vendor/domain/bestiary.j
 import { spawnMonsterInstance, calcDamage } from '../vendor/domain/combatFormulas.js?v=156';
 import { worldXpMultiplier, worldGoldMultiplier } from '../vendor/domain/progression.js?v=128';
 import { zoneMultiplier } from '../vendor/domain/adminConfig.js?v=128';
+import { XP_TABLE } from '../vendor/domain/character.js?v=156';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, upsertRow, updateRows } from './db.js';
 
@@ -42,11 +43,17 @@ async function settleKill(session, mon) {
   const gold = (row ? Number(row.gold) : 0) + goldGained;
   const totalGoldEarned = (row ? Number(row.total_gold_earned) : 0) + goldGained;
   const totalKills = (row ? Number(row.total_kills) : 0) + 1;
-  const xp = (row ? Number(row.xp) : 0) + xpGained;
-  const level = row ? row.level : session.level;
-  // Curva de XP simplificada (mesma progressão base — XP_TABLE completo entra
-  // no Marco 4 junto da autoridade de nível/skills; por ora nível só sobe se
-  // já vier maior no próprio snapshot, level-up automático fica pro próximo marco).
+  // Mesmo modelo do cliente (ver src/application/huntUseCases.js: gainXp): xp
+  // é o progresso DENTRO do nível atual, não um total acumulado — sobe de
+  // nível e reseta o contador, usando a MESMA XP_TABLE. level-up automático
+  // faz parte deste marco (senão xp/level do cliente e do servidor divergem
+  // de significado assim que o cliente passar a exibir estes números).
+  let xp = (row ? Number(row.xp) : 0) + xpGained;
+  let level = row ? row.level : session.level;
+  while (level < 100 && xp >= XP_TABLE[level - 1]) {
+    xp -= XP_TABLE[level - 1];
+    level++;
+  }
 
   await upsertRow('player_stats', {
     user_id: session.userId, slot: session.slot, gold, xp, level,
