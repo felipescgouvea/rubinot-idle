@@ -8,7 +8,7 @@ import { SPELLS } from '../domain/spells.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=130';
 import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=129';
-import { t } from '../i18n/i18n.js?v=135';
+import { t } from '../i18n/i18n.js?v=136';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
@@ -28,7 +28,7 @@ function activeTrainingCard(mode) {
         <div>
           <div class="training-active-title">${mode === 'online' ? '⚔️' : '🏋️'} ${t('training.trainingSkill', { skill: s.name })}</div>
           ${spell ? `<div class="muted">${t('training.usingSpell', { spell: spell.name })}</div>` : ''}
-          <div class="muted">${t('training.rateInfo', { rate })}</div>
+          <div class="muted">${t(mode === 'online' ? 'training.rateInfoOnline' : 'training.rateInfo', { rate })}</div>
           ${mode === 'online' ? `<div class="muted training-online-hint">${t('training.onlineMustStayOpen')}</div>` : ''}
         </div>
       </div>

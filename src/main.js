@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=129';
 import { VOCATIONS } from './domain/character.js?v=156';
 import { emit, EVENTS } from './shared/eventBus.js?v=126';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=135';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=136';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=127';
@@ -49,7 +49,7 @@ import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicke
 import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
 import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=127';
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=128';
-import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=130';
+import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=131';
 import { setSkillsSubtab } from './ui/skillsPanel.js?v=128';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=127';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=127';

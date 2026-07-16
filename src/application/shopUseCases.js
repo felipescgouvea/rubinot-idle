@@ -5,7 +5,7 @@ import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMaxHp, getMaxMana } from './stats.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=127';
-import { t } from '../i18n/i18n.js?v=135';
+import { t } from '../i18n/i18n.js?v=136';
 
 export function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);

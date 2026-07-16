@@ -533,6 +533,7 @@ export default {
   'training.chooseVocation': 'Choose a vocation to train.',
   'training.trainingSkill': 'Training {skill}',
   'training.rateInfo': "+{rate} tries/min · continues while you're away (up to 8h). Starting a hunt ends training.",
+  'training.rateInfoOnline': '+{rate} tries/min. Starting a hunt ends training.',
   'training.stopTraining': 'Stop Training',
   'training.intro': 'Choose a skill to train on the dummies. Training runs in the background (even offline) and pauses hunting.',
   'training.level': 'Lv {lvl}',
