@@ -7,8 +7,8 @@ import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesP
 import { SPELLS } from '../domain/spells.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=130';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=129';
-import { t } from '../i18n/i18n.js?v=138';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=130';
+import { t } from '../i18n/i18n.js?v=139';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).

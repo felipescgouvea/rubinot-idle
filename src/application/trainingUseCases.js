@@ -14,9 +14,16 @@ import { emit, on, EVENTS } from '../shared/eventBus.js?v=126';
 import { trainSkill } from './skillUseCases.js?v=127';
 import { stopHunt } from './huntUseCases.js?v=169';
 import { saveGame } from './saveGameUseCase.js?v=128';
-import { t } from '../i18n/i18n.js?v=138';
+import { t } from '../i18n/i18n.js?v=139';
 
 let trainingInterval = null;
+
+// Soma as tentativas ganhas na sessão de treino ATUAL (desde o último
+// start*Training) — só de sessão, como huntSession em huntUseCases.js. Sem
+// isso, o toast de "treino terminado" só teria o resíduo do último tick de
+// 3s, não o progresso real da sessão inteira (bug reportado pelo Felipe: o
+// treino online terminava sem mostrar quanto rendeu).
+let sessionTries = 0;
 
 // Credita as tentativas acumuladas desde o último "âncora" (trainingSince) e
 // reancoragem em agora. Usada tanto pelo tick online quanto na retomada
@@ -32,7 +39,7 @@ export function accrueTraining({ offline = false } = {}) {
   if (offline) elapsedSec = Math.min(elapsedSec, TRAINING_MAX_OFFLINE_SEC);
   const multiplier = G.trainingMode === 'online' ? ONLINE_RATE_MULTIPLIER : 1;
   const tries = triesForTraining(G.trainingSkill, elapsedSec, multiplier);
-  if (tries > 0) trainSkill(G.trainingSkill, tries);
+  if (tries > 0) { trainSkill(G.trainingSkill, tries); sessionTries += tries; }
   G.trainingSince = now;
   return tries;
 }
@@ -59,6 +66,7 @@ export function startTraining(skillId) {
   G.trainingSince = Date.now();
   G.trainingMode = 'offline';
   G.trainingSpell = null;
+  sessionTries = 0;
   startTrainingLoop();
   emit(EVENTS.NOTIFY, { msg: t('training.startedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
   emit(EVENTS.TRAINING_PANEL);
@@ -81,6 +89,7 @@ export function startOnlineTraining(skillId, spellId = null) {
   G.trainingSince = Date.now();
   G.trainingMode = 'online';
   G.trainingSpell = skillId === 'magic' ? spellId : null;
+  sessionTries = 0;
   startTrainingLoop();
   emit(EVENTS.NOTIFY, { msg: t('training.startedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
   emit(EVENTS.TRAINING_PANEL);
@@ -92,11 +101,17 @@ export function stopTraining() {
   accrueTraining();
   stopTrainingLoop();
   const skillId = G.trainingSkill;
+  const tries = sessionTries;
   G.trainingSkill = null;
   G.trainingSince = null;
   G.trainingMode = 'offline';
   G.trainingSpell = null;
-  emit(EVENTS.NOTIFY, { msg: t('training.stoppedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
+  sessionTries = 0;
+  const skillName = TIBIA_SKILLS[skillId].name;
+  emit(EVENTS.NOTIFY, {
+    msg: tries > 0 ? t('training.stoppedNotifyGain', { tries, skill: skillName }) : t('training.stoppedNotify', { skill: skillName }),
+    type: 'success',
+  });
   emit(EVENTS.TRAINING_PANEL);
   saveGame();
 }
@@ -124,6 +139,7 @@ on(EVENTS.HUNT_BUTTON, ({ hunting } = {}) => {
     stopTrainingLoop();
     G.trainingSkill = null;
     G.trainingSince = null;
+    sessionTries = 0;
     emit(EVENTS.TRAINING_PANEL);
   }
 });

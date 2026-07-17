@@ -9,7 +9,7 @@ import { selectZone, startHunt } from '../application/huntUseCases.js?v=169';
 import { openModal, closeModal } from './shared.js?v=130';
 import { openBattleModal } from './battleModal.js?v=125';
 import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=135';
-import { t } from '../i18n/i18n.js?v=138';
+import { t } from '../i18n/i18n.js?v=139';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

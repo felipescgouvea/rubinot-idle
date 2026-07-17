@@ -27,7 +27,7 @@ import { saveGame } from './saveGameUseCase.js?v=128';
 import { getCombatBonuses } from './bonuses.js?v=126';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
-import { t } from '../i18n/i18n.js?v=138';
+import { t } from '../i18n/i18n.js?v=139';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };

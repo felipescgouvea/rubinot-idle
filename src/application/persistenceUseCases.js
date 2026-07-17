@@ -13,7 +13,7 @@ import { addItemToInventory } from './inventoryCore.js?v=127';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
 import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=128';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
-import { t } from '../i18n/i18n.js?v=138';
+import { t } from '../i18n/i18n.js?v=139';
 import { getMaxHp, getMaxMana } from './stats.js?v=126';
 import { STAMINA_MAX } from '../domain/stamina.js?v=125';
 

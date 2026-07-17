@@ -723,6 +723,7 @@ export default {
   'training.chooseVocationFirst': 'Choose a vocation first!',
   'training.startedNotify': '🏋️ Training {skill}. Come back later to collect the progress!',
   'training.stoppedNotify': '{skill} training ended.',
+  'training.stoppedNotifyGain': '🏋️ {skill} training ended: +{tries} tries.',
   'training.offlineGain': '🏋️ Offline training: +{tries} tries of {skill}.',
 
   // ---- outfit use-cases (application/outfitUseCases.js) ----
