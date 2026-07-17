@@ -6,7 +6,7 @@ import { TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=127';
 import { SPELLS } from '../domain/spells.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=131';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=132';
 import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=130';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -36,7 +36,7 @@ function activeTrainingCard(mode) {
     </div>`;
 }
 
-export function renderOnlineTrainingSection() {
+function renderOnlineTrainingSection() {
   const el = document.getElementById('online-training-body');
   if (!el) return;
   if (!G.vocation) { el.innerHTML = `<p class="muted">${t('training.chooseVocation')}</p>`; return; }

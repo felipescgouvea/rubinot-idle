@@ -5,7 +5,7 @@
 // mas as duas application/*.js podem compartilhar um helper entre si).
 import { ITEMS } from '../domain/items.js?v=138';
 import { MONSTERS } from '../domain/bestiary.js?v=140';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=130';
 
 export function itemLogIcon(itemId) {
   const item = ITEMS[itemId];

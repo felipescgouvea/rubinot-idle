@@ -6,10 +6,10 @@ import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js
 import { MONSTERS } from '../domain/bestiary.js?v=140';
 import { cityName } from '../domain/cities.js?v=131';
 import { ITEMS } from '../domain/items.js?v=138';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=130';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=127';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=131';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=182';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=132';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=183';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -223,7 +223,7 @@ export function renderZonePicker() {
 // Dois botões lado a lado (embaixo da barra de zona atual): "Ver Hunt" (abre
 // a cena de combate — sempre disponível, mesmo parado, mostra o estado ocioso
 // da cena) e "Trocar de Hunt" (abre o seletor de zona, sempre disponível).
-export function renderHuntStatusButton() {
+function renderHuntStatusButton() {
   const viewBtn = document.getElementById('hunt-status-view-btn');
   const switchBtn = document.getElementById('hunt-status-switch-btn');
   if (!viewBtn || !switchBtn) return;
@@ -248,7 +248,7 @@ function renderZoneTheme() {
   }
 }
 
-export function renderLoot() {
+function renderLoot() {
   const area = document.getElementById('loot-display');
   const card = document.getElementById('loot-card');
   if (!area || !card) return;
@@ -269,7 +269,7 @@ export function fmtDuration(ms) {
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
   return (h ? `${h}h ` : '') + `${m}m ${sec}s`;
 }
-export function renderHuntAnalyzer() {
+function renderHuntAnalyzer() {
   const el = document.getElementById('hunt-analyzer-body');
   if (!el) return;
   const st = getHuntStats();
@@ -290,7 +290,7 @@ export function renderHuntAnalyzer() {
 
 // Bênçãos: mostra quantas estão ativas (X/5), o que reduzem na morte e o botão
 // de comprar (custo escala com o nível). Ver domain/blessings.js.
-export function renderBlessings() {
+function renderBlessings() {
   const el = document.getElementById('blessings-body');
   if (!el) return;
   const b = G.blessings || 0;
@@ -377,7 +377,7 @@ export function renderBattleList() {
 // (ocioso ou lutando). O CSS (#dungeon-stage.searching) liga o piso rolando e
 // o bob de passo; o timer de caminhada (ver ui/characterPanel.js) lê essa
 // classe pra ciclar os quadros ou congelar no idle.
-export function updateSceneMode() {
+function updateSceneMode() {
   const stage = document.getElementById('dungeon-stage');
   if (!stage) return;
   stage.classList.toggle('searching', G.hunting && !getCurrentMonster());

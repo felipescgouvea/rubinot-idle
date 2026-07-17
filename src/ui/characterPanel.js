@@ -3,16 +3,16 @@
 import { G } from '../application/gameStore.js?v=129';
 import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=156';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=126';
-import { skillIconImg } from './shared.js?v=131';
+import { skillIconImg } from './shared.js?v=132';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
 import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=125';
 import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=125';
 import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=126';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=127';
-import { formatNum, applyHpState } from './shared.js?v=131';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=140';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=182';
+import { formatNum, applyHpState } from './shared.js?v=132';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=141';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=183';
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=129';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=128';
@@ -212,7 +212,7 @@ export function renderCharPanel() {
   }
 }
 
-export function renderCharInfo() {
+function renderCharInfo() {
   if (!G.vocation) return;
   const v = VOCATIONS[G.vocation];
   mountPlayerPortrait(document.getElementById('char-voc-icon'), 'char-voc-big');
@@ -233,7 +233,7 @@ export function renderCharInfo() {
 // skill como um chip pequeno (ícone + nível + mini-barra de progresso). A que
 // está treinando agora ganha destaque. O treino em si acontece durante a
 // caçada (ver application/skillUseCases.js) — aqui é só a leitura compacta.
-export function renderCharSkills() {
+function renderCharSkills() {
   const el = document.getElementById('char-skills');
   if (!el || !G.vocation) return;
   const voc = VOC_TRAINING[G.vocation];
@@ -254,7 +254,7 @@ export function renderCharSkills() {
   }).join('');
 }
 
-export function renderBars() {
+function renderBars() {
   if (!G.vocation) return;
   const maxHp = getMaxHp(), maxMana = getMaxMana();
   const hpPct = Math.round((G.hp / maxHp) * 100);
@@ -276,7 +276,7 @@ export function renderBars() {
   renderPlayerBattleSide();
 }
 
-export function renderHeaderStats() {
+function renderHeaderStats() {
   document.getElementById('hdr-level').textContent = G.level;
   document.getElementById('hdr-gold').textContent = formatNum(G.gold);
   document.getElementById('hdr-rubini').textContent = formatNum(G.rubini);

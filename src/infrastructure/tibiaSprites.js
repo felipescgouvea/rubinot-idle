@@ -5,7 +5,7 @@
 // mas o conteúdo real baixado é WebP; todo consumidor mantém fallback gracioso
 // pro ícone (ver ui/*, o onerror da <img>) pra qualquer sprite que não exista localmente.
 
-export const SPRITE_BASE = 'assets/sprites/';
+const SPRITE_BASE = 'assets/sprites/';
 
 function localName(file) {
   return file.replace(/\.[^.]+$/, '.webp');
@@ -94,7 +94,7 @@ export function spriteUrl(file) {
 // vez de assentar direto no emoji. Chave = URL final do sprite (não o id),
 // então serve genericamente pra item/monstro/skill/spell/outfit/etc.
 const failedSprites = new Set();
-export function isSpriteFailed(url) { return failedSprites.has(url); }
+function isSpriteFailed(url) { return failedSprites.has(url); }
 export function markSpriteFailed(url) { failedSprites.add(url); }
 // Exposto global pra o onerror inline (atributo HTML, roda no escopo global)
 // conseguir registrar a falha antes de trocar pelo emoji.
@@ -158,14 +158,24 @@ export function effectSpriteFile(name) {
   return name && EFFECT_NAMES.has(name) ? 'effects/' + name + '.gif?ev=' + EFFECT_SPRITE_VER : null;
 }
 
-// Sprite REAL de PROJÉTIL/missile do Tibia (assets/sprites/missiles/<nome>.gif):
+// Sprite REAL de PROJÉTIL/missile do Tibia (assets/sprites/missiles/<nome>.webp):
 // a flecha/virote/spear do arco e o "raio" elemental da wand/rod que VOAM do
 // personagem até o alvo. A UI anima esse sprite atravessando a cena (ver
 // ui/huntPanel.js: playProjectile). Nome derivado da arma/munição/elemento em
 // domain/combatFx.js (basicAttackMissile).
+// Eram .gif originalmente, mas cada um era na verdade um WEBP ANIMADO de
+// vários frames (voo + acúmulo de flechas + explosão de impacto, como no
+// client real do Tibia) — como aqui o próprio JS já controla a posição/
+// rotação/duração do voo via CSS, deixar o navegador tocar essa animação por
+// conta própria ficava fora de sincronia com o voo real, mostrando ora 1
+// flecha, ora 2-3 acumuladas, ora o frame de explosão (bug reportado pelo
+// Felipe). Substituídos por um frame ÚNICO estático (o frame 0, recortado
+// sem a margem transparente) — sempre a mesma imagem de "1 flecha" em
+// qualquer ataque.
 const MISSILE_NAMES = new Set(['arrow', 'bolt', 'spear', 'energy', 'fire', 'ice', 'earth', 'death', 'holy']);
+const MISSILE_SPRITE_VER = 1;
 export function missileSpriteFile(name) {
-  return name && MISSILE_NAMES.has(name) ? 'missiles/' + name + '.gif' : null;
+  return name && MISSILE_NAMES.has(name) ? 'missiles/' + name + '.webp?mv=' + MISSILE_SPRITE_VER : null;
 }
 
 // Moedas: Gold Coin é item real (ver domain/items.js: gold_coin). Rubini Coin

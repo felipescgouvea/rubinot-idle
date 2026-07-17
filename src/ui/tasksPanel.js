@@ -3,8 +3,8 @@ import { MONSTERS } from '../domain/bestiary.js?v=140';
 import { ITEMS } from '../domain/items.js?v=138';
 import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
-import { monsterSpriteImg } from './huntPanel.js?v=140';
-import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=131';
+import { monsterSpriteImg } from './huntPanel.js?v=141';
+import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=132';
 import { t } from '../i18n/i18n.js?v=142';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
@@ -103,7 +103,7 @@ export function renderTasksPanel() {
   renderActiveTask();
 }
 
-export function renderActiveTask() {
+function renderActiveTask() {
   const el = document.getElementById('active-task-display');
   if (!G.activeTask) { el.style.display = 'none'; return; }
   el.style.display = 'block';

@@ -6,7 +6,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=140';
 import { ITEMS } from '../domain/items.js?v=138';
 import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=128';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
-import { gainXp } from './huntUseCases.js?v=182';
+import { gainXp } from './huntUseCases.js?v=183';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=129';
@@ -74,7 +74,7 @@ function grantRewards(rewards) {
   return parts.join(', ');
 }
 
-export function checkTaskProgress() {
+function checkTaskProgress() {
   if (!G.activeTask) return;
   const { roomId, taskIndex, key, required } = G.activeTask;
   const kills = G.taskKills[key] || 0;

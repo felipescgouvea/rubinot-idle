@@ -3,7 +3,7 @@
 // liga esses mecanismos aos eventos emitidos pela camada application.
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { ITEMS } from '../domain/items.js?v=138';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=130';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -101,7 +101,7 @@ function logTimestamp() {
   return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
 }
 
-export function addLog(html, cat = 'combate') {
+function addLog(html, cat = 'combate') {
   const log = document.getElementById('combat-log');
   if (!log) return;
   const line = document.createElement('div');

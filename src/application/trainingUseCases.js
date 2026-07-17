@@ -12,7 +12,7 @@ import { TIBIA_SKILLS } from '../domain/character.js?v=156';
 import { SPELLS } from '../domain/spells.js?v=126';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
 import { trainSkill } from './skillUseCases.js?v=127';
-import { stopHunt } from './huntUseCases.js?v=182';
+import { stopHunt } from './huntUseCases.js?v=183';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -28,7 +28,7 @@ let sessionTries = 0;
 // Credita as tentativas acumuladas desde o último "âncora" (trainingSince) e
 // reancoragem em agora. Usada tanto pelo tick online quanto na retomada
 // offline (o âncora salvo carrega o tempo em que o jogo ficou fechado).
-export function accrueTraining({ offline = false } = {}) {
+function accrueTraining({ offline = false } = {}) {
   if (!G.trainingSkill || !G.trainingSince) return 0;
   const now = Date.now();
   let elapsedSec = Math.floor((now - G.trainingSince) / 1000);
@@ -126,10 +126,6 @@ export function resumeTrainingOnLoad() {
     emit(EVENTS.NOTIFY, { msg: t('training.offlineGain', { tries, skill: s ? s.name : G.trainingSkill }), type: 'success' });
   }
   startTrainingLoop();
-}
-
-export function isTraining() {
-  return !!G.trainingSkill;
 }
 
 // Auto-desliga o treino quando uma caçada começa (ver comentário do topo).

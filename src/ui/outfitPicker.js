@@ -9,7 +9,7 @@ import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=125';
 import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
-import { openModal, rubiniIconImg } from './shared.js?v=131';
+import { openModal, rubiniIconImg } from './shared.js?v=132';
 import { t } from '../i18n/i18n.js?v=142';
 
 // Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
@@ -81,7 +81,7 @@ function mountPreviewCanvas() {
   });
 }
 
-export function renderOutfitPicker() {
+function renderOutfitPicker() {
   if (!G.vocation) return;
   const gender = G.outfitGender || 'male';
 

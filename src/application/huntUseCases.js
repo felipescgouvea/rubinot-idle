@@ -21,7 +21,7 @@ import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=126
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=129';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=128';
 import { t } from '../i18n/i18n.js?v=142';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
@@ -67,7 +67,6 @@ const ATTACK_GROUP_CD_MS = 2000;
 let attackGroupCdUntil = 0;
 function isSpellReady(id) { return (spellCdUntil[id] || 0) <= Date.now(); }
 function startSpellCd(id, seconds) { if (seconds > 0) spellCdUntil[id] = Date.now() + seconds * 1000; }
-export function getSpellCooldownRemaining(id) { return Math.max(0, (spellCdUntil[id] || 0) - Date.now()); }
 function isAttackGroupReady() { return attackGroupCdUntil <= Date.now(); }
 function startAttackGroupCd() { attackGroupCdUntil = Date.now() + ATTACK_GROUP_CD_MS; }
 // Tamanho do grupo, instante do próximo spawn e o RNG de quem aparece são

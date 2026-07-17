@@ -8,7 +8,7 @@ import { G } from '../application/gameStore.js?v=129';
 import { currentUser } from '../infrastructure/authClient.js?v=133';
 import { getCharacterSlots } from '../application/accountUseCases.js?v=127';
 import { VOCATIONS } from '../domain/character.js?v=156';
-import { goldIconImg, openModal } from './shared.js?v=131';
+import { goldIconImg, openModal } from './shared.js?v=132';
 import { t, getLocale, LOCALE_NAMES } from '../i18n/i18n.js?v=142';
 
 function fmtLastSave() {
