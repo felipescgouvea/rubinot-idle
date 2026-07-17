@@ -148,10 +148,29 @@ const server = http.createServer(async (req, res) => {
         stamina = Math.min(STAMINA_MAX, stamina + idleMinutes / 3);
       }
 
-      const inserted = await insertRow('hunt_sessions', {
-        user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
-        atk, def, spd, level, vocation: body.vocation,
-      });
+      // Troca de zona rápida (selectZone: stopHunt()+startHunt() de volta,
+      // sem esperar o /hunt/stop responder) pode deixar DOIS /hunt/start em
+      // voo ao mesmo tempo pro mesmo slot — cada um vê o prevRow ainda ativo
+      // e tenta fechar+inserir, e o segundo esbarra na constraint única
+      // (hunt_sessions_one_active_per_slot), 500 pro cliente (reportado nos
+      // logs após um teste de troca rápida repetida). Um retry único —
+      // fecha de novo o que quer que esteja ativo agora e tenta de novo —
+      // resolve sem precisar serializar todo o endpoint.
+      let inserted;
+      try {
+        inserted = await insertRow('hunt_sessions', {
+          user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
+          atk, def, spd, level, vocation: body.vocation,
+        });
+      } catch (e) {
+        if (!/23505/.test(e.message)) throw e;
+        const raceRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+        if (raceRow) { stopSession(raceRow.id); await updateRows('hunt_sessions', { id: raceRow.id }, { active: false }); }
+        inserted = await insertRow('hunt_sessions', {
+          user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
+          atk, def, spd, level, vocation: body.vocation,
+        });
+      }
 
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
