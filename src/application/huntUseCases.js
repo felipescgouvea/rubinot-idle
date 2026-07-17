@@ -175,6 +175,17 @@ let lastSeenKillAt = 0;
 // huntEngine.js: resolveTick — hp<=0 agora encerra a sessão de verdade e
 // grava stats.last_death, em vez de reviver em silêncio e seguir caçando).
 let lastSeenDeathAt = 0;
+// id da sessão de caçada que ESTE cliente iniciou por último (ver
+// startHunt/checkAndResumeHuntSession) — usado pra só aceitar um last_death
+// que pertença a ELA, nunca a uma sessão antiga já substituída (ver
+// reconcileWithServer: sem isso, trocar de zona rápido podia mostrar a morte
+// da hunt ANTERIOR como se fosse da nova, com o monstro errado).
+let currentSessionId = null;
+// true enquanto um /hunt/start está em voo — nessa janela, o servidor pode
+// responder /hunt/state com hunting:false só porque a sessão NOVA ainda não
+// terminou de ser criada (a antiga já fechou); reconcileWithServer não deve
+// interpretar isso como "a caçada atual morreu" (ver startHunt).
+let starting = false;
 
 // Desde o Marco 4, nível/skills/equipamento NÃO são mais enviados — o
 // servidor lê de player_stats/player_skills/player_equipment (autoritativos).
@@ -225,9 +236,13 @@ async function reconcileWithServer() {
   // houve"). Detecta comparando o que o cliente ainda acha que está caçando
   // com o que o servidor diz agora — se o servidor já não está mais
   // caçando mas o cliente ainda acha que sim, foi ele quem encerrou.
-  if (G.hunting && !res.hunting) {
+  if (G.hunting && !res.hunting && !starting) {
     const d = s.last_death;
-    if (d && d.at && d.at > lastSeenDeathAt) {
+    // Só mostra/reage à morte se ela pertence à sessão QUE ESTE CLIENTE
+    // acha que está rodando agora (currentSessionId, ver startHunt) — sem
+    // isso, uma morte real da hunt ANTERIOR (já substituída) podia ser
+    // exibida como se fosse da atual, com o monstro errado.
+    if (d && d.at && d.at > lastSeenDeathAt && d.sessionId && d.sessionId === currentSessionId) {
       lastSeenDeathAt = d.at;
       emit(EVENTS.LOG, t('hunt.logYouDied', { monster: d.monster, xpLost: d.xpLost }));
       emit(EVENTS.NOTIFY, { msg: t('hunt.notifyYouDied', { monster: d.monster, xpLost: d.xpLost }), type: 'error' });
@@ -433,9 +448,23 @@ export function startHunt() {
     : t('hunt.logEnterZone', { icon: monsterLogIcon(zone.monsters[0]), zone: t(zone.name) }));
   beginLocalLoop();
 
+  // Enquanto o /hunt/start ainda não voltou, o servidor pode responder
+  // /hunt/state com hunting:false por uma fração de segundo (a sessão ANTIGA
+  // já fechou — ver stopHunt() logo abaixo, chamado por selectZone() antes de
+  // startHunt() — mas a NOVA ainda não existe). Sem `starting`, um reconcile
+  // que caísse exatamente nesse intervalo confundia isso com "a caçada atual
+  // morreu", mostrava a morte da sessão ANTERIOR (de outra zona, com o
+  // monstro errado) e derrubava o loop local da caçada NOVA que tinha acabado
+  // de começar — bug reportado pelo Felipe: trocar de hunt e aparecer "morri"
+  // pro bicho da hunt antiga. sessionId (abaixo) é uma segunda blindagem: só
+  // aceita um last_death se ele pertencer à sessão que ESTE cliente iniciou.
+  starting = true;
+  currentSessionId = null;
   startHuntSession(buildHuntSnapshot()).then(res => {
-    if (!res.ok) emit(EVENTS.NOTIFY, { msg: `⚠️ Caçada não confirmada pelo servidor: ${res.error}`, type: 'error' });
-    else reconcileWithServer(); // não espera o 1º intervalo de RECONCILE_MS pra puxar o estado real
+    starting = false;
+    if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ Caçada não confirmada pelo servidor: ${res.error}`, type: 'error' }); return; }
+    currentSessionId = res.sessionId || null;
+    reconcileWithServer(); // não espera o 1º intervalo de RECONCILE_MS pra puxar o estado real
   });
 }
 
@@ -458,6 +487,7 @@ export async function checkAndResumeHuntSession() {
   if (!res.hunting) return false;
   G.activeZone = res.zoneId || G.activeZone;
   G.hunting = true;
+  currentSessionId = res.sessionId || null;
   beginLocalLoop();
   emit(EVENTS.LOG, t('hunt.logEnterZone', { icon: '⚔️', zone: t(ZONES[G.activeZone] ? ZONES[G.activeZone].name : G.activeZone) }));
   return true;
@@ -469,6 +499,8 @@ export async function checkAndResumeHuntSession() {
 // redundante numa sessão que já não existe mais lá.
 function stopHuntLocalOnly() {
   G.hunting = false;
+  currentSessionId = null;
+  starting = false;
   if (huntInterval) { clearInterval(huntInterval); huntInterval = null; }
   if (reconcileInterval) { clearInterval(reconcileInterval); reconcileInterval = null; }
   currentMonster = null;

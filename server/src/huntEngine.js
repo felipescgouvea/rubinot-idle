@@ -321,7 +321,7 @@ async function resolveTick(session) {
     const curXp = row ? Number(row.xp) : 0;
     const xpLost = Math.floor(curXp * deathXpLossPct(blessings));
     session.hp = Math.floor(session.maxHp * reviveHpPct(blessings));
-    const lastDeath = { monster: newPrimary.name, xpLost, blessingsUsed: blessings, at: Date.now() };
+    const lastDeath = { sessionId: session.id, monster: newPrimary.name, xpLost, blessingsUsed: blessings, at: Date.now() };
     await upsertRow('player_stats', {
       user_id: session.userId, slot: session.slot, xp: Math.max(0, curXp - xpLost),
       hp: session.hp, mana: session.mana, stamina: session.stamina, blessings: 0,

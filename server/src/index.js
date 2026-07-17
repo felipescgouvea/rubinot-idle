@@ -207,6 +207,12 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, {
         ok: true,
         hunting: !!activeRow,
+        // id da sessão ATIVA agora (ver huntUseCases.js: currentSessionId) —
+        // permite ao cliente só aceitar um stats.last_death se ele pertencer
+        // à MESMA sessão que ele acha que está rodando, nunca a uma sessão
+        // antiga já substituída (troca rápida de zona podia mostrar a morte
+        // da hunt ANTERIOR como se fosse da nova).
+        sessionId: activeRow ? activeRow.id : null,
         zoneId: activeRow ? activeRow.zone_id : null,
         stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX, last_death: null },
         inventory,
