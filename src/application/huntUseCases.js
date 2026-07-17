@@ -187,6 +187,13 @@ let lastSeenKillAt = 0;
 // huntEngine.js: resolveTick — hp<=0 agora encerra a sessão de verdade e
 // grava stats.last_death, em vez de reviver em silêncio e seguir caçando).
 let lastSeenDeathAt = 0;
+// Atraso entre detectar um golpe real (reconcile) e a barra de vida do
+// monstro realmente cair na tela — mesmo tempo de voo do projétil cosmético
+// (ver ui/huntPanel.js: playProjectile, 320ms fixos), pra a vida só baixar
+// quando a flecha/efeito "chega" de verdade, em vez de saltar instantaneamente
+// assim que o servidor confirma o dano (pedido do Felipe: sincronizar o
+// impacto visual com a queda de vida).
+const HIT_SYNC_DELAY_MS = 320;
 // id da sessão de caçada que ESTE cliente iniciou por último (ver
 // startHunt/checkAndResumeHuntSession) — usado pra só aceitar um last_death
 // que pertença a ELA, nunca a uma sessão antiga já substituída (ver
@@ -344,11 +351,25 @@ function applyServerPack(pack) {
       newUids.forEach(m => emit(EVENTS.LOG, t('hunt.logMonsterAppeared', { icon: monsterLogIcon(m.defKey), name: m.name })));
     }
   }
+  // Golpes reais (hp caiu desde o poll anterior) — a QUEDA na barra de vida
+  // (e o flash/linha de log que a acompanham) só é aplicada HIT_SYNC_DELAY_MS
+  // depois, pra bater com o instante em que o projétil cosmético (ver
+  // ui/huntPanel.js: playProjectile) visualmente "chega" no monstro, em vez
+  // de saltar na tela assim que o servidor confirma o dano (que pode ter
+  // acontecido bem antes do jogador ver o golpe partir). currentPack abaixo
+  // preserva o hp ANTIGO até esse momento.
   pack.forEach(m => {
-    const prev = prevPackByUid.get(String(m.uid));
+    const uid = String(m.uid);
+    const prev = prevPackByUid.get(uid);
     if (prev && m.hp < prev.hp) {
-      m._hitAt = Date.now(); // flash de dano na Battle List/palco (ver ui/huntPanel.js)
-      emit(EVENTS.LOG, t('log.basicAttack', { label: t('hunt.logBasicHit'), dmg: prev.hp - m.hp, name: m.name }));
+      const dmg = prev.hp - m.hp;
+      setTimeout(() => {
+        const vis = currentPack.find(cm => String(cm.uid) === uid);
+        if (vis) { vis.hp = m.hp; vis._hitAt = Date.now(); }
+        emit(EVENTS.LOG, t('log.basicAttack', { label: t('hunt.logBasicHit'), dmg, name: m.name }));
+        emit(EVENTS.BATTLE_LIST);
+        emit(EVENTS.MONSTER_DISPLAY, {});
+      }, HIT_SYNC_DELAY_MS);
     }
   });
   const nowUids = new Set(pack.map(m => String(m.uid)));
@@ -362,9 +383,16 @@ function applyServerPack(pack) {
       if (uid === oldFrontUid) killedFrontDefKey = prev.defKey;
     }
   }
+  // Reconstrói currentPack: quem já existia mantém o hp ANTIGO (o setTimeout
+  // acima corrige assim que o golpe "chega") — só quem acabou de aparecer
+  // agora usa o hp real de cara, já que não há golpe nenhum pra sincronizar ainda.
+  const oldByUid = new Map(currentPack.map(cm => [String(cm.uid), cm]));
   prevPackByUid = new Map(pack.map(m => [String(m.uid), { defKey: m.defKey, name: m.name, hp: m.hp, maxHp: m.maxHp }]));
-  currentPack = pack;
-  currentMonster = (manualTargetUid && pack.find(m => String(m.uid) === manualTargetUid)) || pack[0] || null;
+  currentPack = pack.map(m => {
+    const old = oldByUid.get(String(m.uid));
+    return old ? { ...m, hp: old.hp, _hitAt: old._hitAt } : { ...m };
+  });
+  currentMonster = (manualTargetUid && currentPack.find(m => String(m.uid) === manualTargetUid)) || currentPack[0] || null;
   emit(EVENTS.MONSTER_DISPLAY, killedFrontDefKey ? { killed: killedFrontDefKey } : {});
   emit(EVENTS.BATTLE_LIST);
 }
