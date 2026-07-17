@@ -7,7 +7,7 @@
 // ele entra/sai do Boss Rush — ver startBossRush()/stopBossRush() abaixo.
 import { G } from './gameStore.js?v=129';
 import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=137';
-import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=177';
+import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=178';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=142';
 

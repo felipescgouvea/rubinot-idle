@@ -167,6 +167,18 @@ let reconcileInterval = null;
 // parecer travado). Ainda é só um GET /hunt/state leve; abaixo disso o ganho
 // de "tempo real" deixa de compensar o volume de requisições.
 const RECONCILE_MS = 250;
+// Sobe a cada início/fim de caçada (ver beginLocalLoop/stopHuntLocalOnly).
+// Cada reconcileWithServer() guarda o epoch de quando FOI DISPARADO e, ao
+// receber a resposta (fetch pode demorar mais que RECONCILE_MS por latência
+// de rede), descarta o resultado se o epoch já mudou nesse meio-tempo — sem
+// isso, um poll disparado ENQUANTO ainda caçava podia responder DEPOIS do
+// jogador já ter clicado "Stop Hunt" (ou até de já ter dado Start de novo) e
+// sobrescrever G.hp/G.mana com um snapshot velho, fora de ordem — bug
+// reportado: "hp e mana ficam se mexendo por vários segundos" depois de
+// pausar, e mana "cai pela metade do nada" ao reiniciar (respostas atrasadas
+// da caçada ANTERIOR chegando depois, uma de cada vez, cada uma sobrescrevendo
+// com um valor diferente).
+let reconcileEpoch = 0;
 // Instante (epoch ms) do último session.lastKill já processado (ver
 // server/src/huntEngine.js: settleKill) — evita reprocessar o mesmo kill em
 // polls sucessivos, já que lastKill fica "parado" no servidor até a próxima morte.
@@ -200,7 +212,11 @@ function buildHuntSnapshot() {
 }
 
 async function reconcileWithServer() {
+  const myEpoch = reconcileEpoch;
   const res = await getHuntState(ACCOUNT.activeSlot);
+  // Descarta resposta atrasada de um poll disparado numa caçada que já foi
+  // parada/reiniciada nesse meio-tempo (ver comentário de reconcileEpoch).
+  if (myEpoch !== reconcileEpoch) return;
   if (!res.ok || !res.stats) return;
   const s = res.stats;
   const leveledUp = s.level > G.level;
@@ -419,6 +435,7 @@ function applyServerKillEvents(k) {
 // (startHunt) e a retomada no boot de uma sessão que sobreviveu no servidor
 // enquanto a aba estava fechada (ver checkAndResumeHuntSession abaixo).
 function beginLocalLoop() {
+  reconcileEpoch++; // invalida qualquer poll pendente da caçada/pausa ANTERIOR (ver reconcileEpoch)
   huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
   // Sala/alvo/estado de diff zerados — o servidor é quem decide quando o
   // próximo grupo aparece (ver server/src/huntEngine.js: tick/nextSpawnAt);
@@ -498,6 +515,7 @@ export async function checkAndResumeHuntSession() {
 // própria (morte real, ver reconcileWithServer acima), pra não mandar um stop
 // redundante numa sessão que já não existe mais lá.
 function stopHuntLocalOnly() {
+  reconcileEpoch++; // invalida qualquer poll ainda em voo desta caçada (ver reconcileEpoch)
   G.hunting = false;
   currentSessionId = null;
   starting = false;
