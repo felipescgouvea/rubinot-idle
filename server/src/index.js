@@ -11,7 +11,7 @@
 // valor REAL) e stamina autoritativa (regenera aqui no hunt-start pelo tempo
 // real parado, cai durante a caçada em huntEngine.js).
 import http from 'node:http';
-import { ZONES } from '../../src/domain/bestiary.js?v=139';
+import { ZONES } from '../../src/domain/bestiary.js?v=140';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=157';
 import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';

@@ -34,15 +34,19 @@ export const ZONES = {
   kongra_hunt:    { city: 'porthope',   name: 'zone.kongra_hunt',    icon: '🐒', worldReq: 'auroria', monsters: ['kongra', 'merlkin', 'sibang'], theme: ['#2e5c2e', '#0f2b0f'], boss: 'kongra' },
   crawler_hunt:   { city: 'porthope',   name: 'zone.crawler_hunt',   icon: '🐛', worldReq: 'auroria', monsters: ['crawler', 'insectoid_worker', 'swarmer'], theme: ['#4a5c2e', '#1f2b12'], boss: 'crawler', requiresBossOf: 'kongra' },
 
-  // --- Svargrond (Ilhas de Gelo: corym, refinadores de pedra, Formorgar Mines) ---
-  corym_skirmisher:{ city: 'svargrond', name: 'zone.corym_skirmisher', icon: '👹', worldReq: 'auroria', monsters: ['corym_vanguard', 'corym_charlatan', 'corym_skirmisher'], theme: ['#8fb8d9', '#3a5a73'], boss: 'corym_vanguard' },
-  stone_refiner:  { city: 'svargrond', name: 'zone.stone_refiner',  icon: '💎', worldReq: 'auroria', monsters: ['stonerefiner'], theme: ['#6b6a5c', '#2a2924'], boss: 'stonerefiner', requiresBossOf: 'corym_vanguard' },
-  behemoth_hunt:  { city: 'svargrond', name: 'zone.behemoth_hunt',  icon: '👹', worldReq: 'auroria', monsters: ['behemoth', 'drillworm', 'devourer', 'glooth_anemone'], theme: ['#5a6b7a', '#28323d'], boss: 'behemoth', requiresBossOf: 'stonerefiner' },
+  // --- Svargrond (Ilhas de Gelo: Formorgar Mines) ---
+  behemoth_hunt:  { city: 'svargrond', name: 'zone.behemoth_hunt',  icon: '👹', worldReq: 'auroria', monsters: ['behemoth', 'drillworm', 'devourer', 'glooth_anemone'], theme: ['#5a6b7a', '#28323d'], boss: 'behemoth' },
 
-  // --- Venore (acampamento de amazonas ao sul, depois a caverna clássica de
-  // aranhas gigantes) ---
-  amazon_hunt:    { city: 'venore',     name: 'zone.amazon_hunt',    icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie' },
+  // --- Venore (acampamento orc e de amazonas ao sul, elfos corrompidos de
+  // Shadowthorn, a caverna clássica de aranhas gigantes, coryms e
+  // refinadores de pedra — pedido do Felipe pra reunir tudo aqui) ---
+  orc_fortress:   { city: 'venore',     name: 'zone.orc_fortress',   icon: '🗡️', worldReq: 'auroria', monsters: ['orc', 'orc', 'orc_spearman', 'orc_warrior'], theme: ['#6b5a3a', '#2e2818'], boss: 'orc_warrior' },
+  shadowthorn:    { city: 'venore',     name: 'zone.shadowthorn',    icon: '🔥', worldReq: 'auroria', monsters: ['shadowthorn', 'shadowthorn', 'shadowthorn_splinter', 'shadowthorn_deceiver', 'shadowthorn_templar'], theme: ['#a5391f', '#3a1208'], boss: 'shadowthorn_templar', requiresBossOf: 'orc_warrior' },
+  amazon_hunt:    { city: 'venore',     name: 'zone.amazon_hunt',    icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'shadowthorn_templar' },
   giant_spider_hunt:{ city: 'venore',  name: 'zone.giant_spider_hunt', icon: '🕷️', worldReq: 'auroria', monsters: ['giant_spider', 'tarantula', 'spider'], theme: ['#4a3a3a', '#201616'], boss: 'giant_spider', requiresBossOf: 'valkyrie' },
+  corym_skirmisher:{ city: 'venore',   name: 'zone.corym_skirmisher', icon: '👹', worldReq: 'auroria', monsters: ['corym_vanguard', 'corym_charlatan', 'corym_skirmisher'], theme: ['#8fb8d9', '#3a5a73'], boss: 'corym_vanguard', requiresBossOf: 'giant_spider' },
+  stone_refiner:  { city: 'venore',    name: 'zone.stone_refiner',  icon: '💎', worldReq: 'auroria', monsters: ['stonerefiner'], theme: ['#6b6a5c', '#2a2924'], boss: 'stonerefiner', requiresBossOf: 'corym_vanguard' },
+  orc_warlord_camp:{ city: 'venore',   name: 'zone.orc_warlord_camp', icon: '👑', worldReq: 'auroria', monsters: ['orc_rider', 'orc_shaman', 'orc_berserker', 'orc_warlord'], theme: ['#7a5a3a', '#3a2818'], boss: 'orc_warlord', requiresBossOf: 'stonerefiner' },
 
   // --- Yalahar (economia glooth, bandidos e heróis) ---
   glooth_bandit:  { city: 'yalahar',   name: 'zone.glooth_bandit',  icon: '⚙️', worldReq: 'auroria', monsters: ['glooth_brigand', 'glooth_bandit'], theme: ['#4a6b3a', '#1f331a'], boss: 'glooth_brigand' },
@@ -103,6 +107,12 @@ export const MONSTERS = {
   dwarf_geomancer:{ name: 'Dwarf Geomancer', icon: '🪄', hp: 380, atk: 100, def: 8,  xp: 140, gold: [8,25],  loot: [['wand_of_vortex',0.03],['dwarven_ring',0.02]], spells: [{ element: 'earth', min: 50, max: 110 }, { element: 'death', min: 25, max: 80 }] },
   dwarf_guard:   { name: 'Dwarf Guard', icon: '🛡️', hp: 245, atk: 140, def: 18, xp: 165, gold: [10,30], loot: [['dwarven_ring',0.03],['halberd',0.04]] },
   elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 25 }] },
+  // Shadowthorn (Venore) — elfos corrompidos por fogo, hunt de entrada
+  // fraca (ver ZONES.shadowthorn) — shadowthorn_templar é o chefe.
+  shadowthorn:         { name: 'Shadowthorn', icon: '🧝', hp: 55, atk: 12, def: 3, xp: 20, gold: [1,5], loot: [['bones',0.3],['small_stone',0.2]], spells: [{ element: 'fire', min: 0, max: 18 }] },
+  shadowthorn_splinter:{ name: 'Shadowthorn Splinter', icon: '🔥', hp: 68, atk: 15, def: 3, xp: 26, gold: [1,6], loot: [['bones',0.3],['small_stone',0.2]], spells: [{ element: 'fire', min: 5, max: 22 }] },
+  shadowthorn_deceiver:{ name: 'Shadowthorn Deceiver', icon: '👺', hp: 82, atk: 18, def: 4, xp: 33, gold: [2,7], loot: [['elvish_talisman',0.2],['bones',0.3]], spells: [{ element: 'fire', min: 8, max: 28 }] },
+  shadowthorn_templar: { name: 'Shadowthorn Templar', icon: '👑', hp: 140, atk: 28, def: 6, xp: 58, gold: [4,12], loot: [['elvish_talisman',0.3],['studded_armor',0.05],['bones',0.3]], spells: [{ element: 'fire', min: 15, max: 42 }] },
   dworc:         { name: 'Dworc Voodoomaster', icon: '🌀', hp: 80,  atk: 20, def: 4,  xp: 55,  gold: [2,8],   loot: [['orc_tooth',0.4],['spider_fangs',0.2]], spells: [{ element: 'death', min: 0, max: 40 }, { element: 'earth', min: 6, max: 18 }] },
   dworc_fighter: { name: 'Dworc Fleshhunter', icon: '🪓', hp: 140, atk: 50, def: 8,  xp: 70,  gold: [3,10],  loot: [['orc_tooth',0.5],['studded_armor',0.05]] },
   dworc_venomsniper:{ name: 'Dworc Venomsniper', icon: '🏹', hp: 70,  atk: 15, def: 3,  xp: 60,  gold: [2,9],   loot: [['orc_tooth',0.4],['spider_fangs',0.3]], spells: [{ element: 'earth', min: 10, max: 30 }] },
