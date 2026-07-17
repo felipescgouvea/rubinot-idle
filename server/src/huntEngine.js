@@ -72,7 +72,7 @@ function trainSkill(session, skillId, amount, cfg) {
 // src/application/huntUseCases.js, mas só o essencial (sem log/eventos).
 async function applyRtcHealing(session, cfg) {
   const rtc = session.rtc || {};
-  const healSpellId = rtc.healSpell || defaultHealSpellId(session.vocation);
+  const healSpellId = rtc.healSpell || defaultHealSpellId(session.vocation, session.level);
   const healSpell = isSpellAvailable(healSpellId, session.vocation, session.level) ? SPELLS[healSpellId] : null;
   const hpPct = (session.hp / session.maxHp) * 100;
   if (healSpell && session.hp > 0 && hpPct < (rtc.healSpellThreshold || 0) && session.mana >= healSpell.mana && isSpellReady(session, healSpellId)) {
@@ -220,7 +220,7 @@ async function resolveTick(session) {
   // (2) magia/runa por prioridade (RTC), com respingo de área real
   const rtc = session.rtc || {};
   const magic = (session.skills.magic && session.skills.magic.lv) || 0;
-  const healSpellIdForReserve = rtc.healSpell || defaultHealSpellId(session.vocation);
+  const healSpellIdForReserve = rtc.healSpell || defaultHealSpellId(session.vocation, session.level);
   const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, session.vocation, session.level) ? SPELLS[healSpellIdForReserve] : null;
   const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
 
