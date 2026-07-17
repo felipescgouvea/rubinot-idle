@@ -8,7 +8,7 @@ import { cityName } from '../domain/cities.js?v=131';
 import { ITEMS } from '../domain/items.js?v=138';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum } from './shared.js?v=130';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=131';
 import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=170';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=139';
@@ -164,6 +164,7 @@ export function renderMonsterDisplay(hit = false, killed = null, spellElement = 
   // atualiza in-place quando é o mesmo monstro — recriar o <img> a cada tick
   // impedia o sprite de terminar de carregar
   if (el.dataset.monsterId === currentMonster.defKey && el.querySelector('.monster-hp-fill')) {
+    applyHpState(el.querySelector('.monster-hp-fill'), pct);
     el.querySelector('.monster-hp-fill').style.width = pct + '%';
     el.querySelector('.monster-hp-label').textContent = `${Math.max(0, currentMonster.hp)} / ${currentMonster.maxHp}`;
     el.querySelector('.monster-name').textContent = currentMonster.name;
@@ -178,7 +179,7 @@ export function renderMonsterDisplay(hit = false, killed = null, spellElement = 
     <div class="monster-sprite-wrap${hit ? ' hit' : ''}${bossAura ? ` ${bossAura}` : ''}">${monsterSpriteImg(currentMonster.defKey, 'monster-sprite')}</div>
     <div class="monster-name">${currentMonster.name}</div>
     <div class="monster-hp-track">
-      <div class="monster-hp-fill" style="width:${pct}%"></div>
+      <div class="monster-hp-fill ${hpStateClass(pct)}" style="width:${pct}%"></div>
       <div class="monster-hp-label">${Math.max(0, currentMonster.hp)} / ${currentMonster.maxHp}</div>
     </div>
   `;
@@ -343,7 +344,7 @@ function battleListEntry({ uid, defKey, name, pct, hp, maxHp, target, dead, hit 
     <div class="battle-list-info">
       <div class="battle-list-name">${name}</div>
       <div class="battle-list-hp-track">
-        <div class="battle-list-hp-fill" style="width:${pct}%"></div>
+        <div class="battle-list-hp-fill ${dead ? '' : hpStateClass(pct)}" style="width:${pct}%"></div>
         <div class="battle-list-hp-label">${hp}/${maxHp}</div>
       </div>
     </div>
@@ -428,11 +429,15 @@ function renderStagePack(stage) {
       el.style.pointerEvents = 'auto'; // .stage-pack tem pointer-events:none; sem isso o clique não chega no monstro
       el.setAttribute('onclick', `selectTarget('${m.uid}')`);
       el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>
-        <div class="stage-monster-hp"><div class="stage-monster-hp-fill" style="width:100%"></div></div>`;
+        <div class="stage-monster-hp"><div class="stage-monster-hp-fill hp-state-high" style="width:100%"></div></div>`;
     }
     // vida atualizada a cada tick, inclusive nos que já estavam na tela.
     const fill = el.querySelector('.stage-monster-hp-fill');
-    if (fill) fill.style.width = Math.max(0, Math.round((m.hp / m.maxHp) * 100)) + '%';
+    if (fill) {
+      const pct = Math.max(0, Math.round((m.hp / m.maxHp) * 100));
+      fill.style.width = pct + '%';
+      applyHpState(fill, pct);
+    }
     el.classList.toggle('is-target', m.uid === targetUid);
     const livingSiblings = [...box.children].filter(c => c !== el && !c.classList.contains('leaving'));
     const anchor = livingSiblings[i] || null;

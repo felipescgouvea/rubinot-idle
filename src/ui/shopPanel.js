@@ -1,8 +1,8 @@
 import { G } from '../application/gameStore.js?v=129';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=127';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=128';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=138';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=130';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=131';
 import { buyShopItem } from '../application/shopUseCases.js?v=131';
 import { t } from '../i18n/i18n.js?v=139';
 
@@ -17,7 +17,7 @@ function shopPriceLabel(s) {
 // Loot Boost e Supply Completo ficam com o emoji: não há sprite real de
 // Tibia pra "chance de loot" ou "recarga instantânea" como conceito.
 function shopIconHtml(s) {
-  if (s.itemId) return itemIconImg(s.itemId);
+  if (s.itemId) return itemIconImg(s.itemId, 'shop-item-icon');
   if (s.type === 'currency') return rubiniIconImg();
   if (s.boost === 'xp') return vitalIconImg('xp');
   if (s.boost === 'gold') return goldIconImg();

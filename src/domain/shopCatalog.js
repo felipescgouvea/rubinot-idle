@@ -74,6 +74,20 @@ export const SHOP_ITEMS = [
   { id: 'buy_chain_helmet',     name: 'Chain Helmet',      icon: '⛑️', currency: 'gold', price: 180,   type: 'item', itemId: 'chain_helmet', shop: 'equipment' },
   { id: 'buy_studded_legs',     name: 'Studded Legs',      icon: '🦵', currency: 'gold', price: 280,   type: 'item', itemId: 'studded_legs', shop: 'equipment' },
   { id: 'buy_steel_boots',      name: 'Steel Boots',       icon: '👢', currency: 'gold', price: 880,   type: 'item', itemId: 'steel_boots', shop: 'equipment' },
+  // Faltavam no catálogo apesar de existirem em domain/items.js (auditoria do
+  // bug "poucos itens de Paladin na loja") — armadura/escudo/anel de tier alto,
+  // úteis pra QUALQUER vocação de armadura física (Knight/Paladin), não só o
+  // Paladin. Preço = 4x sell, igual ao resto da lista.
+  { id: 'buy_golden_armor',     name: 'Golden Armor',      icon: '🥋', currency: 'gold', price: 4800,   type: 'item', itemId: 'golden_armor', shop: 'equipment' },
+  { id: 'buy_crown_armor',      name: 'Crown Armor',       icon: '🥋', currency: 'gold', price: 26000,  type: 'item', itemId: 'crown_armor', shop: 'equipment' },
+  { id: 'buy_golden_legs',      name: 'Golden Legs',       icon: '🦵', currency: 'gold', price: 4400,   type: 'item', itemId: 'golden_legs', shop: 'equipment' },
+  { id: 'buy_crown_legs',       name: 'Crown Legs',        icon: '🦵', currency: 'gold', price: 20800,  type: 'item', itemId: 'crown_legs', shop: 'equipment' },
+  { id: 'buy_warrior_helmet',   name: 'Warrior Helmet',    icon: '⛑️', currency: 'gold', price: 1400,   type: 'item', itemId: 'warrior_helmet', shop: 'equipment' },
+  { id: 'buy_crown_helmet',     name: 'Crown Helmet',      icon: '👑', currency: 'gold', price: 23200,  type: 'item', itemId: 'crown_helmet', shop: 'equipment' },
+  { id: 'buy_guardian_shield',  name: 'Guardian Shield',   icon: '🛡️', currency: 'gold', price: 10000,  type: 'item', itemId: 'guardian_shield', shop: 'equipment' },
+  { id: 'buy_crown_shield',     name: 'Crown Shield',      icon: '🛡️', currency: 'gold', price: 20000,  type: 'item', itemId: 'crown_shield', shop: 'equipment' },
+  { id: 'buy_ancient_shield',   name: 'Ancient Shield',    icon: '🛡️', currency: 'gold', price: 44000,  type: 'item', itemId: 'ancient_shield', shop: 'equipment' },
+  { id: 'buy_might_ring',       name: 'Might Ring',        icon: '💍', currency: 'gold', price: 1520,   type: 'item', itemId: 'might_ring', shop: 'equipment' },
 
   // Loja de Artigos Mágicos (gold) — Supply Completo (restaura HP/mana na
   // hora), depois poções e runas, preço = 4x o valor de venda

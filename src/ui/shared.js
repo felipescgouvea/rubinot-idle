@@ -64,6 +64,21 @@ export function trainingDummyImg(cls = '') {
   return spriteImgOrFallback(spriteUrl(TRAINING_DUMMY_FILE), 'Training Dummy', '🏋️', cls);
 }
 
+// Cor da barra de vida por faixa (fiel ao Tibia): verde cheia, laranja pela
+// metade, vermelha quando cai muito — mesmas 3 faixas usadas em todo lugar
+// que mostra vida (jogador E monstro, ver ui/characterPanel.js e
+// ui/huntPanel.js: as barras de monstro usavam sempre a mesma cor fixa,
+// então uma criatura com 1/30 de vida parecia igual a uma com vida cheia).
+export function hpStateClass(pct) {
+  return pct > 50 ? 'hp-state-high' : pct > 25 ? 'hp-state-mid' : 'hp-state-low';
+}
+
+export function applyHpState(el, pct) {
+  if (!el) return;
+  el.classList.remove('hp-state-high', 'hp-state-mid', 'hp-state-low');
+  el.classList.add(hpStateClass(pct));
+}
+
 export function formatNum(n) {
   if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
   if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';

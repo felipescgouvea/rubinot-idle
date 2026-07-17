@@ -1,7 +1,7 @@
 import { G } from '../application/gameStore.js?v=129';
 import { ITEMS } from '../domain/items.js?v=138';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=130';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=131';
 import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=129';
 import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=127';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=129';

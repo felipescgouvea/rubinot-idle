@@ -492,9 +492,12 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .mana-bar { background: linear-gradient(180deg, #3d7ec9, var(--mana-c)); }
 /* Estado da vida por faixa — sobrescreve o gradiente fixo acima (ver
    renderBars/renderPlayerBattleSide, que aplicam a classe conforme o %). */
-.hp-bar.hp-state-high, .player-hp-fill.hp-state-high { background: linear-gradient(180deg, #7ed957, #2e8b2e); }
-.hp-bar.hp-state-mid, .player-hp-fill.hp-state-mid { background: linear-gradient(180deg, #ffb347, #cc7a1a); }
-.hp-bar.hp-state-low, .player-hp-fill.hp-state-low { background: linear-gradient(180deg, #ff6b5b, #a52a1f); }
+.hp-bar.hp-state-high, .player-hp-fill.hp-state-high,
+.monster-hp-fill.hp-state-high, .battle-list-hp-fill.hp-state-high, .stage-monster-hp-fill.hp-state-high { background: linear-gradient(180deg, #7ed957, #2e8b2e); }
+.hp-bar.hp-state-mid, .player-hp-fill.hp-state-mid,
+.monster-hp-fill.hp-state-mid, .battle-list-hp-fill.hp-state-mid, .stage-monster-hp-fill.hp-state-mid { background: linear-gradient(180deg, #ffb347, #cc7a1a); }
+.hp-bar.hp-state-low, .player-hp-fill.hp-state-low,
+.monster-hp-fill.hp-state-low, .battle-list-hp-fill.hp-state-low, .stage-monster-hp-fill.hp-state-low { background: linear-gradient(180deg, #ff6b5b, #a52a1f); }
 .xp-bar { background: linear-gradient(180deg, var(--gold-bright), var(--xp-c)); }
 .bar-row span { width: 82px; font-size: 10.5px; color: var(--ink-soft); text-align: right; font-weight: 600; }
 
@@ -1439,6 +1442,11 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 }
 .inv-item:hover { border-color: var(--gold); transform: translateY(-1px); box-shadow: 0 3px 8px #00000033; }
 .inv-item .item-icon { font-size: 23px; filter: drop-shadow(0 1px 2px #00000033); }
+
+/* Ícone da Loja de Equipamentos/Artigos Mágicos — sem essa classe o <img>/emoji
+   herdava o font-size ambiente do texto do card (~13px), ficando minúsculo
+   comparado ao mesmo ícone no inventário (.item-icon, 23px). */
+.shop-item-icon { font-size: 26px; filter: drop-shadow(0 1px 2px #00000033); }
 .inv-item .item-name { font-size: 9px; color: var(--ink-soft); margin-top: 3px; line-height: 1.35; }
 .inv-item .item-qty { position: absolute; top: 3px; right: 5px; font-size: 9.5px; color: var(--navy-1); font-weight: 700; }
 .inv-item.rare { border-color: #8e44ad; }

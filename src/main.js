@@ -32,9 +32,9 @@ import { claimDailyReward } from './application/dailyRewardUseCases.js?v=126';
 import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=130';
 
 // ui
-import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=130';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=128';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=135';
+import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=131';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=129';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=136';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=129';
 import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=130';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=126';
