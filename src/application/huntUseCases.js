@@ -273,8 +273,10 @@ async function reconcileWithServer() {
     // exibida como se fosse da atual, com o monstro errado.
     if (d && d.at && d.at > lastSeenDeathAt && d.sessionId && d.sessionId === currentSessionId) {
       lastSeenDeathAt = d.at;
+      G.lastSeenDeathAt = d.at; // persiste no save (ver checkAndResumeHuntSession) pra não reexibir esta morte num reload futuro
       emit(EVENTS.LOG, t('hunt.logYouDied', { monster: d.monster, xpLost: d.xpLost }));
       emit(EVENTS.NOTIFY, { msg: t('hunt.notifyYouDied', { monster: d.monster, xpLost: d.xpLost }), type: 'error' });
+      saveGame();
     }
     stopHuntLocalOnly();
   }
@@ -549,6 +551,14 @@ export function startHunt() {
 // retomou (quem chamou deve pular o applyOfflineProgress local nesse caso).
 export async function checkAndResumeHuntSession() {
   if (!G.vocation) return false;
+  // G.hunting ainda reflete o save (local/nuvem) de ANTES deste boot — se veio
+  // true, é porque a aba fechou/travou no meio de uma caçada. Precisa ser lido
+  // AQUI, antes de resetar pra false logo abaixo, pra decidir se um possível
+  // last_death encontrado é "morreu enquanto a aba estava fechada" (avisa) ou
+  // só o resquício de uma sessão já normalmente encerrada antes (não avisa de
+  // novo — ver o uso de wasHuntingLocally mais abaixo).
+  const wasHuntingLocally = G.hunting;
+  G.hunting = false; // só fica true de novo se o servidor confirmar sessão viva
   const res = await getHuntState(ACCOUNT.activeSlot);
   if (!res.ok) return false;
   // Sincroniza SEMPRE (parado ou caçando) — antes só chamava reconcileWithServer
@@ -557,7 +567,27 @@ export async function checkAndResumeHuntSession() {
   // estivesse, e o cálculo aproximado de applyOfflineProgress rodava em cima
   // desse valor já errado, compondo o erro a cada boot.
   await reconcileWithServer();
-  if (!res.hunting) return false;
+  if (!res.hunting) {
+    // Cliente achava (pelo save) que ainda estava caçando, mas o servidor já
+    // não está mais — ou o jogador morreu com a aba fechada (server encerrou
+    // a sessão de verdade, ver server/src/huntEngine.js: resolveTick) ou algo
+    // mais parou a caçada nesse meio-tempo sem o cliente saber. Se houver um
+    // last_death mais novo que o já visto, avisa agora — sem isso, reabrir o
+    // jogo depois de morrer offline não mostrava NADA sobre o que aconteceu
+    // (bug reportado pelo Felipe: tela ficava fora de sincronia sobre
+    // caçando/morto). G.lastSeenDeathAt é persistido no save (ao contrário de
+    // lastSeenDeathAt em memória, que reseta a cada load) pra nunca reexibir
+    // a MESMA morte de novo num reload futuro.
+    const d = res.stats && res.stats.last_death;
+    if (wasHuntingLocally && d && d.at && d.at > (G.lastSeenDeathAt || 0)) {
+      G.lastSeenDeathAt = d.at;
+      lastSeenDeathAt = d.at;
+      emit(EVENTS.LOG, t('hunt.logYouDied', { monster: d.monster, xpLost: d.xpLost }));
+      emit(EVENTS.NOTIFY, { msg: t('hunt.notifyYouDied', { monster: d.monster, xpLost: d.xpLost }), type: 'error' });
+      saveGame();
+    }
+    return false;
+  }
   G.activeZone = res.zoneId || G.activeZone;
   G.hunting = true;
   currentSessionId = res.sessionId || null;
