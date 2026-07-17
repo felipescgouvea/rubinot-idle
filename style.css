@@ -824,7 +824,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   image-rendering: pixelated;
   pointer-events: none;
   z-index: 5;
-  transition: transform 0.13s linear;
+  transition: transform 0.26s linear;
   filter: drop-shadow(0 1px 2px #0008);
 }
 .player-sprite,
