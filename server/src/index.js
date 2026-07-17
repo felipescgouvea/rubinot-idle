@@ -149,27 +149,27 @@ const server = http.createServer(async (req, res) => {
       }
 
       // Troca de zona rápida (selectZone: stopHunt()+startHunt() de volta,
-      // sem esperar o /hunt/stop responder) pode deixar DOIS /hunt/start em
+      // sem esperar o /hunt/stop responder) pode deixar VÁRIOS /hunt/start em
       // voo ao mesmo tempo pro mesmo slot — cada um vê o prevRow ainda ativo
-      // e tenta fechar+inserir, e o segundo esbarra na constraint única
-      // (hunt_sessions_one_active_per_slot), 500 pro cliente (reportado nos
-      // logs após um teste de troca rápida repetida). Um retry único —
-      // fecha de novo o que quer que esteja ativo agora e tenta de novo —
-      // resolve sem precisar serializar todo o endpoint.
+      // e tenta fechar+inserir, e qualquer um além do primeiro esbarra na
+      // constraint única (hunt_sessions_one_active_per_slot), 500 pro cliente
+      // (reportado nos logs após um teste de troca rápida repetida). Retry
+      // em loop — fecha de novo o que quer que esteja ativo agora e tenta de
+      // novo — resolve sem precisar serializar todo o endpoint; algumas
+      // tentativas cobrem até cliques bem próximos um do outro.
       let inserted;
-      try {
-        inserted = await insertRow('hunt_sessions', {
-          user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
-          atk, def, spd, level, vocation: body.vocation,
-        });
-      } catch (e) {
-        if (!/23505/.test(e.message)) throw e;
-        const raceRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
-        if (raceRow) { stopSession(raceRow.id); await updateRows('hunt_sessions', { id: raceRow.id }, { active: false }); }
-        inserted = await insertRow('hunt_sessions', {
-          user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
-          atk, def, spd, level, vocation: body.vocation,
-        });
+      for (let attempt = 0; ; attempt++) {
+        try {
+          inserted = await insertRow('hunt_sessions', {
+            user_id: user.id, slot, zone_id: body.zoneId, boss_only: !!body.bossOnly,
+            atk, def, spd, level, vocation: body.vocation,
+          });
+          break;
+        } catch (e) {
+          if (!/23505/.test(e.message) || attempt >= 4) throw e;
+          const raceRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+          if (raceRow) { stopSession(raceRow.id); await updateRows('hunt_sessions', { id: raceRow.id }, { active: false }); }
+        }
       }
 
       startSession({
