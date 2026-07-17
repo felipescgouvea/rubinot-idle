@@ -3,7 +3,7 @@ import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=128
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=138';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=132';
-import { buyShopItem } from '../application/shopUseCases.js?v=132';
+import { buyShopItem } from '../application/shopUseCases.js?v=133';
 import { t } from '../i18n/i18n.js?v=142';
 
 function shopPriceLabel(s) {

@@ -59,7 +59,7 @@ async function incrementInventory(userId, slot, itemId, delta) {
   }
   const newQty = Math.max(0, (existing ? Number(existing.qty) : 0) + delta);
   await upsertRow('player_inventory', { user_id: userId, slot, item_id: itemId, qty: newQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
-  return true;
+  return newQty;
 }
 
 function isSpellReady(session, id) { return (session.spellCdUntil[id] || 0) <= Date.now(); }
@@ -593,10 +593,15 @@ export async function buyShopItemStandalone(userId, slot, shopItemId, qty) {
   if (Number(stats.gold) < total) return { error: 'saldo insuficiente' };
 
   if (s.type === 'item') {
-    const captured = await incrementInventory(userId, slot, s.itemId, count);
-    if (!captured) return { error: 'bag cheia' };
+    const newQty = await incrementInventory(userId, slot, s.itemId, count);
+    if (!newQty) return { error: 'bag cheia' };
     await updateRows('player_stats', { user_id: userId, slot }, { gold: Number(stats.gold) - total });
-    return { ok: true, gold: Number(stats.gold) - total };
+    // devolve o item comprado pro cliente aplicar em G.inventory na hora — sem
+    // isso, G.inventory só ficava correto no próximo reconcileWithServer (só
+    // roda caçando), então comprar na loja fora de uma caçada mostrava a
+    // quantia velha em qualquer outro painel que leia do inventário local (ex.:
+    // o seletor de poção do RTC), bug reportado pelo Felipe.
+    return { ok: true, gold: Number(stats.gold) - total, itemId: s.itemId, qty: newQty };
   }
 
   // refill: cura hp/mana até o teto (mesma fórmula de maxHp/maxMana do hunt-start)

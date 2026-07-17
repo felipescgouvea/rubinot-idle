@@ -39,6 +39,16 @@ export async function buyShopItem(id, qty = 1) {
     G.gold = res.gold;
     if (res.hp != null) G.hp = res.hp;
     if (res.mana != null) G.mana = res.mana;
+    // Aplica o item comprado no inventário local NA HORA — antes só emitíamos
+    // EVENTS.INVENTORY sem tocar G.inventory, então painéis que leem direto
+    // dali (ex.: ui/rtcPanel.js: openRtcPotionPicker) mostravam a quantia
+    // ANTIGA até o próximo reconcileWithServer (que só roda caçando) corrigir
+    // sozinho — bug reportado pelo Felipe: comprou poção na loja, foi
+    // configurar no RTC e via "possui 0".
+    if (res.itemId && res.qty != null) {
+      G.inventory[res.itemId] = res.qty;
+      if (!G.inventoryOrder.includes(res.itemId)) G.inventoryOrder.push(res.itemId);
+    }
     emit(EVENTS.NOTIFY, {
       msg: s.type === 'refill' ? t('shop.refillSuccess') : t('shop.itemPurchased', { count, name: item.name }),
       type: 'success',
