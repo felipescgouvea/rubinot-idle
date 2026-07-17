@@ -17,6 +17,25 @@ export function showAuthGate() {
   renderGate('login');
 }
 
+// Cobre a tela com um estado de "carregando" (sem formulário) enquanto o
+// boot de uma sessão JÁ LOGADA roda (recarregar a página com sessão válida —
+// ver main.js). Sem isso, o #app ficava visível com o HTML estático padrão
+// (tela de criar personagem, 0 gold, sem equipamento) até o boot terminar de
+// buscar a nuvem/hunt-state — o login manual já tinha esse cuidado (o gate
+// cobre a tela até o bootGame() terminar), mas um F5 com sessão existente
+// nunca mostrava gate nenhum, então o "flash" ficava exposto o tempo todo.
+export function showLoadingGate() {
+  const gate = document.getElementById('auth-gate');
+  if (!gate) return;
+  gate.style.display = 'flex';
+  gate.innerHTML = `
+    <div class="auth-card">
+      <div class="auth-logo"><img src="logo.webp" alt="RubinOT" class="auth-logo-img" /><span class="auth-logo-sub">IDLE</span></div>
+      <p class="auth-foot" style="margin-top:16px">${t('auth.loggingIn')}</p>
+    </div>
+  `;
+}
+
 export function hideAuthGate() {
   const gate = document.getElementById('auth-gate');
   if (gate) gate.style.display = 'none';

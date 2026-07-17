@@ -54,7 +54,7 @@ import { setSkillsSubtab } from './ui/skillsPanel.js?v=128';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=127';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=127';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=131';
-import { showAuthGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=125';
+import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=126';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=129';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance, initGameConfig } from './application/adminUseCases.js?v=129';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=131';
@@ -214,6 +214,7 @@ setAuthSuccessHandler(startAuthedSession);
   consumeAuthRedirect();
   // Login obrigatório: sem sessão válida, mostra o gate e NÃO inicia o jogo.
   if (isLoggedIn()) {
+    showLoadingGate(); // cobre o #app até o boot terminar (ver ui/authPanel.js)
     const token = await ensureValidToken();
     if (token) { await startAuthedSession(); return; }
   }
