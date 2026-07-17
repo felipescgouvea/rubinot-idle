@@ -2,18 +2,29 @@
 // de prioridade que mistura magias E runas livremente — ver domain/rtcConfig.js
 // sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
 // limiar de % de HP) — a UI mora em rtcPanel.js.
-import { G } from './gameStore.js?v=129';
+import { G, ACCOUNT } from './gameStore.js?v=129';
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=159';
 import { getMagic } from './stats.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
+import { updateHuntRtc } from '../infrastructure/authClient.js?v=133';
 import { t } from '../i18n/i18n.js?v=142';
+
+// Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar
+// prioridade de ataque/cura no meio da luta só valia a partir da PRÓXIMA
+// caçada — bug reportado pelo Felipe: "rtc de cura não está funcionando").
+// Parado (G.hunting=false), não há sessão viva pra atualizar — a próxima
+// startHunt() já manda o RTC atual via buildHuntSnapshot, então não faz nada.
+function syncRtcToServer() {
+  if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc);
+}
 
 function refresh(msg) {
   emit(EVENTS.RTC_PANEL);
   emit(EVENTS.NOTIFY, { msg, type: 'info' });
   saveGame();
+  syncRtcToServer();
 }
 
 // Define a magia OU runa de uma caixinha de prioridade específica
@@ -80,4 +91,5 @@ export function setRtcThreshold(field, value) {
   G.rtc[field] = Math.max(5, Math.min(95, Math.round(Number(value)) || 0));
   emit(EVENTS.RTC_PANEL);
   saveGame();
+  syncRtcToServer();
 }

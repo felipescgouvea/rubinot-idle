@@ -559,6 +559,8 @@ export default {
   'hunt.logBossRushChallenge': '<span class="log-info">💀 Boss Zone: desafiando {icon} {zone}...</span>',
   'hunt.logEnterZone': '<span class="log-info">🗺️ Entrando em {icon} {zone}...</span>',
   'hunt.logPaused': '<span class="log-info">⏸ Caçada pausada.</span>',
+  'hunt.logYouDied': '<span class="log-death">☠️ Você morreu para {monster}! Perdeu {xpLost} XP.</span>',
+  'hunt.notifyYouDied': 'Você morreu para {monster} — caçada encerrada. Perdeu {xpLost} XP.',
   'hunt.logBossTierAppeared': '{icon} <span class="log-info">{name} (Tier {tier}) apareceu!</span>',
   'hunt.logMonsterAppeared': '{icon} <span class="log-info">{name} apareceu!</span>',
   'hunt.logExtraInRoom': ' <span class="log-info">(+{count} na sala)</span>',

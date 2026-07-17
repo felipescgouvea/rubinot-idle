@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=132';
+import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=133';
 import { ZONES } from '../domain/bestiary.js?v=137';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
@@ -171,6 +171,10 @@ const RECONCILE_MS = 250;
 // server/src/huntEngine.js: settleKill) — evita reprocessar o mesmo kill em
 // polls sucessivos, já que lastKill fica "parado" no servidor até a próxima morte.
 let lastSeenKillAt = 0;
+// Mesma ideia de lastSeenKillAt, pro evento de morte (ver server/src/
+// huntEngine.js: resolveTick — hp<=0 agora encerra a sessão de verdade e
+// grava stats.last_death, em vez de reviver em silêncio e seguir caçando).
+let lastSeenDeathAt = 0;
 
 // Desde o Marco 4, nível/skills/equipamento NÃO são mais enviados — o
 // servidor lê de player_stats/player_skills/player_equipment (autoritativos).
@@ -213,6 +217,22 @@ async function reconcileWithServer() {
     // contra o teto local, caso o cálculo de equipamento diverja por um instante).
     G.hp = Math.min(getMaxHp(), s.hp);
     G.mana = Math.min(getMaxMana(), s.mana);
+  }
+  // Morte de verdade (ver server/src/huntEngine.js: resolveTick — hp<=0 agora
+  // ENCERRA a sessão de verdade em vez de reviver em silêncio e seguir
+  // caçando pra sempre, bug reportado pelo Felipe: "quando esta em iminente
+  // morte recupera a vida e nao mostra em nenhum lugar o que realmente
+  // houve"). Detecta comparando o que o cliente ainda acha que está caçando
+  // com o que o servidor diz agora — se o servidor já não está mais
+  // caçando mas o cliente ainda acha que sim, foi ele quem encerrou.
+  if (G.hunting && !res.hunting) {
+    const d = s.last_death;
+    if (d && d.at && d.at > lastSeenDeathAt) {
+      lastSeenDeathAt = d.at;
+      emit(EVENTS.LOG, t('hunt.logYouDied', { monster: d.monster, xpLost: d.xpLost }));
+      emit(EVENTS.NOTIFY, { msg: t('hunt.notifyYouDied', { monster: d.monster, xpLost: d.xpLost }), type: 'error' });
+    }
+    stopHuntLocalOnly();
   }
   // Inventário e relíquias (Marco 3) — mesma troca de fonte de verdade: o
   // servidor decide o loot/relic drop, o cliente só espelha. inventoryOrder
@@ -443,7 +463,11 @@ export async function checkAndResumeHuntSession() {
   return true;
 }
 
-export function stopHunt() {
+// Zera todo o estado local de caçada (loop cosmético, polling, sala/alvo) sem
+// chamar /hunt/stop — usado quando o SERVIDOR já encerrou a sessão por conta
+// própria (morte real, ver reconcileWithServer acima), pra não mandar um stop
+// redundante numa sessão que já não existe mais lá.
+function stopHuntLocalOnly() {
   G.hunting = false;
   if (huntInterval) { clearInterval(huntInterval); huntInterval = null; }
   if (reconcileInterval) { clearInterval(reconcileInterval); reconcileInterval = null; }
@@ -454,6 +478,10 @@ export function stopHunt() {
   recentDead = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
   emit(EVENTS.BATTLE_LIST);
+}
+
+export function stopHunt() {
+  stopHuntLocalOnly();
   emit(EVENTS.LOG, t('hunt.logPaused'));
   stopHuntSession(ACCOUNT.activeSlot).then(reconcileWithServer);
 }

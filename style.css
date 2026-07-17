@@ -1044,6 +1044,7 @@ img.tibia-icon {
 .log-kill { color: #8e44ad; font-weight: 600; }
 .log-info { color: var(--ink-faint); font-style: italic; }
 .log-xp { color: var(--navy-1); font-weight: 600; }
+.log-death { color: #c0392b; font-weight: 700; }
 
 /* ============ LOOT ============ */
 #loot-display { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 14px !important; }

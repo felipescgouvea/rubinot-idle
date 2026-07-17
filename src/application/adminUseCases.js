@@ -8,7 +8,7 @@
 // então NUNCA fazem fetch, só leem o cache.
 import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=132';
+import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=133';
 
 // Antes do primeiro fetch resolver (ou se ele falhar), usa o default — nunca
 // trava o jogo por causa da config privilegiada ainda não ter chegado.

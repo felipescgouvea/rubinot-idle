@@ -294,6 +294,15 @@ export function stopHuntSession(slot) {
   return huntFetch('/hunt/stop', { method: 'POST', body: { slot } });
 }
 
+// Empurra a config do RTC pra sessão JÁ RODANDO no servidor (ver
+// server/src/index.js: /hunt/rtc) — sem isso, ajustar cura/prioridade de
+// ataque no meio de uma caçada só valia a partir da PRÓXIMA (bug reportado:
+// "rtc de cura não está funcionando"). Silencioso se não houver caçada ativa
+// (aplicado normalmente no próximo hunt-start via buildHuntSnapshot).
+export function updateHuntRtc(slot, rtc) {
+  return huntFetch('/hunt/rtc', { method: 'POST', body: { slot, rtc } });
+}
+
 export function getHuntState(slot) {
   return huntFetch(`/hunt/state?slot=${slot}`);
 }

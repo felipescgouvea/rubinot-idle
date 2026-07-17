@@ -300,6 +300,8 @@ async function resolveTick(session) {
   await applyRtcHealing(session, cfg);
 
   if (session.hp <= 0) {
+    // Morte de verdade: acaba a caçada aqui mesmo (fiel ao Tibia — morrer
+    // encerra a luta, não continua caçando sozinho com vida cheia de graça).
     // Bênçãos AUTORITATIVAS (lidas ao vivo — podem ter sido compradas a
     // qualquer momento, ver server/src/index.js: /buy-blessing) e consumidas
     // na morte (não recuperam sozinhas — precisa comprar de novo).
@@ -308,12 +310,20 @@ async function resolveTick(session) {
     const curXp = row ? Number(row.xp) : 0;
     const xpLost = Math.floor(curXp * deathXpLossPct(blessings));
     session.hp = Math.floor(session.maxHp * reviveHpPct(blessings));
+    const lastDeath = { monster: newPrimary.name, xpLost, blessingsUsed: blessings, at: Date.now() };
     await upsertRow('player_stats', {
       user_id: session.userId, slot: session.slot, xp: Math.max(0, curXp - xpLost),
-      hp: session.hp, mana: session.mana, stamina: session.stamina, blessings: 0, updated_at: new Date().toISOString(),
+      hp: session.hp, mana: session.mana, stamina: session.stamina, blessings: 0,
+      last_death: lastDeath, updated_at: new Date().toISOString(),
     }, 'user_id,slot');
     session.currentPack = [];
-    session.nextSpawnAt = Date.now() + 1500;
+    // Encerra a sessão de verdade (não é só "sala vazia esperando spawn") —
+    // reportado pelo Felipe: o personagem morrendo recuperava vida sozinho e
+    // seguia caçando sem nada avisar. stopSession limpa os timers deste
+    // processo; marcamos active:false pra o /hunt/state parar de reportar
+    // hunting:true (o cliente detecta e para o loop local também).
+    await updateRows('hunt_sessions', { id: session.id }, { active: false });
+    stopSession(session.id);
   }
 }
 
@@ -376,6 +386,20 @@ export function stopSession(sessionId) {
 
 export function getLiveSession(sessionId) {
   return live.get(sessionId);
+}
+
+// Atualiza a config do RTC (prioridade de ataque, limiares de cura) de uma
+// sessão JÁ RODANDO — antes o servidor só lia `rtc` uma vez, no hunt-start
+// (session.rtc = body.rtc || {}), então ajustar o RTC no meio da caçada
+// (o uso mais comum: reagir a um perigo, mudar o gatilho de cura) não tinha
+// NENHUM efeito até parar e começar a caçar de novo (bug reportado pelo
+// Felipe: "rtc de cura nao esta funcionando"). Agora /hunt/rtc chama isto a
+// cada mudança na UI enquanto G.hunting.
+export function updateSessionRtc(sessionId, rtc) {
+  const s = live.get(sessionId);
+  if (!s) return false;
+  s.rtc = rtc || {};
+  return true;
 }
 
 // Poção fora de sessão viva (parado, ou caçada não iniciada nesse processo) —

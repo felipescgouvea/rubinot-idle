@@ -17,7 +17,7 @@ import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=138';
-import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone } from './huntEngine.js';
+import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
 
 const PORT = process.env.PORT || 3000;
@@ -162,6 +162,24 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }
 
+    // Atualiza a config do RTC (prioridade de ataque, gatilhos de cura) de
+    // uma caçada JÁ EM ANDAMENTO — sem isso, mudar o RTC no meio da luta só
+    // valia a partir do PRÓXIMO hunt-start (bug reportado: cura automática
+    // por spell/poção "não funciona", pois o servidor nunca via a mudança).
+    // Não faz nada de errado se não houver sessão viva (RTC só é preferência,
+    // sem risco — servidor sempre valida mana/cooldown/posse na hora de usar).
+    if (url.pathname === '/hunt/rtc' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+      const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
+      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {});
+      return send(res, 200, { ok: true, applied: !!liveSession });
+    }
+
     if (url.pathname === '/hunt/stop' && req.method === 'POST') {
       const user = await requireUser(req, res);
       if (!user) return;
@@ -190,7 +208,7 @@ const server = http.createServer(async (req, res) => {
         ok: true,
         hunting: !!activeRow,
         zoneId: activeRow ? activeRow.zone_id : null,
-        stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX },
+        stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX, last_death: null },
         inventory,
         relics: relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
         // Skills treinadas (Marco 4) — o motor de combate treina server-side

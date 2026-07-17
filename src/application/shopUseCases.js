@@ -2,7 +2,7 @@ import { G, ACCOUNT } from './gameStore.js?v=129';
 import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=128';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=132';
+import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=133';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { t } from '../i18n/i18n.js?v=142';
 
