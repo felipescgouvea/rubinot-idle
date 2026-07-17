@@ -10,13 +10,13 @@ import { emit, EVENTS } from './shared/eventBus.js?v=126';
 import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=137';
 
 // application
-import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=127';
-import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=160';
+import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=128';
+import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=161';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
-import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=130';
+import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=131';
 import { selectVocation } from './application/characterUseCases.js?v=128';
-import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=167';
-import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=131';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=168';
+import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=132';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=126';
@@ -137,10 +137,12 @@ async function bootGame() {
   G.hunting = false; // só fica true de novo se o servidor confirmar sessão viva (ver abaixo)
   // O servidor de caçada (Railway) continua tickando sozinho mesmo com a aba
   // fechada — se a sessão ainda está ativa lá, aquele tempo JÁ foi contado de
-  // verdade; só roda o cálculo aproximado de offline se NÃO havia sessão viva
-  // (senão contaria a mesma janela duas vezes, ver huntUseCases.js).
-  const resumed = await checkAndResumeHuntSession();
-  if (!resumed) applyOfflineProgress();
+  // verdade e checkAndResumeHuntSession() já traz o ganho real (ver
+  // reconcileWithServer em huntUseCases.js). Não há mais estimativa aproximada
+  // de progresso offline (ver persistenceUseCases.js: applyOfflineProgress) —
+  // se o servidor caiu enquanto o jogador estava fora, essa janela específica
+  // simplesmente não rende nada, de propósito (ver comentário lá).
+  await checkAndResumeHuntSession();
   renderAuthUser();
   renderCharPanel();
   emit(EVENTS.HEADER_STATS);

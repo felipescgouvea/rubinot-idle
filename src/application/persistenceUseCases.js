@@ -7,19 +7,15 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isR
 import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { findOutfit } from '../domain/outfits.js?v=125';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=125';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=136';
+import { ZONES } from '../domain/bestiary.js?v=136';
 import { isRelicId, STARTER_KITS } from '../domain/items.js?v=138';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=126';
-import { worldXpMultiplier, worldGoldMultiplier, LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=128';
+import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=128';
 import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=125';
-import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { t } from '../i18n/i18n.js?v=137';
 import { getMaxHp, getMaxMana } from './stats.js?v=126';
-import { gainXp } from './huntUseCases.js?v=167';
-import { checkBpTier } from './battlePassUseCases.js?v=126';
-import { getXpRate, getGoldRate, getZoneMultiplier, isStaminaEnabled } from './adminUseCases.js?v=129';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
+import { STAMINA_MAX } from '../domain/stamina.js?v=125';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
 // nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não
@@ -158,44 +154,20 @@ export function loadGame() {
   }
 }
 
-export function applyOfflineProgress() {
-  if (!G.vocation || !G.lastSave || !G.wasHunting || !G.activeZone) return;
-  const elapsedSec = Math.floor((Date.now() - G.lastSave) / 1000);
-  if (elapsedSec < 60) return;
-  const cappedSec = Math.min(elapsedSec, 8 * 3600); // máx 8h de ganho offline
-
-  const zone = ZONES[G.activeZone];
-  if (!zone) return;
-  // média dos monstros da zona
-  const avg = zone.monsters.reduce((acc, id) => {
-    const m = MONSTERS[id];
-    return { xp: acc.xp + m.xp / zone.monsters.length, gold: acc.gold + (m.gold[0] + m.gold[1]) / 2 / zone.monsters.length };
-  }, { xp: 0, gold: 0 });
-
-  const scaleFactor = 1 + (G.level - 1) * 0.05;
-  const killsPerMin = 6; // ritmo offline reduzido (~metade do ativo)
-  const kills = Math.floor((cappedSec / 60) * killsPerMin);
-  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', 1);
-  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', 1);
-  // Stamina offline: caçar offline também consome stamina (se ligada) e a XP
-  // sofre o mesmo multiplicador da stamina. Consome pelo tempo caçado.
-  const staminaMult = isStaminaEnabled() ? staminaXpMult(G.stamina) : 1;
-  const xpGained = Math.floor(kills * avg.xp * scaleFactor * zoneXpMult * worldXpMultiplier(G.currentWorld) * 0.5 * getXpRate() * staminaMult);
-  const goldGained = Math.floor(kills * avg.gold * scaleFactor * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * 0.5 * getGoldRate());
-  if (isStaminaEnabled() && typeof G.stamina === 'number') {
-    G.stamina = Math.max(0, G.stamina - cappedSec / 60);
-  }
-
-  G.gold += goldGained;
-  G.totalGoldEarned += goldGained;
-  G.totalKills += kills;
-  G.bpXp += Math.floor(xpGained * 0.01);
-  checkBpTier();
-  gainXp(xpGained);
-
-  const hours = Math.floor(cappedSec / 3600), minutes = Math.floor((cappedSec % 3600) / 60);
-  emit(EVENTS.OFFLINE_PROGRESS, { zoneName: t(zone.name), zoneMainMonster: zone.monsters[0], hours, minutes, kills, xpGained, goldGained });
-}
+// A antiga applyOfflineProgress() (estimativa aproximada de gold/xp offline,
+// killsPerMin fixo etc.) foi removida: desde o Marco 6b nada no cliente decide
+// gold/xp reais, e o servidor de caçada (Railway) continua tickando de VERDADE
+// mesmo com a aba fechada (ver server/src/huntEngine.js) — o tempo que o
+// jogador ficou fora já foi contado de verdade lá, e checkAndResumeHuntSession()
+// (ver main.js: bootGame, chamada antes desta função existiria) já reconcilia
+// esse ganho real via reconcileWithServer(). Rodar uma estimativa aqui em cima
+// contaria a mesma janela duas vezes (uma real, outra inventada).
+// Única lacuna aceita conscientemente: se o PROCESSO do servidor reiniciou
+// (deploy/crash no Railway) enquanto o jogador estava caçando, a sessão em
+// memória morre e reapStaleSessionsOnBoot() marca hunt_sessions.active=false
+// — nenhum tick rodou durante essa janela específica, e o jogador não ganha
+// nada por ela. Preferimos zero ganho nesse caso raro a reintroduzir um
+// palpite do cliente, o que quebraria "o servidor é a única fonte de verdade".
 
 export function confirmReset() {
   if (confirm(t('persistence.resetConfirm'))) {

@@ -1,16 +1,13 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { syncEquipment } from '../infrastructure/authClient.js?v=130';
+import { syncEquipment, useItemOnServer } from '../infrastructure/authClient.js?v=131';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=138';
-import { ZONES } from '../domain/bestiary.js?v=136';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { getMaxHp, getMaxMana, getMagic } from './stats.js?v=126';
+import { getMagic } from './stats.js?v=126';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=159';
-import { getCurrentMonster, getCurrentPack, resolveMonsterKill } from './huntUseCases.js?v=167';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
-import { runeDamage, potionRestore } from '../domain/combatFormulas.js?v=157';
-import { elementMod } from '../domain/elements.js?v=125';
-import { saveGame } from './saveGameUseCase.js?v=127';
+import { getCurrentMonster } from './huntUseCases.js?v=168';
+import { areaName } from '../domain/attackAreas.js?v=125';
+import { saveGame } from './saveGameUseCase.js?v=128';
 import { itemLogIcon } from './logIcons.js?v=127';
 import { t } from '../i18n/i18n.js?v=137';
 
@@ -148,17 +145,18 @@ export function sellAllItem(itemId) {
 // Consome poção/runa/comida do inventário. Poções e comida curam HP/mana na hora;
 // runas de ataque (com "dmg") só funcionam com uma criatura em combate — como usar
 // uma runa mirando o alvo em Tibia — e runas de cura restauram HP a qualquer momento.
-export function useItem(itemId) {
+export async function useItem(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   if (!item || qty <= 0 || !G.vocation) return;
 
   // Nível/vocação mínimos pra usar a poção (fiel ao Tibia — ver domain/items.js).
+  // Checagem local só pra feedback instantâneo: quem decide de VERDADE é o
+  // servidor logo abaixo (useItemOnServer), que confere tudo de novo.
   const blockReason = potionUseBlockReason(item, G.vocation, G.level);
   if (blockReason) { emit(EVENTS.NOTIFY, { msg: t('inventory.useBlocked', { item: item.name, reason: blockReason }), type: 'error' }); return; }
 
   const currentMonster = getCurrentMonster();
-  let runeDeaths = null;
   if (item.dmg) {
     // Runa de ataque exige a vocação certa E o Magic Level mínimo (fiel ao Tibia
     // — o mesmo gate do RTC; ver domain/rtcConfig.js: canUseAttackRune).
@@ -167,50 +165,46 @@ export function useItem(itemId) {
       return;
     }
     if (!currentMonster) { emit(EVENTS.NOTIFY, { msg: t('inventory.noCreatureToTarget'), type: 'error' }); return; }
-    // Runa mirada manualmente respeita a mesma FORMA de área da runa (ver
-    // domain/attackAreas.js): SD acerta só o alvo; Avalanche/GFB pegam a sala.
-    const pack = getCurrentPack();
-    const areaId = item.area || 'single';
-    const targets = isAreaAttack(areaId) ? pack.slice(0, areaMaxTargets(areaId)) : [currentMonster];
-    // Dano pela fórmula real do Tibia (nível/5 + ML·a + base), com a
-    // resistência/fraqueza elemental do alvo por cima (ver domain/elements.js).
-    targets.forEach(mon => {
-      const dmg = Math.max(1, Math.floor(runeDamage({ rune: item, level: G.level, magicLevel: getMagic() }) * elementMod(mon.defKey, item.element || 'physical')));
-      mon.hp -= dmg;
-      emit(EVENTS.LOG, { html: `📜 ${t('inventory.logRuneDamage', { item: item.name, dmg, target: mon.name })}`, cat: 'suprimento' });
-    });
-    if (isAreaAttack(areaId) && targets.length > 1) {
-      emit(EVENTS.LOG, { html: t('inventory.logAreaHit', { area: areaName(areaId, t), count: targets.length }), cat: 'combate' });
-    }
-    runeDeaths = targets.filter(mon => mon.hp <= 0);
-  }
-  // potionRestore() aplica a faixa ±15% (fiel ao Tibia: toda poção cura/repõe
-  // um valor ALEATÓRIO dentro de uma faixa, nunca um número fixo) — mesma
-  // fórmula usada quando o RTC bebe automaticamente (ver huntUseCases.js:
-  // applyRtcHealing). Bebida manual pela Bag tinha ficado de fora dessa conta.
-  if (item.heal) {
-    const before = G.hp;
-    G.hp = Math.min(getMaxHp(), G.hp + potionRestore(item.heal));
-    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealHp', { item: item.name, amount: G.hp - before })}`, cat: 'suprimento' });
-  }
-  if (item.mana) {
-    const before = G.mana;
-    G.mana = Math.min(getMaxMana(), G.mana + potionRestore(item.mana));
-    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealMana', { item: item.name, amount: G.mana - before })}`, cat: 'suprimento' });
   }
 
-  G.inventory[itemId]--;
-  if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
+  // Ação AUTORITATIVA (ver server/src/huntEngine.js: useItemInSession) — o
+  // servidor confere posse/nível/vocação/ML de novo (não confia no que já
+  // passou nas checagens locais acima) e é quem decide hp/mana reais e, pra
+  // runa, dano/morte, reaproveitando o MESMO settleKill() do tick automático.
+  // Isso fecha o mesmo buraco que o hunt-tick automático já tinha corrigido:
+  // clicar um item na Bag mutava G.hp/G.mana/G.gold/G.inventory só no
+  // cliente, sem o servidor nunca confirmar nada.
+  const res = await useItemOnServer(ACCOUNT.activeSlot, itemId);
+  if (!res.ok) {
+    emit(EVENTS.NOTIFY, { msg: t('inventory.useBlocked', { item: item.name, reason: res.error || '' }), type: 'error' });
+    return;
+  }
+
+  // Feedback cosmético com os números REAIS que o servidor devolveu — gold/
+  // xp/loot/relíquia de uma eventual morte já foram creditados lá dentro
+  // (settleKill) e chegam no cliente pelo próximo reconcileWithServer()
+  // (huntUseCases.js), junto com hp/mana/inventário definitivos.
+  if (item.dmg) {
+    if (res.dmg != null) {
+      emit(EVENTS.LOG, { html: `📜 ${t('inventory.logRuneDamage', { item: item.name, dmg: res.dmg, target: res.targetName || currentMonster.name })}`, cat: 'suprimento' });
+    }
+    if (res.hitCount > 1) {
+      emit(EVENTS.LOG, { html: t('inventory.logAreaHit', { area: areaName(item.area || 'single', t), count: res.hitCount }), cat: 'combate' });
+    }
+  }
+  if (item.heal && res.healedHp != null) {
+    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealHp', { item: item.name, amount: res.healedHp })}`, cat: 'suprimento' });
+  }
+  if (item.mana && res.healedMana != null) {
+    emit(EVENTS.LOG, { html: `${itemLogIcon(itemId)} ${t('inventory.logHealMana', { item: item.name, amount: res.healedMana })}`, cat: 'suprimento' });
+  }
+  if (res.hp != null) G.hp = res.hp;
+  if (res.mana != null) G.mana = res.mana;
+
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
-
-  if (runeDeaths && runeDeaths.length > 0) {
-    const zone = ZONES[G.activeZone];
-    runeDeaths.forEach(m => resolveMonsterKill(zone, m));
-  } else {
-    emit(EVENTS.MONSTER_DISPLAY, {});
-  }
+  if (!(item.dmg && res.killed)) emit(EVENTS.MONSTER_DISPLAY, {});
   saveGame();
 }

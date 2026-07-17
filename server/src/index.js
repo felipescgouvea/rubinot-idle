@@ -17,7 +17,7 @@ import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES } from '../../src/domain/items.js?v=138';
-import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot } from './huntEngine.js';
+import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
 
 const PORT = process.env.PORT || 3000;
@@ -287,6 +287,27 @@ const server = http.createServer(async (req, res) => {
       if (gold < cost) return send(res, 400, { error: 'gold insuficiente' });
       await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - cost, blessings: blessings + 1, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, gold: gold - cost, blessings: blessings + 1 });
+    }
+
+    // Uso manual de item (poção/runa) clicado na Bag durante a caçada — ação
+    // VALIDADA: exige sessão ativa em memória (huntEngine.js: live), confere
+    // posse/vocação/ML e aplica a MESMA matemática/kill-path do RTC
+    // automático (ver huntEngine.js: useItemInSession). Sem isso o clique
+    // manual mutava hp/mana/gold/inventário só no cliente, sem o servidor
+    // nunca saber (mesma categoria de bug que o tick automático já tinha).
+    if (url.pathname === '/hunt/use-item' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      const itemId = typeof body.itemId === 'string' ? body.itemId : null;
+      if (slot === null || !itemId) return send(res, 400, { error: 'slot ou itemId inválido' });
+      const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+      const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
+      if (!liveSession) return send(res, 400, { error: 'sem caçada ativa' });
+      const result = await useItemInSession(liveSession, itemId);
+      if (result.error) return send(res, 400, { error: result.error });
+      return send(res, 200, result);
     }
 
     send(res, 404, { error: 'not found' });

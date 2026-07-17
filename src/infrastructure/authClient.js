@@ -318,3 +318,12 @@ export function grantStarterKit(slot, vocation) {
 export function buyBlessingOnServer(slot) {
   return huntFetch('/buy-blessing', { method: 'POST', body: { slot } });
 }
+
+// Uso manual de item da Bag (poção bebida ou runa mirada por clique do
+// jogador, fora do RTC automático) — validado no servidor (posse/vocação/ML
+// e, pra runa, dano/morte pelo MESMO settleKill do tick automático; ver
+// server/src/huntEngine.js: useItemInSession). Retorna { ok, hp, mana,
+// healedHp/healedMana (poção) ou dmg/targetName/killed (runa) }.
+export function useItemOnServer(slot, itemId) {
+  return huntFetch('/hunt/use-item', { method: 'POST', body: { slot, itemId } });
+}

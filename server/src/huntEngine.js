@@ -190,7 +190,7 @@ async function settleKill(session, mon, cfg) {
     }
   }
 
-  session.lastKill = { monster: mon.name, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
+  session.lastKill = { monster: mon.name, defKey: mon.defKey, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
 }
 
 // Um "tick" inteiro: golpe básico (só no alvo da frente) + magia/runa por
@@ -361,6 +361,64 @@ export function stopSession(sessionId) {
 
 export function getLiveSession(sessionId) {
   return live.get(sessionId);
+}
+
+// Uso MANUAL de item pela Bag (clique do jogador durante a caçada) — mesma
+// checagem de posse/vocação/ML do RTC automático e a MESMA matemática
+// (potionRestore/runeDamage+elementMod, ver domain/combatFormulas.js e
+// domain/elements.js). Morte por runa manual passa pelo MESMO settleKill()
+// do tick automático — só existe UM caminho real de gold/xp/loot/relíquia,
+// nunca um segundo cálculo paralelo no cliente.
+export async function useItemInSession(session, itemId) {
+  const item = ITEMS[itemId];
+  if (!item) return { error: 'item inválido' };
+
+  const isPotion = !!(item.heal || item.mana);
+  const isRune = item.type === 'rune' && item.dmg;
+  if (!isPotion && !isRune) return { error: 'item não pode ser usado assim' };
+
+  const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: itemId });
+  if (!row || Number(row.qty) <= 0) return { error: 'item não pertence a esta conta/personagem' };
+
+  if (isPotion) {
+    if (!canUsePotion(item, session.vocation, session.level)) return { error: 'vocação/nível insuficiente pra esta poção' };
+    const beforeHp = session.hp, beforeMana = session.mana;
+    if (item.heal) session.hp = Math.min(session.maxHp, session.hp + potionRestore(item.heal));
+    if (item.mana) session.mana = Math.min(session.maxMana, session.mana + potionRestore(item.mana));
+    await incrementInventory(session.userId, session.slot, itemId, -1);
+    await flushVitals(session);
+    return { ok: true, hp: session.hp, mana: session.mana, healedHp: session.hp - beforeHp, healedMana: session.mana - beforeMana };
+  }
+
+  // Runa de ataque: mesmo gate de vocação/Magic Level do RTC (ver
+  // domain/rtcConfig.js: canUseAttackRune) e só faz sentido com alvo vivo.
+  const magic = (session.skills.magic && session.skills.magic.lv) || 0;
+  if (!canUseAttackRune(itemId, session.vocation, magic)) return { error: 'vocação/Magic Level insuficiente pra esta runa' };
+  const pack = session.currentPack;
+  if (!pack || !pack.length || pack[0].hp <= 0) return { error: 'sem criatura pra mirar' };
+
+  const cfg = await getGameConfig();
+  const areaId = item.area || 'single';
+  const maxTargets = isAreaAttack(areaId) ? areaMaxTargets(areaId) : 1;
+  const targets = pack.slice(0, maxTargets);
+  const primaryName = targets[0].name;
+  let primaryDmg = 0;
+  targets.forEach((mon, i) => {
+    const dmg = Math.max(1, Math.floor(runeDamage({ rune: item, level: session.level, magicLevel: magic }) * elementMod(mon.defKey, item.element || 'physical')));
+    mon.hp -= dmg;
+    if (i === 0) primaryDmg = dmg;
+  });
+  await incrementInventory(session.userId, session.slot, itemId, -1);
+
+  const deaths = pack.filter(m => m.hp <= 0);
+  for (const m of deaths) await settleKill(session, m, cfg);
+  session.currentPack = pack.filter(m => m.hp > 0);
+  if (!session.currentPack.length) session.nextSpawnAt = Date.now() + 1500;
+  await flushVitals(session);
+  return {
+    ok: true, hp: session.hp, mana: session.mana,
+    dmg: primaryDmg, targetName: primaryName, killed: deaths.length > 0, hitCount: targets.length,
+  };
 }
 
 // Ao subir (deploy/restart), qualquer sessão marcada "active" no banco perdeu

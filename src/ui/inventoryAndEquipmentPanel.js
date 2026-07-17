@@ -5,7 +5,7 @@ import { G } from '../application/gameStore.js?v=129';
 import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=138';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
-import { saveGame } from '../application/saveGameUseCase.js?v=127';
+import { saveGame } from '../application/saveGameUseCase.js?v=128';
 import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=130';
 import { t } from '../i18n/i18n.js?v=137';
 
