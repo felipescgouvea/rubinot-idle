@@ -291,24 +291,33 @@ async function resolveTick(session) {
   for (const m of deaths) await settleKill(session, m, cfg);
   session.currentPack = pack.filter(m => m.hp > 0);
 
+  // (3) contra-ataque do monstro da frente (o que sobrou, se algum) — só
+  // depois de uma folga desde o spawn do pack (GRACE_MS), pra o cliente
+  // sempre ter chance de mostrar o monstro na tela antes de correr QUALQUER
+  // risco de dano. + cura automática — chamada SEMPRE, mesmo quando o pack
+  // acabou de ser zerado neste MESMO tick (golpe do jogador matou o último
+  // monstro): antes, applyRtcHealing() só rodava dentro do "else" de
+  // primaryDied/pack vazio, então contra qualquer monstro fraco que morresse
+  // num só golpe (comum em zona bem abaixo do nível do jogador), a cura
+  // automática NUNCA tinha chance de rodar — bug reportado pelo Felipe:
+  // "RTC não cura, não usa poção".
+  const newPrimary = session.currentPack[0] || null;
+  if (newPrimary && !primaryDied && Date.now() - (session.packSpawnedAt || 0) >= SPAWN_GRACE_MS) {
+    const atkResult = monsterAttack(newPrimary, getDef(session));
+    session.hp = Math.max(0, session.hp - atkResult.dmg);
+  }
+  await applyRtcHealing(session, cfg);
+
+  // Só sai sem checar morte se o alvo da frente sobreviveu (newPrimary
+  // continua valendo pro bloco de morte abaixo, que usa newPrimary.name) —
+  // hp só pode ter caído a 0 acima, no mesmo tick, quando havia contra-
+  // ataque (newPrimary não-nulo e vivo), então esse `return` nunca pula uma
+  // morte de verdade.
   if (primaryDied || !session.currentPack.length) {
     if (!session.currentPack.length) session.nextSpawnAt = Date.now() + 1500;
     await flushVitals(session);
     return;
   }
-
-  // (3) contra-ataque do monstro da frente (o que sobrou) + cura automática —
-  // só depois de uma folga desde o spawn do pack (GRACE_MS), pra o cliente
-  // sempre ter chance de mostrar o monstro na tela (poll de /hunt/state a
-  // cada 250ms) antes de correr QUALQUER risco de dano. Golpe/magia do
-  // jogador (passos 1-2 acima) já valem desde o primeiro tick — só o
-  // contra-ataque do monstro fica em espera.
-  const newPrimary = session.currentPack[0];
-  if (Date.now() - (session.packSpawnedAt || 0) >= SPAWN_GRACE_MS) {
-    const atkResult = monsterAttack(newPrimary, getDef(session));
-    session.hp = Math.max(0, session.hp - atkResult.dmg);
-  }
-  await applyRtcHealing(session, cfg);
 
   if (session.hp <= 0) {
     // Morte de verdade: acaba a caçada aqui mesmo (fiel ao Tibia — morrer
