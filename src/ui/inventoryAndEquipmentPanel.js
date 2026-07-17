@@ -7,7 +7,7 @@ import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { saveGame } from '../application/saveGameUseCase.js?v=129';
 import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=131';
-import { t } from '../i18n/i18n.js?v=141';
+import { t } from '../i18n/i18n.js?v=142';
 
 let dragId = null; // itemId sendo arrastado no inventário
 

@@ -5,7 +5,7 @@
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=132';
-import { ZONES, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=136';
+import { ZONES, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=137';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
@@ -13,7 +13,7 @@ import { calcDamage, spawnMonsterInstance, spellAttackDamage, runeDamage, monste
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX } from '../domain/stamina.js?v=125';
 import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=138';
-import { MONSTERS } from '../domain/bestiary.js?v=136';
+import { MONSTERS } from '../domain/bestiary.js?v=137';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=126';
@@ -24,7 +24,7 @@ import { saveGame } from './saveGameUseCase.js?v=129';
 import { getCombatBonuses } from './bonuses.js?v=126';
 import { getSpawnDelayRange, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
-import { t } from '../i18n/i18n.js?v=141';
+import { t } from '../i18n/i18n.js?v=142';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };

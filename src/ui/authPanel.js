@@ -3,7 +3,7 @@
 // authClient.js. Enquanto não há sessão válida, o #auth-gate cobre a tela toda
 // e o jogo não inicia.
 import { signIn, signUp, signOut, currentUser, resendConfirmation } from '../infrastructure/authClient.js?v=132';
-import { t } from '../i18n/i18n.js?v=141';
+import { t } from '../i18n/i18n.js?v=142';
 
 // Callback disparado quando o login/cadastro dá certo (main.js liga o boot do
 // jogo aqui, depois de puxar o save da nuvem).

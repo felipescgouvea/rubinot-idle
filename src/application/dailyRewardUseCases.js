@@ -6,7 +6,7 @@ import { isBoostActive } from '../domain/shopCatalog.js?v=128';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMaxHp, getMaxMana } from './stats.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
-import { t } from '../i18n/i18n.js?v=141';
+import { t } from '../i18n/i18n.js?v=142';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

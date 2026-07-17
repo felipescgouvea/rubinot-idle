@@ -3,11 +3,11 @@
 // pelo Market (ver marketUseCases.js).
 import { G } from './gameStore.js?v=129';
 import { XP_TABLE } from '../domain/character.js?v=156';
-import { MONSTERS } from '../domain/bestiary.js?v=136';
+import { MONSTERS } from '../domain/bestiary.js?v=137';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=129';
-import { t } from '../i18n/i18n.js?v=141';
+import { t } from '../i18n/i18n.js?v=142';
 
 let lastSubmitAt = 0;
 // Cache por CATEGORIA (level/skill/bestiário pedem ordenações diferentes do
