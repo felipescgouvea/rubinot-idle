@@ -189,11 +189,12 @@ let lastSeenKillAt = 0;
 let lastSeenDeathAt = 0;
 // Atraso entre detectar um golpe real (reconcile) e a barra de vida do
 // monstro realmente cair na tela — mesmo tempo de voo do projétil cosmético
-// (ver ui/huntPanel.js: playProjectile, 320ms fixos), pra a vida só baixar
+// (ver ui/huntPanel.js: playProjectile, 130ms fixos), pra a vida só baixar
 // quando a flecha/efeito "chega" de verdade, em vez de saltar instantaneamente
 // assim que o servidor confirma o dano (pedido do Felipe: sincronizar o
-// impacto visual com a queda de vida).
-const HIT_SYNC_DELAY_MS = 320;
+// impacto visual com a queda de vida; delay reduzido de 320→140ms pois o
+// original deixava a sincronia "lenta" na percepção do jogador).
+const HIT_SYNC_DELAY_MS = 140;
 // id da sessão de caçada que ESTE cliente iniciou por último (ver
 // startHunt/checkAndResumeHuntSession) — usado pra só aceitar um last_death
 // que pertença a ELA, nunca a uma sessão antiga já substituída (ver

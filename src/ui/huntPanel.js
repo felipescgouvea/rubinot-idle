@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=138';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=131';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=180';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=181';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -490,7 +490,7 @@ export function playProjectile({ missile, targetUid } = {}) {
   // força reflow e anima até o alvo
   void img.offsetWidth;
   img.style.transform = `translate(-50%, -50%) translate(${x1 - x0}px, ${y1 - y0}px) rotate(${ang + 90}deg)`;
-  setTimeout(() => img.remove(), 320);
+  setTimeout(() => img.remove(), 140);
 }
 
 export function wireHuntPanelEvents() {
