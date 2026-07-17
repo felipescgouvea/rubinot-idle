@@ -23,8 +23,10 @@ export const ZONES = {
   // --- Ab'Dendriel (cidade dos elfos) ---
   elf_hunt:       { city: 'abdendriel', name: 'zone.elf_hunt',       icon: '🧝', worldReq: 'auroria', monsters: ['elf', 'elf_scout', 'elf_arcanist'], theme: ['#3f7052', '#1e3d2b'], boss: 'elf_arcanist' },
 
-  // --- Carlin (cidade das amazonas) ---
-  amazon_hunt:    { city: 'carlin',     name: 'zone.amazon_hunt',    icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie' },
+  // --- Carlin (cidade das amazonas, com Femor Hills — o acampamento goblin —
+  // como hunt de entrada, mais fraca que as amazonas) ---
+  femor_hills:    { city: 'carlin',     name: 'zone.femor_hills',    icon: '👺', worldReq: 'auroria', monsters: ['goblin', 'goblin', 'goblin', 'goblin_scavenger', 'goblin_assassin', 'goblin_leader'], theme: ['#6b7a3f', '#2e3a1f'], boss: 'goblin_leader' },
+  amazon_hunt:    { city: 'carlin',     name: 'zone.amazon_hunt',    icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'goblin_leader' },
 
   // --- Thais (Mintwallin: minotauros clássicos, depois ciclopes) ---
   minotaur_hunt:  { city: 'thais',      name: 'zone.minotaur_hunt',  icon: '🐂', worldReq: 'auroria', monsters: ['minotaur', 'minotaur_archer', 'minotaur_guard', 'minotaur_mage'], theme: ['#7a5a3a', '#3a2818'], boss: 'minotaur_guard' },

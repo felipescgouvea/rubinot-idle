@@ -3,7 +3,7 @@
 // pelo Market (ver marketUseCases.js).
 import { G } from './gameStore.js?v=129';
 import { XP_TABLE } from '../domain/character.js?v=156';
-import { MONSTERS } from '../domain/bestiary.js?v=137';
+import { MONSTERS } from '../domain/bestiary.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { submitScoreRequest, fetchHighscoresRequest } from '../infrastructure/highscoresApi.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=129';

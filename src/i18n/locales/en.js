@@ -141,6 +141,7 @@ export default {
   // ---- hunting grounds / dungeons (domain/bestiary.js: ZONES[id].name) ----
   'zone.troll_cave': 'Troll Cave',
   'zone.elf_hunt': 'Elf Woods',
+  'zone.femor_hills': 'Femor Hills',
   'zone.amazon_hunt': 'Amazon Camp',
   'zone.minotaur_hunt': 'Mintwallin',
   'zone.cyclopolis': 'Cyclopolis',

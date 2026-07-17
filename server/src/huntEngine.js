@@ -7,7 +7,7 @@
 // skill). Marco 6: respingo de área (pack de monstros, não só alvo único),
 // bênçãos e stamina autoritativas — fecha as 3 limitações que ainda
 // restavam (documentadas antes, agora corrigidas).
-import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=136';
+import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=138';
 import {
   spawnMonsterInstance, calcDamage, monsterAttack, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
