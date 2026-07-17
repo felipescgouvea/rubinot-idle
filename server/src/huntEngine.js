@@ -329,9 +329,22 @@ async function tick(session) {
   if (!session.currentPack || !session.currentPack.length) {
     if (Date.now() < session.nextSpawnAt) return;
     const cfg = await getGameConfig();
-    const spawnCfg = resolveZoneSpawn(cfg, session.zoneId, zone.monsters);
-    const packSize = spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1));
-    session.currentPack = Array.from({ length: packSize }, () => spawnMonsterInstance(zone, MONSTERS, session.level, 1, spawnCfg.weights));
+    // Boss Rush: restringe o pool de spawn só ao boss da zona (mesma regra do
+    // antigo doHuntTick do cliente, agora única fonte de verdade — ver
+    // application/huntUseCases.js: setBossOnlyMode).
+    const spawnZone = session.bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
+    const bossMult = session.bossOnly ? 1 : 1; // tier de Boss Rush ainda não escala aqui (ver nota abaixo)
+    const spawnCfg = session.bossOnly ? null : resolveZoneSpawn(cfg, session.zoneId, zone.monsters);
+    const packSize = session.bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
+    // uid sequencial por instância spawnada — o cliente usa isso pra saber
+    // (diffando entre polls de /hunt/state) quando um monstro NOVO apareceu
+    // ou quando um que já existia SUMIU (morreu), em vez de sortear/simular
+    // seu próprio pack independente (ver huntUseCases.js: applyServerPack).
+    session.currentPack = Array.from({ length: packSize }, () => {
+      const m = spawnMonsterInstance(spawnZone, MONSTERS, session.level, bossMult, spawnCfg && spawnCfg.weights);
+      m.uid = ++session.spawnSeq;
+      return m;
+    });
     session.lastTickAt = Date.now();
     return;
   }
@@ -340,6 +353,7 @@ async function tick(session) {
 
 export function startSession(session) {
   session.currentPack = [];
+  session.spawnSeq = 0;
   session.nextSpawnAt = Date.now();
   session.spellCdUntil = {};
   session.attackGroupCdUntil = 0;

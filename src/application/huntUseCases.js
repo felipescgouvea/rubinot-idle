@@ -5,24 +5,22 @@
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=132';
-import { ZONES, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=137';
+import { ZONES } from '../domain/bestiary.js?v=137';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
-import { calcDamage, spawnMonsterInstance, spellAttackDamage, runeDamage, monsterAttack } from '../domain/combatFormulas.js?v=157';
+import { monsterAttack } from '../domain/combatFormulas.js?v=157';
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX } from '../domain/stamina.js?v=125';
-import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=138';
+import { ITEMS } from '../domain/items.js?v=138';
 import { MONSTERS } from '../domain/bestiary.js?v=137';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
-import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=126';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
-import { getCombatBonuses } from './bonuses.js?v=126';
-import { getSpawnDelayRange, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=129';
+import { isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -32,18 +30,25 @@ const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEner
 let huntInterval = null;
 let regenInterval = null;
 let rtcHealInterval = null;
-// currentMonster é sempre o ALVO da frente (currentPack[0]) — toda a lógica de
-// combate mira nele. currentPack é a "sala": o alvo + os monstros esperando,
-// mostrados na Battle List. Você luta um por vez; ao matar o da frente, o
-// próximo assume; quando a sala esvazia, o próximo tick gera um novo grupo.
+// currentMonster/currentPack são um ESPELHO fiel da sala REAL do servidor
+// (session.currentPack, ver server/src/huntEngine.js) — populados por
+// applyServerPack() a cada reconcileWithServer(), NUNCA por uma simulação
+// local. currentMonster é sempre currentPack[0] (o alvo que o servidor
+// realmente ataca/é atacado), a menos que o jogador tenha clicado noutro
+// (manualTargetUid) — troca só o DESTAQUE visual, nunca o que leva dano de
+// verdade (isso sempre foi resolvido no servidor, mesmo antes desta correção).
 let currentMonster = null;
 let currentPack = [];
-// id sequencial por instância spawnada — o palco usa isso pra materializar cada
-// monstro novo (mesmo que seja do mesmo tipo do anterior). Ver ui/huntPanel.js.
-let spawnSeq = 0;
+// uid -> última leitura conhecida {defKey,name,hp,maxHp} do pack do servidor —
+// a base de comparação de applyServerPack() pra decidir quem "apareceu",
+// "levou dano" ou "morreu" entre um poll e o próximo.
+let prevPackByUid = new Map();
+// Clique manual na Battle List/palco (ver selectTarget) — sticky até o alvo
+// escolhido sumir da sala real (morreu) ou a caçada reiniciar.
+let manualTargetUid = null;
 // Monstros mortos há menos de 1s: continuam aparecendo na Battle List com a
 // vida ZERADA (indicando a morte) por 1 segundo antes de sumir (ver
-// resolveMonsterKill + ui/huntPanel.js: renderBattleList).
+// applyServerPack + ui/huntPanel.js: renderBattleList).
 let recentDead = [];
 let deadSeq = 0;
 export function getRecentDead() { return recentDead; }
@@ -65,26 +70,13 @@ function startSpellCd(id, seconds) { if (seconds > 0) spellCdUntil[id] = Date.no
 export function getSpellCooldownRemaining(id) { return Math.max(0, (spellCdUntil[id] || 0) - Date.now()); }
 function isAttackGroupReady() { return attackGroupCdUntil <= Date.now(); }
 function startAttackGroupCd() { attackGroupCdUntil = Date.now() + ATTACK_GROUP_CD_MS; }
-// Tamanho máximo de um grupo numa caçada comum (Boss Rush é sempre 1). Grupos
-// maiores fazem os ataques de ÁREA valerem a pena (limpam a sala num golpe),
-// enquanto o alvo único precisa abater um por um. Só o bicho da frente revida,
-// então uma sala cheia é mais XP disponível, não mais perigo simultâneo.
-const MAX_PACK_SIZE = 5;
-// Instante em que o próximo grupo pode aparecer — enquanto não chega, o
-// personagem fica "procurando" (andando pra baixo, ver ui/huntPanel.js:
-// updateSceneMode). Dá um respiro de exploração entre salas em vez de o
-// próximo bicho surgir instantâneo.
-let nextSpawnAt = 0;
-function searchDelay() {
-  // Range configurável no Painel Admin (G.adminConfig.spawnDelayMin/Max, em s).
-  const { min, max } = getSpawnDelayRange();
-  return min + Math.random() * Math.max(0, max - min);
-}
-// Modo "só o boss" do Boss Rush (ver application/bossRushUseCases.js): quando
-// ligado, spawnMonsterInstance só sorteia zone.boss em vez do elenco normal
-// da zona — nunca muda o desenho da caçada comum, só restringe o pool de
-// spawn. Fica de fora do save de propósito: é um modo de sessão, não de save
-// (o jogador nunca "salva" estando em Boss Rush).
+// Tamanho do grupo, instante do próximo spawn e o RNG de quem aparece são
+// decididos 100% pelo servidor agora (ver server/src/huntEngine.js: tick/
+// resolveZoneSpawn/spawnMonsterInstance) — o cliente só espelha o resultado
+// via applyServerPack(). bossOnly continua aqui: é preferência de SESSÃO
+// (nunca vai pro save) enviada no snapshot de hunt-start (buildHuntSnapshot)
+// e também usada localmente só pra escolher a variante certa da mensagem de
+// log ("Tier X apareceu" vs. "apareceu") em applyServerPack.
 let bossOnly = false;
 
 // Hunt Analyzer (como o Analisador de Caçada do Tibia): estatísticas da SESSÃO
@@ -129,6 +121,7 @@ export function selectTarget(uid) {
   const key = String(uid);
   const picked = currentPack.find(m => String(m.uid) === key);
   if (!picked || picked === currentMonster) return; // já é o alvo, ou uid não existe na sala
+  manualTargetUid = key;
   currentMonster = picked;
   emit(EVENTS.MONSTER_DISPLAY, {});
 }
@@ -166,12 +159,14 @@ export function toggleHunt() {
 // combate rico que a UI mostra localmente (aceito conscientemente até o
 // Marco 4 trazer paridade de combate no servidor).
 let reconcileInterval = null;
-// Reduzido de 5000 pra 1500, depois 750, depois 375 (pedido repetido do
-// Felipe: "diminua pela metade") — quanto maior o intervalo, maior o salto
-// visível de gold/xp/hp quando o servidor sobrescreve o preview local. Ainda
-// é só um GET /hunt/state leve; abaixo disso o ganho de "tempo real" deixa de
-// compensar o volume de requisições.
-const RECONCILE_MS = 375;
+// Reduzido de 5000 pra 1500, depois 750, depois 375, agora 250 (auditoria do
+// combate: o poll deixou de ser só uma "rede de segurança" atrás de uma
+// simulação local cosmética — desde que currentPack/currentMonster passaram a
+// vir DIRETO do servidor (ver applyServerPack), o poll é a ÚNICA fonte da
+// cadência visual de combate, então precisa ser mais rápido que antes pra não
+// parecer travado). Ainda é só um GET /hunt/state leve; abaixo disso o ganho
+// de "tempo real" deixa de compensar o volume de requisições.
+const RECONCILE_MS = 250;
 // Instante (epoch ms) do último session.lastKill já processado (ver
 // server/src/huntEngine.js: settleKill) — evita reprocessar o mesmo kill em
 // polls sucessivos, já que lastKill fica "parado" no servidor até a próxima morte.
@@ -194,6 +189,12 @@ async function reconcileWithServer() {
   if (!res.ok || !res.stats) return;
   const s = res.stats;
   const leveledUp = s.level > G.level;
+  // HP de ANTES desta reconciliação — comparado com s.hp depois de aplicado,
+  // é o que decide se o monstro real da frente acabou de bater no jogador
+  // (ver applyServerPack mais abaixo). Preview local não inventa mais esse
+  // número: ou vem de um contra-ataque de verdade já refletido em s.hp, ou
+  // não é logado.
+  const prevPlayerHp = G.hp;
   G.gold = s.gold;
   G.xp = s.xp;
   G.level = s.level;
@@ -236,9 +237,28 @@ async function reconcileWithServer() {
   // trainSkill), mas nada devolvia esse progresso: G.sk ficava travado no
   // valor local do save, sem nunca ser corrigido pelo real do servidor.
   if (res.skills) { G.sk = res.skills; emit(EVENTS.TRAINING_PANEL); emit(EVENTS.CHAR_PANEL); }
-  // Evento de morte REAL (Marco 6b) — o tick cosmético local não grava mais
-  // gold/xp/loot/relic nenhum (ver doHuntTick); quem alimenta o log de kill,
-  // o Hunt Analyzer, o Battle Pass, as missões, os contadores de bestiário/
+  // A sala REAL de monstros (ver server/src/index.js: /hunt/state, campo
+  // `pack`) — única fonte de verdade pra currentPack/currentMonster desde
+  // esta auditoria. Atualiza ANTES do log de contra-ataque abaixo, pra usar o
+  // nome do alvo já correto.
+  if (G.hunting && res.pack) applyServerPack(res.pack);
+  // Contra-ataque REAL do monstro (Marco 5/6b, agora sem preview inventado):
+  // se o HP caiu desde a última reconciliação (e não foi level-up, que já
+  // restaura o HP cheio acima), foi o monstro da frente que bateu de verdade.
+  // O NÚMERO vem do delta real; o elemento (spellTag) é só flavor cosmético,
+  // reconstruído a partir do bestiário estático do alvo (ver monsterAttack).
+  if (!leveledUp && G.hunting && currentMonster && s.hp != null && prevPlayerHp != null && s.hp < prevPlayerHp) {
+    const dmg = prevPlayerHp - s.hp;
+    const monDef = MONSTERS[currentMonster.defKey];
+    const preview = monDef ? monsterAttack(monDef, getDef()) : null;
+    const elKey = preview ? MONSTER_ELEMENT_KEYS[preview.element] : null;
+    const spellTag = preview && preview.kind === 'spell' ? t('hunt.logElementTag', { element: elKey ? t(elKey) : preview.element }) : '';
+    emit(EVENTS.LOG, t('log.monsterHitsYou', { name: currentMonster.name, dmg, spellTag }));
+    emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true, spellElement: preview && preview.kind === 'spell' ? preview.element : null });
+  }
+  // Evento de morte REAL (Marco 6b) — nenhuma simulação local grava mais
+  // gold/xp/loot/relic (ver doCosmeticTick); quem alimenta o log de kill, o
+  // Hunt Analyzer, o Battle Pass, as missões, os contadores de bestiário/
   // task e o desbloqueio de zona/tier do Boss Rush é o ÚLTIMO kill real que o
   // servidor reporta aqui (server/src/huntEngine.js: session.lastKill).
   if (res.lastKill && res.lastKill.at && res.lastKill.at > lastSeenKillAt) {
@@ -247,6 +267,55 @@ async function reconcileWithServer() {
   }
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
+}
+
+// Compara o pack recém-lido do servidor com o snapshot do poll anterior
+// (prevPackByUid) pra derivar, SEM simular nada: quem apareceu agora (uid
+// novo), quem levou dano de verdade (hp caiu no mesmo uid) e quem morreu (uid
+// que sumiu). É isto que substitui o antigo doHuntTick spawnando/atacando seu
+// próprio monstro fake — currentPack/currentMonster passam a ser um espelho
+// exato de session.currentPack (ver server/src/huntEngine.js).
+function applyServerPack(pack) {
+  const wasEmpty = prevPackByUid.size === 0;
+  // uid do alvo da frente ANTES deste diff — se ele estiver entre os que
+  // sumiram agora, é ele quem acabou de morrer (dispara o flash "☠️ nome" no
+  // monster-display, ver ui/huntPanel.js: renderMonsterDisplay(killed)).
+  const oldFrontUid = currentMonster ? String(currentMonster.uid) : null;
+  const newUids = pack.filter(m => !prevPackByUid.has(String(m.uid)));
+  if (newUids.length) {
+    if (wasEmpty) {
+      const first = pack[0];
+      const extra = pack.length > 1 ? t('hunt.logExtraInRoom', { count: pack.length - 1 }) : '';
+      emit(EVENTS.LOG, isBossOnlyHunt()
+        ? t('hunt.logBossTierAppeared', { icon: monsterLogIcon(first.defKey), name: first.name, tier: (G.bossTiers[G.activeZone] || 1) })
+        : t('hunt.logMonsterAppeared', { icon: monsterLogIcon(first.defKey), name: first.name }) + extra);
+    } else {
+      newUids.forEach(m => emit(EVENTS.LOG, t('hunt.logMonsterAppeared', { icon: monsterLogIcon(m.defKey), name: m.name })));
+    }
+  }
+  pack.forEach(m => {
+    const prev = prevPackByUid.get(String(m.uid));
+    if (prev && m.hp < prev.hp) {
+      m._hitAt = Date.now(); // flash de dano na Battle List/palco (ver ui/huntPanel.js)
+      emit(EVENTS.LOG, t('log.basicAttack', { label: t('hunt.logBasicHit'), dmg: prev.hp - m.hp, name: m.name }));
+    }
+  });
+  const nowUids = new Set(pack.map(m => String(m.uid)));
+  let killedFrontDefKey = null;
+  for (const [uid, prev] of prevPackByUid) {
+    if (!nowUids.has(uid)) {
+      const deadEntry = { defKey: prev.defKey, name: prev.name, maxHp: prev.maxHp, uid: ++deadSeq };
+      recentDead.push(deadEntry);
+      setTimeout(() => { recentDead = recentDead.filter(d => d.uid !== deadEntry.uid); emit(EVENTS.BATTLE_LIST); }, 1000);
+      if (manualTargetUid === uid) manualTargetUid = null;
+      if (uid === oldFrontUid) killedFrontDefKey = prev.defKey;
+    }
+  }
+  prevPackByUid = new Map(pack.map(m => [String(m.uid), { defKey: m.defKey, name: m.name, hp: m.hp, maxHp: m.maxHp }]));
+  currentPack = pack;
+  currentMonster = (manualTargetUid && pack.find(m => String(m.uid) === manualTargetUid)) || pack[0] || null;
+  emit(EVENTS.MONSTER_DISPLAY, killedFrontDefKey ? { killed: killedFrontDefKey } : {});
+  emit(EVENTS.BATTLE_LIST);
 }
 
 // Reage a UM kill real do servidor (o mais recente — ver reconcileWithServer).
@@ -316,11 +385,18 @@ function applyServerKillEvents(k) {
 // enquanto a aba estava fechada (ver checkAndResumeHuntSession abaixo).
 function beginLocalLoop() {
   huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
-  nextSpawnAt = Date.now() + searchDelay(); // começa procurando (boneco anda)
+  // Sala/alvo/estado de diff zerados — o servidor é quem decide quando o
+  // próximo grupo aparece (ver server/src/huntEngine.js: tick/nextSpawnAt);
+  // o cliente só reflete isso via applyServerPack() no próximo reconcile.
+  currentMonster = null;
+  currentPack = [];
+  prevPackByUid = new Map();
+  manualTargetUid = null;
+  recentDead = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
   emit(EVENTS.HUNT_STATS);
   emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
-  huntInterval = setInterval(doHuntTick, Math.max(400, 2400 / getSpd()));
+  huntInterval = setInterval(doCosmeticTick, Math.max(400, 2400 / getSpd()));
   if (reconcileInterval) clearInterval(reconcileInterval);
   reconcileInterval = setInterval(reconcileWithServer, RECONCILE_MS);
 }
@@ -373,6 +449,8 @@ export function stopHunt() {
   if (reconcileInterval) { clearInterval(reconcileInterval); reconcileInterval = null; }
   currentMonster = null;
   currentPack = [];
+  prevPackByUid = new Map();
+  manualTargetUid = null;
   recentDead = [];
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
   emit(EVENTS.BATTLE_LIST);
@@ -398,132 +476,50 @@ function applyRtcHealing() {
   if (spellWants || potionWants) emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
 }
 
-export function doHuntTick() {
-  if (!G.hunting || !G.activeZone) return;
-
-  if (!currentMonster) {
-    // Ainda "procurando": segura o próximo grupo até passar o tempo de busca
-    // (o boneco fica andando pra baixo nesse meio tempo — ver ui/huntPanel.js).
-    if (Date.now() < nextSpawnAt) return;
-    const zone = ZONES[G.activeZone];
-    // Boss Rush: restringe o pool de spawn só ao boss da zona, sem tocar em
-    // spawnMonsterInstance (a caçada comum continua sorteando o elenco
-    // inteiro normalmente) — ver setBossOnlyMode()/bossRushUseCases.js.
-    const spawnZone = bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
-    // Boss Rush: o boss desafiado de propósito é mais forte que o mesmo bicho
-    // encontrado à toa numa zona comum, e escala por tier (ver domain/bestiary.js:
-    // bossTierMultiplier) — vencer o tier atual sobe pro próximo, mais forte.
-    const bossTier = bossOnly ? (G.bossTiers[G.activeZone] || 1) : 1;
-    const bossMult = bossOnly ? bossTierMultiplier(bossTier) : 1;
-    // Peso por monstro e faixa do grupo vêm do Painel Admin (por zona). No Boss
-    // Rush, ignora: é sempre 1 boss. Ver domain/adminConfig.js: resolveZoneSpawn.
-    const spawnCfg = bossOnly ? null : getZoneSpawn(G.activeZone, zone.monsters);
-    const packSize = bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
-    currentPack = Array.from({ length: packSize }, () => { const m = spawnMonsterInstance(spawnZone, MONSTERS, G.level, bossMult, spawnCfg && spawnCfg.weights); m.uid = ++spawnSeq; return m; });
-    currentMonster = currentPack[0];
-    const extra = packSize > 1 ? t('hunt.logExtraInRoom', { count: packSize - 1 }) : '';
-    emit(EVENTS.LOG, bossOnly
-      ? t('hunt.logBossTierAppeared', { icon: monsterLogIcon(currentMonster.defKey), name: currentMonster.name, tier: bossTier })
-      : t('hunt.logMonsterAppeared', { icon: monsterLogIcon(currentMonster.defKey), name: currentMonster.name }) + extra);
-    emit(EVENTS.MONSTER_DISPLAY, { bossAura: bossOnly ? bossAuraClass(bossTier) : null });
-    emit(EVENTS.BATTLE_LIST);
-    return; // o monstro aparece neste tick; o combate começa no próximo
-  }
-
+// Tick cosmético — SÓ ANIMAÇÃO/FLAVOR, na cadência antiga (400-2400ms/spd),
+// pra manter a sensação de ritmo de combate entre um poll e outro do
+// reconcile. Não decide mais NADA de real: não spawna, não calcula dano, não
+// mata ninguém, não toca currentPack/currentMonster.hp. Essa era a raiz do
+// bug (Marco de auditoria desta sessão): o combate "de verdade" já era 100%
+// servidor-autoritativo desde o Marco 6b, mas o monstro MOSTRADO na tela
+// ainda vinha de spawnMonsterInstance() rodando aqui, com seu próprio RNG,
+// então o bicho que o jogador via lutar/morrer não tinha NENHUMA relação com
+// o que o servidor matava e pagava (evidência ao vivo: "Blue Container
+// appeared!" na tela enquanto o servidor creditava kills de "Chayenne",
+// "Rotworm", "Scar Tribe Shaman" nunca mostrados). Agora currentPack/
+// currentMonster são só um espelho de session.currentPack (ver
+// applyServerPack, alimentado por reconcileWithServer) — este tick só finge
+// o SWING (golpe básico) e a TENTATIVA de magia/runa por prioridade (pros
+// logs/efeitos de "casting" ficarem vivos), sem aplicar nenhum dano.
+export function doCosmeticTick() {
+  if (!G.hunting || !G.activeZone || !currentMonster) return;
   const voc = VOC_TRAINING[G.vocation];
-
-  // O alvo da frente (sempre currentPack[0]). Guardado antes de resolver mortes
-  // porque um ataque de área pode abater ele E outros no mesmo tick.
   const primary = currentMonster;
 
-  // Player attacks monster. `areaId` decide a FORMA de área (ver
-  // domain/attackAreas.js): quando não é 'single', o mesmo golpe respinga nas
-  // criaturas que estão esperando atrás na sala (até o limite da forma).
-  // `spellPower`/`runeDmg` guardam COMO recalcular o dano em cada alvo do
-  // respingo — cada criatura leva seu próprio dano (rola contra a def dela).
-  // Aplica dano num alvo com o bônus de Presa/Charm DELE e o lifeleech; devolve
-  // o dano final. Usado no golpe básico, na magia/runa e em cada alvo do respingo.
-  // Nota: dano aqui é só PREVIEW visual (barra de vida do monstro na tela,
-  // popups de dano) — não grava gold/xp/loot/relic nenhum (isso é 100% do
-  // servidor, ver applyServerKillEvents). Por isso não aplica mais lifeleech
-  // em G.hp: curar o jogador de verdade é papel exclusivo do servidor.
-  function strike(target, rawDmg) {
-    const cb = getCombatBonuses(target.defKey, Date.now());
-    let dmg = Math.max(1, Math.floor(rawDmg * (cb.damage > 1 ? cb.damage : 1)));
-    target.hp -= dmg;
-    target._hitAt = Date.now(); // marca o instante do golpe (flash na Battle List, inclui área)
-    return dmg;
-  }
-
-  // === Ações ofensivas do tick — FIÉIS ao Tibia: o auto-ataque (arma) e a
-  // magia/runa são SEPARADOS e acontecem no MESMO tick (você bate com a arma E
-  // casta ao mesmo tempo). As poções (cura/mana) também rodam neste mesmo tick,
-  // mais abaixo. Então um tick = 1 golpe básico + 1 magia/runa + poções. ===
-
-  // (1) GOLPE BÁSICO — sempre acontece: arma pro guerreiro/paladino (treina a
-  // skill da arma equipada); o cajado/wand do mago é arma mágica e NÃO custa mana.
-  // Consumo de munição (opcional, Admin): o paladino gasta 1 flecha/dardo por
-  // golpe à distância; sem munição, só soca fraco. Dano físico → aplica o
-  // modificador físico do alvo (a maioria é neutra).
-  // Munição não é mais consumida AQUI — quem gasta a flecha/dardo de verdade é
-  // o servidor (huntEngine.js). Só LEMOS a última contagem reconciliada pra
-  // decidir a animação (golpe normal vs. soco sem munição); nunca decrementamos.
-  let basicRaw, outOfAmmo = false;
-  if (voc.attackSkill === 'distance' && isConsumeAmmo()) {
-    const ammoId = G.equipment.ammo;
-    if (ammoId && (G.inventory[ammoId] || 0) > 0) {
-      basicRaw = calcDamage(getAtk(), primary.def);
-    } else {
-      outOfAmmo = true;
-      basicRaw = calcDamage(7 + G.sk.fist.lv, primary.def) * 0.5; // sem munição: soco fraco
-    }
-  } else {
-    basicRaw = calcDamage(getAtk(), primary.def);
-    // Calibragem: o auto-ataque de wand/rod do mago é um POKE fraco (como no
-    // Tibia) — o dano do mago vem das magias, não do cajado gratuito. Sem esse
-    // corte, o wand grátis todo tick inflava demais o DPS do mago.
-    if (voc.attackSkill === 'magic') basicRaw *= 0.5;
-  }
-  const basicDmg = basicRaw * elementMod(primary.defKey, 'physical');
-  // Treino de skill (golpe corpo-a-corpo/soco/distância) não roda mais aqui —
-  // é o servidor quem treina de verdade (huntEngine.js: trainSkill); G.sk só
-  // muda via reconcileWithServer().
-  const basicHit = strike(primary, basicDmg);
-  const basicLabel = outOfAmmo ? t('hunt.logOutOfAmmoPunch') : t('hunt.logBasicHit');
-  emit(EVENTS.LOG, t('log.basicAttack', { label: basicLabel, dmg: basicHit, name: primary.name }));
-
-  // Projétil do golpe básico à distância/mágico: a flecha/virote do arco ou o
-  // raio elemental da wand/rod voando do boneco até o alvo (ver ui/huntPanel.js).
-  // Corpo-a-corpo não dispara; sem munição (soco) também não.
+  // (1) Golpe básico — só ANIMAÇÃO (swing + projétil); o número real de dano
+  // já foi (ou será) logado por applyServerPack() comparando o hp real entre
+  // dois polls, então aqui NÃO emitimos linha de log nem tocamos primary.hp.
+  const outOfAmmo = voc.attackSkill === 'distance' && isConsumeAmmo() && !((G.inventory[G.equipment.ammo] || 0) > 0);
+  emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
+  emit(EVENTS.MONSTER_DISPLAY, { hit: true });
   if (!outOfAmmo) {
     const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
     if (missile) emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
   }
 
-  // (2) MAGIA (por prioridade) OU RUNA — ação ADICIONAL no mesmo tick, com dano,
-  // área e efeito próprios. Magia custa mana + cooldown; runa consome o item. O
-  // dano de cada alvo é calculado por `hitFn(target)` e multiplicado pela
-  // resistência/fraqueza elemental DELE (ver domain/elements.js).
+  // (2) Tentativa de magia/runa por prioridade — mesma fila do RTC real (ver
+  // domain/rtcConfig.js), só pra decidir SE e QUAL efeito/linha de "casting"
+  // mostrar (flavor visual, sem gastar mana/consumir item/aplicar dano — isso
+  // é 100% resolvido pelo servidor, ver server/src/huntEngine.js: resolveTick).
+  // Os cooldowns aqui são só ESTIMATIVAS pra não repetir a mesma magia toda
+  // hora na tela; podem divergir por um tick do cooldown real do servidor
+  // sem problema, já que não concedem nem gastam nada de verdade.
   const magic = getMagic();
-  let combatFx = null;
-  let areaId = 'single';
-  let element = null;
-  let hitFn = null; // (target) => dano-base (antes do modificador elemental)
-  // Calculado aqui (não só lá embaixo, no bloco de cura) porque a magia de
-  // ataque precisa RESERVAR essa mana antes de gastar — sem isso, uma magia
-  // cara (ex.: Groundshaker do knight, 160 de mana, contra um manaRegen de
-  // só 1/tick) esvazia a mana e o RTC fica sem como curar depois no MESMO
-  // tick em que o monstro contra-ataca. Golpe físico nunca compete com isso
-  // (não usa mana); só a magia/runa de ataque respeita essa reserva.
-  const healSpellIdForReserve = G.rtc.healSpell || defaultHealSpellId(G.vocation, G.level);
-  const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, G.vocation, G.level) ? SPELLS[healSpellIdForReserve] : null;
-  const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
-  // Fila de prioridade ÚNICA misturando magia e runa (igual ao RTCaster real:
-  // a caixinha 1 pode ser uma magia e a 2 uma runa — usa a primeira PRONTA,
-  // seja ela qual for) — ver domain/rtcConfig.js: normalizeAttackSpells/
-  // isRuneEntry. Ambas competem pelo mesmo cooldown de grupo (2s).
-  const ready = isAttackGroupReady()
-    ? normalizeAttackSpells(G.rtc).map(entry => {
+  if (isAttackGroupReady()) {
+    const healSpellIdForReserve = G.rtc.healSpell || defaultHealSpellId(G.vocation, G.level);
+    const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, G.vocation, G.level) ? SPELLS[healSpellIdForReserve] : null;
+    const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
+    const ready = normalizeAttackSpells(G.rtc).map(entry => {
       if (isRuneEntry(entry)) {
         const id = runeEntryId(entry);
         const rune = ITEMS[id];
@@ -533,160 +529,35 @@ export function doHuntTick() {
       const s = SPELLS[entry];
       const ok = s && isSpellAvailable(entry, G.vocation, G.level) && G.mana - healManaReserve >= s.mana && isSpellReady(entry);
       return ok ? { kind: 'spell', id: entry, s } : null;
-    }).filter(Boolean)
-    : [];
-  let pick = null;
-  if (ready.length) {
-    pick = ready[0]; // padrão: a primeira da prioridade
-    if (G.rtc.smartElement) {
-      // Prioridade inteligente: entre as prontas, a mais forte contra a
-      // fraqueza da criatura da frente (maior modificador elemental).
-      const elOf = e => e.kind === 'rune' ? (e.rune.element || 'physical') : e.s.element;
-      pick = ready.reduce((best, cur) =>
-        elementMod(primary.defKey, elOf(cur)) > elementMod(primary.defKey, elOf(best)) ? cur : best, ready[0]);
-    }
-  }
-  if (pick && pick.kind === 'rune') {
-    const rune = pick.rune;
-    areaId = rune.area || 'single';
-    element = rune.element || 'physical';
-    hitFn = () => runeDamage({ rune, level: G.level, magicLevel: magic }); // fórmula do Tibia (nível/5 + ML·a + base)
-    combatFx = { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid };
-    // Consumo real da runa é só do servidor (huntEngine.js); aqui a checagem de
-    // `ready` acima já usa a última contagem reconciliada, sem decrementar.
-    startAttackGroupCd();
-    emit(EVENTS.LOG, { html: t('log.rtcRuneUsed', { name: rune.name }), cat: 'suprimento' });
-  } else if (pick && pick.kind === 'spell') {
-    const atkSpellId = pick.id, atkSpell = pick.s;
-    areaId = atkSpell.area || 'single';
-    element = atkSpell.element;
-    // Contexto pra escala das magias FÍSICAS (fórmula do Tibia): melee usa
-    // skill·ataque da arma; distância usa a skill de distância. As demais só
-    // usam Magic Level. (Ver domain/combatFormulas.js: spellAttackDamage.)
-    const meleeSkillId = getEquippedWeaponSkillId();
-    const meleeSkill = (G.sk[meleeSkillId] && G.sk[meleeSkillId].lv) || 0;
-    const eqWeapon = resolveEquippedItem(G.equipment.weapon, G.relics);
-    const weaponAtk = (eqWeapon && eqWeapon.atk) || 7; // punho = ataque base 7
-    const distanceSkill = (G.sk.distance && G.sk.distance.lv) || 0;
-    hitFn = () => spellAttackDamage({ spell: atkSpell, level: G.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
-    // Gasto real de mana e treino de magic são só do servidor; localmente só
-    // pausamos o cooldown (ephemeral, pra ritmo da animação — ver isSpellReady).
-    startSpellCd(atkSpellId, atkSpell.cd);
-    startAttackGroupCd();
-    emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
-    combatFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: areaId, targetUid: primary.uid };
-  }
-
-  // Aplica a magia/runa: dano no alvo da frente (se sobreviveu ao básico) + o
-  // respingo de área nas criaturas atrás — cada alvo com SEU modificador elemental.
-  if (hitFn) {
-    if (primary.hp > 0) {
-      const sHit = strike(primary, hitFn(primary) * elementMod(primary.defKey, element));
-      emit(EVENTS.LOG, t('log.spellDamage', { dmg: sHit, name: primary.name }));
-    }
-    if (isAreaAttack(areaId) && currentPack.length > 1) {
-      const maxTargets = areaMaxTargets(areaId);
-      const splashTargets = currentPack.slice(1, maxTargets); // exclui o da frente
-      splashTargets.forEach(tgt => {
-        const d = strike(tgt, hitFn(tgt) * elementMod(tgt.defKey, element));
-        emit(EVENTS.LOG, t('log.splashDamage', { dmg: d, name: tgt.name }));
-      });
-      if (splashTargets.length > 0) {
-        emit(EVENTS.LOG, { html: t('log.areaHitCount', { area: areaName(areaId, t), count: splashTargets.length + 1 }), cat: 'combate' });
+    }).filter(Boolean);
+    let pick = null;
+    if (ready.length) {
+      pick = ready[0];
+      if (G.rtc.smartElement) {
+        const elOf = e => e.kind === 'rune' ? (e.rune.element || 'physical') : e.s.element;
+        pick = ready.reduce((best, cur) =>
+          elementMod(primary.defKey, elOf(cur)) > elementMod(primary.defKey, elOf(best)) ? cur : best, ready[0]);
       }
     }
+    if (pick && pick.kind === 'rune') {
+      const rune = pick.rune;
+      const areaId = rune.area || 'single';
+      startAttackGroupCd();
+      emit(EVENTS.LOG, { html: t('log.rtcRuneUsed', { name: rune.name }), cat: 'suprimento' });
+      emit(EVENTS.COMBAT_FX, { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid });
+    } else if (pick && pick.kind === 'spell') {
+      const atkSpellId = pick.id, atkSpell = pick.s;
+      startSpellCd(atkSpellId, atkSpell.cd);
+      startAttackGroupCd();
+      emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
+      emit(EVENTS.COMBAT_FX, { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid });
+    }
   }
 
-  emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
-  emit(EVENTS.MONSTER_DISPLAY, { hit: true });
-  // Efeito real da magia/runa espalhado nos tiles ao redor do boneco (null no
-  // golpe básico → nada é desenhado).
-  if (combatFx) emit(EVENTS.COMBAT_FX, combatFx);
-
-  // Resolve TODAS as criaturas que morreram neste golpe (o da frente e/ou as
-  // atingidas pela área) — só o lado COSMÉTICO (some da sala/Battle List).
-  // Gold/XP/loot/relic reais da morte são só do servidor (huntEngine.js),
-  // refletidos no cliente por applyServerKillEvents() via reconcileWithServer().
-  const primaryDied = primary.hp <= 0;
-  const deaths = currentPack.filter(m => m.hp <= 0);
-  deaths.forEach(m => cosmeticMonsterDeath(m));
-
-  // Boss Rush: cada tier vencido PAUSA a caçada — o jogador precisa clicar
-  // explicitamente pra desafiar o próximo tier (não sobe automático). Como no
-  // Boss Rush a sala é sempre 1 boss, qualquer morte aqui = tier vencido. Esta
-  // é a pausa RESPONSIVA baseada no combate cosmético local (aproximado); a
-  // pausa "de verdade" (baseada no kill real do servidor) roda em
-  // applyServerKillEvents() como reforço, pro caso da sessão ter sido retomada
-  // sem o tick cosmético ter presenciado a morte.
-  if (bossOnly && deaths.length > 0) {
-    emit(EVENTS.BARS);
-    emit(EVENTS.HEADER_STATS);
-    stopHunt(); // pausa; o card/botão passa a mostrar "Batalhar Tier X"
-    return;
-  }
-
-  // Se o alvo da frente caiu (ou a sala esvaziou), o tick acaba aqui — corpo
-  // não revida. O próximo tick já mira o novo alvo (ou volta a procurar).
-  if (primaryDied || !currentMonster) {
-    emit(EVENTS.BARS);
-    emit(EVENTS.HEADER_STATS);
-    reconcileWithServer(); // ver comentário abaixo (mesmo motivo do caminho completo)
-    return;
-  }
-
-  // Monstro ataca o jogador: melee físico OU uma de suas magias (elemental, do
-  // TFS — ver domain/combatFormulas.js: monsterAttack). Só PREVIEW: o dano real
-  // em G.hp e o treino de shielding são calculados de verdade pelo servidor
-  // (huntEngine.js) — aqui só usamos `atk` pro texto/flash do log e da UI.
-  const atk = monsterAttack(currentMonster, getDef());
-  const elKey = MONSTER_ELEMENT_KEYS[atk.element];
-  const spellTag = atk.kind === 'spell' ? t('hunt.logElementTag', { element: elKey ? t(elKey) : atk.element }) : '';
-  emit(EVENTS.LOG, t('log.monsterHitsYou', { name: currentMonster.name, dmg: atk.dmg, spellTag }));
-  emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true, spellElement: atk.kind === 'spell' ? atk.element : null });
-
-  // RTC — flash cosmético de cura: ver applyRtcHealing() (compartilhada com o
-  // regen passivo fora de combate, ver startRegen()). HP/mana/morte reais só
-  // chegam via reconcileWithServer() — o cliente não decide mais quando o
-  // jogador morre (ver applyServerKillEvents/reconcileWithServer para bênçãos).
+  // RTC — flash cosmético de cura (ver applyRtcHealing/startRegen). HP/mana
+  // reais só mudam via reconcileWithServer().
   applyRtcHealing();
-
-  emit(EVENTS.BARS);
-  emit(EVENTS.HEADER_STATS);
-  // Puxa o servidor NA HORA de cada tick de combate, em vez de só confiar no
-  // poll periódico (RECONCILE_MS) — antes gold/xp/dano/vida real só chegavam
-  // até 375ms depois do golpe/dano cosmético aparecer na tela, um atraso
-  // perceptível (reportado pelo Felipe: "o golpe sai, mas o dano demora, a xp
-  // demora pra entrar"). O poll do reconcileInterval continua rodando por
-  // trás como rede de segurança pros momentos sem tick (procurando, parado).
-  reconcileWithServer();
 }
-
-// Remove a vítima da sala (por identidade — num ataque de área ela pode não
-// ser a que está sendo mirada) e mantém a Battle List consistente. Só
-// COSMÉTICO: nenhum gold/xp/loot/relic é concedido aqui (ver
-// applyServerKillEvents, alimentado pelo kill real do servidor).
-function cosmeticMonsterDeath(mon) {
-  const idx = currentPack.indexOf(mon);
-  if (idx >= 0) currentPack.splice(idx, 1);
-  if (currentMonster === mon) currentMonster = currentPack[0] || null;
-  // Deixa o morto 1s na Battle List com a vida zerada (indica que morreu), depois some.
-  const deadEntry = { defKey: mon.defKey, name: mon.name, maxHp: mon.maxHp, uid: ++deadSeq };
-  recentDead.push(deadEntry);
-  setTimeout(() => { recentDead = recentDead.filter(d => d.uid !== deadEntry.uid); emit(EVENTS.BATTLE_LIST); }, 1000);
-  // sala limpa: volta a "procurar" (boneco anda de novo por um tempinho)
-  if (!currentMonster) nextSpawnAt = Date.now() + searchDelay();
-  emit(EVENTS.MONSTER_DISPLAY, { killed: mon.defKey });
-  emit(EVENTS.BATTLE_LIST);
-}
-
-// NOTA: resolveMonsterKill() (que calculava e gravava XP/gold/loot/relíquia
-// direto no cliente — G.gold/G.xp/G.inventory/G.relics) foi REMOVIDA nesta
-// auditoria. Era usada pelo golpe normal antigo e por inventoryUseCases.js
-// (runa manual); desde a migração pra combate 100% servidor-autoritativo
-// (Marco 6b) nenhum chamador restava — doHuntTick só faz preview cosmético e
-// inventoryUseCases.useItem() já usa useItemOnServer(). Função órfã mutando
-// estado real era um risco de regressão (bastava alguém religar a chamada
-// pra voltar a "roubar" a autoridade do servidor).
 
 export function gainXp(amount) {
   G.xp += amount;
@@ -732,10 +603,10 @@ export function startRegen() {
   }, 2000);
 
   // RTC fora de combate: parado ou "procurando" entre um monstro e outro,
-  // doHuntTick não roda cura nenhuma (só entra no bloco de cura depois de
-  // resolver o ataque de um monstro vivo) — sem isto o jogador podia emendar
-  // pra próxima luta sem vida mesmo com a cura automática ligada. Enquanto há
-  // um monstro na frente, quem cuida da cura é o próprio doHuntTick. Roda num
+  // doCosmeticTick não roda (retorna cedo sem currentMonster) — sem isto o
+  // jogador podia emendar pra próxima luta sem vida mesmo com a cura
+  // automática ligada. Enquanto há um monstro na frente, quem cuida da cura é
+  // o próprio doCosmeticTick. Roda num
   // intervalo PRÓPRIO de 500ms (não junto do regen de 2s acima) pra respeitar
   // de verdade o exhaust de 1s da poção — preso ao tick de 2s, o intervalo
   // real entre poções virava 2s (ou mais) em vez do 1s combinado.

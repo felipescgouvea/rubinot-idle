@@ -199,7 +199,15 @@ const server = http.createServer(async (req, res) => {
         // corrigido, mesmo o servidor já tendo uma verdade diferente (ver
         // huntUseCases.js: reconcileWithServer).
         skills: skillsRow ? skillsRow.skills : null,
-        currentMonster: liveSession && liveSession.currentMonster ? { name: liveSession.currentMonster.name, hp: liveSession.currentMonster.hp, maxHp: liveSession.currentMonster.maxHp } : null,
+        // A sala REAL de monstros (uid + defKey + name + hp/maxHp) — antes só
+        // existia um `currentMonster` singular que NUNCA era populado (dead
+        // code: session.currentMonster nunca era atribuído em huntEngine.js).
+        // Agora o cliente renderiza a Battle List/palco/HP direto daqui (ver
+        // application/huntUseCases.js: applyServerPack) em vez de rodar sua
+        // PRÓPRIA simulação local com spawn/dano independentes — a causa raiz
+        // do bug em que o monstro mostrado na tela não tinha nada a ver com o
+        // que o servidor realmente matava e pagava.
+        pack: liveSession ? liveSession.currentPack.map(m => ({ uid: m.uid, defKey: m.defKey, name: m.name, hp: Math.max(0, m.hp), maxHp: m.maxHp })) : [],
         lastKill: liveSession ? liveSession.lastKill || null : null,
       });
     }
