@@ -169,11 +169,12 @@ export function toggleHunt() {
 // combate rico que a UI mostra localmente (aceito conscientemente até o
 // Marco 4 trazer paridade de combate no servidor).
 let reconcileInterval = null;
-// Reduzido de 5000 pra 1500 e depois pra 750 (pedido do Felipe: "diminua pela
-// metade") — quanto maior o intervalo, maior o salto visível de gold/xp/hp
-// quando o servidor sobrescreve o preview local. 750ms ainda é um poll leve
-// (só GET /hunt/state) e deixa a UI praticamente em tempo real.
-const RECONCILE_MS = 750;
+// Reduzido de 5000 pra 1500, depois 750, depois 375 (pedido repetido do
+// Felipe: "diminua pela metade") — quanto maior o intervalo, maior o salto
+// visível de gold/xp/hp quando o servidor sobrescreve o preview local. Ainda
+// é só um GET /hunt/state leve; abaixo disso o ganho de "tempo real" deixa de
+// compensar o volume de requisições.
+const RECONCILE_MS = 375;
 // Instante (epoch ms) do último session.lastKill já processado (ver
 // server/src/huntEngine.js: settleKill) — evita reprocessar o mesmo kill em
 // polls sucessivos, já que lastKill fica "parado" no servidor até a próxima morte.
