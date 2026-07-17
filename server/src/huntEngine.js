@@ -24,7 +24,7 @@ import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/ble
 import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { getGameConfig } from './gameConfig.js';
-import { selectOne, selectMany, insertRow, upsertRow, updateRows } from './db.js';
+import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows } from './db.js';
 
 // sessionId -> objeto de sessão (ver startSession) — tudo em memória; só
 // existe enquanto ESTE processo está de pé (ver reapStaleSessionsOnBoot).
@@ -361,6 +361,47 @@ export function stopSession(sessionId) {
 
 export function getLiveSession(sessionId) {
   return live.get(sessionId);
+}
+
+// Poção fora de sessão viva (parado, ou caçada não iniciada nesse processo) —
+// no Tibia real, beber uma poção nunca dependeu de estar em combate. Sem
+// isso, o jogador ficava sem como se curar sempre que clicasse "Use" parado
+// (bug reportado pelo Felipe: "aqui nao funcionou uso de poções"). Lê/escreve
+// direto em player_stats (mesmo padrão do /buy-blessing), sem o tick de
+// combate — maxHp/maxMana recalculados igual ao /hunt/start.
+export async function usePotionStandalone(userId, slot, itemId) {
+  const item = ITEMS[itemId];
+  if (!item) return { error: 'item inválido' };
+  if (!item.heal && !item.mana) return { error: 'item não pode ser usado assim' };
+
+  const invRow = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
+  if (!invRow || Number(invRow.qty) <= 0) return { error: 'item não pertence a esta conta/personagem' };
+
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  if (!stats) return { error: 'personagem sem stats' };
+  // vocação só existe em hunt_sessions (snapshot do hunt-start) — pega a
+  // sessão mais recente (ativa ou não), já que usar poção não exige caçar.
+  const lastSession = await selectLatest('hunt_sessions', { user_id: userId, slot }, 'started_at');
+  if (!lastSession) return { error: 'personagem sem vocação definida' };
+  const vocation = lastSession.vocation;
+  if (!canUsePotion(item, vocation, stats.level)) return { error: 'vocação/nível insuficiente pra esta poção' };
+
+  const eqRows = await selectMany('player_equipment', { user_id: userId, slot });
+  const equipment = {};
+  eqRows.forEach(r => { equipment[r.eq_slot] = r.item_id; });
+  const relicRows = await selectMany('player_relics', { user_id: userId, slot });
+  const relics = relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) }));
+  const maxHp = computeMaxHp({ vocation, level: stats.level, equipment, relics });
+  const maxMana = computeMaxMana({ vocation, level: stats.level });
+
+  const beforeHp = Math.min(maxHp, stats.hp != null ? stats.hp : maxHp);
+  const beforeMana = Math.min(maxMana, stats.mana != null ? stats.mana : maxMana);
+  const hp = item.heal ? Math.min(maxHp, beforeHp + potionRestore(item.heal)) : beforeHp;
+  const mana = item.mana ? Math.min(maxMana, beforeMana + potionRestore(item.mana)) : beforeMana;
+
+  await incrementInventory(userId, slot, itemId, -1);
+  await updateRows('player_stats', { user_id: userId, slot }, { hp, mana });
+  return { ok: true, hp, mana, healedHp: hp - beforeHp, healedMana: mana - beforeMana };
 }
 
 // Uso MANUAL de item pela Bag (clique do jogador durante a caçada) — mesma

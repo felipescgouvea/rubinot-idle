@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=129';
 import { VOCATIONS } from './domain/character.js?v=156';
 import { emit, EVENTS } from './shared/eventBus.js?v=126';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=137';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=138';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=128';
@@ -15,7 +15,7 @@ import { loadGame, confirmReset, applyCloudSave } from './application/persistenc
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=131';
 import { selectVocation } from './application/characterUseCases.js?v=128';
-import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=168';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=169';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=132';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';

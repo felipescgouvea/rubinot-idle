@@ -9,7 +9,7 @@ import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { monsterSpriteImg } from './huntPanel.js?v=135';
 import { openBattleModal } from './battleModal.js?v=125';
-import { t, getLocale } from '../i18n/i18n.js?v=137';
+import { t, getLocale } from '../i18n/i18n.js?v=138';
 
 function bossCard(zoneId, zone) {
   const boss = MONSTERS[zone.boss];

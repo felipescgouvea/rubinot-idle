@@ -33,6 +33,16 @@ export async function selectMany(table, filters) {
   return res.json();
 }
 
+// Última linha por uma coluna de ordenação (ex.: a sessão de caça mais
+// recente, ativa ou não) — usado quando o dado que precisamos (vocação) só
+// existe em hunt_sessions, mas a ação não depende de haver sessão ATIVA.
+export async function selectLatest(table, filters, orderCol) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs(filters)}&select=*&order=${orderCol}.desc&limit=1`, { headers: headers() });
+  if (!res.ok) throw new Error(`selectLatest ${table} falhou: ${res.status} ${await res.text()}`);
+  const rows = await res.json();
+  return rows.length ? rows[0] : null;
+}
+
 export async function insertRow(table, row) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
     method: 'POST', headers: headers({ Prefer: 'return=representation' }), body: JSON.stringify(row),

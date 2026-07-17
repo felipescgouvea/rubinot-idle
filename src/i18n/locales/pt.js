@@ -89,6 +89,7 @@ export default {
   'battle.logCombat': 'Combate',
   'battle.logSpells': 'Magias',
   'battle.logSupplies': 'Suprimentos',
+  'battle.logLoot': 'Loot',
 
   // ---- settings panel ----
   'settings.title': 'Configurações',

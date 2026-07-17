@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=125" />
-  <link rel="stylesheet" href="style.css?v=133" />
+  <link rel="stylesheet" href="style.css?v=134" />
 </head>
 <body>
   <div id="app">
@@ -377,6 +377,7 @@
               <button class="log-tab" data-cat="combate" onclick="setLogFilter('combate')">⚔️ <span data-i18n="battle.logCombat">Combat</span></button>
               <button class="log-tab" data-cat="magia" onclick="setLogFilter('magia')">🗣️ <span data-i18n="battle.logSpells">Spells</span></button>
               <button class="log-tab" data-cat="suprimento" onclick="setLogFilter('suprimento')">🧪 <span data-i18n="battle.logSupplies">Supplies</span></button>
+              <button class="log-tab" data-cat="loot" onclick="setLogFilter('loot')">📦 <span data-i18n="battle.logLoot">Loot</span></button>
             </div>
             <div id="combat-log" data-filter="tudo"></div>
           </div>
@@ -391,6 +392,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=164"></script>
+  <script type="module" src="src/main.js?v=165"></script>
 </body>
 </html>

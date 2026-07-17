@@ -4,7 +4,7 @@ import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCate
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { escapeHtml, notify, skillIconImg } from './shared.js?v=130';
 import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=129';
-import { t } from '../i18n/i18n.js?v=137';
+import { t } from '../i18n/i18n.js?v=138';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 const TOTAL_BESTIARY = Object.keys(MONSTERS).length;

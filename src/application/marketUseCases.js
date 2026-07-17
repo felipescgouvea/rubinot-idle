@@ -4,7 +4,7 @@
 import { G } from './gameStore.js?v=129';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { t } from '../i18n/i18n.js?v=137';
+import { t } from '../i18n/i18n.js?v=138';
 import {
   fetchMyWalletRequest, fetchListingsRequest, depositRequest, withdrawRequest,
   listItemRequest, cancelListingRequest, buyListingRequest,

@@ -27,7 +27,7 @@ import { saveGame } from './saveGameUseCase.js?v=128';
 import { getCombatBonuses } from './bonuses.js?v=126';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
-import { t } from '../i18n/i18n.js?v=137';
+import { t } from '../i18n/i18n.js?v=138';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -272,7 +272,7 @@ function applyServerKillEvents(k) {
   emit(EVENTS.LOG, t('log.monsterDied', { name: k.monster, xp: k.xp || 0, gold: k.gold || 0 }));
   if (k.loot && k.loot.length) {
     const lootLine = k.loot.map(id => `${itemLogIcon(id)} ${(ITEMS[id] && ITEMS[id].name) || id}`);
-    emit(EVENTS.LOG, t('log.lootLine', { items: lootLine.join(', ') }));
+    emit(EVENTS.LOG, { html: t('log.lootLine', { items: lootLine.join(', ') }), cat: 'loot' });
   }
   if (k.relics && k.relics.length) {
     k.relics.forEach(r => {
@@ -281,7 +281,7 @@ function applyServerKillEvents(k) {
       if (!tier || !item) return;
       const bonusPct = r.bonusPct != null ? r.bonusPct : Number(r.bonus_pct);
       const pct = Math.round(bonusPct * 100);
-      emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`);
+      emit(EVENTS.LOG, { html: `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`, cat: 'loot' });
       emit(EVENTS.NOTIFY, { msg: t('hunt.notifyRelicDrop', { tier: t(tier.name), item: item.name, pct }), type: 'success' });
     });
   }
