@@ -17,7 +17,7 @@ import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=138';
-import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc } from './huntEngine.js';
+import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
 
 const PORT = process.env.PORT || 3000;
@@ -373,6 +373,25 @@ const server = http.createServer(async (req, res) => {
       const result = liveSession
         ? await useItemInSession(liveSession, itemId)
         : await usePotionStandalone(user.id, slot, itemId);
+      if (result.error) return send(res, 400, { error: result.error });
+      return send(res, 200, result);
+    }
+
+    // RTC parado (fora de caçada) — cura automática por spell/poção igual ao
+    // RTC de dentro do combate, mas rodando enquanto o personagem não está
+    // caçando (ver huntEngine.js: idleRtcHealStandalone). Chamado pelo
+    // cliente num timer curto (ver huntUseCases.js: rtcHealInterval) — sem
+    // sessão viva o servidor não tem onde guardar a config do RTC, então o
+    // cliente manda ela em toda chamada (mesmo padrão de /hunt/start).
+    if (url.pathname === '/hunt/idle-heal' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+      if (activeRow && getLiveSession(activeRow.id)) return send(res, 400, { error: 'caçada ativa — o RTC de combate já cuida disso' });
+      const result = await idleRtcHealStandalone(user.id, slot, body.rtc || {});
       if (result.error) return send(res, 400, { error: result.error });
       return send(res, 200, result);
     }

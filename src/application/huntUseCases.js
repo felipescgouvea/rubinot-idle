@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=133';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=134';
 import { ZONES } from '../domain/bestiary.js?v=140';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
@@ -30,6 +30,8 @@ const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEner
 let huntInterval = null;
 let regenInterval = null;
 let rtcHealInterval = null;
+let idleHealInterval = null;
+let idleHealBusy = false;
 // currentMonster/currentPack são um ESPELHO fiel da sala REAL do servidor
 // (session.currentPack, ver server/src/huntEngine.js) — populados por
 // applyServerPack() a cada reconcileWithServer(), NUNCA por uma simulação
@@ -640,6 +642,50 @@ function applyRtcHealing() {
   if (spellWants || potionWants) emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
 }
 
+// RTC parado (fora de caçada) — cura de VERDADE (spell/poção), não só o flash
+// cosmético de applyRtcHealing acima. Dentro de uma caçada quem cura de
+// verdade é o tick do servidor (huntEngine.js: applyRtcHealing); fora dela
+// não existia NADA rodando pro jogador se curar sozinho antes da próxima
+// hunt — só dava pra beber poção manualmente pela Bag (pedido do Felipe: "nao
+// faz sentido eu nao curar antes de entrar numa batalha"). Chamada por um
+// timer próprio (ver startRegen: idleHealInterval), só quando NÃO caçando —
+// o servidor valida tudo de novo (posse/vocação/nível), igual usePotionStandalone.
+async function performIdleRtcHeal() {
+  if (!G.rtc || !G.vocation || idleHealBusy) return;
+  const maxHp = getMaxHp(), maxMana = getMaxMana();
+  const hpPct = maxHp > 0 ? (G.hp / maxHp) * 100 : 100;
+  const manaPct = maxMana > 0 ? (G.mana / maxMana) * 100 : 100;
+  const wantsHp = G.hp > 0 && (
+    (G.rtc.healPotion && hpPct < (G.rtc.healPotionThreshold || 0) && (G.inventory[G.rtc.healPotion] || 0) > 0) ||
+    hpPct < (G.rtc.healSpellThreshold || 0)
+  );
+  const wantsMana = G.rtc.manaPotion && G.mana < maxMana && manaPct < (G.rtc.manaPotionThreshold || 0) && (G.inventory[G.rtc.manaPotion] || 0) > 0;
+  if (!wantsHp && !wantsMana) return;
+  idleHealBusy = true;
+  try {
+    const res = await idleHealOnServer(ACCOUNT.activeSlot, G.rtc);
+    if (!res.ok) return;
+    G.hp = res.hp;
+    G.mana = res.mana;
+    if (res.usedPotionHeal && G.rtc.healPotion) {
+      G.inventory[G.rtc.healPotion] = Math.max(0, (G.inventory[G.rtc.healPotion] || 0) - 1);
+      emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.healPotion)} ${t('inventory.logHealHp', { item: ITEMS[G.rtc.healPotion].name, amount: res.healedHp })}`, cat: 'suprimento' });
+    }
+    if (res.usedPotionMana && G.rtc.manaPotion) {
+      G.inventory[G.rtc.manaPotion] = Math.max(0, (G.inventory[G.rtc.manaPotion] || 0) - 1);
+      emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.manaPotion)} ${t('inventory.logHealMana', { item: ITEMS[G.rtc.manaPotion].name, amount: res.healedMana })}`, cat: 'suprimento' });
+    }
+    if (res.healedHp > 0 || res.healedMana > 0) {
+      emit(EVENTS.BARS);
+      emit(EVENTS.HEADER_STATS);
+      emit(EVENTS.INVENTORY);
+      saveGame();
+    }
+  } finally {
+    idleHealBusy = false;
+  }
+}
+
 // Tick cosmético — SÓ ANIMAÇÃO/FLAVOR, na cadência antiga (400-2400ms/spd),
 // pra manter a sensação de ritmo de combate entre um poll e outro do
 // reconcile. Não decide mais NADA de real: não spawna, não calcula dano, não
@@ -781,4 +827,13 @@ export function startRegen() {
   rtcHealInterval = setInterval(() => {
     if (G.vocation && !currentMonster) applyRtcHealing();
   }, 500);
+
+  // Cura de VERDADE enquanto parado (fora de caçada) — ver performIdleRtcHeal.
+  // Intervalo mais longo que o flash cosmético acima de propósito: respeita o
+  // exhaust real de poção (~1s) sem precisar de estado de cooldown persistido
+  // no servidor (ver server/src/huntEngine.js: idleRtcHealStandalone).
+  if (idleHealInterval) clearInterval(idleHealInterval);
+  idleHealInterval = setInterval(() => {
+    if (G.vocation && !G.hunting) performIdleRtcHeal();
+  }, 1000);
 }

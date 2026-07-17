@@ -489,6 +489,81 @@ export async function usePotionStandalone(userId, slot, itemId) {
   return { ok: true, hp, mana, healedHp: hp - beforeHp, healedMana: mana - beforeMana };
 }
 
+// RTC (cura automática) FORA de caçada — antes o RTC só existia dentro do
+// tick de combate (applyRtcHealing acima), então o jogador não tinha como se
+// curar sozinho antes de entrar numa hunt: precisava clicar manualmente na
+// poção pela Bag (bug reportado pelo Felipe: "nao faz sentido eu nao curar
+// antes de entrar numa batalha"). Chamado pelo cliente num timer curto
+// enquanto parado (ver huntUseCases.js: rtcHealInterval) — cada chamada faz
+// NO MÁXIMO uma cura de spell e uma de poção (o próprio intervalo do cliente
+// já funciona como o "exhaust" natural, sem precisar de estado de cooldown
+// persistido aqui). `rtc` vem do cliente a cada chamada (ver /hunt/rtc) já
+// que, sem sessão viva, não há onde guardar a preferência no servidor.
+export async function idleRtcHealStandalone(userId, slot, rtc) {
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  if (!stats) return { error: 'personagem sem stats' };
+  if (stats.hp != null && Number(stats.hp) <= 0) return { ok: true, hp: stats.hp, mana: stats.mana, healedHp: 0, healedMana: 0 };
+
+  const lastSession = await selectLatest('hunt_sessions', { user_id: userId, slot }, 'started_at');
+  if (!lastSession) return { error: 'personagem sem vocação definida' };
+  const vocation = lastSession.vocation;
+
+  const eqRows = await selectMany('player_equipment', { user_id: userId, slot });
+  const equipment = {};
+  eqRows.forEach(r => { equipment[r.eq_slot] = r.item_id; });
+  const relicRows = await selectMany('player_relics', { user_id: userId, slot });
+  const relics = relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) }));
+  const maxHp = computeMaxHp({ vocation, level: stats.level, equipment, relics });
+  const maxMana = computeMaxMana({ vocation, level: stats.level });
+
+  let hp = Math.min(maxHp, stats.hp != null ? stats.hp : maxHp);
+  let mana = Math.min(maxMana, stats.mana != null ? stats.mana : maxMana);
+  const beforeHp = hp, beforeMana = mana;
+  let usedSpell = false, usedPotionHeal = false, usedPotionMana = false;
+
+  const r = rtc || {};
+  const healSpellId = r.healSpell || defaultHealSpellId(vocation, stats.level);
+  const healSpell = isSpellAvailable(healSpellId, vocation, stats.level) ? SPELLS[healSpellId] : null;
+  const hpPct = (hp / maxHp) * 100;
+  if (healSpell && hp > 0 && hpPct < (r.healSpellThreshold || 0) && mana >= healSpell.mana) {
+    const skillsRow = await selectOne('player_skills', { user_id: userId, slot });
+    const magicLevel = (skillsRow && skillsRow.skills && skillsRow.skills.magic && skillsRow.skills.magic.lv) || 0;
+    const heal = Math.min(maxHp - hp, spellHealAmount({ spell: healSpell, level: stats.level, magicLevel }));
+    hp = Math.min(maxHp, hp + heal);
+    mana -= healSpell.mana;
+    usedSpell = true;
+  }
+
+  if (r.healPotion && hp > 0 && ((hp / maxHp) * 100) < (r.healPotionThreshold || 0)) {
+    const item = ITEMS[r.healPotion];
+    if (item && canUsePotion(item, vocation, stats.level)) {
+      const row = await selectOne('player_inventory', { user_id: userId, slot, item_id: r.healPotion });
+      if (row && Number(row.qty) > 0) {
+        hp = Math.min(maxHp, hp + potionRestore(item.heal));
+        await incrementInventory(userId, slot, r.healPotion, -1);
+        usedPotionHeal = true;
+      }
+    }
+  }
+
+  if (r.manaPotion && mana < maxMana && ((mana / maxMana) * 100) < (r.manaPotionThreshold || 0)) {
+    const item = ITEMS[r.manaPotion];
+    if (item && canUsePotion(item, vocation, stats.level)) {
+      const row = await selectOne('player_inventory', { user_id: userId, slot, item_id: r.manaPotion });
+      if (row && Number(row.qty) > 0) {
+        mana = Math.min(maxMana, mana + potionRestore(item.mana));
+        await incrementInventory(userId, slot, r.manaPotion, -1);
+        usedPotionMana = true;
+      }
+    }
+  }
+
+  if (usedSpell || usedPotionHeal || usedPotionMana) {
+    await updateRows('player_stats', { user_id: userId, slot }, { hp, mana });
+  }
+  return { ok: true, hp, mana, healedHp: hp - beforeHp, healedMana: mana - beforeMana, usedSpell, usedPotionHeal, usedPotionMana };
+}
+
 // Uso MANUAL de item pela Bag (clique do jogador durante a caçada) — mesma
 // checagem de posse/vocação/ML do RTC automático e a MESMA matemática
 // (potionRestore/runeDamage+elementMod, ver domain/combatFormulas.js e

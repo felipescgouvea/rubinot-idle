@@ -12,7 +12,7 @@ import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../appli
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { formatNum, applyHpState } from './shared.js?v=132';
 import { renderZonePicker, fmtDuration } from './huntPanel.js?v=141';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=184';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=185';
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=129';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=128';

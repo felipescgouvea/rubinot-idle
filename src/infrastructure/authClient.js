@@ -81,7 +81,7 @@ function authError(json, status) {
 }
 
 // ---- API pública ----
-export function getSession() { return session || loadStoredSession(); }
+function getSession() { return session || loadStoredSession(); }
 export function currentUser() { const s = getSession(); return s ? s.user : null; }
 export function isLoggedIn() { return !!(getSession() && getSession().access_token); }
 
@@ -172,7 +172,6 @@ export async function ensureValidToken() {
 // bom já existente na nuvem. Uma leitura OK — com dados OU sem linha (conta
 // nova) — libera a gravação normalmente.
 let cloudReadFailed = false;
-export function isCloudSaveBlocked() { return cloudReadFailed; }
 
 // Retorna { ok, data }: ok=false => a leitura FALHOU (não sobrescreva nada);
 // ok=true, data=null => conta nova sem save (pode gravar); ok=true, data=obj =>
@@ -335,6 +334,16 @@ export function buyBlessingOnServer(slot) {
 // healedHp/healedMana (poção) ou dmg/targetName/killed (runa) }.
 export function useItemOnServer(slot, itemId) {
   return huntFetch('/hunt/use-item', { method: 'POST', body: { slot, itemId } });
+}
+
+// RTC parado (fora de caçada) — cura automática por spell/poção rodando
+// enquanto o personagem não está caçando (ver server/src/huntEngine.js:
+// idleRtcHealStandalone e application/huntUseCases.js: rtcHealInterval).
+// Manda o `rtc` do cliente a cada chamada — sem sessão viva o servidor não
+// tem onde guardar essa preferência. Retorna { ok, hp, mana, healedHp,
+// healedMana, usedSpell, usedPotionHeal, usedPotionMana }.
+export function idleHealOnServer(slot, rtc) {
+  return huntFetch('/hunt/idle-heal', { method: 'POST', body: { slot, rtc } });
 }
 
 // Compra na Loja (gold) validada no servidor (preço/saldo conferidos lá — ver
