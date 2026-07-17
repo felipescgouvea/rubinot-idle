@@ -15,7 +15,7 @@ import { loadGame, applyOfflineProgress, confirmReset, applyCloudSave } from './
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=130';
 import { selectVocation } from './application/characterUseCases.js?v=128';
-import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=166';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=167';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=131';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';

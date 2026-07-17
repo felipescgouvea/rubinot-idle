@@ -182,6 +182,7 @@ const server = http.createServer(async (req, res) => {
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
       const invRows = await selectMany('player_inventory', { user_id: user.id, slot });
       const relicRows = await selectMany('player_relics', { user_id: user.id, slot });
+      const skillsRow = await selectOne('player_skills', { user_id: user.id, slot });
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
       const inventory = {};
       invRows.forEach(r => { inventory[r.item_id] = Number(r.qty); });
@@ -192,6 +193,12 @@ const server = http.createServer(async (req, res) => {
         stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX },
         inventory,
         relics: relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
+        // Skills treinadas (Marco 4) — o motor de combate treina server-side
+        // (huntEngine.js: trainSkill), mas nada devolvia esse progresso real pro
+        // cliente: G.sk ficava travado no valor local antigo (do save), nunca
+        // corrigido, mesmo o servidor já tendo uma verdade diferente (ver
+        // huntUseCases.js: reconcileWithServer).
+        skills: skillsRow ? skillsRow.skills : null,
         currentMonster: liveSession && liveSession.currentMonster ? { name: liveSession.currentMonster.name, hp: liveSession.currentMonster.hp, maxHp: liveSession.currentMonster.maxHp } : null,
         lastKill: liveSession ? liveSession.lastKill || null : null,
       });

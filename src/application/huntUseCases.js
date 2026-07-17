@@ -232,6 +232,10 @@ async function reconcileWithServer() {
   // stamina cai caçando e regenera parada, sempre calculada lá.
   if (s.blessings != null) { G.blessings = s.blessings; emit(EVENTS.BLESSINGS); }
   if (s.stamina != null) { G.stamina = s.stamina; }
+  // Skills (Marco 4) — o motor de combate treina server-side (huntEngine.js:
+  // trainSkill), mas nada devolvia esse progresso: G.sk ficava travado no
+  // valor local do save, sem nunca ser corrigido pelo real do servidor.
+  if (res.skills) { G.sk = res.skills; emit(EVENTS.TRAINING_PANEL); emit(EVENTS.CHAR_PANEL); }
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
 }
