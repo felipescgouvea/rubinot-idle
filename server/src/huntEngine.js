@@ -204,6 +204,14 @@ async function settleKill(session, mon, cfg) {
 // contra-ataque + morte. Fiel ao doHuntTick do cliente.
 async function resolveTick(session) {
   const cfg = await getGameConfig();
+  // stopSession() (ver /hunt/stop) pode ter marcado esta sessão parada
+  // ENQUANTO este tick esperava o await acima — sem essa checagem, um golpe
+  // a mais (do jogador OU do monstro) ainda aplicava dano/gravava vitals
+  // depois do jogador já ter clicado "Stop Hunt" (bug reportado: "dou stop
+  // hunt e continuo levando hit"). clearInterval() só impede o PRÓXIMO tick
+  // agendado, não aborta um tick já em andamento — esta é a checagem que
+  // fecha essa janela.
+  if (session.stopped) return;
   const voc = VOC_TRAINING[session.vocation];
   const pack = session.currentPack;
   const primary = pack[0];
@@ -348,7 +356,7 @@ async function resolveTick(session) {
 }
 
 function doTick(session) {
-  if (session.busy) return;
+  if (session.busy || session.stopped) return;
   session.busy = true;
   tick(session).catch(err => console.error('tick falhou', session.id, err.message)).finally(() => { session.busy = false; });
 }
@@ -359,6 +367,10 @@ async function tick(session) {
   if (!session.currentPack || !session.currentPack.length) {
     if (Date.now() < session.nextSpawnAt) return;
     const cfg = await getGameConfig();
+    // Mesma checagem de resolveTick: stopSession() pode ter marcado a sessão
+    // parada enquanto este await rodava — não spawna um pack novo pra uma
+    // caçada que o jogador já mandou parar.
+    if (session.stopped) return;
     // Boss Rush: restringe o pool de spawn só ao boss da zona (mesma regra do
     // antigo doHuntTick do cliente, agora única fonte de verdade — ver
     // application/huntUseCases.js: setBossOnlyMode).
@@ -389,6 +401,7 @@ async function tick(session) {
 
 export function startSession(session) {
   session.currentPack = [];
+  session.stopped = false;
   session.spawnSeq = 0;
   session.nextSpawnAt = Date.now();
   session.spellCdUntil = {};
@@ -404,6 +417,13 @@ export function startSession(session) {
 export function stopSession(sessionId) {
   const s = live.get(sessionId);
   if (!s) return;
+  // Marca ANTES de clearInterval — clearInterval só impede o PRÓXIMO tick
+  // agendado; um tick já em andamento (parado num await, ex.: getGameConfig
+  // ou uma leitura de inventário) continuaria até o fim e podia aplicar dano/
+  // gravar vitals depois do jogador já ter mandado parar (ver checagens de
+  // session.stopped em tick()/resolveTick() acima — bug reportado: "dou stop
+  // hunt e continuo levando hit").
+  s.stopped = true;
   clearInterval(s.timer);
   clearInterval(s.flushTimer);
   flushVitals(s).catch(() => {});
