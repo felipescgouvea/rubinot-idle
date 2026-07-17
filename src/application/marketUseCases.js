@@ -11,7 +11,7 @@ import {
 } from '../infrastructure/marketApi.js?v=125';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { ensurePlayerSecret } from './highscoresUseCases.js?v=129';
-import { saveGame } from './saveGameUseCase.js?v=128';
+import { saveGame } from './saveGameUseCase.js?v=129';
 
 export async function fetchMyMarketWallet() {
   if (!G.playerSecret) return 0;

@@ -8,7 +8,7 @@
 // duplicar toda a lógica de start/stop de intervalos (caçada/treino/regen)
 // que só faz sentido rodar uma vez, no boot.
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=128';
+import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=129';
 import { saveState } from '../infrastructure/storage.js?v=125';
 import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=131';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';

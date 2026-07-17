@@ -3,7 +3,7 @@ import { BP_REWARDS, bpTierForXp, dailyMissionsFor } from '../domain/progression
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
-import { saveGame } from './saveGameUseCase.js?v=128';
+import { saveGame } from './saveGameUseCase.js?v=129';
 import { t } from '../i18n/i18n.js?v=139';
 
 export function checkBpTier() {

@@ -8,7 +8,7 @@ import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructu
 import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=136';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=127';
+import { computeBoostMods } from '../domain/shopCatalog.js?v=128';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
 import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=128';
 import { calcDamage, spawnMonsterInstance, spellAttackDamage, runeDamage, monsterAttack } from '../domain/combatFormulas.js?v=157';
@@ -23,7 +23,7 @@ import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
-import { saveGame } from './saveGameUseCase.js?v=128';
+import { saveGame } from './saveGameUseCase.js?v=129';
 import { getCombatBonuses } from './bonuses.js?v=126';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
@@ -169,11 +169,11 @@ export function toggleHunt() {
 // combate rico que a UI mostra localmente (aceito conscientemente até o
 // Marco 4 trazer paridade de combate no servidor).
 let reconcileInterval = null;
-// Reduzido de 5000 pra 1500: era o principal responsável pelo "jump" visível
-// de gold/xp/hp a cada 5s (o servidor sobrescreve o preview local, e quanto
-// maior o intervalo, maior o salto). 1500ms ainda é sustentável (poll leve) e
-// deixa a UI muito mais próxima de "tempo real".
-const RECONCILE_MS = 1500;
+// Reduzido de 5000 pra 1500 e depois pra 750 (pedido do Felipe: "diminua pela
+// metade") — quanto maior o intervalo, maior o salto visível de gold/xp/hp
+// quando o servidor sobrescreve o preview local. 750ms ainda é um poll leve
+// (só GET /hunt/state) e deixa a UI praticamente em tempo real.
+const RECONCILE_MS = 750;
 // Instante (epoch ms) do último session.lastKill já processado (ver
 // server/src/huntEngine.js: settleKill) — evita reprocessar o mesmo kill em
 // polls sucessivos, já que lastKill fica "parado" no servidor até a próxima morte.

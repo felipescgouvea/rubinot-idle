@@ -20,7 +20,13 @@ let cloudTimer = null;
 // velho/divergente antes do 1º reconcile. Ficam de fora só do payload que sobe
 // pra public.saves — o localStorage deste dispositivo continua com eles (só
 // como preview otimista até a próxima reconciliação; nunca é a fonte de verdade).
-const ECONOMY_FIELDS = ['gold', 'xp', 'level', 'hp', 'mana', 'sk', 'inventory', 'inventoryOrder', 'relics', 'relicSeq', 'blessings', 'stamina', 'totalGoldEarned', 'totalKills'];
+// `level` FICA DE FORA desta lista de propósito: é só o rótulo cosmético do
+// seletor de personagem (ver ui/settingsPanel.js: getCharacterSlots) — sem
+// nenhum peso econômico — e é o único jeito de mostrar o nível do slot
+// INATIVO (nada reconcilia esse slot com o servidor fora dele estar caçando).
+// Removê-lo daqui deixava "(level ,)" em branco pro personagem que não está
+// sendo jogado no momento (bug reportado pelo Felipe).
+const ECONOMY_FIELDS = ['gold', 'xp', 'hp', 'mana', 'sk', 'inventory', 'inventoryOrder', 'relics', 'relicSeq', 'blessings', 'stamina', 'totalGoldEarned', 'totalKills'];
 
 function stripEconomyFieldsForCloud(account) {
   return {

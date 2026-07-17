@@ -7,7 +7,7 @@ import { isSpellAvailable } from '../domain/spells.js?v=126';
 import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=159';
 import { getMagic } from './stats.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { saveGame } from './saveGameUseCase.js?v=128';
+import { saveGame } from './saveGameUseCase.js?v=129';
 import { t } from '../i18n/i18n.js?v=139';
 
 function refresh(msg) {
