@@ -15,7 +15,7 @@ import { loadGame, confirmReset, applyCloudSave } from './application/persistenc
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=133';
 import { selectVocation } from './application/characterUseCases.js?v=128';
-import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=178';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=179';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=133';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';
@@ -33,10 +33,10 @@ import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad 
 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=131';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=129';
-import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=136';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=130';
+import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=137';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=129';
-import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=130';
+import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=131';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=127';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=126';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=126';
@@ -45,20 +45,20 @@ import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPic
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=130';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=127';
 import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=126';
-import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicker.js?v=133';
+import { openZonePicker, pickZone, openCity, backToCities } from './ui/zonePicker.js?v=134';
 import { openBattleModal, closeBattleModal } from './ui/battleModal.js?v=125';
-import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=127';
-import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=128';
+import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/bossRushPanel.js?v=128';
+import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=129';
 import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=132';
 import { setSkillsSubtab } from './ui/skillsPanel.js?v=128';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=128';
-import { renderBoostedPanel } from './ui/boostedPanel.js?v=127';
-import { wireAdminPanelEvents } from './ui/adminPanel.js?v=131';
+import { renderBoostedPanel } from './ui/boostedPanel.js?v=128';
+import { wireAdminPanelEvents } from './ui/adminPanel.js?v=132';
 import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=126';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=129';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance, initGameConfig } from './application/adminUseCases.js?v=129';
-import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=131';
-import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=131';
+import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=132';
+import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=132';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();

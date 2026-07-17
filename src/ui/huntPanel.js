@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=138';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=126';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=131';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=178';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=179';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -460,6 +460,12 @@ export function playProjectile({ missile, targetUid } = {}) {
   const stage = document.getElementById('dungeon-stage');
   const playerWrap = document.getElementById('player-sprite-wrap');
   if (!file || !stage || !playerWrap) return;
+  // Blindagem: nunca mais de UM projétil em voo por vez — se algo disparar
+  // doCosmeticTick() mais de uma vez por ciclo (ex.: um huntInterval antigo
+  // vazado, ver beginLocalLoop), cada chamada criava seu PRÓPRIO <img>, todos
+  // animando ao mesmo tempo (bug reportado: "às vezes sai 2, 3, 5 flechas").
+  // Remove qualquer projétil ainda visível antes de criar o novo.
+  stage.querySelectorAll('.combat-projectile').forEach(el => el.remove());
   // alvo: a criatura pedida (por uid) ou a primeira da fila
   const cont = document.getElementById('stage-pack');
   const targetEl = (targetUid && cont && cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`)) || (cont && cont.firstElementChild);

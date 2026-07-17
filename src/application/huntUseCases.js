@@ -448,6 +448,16 @@ function beginLocalLoop() {
   emit(EVENTS.HUNT_BUTTON, { hunting: true });
   emit(EVENTS.HUNT_STATS);
   emit(EVENTS.MONSTER_DISPLAY, {}); // limpa o alvo e liga o modo "procurando"
+  // Sem o clearInterval abaixo, chamar beginLocalLoop() duas vezes sem um
+  // stopHuntLocalOnly() no meio (ex.: clique duplo em "Start Hunt" antes do
+  // botão re-renderizar, ou checkAndResumeHuntSession seguido de um start
+  // manual) deixava o huntInterval ANTIGO vazando, rodando em paralelo com o
+  // novo — cada um chamando doCosmeticTick() por conta própria, cada chamada
+  // criando seu PRÓPRIO projétil (ver playProjectile: cria um <img> novo por
+  // evento, sem deduplicar). Resultado: várias flechas/bolas de fogo na tela
+  // ao mesmo tempo em vez de uma só (bug reportado pelo Felipe). Mesmo
+  // padrão já usado abaixo pro reconcileInterval.
+  if (huntInterval) clearInterval(huntInterval);
   huntInterval = setInterval(doCosmeticTick, Math.max(400, 2400 / getSpd()));
   if (reconcileInterval) clearInterval(reconcileInterval);
   reconcileInterval = setInterval(reconcileWithServer, RECONCILE_MS);
