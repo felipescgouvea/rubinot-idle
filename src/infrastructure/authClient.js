@@ -327,3 +327,24 @@ export function buyBlessingOnServer(slot) {
 export function useItemOnServer(slot, itemId) {
   return huntFetch('/hunt/use-item', { method: 'POST', body: { slot, itemId } });
 }
+
+// Compra na Loja (gold) validada no servidor (preço/saldo conferidos lá — ver
+// server/src/index.js: /shop/buy e huntEngine.js: buyShopItemStandalone).
+// Retorna { ok, gold } ou, pro Supply Completo, { ok, gold, hp, mana }. Só
+// cobre currency 'gold' — rubini/dinheiro real continuam só no cliente (ver
+// comentário em buyShopItemStandalone sobre o porquê).
+export function buyShopItemOnServer(slot, shopItemId, qty) {
+  return huntFetch('/shop/buy', { method: 'POST', body: { slot, shopItemId, qty } });
+}
+
+// Vender item da Bag (qty omitido = vende a pilha toda) — ver server/src/
+// index.js: /inventory/sell. Retorna { ok, gold, sold, total }.
+export function sellItemOnServer(slot, itemId, qty) {
+  return huntFetch('/inventory/sell', { method: 'POST', body: { slot, itemId, qty } });
+}
+
+// Vender uma relíquia — ver server/src/index.js: /inventory/sell-relic.
+// Retorna { ok, gold, price }.
+export function sellRelicOnServer(slot, relicId) {
+  return huntFetch('/inventory/sell-relic', { method: 'POST', body: { slot, relicId } });
+}

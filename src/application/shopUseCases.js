@@ -1,13 +1,12 @@
-import { G } from './gameStore.js?v=129';
+import { G, ACCOUNT } from './gameStore.js?v=129';
 import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=128';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
-import { getMaxHp, getMaxMana } from './stats.js?v=126';
-import { addItemToInventory } from './inventoryCore.js?v=127';
+import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=132';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { t } from '../i18n/i18n.js?v=141';
 
-export function buyShopItem(id, qty = 1) {
+export async function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);
   if (!s) return;
 
@@ -26,23 +25,41 @@ export function buyShopItem(id, qty = 1) {
   const count = isBulk ? Math.max(1, Math.min(9999, Math.floor(Number(qty) || 1))) : 1;
   const total = s.price * count;
 
+  // Compra em GOLD de item/refill: AUTORITATIVA no servidor (ver
+  // server/src/index.js: /shop/buy) — antes G.gold/G.inventory/G.hp/G.mana
+  // só mutavam aqui e o próximo reconcileWithServer() revertia tudo em
+  // silêncio (achado na varredura de QA: dinheiro sumia/reaparecia sozinho).
+  // Rubini/boost continuam locais por ora (ver nota no servidor: rubini não
+  // tem coluna própria hoje, e boost ainda não é aplicado no cálculo real do
+  // servidor — cobrar por ele autoritativamente não teria efeito nenhum).
+  if (s.currency === 'gold' && (s.type === 'item' || s.type === 'refill')) {
+    if (G.gold < total) { emit(EVENTS.NOTIFY, { msg: t('shop.insufficientBalance'), type: 'error' }); return; }
+    const res = await buyShopItemOnServer(ACCOUNT.activeSlot, s.id, count);
+    if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('shop.insufficientBalance'), type: 'error' }); return; }
+    G.gold = res.gold;
+    if (res.hp != null) G.hp = res.hp;
+    if (res.mana != null) G.mana = res.mana;
+    emit(EVENTS.NOTIFY, {
+      msg: s.type === 'refill' ? t('shop.refillSuccess') : t('shop.itemPurchased', { count, name: item.name }),
+      type: 'success',
+    });
+    emit(EVENTS.SHOP_PANEL);
+    emit(EVENTS.HEADER_STATS);
+    emit(EVENTS.CHAR_INFO);
+    emit(EVENTS.BARS);
+    emit(EVENTS.INVENTORY);
+    saveGame();
+    return;
+  }
+
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
   if (balance < total) { emit(EVENTS.NOTIFY, { msg: t('shop.insufficientBalance'), type: 'error' }); return; }
-  if (s.currency === 'rubini') G.rubini -= total; else G.gold -= total;
+  G.rubini -= total; // só chega aqui pra currency 'rubini' (gold já tratado acima)
 
-  if (s.type === 'boost') {
-    const now = Date.now();
-    const base = isBoostActive(G.boosts, s.boost, now) ? G.boosts[s.boost] : now;
-    G.boosts[s.boost] = base + s.minutes * 60000; // acumula tempo
-    emit(EVENTS.NOTIFY, { msg: t('shop.boostActivated', { icon: s.icon, name: s.name, minutes: s.minutes }), type: 'success' });
-  } else if (s.type === 'refill') {
-    G.hp = getMaxHp();
-    G.mana = getMaxMana();
-    emit(EVENTS.NOTIFY, { msg: t('shop.refillSuccess'), type: 'success' });
-  } else if (s.type === 'item') {
-    for (let i = 0; i < count; i++) addItemToInventory(s.itemId);
-    emit(EVENTS.NOTIFY, { msg: t('shop.itemPurchased', { count, name: ITEMS[s.itemId].name }), type: 'success' });
-  }
+  const now = Date.now();
+  const base = isBoostActive(G.boosts, s.boost, now) ? G.boosts[s.boost] : now;
+  G.boosts[s.boost] = base + s.minutes * 60000; // acumula tempo
+  emit(EVENTS.NOTIFY, { msg: t('shop.boostActivated', { icon: s.icon, name: s.name, minutes: s.minutes }), type: 'success' });
 
   emit(EVENTS.SHOP_PANEL);
   emit(EVENTS.HEADER_STATS);

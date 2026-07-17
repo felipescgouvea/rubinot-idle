@@ -5,7 +5,7 @@
 import { G } from '../application/gameStore.js?v=129';
 import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=136';
 import { CITIES, isCityUnlocked, ROOKGAARD_LEVEL_CAP } from '../domain/cities.js?v=131';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=172';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=173';
 import { openModal, closeModal } from './shared.js?v=131';
 import { openBattleModal } from './battleModal.js?v=125';
 import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=136';

@@ -16,6 +16,7 @@ import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progres
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
 import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/character.js?v=156';
 import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=138';
+import { SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=126';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../../src/domain/rtcConfig.js?v=159';
@@ -24,7 +25,7 @@ import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/ble
 import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { getGameConfig } from './gameConfig.js';
-import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows } from './db.js';
+import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows } from './db.js';
 
 // sessionId -> objeto de sessão (ver startSession) — tudo em memória; só
 // existe enquanto ESTE processo está de pé (ver reapStaleSessionsOnBoot).
@@ -460,6 +461,105 @@ export async function useItemInSession(session, itemId) {
     ok: true, hp: session.hp, mana: session.mana,
     dmg: primaryDmg, targetName: primaryName, killed: deaths.length > 0, hitCount: targets.length,
   };
+}
+
+// Vocação/nível/maxHp/maxMana pra ações fora de sessão (compra/venda/refill) —
+// mesmo padrão de usePotionStandalone: vocação só existe em hunt_sessions
+// (snapshot do hunt-start), então pega a mais recente, ativa ou não.
+async function loadVitalsContext(userId, slot) {
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  if (!stats) return null;
+  const lastSession = await selectLatest('hunt_sessions', { user_id: userId, slot }, 'started_at');
+  if (!lastSession) return null;
+  const vocation = lastSession.vocation;
+  const eqRows = await selectMany('player_equipment', { user_id: userId, slot });
+  const equipment = {};
+  eqRows.forEach(r => { equipment[r.eq_slot] = r.item_id; });
+  const relicRows = await selectMany('player_relics', { user_id: userId, slot });
+  const relics = relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) }));
+  const maxHp = computeMaxHp({ vocation, level: stats.level, equipment, relics });
+  const maxMana = computeMaxMana({ vocation, level: stats.level });
+  return { stats, vocation, maxHp, maxMana };
+}
+
+// Comprar na Loja de Equipamentos/Artigos Mágicos (gold) — antes só mutava
+// G.gold/G.inventory no cliente, sem o servidor nunca saber; o próximo
+// reconcileWithServer() (a cada tick de combate ou hunt-start) sobrescrevia
+// G.gold/G.inventory com os valores REAIS do banco, revertendo a compra em
+// silêncio (bug reportado na varredura de QA: dinheiro gasto/item comprado
+// "reaparecia"/"sumia" sozinho). Só cobre currency 'gold' — 'rubini' ainda
+// não tem coluna própria em player_stats (moeda premium, sem risco de
+// reconciliação hoje) e 'real' precisa de gateway de pagamento (fora de
+// escopo). type 'boost' também fica de fora por ora: o servidor ainda não
+// aplica G.boosts no cálculo de gold/xp (huntEngine.js: settleKill) — sem
+// isso o boost seria cobrado à toa, sem efeito real; ver nota na resposta.
+export async function buyShopItemStandalone(userId, slot, shopItemId, qty) {
+  const s = SHOP_ITEMS.find(x => x.id === shopItemId);
+  if (!s) return { error: 'item da loja não encontrado' };
+  if (s.currency !== 'gold') return { error: 'esta compra ainda não é validada pelo servidor' };
+  if (s.type !== 'item' && s.type !== 'refill') return { error: 'esta compra ainda não é validada pelo servidor' };
+
+  const item = s.itemId ? ITEMS[s.itemId] : null;
+  const isBulk = s.type === 'item' && item && (item.type === 'potion' || item.type === 'rune');
+  const count = isBulk ? Math.max(1, Math.min(9999, Math.floor(Number(qty) || 1))) : 1;
+  const total = s.price * count;
+
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  if (!stats) return { error: 'personagem sem stats' };
+  if (Number(stats.gold) < total) return { error: 'saldo insuficiente' };
+
+  if (s.type === 'item') {
+    const captured = await incrementInventory(userId, slot, s.itemId, count);
+    if (!captured) return { error: 'bag cheia' };
+    await updateRows('player_stats', { user_id: userId, slot }, { gold: Number(stats.gold) - total });
+    return { ok: true, gold: Number(stats.gold) - total };
+  }
+
+  // refill: cura hp/mana até o teto (mesma fórmula de maxHp/maxMana do hunt-start)
+  const ctx = await loadVitalsContext(userId, slot);
+  if (!ctx) return { error: 'personagem sem vocação definida' };
+  await updateRows('player_stats', { user_id: userId, slot }, { gold: Number(stats.gold) - total, hp: ctx.maxHp, mana: ctx.maxMana });
+  return { ok: true, gold: Number(stats.gold) - total, hp: ctx.maxHp, mana: ctx.maxMana };
+}
+
+// Vender item(ns) da bag — mesmo motivo do buyShopItemStandalone (gold
+// creditado só no cliente era revertido no próximo reconcile). `qty` omitido
+// vende TODA a pilha (equivalente ao sellAllItem do cliente).
+export async function sellItemStandalone(userId, slot, itemId, qty) {
+  const item = ITEMS[itemId];
+  if (!item || item.sell == null) return { error: 'item não vendável' };
+  const row = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
+  const owned = row ? Number(row.qty) : 0;
+  if (owned <= 0) return { error: 'item não pertence a esta conta/personagem' };
+  const count = qty != null ? Math.max(1, Math.min(owned, Math.floor(Number(qty) || 1))) : owned;
+  const total = item.sell * count;
+
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  if (!stats) return { error: 'personagem sem stats' };
+  await incrementInventory(userId, slot, itemId, -count);
+  const gold = Number(stats.gold) + total;
+  await updateRows('player_stats', { user_id: userId, slot }, { gold });
+  return { ok: true, gold, sold: count, total };
+}
+
+// Vender uma relíquia — preço = sell base * (1 + bonusPct*2), mesma fórmula
+// do cliente (application/inventoryUseCases.js: sellRelic). Se estava
+// equipada, limpa o slot (mesmo espírito de unequipItem/syncEquipment).
+export async function sellRelicStandalone(userId, slot, relicId) {
+  const relic = await selectOne('player_relics', { user_id: userId, slot, id: relicId });
+  if (!relic) return { error: 'relíquia não pertence a esta conta/personagem' };
+  const base = ITEMS[relic.item_id];
+  if (!base) return { error: 'item base da relíquia não existe' };
+  const price = Math.round(base.sell * (1 + Number(relic.bonus_pct) * 2));
+
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  if (!stats) return { error: 'personagem sem stats' };
+  const eqRow = await selectOne('player_equipment', { user_id: userId, slot, item_id: relicId });
+  if (eqRow) await updateRows('player_equipment', { user_id: userId, slot, eq_slot: eqRow.eq_slot }, { item_id: null });
+  await deleteRows('player_relics', { user_id: userId, slot, id: relicId });
+  const gold = Number(stats.gold) + price;
+  await updateRows('player_stats', { user_id: userId, slot }, { gold });
+  return { ok: true, gold, price };
 }
 
 // Ao subir (deploy/restart), qualquer sessão marcada "active" no banco perdeu

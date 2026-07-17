@@ -4,28 +4,25 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=131';
-import { ZONES, boostedZoneForDate, BOSS_MONSTER_IDS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=136';
+import { startHuntSession, stopHuntSession, getHuntState } from '../infrastructure/authClient.js?v=132';
+import { ZONES, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=136';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
-import { computeBoostMods } from '../domain/shopCatalog.js?v=128';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
-import { worldXpMultiplier, worldGoldMultiplier } from '../domain/progression.js?v=128';
 import { calcDamage, spawnMonsterInstance, spellAttackDamage, runeDamage, monsterAttack } from '../domain/combatFormulas.js?v=157';
 import { elementMod } from '../domain/elements.js?v=125';
-import { STAMINA_MAX, staminaXpMult } from '../domain/stamina.js?v=125';
-import { ITEMS, EQUIPPABLE_TYPES, resolveEquippedItem, equippableFallbackPool } from '../domain/items.js?v=138';
+import { STAMINA_MAX } from '../domain/stamina.js?v=125';
+import { ITEMS, resolveEquippedItem } from '../domain/items.js?v=138';
 import { MONSTERS } from '../domain/bestiary.js?v=136';
-import { RARITY_TIERS, rollIndependentRarityTiers } from '../domain/rarity.js?v=126';
+import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { areaMaxTargets, areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=125';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getAtk, getDef, getMagic, getMaxHp, getMaxMana, getSpd, getEquippedWeaponSkillId } from './stats.js?v=126';
-import { addItemToInventory } from './inventoryCore.js?v=127';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { getCombatBonuses } from './bonuses.js?v=126';
-import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
+import { getSpawnDelayRange, isStaminaEnabled, isConsumeAmmo, getZoneSpawn } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
 import { t } from '../i18n/i18n.js?v=141';
 
@@ -682,173 +679,14 @@ function cosmeticMonsterDeath(mon) {
   emit(EVENTS.BATTLE_LIST);
 }
 
-function todayStr() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-// Paga XP/gold/loot pela morte da criatura atual — usado tanto por um golpe normal
-// (doHuntTick) quanto por uma runa de ataque usada manualmente (inventoryUseCases),
-// para que nenhuma via de dano "sonegue" a recompensa da morte.
-export function resolveMonsterKill(zone, victim) {
-  // `victim` é a criatura que morreu. Normalmente é o alvo da frente, mas num
-  // ataque de ÁREA pode ser uma que estava esperando atrás na sala (ver
-  // doHuntTick). Default: o alvo da frente — mantém compatível com quem chama
-  // sem passar vítima (runa manual em inventoryUseCases e golpe de alvo único).
-  const mon = victim || currentMonster;
-  if (!mon) return;
-  const boosts = computeBoostMods(G.boosts, Date.now());
-  // Zona Bônus do Dia (como o Boosted Creature/Boss real de Tibia): +50% extra
-  // em gold/xp na zona sorteada de hoje — aplicado aqui em cima dos mults da
-  // zona/mundo, sem mutar ZONES (dado estático compartilhado por todo mundo).
-  const isBoostedToday = G.activeZone === boostedZoneForDate(todayStr());
-  const boostedMult = isBoostedToday ? 1.5 : 1;
-  // Bônus de Presa/Charm contra esta criatura (ver application/bonuses.js) —
-  // multiplicadores de gold/xp e chance aditiva de loot, por cima de tudo.
-  const bonus = getCombatBonuses(mon.defKey, Date.now());
-  // Multiplicador de XP/Gold da zona: por padrão 1 (fiel ao Tibia); só difere
-  // se o dono ligou os multiplicadores no Painel Admin (ver adminUseCases).
-  const zoneGoldMult = getZoneMultiplier(G.activeZone, 'gold', 1);
-  const zoneXpMult = getZoneMultiplier(G.activeZone, 'xp', 1);
-  const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(G.currentWorld) * boosts.gold * boostedMult * bonus.gold * getGoldRate());
-  const staminaMult = isStaminaEnabled() ? staminaXpMult(G.stamina) : 1;
-  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(G.currentWorld) * boosts.xp * boostedMult * bonus.xp * getXpRate() * staminaMult);
-
-  G.gold += goldGained;
-  G.totalGoldEarned += goldGained;
-  G.totalKills++;
-
-  // Hunt Analyzer: registra kill, XP e gold desta morte na sessão atual.
-  huntSession.kills++;
-  huntSession.xp += xpGained;
-  huntSession.gold += goldGained;
-
-  // Kill counters da zona atual
-  G.killCounters = G.killCounters || {};
-  G.killCounters[mon.defKey] = (G.killCounters[mon.defKey] || 0) + 1;
-
-  // Battle Pass XP
-  G.bpXp += Math.floor(xpGained * 0.01);
-  checkBpTier();
-  bumpMissionProgress('kills', 1);
-  bumpMissionProgress('gold', goldGained);
-
-  emit(EVENTS.LOG, t('log.monsterDied', { name: mon.name, xp: xpGained, gold: goldGained }));
-
-  // Loot — chance efetiva de cada item é a override do dono (Painel Admin,
-  // aba Loot) por cima do padrão do bestiário, quando houver (ver
-  // domain/adminConfig.js: resolveMonsterLoot).
-  const lootLine = [];
-  let soldGold = 0;
-  getMonsterLoot(mon.defKey, mon.loot).forEach(([itemId, chance]) => {
-    if (Math.random() < (chance + boosts.loot + bonus.loot) * getLootRate()) {
-      const item = ITEMS[itemId];
-      // Auto-vender lixo: itens 'misc' baratos viram gold na hora, sem lotar a bag.
-      const autoSell = G.autoSell && G.autoSell.enabled && item.type === 'misc' && (item.sell || 0) <= (G.autoSell.maxValue || 0);
-      if (autoSell) {
-        G.gold += item.sell || 0;
-        huntSession.gold += item.sell || 0;
-        soldGold += item.sell || 0;
-      } else if (addItemToInventory(itemId)) {
-        // Bag cheia (20 tipos distintos, ver domain/items.js: BAG_MAX_SLOTS) e
-        // o item é um tipo NOVO: addItemToInventory recusa, e o loot simplesmente
-        // não é capturado (o monstro ainda morre e dá XP/gold normalmente).
-        huntSession.loot += item.sell || 0; // valor do loot pra o Hunt Analyzer
-        lootLine.push(`${itemLogIcon(itemId)} ${item.name}`);
-      }
-    }
-  });
-  if (lootLine.length > 0) emit(EVENTS.LOG, t('log.lootLine', { items: lootLine.join(', ') }));
-  if (soldGold > 0) emit(EVENTS.LOG, { html: t('log.autoSoldTrash', { gold: soldGold }), cat: 'suprimento' });
-
-  // Relíquia (raridade) — cai SÓ no Boss Rush (bossOnly), nunca numa caçada
-  // comum. O boss de uma zona (ver domain/bestiary.js: BOSS_MONSTER_IDS)
-  // aparece no elenco normal daquela hunt — sem esse gate, matar ele
-  // caçando normalmente também sorteava relíquia, deixando hunts comuns
-  // dropar item raro (ex.: Wolf, boss de wolf_den, chegou a dropar Demon
-  // Shield numa caçada comum). Cada raridade rola INDEPENDENTE das outras
-  // (ver domain/rarity.js: rollIndependentRarityTiers) — não é uma escolha
-  // única, então mais de uma pode bater no mesmo kill: vira uma relíquia PRA
-  // CADA raridade que bateu (podem ser 0, 1 ou várias).
-  if (bossOnly && BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < getRelicDropChance()) {
-    const equippablePool = mon.loot
-      .map(([id]) => id)
-      .filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
-    const pool = equippablePool.length > 0
-      ? equippablePool
-      : equippableFallbackPool(mon.xp);
-    if (pool.length > 0) {
-      const hitTiers = rollIndependentRarityTiers(getRarityWeights());
-      hitTiers.forEach(rarity => {
-        // Cada relíquia sorteia seu próprio item — duas relíquias do mesmo
-        // kill podem ser itens diferentes.
-        const itemId = pool[Math.floor(Math.random() * pool.length)];
-        const tier = RARITY_TIERS[rarity];
-        G.relicSeq = (G.relicSeq || 0) + 1;
-        G.relics = G.relics || [];
-        G.relics.push({ id: 'relic_' + G.relicSeq, itemId, rarity, bonusPct: tier.bonusPct });
-        const item = ITEMS[itemId];
-        const pct = Math.round(tier.bonusPct * 100);
-        emit(EVENTS.LOG, `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`);
-        emit(EVENTS.NOTIFY, { msg: t('hunt.notifyRelicDrop', { tier: t(tier.name), item: item.name, pct }), type: 'success' });
-      });
-      if (hitTiers.length > 0) emit(EVENTS.INVENTORY);
-    }
-  }
-
-  gainXp(xpGained);
-  const killedId = mon.defKey;
-  // anuncia a morte pra quem precisar reagir (ex.: progresso de Linked Tasks)
-  // sem a caçada precisar saber que tasks existem
-  emit(EVENTS.MONSTER_KILLED, { monsterId: killedId });
-
-  // Boss da zona derrotado pela 1ª vez: desbloqueia a próxima zona da cadeia
-  // (ver ZONES[id].requiresBossOf em domain/bestiary.js).
-  G.defeatedZoneBosses = G.defeatedZoneBosses || [];
-  if (killedId === zone.boss && G.activeZone && !G.defeatedZoneBosses.includes(G.activeZone)) {
-    G.defeatedZoneBosses.push(G.activeZone);
-    emit(EVENTS.NOTIFY, { msg: t('hunt.notifyZoneBossDefeated'), type: 'success' });
-    emit(EVENTS.ZONE_PICKER);
-  }
-
-  // Boss Rush: vencer o tier atual desbloqueia o próximo, mais forte e com
-  // aura diferente (ver domain/bestiary.js: bossTierMultiplier/bossAuraClass) —
-  // é a "escada" de dificuldade infinita do Boss Rush, nunca some/regride.
-  if (isBossOnlyHunt() && killedId === zone.boss && G.activeZone) {
-    G.bossTiers = G.bossTiers || {};
-    const nextTier = (G.bossTiers[G.activeZone] || 1) + 1;
-    G.bossTiers[G.activeZone] = nextTier;
-    emit(EVENTS.NOTIFY, { msg: t('hunt.notifyTierWon', { tier: nextTier - 1, nextTier }), type: 'success' });
-    emit(EVENTS.BOSS_RUSH_PANEL);
-  }
-
-  // Remove a vítima da sala (por identidade — num ataque de área ela pode não
-  // ser a que está sendo mirada). Só troca o alvo se quem morreu FOI o alvo
-  // (senão o jogador que escolheu manualmente um alvo específico o perderia
-  // sempre que outro bicho da sala morresse). Só quando a sala esvazia
-  // (currentMonster null) o próximo tick gera novo grupo.
-  const idx = currentPack.indexOf(mon);
-  if (idx >= 0) currentPack.splice(idx, 1);
-  if (currentMonster === mon) currentMonster = currentPack[0] || null;
-  // Deixa o morto 1s na Battle List com a vida zerada (indica que morreu), depois some.
-  const deadEntry = { defKey: mon.defKey, name: mon.name, maxHp: mon.maxHp, uid: ++deadSeq };
-  recentDead.push(deadEntry);
-  setTimeout(() => { recentDead = recentDead.filter(d => d.uid !== deadEntry.uid); emit(EVENTS.BATTLE_LIST); }, 1000);
-  // sala limpa: volta a "procurar" (boneco anda de novo por um tempinho)
-  if (!currentMonster) nextSpawnAt = Date.now() + searchDelay();
-  emit(EVENTS.MONSTER_DISPLAY, { killed: killedId });
-  emit(EVENTS.BATTLE_LIST);
-  emit(EVENTS.LOOT);
-  emit(EVENTS.KILL_COUNTERS);
-  emit(EVENTS.HEADER_STATS);
-  emit(EVENTS.INVENTORY);
-  // Salva a cada kill (não só no setInterval de 30s do main.js) — G.lastSave
-  // precisa ficar sempre "fresco" durante a caçada. Sem isso, um F5 logo
-  // depois de uma janela de até ~30s sem save fazia applyOfflineProgress()
-  // (ver persistenceUseCases.js) reconstruir esse intervalo como "progresso
-  // offline" por cima da XP que a caçada AO VIVO já tinha dado — contava a
-  // mesma janela de tempo duas vezes (uma vez de verdade, outra aproximada).
-  saveGame();
-}
+// NOTA: resolveMonsterKill() (que calculava e gravava XP/gold/loot/relíquia
+// direto no cliente — G.gold/G.xp/G.inventory/G.relics) foi REMOVIDA nesta
+// auditoria. Era usada pelo golpe normal antigo e por inventoryUseCases.js
+// (runa manual); desde a migração pra combate 100% servidor-autoritativo
+// (Marco 6b) nenhum chamador restava — doHuntTick só faz preview cosmético e
+// inventoryUseCases.useItem() já usa useItemOnServer(). Função órfã mutando
+// estado real era um risco de regressão (bastava alguém religar a chamada
+// pra voltar a "roubar" a autoridade do servidor).
 
 export function gainXp(amount) {
   G.xp += amount;

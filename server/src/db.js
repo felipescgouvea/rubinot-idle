@@ -65,3 +65,8 @@ export async function upsertRow(table, row, onConflict) {
   });
   if (!res.ok) throw new Error(`upsert ${table} falhou: ${res.status} ${await res.text()}`);
 }
+
+export async function deleteRows(table, filters) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs(filters)}`, { method: 'DELETE', headers: headers() });
+  if (!res.ok) throw new Error(`delete ${table} falhou: ${res.status} ${await res.text()}`);
+}

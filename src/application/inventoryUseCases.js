@@ -1,11 +1,11 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { syncEquipment, useItemOnServer } from '../infrastructure/authClient.js?v=131';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer } from '../infrastructure/authClient.js?v=132';
 import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=138';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMagic } from './stats.js?v=126';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=159';
-import { getCurrentMonster } from './huntUseCases.js?v=172';
+import { getCurrentMonster } from './huntUseCases.js?v=173';
 import { areaName } from '../domain/attackAreas.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { itemLogIcon } from './logIcons.js?v=127';
@@ -85,25 +85,29 @@ export function equipRelic(relicId) {
 // Vender uma Relíquia é definitivo — some de G.relics e paga em gold, com um
 // preço maior que o item base (a raridade conta pra mais que o dobro do peso
 // do bônus no preço final, pra recompensar quem preferir vender uma relíquia
-// que não precisa em vez de guardar).
-export function sellRelic(relicId) {
+// que não precisa em vez de guardar). AUTORITATIVO no servidor (ver
+// server/src/index.js: /inventory/sell-relic) — antes G.gold/G.relics só
+// mutavam aqui e o próximo reconcileWithServer() revertia a venda em
+// silêncio (achado na varredura de QA).
+export async function sellRelic(relicId) {
   const idx = (G.relics || []).findIndex(r => r.id === relicId);
   if (idx === -1) return;
   const relic = G.relics[idx];
   const base = ITEMS[relic.itemId];
   if (!base) return;
-  const price = Math.round(base.sell * (1 + relic.bonusPct * 2));
+  const res = await sellRelicOnServer(ACCOUNT.activeSlot, relicId);
+  if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: base.name, reason: '' }), type: 'error' }); return; }
   // se a relíquia vendida estava equipada, o slot não pode continuar
-  // apontando pra um id que não existe mais
-  if (G.equipment[base.type] === relicId) { G.equipment[base.type] = null; syncEquipment(ACCOUNT.activeSlot, base.type, null); }
+  // apontando pra um id que não existe mais (servidor já limpou o dele)
+  if (G.equipment[base.type] === relicId) G.equipment[base.type] = null;
   G.relics.splice(idx, 1);
-  G.gold += price;
+  G.gold = res.gold;
   const tier = RARITY_TIERS[relic.rarity];
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.CHAR_INFO);
-  emit(EVENTS.NOTIFY, { msg: t('inventory.relicSold', { item: base.name, tier: t(tier.name), price }), type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.relicSold', { item: base.name, tier: t(tier.name), price: res.price }), type: 'success' });
   saveGame();
 }
 
@@ -114,11 +118,16 @@ export function sellRelic(relicId) {
 // openRelicModal, que agora compartilham o mesmo modal genérico) — fechar
 // tudo incondicionalmente levaria a Bag junto. Quem decide se volta pra Bag
 // ou fecha de vez é a UI, que sabe de onde o modal foi aberto.
-export function sellItem(itemId) {
+// AUTORITATIVO no servidor (ver server/src/index.js: /inventory/sell) — mesmo
+// motivo de sellRelic acima: G.gold/G.inventory só mutando aqui era revertido
+// pelo próximo reconcileWithServer() (achado na varredura de QA).
+export async function sellItem(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   if (qty <= 0) return;
-  G.gold += item.sell;
+  const res = await sellItemOnServer(ACCOUNT.activeSlot, itemId, 1);
+  if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: item.name, reason: '' }), type: 'error' }); return; }
+  G.gold = res.gold;
   G.inventory[itemId]--;
   if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
   emit(EVENTS.ITEM_MODAL_DONE);
@@ -128,17 +137,18 @@ export function sellItem(itemId) {
   saveGame();
 }
 
-export function sellAllItem(itemId) {
+export async function sellAllItem(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   if (qty <= 0) return;
-  const total = item.sell * qty;
-  G.gold += total;
+  const res = await sellItemOnServer(ACCOUNT.activeSlot, itemId);
+  if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: item.name, reason: '' }), type: 'error' }); return; }
+  G.gold = res.gold;
   delete G.inventory[itemId];
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);
-  emit(EVENTS.NOTIFY, { msg: t('inventory.itemSoldAll', { qty, item: item.name, price: total }), type: 'success' });
+  emit(EVENTS.NOTIFY, { msg: t('inventory.itemSoldAll', { qty: res.sold, item: item.name, price: res.total }), type: 'success' });
   saveGame();
 }
 
