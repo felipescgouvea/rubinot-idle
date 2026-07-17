@@ -7,7 +7,7 @@
 // getters abaixo são síncronos de propósito (chamados no hot path da caçada),
 // então NUNCA fazem fetch, só leem o cache.
 import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
-import { emit, EVENTS } from '../shared/eventBus.js?v=126';
+import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=133';
 
 // Antes do primeiro fetch resolver (ou se ele falhar), usa o default — nunca

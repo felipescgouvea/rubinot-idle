@@ -15,7 +15,7 @@ import { renderBestiaryTab } from './bestiaryPanel.js?v=130';
 import { renderTrainingSection } from './trainingPanel.js?v=132';
 import { renderAdminPanel } from './adminPanel.js?v=133';
 import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=129';
-import { on, EVENTS } from '../shared/eventBus.js?v=126';
+import { on, EVENTS } from '../shared/eventBus.js?v=127';
 
 const RENDER_BY_TAB = {
   tasks: renderTasksPanel,

@@ -16,7 +16,7 @@ import { ITEMS } from '../domain/items.js?v=138';
 import { MONSTERS } from '../domain/bestiary.js?v=140';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=126';
-import { emit, EVENTS } from '../shared/eventBus.js?v=126';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
 import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
@@ -187,14 +187,20 @@ let lastSeenKillAt = 0;
 // huntEngine.js: resolveTick — hp<=0 agora encerra a sessão de verdade e
 // grava stats.last_death, em vez de reviver em silêncio e seguir caçando).
 let lastSeenDeathAt = 0;
-// Atraso entre detectar um golpe real (reconcile) e a barra de vida do
-// monstro realmente cair na tela — mesmo tempo de voo do projétil cosmético
-// (ver ui/huntPanel.js: playProjectile, 130ms fixos), pra a vida só baixar
-// quando a flecha/efeito "chega" de verdade, em vez de saltar instantaneamente
-// assim que o servidor confirma o dano (pedido do Felipe: sincronizar o
-// impacto visual com a queda de vida; delay reduzido de 320→140ms pois o
-// original deixava a sincronia "lenta" na percepção do jogador).
-const HIT_SYNC_DELAY_MS = 140;
+// Salvaguarda MÁXIMA pro golpe ficar pendente esperando o pouso real do
+// projétil (ver COMBAT_PROJECTILE_LANDED abaixo) — só dispara se o evento de
+// pouso nunca chegar (painel fora de foco/não montado). Em uso normal quem
+// decide o instante da queda de vida é o transitionend real, não este timer.
+const HIT_SYNC_DELAY_MS = 400;
+// golpes reais aguardando o projétil correspondente "pousar" de verdade na
+// tela (ver ui/huntPanel.js: playProjectile) antes de aplicar a queda de
+// vida/log — hitId -> callback. Ver applyServerPack().
+let hitSeq = 0;
+const pendingHits = new Map();
+on(EVENTS.COMBAT_PROJECTILE_LANDED, ({ hitId } = {}) => {
+  const cb = pendingHits.get(hitId);
+  if (cb) { pendingHits.delete(hitId); cb(); }
+});
 // id da sessão de caçada que ESTE cliente iniciou por último (ver
 // startHunt/checkAndResumeHuntSession) — usado pra só aceitar um last_death
 // que pertença a ELA, nunca a uma sessão antiga já substituída (ver
@@ -353,24 +359,36 @@ function applyServerPack(pack) {
     }
   }
   // Golpes reais (hp caiu desde o poll anterior) — a QUEDA na barra de vida
-  // (e o flash/linha de log que a acompanham) só é aplicada HIT_SYNC_DELAY_MS
-  // depois, pra bater com o instante em que o projétil cosmético (ver
-  // ui/huntPanel.js: playProjectile) visualmente "chega" no monstro, em vez
-  // de saltar na tela assim que o servidor confirma o dano (que pode ter
-  // acontecido bem antes do jogador ver o golpe partir). currentPack abaixo
-  // preserva o hp ANTIGO até esse momento.
+  // (e o flash/linha de log que a acompanham) só é aplicada quando o
+  // projétil cosmético (ver ui/huntPanel.js: playProjectile) TERMINA DE
+  // VOAR DE VERDADE (transitionend, via COMBAT_PROJECTILE_LANDED com hitId
+  // casado), em vez de um timeout chutado sem relação causal com a animação
+  // — isso fecha de vez a dessincronia (ver comentário em doCosmeticTick).
+  // currentPack abaixo preserva o hp ANTIGO até o projétil chegar.
   pack.forEach(m => {
     const uid = String(m.uid);
     const prev = prevPackByUid.get(uid);
     if (prev && m.hp < prev.hp) {
       const dmg = prev.hp - m.hp;
-      setTimeout(() => {
+      const hitId = String(++hitSeq);
+      const voc = VOC_TRAINING[G.vocation];
+      const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
+      const applyHit = () => {
         const vis = currentPack.find(cm => String(cm.uid) === uid);
         if (vis) { vis.hp = m.hp; vis._hitAt = Date.now(); }
         emit(EVENTS.LOG, t('log.basicAttack', { label: t('hunt.logBasicHit'), dmg, name: m.name }));
         emit(EVENTS.BATTLE_LIST);
         emit(EVENTS.MONSTER_DISPLAY, {});
-      }, HIT_SYNC_DELAY_MS);
+      };
+      if (missile) {
+        pendingHits.set(hitId, applyHit);
+        emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: uid, hitId });
+        // salvaguarda: se o evento de pouso nunca chegar (painel não montado
+        // ainda, aba trocada), não deixa o golpe pendente pra sempre.
+        setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, HIT_SYNC_DELAY_MS);
+      } else {
+        applyHit();
+      }
     }
   });
   const nowUids = new Set(pack.map(m => String(m.uid)));
@@ -616,13 +634,16 @@ export function doCosmeticTick() {
   // (1) Golpe básico — só ANIMAÇÃO (swing + projétil); o número real de dano
   // já foi (ou será) logado por applyServerPack() comparando o hp real entre
   // dois polls, então aqui NÃO emitimos linha de log nem tocamos primary.hp.
-  const outOfAmmo = voc.attackSkill === 'distance' && isConsumeAmmo() && !((G.inventory[G.equipment.ammo] || 0) > 0);
   emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true });
   emit(EVENTS.MONSTER_DISPLAY, { hit: true });
-  if (!outOfAmmo) {
-    const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
-    if (missile) emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
-  }
+  // O projétil em si NÃO dispara mais aqui — este tick roda no SEU próprio
+  // timer local (400-2400ms/spd), sem relação nenhuma com o instante em que
+  // o reconcile (a cada 250ms) percebe um golpe real. Disparar o voo daqui e
+  // a queda de vida de applyServerPack() por um timeout separado eram dois
+  // relógios independentes só coincidindo por sorte de tuning — daí a
+  // sincronia nunca ficar boa por mais que o delay fosse ajustado. Agora o
+  // projétil só voa quando applyServerPack() confirma um golpe real, e a
+  // vida só cai quando esse voo específico termina (ver COMBAT_PROJECTILE_LANDED).
 
   // (2) Tentativa de magia/runa por prioridade — mesma fila do RTC real (ver
   // domain/rtcConfig.js), só pra decidir SE e QUAL efeito/linha de "casting"

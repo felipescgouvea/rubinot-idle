@@ -7,8 +7,8 @@
 // ele entra/sai do Boss Rush — ver startBossRush()/stopBossRush() abaixo.
 import { G } from './gameStore.js?v=129';
 import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=140';
-import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=181';
-import { emit, EVENTS } from '../shared/eventBus.js?v=126';
+import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=182';
+import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { t } from '../i18n/i18n.js?v=142';
 
 // Zona/estado de caçada "de fora" do Boss Rush — guardados só pra restaurar a

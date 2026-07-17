@@ -49,6 +49,7 @@ export const EVENTS = {
   MARKET_VISIBILITY: 'marketVisibility',
   COMBAT_FX: 'combatFx',
   COMBAT_PROJECTILE: 'combatProjectile',
+  COMBAT_PROJECTILE_LANDED: 'combatProjectileLanded',
   HUNT_STATS: 'huntStats',
   BLESSINGS: 'blessings',
   HIGHSCORES_PANEL: 'highscoresPanel',

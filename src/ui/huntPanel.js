@@ -7,9 +7,9 @@ import { MONSTERS } from '../domain/bestiary.js?v=140';
 import { cityName } from '../domain/cities.js?v=131';
 import { ITEMS } from '../domain/items.js?v=138';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=129';
-import { on, EVENTS } from '../shared/eventBus.js?v=126';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=131';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=181';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=182';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -455,11 +455,25 @@ function renderStagePack(stage) {
 // missile (flecha/virote/raio elemental) no centro do boneco e o anima voando
 // até a criatura-alvo no topo do palco, girando na direção do voo. Removido ao
 // chegar. Reaproveita o mesmo palco/coordenadas do playAreaEffect.
-export function playProjectile({ missile, targetUid } = {}) {
+// hitId: correlaciona ESTE voo específico com o golpe real que o disparou
+// (ver application/huntUseCases.js: applyServerPack) — quando o projétil
+// termina de voar de verdade (transitionend, não um timeout chutado), emite
+// COMBAT_PROJECTILE_LANDED com o mesmo hitId, e é SÓ NESSE MOMENTO que a
+// barra de vida daquele golpe específico cai. Isso fecha o problema de
+// "não importa quanto eu ajuste o delay, ainda sai dessincronizado": antes
+// o drop da vida usava um timeout próprio contando a partir de quando o
+// reconcile percebeu o dano, sem nenhuma relação causal com o instante em
+// que o doCosmeticTick (rodando no SEU próprio timer local) decidia disparar
+// o projétil cosmético — dois relógios independentes só coincidindo por
+// sorte de tuning. Agora há causalidade real entre uma coisa e a outra.
+export function playProjectile({ missile, targetUid, hitId } = {}) {
   const file = missile ? missileSpriteFile(missile) : null;
   const stage = document.getElementById('dungeon-stage');
   const playerWrap = document.getElementById('player-sprite-wrap');
-  if (!file || !stage || !playerWrap) return;
+  if (!file || !stage || !playerWrap) {
+    if (hitId) emit(EVENTS.COMBAT_PROJECTILE_LANDED, { hitId });
+    return;
+  }
   // Blindagem: nunca mais de UM projétil em voo por vez — se algo disparar
   // doCosmeticTick() mais de uma vez por ciclo (ex.: um huntInterval antigo
   // vazado, ver beginLocalLoop), cada chamada criava seu PRÓPRIO <img>, todos
@@ -469,7 +483,10 @@ export function playProjectile({ missile, targetUid } = {}) {
   // alvo: a criatura pedida (por uid) ou a primeira da fila
   const cont = document.getElementById('stage-pack');
   const targetEl = (targetUid && cont && cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`)) || (cont && cont.firstElementChild);
-  if (!targetEl) return;
+  if (!targetEl) {
+    if (hitId) emit(EVENTS.COMBAT_PROJECTILE_LANDED, { hitId });
+    return;
+  }
   const sr = stage.getBoundingClientRect();
   const pr = playerWrap.getBoundingClientRect();
   const tr = targetEl.getBoundingClientRect();
@@ -487,10 +504,21 @@ export function playProjectile({ missile, targetUid } = {}) {
   img.style.top = y0 + 'px';
   img.style.transform = `translate(-50%, -50%) rotate(${ang + 90}deg)`;
   stage.appendChild(img);
+  let landed = false;
+  const land = () => {
+    if (landed) return;
+    landed = true;
+    img.remove();
+    if (hitId) emit(EVENTS.COMBAT_PROJECTILE_LANDED, { hitId });
+  };
+  img.addEventListener('transitionend', land, { once: true });
+  // salvaguarda: se o transitionend não disparar por algum motivo (aba em
+  // background throttlando rAF/transições, elemento removido no meio do voo),
+  // não deixa o golpe pendente pra sempre — 400ms cobre com folga o voo real.
+  setTimeout(land, 400);
   // força reflow e anima até o alvo
   void img.offsetWidth;
   img.style.transform = `translate(-50%, -50%) translate(${x1 - x0}px, ${y1 - y0}px) rotate(${ang + 90}deg)`;
-  setTimeout(() => img.remove(), 140);
 }
 
 export function wireHuntPanelEvents() {
