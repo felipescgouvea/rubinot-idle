@@ -33,6 +33,10 @@ const live = new Map();
 
 const ATTACK_GROUP_CD_MS = 2000;
 const POTION_CD_MS = 1000;
+// Folga entre um monstro spawnar e poder contra-atacar — dá tempo do cliente
+// (poll de /hunt/state a cada 250ms) mostrar "X appeared!" na tela antes de
+// qualquer risco de dano real (ver tick()/resolveTick abaixo).
+const SPAWN_GRACE_MS = 1500;
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -293,10 +297,17 @@ async function resolveTick(session) {
     return;
   }
 
-  // (3) contra-ataque do monstro da frente (o que sobrou) + cura automática
+  // (3) contra-ataque do monstro da frente (o que sobrou) + cura automática —
+  // só depois de uma folga desde o spawn do pack (GRACE_MS), pra o cliente
+  // sempre ter chance de mostrar o monstro na tela (poll de /hunt/state a
+  // cada 250ms) antes de correr QUALQUER risco de dano. Golpe/magia do
+  // jogador (passos 1-2 acima) já valem desde o primeiro tick — só o
+  // contra-ataque do monstro fica em espera.
   const newPrimary = session.currentPack[0];
-  const atkResult = monsterAttack(newPrimary, getDef(session));
-  session.hp = Math.max(0, session.hp - atkResult.dmg);
+  if (Date.now() - (session.packSpawnedAt || 0) >= SPAWN_GRACE_MS) {
+    const atkResult = monsterAttack(newPrimary, getDef(session));
+    session.hp = Math.max(0, session.hp - atkResult.dmg);
+  }
   await applyRtcHealing(session, cfg);
 
   if (session.hp <= 0) {
@@ -355,6 +366,12 @@ async function tick(session) {
       m.uid = ++session.spawnSeq;
       return m;
     });
+    // Marca o instante do spawn — dá uma folga (GRACE_MS, ver resolveTick)
+    // antes do monstro poder contra-atacar. Sem isso, o jogador podia morrer
+    // no MESMO tick em que o servidor spawna o pack, antes do cliente sequer
+    // ter feito o próximo poll de /hunt/state pra desenhar o monstro na tela
+    // (bug reportado: "entro na hunt e já morro sem o bicho aparecer").
+    session.packSpawnedAt = Date.now();
     session.lastTickAt = Date.now();
     return;
   }
