@@ -5,11 +5,11 @@ import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { getMagic } from './stats.js?v=126';
 import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=159';
-import { getCurrentMonster } from './huntUseCases.js?v=171';
+import { getCurrentMonster } from './huntUseCases.js?v=172';
 import { areaName } from '../domain/attackAreas.js?v=125';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { itemLogIcon } from './logIcons.js?v=127';
-import { t } from '../i18n/i18n.js?v=139';
+import { t } from '../i18n/i18n.js?v=141';
 
 export { addItemToInventory } from './inventoryCore.js?v=127';
 

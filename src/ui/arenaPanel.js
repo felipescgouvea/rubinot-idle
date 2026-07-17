@@ -1,9 +1,9 @@
 import { G } from '../application/gameStore.js?v=129';
 import { VOCATIONS } from '../domain/character.js?v=156';
-import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=128';
+import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=128';
 import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=126';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=131';
-import { t } from '../i18n/i18n.js?v=139';
+import { t } from '../i18n/i18n.js?v=141';
 
 function divisionRewardIcon(r) {
   if (r.type === 'gold') return goldIconImg('inline-icon');
@@ -20,7 +20,7 @@ function renderArenaSummary() {
     <div class="arena-stat"><div class="arena-stat-val">${G.arenaWins}</div><div class="arena-stat-lbl">${t('arena.wins')}</div></div>
     <div class="arena-stat"><div class="arena-stat-val">${G.arenaLosses}</div><div class="arena-stat-lbl">${t('arena.losses')}</div></div>
     <div class="arena-stat"><div class="arena-stat-val">${G.arenaStreak || 0}🔥</div><div class="arena-stat-lbl">${t('arena.streak')}</div></div>
-    <div class="arena-stat"><div class="arena-stat-val">${arenaAttemptsLeft()}/15</div><div class="arena-stat-lbl">${t('arena.fightsToday')}</div></div>
+    <div class="arena-stat"><div class="arena-stat-val">${arenaAttemptsLeft()}/${ARENA_DAILY_LIMIT}</div><div class="arena-stat-lbl">${t('arena.fightsToday')}</div></div>
   `;
 
   const currentIdx = ARENA_DIVISIONS.indexOf(division);

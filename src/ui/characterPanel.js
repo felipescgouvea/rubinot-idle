@@ -12,12 +12,12 @@ import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../appli
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=126';
 import { formatNum, applyHpState } from './shared.js?v=131';
 import { renderZonePicker, fmtDuration } from './huntPanel.js?v=136';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=171';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=172';
 import { isStaminaEnabled } from '../application/adminUseCases.js?v=129';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=128';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
-import { t } from '../i18n/i18n.js?v=139';
+import { t } from '../i18n/i18n.js?v=141';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).

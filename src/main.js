@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=129';
 import { VOCATIONS } from './domain/character.js?v=156';
 import { emit, EVENTS } from './shared/eventBus.js?v=126';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=139';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=141';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=129';
@@ -15,7 +15,7 @@ import { loadGame, confirmReset, applyCloudSave } from './application/persistenc
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=131';
 import { selectVocation } from './application/characterUseCases.js?v=128';
-import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=171';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=172';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=132';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';
@@ -28,7 +28,7 @@ import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing,
 import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=126';
 import { rerollPrey, clearPrey } from './application/preyUseCases.js?v=127';
 import { unlockCharm, toggleCharmEquipped } from './application/bestiaryUseCases.js?v=127';
-import { claimDailyReward } from './application/dailyRewardUseCases.js?v=126';
+import { claimDailyReward } from './application/dailyRewardUseCases.js?v=127';
 import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=130';
 
 // ui
@@ -37,7 +37,7 @@ import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, crea
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=136';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=129';
 import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=130';
-import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=126';
+import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=127';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=126';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=126';
 import { wireShopPanelEvents, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=133';
@@ -51,7 +51,7 @@ import { challengeBoss, stopBossRushClick, wireBossRushPanelEvents } from './ui/
 import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiaryPanel.js?v=128';
 import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=132';
 import { setSkillsSubtab } from './ui/skillsPanel.js?v=128';
-import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=127';
+import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=128';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=127';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=131';
 import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=126';

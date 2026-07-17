@@ -96,11 +96,6 @@ export default {
   'settings.account': 'Conta',
   'settings.notLoggedIn': 'não logado',
   'settings.signOut': 'Sair da conta',
-  'settings.nickname': 'Nome do personagem',
-  'settings.nicknameCurrent': 'Jogando como {name}.',
-  'settings.nicknameNone': 'Você ainda não escolheu um nome — sem ele, seu personagem não aparece no ranking.',
-  'settings.nicknameSave': 'Salvar',
-  'settings.nicknameHint': 'O nome aparece na barra de status do personagem e no ranking (Highscores). Pode trocar quando quiser, contanto que não esteja em uso.',
 
   // ---- múltiplos personagens (até 2 por conta) ----
   'account.title': 'Personagens',
@@ -557,6 +552,8 @@ export default {
   'daily.intro': 'Volte todo dia para manter a sequência. Faltar um dia reinicia o ciclo de 7 dias.',
   'daily.claimDay': 'Resgatar dia {day}: {icon} {name}',
   'daily.alreadyClaimed': 'Recompensa de hoje já resgatada (sequência: dia {day}). Volte amanhã!',
+  'daily.reward.supplyRefill': 'Supply Completo',
+  'daily.reward.xpBoost30': 'XP Boost (30 min)',
 
   // ---- worlds panel (ui/worldsPanel.js) ----
   'worlds.playersCount': '{n} jogadores',

@@ -4,13 +4,19 @@
 
 // Ciclo de 7 dias. `type`/`amount` seguem o mesmo formato usado nas outras
 // recompensas do jogo (ver application/battlePassUseCases.js: grantReward).
+// `name`: string literal pra gold/rubini (número+unidade, igual nos dois
+// idiomas — mesma convenção do BP_REWARDS em domain/progression.js), ou chave
+// de tradução ('daily.reward.*') pra refill/boost, que têm palavras que MUDAM
+// por idioma. ui/dailyRewardPanel.js SEMPRE passa `name` por t() antes de
+// mostrar — t() cai na própria chave quando não acha tradução, então o
+// literal funciona como "chave inexistente" de propósito (ver i18n/i18n.js).
 export const DAILY_REWARDS = [
-  { day: 1, icon: '💰', name: '1.000 Gold',        type: 'gold',   amount: 1000 },
+  { day: 1, icon: '💰', name: '1000 Gold',        type: 'gold',   amount: 1000 },
   { day: 2, icon: '💎', name: '20 Rubini Coins',   type: 'rubini', amount: 20 },
-  { day: 3, icon: '🧪', name: 'Supply Completo',   type: 'refill' },
-  { day: 4, icon: '💰', name: '3.000 Gold',        type: 'gold',   amount: 3000 },
+  { day: 3, icon: '🧪', name: 'daily.reward.supplyRefill', type: 'refill' },
+  { day: 4, icon: '💰', name: '3000 Gold',        type: 'gold',   amount: 3000 },
   { day: 5, icon: '💎', name: '50 Rubini Coins',   type: 'rubini', amount: 50 },
-  { day: 6, icon: '⭐', name: 'XP Boost (30 min)', type: 'boost',  boost: 'xp', minutes: 30 },
+  { day: 6, icon: '⭐', name: 'daily.reward.xpBoost30', type: 'boost',  boost: 'xp', minutes: 30 },
   { day: 7, icon: '👑', name: '100 Rubini Coins',  type: 'rubini', amount: 100 },
 ];
 

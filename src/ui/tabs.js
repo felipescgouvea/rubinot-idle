@@ -3,7 +3,7 @@
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
 import { renderTasksPanel } from './tasksPanel.js?v=130';
 import { renderSkillsPanel } from './skillsPanel.js?v=128';
-import { renderArenaPanel } from './arenaPanel.js?v=126';
+import { renderArenaPanel } from './arenaPanel.js?v=127';
 import { renderWorldsPanel } from './worldsPanel.js?v=126';
 import { renderBattlePassPanel } from './battlePassPanel.js?v=126';
 import { renderRtcPanel } from './rtcPanel.js?v=160';

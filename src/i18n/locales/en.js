@@ -95,11 +95,6 @@ export default {
   'settings.account': 'Account',
   'settings.notLoggedIn': 'not logged in',
   'settings.signOut': 'Sign out',
-  'settings.nickname': 'Character name',
-  'settings.nicknameCurrent': 'Playing as {name}.',
-  'settings.nicknameNone': "You haven't picked a name yet — without one, your character won't show up on the leaderboard.",
-  'settings.nicknameSave': 'Save',
-  'settings.nicknameHint': 'Your name shows on the character status bar and the leaderboard (Highscores). You can change it anytime, as long as it isn\'t already taken.',
 
   // ---- multiple characters (up to 2 per account) ----
   'account.title': 'Characters',
@@ -556,6 +551,8 @@ export default {
   'daily.intro': 'Come back every day to keep your streak. Missing a day resets the 7-day cycle.',
   'daily.claimDay': 'Claim day {day}: {icon} {name}',
   'daily.alreadyClaimed': "Today's reward already claimed (streak: day {day}). Come back tomorrow!",
+  'daily.reward.supplyRefill': 'Full Supply Refill',
+  'daily.reward.xpBoost30': 'XP Boost (30 min)',
 
   // ---- worlds panel (ui/worldsPanel.js) ----
   'worlds.playersCount': '{n} players',

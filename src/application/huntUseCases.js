@@ -27,7 +27,7 @@ import { saveGame } from './saveGameUseCase.js?v=129';
 import { getCombatBonuses } from './bonuses.js?v=126';
 import { getXpRate, getGoldRate, getLootRate, getRelicDropChance, getRarityWeights, getSpawnDelayRange, getZoneMultiplier, isStaminaEnabled, isConsumeAmmo, getZoneSpawn, getMonsterLoot } from './adminUseCases.js?v=129';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=127';
-import { t } from '../i18n/i18n.js?v=139';
+import { t } from '../i18n/i18n.js?v=141';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -633,6 +633,7 @@ export function doHuntTick() {
   if (primaryDied || !currentMonster) {
     emit(EVENTS.BARS);
     emit(EVENTS.HEADER_STATS);
+    reconcileWithServer(); // ver comentário abaixo (mesmo motivo do caminho completo)
     return;
   }
 
@@ -654,6 +655,13 @@ export function doHuntTick() {
 
   emit(EVENTS.BARS);
   emit(EVENTS.HEADER_STATS);
+  // Puxa o servidor NA HORA de cada tick de combate, em vez de só confiar no
+  // poll periódico (RECONCILE_MS) — antes gold/xp/dano/vida real só chegavam
+  // até 375ms depois do golpe/dano cosmético aparecer na tela, um atraso
+  // perceptível (reportado pelo Felipe: "o golpe sai, mas o dano demora, a xp
+  // demora pra entrar"). O poll do reconcileInterval continua rodando por
+  // trás como rede de segurança pros momentos sem tick (procurando, parado).
+  reconcileWithServer();
 }
 
 // Remove a vítima da sala (por identidade — num ataque de área ela pode não
