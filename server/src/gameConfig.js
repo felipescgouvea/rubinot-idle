@@ -3,7 +3,7 @@
 // supabase/functions/admin-config-set). O servidor de caçada lê direto do
 // Postgres (service role), sempre fresca (nunca hardcoded aqui) — assim
 // mudar uma taxa no painel também vale pro cálculo autoritativo, sem redeploy.
-import { sanitizeAdminConfig, DEFAULT_ADMIN_CONFIG } from '../vendor/domain/adminConfig.js?v=128';
+import { sanitizeAdminConfig, DEFAULT_ADMIN_CONFIG } from '../../src/domain/adminConfig.js?v=128';
 import { selectOne } from './db.js';
 
 let cache = sanitizeAdminConfig(DEFAULT_ADMIN_CONFIG);

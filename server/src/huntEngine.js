@@ -7,22 +7,22 @@
 // skill). Marco 6: respingo de área (pack de monstros, não só alvo único),
 // bênçãos e stamina autoritativas — fecha as 3 limitações que ainda
 // restavam (documentadas antes, agora corrigidas).
-import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../vendor/domain/bestiary.js?v=135';
+import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=136';
 import {
   spawnMonsterInstance, calcDamage, monsterAttack, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
-} from '../vendor/domain/combatFormulas.js?v=156';
-import { worldXpMultiplier, worldGoldMultiplier } from '../vendor/domain/progression.js?v=128';
-import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../vendor/domain/adminConfig.js?v=128';
-import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../vendor/domain/character.js?v=156';
-import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../vendor/domain/items.js?v=136';
-import { RARITY_TIERS, rollIndependentRarityTiers } from '../vendor/domain/rarity.js?v=126';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../vendor/domain/spells.js?v=126';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../vendor/domain/rtcConfig.js?v=158';
-import { elementMod } from '../vendor/domain/elements.js?v=125';
-import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../vendor/domain/blessings.js?v=125';
-import { areaMaxTargets, isAreaAttack } from '../vendor/domain/attackAreas.js?v=125';
-import { staminaXpMult } from '../vendor/domain/stamina.js?v=125';
+} from '../../src/domain/combatFormulas.js?v=157';
+import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
+import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
+import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/character.js?v=156';
+import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=138';
+import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=126';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../../src/domain/rtcConfig.js?v=159';
+import { elementMod } from '../../src/domain/elements.js?v=125';
+import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/blessings.js?v=125';
+import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
+import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, selectMany, insertRow, upsertRow, updateRows } from './db.js';
 

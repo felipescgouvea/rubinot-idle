@@ -1,0 +1,12 @@
+{
+  "name": "rubinot-idle-repo",
+  "private": true,
+  "type": "module",
+  "description": "Manifesto raiz só pro deploy do servidor (Railway) — o site em si (GitHub Pages) não usa build/npm nenhum. server/src/index.js importa domain compartilhado direto de src/domain/ (única fonte, sem cópia vendor).",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server/src/index.js"
+  }
+}

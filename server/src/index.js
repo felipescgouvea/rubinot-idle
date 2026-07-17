@@ -11,12 +11,12 @@
 // valor REAL) e stamina autoritativa (regenera aqui no hunt-start pelo tempo
 // real parado, cai durante a caçada em huntEngine.js).
 import http from 'node:http';
-import { ZONES } from '../vendor/domain/bestiary.js?v=135';
-import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../vendor/domain/combatFormulas.js?v=156';
-import { TIBIA_SKILLS } from '../vendor/domain/character.js?v=156';
-import { STAMINA_MAX } from '../vendor/domain/stamina.js?v=125';
-import { MAX_BLESSINGS, blessingCost } from '../vendor/domain/blessings.js?v=125';
-import { STARTER_KITS, STARTER_SUPPLIES } from '../vendor/domain/items.js?v=138';
+import { ZONES } from '../../src/domain/bestiary.js?v=136';
+import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=157';
+import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
+import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
+import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
+import { STARTER_KITS, STARTER_SUPPLIES } from '../../src/domain/items.js?v=138';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot } from './huntEngine.js';
 import { selectOne, selectMany, insertRow, updateRows, upsertRow } from './db.js';
 

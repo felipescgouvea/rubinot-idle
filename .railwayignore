@@ -1,0 +1,22 @@
+# Deploy do servidor (Railway) só precisa de server/ + src/domain/ + package.json
+# (ver package.json na raiz) — o resto é o site estático (GitHub Pages) e não
+# tem nenhuma relação com o processo Node do servidor.
+assets/
+docs/
+.spec/
+supabase/
+src/application/
+src/infrastructure/
+src/i18n/
+src/shared/
+src/ui/
+src/main.js
+index.html
+style.css
+favicon.svg
+logo.webp
+rtc.jpeg
+rtc-2.jpeg
+scroll.jpeg
+CHANGELOG.md
+TODO.md
