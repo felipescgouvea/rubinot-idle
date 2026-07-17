@@ -277,10 +277,16 @@ export function startHunt() {
 export async function checkAndResumeHuntSession() {
   if (!G.vocation) return false;
   const res = await getHuntState(ACCOUNT.activeSlot);
-  if (!res.ok || !res.hunting) return false;
+  if (!res.ok) return false;
+  // Sincroniza SEMPRE (parado ou caçando) — antes só chamava reconcileWithServer
+  // quando havia uma sessão pra retomar; parado, G.gold/xp/level/hp/mana ficavam
+  // com o que estivesse no save (local ou nuvem), por mais desatualizado que
+  // estivesse, e o cálculo aproximado de applyOfflineProgress rodava em cima
+  // desse valor já errado, compondo o erro a cada boot.
+  await reconcileWithServer();
+  if (!res.hunting) return false;
   G.activeZone = res.zoneId || G.activeZone;
   G.hunting = true;
-  await reconcileWithServer();
   beginLocalLoop();
   emit(EVENTS.LOG, t('hunt.logEnterZone', { icon: '⚔️', zone: t(ZONES[G.activeZone] ? ZONES[G.activeZone].name : G.activeZone) }));
   return true;
