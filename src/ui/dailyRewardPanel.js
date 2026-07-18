@@ -17,14 +17,18 @@ function dailyRewardIcon(r, cls = 'daily-icon-img') {
 }
 
 // Atualiza o selo "!" do botão do header conforme há ou não resgate hoje.
-export function renderDailyBadge() {
+// getDailyState() agora é assíncrona (consulta o servidor) — sem sessão
+// pronta ainda ou request em voo, simplesmente não mexe no selo até resolver.
+export async function renderDailyBadge() {
   const badge = document.getElementById('daily-reward-badge');
   if (!badge) return;
-  badge.style.display = getDailyState().canClaim ? 'flex' : 'none';
+  const state = await getDailyState();
+  badge.style.display = state.canClaim ? 'flex' : 'none';
 }
 
-export function openDailyReward() {
-  const state = getDailyState();
+export async function openDailyReward() {
+  openModal(`<h3>🎁 ${t('daily.title')}</h3><p class="muted">${t('market.loading')}</p>`);
+  const state = await getDailyState();
   const todayReward = rewardForStreak(state.streak);
   const cards = DAILY_REWARDS.map(r => {
     const isToday = state.canClaim && r.day === ((state.streak - 1) % DAILY_CYCLE) + 1;

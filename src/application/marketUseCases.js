@@ -1,57 +1,54 @@
 // Market entre jogadores: depositar/sacar da carteira, anunciar, cancelar e
-// comprar itens. Mesmo modelo de confiança do ranking global (secret gerado
-// no navegador + funções SECURITY DEFINER no banco como fronteira real).
-import { G } from './gameStore.js?v=129';
+// comprar itens. Servidor (Railway) é a única fonte de verdade — este
+// arquivo só chama as rotas novas em infrastructure/authClient.js e, DEPOIS
+// da confirmação `ok` do servidor, muta G localmente pra cache/feedback
+// visual (nunca antes — evita ter que reverter uma mutação otimista).
+import { G, ACCOUNT } from './gameStore.js?v=129';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { t } from '../i18n/i18n.js?v=142';
 import {
-  fetchMyWalletRequest, fetchListingsRequest, depositRequest, withdrawRequest,
-  listItemRequest, cancelListingRequest, buyListingRequest,
-} from '../infrastructure/marketApi.js?v=125';
-import { addItemToInventory } from './inventoryCore.js?v=127';
-import { ensurePlayerSecret } from './highscoresUseCases.js?v=129';
+  fetchMarketWallet, depositToMarketOnServer, withdrawFromMarketOnServer,
+  fetchMarketListingsOnServer, listItemOnServerMarket, cancelListingOnServerMarket,
+  buyListingOnServerMarket,
+} from '../infrastructure/authClient.js';
 import { saveGame } from './saveGameUseCase.js?v=129';
 
 export async function fetchMyMarketWallet() {
-  if (!G.playerSecret) return 0;
-  try {
-    return await fetchMyWalletRequest(G.playerSecret);
-  } catch (e) {
-    return null;
-  }
+  const result = await fetchMarketWallet(ACCOUNT.activeSlot);
+  return result.ok ? result.balance : null;
 }
 
-export function fetchMarketListings() {
-  return fetchListingsRequest();
+// Retorna a lista já com `mine` calculado pelo servidor (campos: id,
+// sellerName, itemId, qty, pricePerUnit, mine).
+export async function fetchMarketListings() {
+  const result = await fetchMarketListingsOnServer(ACCOUNT.activeSlot);
+  return result.ok ? result.listings : null;
 }
 
 export async function depositToMarket(amount) {
   amount = Math.floor(Number(amount));
   if (!amount || amount <= 0) { emit(EVENTS.NOTIFY, { msg: t('market.invalidAmount'), type: 'error' }); return; }
   if (amount > G.gold) { emit(EVENTS.NOTIFY, { msg: t('market.notEnoughGold'), type: 'error' }); return; }
-  ensurePlayerSecret();
-  try {
-    await depositRequest(G.playerSecret, G.playerName, amount);
-    G.gold -= amount;
-    emit(EVENTS.NOTIFY, { msg: t('market.depositSuccess', { amount }), type: 'success' });
-    emit(EVENTS.HEADER_STATS);
-    saveGame();
-    emit(EVENTS.MARKET_PANEL);
-  } catch (e) { emit(EVENTS.NOTIFY, { msg: e.message, type: 'error' }); }
+  const result = await depositToMarketOnServer(ACCOUNT.activeSlot, amount);
+  if (!result.ok) { emit(EVENTS.NOTIFY, { msg: result.error || t('market.invalidAmount'), type: 'error' }); return; }
+  G.gold = result.gold;
+  emit(EVENTS.NOTIFY, { msg: t('market.depositSuccess', { amount }), type: 'success' });
+  emit(EVENTS.HEADER_STATS);
+  saveGame();
+  emit(EVENTS.MARKET_PANEL);
 }
 
 export async function withdrawFromMarket(amount) {
   amount = Math.floor(Number(amount));
   if (!amount || amount <= 0) { emit(EVENTS.NOTIFY, { msg: t('market.invalidAmount'), type: 'error' }); return; }
-  try {
-    await withdrawRequest(G.playerSecret, amount);
-    G.gold += amount;
-    emit(EVENTS.NOTIFY, { msg: t('market.withdrawSuccess', { amount }), type: 'success' });
-    emit(EVENTS.HEADER_STATS);
-    saveGame();
-    emit(EVENTS.MARKET_PANEL);
-  } catch (e) { emit(EVENTS.NOTIFY, { msg: e.message, type: 'error' }); }
+  const result = await withdrawFromMarketOnServer(ACCOUNT.activeSlot, amount);
+  if (!result.ok) { emit(EVENTS.NOTIFY, { msg: result.error || t('market.invalidAmount'), type: 'error' }); return; }
+  G.gold = result.gold;
+  emit(EVENTS.NOTIFY, { msg: t('market.withdrawSuccess', { amount }), type: 'success' });
+  emit(EVENTS.HEADER_STATS);
+  saveGame();
+  emit(EVENTS.MARKET_PANEL);
 }
 
 export async function listItemOnMarket(itemId, qty, price) {
@@ -61,39 +58,34 @@ export async function listItemOnMarket(itemId, qty, price) {
   if (!itemId || !ITEMS[itemId]) { emit(EVENTS.NOTIFY, { msg: t('market.selectItem'), type: 'error' }); return; }
   if (!qty || qty <= 0 || qty > owned) { emit(EVENTS.NOTIFY, { msg: t('market.invalidQuantity'), type: 'error' }); return; }
   if (!price || price <= 0) { emit(EVENTS.NOTIFY, { msg: t('market.invalidPrice'), type: 'error' }); return; }
-  ensurePlayerSecret();
-  try {
-    await listItemRequest(G.playerSecret, G.playerName, itemId, qty, price);
-    G.inventory[itemId] -= qty;
-    if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
-    emit(EVENTS.NOTIFY, { msg: t('market.listingCreated', { qty, name: ITEMS[itemId].name }), type: 'success' });
-    emit(EVENTS.INVENTORY);
-    saveGame();
-    emit(EVENTS.MARKET_PANEL);
-  } catch (e) { emit(EVENTS.NOTIFY, { msg: e.message, type: 'error' }); }
+  const result = await listItemOnServerMarket(ACCOUNT.activeSlot, itemId, qty, price, G.playerName);
+  if (!result.ok) { emit(EVENTS.NOTIFY, { msg: result.error || t('market.invalidQuantity'), type: 'error' }); return; }
+  G.inventory[itemId] -= qty;
+  if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
+  emit(EVENTS.NOTIFY, { msg: t('market.listingCreated', { qty, name: ITEMS[itemId].name }), type: 'success' });
+  emit(EVENTS.INVENTORY);
+  saveGame();
+  emit(EVENTS.MARKET_PANEL);
 }
 
 export async function cancelMyListing(listingId, itemId, qty) {
-  try {
-    await cancelListingRequest(G.playerSecret, listingId);
-    G.inventory[itemId] = (G.inventory[itemId] || 0) + qty;
-    emit(EVENTS.NOTIFY, { msg: t('market.listingCancelled'), type: 'info' });
-    emit(EVENTS.INVENTORY);
-    saveGame();
-    emit(EVENTS.MARKET_PANEL);
-  } catch (e) { emit(EVENTS.NOTIFY, { msg: e.message, type: 'error' }); }
+  const result = await cancelListingOnServerMarket(ACCOUNT.activeSlot, listingId);
+  if (!result.ok) { emit(EVENTS.NOTIFY, { msg: result.error || t('market.loadError'), type: 'error' }); return; }
+  G.inventory[itemId] = (G.inventory[itemId] || 0) + qty;
+  emit(EVENTS.NOTIFY, { msg: t('market.listingCancelled'), type: 'info' });
+  emit(EVENTS.INVENTORY);
+  saveGame();
+  emit(EVENTS.MARKET_PANEL);
 }
 
 export async function buyMarketListing(listingId, qtyToBuy) {
   qtyToBuy = Math.floor(Number(qtyToBuy));
   if (!qtyToBuy || qtyToBuy <= 0) { emit(EVENTS.NOTIFY, { msg: t('market.invalidQuantity'), type: 'error' }); return; }
-  ensurePlayerSecret();
-  try {
-    const result = await buyListingRequest(G.playerSecret, G.playerName, listingId, qtyToBuy);
-    G.inventory[result.item_id] = (G.inventory[result.item_id] || 0) + result.qty;
-    emit(EVENTS.NOTIFY, { msg: t('market.purchaseSuccess', { qty: result.qty, name: ITEMS[result.item_id]?.name || result.item_id }), type: 'success' });
-    emit(EVENTS.INVENTORY);
-    saveGame();
-    emit(EVENTS.MARKET_PANEL);
-  } catch (e) { emit(EVENTS.NOTIFY, { msg: e.message, type: 'error' }); }
+  const result = await buyListingOnServerMarket(ACCOUNT.activeSlot, listingId, qtyToBuy);
+  if (!result.ok) { emit(EVENTS.NOTIFY, { msg: result.error || t('market.invalidQuantity'), type: 'error' }); return; }
+  G.inventory[result.itemId] = (G.inventory[result.itemId] || 0) + result.qty;
+  emit(EVENTS.NOTIFY, { msg: t('market.purchaseSuccess', { qty: result.qty, name: ITEMS[result.itemId]?.name || result.itemId }), type: 'success' });
+  emit(EVENTS.INVENTORY);
+  saveGame();
+  emit(EVENTS.MARKET_PANEL);
 }

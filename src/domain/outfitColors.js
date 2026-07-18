@@ -4,8 +4,6 @@
 // usado por servidores OT). Cada cor é multiplicada pixel a pixel sobre a
 // região correspondente do outfit (cabeça/corpo/pernas/pés) — ver
 // infrastructure/outfitRenderer.js.
-export const OUTFIT_COLOR_GRID_COLS = 19;
-
 export const TIBIA_COLOR_PALETTE = [
   'FFFFFF',  'FFD4BF',  'FFE9BF',  'FFFFBF',  'E9FFBF',  'D4FFBF',
   'BFFFBF',  'BFFFD4',  'BFFFE9',  'BFFFFF',  'BFE9FF',  'BFD4FF',

@@ -9886,7 +9886,7 @@ export function equippableFallbackPool(xp) {
 // Tipos de ARMA que cada vocação pode empunhar (fiel ao Tibia: cada profissão
 // usa sua classe de arma). Armadura/elmo/anel/etc. não são restritos aqui. A
 // munição (ammo) é exclusiva do paladino. Ver equipItem em inventoryUseCases.
-export const VOCATION_WEAPON_TYPES = {
+const VOCATION_WEAPON_TYPES = {
   knight:   ['sword', 'axe', 'club'],
   paladin:  ['distance'],
   sorcerer: ['magic'],

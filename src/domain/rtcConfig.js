@@ -10,7 +10,7 @@
 // com Magic Level).
 import { ITEMS } from './items.js?v=138';
 
-export const ATTACK_RUNE_VOCATIONS = {
+const ATTACK_RUNE_VOCATIONS = {
   sudden_death_rune: ['paladin', 'sorcerer', 'druid'],
   explosion_rune: ['paladin', 'sorcerer', 'druid'],
   avalanche_rune: ['paladin', 'sorcerer', 'druid'],

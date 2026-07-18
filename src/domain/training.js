@@ -9,8 +9,8 @@ export const TRAINABLE_SKILLS = ['fist', 'club', 'sword', 'axe', 'distance', 'sh
 // Tentativas de skill concedidas por minuto de treino. Ritmo deliberadamente
 // modesto: treino é uma alternativa passiva à caçada (não some com a curva de
 // skill), pensado pra rodar enquanto o jogador está fora.
-export const TRIES_PER_MINUTE = 6;
-export const MAGIC_TRIES_PER_MINUTE = 3;
+const TRIES_PER_MINUTE = 6;
+const MAGIC_TRIES_PER_MINUTE = 3;
 
 // Teto de acúmulo offline do treino: mesmas 8h do progresso offline de caçada
 // (ver application/persistenceUseCases.js) pra manter a regra consistente.

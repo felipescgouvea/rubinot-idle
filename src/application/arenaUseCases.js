@@ -7,7 +7,7 @@
 import { G } from './gameStore.js?v=129';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=126';
-import { fetchArenaOpponentRequest } from '../infrastructure/highscoresApi.js?v=127';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=126';
 import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=128';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
@@ -16,6 +16,21 @@ import { saveGame } from './saveGameUseCase.js?v=129';
 import { t } from '../i18n/i18n.js?v=142';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
+
+// Busca um oponente real do ranking global (rubinot_idle_scores) pra Arena —
+// FORA do escopo desta migração (arena_points ainda não é autoritativo no
+// servidor de caçada, ver server/src/index.js: /highscores/submit). Antes
+// vivia em infrastructure/highscoresApi.js (deletado — Market/Highscores
+// migraram pro servidor, mas a Arena continua lendo o Supabase direto por
+// enquanto, mesmo modelo de sempre).
+async function fetchArenaOpponentRequest(level, excludeName) {
+  const lo = Math.max(1, level - 15), hi = level + 15;
+  const rows = await selectRequest(
+    `rubinot_idle_scores?select=name,vocation,level,arena_points&level=gte.${lo}&level=lte.${hi}&name=neq.${encodeURIComponent(excludeName || '~')}&limit=20`
+  );
+  if (!rows || !rows.length) return null;
+  return rows[Math.floor(Math.random() * rows.length)];
+}
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

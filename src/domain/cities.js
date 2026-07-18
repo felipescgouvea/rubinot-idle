@@ -26,7 +26,7 @@ export const CITIES = [
   { id: 'ferumbras',  name: 'Ferumbras Citadel',    icon: '👑', blurb: 'city.ferumbras' },
 ];
 
-export const CITY_BY_ID = Object.fromEntries(CITIES.map(c => [c.id, c]));
+const CITY_BY_ID = Object.fromEntries(CITIES.map(c => [c.id, c]));
 
 export function cityName(cityId) {
   const c = CITY_BY_ID[cityId];

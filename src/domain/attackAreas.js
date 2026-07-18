@@ -11,7 +11,7 @@
 // `name` é chave de tradução (ver ui/rtcPanel.js e i18n/locales/*.js: area.<id>)
 // — descreve a forma do ataque pro jogador, não é termo canônico de Tibia
 // (isso é o campo `tibia`, comentário técnico de referência).
-export const ATTACK_AREAS = {
+const ATTACK_AREAS = {
   single:    { name: 'area.single',    maxTargets: 1,  tibia: 'Atinge apenas o alvo à frente (golpe normal, strikes, SD, missile, Fireball).' },
   beam:      { name: 'area.beam',      maxTargets: 3,  tibia: 'Linha reta a partir do conjurador (ex.: Ethereal Spear, Energy Beam).' },
   wave:      { name: 'area.wave',      maxTargets: 5,  tibia: 'Cone/onda à frente (ex.: Fire Wave, Energy Wave, Terra Wave, Front Sweep).' },
@@ -22,7 +22,7 @@ export const ATTACK_AREAS = {
 
 const DEFAULT = ATTACK_AREAS.single;
 
-export function areaOf(areaId) {
+function areaOf(areaId) {
   return ATTACK_AREAS[areaId] || DEFAULT;
 }
 

@@ -65,7 +65,7 @@ export const VOC_TRAINING = {
 // treinar Sword/Axe/Club rápido (1.1) mas Distance devagar (1.4), o Paladin o
 // oposto (1.2 melee, 1.1 distance), e mago treinar QUALQUER combate devagar
 // (1.5–2.0) — cada skill tem seu próprio número, por vocação, igual ao Tibia.
-export const SKILL_MULTIPLIERS = {
+const SKILL_MULTIPLIERS = {
   knight:   { fist: 1.1, club: 1.1, sword: 1.1, axe: 1.1, distance: 1.4, shielding: 1.1 },
   paladin:  { fist: 1.2, club: 1.2, sword: 1.2, axe: 1.2, distance: 1.1, shielding: 1.1 },
   sorcerer: { fist: 1.5, club: 2.0, sword: 2.0, axe: 2.0, distance: 2.0, shielding: 1.5 },

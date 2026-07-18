@@ -14,7 +14,7 @@ import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=133
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { t } from '../i18n/i18n.js?v=142';
 
-export const MAX_CHARACTER_SLOTS = 2;
+const MAX_CHARACTER_SLOTS = 2;
 
 // Resumo de cada slot pra UI (Configurações) — nunca o blob inteiro do
 // personagem, só o suficiente pra identificar/escolher.
@@ -28,7 +28,7 @@ export function getCharacterSlots() {
 // debounce de 8s) no próprio slot, marca o novo slot como ativo e recarrega —
 // o slot novo pode estar vazio (2º personagem ainda não criado), nesse caso o
 // boot cai direto na tela de escolha de vocação, igual ao 1º personagem.
-export async function switchCharacterSlot(slot) {
+async function switchCharacterSlot(slot) {
   if (slot < 0 || slot >= MAX_CHARACTER_SLOTS || slot === ACCOUNT.activeSlot) return;
   if (G.vocation) saveGame(); // nada a salvar se o slot atual nunca virou personagem
   await flushCloudSave();

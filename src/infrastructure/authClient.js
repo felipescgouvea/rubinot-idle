@@ -366,3 +366,55 @@ export function sellItemOnServer(slot, itemId, qty) {
 export function sellRelicOnServer(slot, relicId) {
   return huntFetch('/inventory/sell-relic', { method: 'POST', body: { slot, relicId } });
 }
+
+// ---- Market entre jogadores (ver server/src/index.js) ----
+// Carteira do Market — SEPARADA do gold do personagem, de propósito (mesmo
+// modelo do antigo secret-based, só que a fronteira agora é o servidor).
+export function fetchMarketWallet(slot) {
+  return huntFetch(`/market/wallet?slot=${slot}`);
+}
+
+export function depositToMarketOnServer(slot, amount) {
+  return huntFetch('/market/deposit', { method: 'POST', body: { slot, amount } });
+}
+
+export function withdrawFromMarketOnServer(slot, amount) {
+  return huntFetch('/market/withdraw', { method: 'POST', body: { slot, amount } });
+}
+
+// Retorna { ok, listings: [{ id, sellerName, itemId, qty, pricePerUnit, mine }] }.
+export function fetchMarketListingsOnServer(slot) {
+  return huntFetch(`/market/listings?slot=${slot}`);
+}
+
+export function listItemOnServerMarket(slot, itemId, qty, price, sellerName) {
+  return huntFetch('/market/list', { method: 'POST', body: { slot, itemId, qty, price, sellerName } });
+}
+
+export function cancelListingOnServerMarket(slot, listingId) {
+  return huntFetch('/market/cancel', { method: 'POST', body: { slot, listingId } });
+}
+
+export function buyListingOnServerMarket(slot, listingId, qty) {
+  return huntFetch('/market/buy', { method: 'POST', body: { slot, listingId, qty } });
+}
+
+// ---- Highscores globais (ver server/src/index.js) ----
+// payload: { slot, playerName, arenaPoints, tasksDone, world, bestiaryCount }
+// — level/xp/kills/skills o servidor já lê sozinho de player_stats/player_skills.
+export function submitHighscoreOnServer(slot, payload) {
+  return huntFetch('/highscores/submit', { method: 'POST', body: { slot, ...payload } });
+}
+
+export function fetchHighscoresOnServer(category) {
+  return huntFetch(`/highscores?category=${encodeURIComponent(category)}`);
+}
+
+// ---- Daily Reward (piloto) — ver server/src/index.js ----
+export function fetchDailyRewardState(slot) {
+  return huntFetch(`/daily-reward/state?slot=${slot}`);
+}
+
+export function claimDailyRewardOnServer(slot) {
+  return huntFetch('/daily-reward/claim', { method: 'POST', body: { slot } });
+}

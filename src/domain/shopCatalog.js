@@ -174,11 +174,3 @@ export const SHOPS = [
 export function isBoostActive(boosts, kind, now) {
   return !!(boosts && boosts[kind] && boosts[kind] > now);
 }
-
-export function computeBoostMods(boosts, now) {
-  return {
-    xp: isBoostActive(boosts, 'xp', now) ? 1.5 : 1,
-    loot: isBoostActive(boosts, 'loot', now) ? 0.15 : 0,
-    gold: isBoostActive(boosts, 'gold', now) ? 1.3 : 1,
-  };
-}

@@ -1,7 +1,7 @@
 // Categorias do ranking global (Highscores): nível do personagem, cada uma
 // das 7 skills reais do Tibia (ver domain/character.js: TIBIA_SKILLS) e o
 // progresso no bestiário. `column` é a coluna do Supabase que ordena aquela
-// categoria (ver infrastructure/highscoresApi.js: fetchHighscoresRequest) —
+// categoria (ver server/src/index.js: GET /highscores) —
 // mesma tabela rubinot_idle_scores pra todas, só muda o ORDER BY.
 export const HIGHSCORE_CATEGORIES = [
   { key: 'level',     column: 'level',           icon: '⭐', labelKey: 'highscores.catLevel' },

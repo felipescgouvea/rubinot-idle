@@ -4,7 +4,7 @@
 import { G } from './gameStore.js?v=129';
 import {
   computeMaxHp, computeMaxMana, computeAtk, computeDef, computeMagic, computeSpd,
-  computeEquipBonus, equippedWeaponSkillId,
+  equippedWeaponSkillId,
 } from '../domain/combatFormulas.js?v=157';
 
 export function getMaxHp() {
@@ -29,10 +29,6 @@ export function getMagic() {
 
 export function getSpd() {
   return computeSpd({ vocation: G.vocation, equipment: G.equipment, relics: G.relics });
-}
-
-export function getEquipBonus() {
-  return computeEquipBonus(G.equipment, G.relics);
 }
 
 export function getEquippedWeaponSkillId() {

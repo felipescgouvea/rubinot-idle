@@ -51,7 +51,11 @@ function getDef(session) {
   return computeDef({ skills: session.skills, equipment: session.equipment, relics: session.relics });
 }
 
-async function incrementInventory(userId, slot, itemId, delta) {
+// Exportada (também usada por index.js: rotas do Market, pra decrementar/
+// devolver item ao inventário do vendedor/comprador) — mesmo padrão de
+// read-then-write já usado por toda mutação de player_inventory neste
+// arquivo.
+export async function incrementInventory(userId, slot, itemId, delta) {
   const existing = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
   if (delta > 0 && !existing) {
     const rows = await selectMany('player_inventory', { user_id: userId, slot });

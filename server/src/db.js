@@ -43,6 +43,21 @@ export async function selectLatest(table, filters, orderCol) {
   return rows.length ? rows[0] : null;
 }
 
+// SELECT com ORDER BY/LIMIT (listings do Market, highscores) — mesmos
+// filtros de igualdade dos outros helpers, mais `order`/`limit` na query
+// string. `filters` pode ser {} (sem filtro nenhum, ex.: highscores globais).
+export async function selectManyOrdered(table, filters, { order, limit } = {}) {
+  const filterQs = qs(filters);
+  const parts = [];
+  if (filterQs) parts.push(filterQs);
+  parts.push('select=*');
+  if (order) parts.push(`order=${order}`);
+  if (limit) parts.push(`limit=${limit}`);
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${parts.join('&')}`, { headers: headers() });
+  if (!res.ok) throw new Error(`selectManyOrdered ${table} falhou: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
 export async function insertRow(table, row) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
     method: 'POST', headers: headers({ Prefer: 'return=representation' }), body: JSON.stringify(row),

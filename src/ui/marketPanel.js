@@ -2,7 +2,7 @@ import { G } from '../application/gameStore.js?v=129';
 import { ITEMS } from '../domain/items.js?v=138';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=132';
-import { ensurePlayerSecret, registerPlayerName } from '../application/highscoresUseCases.js?v=129';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
 import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=127';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=129';
 import { t } from '../i18n/i18n.js?v=142';
@@ -30,7 +30,6 @@ export async function renderMarketPanel() {
     return;
   }
 
-  ensurePlayerSecret();
   el.innerHTML = `<p class="muted">${t('market.loading')}</p>`;
 
   const [wallet, listings] = await Promise.all([fetchMyMarketWallet(), fetchMarketListings()]);
@@ -71,17 +70,17 @@ export async function renderMarketPanel() {
     return;
   }
 
-  const mine = listings.filter(l => l.seller_secret === G.playerSecret);
-  const others = listings.filter(l => l.seller_secret !== G.playerSecret);
+  const mine = listings.filter(l => l.mine);
+  const others = listings.filter(l => !l.mine);
 
   document.getElementById('mk-my-listings').innerHTML = mine.length ? mine.map(l => {
-    const item = ITEMS[l.item_id];
+    const item = ITEMS[l.itemId];
     return `<div class="skill-card" style="margin-bottom:8px">
       <div class="skill-card-header">
-        <span class="skill-card-name">${item ? itemIconImg(l.item_id) : '?'} ${item?.name || l.item_id} x${l.qty}</span>
-        <span class="skill-card-level" style="font-size:11px">${formatNum(l.price_per_unit)} ${goldIconImg('inline-icon')}${t('market.perUnitSuffix')}</span>
+        <span class="skill-card-name">${item ? itemIconImg(l.itemId) : '?'} ${item?.name || l.itemId} x${l.qty}</span>
+        <span class="skill-card-level" style="font-size:11px">${formatNum(l.pricePerUnit)} ${goldIconImg('inline-icon')}${t('market.perUnitSuffix')}</span>
       </div>
-      <button class="skill-upgrade-btn" style="background:linear-gradient(180deg,#c0392b,#7b241c);border-color:#7b241c" onclick="cancelMyListing('${l.id}', '${l.item_id}', ${l.qty})">${t('market.cancelListing')}</button>
+      <button class="skill-upgrade-btn" style="background:linear-gradient(180deg,#c0392b,#7b241c);border-color:#7b241c" onclick="cancelMyListing('${l.id}', '${l.itemId}', ${l.qty})">${t('market.cancelListing')}</button>
     </div>`;
   }).join('') : `<p class="muted">${t('market.noActiveListings')}</p>`;
 
@@ -90,13 +89,13 @@ export async function renderMarketPanel() {
       <thead><tr><th>${t('market.thItem')}</th><th>${t('market.thQty')}</th><th>${t('market.thPricePerUnit')}</th><th>${t('market.thTotal')}</th><th>${t('market.thSeller')}</th><th></th></tr></thead>
       <tbody>
         ${others.map(l => {
-          const item = ITEMS[l.item_id];
+          const item = ITEMS[l.itemId];
           return `<tr>
-            <td>${item ? itemIconImg(l.item_id) : '?'} ${item?.name || l.item_id}</td>
+            <td>${item ? itemIconImg(l.itemId) : '?'} ${item?.name || l.itemId}</td>
             <td>${l.qty}</td>
-            <td>${formatNum(l.price_per_unit)} ${goldIconImg('inline-icon')}</td>
-            <td>${formatNum(l.price_per_unit * l.qty)} ${goldIconImg('inline-icon')}</td>
-            <td>${escapeHtml(l.seller_name)}</td>
+            <td>${formatNum(l.pricePerUnit)} ${goldIconImg('inline-icon')}</td>
+            <td>${formatNum(l.pricePerUnit * l.qty)} ${goldIconImg('inline-icon')}</td>
+            <td>${escapeHtml(l.sellerName)}</td>
             <td><button class="btn-blue" onclick="buyMarketListing('${l.id}', ${l.qty})">${t('market.buyAll')}</button></td>
           </tr>`;
         }).join('')}

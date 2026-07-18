@@ -21,7 +21,7 @@ function todayStr() {
 // Zera o progresso das missões diárias quando o dia muda — chamada antes de
 // qualquer leitura/escrita em bpMissionProgress pra garantir que nunca conta
 // progresso de ontem nas missões de hoje.
-export function ensureDailyMissions() {
+function ensureDailyMissions() {
   const today = todayStr();
   if (G.bpMissionDate === today) return;
   G.bpMissionDate = today;

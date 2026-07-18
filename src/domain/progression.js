@@ -229,7 +229,7 @@ export function bpTierForXp(bpXp) {
 // G.bpMissionProgress (ver application/battlePassUseCases.js).
 // `name` é chave de tradução (ver ui/battlePassPanel.js e i18n/locales/*.js:
 // battlepass.mission.<id>) — texto original deste jogo, não canon de Tibia.
-export const BP_MISSION_POOL = [
+const BP_MISSION_POOL = [
   { id: 'kill_50',   name: 'battlepass.mission.kill_50',   goal: 50,   track: 'kills',     xp: 150 },
   { id: 'kill_150',  name: 'battlepass.mission.kill_150',  goal: 150,  track: 'kills',     xp: 350 },
   { id: 'kill_300',  name: 'battlepass.mission.kill_300',  goal: 300,  track: 'kills',     xp: 600 },
@@ -241,7 +241,7 @@ export const BP_MISSION_POOL = [
   { id: 'arena_3',   name: 'battlepass.mission.arena_3',   goal: 3,    track: 'arenaWins', xp: 450 },
 ];
 
-export const BP_MISSIONS_PER_DAY = 3;
+const BP_MISSIONS_PER_DAY = 3;
 
 // Mesmas 3 missões o dia inteiro pra qualquer jogador, sem precisar de
 // servidor pra sortear — hash simples da data (string "YYYY-MM-DD") vira o

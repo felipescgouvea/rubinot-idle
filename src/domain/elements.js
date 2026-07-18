@@ -8,8 +8,6 @@
 // dano da magia/runa é multiplicado por esse modificador no combate; o ataque
 // básico da arma conta como 'physical'. Ver application/huntUseCases.js.
 
-export const ELEMENTS = ['physical', 'fire', 'ice', 'energy', 'earth', 'holy', 'death'];
-
 const WEAK = 1.25;    // leva +25% do elemento
 const RESIST = 0.7;   // leva -30%
 const IMMUNE = 0;     // não sofre nada

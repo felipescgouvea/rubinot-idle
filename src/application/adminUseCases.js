@@ -6,7 +6,7 @@
 // cache local (configCache) populado no boot por initGameConfig() — os
 // getters abaixo são síncronos de propósito (chamados no hot path da caçada),
 // então NUNCA fazem fetch, só leem o cache.
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, zoneMultiplier, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=128';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=133';
 
@@ -32,21 +32,6 @@ export function getAdminConfig() { return configCache; }
 // assinatura de antes, só a fonte dos dados mudou.
 export const getXpRate = () => getAdminConfig().xpRate;
 export const getSkillRate = () => getAdminConfig().skillRate;
-export const getGoldRate = () => getAdminConfig().goldRate;
-export const getLootRate = () => getAdminConfig().lootRate;
-export const getRelicDropChance = () => getAdminConfig().relicDropChance;
-export const getRarityWeights = () => getAdminConfig().rarityWeights;
-// Range de tempo de aparição, em MILISSEGUNDOS (config guarda em segundos).
-export function getSpawnDelayRange() {
-  const c = getAdminConfig();
-  return { min: c.spawnDelayMin * 1000, max: c.spawnDelayMax * 1000 };
-}
-
-export const isUsingZoneMultipliers = () => getAdminConfig().useZoneMultipliers;
-export function getZoneMultiplier(zoneId, kind, builtIn) {
-  return zoneMultiplier(getAdminConfig(), zoneId, kind, builtIn);
-}
-
 export function getZoneSpawn(zoneId, zoneMonsters) {
   return resolveZoneSpawn(getAdminConfig(), zoneId, zoneMonsters);
 }

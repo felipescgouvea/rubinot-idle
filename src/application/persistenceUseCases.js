@@ -169,6 +169,20 @@ export function loadGame() {
 // nada por ela. Preferimos zero ganho nesse caso raro a reintroduzir um
 // palpite do cliente, o que quebraria "o servidor é a única fonte de verdade".
 
+// Helper genérico de reconciliação: chama `fetchFn()` (uma função de
+// infrastructure/authClient.js, que retorna `{ ok: true, ...dados }` ou
+// `{ ok: false, error }`); se `ok`, aplica `applyToG(resultado)` (uma função
+// que muta G com os campos vindos do servidor) e retorna o resultado; se
+// falhar, não mexe em G e retorna null. Sem lógica específica de nenhum
+// domínio — qualquer mecânica futura no modelo "servidor é a fonte de
+// verdade" pode reusar isto em vez de reescrever o mesmo try/then.
+export async function reconcileField(fetchFn, applyToG) {
+  const result = await fetchFn();
+  if (!result || !result.ok) return null;
+  applyToG(result);
+  return result;
+}
+
 export function confirmReset() {
   if (confirm(t('persistence.resetConfirm'))) {
     clearState();
