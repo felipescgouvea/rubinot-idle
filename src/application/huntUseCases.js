@@ -218,6 +218,18 @@ let currentSessionId = null;
 // terminou de ser criada (a antiga já fechou); reconcileWithServer não deve
 // interpretar isso como "a caçada atual morreu" (ver startHunt).
 let starting = false;
+// Janela de tolerância logo após um /hunt/start confirmado — um poll de
+// /hunt/state pode legitimamente responder hunting:false por uma fração de
+// segundo mesmo DEPOIS do servidor já ter confirmado a sessão (ex.: o
+// /character/starter-kit disparado por selectVocation ainda em voo, gravando
+// equipamento/inventário ao mesmo tempo; ou qualquer lag de leitura logo após
+// a escrita). Sem essa tolerância, essa ÚNICA leitura falsa-negativa já
+// bastava pra reconcileWithServer() interpretar como "a caçada morreu" e
+// desligar tudo — bug reportado pelo Felipe: personagem novo clica Start
+// Hunt, a hunt confirma no servidor (ver rede: /hunt/start retorna ok:true),
+// mas a tela volta pra "Start Hunt" sozinha ~1s depois.
+let startGraceUntil = 0;
+const START_GRACE_MS = 2000;
 
 // Desde o Marco 4, nível/skills/equipamento NÃO são mais enviados — o
 // servidor lê de player_stats/player_skills/player_equipment (autoritativos).
@@ -272,7 +284,7 @@ async function reconcileWithServer() {
   // houve"). Detecta comparando o que o cliente ainda acha que está caçando
   // com o que o servidor diz agora — se o servidor já não está mais
   // caçando mas o cliente ainda acha que sim, foi ele quem encerrou.
-  if (G.hunting && !res.hunting && !starting) {
+  if (G.hunting && !res.hunting && !starting && Date.now() > startGraceUntil) {
     const d = s.last_death;
     // Só mostra/reage à morte se ela pertence à sessão QUE ESTE CLIENTE
     // acha que está rodando agora (currentSessionId, ver startHunt) — sem
@@ -546,6 +558,7 @@ export function startHunt() {
     starting = false;
     if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ Caçada não confirmada pelo servidor: ${res.error}`, type: 'error' }); return; }
     currentSessionId = res.sessionId || null;
+    startGraceUntil = Date.now() + START_GRACE_MS;
     reconcileWithServer(); // não espera o 1º intervalo de RECONCILE_MS pra puxar o estado real
   });
 }
