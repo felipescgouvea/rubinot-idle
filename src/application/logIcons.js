@@ -4,7 +4,7 @@
 // importar de ui/*.js, então não dá pra reusar ui/shared.js: itemIconImg,
 // mas as duas application/*.js podem compartilhar um helper entre si).
 import { ITEMS } from '../domain/items.js?v=139';
-import { MONSTERS } from '../domain/bestiary.js?v=144';
+import { MONSTERS } from '../domain/bestiary.js?v=145';
 import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=130';
 
 export function itemLogIcon(itemId) {
