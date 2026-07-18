@@ -640,6 +640,15 @@ function applyRtcHealing() {
   const spellWants = healSpell && G.hp > 0 && hpPct < G.rtc.healSpellThreshold && G.mana >= healSpell.mana;
   const potionWants = G.rtc.healPotion && G.hp > 0 && hpPct < G.rtc.healPotionThreshold && (G.inventory[G.rtc.healPotion] || 0) > 0;
   if (spellWants || potionWants) emit(EVENTS.PLAYER_BATTLE_SIDE, { healing: true });
+  // Log de "casting" da cura — só estimativa de cooldown (mesmo espírito do
+  // ataque em doCosmeticTick), sem gastar mana/curar de verdade aqui (isso é
+  // 100% resolvido pelo servidor). Sem isso a aba "Magias" do log de combate
+  // nunca mostrava a cura acontecendo, só o ataque (bug reportado: "não
+  // parece que tá usando magia de cura").
+  if (spellWants && isSpellReady(healSpellId)) {
+    startSpellCd(healSpellId, healSpell.cd);
+    emit(EVENTS.LOG, { html: t('log.spellCast', { words: healSpell.words }), cat: 'magia' });
+  }
 }
 
 // RTC parado (fora de caçada) — cura de VERDADE (spell/poção), não só o flash
