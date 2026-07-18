@@ -5,7 +5,7 @@
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=134';
-import { ZONES } from '../domain/bestiary.js?v=140';
+import { ZONES } from '../domain/bestiary.js?v=141';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=156';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=126';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=159';
@@ -13,7 +13,7 @@ import { monsterAttack } from '../domain/combatFormulas.js?v=157';
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX } from '../domain/stamina.js?v=125';
 import { ITEMS } from '../domain/items.js?v=138';
-import { MONSTERS } from '../domain/bestiary.js?v=140';
+import { MONSTERS } from '../domain/bestiary.js?v=141';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=127';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
