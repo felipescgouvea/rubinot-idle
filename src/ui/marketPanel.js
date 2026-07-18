@@ -1,5 +1,5 @@
 import { G } from '../application/gameStore.js?v=129';
-import { ITEMS } from '../domain/items.js?v=138';
+import { ITEMS } from '../domain/items.js?v=139';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=132';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';

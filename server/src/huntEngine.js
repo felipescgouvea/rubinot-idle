@@ -15,7 +15,7 @@ import {
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
 import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/character.js?v=156';
-import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=138';
+import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=139';
 import { SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=126';

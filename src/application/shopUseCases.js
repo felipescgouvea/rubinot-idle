@@ -1,6 +1,6 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=128';
-import { ITEMS } from '../domain/items.js?v=138';
+import { ITEMS } from '../domain/items.js?v=139';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=134';
 import { saveGame } from './saveGameUseCase.js?v=129';

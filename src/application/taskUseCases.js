@@ -3,7 +3,7 @@
 // precisa saber que tasks existem, só anuncia mortes.
 import { G } from './gameStore.js?v=129';
 import { MONSTERS } from '../domain/bestiary.js?v=144';
-import { ITEMS } from '../domain/items.js?v=138';
+import { ITEMS } from '../domain/items.js?v=139';
 import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=128';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
 import { gainXp } from './huntUseCases.js?v=189';

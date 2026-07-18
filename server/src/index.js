@@ -41,7 +41,7 @@ import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from
 import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
-import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=138';
+import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=139';
 import { XP_TABLE, VOCATIONS } from '../../src/domain/character.js?v=156';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';

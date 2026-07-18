@@ -2,7 +2,7 @@
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
 import { G } from '../application/gameStore.js?v=129';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=138';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=139';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { saveGame } from '../application/saveGameUseCase.js?v=129';

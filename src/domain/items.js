@@ -2098,8 +2098,14 @@ export const ITEMS = {
   prismatic_bolt:  { name: 'Prismatic Bolt', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
   shatterstorm_arrow: { name: 'Shatterstorm Arrow', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
   shiver_arrow:    { name: 'Shiver Arrow', icon: '🏹', type: 'ammo', atk: 46, sell: 4 },
-  simple_arrow_weak: { name: 'Simple Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 46, sell: 4 },
-  simple_arrow:    { name: 'Simple Arrow', icon: '🏹', type: 'ammo', atk: 42, sell: 3 },
+  // Corrigido (era atk 46/42, herdado por engano do lote de bolts/arrows de
+  // alto tier vizinho no catálogo importado) — no Tibia real a Simple Arrow
+  // (atk 20) é ligeiramente MAIS FRACA que a Arrow comum (atk 25, ver acima
+  // `arrow`), não mais forte. Fiel a essa proporção (~0.8x da Arrow deste
+  // jogo, atk 13): é a munição real dada ao Paladino no Dawnport (ver
+  // STARTER_KITS abaixo), não a Arrow comum.
+  simple_arrow_weak: { name: 'Simple Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 7, sell: 4 },
+  simple_arrow:    { name: 'Simple Arrow', icon: '🏹', type: 'ammo', atk: 10, sell: 3 },
   sniper_arrow_weak: { name: 'Sniper Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 10, sell: 1 },
   spectral_bolt:   { name: 'Spectral Bolt', icon: '🏹', type: 'ammo', atk: 42, sell: 3 },
   tarsal_arrow:    { name: 'Tarsal Arrow', icon: '🏹', type: 'ammo', atk: 22, sell: 2 },
@@ -9848,7 +9854,7 @@ export const ITEMS = {
 // separada da criação (o Graduate Set do Tibia real não se aplica aqui).
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'leather_armor',                      helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'simple_arrow', armor: 'leather_armor',               helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   sorcerer: { weapon: 'the_scorcher',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   druid:    { weapon: 'the_chiller',   armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
