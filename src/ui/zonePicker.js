@@ -3,7 +3,7 @@
 // substituíram os "mundos" como eixo de navegação — o mundo virou só um bônus
 // de fundo (ver domain/bestiary.js: isZoneUnlocked não gateia mais por mundo).
 import { G } from '../application/gameStore.js?v=129';
-import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=146';
+import { ZONES, MONSTERS, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=147';
 import { CITIES, isCityUnlocked, ROOKGAARD_LEVEL_CAP } from '../domain/cities.js?v=132';
 import { selectZone, startHunt } from '../application/huntUseCases.js?v=189';
 import { openModal, closeModal } from './shared.js?v=132';

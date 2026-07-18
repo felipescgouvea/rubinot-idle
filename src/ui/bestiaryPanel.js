@@ -5,7 +5,7 @@
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
 import { G } from '../application/gameStore.js?v=129';
-import { MONSTERS } from '../domain/bestiary.js?v=146';
+import { MONSTERS } from '../domain/bestiary.js?v=147';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, isPreyActive,
 } from '../domain/prey.js?v=125';
