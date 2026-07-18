@@ -9,7 +9,7 @@ import { getMagic } from './stats.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=129';
 import { updateHuntRtc } from '../infrastructure/authClient.js?v=134';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 
 // Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar
 // prioridade de ataque/cura no meio da luta só valia a partir da PRÓXIMA

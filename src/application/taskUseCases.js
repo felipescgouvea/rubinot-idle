@@ -2,7 +2,7 @@
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
 import { G } from './gameStore.js?v=129';
-import { MONSTERS } from '../domain/bestiary.js?v=143';
+import { MONSTERS } from '../domain/bestiary.js?v=144';
 import { ITEMS } from '../domain/items.js?v=138';
 import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=128';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
@@ -10,7 +10,7 @@ import { gainXp } from './huntUseCases.js?v=189';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=129';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 
 function findTask(roomId, taskIndex) {
   const room = TASK_ROOMS.find(r => r.id === roomId);

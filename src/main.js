@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=129';
 import { VOCATIONS } from './domain/character.js?v=156';
 import { emit, EVENTS } from './shared/eventBus.js?v=127';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=142';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=143';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=129';

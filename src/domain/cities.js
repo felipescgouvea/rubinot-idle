@@ -37,6 +37,10 @@ export function cityName(cityId) {
 // até nível 8 — só então pode viajar pro mainland (ver ui/zonePicker.js: cityCard).
 export const ROOKGAARD_LEVEL_CAP = 8;
 
+// Dawnport é a OUTRA ilha de treino (ver domain/bestiary.js: ZONES.dawnport_hunt)
+// — mesma trava (ou melhor, ausência dela) do Rookgaard: fiel ao Tibia real,
+// onde Dawnport também ficava disponível desde o nível 1, sem precisar
+// esperar o cap de 8.
 export function isCityUnlocked(cityId, level) {
-  return cityId === 'rookgaard' || level >= ROOKGAARD_LEVEL_CAP;
+  return cityId === 'rookgaard' || cityId === 'dawnport' || level >= ROOKGAARD_LEVEL_CAP;
 }

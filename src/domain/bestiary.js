@@ -20,6 +20,12 @@ export const ZONES = {
   // --- Rookgaard (ilha inicial, sempre desbloqueada) ---
   troll_cave:     { city: 'rookgaard',  name: 'zone.troll_cave',     icon: '🧌', worldReq: 'auroria', monsters: ['troll', 'swamp_troll'], theme: ['#3d5c3a', '#182b16'], boss: 'swamp_troll' },
 
+  // --- Dawnport (ilha alternativa de treino, também sempre desbloqueada —
+  // ver domain/cities.js: isCityUnlocked) — só as 4 criaturas mais fracas do
+  // Dawnport real (pedido do Felipe), boss = a mais forte das 4 (Meadow
+  // Strider, "ainda forte pra um personagem novo" segundo o TibiaWiki).
+  dawnport_hunt:  { city: 'dawnport',   name: 'zone.dawnport_hunt',  icon: '🌅', worldReq: 'auroria', monsters: ['woodling', 'troll_trained_salamander', 'meadow_strider', 'dawnfly'], theme: ['#e0955a', '#5c3a24'], boss: 'meadow_strider' },
+
   // --- Ab'Dendriel (cidade dos elfos) ---
   elf_hunt:       { city: 'abdendriel', name: 'zone.elf_hunt',       icon: '🧝', worldReq: 'auroria', monsters: ['elf', 'elf_scout', 'elf_arcanist'], theme: ['#3f7052', '#1e3d2b'], boss: 'elf_arcanist' },
 
@@ -301,12 +307,12 @@ export const MONSTERS = {
   muglex_clan_scavenger:{ name: 'Muglex Clan Scavenger', icon: '🏴', hp: 60, atk: 15, def: 7, xp: 37, gold: [2,9], loot: [['orc_tooth',0.4]] },
   brittle_skeleton:    { name: 'Brittle Skeleton', icon: '🦴', hp: 50, atk: 17, def: 2, xp: 35, gold: [3,10], loot: [['bones',0.9]], spells: [{ element: 'death', min: 5, max: 15 }] },
   dawn_scorpion:       { name: 'Dawn Scorpion', icon: '🦂', hp: 65, atk: 20, def: 11, xp: 45, gold: [3,10], loot: [['spider_fangs',0.35]] },
-  troll_trained_salamander:{ name: 'Troll-Trained Salamander', icon: '🦎', hp: 70, atk: 13, def: 1, xp: 23, gold: [2,8], loot: [['bones',0.4]], spells: [{ element: 'earth', min: 4, max: 6 }] },
+  troll_trained_salamander:{ name: 'Troll-Trained Salamander', icon: '🦎', hp: 70, atk: 13, def: 1, xp: 23, gold: [2,8], loot: [['insectoid_eggs',0.35],['simple_arrow',0.3],['meat',0.3],['chain_helmet',0.05],['axe',0.05],['bone_club',0.03],['short_sword',0.03],['studded_helmet',0.03],['poison_arrow',0.08],['shovel',0.015],['health_potion',0.015]], spells: [{ element: 'earth', min: 4, max: 6 }] },
   troll_marauder:      { name: 'Troll Marauder', icon: '👹', hp: 70, atk: 29, def: 8, xp: 40, gold: [3,10], loot: [['bones',0.6]] },
-  woodling:            { name: 'Woodling', icon: '🌳', hp: 80, atk: 15, def: 2, xp: 40, gold: [2,8], loot: [['worm_dirt',0.3]], spells: [{ element: 'earth', min: 0, max: 8 }] },
-  dawnfly:             { name: 'Dawnfly', icon: '🪰', hp: 90, atk: 20, def: 3, xp: 35, gold: [1,6], loot: [['worm_dirt',0.2]], spells: [{ element: 'earth', min: 4, max: 8 }] },
+  woodling:            { name: 'Woodling', icon: '🌳', hp: 80, atk: 15, def: 2, xp: 40, gold: [2,8], loot: [['white_mushroom',0.35],['simple_arrow',0.35],['rope',0.15],['studded_armor',0.05],['hatchet',0.05],['studded_shield',0.05]], spells: [{ element: 'earth', min: 0, max: 8 }] },
+  dawnfly:             { name: 'Dawnfly', icon: '🪰', hp: 90, atk: 20, def: 3, xp: 35, gold: [1,6], loot: [['simple_arrow',0.4],['poison_arrow',0.25],['simple_jo_staff',0.04],['doublet',0.03],['mana_potion',0.06],['health_potion',0.06]], spells: [{ element: 'earth', min: 4, max: 8 }] },
   minotaur_bruiser:    { name: 'Minotaur Bruiser', icon: '🐂', hp: 100, atk: 45, def: 11, xp: 50, gold: [5,15], loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
-  meadow_strider:      { name: 'Meadow Strider', icon: '🦗', hp: 100, atk: 16, def: 1, xp: 50, gold: [3,10], loot: [['meat',0.4]], spells: [{ element: 'physical', min: 8, max: 19 }] },
+  meadow_strider:      { name: 'Meadow Strider', icon: '🦗', hp: 100, atk: 16, def: 1, xp: 50, gold: [3,10], loot: [['meat',0.4],['fish',0.25],['worm',0.25],['mace',0.05],['longsword',0.04],['hatchet',0.05],['rope',0.08]], spells: [{ element: 'physical', min: 8, max: 19 }] },
   crazed_dwarf:        { name: 'Crazed Dwarf', icon: '⛏️', hp: 105, atk: 15, def: 9, xp: 50, gold: [3,10], loot: [['iron_ore',0.4],['studded_armor',0.05]] },
   dwarf_miner:         { name: 'Dwarf Miner', icon: '⛏️', hp: 120, atk: 35, def: 7, xp: 60, gold: [5,16], loot: [['iron_ore',0.5],['studded_armor',0.05]] },
   scar_tribe_shaman:   { name: 'Scar Tribe Shaman', icon: '🪄', hp: 115, atk: 20, def: 6, xp: 85, gold: [6,18], loot: [['elvish_talisman',0.15]], spells: [{ element: 'energy', min: 10, max: 30 }] },

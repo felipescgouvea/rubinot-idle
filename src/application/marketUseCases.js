@@ -6,7 +6,7 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { ITEMS } from '../domain/items.js?v=138';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 import {
   fetchMarketWallet, depositToMarketOnServer, withdrawFromMarketOnServer,
   fetchMarketListingsOnServer, listItemOnServerMarket, cancelListingOnServerMarket,

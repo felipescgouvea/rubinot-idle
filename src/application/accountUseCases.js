@@ -12,7 +12,7 @@ import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=129';
 import { saveState } from '../infrastructure/storage.js?v=125';
 import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=134';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 
 const MAX_CHARACTER_SLOTS = 2;
 

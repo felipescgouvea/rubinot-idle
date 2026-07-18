@@ -8,7 +8,7 @@ import { G, ACCOUNT } from './gameStore.js?v=129';
 import { fetchDailyRewardState, claimDailyRewardOnServer } from '../infrastructure/authClient.js';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { saveGame } from './saveGameUseCase.js?v=129';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 
 export async function getDailyState() {
   const result = await fetchDailyRewardState(ACCOUNT.activeSlot);

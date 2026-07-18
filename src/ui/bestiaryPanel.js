@@ -5,7 +5,7 @@
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
 import { G } from '../application/gameStore.js?v=129';
-import { MONSTERS } from '../domain/bestiary.js?v=143';
+import { MONSTERS } from '../domain/bestiary.js?v=144';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, isPreyActive,
 } from '../domain/prey.js?v=125';
@@ -19,7 +19,7 @@ import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=132';
 import { monsterSpriteImg } from './huntPanel.js?v=144';
 import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=127';
 import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=127';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.

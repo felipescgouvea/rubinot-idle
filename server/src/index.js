@@ -36,7 +36,7 @@
 //     toda leitura precisa disso (Daily Reward, por ex., não tem delta
 //     pendente: o estado é sempre recomputado na hora a partir da data).
 import http from 'node:http';
-import { ZONES } from '../../src/domain/bestiary.js?v=143';
+import { ZONES } from '../../src/domain/bestiary.js?v=144';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=157';
 import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';

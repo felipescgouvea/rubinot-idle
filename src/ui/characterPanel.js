@@ -17,7 +17,7 @@ import { isStaminaEnabled } from '../application/adminUseCases.js?v=130';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=125';
 import { selectVocation } from '../application/characterUseCases.js?v=128';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
-import { t } from '../i18n/i18n.js?v=142';
+import { t } from '../i18n/i18n.js?v=143';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
