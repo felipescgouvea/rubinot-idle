@@ -173,7 +173,7 @@ export function effectSpriteFile(name) {
 // sem a margem transparente) — sempre a mesma imagem de "1 flecha" em
 // qualquer ataque.
 const MISSILE_NAMES = new Set(['arrow', 'bolt', 'spear', 'energy', 'fire', 'ice', 'earth', 'death', 'holy']);
-const MISSILE_SPRITE_VER = 1;
+const MISSILE_SPRITE_VER = 2;
 export function missileSpriteFile(name) {
   return name && MISSILE_NAMES.has(name) ? 'missiles/' + name + '.webp?mv=' + MISSILE_SPRITE_VER : null;
 }
