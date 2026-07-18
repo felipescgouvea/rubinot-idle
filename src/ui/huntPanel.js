@@ -2,8 +2,8 @@
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
 import { G } from '../application/gameStore.js?v=129';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=145';
-import { MONSTERS } from '../domain/bestiary.js?v=145';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=146';
+import { MONSTERS } from '../domain/bestiary.js?v=146';
 import { cityName } from '../domain/cities.js?v=132';
 import { ITEMS } from '../domain/items.js?v=139';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=131';
