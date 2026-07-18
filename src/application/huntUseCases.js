@@ -15,7 +15,7 @@ import { STAMINA_MAX } from '../domain/stamina.js?v=125';
 import { ITEMS } from '../domain/items.js?v=138';
 import { MONSTERS } from '../domain/bestiary.js?v=140';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
-import { spellEffectName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=126';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=127';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
 import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
@@ -777,7 +777,14 @@ export function doCosmeticTick() {
       startSpellCd(atkSpellId, atkSpell.cd);
       startAttackGroupCd();
       emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
-      emit(EVENTS.COMBAT_FX, { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid });
+      const missile = spellMissileName(atkSpellId);
+      if (missile) {
+        // Ethereal Spear/Strong Ethereal Spear: joga uma lança de verdade
+        // (ver domain/combatFx.js: SPELL_MISSILE) em vez do efeito de área.
+        emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
+      } else {
+        emit(EVENTS.COMBAT_FX, { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid });
+      }
     }
   }
 

@@ -36,6 +36,22 @@ const RUNE_EFFECT = {
   great_fireball_rune: 'fire',
 };
 
+// Magias que no Tibia real VOAM do personagem até o alvo (um projétil físico
+// de verdade, igual ao golpe básico à distância) em vez de só "explodir" um
+// efeito estático em cima do alvo — hoje só as duas Ethereal Spear do
+// paladino (CONST_ANI_SPEAR: literalmente joga uma lança). Sem isso elas
+// caíam no fallback de ELEMENT_EFFECT (physical) e mostravam o efeito de
+// "estouro físico" parado no monstro, nunca uma lança voando (bug reportado
+// pelo Felipe: "magias de paladin estao com projetil errado").
+const SPELL_MISSILE = {
+  exori_con: 'spear',       // Ethereal Spear
+  exori_gran_con: 'spear',  // Strong Ethereal Spear
+};
+
+export function spellMissileName(spellId) {
+  return SPELL_MISSILE[spellId] || null;
+}
+
 export function spellEffectName(spellId, element) {
   return SPELL_EFFECT_OVERRIDE[spellId] || ELEMENT_EFFECT[element] || 'physical';
 }
