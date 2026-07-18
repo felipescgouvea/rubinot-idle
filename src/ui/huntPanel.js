@@ -9,8 +9,9 @@ import { ITEMS } from '../domain/items.js?v=138';
 import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=131';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=132';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=185';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=187';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=125';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=130';
 import { t } from '../i18n/i18n.js?v=142';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
@@ -499,6 +500,11 @@ export function playProjectile({ missile, targetUid, hitId } = {}) {
   img.className = 'combat-projectile';
   img.src = spriteUrl(file);
   img.alt = '';
+  // Velocidade configurável no Painel Admin (ver adminUseCases.js:
+  // getProjectileSpeedMs) — sobrescreve a duração da transição em CSS (só o
+  // valor padrão/fallback) via inline style, sem mexer no timing-function.
+  const flightMs = getProjectileSpeedMs();
+  img.style.transitionDuration = flightMs + 'ms';
   // o sprite do Tibia aponta pra cima (norte); +90° alinha o "nariz" ao vetor de voo
   img.style.left = x0 + 'px';
   img.style.top = y0 + 'px';
@@ -514,8 +520,9 @@ export function playProjectile({ missile, targetUid, hitId } = {}) {
   img.addEventListener('transitionend', land, { once: true });
   // salvaguarda: se o transitionend não disparar por algum motivo (aba em
   // background throttlando rAF/transições, elemento removido no meio do voo),
-  // não deixa o golpe pendente pra sempre — 400ms cobre com folga o voo real.
-  setTimeout(land, 400);
+  // não deixa o golpe pendente pra sempre — folga de 150ms sobre a duração
+  // configurada cobre o voo real com sobra.
+  setTimeout(land, flightMs + 150);
   // força reflow e anima até o alvo
   void img.offsetWidth;
   img.style.transform = `translate(-50%, -50%) translate(${x1 - x0}px, ${y1 - y0}px) rotate(${ang + 90}deg)`;

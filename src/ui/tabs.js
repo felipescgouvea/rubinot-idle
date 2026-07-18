@@ -8,13 +8,13 @@ import { renderWorldsPanel } from './worldsPanel.js?v=126';
 import { renderBattlePassPanel } from './battlePassPanel.js?v=126';
 import { renderRtcPanel } from './rtcPanel.js?v=160';
 import { renderShopPanel } from './shopPanel.js?v=134';
-import { renderMarketPanel } from './marketPanel.js?v=127';
+import { renderMarketPanel } from './marketPanel.js?v=128';
 import { renderHighscoresPanel } from './highscoresPanel.js?v=130';
 import { renderBossRushPanel } from './bossRushPanel.js?v=129';
 import { renderBestiaryTab } from './bestiaryPanel.js?v=130';
 import { renderTrainingSection } from './trainingPanel.js?v=132';
-import { renderAdminPanel } from './adminPanel.js?v=133';
-import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=129';
+import { renderAdminPanel } from './adminPanel.js?v=134';
+import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=130';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 
 const RENDER_BY_TAB = {

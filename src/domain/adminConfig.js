@@ -50,6 +50,12 @@ export const DEFAULT_ADMIN_CONFIG = {
   // ataque à distância gasta 1 flecha/dardo do inventário; sem munição, o
   // paladino só soca. Padrão OFF (munição infinita, mais amigável ao idle).
   consumeAmmo: false,
+  // Duração (em MILISSEGUNDOS) do voo do projétil cosmético (flecha/virote/
+  // raio de wand-rod) do boneco até o alvo — ver ui/huntPanel.js:
+  // playProjectile. A queda de vida na barra é sincronizada com esse mesmo
+  // tempo (ver application/huntUseCases.js: pendingHits), então mudar isto
+  // também muda quando o dano "chega" visualmente.
+  projectileSpeedMs: 260,
 };
 
 // Campos de taxa simples (numéricos) exibidos no painel, na ordem.
@@ -140,6 +146,7 @@ export function sanitizeAdminConfig(cfg) {
   c.marketEnabled = !!c.marketEnabled;
   c.staminaEnabled = !!c.staminaEnabled;
   c.consumeAmmo = !!c.consumeAmmo;
+  c.projectileSpeedMs = Math.min(1000, Math.max(60, Math.round(asNum(c.projectileSpeedMs, d.projectileSpeedMs))));
   const zm = {};
   if (c.zoneMultipliers && typeof c.zoneMultipliers === 'object') {
     for (const [zid, ov] of Object.entries(c.zoneMultipliers)) {

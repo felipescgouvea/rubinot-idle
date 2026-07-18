@@ -4,7 +4,7 @@ import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=132';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
 import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=127';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=129';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=130';
 import { t } from '../i18n/i18n.js?v=142';
 
 export async function renderMarketPanel() {

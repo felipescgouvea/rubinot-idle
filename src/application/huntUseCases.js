@@ -20,7 +20,7 @@ import { emit, on, EVENTS } from '../shared/eventBus.js?v=127';
 import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=126';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=126';
 import { saveGame } from './saveGameUseCase.js?v=129';
-import { isStaminaEnabled, isConsumeAmmo } from './adminUseCases.js?v=129';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=130';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=128';
 import { t } from '../i18n/i18n.js?v=142';
 
@@ -192,7 +192,12 @@ let lastSeenDeathAt = 0;
 // projétil (ver COMBAT_PROJECTILE_LANDED abaixo) — só dispara se o evento de
 // pouso nunca chegar (painel fora de foco/não montado). Em uso normal quem
 // decide o instante da queda de vida é o transitionend real, não este timer.
-const HIT_SYNC_DELAY_MS = 400;
+// Escala com a velocidade configurada no Admin (ver getProjectileSpeedMs) —
+// um valor fixo quebraria a causalidade real pra qualquer velocidade mais
+// lenta que ele (o fallback dispararia ANTES do projétil realmente chegar).
+function hitSyncFallbackMs() {
+  return getProjectileSpeedMs() + 150;
+}
 // golpes reais aguardando o projétil correspondente "pousar" de verdade na
 // tela (ver ui/huntPanel.js: playProjectile) antes de aplicar a queda de
 // vida/log — hitId -> callback. Ver applyServerPack().
@@ -388,7 +393,7 @@ function applyServerPack(pack) {
         emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: uid, hitId });
         // salvaguarda: se o evento de pouso nunca chegar (painel não montado
         // ainda, aba trocada), não deixa o golpe pendente pra sempre.
-        setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, HIT_SYNC_DELAY_MS);
+        setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, hitSyncFallbackMs());
       } else {
         applyHit();
       }

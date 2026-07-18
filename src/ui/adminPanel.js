@@ -7,9 +7,9 @@ import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { ZONES, MONSTERS } from '../domain/bestiary.js?v=140';
 import { ITEMS } from '../domain/items.js?v=138';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
-import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=129';
+import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=130';
 import { itemIconImg } from './shared.js?v=132';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=142';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=144';
 import { t } from '../i18n/i18n.js?v=142';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
@@ -136,6 +136,18 @@ function renderGeneralSubPanel(cfg) {
       <small>${cfg.consumeAmmo
         ? 'Ligado: cada tiro gasta 1 flecha/dardo; sem munição, o paladino só soca.'
         : 'Desligado (padrão): munição infinita.'}</small>
+    </div>
+
+    <h4>🏹 Velocidade do projétil</h4>
+    <div class="admin-field">
+      <label>Duração do voo</label>
+      <div class="admin-input-row">
+        <input type="range" min="60" max="1000" step="10" value="${cfg.projectileSpeedMs}"
+          oninput="this.nextElementSibling.textContent = this.value + ' ms'"
+          onchange="setAdminRate('projectileSpeedMs', parseInt(this.value, 10))" style="flex:1" />
+        <span class="admin-x">${cfg.projectileSpeedMs} ms</span>
+      </div>
+      <small>Tempo (em ms) que a flecha/virote/raio leva do boneco até o alvo. Menor = mais rápido. A queda de vida na barra acompanha esse mesmo tempo.</small>
     </div>
 
     <button class="btn-small danger" style="margin-top:14px" onclick="resetAdminConfig()">🔄 Restaurar padrões</button>`;
