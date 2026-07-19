@@ -20,10 +20,12 @@ export function renderBoostedPanel() {
       <div class="boosted-label">🐗 CREATURE</div>
       <div class="boosted-sprite">${creature ? monsterSpriteImg(creatureId, 'boosted-sprite-img') : '❓'}</div>
       <div class="boosted-name">${creature ? creature.name : '—'}</div>
+      <div class="boosted-bonus" title="Dobro de XP e loot ao caçar esta criatura hoje">⚡ 2× XP · loot</div>
     </div>
     <div class="boosted-item">
       <div class="boosted-label">💀 BOSS</div>
       <div class="boosted-sprite">${boss ? monsterSpriteImg(bossId, 'boosted-sprite-img') : '❓'}</div>
       <div class="boosted-name">${boss ? boss.name : '—'}</div>
+      <div class="boosted-bonus" title="Dobro de XP e loot ao enfrentar este boss hoje">⚡ 2× XP · loot</div>
     </div>`;
 }

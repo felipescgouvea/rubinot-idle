@@ -7,7 +7,7 @@
 // skill). Marco 6: respingo de área (pack de monstros, não só alvo único),
 // bênçãos e stamina autoritativas — fecha as 3 limitações que ainda
 // restavam (documentadas antes, agora corrigidas).
-import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=147';
+import { ZONES, MONSTERS, boostedZoneForDate, boostedCreatureForDate, boostedBossForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=147';
 import {
   spawnMonsterInstance, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
@@ -178,11 +178,19 @@ function decayStamina(session, cfg, elapsedMs) {
 async function settleKill(session, mon, cfg) {
   const zoneGoldMult = zoneMultiplier(cfg, session.zoneId, 'gold', 1);
   const zoneXpMult = zoneMultiplier(cfg, session.zoneId, 'xp', 1);
-  const isBoostedToday = session.zoneId === boostedZoneForDate(todayStr());
+  const todayS = todayStr();
+  const isBoostedToday = session.zoneId === boostedZoneForDate(todayS);
   const boostedMult = isBoostedToday ? 1.5 : 1;
+  // Boosted Creature/Boss do DIA (fiel ao Tibia: a criatura/boss em destaque no
+  // dia dá 2x XP e o dobro de chance de loot). Antes só a ZONA boosted valia; a
+  // criatura e o boss do dia (mostrados no boostedPanel) eram puramente
+  // cosméticos — nenhum bônus era aplicado.
+  const isBoostedCreature = mon.defKey === boostedCreatureForDate(todayS)
+    || (session.bossOnly && mon.defKey === boostedBossForDate(todayS));
+  const creatureBoostMult = isBoostedCreature ? 2 : 1;
   const staminaMult = cfg.staminaEnabled ? staminaXpMult(session.stamina) : 1;
   const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(session.world) * boostedMult * cfg.goldRate);
-  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * cfg.xpRate * staminaMult);
+  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * creatureBoostMult * cfg.xpRate * staminaMult);
 
   const row = await selectOne('player_stats', { user_id: session.userId, slot: session.slot });
   const gold = (row ? Number(row.gold) : 0) + goldGained;
@@ -214,7 +222,8 @@ async function settleKill(session, mon, cfg) {
   const lootTable = resolveMonsterLoot(cfg, mon.defKey, mon.loot);
   const lootGained = [];
   for (const [itemId, chance] of lootTable) {
-    if (Math.random() < chance * cfg.lootRate) {
+    // Boosted creature/boss dobra a chance de loot (cap em 1 = drop garantido).
+    if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult)) {
       const captured = await incrementInventory(session.userId, session.slot, itemId, 1);
       if (captured) lootGained.push(itemId);
     }

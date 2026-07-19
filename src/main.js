@@ -52,7 +52,7 @@ import { openPreySelect, pickPrey, wireBestiaryPanelEvents } from './ui/bestiary
 import { wireTrainingPanelEvents, pickTrainingSpell, pickedTrainingSpellId } from './ui/trainingPanel.js?v=132';
 import { setSkillsSubtab } from './ui/skillsPanel.js?v=128';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=128';
-import { renderBoostedPanel } from './ui/boostedPanel.js?v=129';
+import { renderBoostedPanel } from './ui/boostedPanel.js?v=130';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=134';
 import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=126';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=129';

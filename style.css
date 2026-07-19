@@ -1910,6 +1910,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .boosted-sprite { height: 52px; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
 .boosted-sprite-img { max-height: 48px; max-width: 48px; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #0006); }
 .boosted-name { font-size: 11px; font-weight: 700; color: var(--ink); }
+.boosted-bonus { font-size: 9px; font-weight: 700; color: #f0c14b; margin-top: 1px; white-space: nowrap; }
 
 /* ---- Presas (Prey) ---- */
 .prey-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
