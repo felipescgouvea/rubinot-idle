@@ -223,6 +223,23 @@ export function bpTierForXp(bpXp) {
   return Math.floor(bpXp / BP_XP_PER_TIER);
 }
 
+// Custo da trilha PREMIUM (paga em Rubini Coins) — desbloqueia a coluna de
+// recompensas premium, mais valiosa que a gratuita.
+export const BP_PREMIUM_COST_RUBINI = 250;
+// Trilha PREMIUM: recompensas paralelas por tier, melhores que a gratuita. Só
+// gold/rubini (nome numérico, sem i18n) nesta v1.
+export const BP_PREMIUM_REWARDS = [
+  { tier: 1,  icon: '💎', name: '100 Rubini Coins', type: 'rubini', amount: 100 },
+  { tier: 3,  icon: '💰', name: '5000 Gold', type: 'gold', amount: 5000 },
+  { tier: 5,  icon: '💎', name: '150 Rubini Coins', type: 'rubini', amount: 150 },
+  { tier: 7,  icon: '💰', name: '15000 Gold', type: 'gold', amount: 15000 },
+  { tier: 10, icon: '💎', name: '250 Rubini Coins', type: 'rubini', amount: 250 },
+  { tier: 12, icon: '💰', name: '30000 Gold', type: 'gold', amount: 30000 },
+  { tier: 15, icon: '💎', name: '400 Rubini Coins', type: 'rubini', amount: 400 },
+  { tier: 18, icon: '💰', name: '60000 Gold', type: 'gold', amount: 60000 },
+  { tier: 20, icon: '💎', name: '750 Rubini Coins', type: 'rubini', amount: 750 },
+];
+
 // Missões diárias do Battle Pass: XP extra além do trickle passivo de matar
 // monstros, ligadas a ações que o jogador já faz no jogo (caçar, tasks,
 // Arena) — não é busywork inventado à parte. `track` casa com uma chave de

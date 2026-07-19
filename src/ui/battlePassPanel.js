@@ -1,8 +1,8 @@
 import { G } from '../application/gameStore.js?v=129';
-import { BP_REWARDS, BP_XP_PER_TIER } from '../domain/progression.js?v=128';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=132';
-import { currentMissions } from '../application/battlePassUseCases.js?v=126';
+import { currentMissions } from '../application/battlePassUseCases.js?v=127';
 import { t } from '../i18n/i18n.js?v=143';
 
 function bpRewardIcon(r) {
@@ -51,17 +51,40 @@ export function renderBattlePassPanel() {
 
   renderBpMissions();
 
+  // Banner da trilha premium (comprar / já ativa).
+  const premEl = document.getElementById('bp-premium-banner');
+  if (premEl) {
+    premEl.innerHTML = G.bpPremium
+      ? `<div class="bp-premium-on">⭐ Trilha Premium ativa</div>`
+      : `<div class="bp-premium-off">⭐ Trilha Premium — recompensas melhores por tier <button class="bp-claim-btn" style="width:auto;padding:6px 14px" onclick="buyBpPremium()">Desbloquear (${BP_PREMIUM_COST_RUBINI} ${rubiniIconImg('inline-icon')})</button></div>`;
+  }
+
   const track = document.getElementById('bp-rewards-track');
+  const premByTier = {}; BP_PREMIUM_REWARDS.forEach(r => { premByTier[r.tier] = r; });
+  const claimedPrem = G.bpClaimedPremium || [];
   track.innerHTML = BP_REWARDS.map(r => {
     const claimed = G.bpClaimed.includes(r.tier);
     const available = G.bpTier >= r.tier && !claimed;
-    return `<div class="bp-reward ${claimed ? 'claimed' : ''} ${available ? 'available' : ''}">
-      <div class="bp-reward-tier">${t('battlepass.tierLabel', { tier: r.tier })}</div>
-      <div class="bp-reward-icon">${bpRewardIcon(r)}</div>
-      <div class="bp-reward-name">${t(r.name)}</div>
-      <button class="bp-claim-btn" onclick="claimBpReward(${r.tier})" ${!available ? 'disabled' : ''}>
-        ${claimed ? '✓' : available ? t('battlepass.claim') : '🔒'}
+    const p = premByTier[r.tier];
+    const pClaimed = p && claimedPrem.includes(r.tier);
+    const pAvailable = p && G.bpPremium && G.bpTier >= r.tier && !pClaimed;
+    const premHtml = p ? `<div class="bp-reward bp-reward-premium ${pClaimed ? 'claimed' : ''} ${pAvailable ? 'available' : ''}" title="Trilha premium">
+      <div class="bp-reward-icon">⭐ ${bpRewardIcon(p)}</div>
+      <div class="bp-reward-name">${t(p.name)}</div>
+      <button class="bp-claim-btn" onclick="claimBpReward(${r.tier}, 'premium')" ${!pAvailable ? 'disabled' : ''}>
+        ${pClaimed ? '✓' : (G.bpPremium ? (G.bpTier >= r.tier ? t('battlepass.claim') : '🔒') : '🔒')}
       </button>
+    </div>` : '';
+    return `<div class="bp-reward-col">
+      <div class="bp-reward ${claimed ? 'claimed' : ''} ${available ? 'available' : ''}">
+        <div class="bp-reward-tier">${t('battlepass.tierLabel', { tier: r.tier })}</div>
+        <div class="bp-reward-icon">${bpRewardIcon(r)}</div>
+        <div class="bp-reward-name">${t(r.name)}</div>
+        <button class="bp-claim-btn" onclick="claimBpReward(${r.tier})" ${!available ? 'disabled' : ''}>
+          ${claimed ? '✓' : available ? t('battlepass.claim') : '🔒'}
+        </button>
+      </div>
+      ${premHtml}
     </div>`;
   }).join('');
 }

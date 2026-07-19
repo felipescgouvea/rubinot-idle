@@ -98,6 +98,8 @@ export function loadGame() {
   if (typeof G.promoted !== 'boolean') G.promoted = false; // migração: promoção de vocação é nova
   if (G.title === undefined) G.title = null; // migração: título de achievement é novo
   if (!G.imbuements || typeof G.imbuements !== 'object') G.imbuements = {}; // migração: imbuements são novos
+  if (typeof G.bpPremium !== 'boolean') G.bpPremium = false; // migração: trilha premium do BP é nova
+  if (!Array.isArray(G.bpClaimedPremium)) G.bpClaimedPremium = [];
   // migração: Mochila-item + ordem do inventário (drag) são novos. Todo save
   // ganha o bag inicial e uma ordem inicial a partir dos itens que já tem.
   if (!G.backpack) G.backpack = 'bag';

@@ -11,7 +11,7 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=129';
-import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=166';
+import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=167';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=134';
 import { selectVocation } from './application/characterUseCases.js?v=129';
@@ -19,7 +19,7 @@ import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession, setFig
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=136';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=130';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=130';
-import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=126';
+import { claimBpReward, claimMissionReward, buyBpPremium } from './application/battlePassUseCases.js?v=127';
 import { buyShopItem } from './application/shopUseCases.js?v=133';
 import { buyBlessing } from './application/blessingUseCases.js?v=127';
 import { promoteVocation } from './application/promotionUseCases.js?v=125';
@@ -40,7 +40,7 @@ import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wi
 import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=133';
 import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPanel.js?v=127';
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=126';
-import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=126';
+import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=127';
 import { wireShopPanelEvents, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=134';
 import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=161';
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=130';
@@ -95,7 +95,7 @@ Object.assign(window, {
   startArenaBattle: handleArenaBattleClick,
   handleClaimArenaDivision,
   selectWorld,
-  claimBpReward, claimMissionReward,
+  claimBpReward, claimMissionReward, buyBpPremium,
   buyShopItem, confirmBuyShopItem, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing, promoteVocation, openAchievements, setPlayerTitle, openImbueModal, applyImbuementClick,
   setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell,
   registerPlayerName, refreshHighscoresClick, setHighscoresCategory,

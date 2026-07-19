@@ -1508,6 +1508,13 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .bp-reward.claimed { border-color: var(--green-badge); opacity: 0.6; }
 .bp-reward.available { border: 2px solid var(--gold); background: #fdf4d7; animation: bp-pulse 2s ease-in-out infinite; }
 @keyframes bp-pulse { 0%,100% { box-shadow: 0 0 6px #b8860b44; } 50% { box-shadow: 0 0 16px #b8860b88; } }
+/* Battle Pass — trilha premium */
+.bp-reward-col { display: flex; flex-direction: column; gap: 6px; }
+.bp-reward-premium { border-color: #b57edc; background: linear-gradient(180deg, #f3e8ff, #fbf5ff); }
+.bp-reward-premium.available { border: 2px solid #7b4bd5; }
+.bp-premium-off, .bp-premium-on { margin: 12px 0 4px; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bp-premium-off { background: rgba(123,75,213,.12); border: 1px solid #7b4bd5; color: #7b4bd5; }
+.bp-premium-on { background: rgba(240,193,75,.14); border: 1px solid #f0c14b; color: #b8860b; }
 .bp-reward-tier { font-size: 8.5px; color: var(--ink-faint); margin-bottom: 4px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
 .bp-reward-icon { font-size: 21px; filter: drop-shadow(0 1px 2px #00000033); }
 .bp-reward-name { font-size: 9.5px; margin-top: 4px; color: var(--ink-soft); line-height: 1.35; }

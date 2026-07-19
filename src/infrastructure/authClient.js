@@ -333,6 +333,17 @@ export function promoteOnServer(slot) {
   return huntFetch('/promote', { method: 'POST', body: { slot } });
 }
 
+// Battle Pass: resgate de recompensa validado no servidor (grant real de gold/
+// item/rubini + anti double-claim — ver /bp/claim). Retorna { ok, gold, rubini,
+// itemId }. `xp` é o bpXp local (só pra checar o tier alcançado).
+export function bpClaimOnServer(slot, tier, kind, xp) {
+  return huntFetch('/bp/claim', { method: 'POST', body: { slot, tier, kind, xp } });
+}
+// Comprar a trilha premium (paga em rubini — ver /bp/buy-premium).
+export function bpBuyPremiumOnServer(slot) {
+  return huntFetch('/bp/buy-premium', { method: 'POST', body: { slot } });
+}
+
 // Treino de dummy AUTORITATIVO (aba Training) — o servidor guarda o estado e
 // credita skill real em player_skills (ver server/src/index.js: /train/*).
 // `vocation` é reportado pelo cliente (não é progressão — usado só pra fórmula

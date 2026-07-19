@@ -97,6 +97,8 @@ export function createDefaultState() {
     bpMissionDate: null,
     bpMissionProgress: { kills: 0, gold: 0, tasks: 0, arenaWins: 0 },
     bpMissionClaimed: [],
+    bpPremium: false,        // trilha premium do Battle Pass comprada (ver progression: BP_PREMIUM_*)
+    bpClaimedPremium: [],    // tiers da trilha premium já resgatados
     totalKills: 0,
     totalGoldEarned: 0,
     killCounters: {},

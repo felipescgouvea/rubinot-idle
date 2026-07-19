@@ -47,6 +47,7 @@ import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp } from '../../src/domain/progression.js?v=128';
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
@@ -486,6 +487,58 @@ const server = http.createServer(async (req, res) => {
       if (gold < PROMOTION.cost) return send(res, 400, { error: 'gold insuficiente' });
       await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - PROMOTION.cost, promoted: true, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, gold: gold - PROMOTION.cost, promoted: true });
+    }
+
+    // ---- Battle Pass: resgate de recompensa AUTORITATIVO ----
+    // Antes o claim só fazia G.gold+=/addItem no cliente e o reconcile revertia
+    // (gold/inventory são do servidor) — recompensa sumia. Agora o grant é aqui,
+    // e o servidor rastreia os tiers já resgatados (bp em player_stats) pra
+    // impedir resgate duplo. `xp` é reportado pelo cliente só pra checar o tier
+    // alcançado (bpXp é estado do save, baixo risco — mesma confiança de hoje).
+    if (url.pathname === '/bp/claim' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const tier = Math.floor(Number(body.tier));
+      const kind = body.kind === 'premium' ? 'premium' : 'free';
+      const rewards = kind === 'premium' ? BP_PREMIUM_REWARDS : BP_REWARDS;
+      const reward = rewards.find(r => r.tier === tier);
+      if (!reward) return send(res, 400, { error: 'recompensa inválida' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const bp = (stats && stats.bp) || { claimedFree: [], claimedPremium: [], premium: false };
+      bp.claimedFree = bp.claimedFree || []; bp.claimedPremium = bp.claimedPremium || [];
+      const claimed = kind === 'premium' ? bp.claimedPremium : bp.claimedFree;
+      if (claimed.includes(tier)) return send(res, 400, { error: 'já resgatado' });
+      if (bpTierForXp(Math.max(0, Math.floor(Number(body.xp) || 0))) < tier) return send(res, 400, { error: 'tier não alcançado' });
+      if (kind === 'premium' && !bp.premium) return send(res, 400, { error: 'precisa da trilha premium' });
+      let gold = stats ? Number(stats.gold) : 0;
+      let rubini = stats ? Number(stats.rubini) || 0 : 0;
+      let grantedItem = null;
+      if (reward.type === 'gold') gold += reward.amount;
+      else if (reward.type === 'rubini') rubini += reward.amount;
+      else if (reward.type === 'item') { await incrementInventory(user.id, slot, reward.itemId, 1); grantedItem = reward.itemId; }
+      claimed.push(tier);
+      await upsertRow('player_stats', { user_id: user.id, slot, gold, rubini, bp, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, gold, rubini, itemId: grantedItem, tier, kind });
+    }
+
+    // Comprar a trilha PREMIUM do Battle Pass (paga em Rubini Coins).
+    if (url.pathname === '/bp/buy-premium' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const bp = (stats && stats.bp) || { claimedFree: [], claimedPremium: [], premium: false };
+      if (bp.premium) return send(res, 400, { error: 'você já tem a trilha premium' });
+      const rubini = stats ? Number(stats.rubini) || 0 : 0;
+      if (rubini < BP_PREMIUM_COST_RUBINI) return send(res, 400, { error: 'Rubini Coins insuficientes' });
+      bp.premium = true;
+      await upsertRow('player_stats', { user_id: user.id, slot, rubini: rubini - BP_PREMIUM_COST_RUBINI, bp, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, rubini: rubini - BP_PREMIUM_COST_RUBINI, premium: true });
     }
 
     // Aplicar um Imbuement num equipamento — valida gold + materiais no servidor
