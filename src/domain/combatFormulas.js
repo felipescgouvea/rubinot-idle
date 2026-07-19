@@ -190,25 +190,39 @@ export function computePlayerArmor(equipment, relics) {
   return armor;
 }
 
+// Estilo de luta (Fight Mode do Tibia/TFS). attackFactor DIVIDE o dano do
+// jogador (fator maior = menos dano); defenseFactor MULTIPLICA a defesa de
+// escudo (maior = mais bloqueio). Valores REAIS do TFS (Player::getAttackFactor
+// / getDefenseFactor). Só afeta dano FÍSICO e o auto-ataque de arma + o bloqueio
+// de escudo — magia e dano elemental NÃO mudam com o modo (fiel ao TFS).
+// fightMode omitido/desconhecido = 1.0/1.0 (comportamento antigo preservado).
+export const FIGHT_MODES = {
+  attack:   { attackFactor: 1.0, defenseFactor: 0.5 },  // Ofensivo: dano máx, defesa reduzida
+  balanced: { attackFactor: 1.2, defenseFactor: 0.75 }, // Equilibrado
+  defense:  { attackFactor: 2.0, defenseFactor: 1.0 },  // Defensivo: metade do dano, defesa cheia
+};
+function attackFactorOf(mode) { return (FIGHT_MODES[mode] && FIGHT_MODES[mode].attackFactor) || 1.0; }
+function defenseFactorOf(mode) { return (FIGHT_MODES[mode] && FIGHT_MODES[mode].defenseFactor) || 1.0; }
+
 // Player::getDefense (src/player.cpp), só a parte de ESCUDO (nossas armas não
-// têm defense): (shielding/4 + 2.23) * defEscudo * 0.15 * defenseFactor.
-// defenseFactor = 1.0 (sem modo de luta / sem exhaust no jogo). Sem escudo
-// equipado não há bloqueio de defesa (fist defense é desprezível).
-export function computePlayerDefense({ skills, equipment, relics }) {
+// têm defense): (shielding/4 + 2.23) * defEscudo * 0.15 * defenseFactor. Sem
+// escudo equipado não há bloqueio de defesa (fist defense é desprezível).
+export function computePlayerDefense({ skills, equipment, relics, fightMode }) {
   const shield = resolveEquippedItem(equipment.shield, relics);
   if (!shield || !shield.def) return 0;
   const shielding = (skills.shielding && skills.shielding.lv) || 0;
-  return Math.floor((shielding / 4 + 2.23) * shield.def * 0.15);
+  return Math.floor((shielding / 4 + 2.23) * shield.def * 0.15 * defenseFactorOf(fightMode));
 }
 
 // Golpe básico do jogador ANTES da redução do alvo, fiel ao TFS (WeaponMelee/
 // WeaponDistance/WeaponWand::getWeaponDamage). Retorna { damage, element,
 // physical }: `physical` diz se o alvo reduz por armadura (melee/distância) ou
 // não (wand elemental).
-export function rollPlayerAttack({ vocation, level, skills, equipment, relics }) {
+export function rollPlayerAttack({ vocation, level, skills, equipment, relics, fightMode }) {
   if (!vocation) return { damage: 0, element: 'physical', physical: true };
   const voc = VOC_TRAINING[vocation];
   const weapon = resolveEquippedItem(equipment.weapon, relics);
+  const af = attackFactorOf(fightMode); // estilo de luta (Ofensivo/Equilibrado/Defensivo)
 
   if (voc.attackSkill === 'magic') {
     // Wand/rod: dano FIXO em faixa (normal_random(minChange,maxChange)), sem
@@ -230,7 +244,7 @@ export function rollPlayerAttack({ vocation, level, skills, equipment, relics })
     const bowAtk = (weapon && weapon.weaponType === 'distance') ? ((weapon.atk || 0) + (weapon.distanceBonus || 0)) : 0;
     const attackValue = ammoAtk + bowAtk;
     const skill = (skills.distance && skills.distance.lv) || 0;
-    const max = getMaxWeaponDamage(level, skill, attackValue, 1);
+    const max = getMaxWeaponDamage(level, skill, attackValue, af);
     const min = Math.ceil(level * 0.2);
     return { damage: normalRandom(min, max), element: 'physical', physical: true };
   }

@@ -84,11 +84,11 @@ const TARGET = { 8: 'troll', 25: 'minotaur', 50: 'dragon', 75: 'hydra', 100: 'de
 const HEAL_POTION = lvl => lvl >= 130 ? 'ultimate_health_potion' : lvl >= 80 ? 'great_health_potion' : lvl >= 50 ? 'strong_health_potion' : 'health_potion';
 const MANA_POTION = lvl => lvl >= 80 ? 'great_mana_potion' : lvl >= 50 ? 'strong_mana_potion' : 'mana_potion';
 
-function simulate(voc, lvl, minutes) {
+function simulate(voc, lvl, minutes, mode = 'attack') {
   const equipment = gearTier(voc, lvl), skills = skillsFor(voc, lvl), relics = [];
   const maxHp = computeMaxHp({ vocation: voc, level: lvl, equipment, relics });
   const maxMana = computeMaxMana({ vocation: voc, level: lvl });
-  const armor = computePlayerArmor(equipment, relics), defense = computePlayerDefense({ skills, equipment, relics });
+  const armor = computePlayerArmor(equipment, relics), defense = computePlayerDefense({ skills, equipment, relics, fightMode: mode });
   const ml = skills.magic.lv, meleeSkillId = equippedWeaponSkillId(equipment, relics);
   const meleeSkill = (skills[meleeSkillId] || { lv: 10 }).lv;
   const weapon = ITEMS[equipment.weapon] || {}; const weaponAtk = weapon.atk || 7;
@@ -108,7 +108,7 @@ function simulate(voc, lvl, minutes) {
   for (let t = 0; t < ticks; t++) {
     const now = t * 2000;
     // (1) golpe básico
-    const ar = rollPlayerAttack({ vocation: voc, level: lvl, skills, equipment, relics });
+    const ar = rollPlayerAttack({ vocation: voc, level: lvl, skills, equipment, relics, fightMode: mode });
     let bd = ar.damage * elementMod(mon.defKey, ar.element);
     if (ar.physical) bd = reducePhysical(bd, mon.def, 0);
     bd = Math.max(1, Math.floor(bd)); mon.hp -= bd; state.dmgDealt += bd;
@@ -165,5 +165,17 @@ for (const voc of ['knight', 'paladin', 'sorcerer', 'druid']) {
       String(r.dps).padStart(5), String(r.dtps).padStart(7), String(r.killsH).padStart(8), String(r.xpH).padStart(9),
       String(r.deathsH).padStart(9), String(r.profitH).padStart(9), ' ', r.atkSpell + (r.manaOut ? ' ⚠️mana-out' : ''),
     );
+  }
+}
+
+// --- ESTILO DE LUTA (Fight Mode): tradeoff dano × sobrevivência (Knight, com
+// escudo, contra alvo físico onde a defesa pesa) ---
+console.log('\n\n=== ESTILO DE LUTA — Knight lvl 25 (minotaur, físico) e lvl 50 (dragon) ===');
+console.log('modo'.padEnd(12), 'lvl'.padEnd(4), 'DPS'.padStart(5), 'dano/s sofrido'.padStart(15), 'kills/h'.padStart(8), 'mortes/h'.padStart(9));
+for (const lvl of [25, 50]) {
+  for (const mode of ['attack', 'balanced', 'defense']) {
+    const r = simulate('knight', lvl, 30, mode);
+    const label = { attack: '⚔️ Ofensivo', balanced: '⚖️ Equilibrado', defense: '🛡️ Defensivo' }[mode];
+    console.log(label.padEnd(12), String(lvl).padEnd(4), String(r.dps).padStart(5), String(r.dtps).padStart(15), String(r.killsH).padStart(8), String(r.deathsH).padStart(9));
   }
 }

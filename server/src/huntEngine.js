@@ -66,7 +66,7 @@ function getPlayerArmor(session) {
   return computePlayerArmor(session.equipment, session.relics);
 }
 function getPlayerDefense(session) {
-  return computePlayerDefense({ skills: session.skills, equipment: session.equipment, relics: session.relics });
+  return computePlayerDefense({ skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
 }
 
 // Exportada (também usada por index.js: rotas do Market, pra decrementar/
@@ -247,7 +247,7 @@ async function resolveTick(session) {
   // distância), o monstro reduz pela sua armadura (monster.def) via
   // reducePhysical (Creature::blockHit). Wand é elemental: não reduz por
   // armadura, só pelo modificador elemental do alvo.
-  const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics });
+  const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
   let basicDmg = atkRoll.damage * elementMod(primary.defKey, atkRoll.element);
   if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
   primary.hp -= Math.max(1, Math.floor(basicDmg));
@@ -484,10 +484,11 @@ export function getLiveSession(sessionId) {
 // NENHUM efeito até parar e começar a caçar de novo (bug reportado pelo
 // Felipe: "rtc de cura nao esta funcionando"). Agora /hunt/rtc chama isto a
 // cada mudança na UI enquanto G.hunting.
-export function updateSessionRtc(sessionId, rtc) {
+export function updateSessionRtc(sessionId, rtc, fightMode) {
   const s = live.get(sessionId);
   if (!s) return false;
   s.rtc = rtc || {};
+  if (fightMode) s.fightMode = fightMode; // estilo de luta ao vivo (ver combatFormulas: FIGHT_MODES)
   return true;
 }
 

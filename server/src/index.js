@@ -224,7 +224,7 @@ const server = http.createServer(async (req, res) => {
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
         vocation: body.vocation, level, skills, equipment, relics,
         spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
-        rtc: body.rtc || {},
+        rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }
@@ -243,7 +243,7 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
-      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {});
+      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {}, body.fightMode);
       return send(res, 200, { ok: true, applied: !!liveSession });
     }
 
