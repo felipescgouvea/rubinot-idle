@@ -397,21 +397,14 @@ function applyServerPack(pack) {
   // casado), em vez de um timeout chutado sem relação causal com a animação
   // — isso fecha de vez a dessincronia (ver comentário em doCosmeticTick).
   // currentPack abaixo preserva o hp ANTIGO até o projétil chegar.
-  // #3 (sincronia magia↔HP): se uma magia/runa foi "castada" no tick local
-  // recente (ver doCosmeticTick: pendingSpellFx), o dano deste poll veio dela —
-  // então o EFEITO da magia é mostrado AGORA, junto da queda de HP real, e os
-  // projéteis do golpe básico NÃO saem (pra não aparecer flecha voando numa
-  // magia). Sem isso o efeito saía no relógio do tick local e o HP caía no
-  // relógio do poll — nunca casavam (bug: "magia dessincronizada com a vida do
-  // monstro").
-  const spellThisPoll = (pendingSpellFx && Date.now() - pendingSpellFx.at < 1600) ? pendingSpellFx : null;
-  pendingSpellFx = null;
-  let spellFxShown = false;
   pack.forEach(m => {
     const uid = String(m.uid);
     const prev = prevPackByUid.get(uid);
     if (prev && m.hp < prev.hp) {
       const dmg = prev.hp - m.hp;
+      const hitId = String(++hitSeq);
+      const voc = VOC_TRAINING[G.vocation];
+      const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
       const applyHit = () => {
         const vis = currentPack.find(cm => String(cm.uid) === uid);
         if (vis) { vis.hp = m.hp; vis._hitAt = Date.now(); }
@@ -419,29 +412,14 @@ function applyServerPack(pack) {
         emit(EVENTS.BATTLE_LIST);
         emit(EVENTS.MONSTER_DISPLAY, {});
       };
-      if (spellThisPoll) {
-        // dano de magia/runa: efeito sincronizado com a queda de HP (uma vez,
-        // no alvo da frente; os demais são o respingo de área, só o flash de HP).
-        if (!spellFxShown) {
-          spellFxShown = true;
-          const fxTarget = oldFrontUid || uid;
-          if (spellThisPoll.missile) emit(EVENTS.COMBAT_PROJECTILE, { missile: spellThisPoll.missile, targetUid: fxTarget });
-          else emit(EVENTS.COMBAT_FX, { effect: spellThisPoll.effect, shape: spellThisPoll.shape, targetUid: fxTarget });
-        }
-        applyHit();
+      if (missile) {
+        pendingHits.set(hitId, applyHit);
+        emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: uid, hitId });
+        // salvaguarda: se o evento de pouso nunca chegar (painel não montado
+        // ainda, aba trocada), não deixa o golpe pendente pra sempre.
+        setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, hitSyncFallbackMs());
       } else {
-        const hitId = String(++hitSeq);
-        const voc = VOC_TRAINING[G.vocation];
-        const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
-        if (missile) {
-          pendingHits.set(hitId, applyHit);
-          emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: uid, hitId });
-          // salvaguarda: se o pouso nunca chegar (painel não montado, aba
-          // trocada), não deixa o golpe pendente pra sempre.
-          setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, hitSyncFallbackMs());
-        } else {
-          applyHit();
-        }
+        applyHit();
       }
     }
   });
@@ -839,21 +817,20 @@ export function doCosmeticTick() {
       const areaId = rune.area || 'single';
       startAttackGroupCd();
       emit(EVENTS.LOG, { html: t('log.rtcRuneUsed', { name: rune.name }), cat: 'suprimento' });
-      // NÃO emite o efeito aqui — guarda pra applyServerPack disparar junto da
-      // queda de HP real (sincronia, ver pendingSpellFx).
-      pendingSpellFx = { effect: runeEffectName(pick.id), shape: areaId, missile: null, at: Date.now() };
+      emit(EVENTS.COMBAT_FX, { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid });
     } else if (pick && pick.kind === 'spell') {
       const atkSpellId = pick.id, atkSpell = pick.s;
       startSpellCd(atkSpellId, atkSpell.cd);
       startAttackGroupCd();
       emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
       const missile = spellMissileName(atkSpellId);
-      // Efeito guardado pra sair SINCRONIZADO com o dano real (ver
-      // pendingSpellFx em applyServerPack). Ethereal Spear = lança de verdade
-      // (missile); demais = efeito de área.
-      pendingSpellFx = missile
-        ? { missile, effect: null, shape: null, at: Date.now() }
-        : { missile: null, effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', at: Date.now() };
+      if (missile) {
+        // Ethereal Spear/Strong Ethereal Spear: joga uma lança de verdade
+        // (ver domain/combatFx.js: SPELL_MISSILE) em vez do efeito de área.
+        emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
+      } else {
+        emit(EVENTS.COMBAT_FX, { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid });
+      }
     }
   }
 
