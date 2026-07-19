@@ -100,6 +100,14 @@ export function markSpriteFailed(url) { failedSprites.add(url); }
 // conseguir registrar a falha antes de trocar pelo emoji.
 if (typeof window !== 'undefined') window.__markSpriteFailed = markSpriteFailed;
 
+// Runas iniciais de mago/paladino com nome INVENTADO (não existem no Tibia,
+// logo não têm sprite próprio em assets/sprites/items) — pré-marca como falho
+// pra o ícone ir direto pro emoji 📜, sem disparar um GET 404 no console a cada
+// personagem novo (bug reportado: "vários erros no dev console").
+['lightest_missile_rune', 'light_stone_shower_rune'].forEach(id => {
+  markSpriteFailed(spriteUrl(itemSpriteFile(id)));
+});
+
 // Monta o par <img onerror=fallback>/<span> comum a todo ícone de conteúdo do
 // jogo: se a URL já falhou antes nesta sessão, nem tenta de novo — vai direto
 // pro emoji. Senão, tenta a imagem real e registra a falha (pro futuro) se

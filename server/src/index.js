@@ -655,7 +655,11 @@ const server = http.createServer(async (req, res) => {
         await upsertRow('rubinot_idle_scores', row, 'user_id,slot');
       } catch (e) {
         if (/23505/.test(e.message) || /"name"/.test(e.message)) {
-          return send(res, 409, { error: 'nome já em uso' });
+          // 200 (não 409) de propósito: nome duplicado é um resultado esperado,
+          // não um erro de protocolo — evita o "POST 409 (Conflict)" vermelho
+          // no console do jogador. O cliente detecta ok:false + 'em uso' e
+          // mostra a notificação (ver application/highscoresUseCases.js).
+          return send(res, 200, { ok: false, error: 'nome já em uso' });
         }
         throw e;
       }
