@@ -12,7 +12,7 @@ import {
   spawnMonsterInstance, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
   rollPlayerAttack, rollMonsterMelee, rollMonsterSpell, reducePhysical, computePlayerArmor, computePlayerDefense,
-} from '../../src/domain/combatFormulas.js?v=157';
+} from '../../src/domain/combatFormulas.js?v=158';
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
 import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/character.js?v=156';

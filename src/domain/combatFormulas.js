@@ -56,39 +56,42 @@ export function computeMaxMana({ vocation, level }) {
 //    ao Tibia real — magic level NÃO escala o autoataque de wand, só as magias.
 // O "atk" de outros equipamentos NÃO entra aqui de propósito (no Tibia
 // elmo/armadura/anel não aumentam o ataque) — só a arma/munição/wand conta.
+// ATK exibido = dano MÁXIMO de arma do jogador, pela fórmula real do TFS
+// (getMaxWeaponDamage / rollPlayerAttack). É só o número do painel; o dano real
+// do combate é rolado com normal_random(0, este valor) no servidor.
 export function computeAtk({ vocation, level, skills, equipment, relics }) {
   if (!vocation) return 0;
   const voc = VOC_TRAINING[vocation];
   const weapon = resolveEquippedItem(equipment.weapon, relics);
 
   if (voc.attackSkill === 'magic') {
-    // Wand/rod no Tibia real tem dano FIXO do item — magic level não escala o
-    // autoataque (só escala as magias). Sem wand equipada, o mago não bate nada.
-    return (weapon && weapon.weaponType === 'magic' && weapon.wandDmg) || 0;
+    // Wand/rod tem dano fixo — exibe o TETO da faixa (≈ wandDmg +40%, ver rollPlayerAttack).
+    const wd = (weapon && weapon.weaponType === 'magic' && weapon.wandDmg) || 0;
+    return wd ? Math.round(wd * 1.4) : 0;
   }
 
   if (voc.attackSkill === 'distance') {
     const ammo = resolveEquippedItem(equipment.ammo, relics);
     const ammoAtk = (ammo && ammo.type === 'ammo' && ammo.atk) || 0;
-    const bowBonus = (weapon && weapon.weaponType === 'distance' && weapon.distanceBonus) || 0;
-    const dist = skills.distance.lv + bowBonus;
-    return Math.floor(0.085 * ammoAtk * dist + level / 5);
+    const bowAtk = (weapon && weapon.weaponType === 'distance') ? ((weapon.atk || 0) + (weapon.distanceBonus || 0)) : 0;
+    const skill = (skills.distance && skills.distance.lv) || 0;
+    return getMaxWeaponDamage(level, skill, ammoAtk + bowAtk, 1);
   }
 
   // Melee (knight): a arma REALMENTE equipada decide a skill e o ataque; sem
   // arma de corpo-a-corpo, é Fist com ataque base 7.
   const skillId = equippedWeaponSkillId(equipment, relics);
   const isMelee = weapon && (weapon.weaponType === 'sword' || weapon.weaponType === 'axe' || weapon.weaponType === 'club');
-  const weaponAtk = isMelee ? (weapon.atk || 0) : 7;
-  return Math.floor(0.085 * weaponAtk * skills[skillId].lv + level / 5);
+  const attackValue = isMelee ? (weapon.atk || 0) : 7;
+  const skill = (skills[skillId] && skills[skillId].lv) || 0;
+  return getMaxWeaponDamage(level, skill, attackValue, 1);
 }
 
-// Defesa: o bônus de Shielding só se aplica com um escudo equipado — sem escudo,
-// a skill não tem onde "encostar" (como no Tibia, ela melhora a defesa do escudo).
+// DEF exibido = armadura (peças de corpo, Player::getArmor) + defesa de escudo
+// (Player::getDefense) — as duas fontes que reduzem dano físico no combate real
+// (ver reducePhysical). Fiel ao TFS, substitui o antigo shielding*1.2 + soma de def.
 export function computeDef({ skills, equipment, relics }) {
-  const eq = computeEquipBonus(equipment, relics).def || 0;
-  const shieldBonus = equipment.shield ? Math.floor(skills.shielding.lv * 1.2) : 0;
-  return shieldBonus + eq;
+  return computePlayerArmor(equipment, relics) + computePlayerDefense({ skills, equipment, relics });
 }
 
 export function computeMagic({ skills }) {

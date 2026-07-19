@@ -6,7 +6,8 @@
 // versão anterior do jogo, e é o que este desenho corrige).
 import { G } from './gameStore.js?v=129';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
-import { getAtk, getDef, getMagic, getMaxHp } from './stats.js?v=126';
+import { getMagic, getMaxHp } from './stats.js?v=126';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=158';
 import { selectRequest } from '../infrastructure/supabaseClient.js?v=126';
 import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=128';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=126';
@@ -72,10 +73,19 @@ export async function startArenaBattle() {
     enemyLevel = G.level + Math.floor(Math.random() * 5) - 2;
     enemyPts = Math.max(0, G.arenaPoints + Math.floor(Math.random() * 30) - 15);
   }
-  // stats do oponente derivados do level dele (real ou NPC)
+  // Combate FIEL ao TFS (mesma maquinaria da caçada: rollPlayerAttack +
+  // reducePhysical). O oponente é um fantasma escalado pelo level dele — dano
+  // máximo, armadura e defesa derivam do que o JOGADOR tem, ajustados pelo
+  // levelRatio (um "espelho" de força equivalente ao nível do rival).
   const levelRatio = Math.max(0.5, Math.min(1.6, enemyLevel / Math.max(1, G.level)));
-  const enemyAtk = getAtk() * (0.75 + Math.random() * 0.3) * levelRatio;
+  const loadout = { vocation: G.vocation, level: G.level, skills: G.sk, equipment: G.equipment, relics: G.relics };
+  const pArmor = computePlayerArmor(G.equipment, G.relics);
+  const pDef = computePlayerDefense({ skills: G.sk, equipment: G.equipment, relics: G.relics });
+  const enemyMaxHit = Math.max(1, Math.round(computeAtk(loadout) * (0.8 + Math.random() * 0.3) * levelRatio));
+  const enemyArmor = Math.round(pArmor * levelRatio);
+  const enemyDef = Math.round(pDef * levelRatio);
   const enemyHp = getMaxHp() * (0.85 + Math.random() * 0.3) * levelRatio;
+  const isMage = G.vocation === 'sorcerer' || G.vocation === 'druid';
 
   const realTag = isReal ? ` <strong>(${t('arena.realPlayerTag')})</strong>` : '';
   const log = [`<span style="color:var(--arcane)">⚔️ ${t('arena.logVs', { enemy: enemyName })}${realTag}</span>`];
@@ -86,8 +96,14 @@ export async function startArenaBattle() {
     let playerHp = getMaxHp(), eHp = enemyHp;
     log.push(`<span style="color:var(--muted)">${t('arena.roundHeader', { round })}</span>`);
     for (let tick = 0; tick < 30; tick++) {
-      const pd = Math.max(1, Math.floor((getAtk() + getMagic()) * (0.8 + Math.random() * 0.4) - getDef() * 0.3));
-      const ed = Math.max(1, Math.floor(enemyAtk * (0.8 + Math.random() * 0.4) - getDef() * 0.5));
+      // jogador bate: golpe real de arma (+ magia elemental se mago); físico
+      // reduzido pela armadura/defesa do oponente, elemental (mago) passa direto.
+      const atkRoll = rollPlayerAttack(loadout);
+      let pRaw = atkRoll.damage;
+      if (isMage) pRaw += Math.floor(getMagic() * (2.5 + Math.random() * 2));
+      const pd = Math.max(1, Math.floor(atkRoll.physical ? reducePhysical(pRaw, enemyArmor, enemyDef) : pRaw));
+      // oponente bate: normal_random(0, maxHit) reduzido pela armadura+defesa do jogador.
+      const ed = Math.max(1, Math.floor(reducePhysical(normalRandom(0, enemyMaxHit), pArmor, pDef)));
       eHp -= pd; playerHp -= ed;
       if (eHp <= 0) { log.push(`<span class="log-heal">✅ ${t('arena.roundWon', { round })}</span>`); wins++; break; }
       if (playerHp <= 0) { log.push(`<span class="log-dmg">❌ ${t('arena.roundLost', { round })}</span>`); losses++; break; }
