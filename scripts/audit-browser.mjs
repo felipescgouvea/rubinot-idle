@@ -127,23 +127,25 @@ try {
 
   // --- Cenário 2b: Estilo de Luta (Fight Mode) — os 3 modos aplicam sem erro e
   // destacam o botão ativo na janela de batalha ---
-  const hasBtns = await page.evaluate(() => document.querySelectorAll('.fight-mode-btn').length === 3);
+  // NB: os botões de densidade reusam a classe .fight-mode-btn (só p/ estilo),
+  // então contar .fight-mode-btn solto dá 6 — escopa no #fight-mode-row.
+  const hasBtns = await page.evaluate(() => document.querySelectorAll('#fight-mode-row .fight-mode-btn').length === 3);
   if (!hasBtns) problems.push('FIGHTMODE: os 3 botões de estilo de luta não estão na janela de batalha');
   else for (const mode of ['defense', 'attack', 'balanced']) {
     await page.evaluate(m => window.setFightMode && window.setFightMode(m), mode);
     await page.waitForTimeout(1200);
-    const active = await page.evaluate(() => document.querySelector('.fight-mode-btn.active')?.dataset.mode);
+    const active = await page.evaluate(() => document.querySelector('#fight-mode-row .fight-mode-btn.active')?.dataset.mode);
     if (active !== mode) problems.push(`FIGHTMODE: '${mode}' não ficou ativo na UI (ativo=${active})`);
   }
   log('estilo de luta: botões + 3 modos testados');
 
   // --- Cenário 2c: Densidade da caçada — os 3 botões aplicam sem erro ---
-  const hasDensity = await page.evaluate(() => document.querySelectorAll('.density-btn').length === 3);
+  const hasDensity = await page.evaluate(() => document.querySelectorAll('#density-row .density-btn').length === 3);
   if (!hasDensity) problems.push('DENSITY: os 3 botões de densidade não estão na janela de batalha');
   else for (const mode of ['solo', 'pack', 'normal']) {
     await page.evaluate(m => window.setDensity && window.setDensity(m), mode);
     await page.waitForTimeout(1200);
-    const active = await page.evaluate(() => document.querySelector('.density-btn.active')?.dataset.mode);
+    const active = await page.evaluate(() => document.querySelector('#density-row .density-btn.active')?.dataset.mode);
     if (active !== mode) problems.push(`DENSITY: '${mode}' não ficou ativo na UI (ativo=${active})`);
   }
   log('densidade: botões + 3 modos testados');
