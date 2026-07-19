@@ -22,7 +22,7 @@ import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=126';
 import { buyShopItem } from './application/shopUseCases.js?v=133';
 import { buyBlessing } from './application/blessingUseCases.js?v=127';
-import { setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold } from './application/rtcUseCases.js?v=160';
+import { setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold } from './application/rtcUseCases.js?v=161';
 import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=129';
 import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=127';
 import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=126';
@@ -41,7 +41,7 @@ import { handleArenaBattleClick, handleClaimArenaDivision } from './ui/arenaPane
 import { wireWorldsPanelEvents } from './ui/worldsPanel.js?v=126';
 import { wireBattlePassPanelEvents } from './ui/battlePassPanel.js?v=126';
 import { wireShopPanelEvents, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, confirmBuyShopItem } from './ui/shopPanel.js?v=134';
-import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=160';
+import { wireRtcPanelEvents, setRtcSubTab, handleRtcPotionDrop, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell } from './ui/rtcPanel.js?v=161';
 import { refreshHighscoresClick, wireHighscoresPanelEvents, setHighscoresCategory } from './ui/highscoresPanel.js?v=130';
 import { handleMarketRegisterClick, wireMarketPanelEvents } from './ui/marketPanel.js?v=128';
 import { openOutfitPicker, setActiveColorChannel, wireOutfitPickerEvents } from './ui/outfitPicker.js?v=126';
@@ -58,7 +58,7 @@ import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, ren
 import { openSettingsPanel } from './ui/settingsPanel.js?v=129';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance, initGameConfig } from './application/adminUseCases.js?v=130';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=134';
-import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=136';
+import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=137';
 
 // ---- liga application -> ui via barramento de eventos (ver src/shared/eventBus.js) ----
 wireSharedEvents();

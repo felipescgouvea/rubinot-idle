@@ -5,7 +5,7 @@
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
 import { G } from '../application/gameStore.js?v=129';
-import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=126';
+import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=127';
 import { ITEMS, potionReqLabel } from '../domain/items.js?v=140';
 import { VOCATIONS } from '../domain/character.js?v=156';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
@@ -13,7 +13,7 @@ import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAtta
 import { getMagic } from '../application/stats.js?v=126';
 import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=125';
 import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=125';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=160';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=161';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=132';
 import { t } from '../i18n/i18n.js?v=143';

@@ -20,7 +20,7 @@ import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/charact
 import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=139';
 import { SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=126';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=127';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../../src/domain/rtcConfig.js?v=159';
 import { elementMod } from '../../src/domain/elements.js?v=125';
 import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/blessings.js?v=125';
@@ -77,6 +77,20 @@ function getPlayerAbsorb(session) {
   return computePlayerAbsorb(session.equipment, session.relics);
 }
 
+// Resolve a magia de cura EFETIVA do RTC. Usa a escolhida pelo jogador, mas se
+// ela não está disponível pro nível atual, CAI no default apropriado pro nível
+// (defaultHealSpellId já é level-aware: Bruise Bane/Magic Patch < 8, exura/
+// exura_ico >= 8). Sem esse fallback, um save gravado por um cliente stale (que
+// tinha o defaultHealSpellId antigo, sempre 'exura' de nível 8) deixava um char
+// de Dawnport (nível 1-7) com healSpell='exura' INDISPONÍVEL → não curava nunca
+// (bug reportado pelo Felipe: "magias de cura de Dawnport não curam"). O servidor
+// é autoritativo na cura, então corrigir aqui conserta independente do cliente.
+function resolveHealSpell(healSpellId, vocation, level) {
+  let id = healSpellId || defaultHealSpellId(vocation, level);
+  if (!isSpellAvailable(id, vocation, level)) id = defaultHealSpellId(vocation, level);
+  return { id, spell: isSpellAvailable(id, vocation, level) ? SPELLS[id] : null };
+}
+
 // Exportada (também usada por index.js: rotas do Market, pra decrementar/
 // devolver item ao inventário do vendedor/comprador) — mesmo padrão de
 // read-then-write já usado por toda mutação de player_inventory neste
@@ -107,8 +121,7 @@ function trainSkill(session, skillId, amount, cfg) {
 // src/application/huntUseCases.js, mas só o essencial (sem log/eventos).
 async function applyRtcHealing(session, cfg) {
   const rtc = session.rtc || {};
-  const healSpellId = rtc.healSpell || defaultHealSpellId(session.vocation, session.level);
-  const healSpell = isSpellAvailable(healSpellId, session.vocation, session.level) ? SPELLS[healSpellId] : null;
+  const { id: healSpellId, spell: healSpell } = resolveHealSpell(rtc.healSpell, session.vocation, session.level);
   const hpPct = (session.hp / session.maxHp) * 100;
   if (healSpell && session.hp > 0 && hpPct < (rtc.healSpellThreshold || 0) && session.mana >= healSpell.mana && isSpellReady(session, healSpellId)) {
     const heal = Math.min(session.maxHp - session.hp, spellHealAmount({ spell: healSpell, level: session.level, magicLevel: (session.skills.magic && session.skills.magic.lv) || 0 }));
@@ -267,8 +280,7 @@ async function resolveTick(session) {
   // (2) magia/runa por prioridade (RTC), com respingo de área real
   const rtc = session.rtc || {};
   const magic = (session.skills.magic && session.skills.magic.lv) || 0;
-  const healSpellIdForReserve = rtc.healSpell || defaultHealSpellId(session.vocation, session.level);
-  const healSpellForReserve = isSpellAvailable(healSpellIdForReserve, session.vocation, session.level) ? SPELLS[healSpellIdForReserve] : null;
+  const { spell: healSpellForReserve } = resolveHealSpell(rtc.healSpell, session.vocation, session.level);
   const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
 
   if (isAttackGroupReady(session) && primary.hp > 0) {
@@ -584,8 +596,7 @@ export async function idleRtcHealStandalone(userId, slot, rtc) {
   let usedSpell = false, usedPotionHeal = false, usedPotionMana = false;
 
   const r = rtc || {};
-  const healSpellId = r.healSpell || defaultHealSpellId(vocation, stats.level);
-  const healSpell = isSpellAvailable(healSpellId, vocation, stats.level) ? SPELLS[healSpellId] : null;
+  const { spell: healSpell } = resolveHealSpell(r.healSpell, vocation, stats.level);
   const hpPct = (hp / maxHp) * 100;
   if (healSpell && hp > 0 && hpPct < (r.healSpellThreshold || 0) && mana >= healSpell.mana) {
     const skillsRow = await selectOne('player_skills', { user_id: userId, slot });

@@ -3,7 +3,7 @@
 // sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
 // limiar de % de HP) — a UI mora em rtcPanel.js.
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { isSpellAvailable } from '../domain/spells.js?v=126';
+import { isSpellAvailable } from '../domain/spells.js?v=127';
 import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=159';
 import { getMagic } from './stats.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
