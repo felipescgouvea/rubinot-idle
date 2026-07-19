@@ -295,6 +295,19 @@ const server = http.createServer(async (req, res) => {
           stats.mana = Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin);
         }
       }
+      // Com sessão VIVA, o hp/mana autoritativos são os DELA (tempo real, todo
+      // tick), não os de player_stats — que só é flushado a cada 5s (ver
+      // flushTimer em huntEngine.js). Sem isto, ao dar play o /hunt/state
+      // devolve o hp/mana VELHO flushado (ex.: o valor de antes de descansar até
+      // encher) e o cliente reconcilia pra ele: o idle mostra 135/135 mas a
+      // batalha COMEÇA mostrando 41/10, corrigindo só no flush seguinte (~5s).
+      // Bug de dessincronia pego pelo auditor de vitais: "os números não fazem
+      // sentido ao entrar na batalha". O pack de monstros já vinha da sessão
+      // viva (abaixo) — o hp/mana do jogador tinham ficado de fora.
+      if (liveSession && stats) {
+        stats.hp = liveSession.hp;
+        stats.mana = liveSession.mana;
+      }
       return send(res, 200, {
         ok: true,
         hunting: !!activeRow,
