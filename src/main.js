@@ -11,7 +11,7 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=129';
-import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=162';
+import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=163';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=134';
 import { selectVocation } from './application/characterUseCases.js?v=128';

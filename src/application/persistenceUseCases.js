@@ -154,10 +154,21 @@ export function loadGame() {
   delete G.rtc.attackType;
   delete G.rtc.attackRune;
   if (G.rtc.healSpell && !isSpellAvailable(G.rtc.healSpell, G.vocation, G.level)) G.rtc.healSpell = null;
-  // Clamp hp/mana to max on load
+  // hp/mana no boot. Desde o Marco 5/6b, HP/mana são AUTORITATIVOS do servidor
+  // (reconcileWithServer no boot corrige pro valor real em segundos). O save
+  // local nem sempre traz hp/mana (viraram estado do servidor), então um char
+  // COM vocação pode carregar com o default 0 do createDefaultState — e o painel
+  // renderiza ANTES do reconcile responder (ver main.js: renderCharPanel antes
+  // do await checkAndResumeHuntSession), mostrando "0/130 · 0/380" por ~alguns
+  // segundos a cada login (parece morto/quebrado — "os números não fazem sentido
+  // antes de entrar na batalha"). Regra: valor salvo VÁLIDO (>0) é preservado e
+  // só é clampado ao teto; hp/mana ausentes/0 (desconhecidos) assumem CHEIO —
+  // um char em descanso não aparece morto — e o servidor sobrescreve com a
+  // verdade logo em seguida (inclusive uma morte real, que ele revive com %).
   if (G.vocation) {
-    G.hp = Math.min(G.hp, getMaxHp());
-    G.mana = Math.min(G.mana, getMaxMana());
+    const maxHp = getMaxHp(), maxMana = getMaxMana();
+    G.hp = G.hp > 0 ? Math.min(G.hp, maxHp) : maxHp;
+    G.mana = G.mana > 0 ? Math.min(G.mana, maxMana) : maxMana;
   }
 }
 
