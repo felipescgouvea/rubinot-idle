@@ -1,1 +1,5 @@
 node_modules/
+
+# Conta de teste do auditor de browser — credenciais NUNCA vão pro git
+# (repo é público / serve o GitHub Pages). Ver scripts/audit-browser.
+.test-account.json

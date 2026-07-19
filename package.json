@@ -7,6 +7,12 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node server/src/index.js"
+    "start": "node server/src/index.js",
+    "audit:static": "node scripts/audit-static.mjs",
+    "audit:browser": "node scripts/audit-browser.mjs",
+    "audit": "npm run audit:static && npm run audit:browser"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
   }
 }
