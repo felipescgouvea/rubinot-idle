@@ -38,7 +38,8 @@
 import http from 'node:http';
 import { ZONES } from '../../src/domain/bestiary.js?v=147';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=158';
-import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
+import { TIBIA_SKILLS, applySkillGain } from '../../src/domain/character.js?v=157';
+import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, triesForTraining } from '../../src/domain/training.js?v=127';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=139';
@@ -68,6 +69,28 @@ function defaultSkills() {
   const out = {};
   Object.entries(TIBIA_SKILLS).forEach(([id, s]) => { out[id] = { lv: s.base, tries: 0 }; });
   return out;
+}
+
+// Credita o treino de dummy acumulado desde training_since em player_skills —
+// AUTORITATIVO, igual a caçada credita skill (huntEngine.trainSkill). Antes o
+// treino da aba Training só mexia em G.sk no cliente e o reconcile do servidor
+// (G.sk = res.skills) o apagava na caçada seguinte (bug: "treino offline some").
+// Online tem cap curto (o cliente credita a cada tick com a aba aberta); offline
+// credita o tempo de aba fechada até TRAINING_MAX_OFFLINE_SEC. NÃO mexe em
+// training_since (o endpoint decide reancorar ou limpar).
+async function creditTraining(userId, slot, stats, vocation) {
+  const skillId = stats.training_skill;
+  if (!skillId || !TRAINABLE_SKILLS.includes(skillId) || !stats.training_since || !vocation) return { skills: null, tries: 0 };
+  const mode = stats.training_mode === 'online' ? 'online' : 'offline';
+  let elapsed = Math.max(0, (Date.now() - new Date(stats.training_since).getTime()) / 1000);
+  elapsed = Math.min(elapsed, mode === 'online' ? 5 * 60 : TRAINING_MAX_OFFLINE_SEC);
+  const tries = triesForTraining(skillId, elapsed, mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1);
+  const skillsRow = await selectOne('player_skills', { user_id: userId, slot });
+  const skills = (skillsRow && skillsRow.skills) || defaultSkills();
+  if (tries <= 0) return { skills, tries: 0 };
+  const { sk } = applySkillGain(skills, skillId, tries, vocation);
+  await upsertRow('player_skills', { user_id: userId, slot, skills: sk, updated_at: new Date().toISOString() }, 'user_id,slot');
+  return { skills: sk, tries };
 }
 
 async function verifySupabaseToken(token) {
@@ -445,6 +468,57 @@ const server = http.createServer(async (req, res) => {
       if (gold < PROMOTION.cost) return send(res, 400, { error: 'gold insuficiente' });
       await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - PROMOTION.cost, promoted: true, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, gold: gold - PROMOTION.cost, promoted: true });
+    }
+
+    // ---- Treino de dummy AUTORITATIVO (aba Training) ----
+    // O servidor passa a ser dono do treino (como já é da caçada): guarda
+    // skill/início/modo em player_stats e credita skill real em player_skills.
+    // Sem isso, o treino só existia no G.sk do cliente e era apagado pelo
+    // reconcile (ver creditTraining acima). `vocation` vem do cliente (não é
+    // progressão — mesma exceção de baixo risco do /hunt/start).
+    if (url.pathname === '/train/start' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      if (!TRAINABLE_SKILLS.includes(body.skillId)) return send(res, 400, { error: 'skill inválida' });
+      const mode = body.mode === 'online' ? 'online' : 'offline';
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      // Trocar de treino sem perder o que já acumulou: credita o anterior antes.
+      let skills = null;
+      if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation); skills = r.skills; }
+      await upsertRow('player_stats', { user_id: user.id, slot, training_skill: body.skillId, training_since: new Date().toISOString(), training_mode: mode, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, skills });
+    }
+
+    // Credita o acumulado e REANCORA (segue treinando) — chamado pelo tick do
+    // cliente (online) e na retomada offline no boot.
+    if (url.pathname === '/train/credit' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      if (!stats || !stats.training_skill) return send(res, 200, { ok: true, active: false });
+      const { skills, tries } = await creditTraining(user.id, slot, stats, body.vocation);
+      await upsertRow('player_stats', { user_id: user.id, slot, training_since: new Date().toISOString(), updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, active: true, skills, tries, skill: stats.training_skill, mode: stats.training_mode });
+    }
+
+    // Credita o acumulado e ENCERRA o treino (limpa o estado).
+    if (url.pathname === '/train/stop' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      let skills = null, tries = 0;
+      if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation); skills = r.skills; tries = r.tries; }
+      await upsertRow('player_stats', { user_id: user.id, slot, training_skill: null, training_since: null, training_mode: null, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, skills, tries });
     }
 
     // Uso manual de item (poção/runa) clicado na Bag — ação VALIDADA: confere
