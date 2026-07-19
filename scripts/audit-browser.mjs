@@ -70,6 +70,26 @@ try {
       .observe(stage, { childList: true, subtree: true });
   });
 
+  // diagnóstico: o char DEVERIA carregar do cloud save no boot (main.js). Se a
+  // tela de criação aparece com char salvo no banco, é bug de load.
+  const boot = await page.evaluate(() => {
+    let ls = null;
+    try { const raw = localStorage.getItem('rubinot_idle_v1'); const p = raw && JSON.parse(raw); ls = p ? { hasSlots: !!p.slots, voc0: p.slots ? (p.slots[0] && p.slots[0].vocation) : (p.vocation || null) } : 'vazio'; } catch (e) { ls = 'erro:' + e.message; }
+    return {
+      nameInputVisible: !!(document.getElementById('char-name-input')?.offsetParent),
+      charInfoVisible: !!(document.getElementById('char-info')?.offsetParent),
+      localStorageSave: ls,
+    };
+  });
+  log('estado pós-boot:', JSON.stringify(boot));
+  // teste: se o localStorage TEM o char mas a UI mostra criação, recarrega e vê
+  // se aparece — discrimina bug do 1º login (ordem) vs load quebrado de vez.
+  if (boot.nameInputVisible && boot.localStorageSave && boot.localStorageSave.voc0) {
+    problems.push('LOAD: char não carrega no 1º login — localStorage tem o char mas a UI mostra "criar personagem" (jogador em dispositivo novo acha que perdeu o char); só reload resolve');
+    log('DIVERGE: localStorage tem char mas UI mostra criação — recarregando pra prosseguir o resto do teste...');
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(7000);
+  }
   const needChar = await page.isVisible('#char-name-input').catch(() => false);
   if (needChar) {
     await page.fill('#char-name-input', 'ClaudeAuditBot');
@@ -146,7 +166,11 @@ try {
 } finally {
   tearingDown = true;
   try { await page.evaluate(() => { if (window.__hunting !== false) window.toggleHunt && window.toggleHunt(); }); } catch {}
-  await page.waitForTimeout(2500).catch(() => {});
+  // dispara o flush do cloud save (o jogo faz isso no pagehide, ver main.js) pra
+  // o personagem/progresso persistir de verdade — senão o char some entre
+  // rodadas (o save é debounced 8s e browser.close() não dispara o pagehide).
+  try { await page.evaluate(() => window.dispatchEvent(new Event('pagehide'))); } catch {}
+  await page.waitForTimeout(4000).catch(() => {});
   await browser.close();
 }
 

@@ -23,7 +23,14 @@ import { STAMINA_MAX } from '../domain/stamina.js?v=125';
 // sem conta importa o progresso ao criar a 1ª conta. Chamada só pelo main.js,
 // logo após o login e antes de loadGame().
 export function applyCloudSave(cloudData) {
-  if (cloudData) saveState(cloudData);
+  // Grava no localStorage E APLICA ao estado vivo (loadGame) na hora. Só
+  // saveState() não bastava: no 1º login (dispositivo novo, sem localStorage
+  // prévio) o char do cloud ia pro localStorage mas o G continuava default até
+  // um reload — o jogador via a tela de "criar personagem" mesmo já tendo
+  // personagem (bug pego pelo auditor de browser: localStorage tinha o char mas
+  // a UI mostrava criação; reload resolvia). loadGame() aqui garante que o G
+  // reflita o save da nuvem imediatamente.
+  if (cloudData) { saveState(cloudData); loadGame(); }
 }
 
 // Normaliza o que veio do storage (local ou nuvem) pro formato de CONTA
