@@ -46,6 +46,7 @@ import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
+import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
@@ -711,14 +712,27 @@ const server = http.createServer(async (req, res) => {
       const slot = validSlot(Number(url.searchParams.get('slot')));
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const rows = await selectManyOrdered('market_listings', { status: 'active' }, { order: 'created_at.desc', limit: 100 });
+      // Expiração preguiçosa: fecha as ofertas vencidas e DEVOLVE o item ao
+      // vendedor (o item ficava em escrow desde o /list). Fiel ao Tibia, onde
+      // ofertas de mercado expiram após alguns dias.
+      const now = Date.now();
+      const active = [];
+      for (const r of rows) {
+        if (r.expires_at && new Date(r.expires_at).getTime() < now) {
+          await updateRows('market_listings', { id: r.id }, { status: 'expired', closed_at: new Date().toISOString() });
+          await incrementInventory(r.seller_user_id, r.seller_slot, r.item_id, Number(r.qty));
+        } else active.push(r);
+      }
       return send(res, 200, {
         ok: true,
-        listings: rows.map(r => ({
+        feePct: MARKET_FEE_PCT,
+        listings: active.map(r => ({
           id: r.id,
           sellerName: r.seller_name,
           itemId: r.item_id,
           qty: Number(r.qty),
           pricePerUnit: Number(r.price_per_unit),
+          expiresAt: r.expires_at,
           mine: r.seller_user_id === user.id && r.seller_slot === slot,
         })),
       });
@@ -740,9 +754,10 @@ const server = http.createServer(async (req, res) => {
       if (owned < qty) return send(res, 400, { error: 'você não tem essa quantidade do item' });
       await incrementInventory(user.id, slot, itemId, -qty);
       const sellerName = String(body.sellerName || '').slice(0, 20) || 'Jogador';
+      const expiresAt = new Date(Date.now() + MARKET_LISTING_DAYS * 86400 * 1000).toISOString();
       const inserted = await insertRow('market_listings', {
         seller_user_id: user.id, seller_slot: slot, seller_name: sellerName,
-        item_id: itemId, qty, price_per_unit: price, status: 'active',
+        item_id: itemId, qty, price_per_unit: price, status: 'active', expires_at: expiresAt,
       });
       return send(res, 200, { ok: true, listingId: inserted.id });
     }
@@ -781,19 +796,38 @@ const server = http.createServer(async (req, res) => {
       const buyerBalance = buyerWallet ? Number(buyerWallet.balance) : 0;
       if (buyerBalance < total) return send(res, 400, { error: 'saldo insuficiente na carteira' });
 
+      // Taxa da casa: o vendedor recebe o total MENOS a taxa (sink de gold,
+      // segura a inflação — fiel ao mercado do Tibia). O comprador paga o total.
+      const proceeds = sellerProceeds(total);
       const sellerWallet = await selectOne('market_wallet', { user_id: listing.seller_user_id, slot: listing.seller_slot });
-      const sellerBalance = (sellerWallet ? Number(sellerWallet.balance) : 0) + total;
+      const sellerBalance = (sellerWallet ? Number(sellerWallet.balance) : 0) + proceeds;
 
       await upsertRow('market_wallet', { user_id: user.id, slot, balance: buyerBalance - total, updated_at: new Date().toISOString() }, 'user_id,slot');
       await upsertRow('market_wallet', { user_id: listing.seller_user_id, slot: listing.seller_slot, balance: sellerBalance, updated_at: new Date().toISOString() }, 'user_id,slot');
       await incrementInventory(user.id, slot, listing.item_id, qtyToBuy);
+      // Histórico de preço (market_transactions) — alimenta o /market/stats.
+      await insertRow('market_transactions', { item_id: listing.item_id, price_per_unit: Number(listing.price_per_unit), qty: qtyToBuy });
       const remaining = available - qtyToBuy;
       if (remaining <= 0) {
         await updateRows('market_listings', { id: listingId }, { status: 'closed', closed_at: new Date().toISOString(), qty: 0 });
       } else {
         await updateRows('market_listings', { id: listingId }, { qty: remaining });
       }
-      return send(res, 200, { ok: true, itemId: listing.item_id, qty: qtyToBuy, balance: buyerBalance - total });
+      return send(res, 200, { ok: true, itemId: listing.item_id, qty: qtyToBuy, balance: buyerBalance - total, fee: marketFee(total) });
+    }
+
+    // Estatística de preço de um item (últimas vendas reais) — alimenta a
+    // decisão de preço no anúncio, como a aba de estatísticas do Market do Tibia.
+    if (url.pathname === '/market/stats' && req.method === 'GET') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const itemId = url.searchParams.get('itemId');
+      if (!itemId || !ITEMS[itemId]) return send(res, 400, { error: 'itemId inválido' });
+      const rows = await selectManyOrdered('market_transactions', { item_id: itemId }, { order: 'sold_at.desc', limit: 50 });
+      if (!rows.length) return send(res, 200, { ok: true, itemId, count: 0 });
+      const prices = rows.map(r => Number(r.price_per_unit));
+      const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+      return send(res, 200, { ok: true, itemId, count: prices.length, last: prices[0], avg, min: Math.min(...prices), max: Math.max(...prices) });
     }
 
     // ---- Highscores globais ----

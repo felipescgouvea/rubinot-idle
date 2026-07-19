@@ -425,6 +425,11 @@ export function buyListingOnServerMarket(slot, listingId, qty) {
   return huntFetch('/market/buy', { method: 'POST', body: { slot, listingId, qty } });
 }
 
+// Estatística de preço de um item (últimas vendas reais) — ver /market/stats.
+export function fetchMarketStatsOnServer(slot, itemId) {
+  return huntFetch(`/market/stats?slot=${slot}&itemId=${encodeURIComponent(itemId)}`);
+}
+
 // ---- Highscores globais (ver server/src/index.js) ----
 // payload: { slot, playerName, arenaPoints, tasksDone, world, bestiaryCount }
 // — level/xp/kills/skills o servidor já lê sozinho de player_stats/player_skills.

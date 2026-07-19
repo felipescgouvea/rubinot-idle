@@ -3,7 +3,7 @@ import { ITEMS } from '../domain/items.js?v=140';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=132';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=129';
-import { fetchMyMarketWallet, fetchMarketListings } from '../application/marketUseCases.js?v=127';
+import { fetchMyMarketWallet, fetchMarketListings, fetchMarketStats } from '../application/marketUseCases.js?v=128';
 import { isMarketEnabled } from '../application/adminUseCases.js?v=130';
 import { t } from '../i18n/i18n.js?v=143';
 
@@ -32,7 +32,9 @@ export async function renderMarketPanel() {
 
   el.innerHTML = `<p class="muted">${t('market.loading')}</p>`;
 
-  const [wallet, listings] = await Promise.all([fetchMyMarketWallet(), fetchMarketListings()]);
+  const [wallet, market] = await Promise.all([fetchMyMarketWallet(), fetchMarketListings()]);
+  const feePct = (market && market.feePct != null) ? market.feePct : 5;
+  const listings = market ? market.listings : null;
   const ownedItems = Object.entries(G.inventory).filter(([id, qty]) => qty > 0 && ITEMS[id]);
 
   el.innerHTML = `
@@ -49,13 +51,14 @@ export async function renderMarketPanel() {
 
     <h4 style="margin:12px 14px 8px">📤 ${t('market.listItem')}</h4>
     <div style="display:flex; gap:8px; margin:0 14px 14px; flex-wrap:wrap; align-items:center">
-      <select id="mk-sell-item" style="flex:2; min-width:160px">
+      <select id="mk-sell-item" style="flex:2; min-width:160px" onchange="showMarketStats(this.value)">
         ${ownedItems.length ? ownedItems.map(([id, qty]) => `<option value="${id}">${ITEMS[id].icon} ${ITEMS[id].name} ${t('market.haveQty', { qty })}</option>`).join('') : `<option value="">${t('market.noItemsInInventory')}</option>`}
       </select>
       <input id="mk-sell-qty" type="number" min="1" value="1" placeholder="${t('market.qtyPlaceholder')}" style="width:70px" />
       <input id="mk-sell-price" type="number" min="1" placeholder="${t('market.pricePerUnitPlaceholder')}" style="width:130px" />
       <button class="skill-upgrade-btn" style="width:auto;padding:8px 16px" onclick="listItemOnMarket(document.getElementById('mk-sell-item').value, document.getElementById('mk-sell-qty').value, document.getElementById('mk-sell-price').value)">${t('market.list')}</button>
     </div>
+    <div style="margin:-6px 14px 14px; font-size:11.5px; color:#8a92b8">🏛️ ${feePct}% taxa da casa na venda · ⏳ anúncio expira em 7 dias · <span id="mk-sell-stats"></span></div>
 
     <h4 style="margin:12px 14px 8px">📦 ${t('market.myListings')}</h4>
     <div id="mk-my-listings" style="margin:0 14px 14px"></div>
@@ -95,12 +98,30 @@ export async function renderMarketPanel() {
             <td>${l.qty}</td>
             <td>${formatNum(l.pricePerUnit)} ${goldIconImg('inline-icon')}</td>
             <td>${formatNum(l.pricePerUnit * l.qty)} ${goldIconImg('inline-icon')}</td>
-            <td>${escapeHtml(l.sellerName)}</td>
+            <td>${escapeHtml(l.sellerName)} <span class="muted" style="font-size:10px">${daysLeft(l.expiresAt)}</span></td>
             <td><button class="btn-blue" onclick="buyMarketListing('${l.id}', ${l.qty})">${t('market.buyAll')}</button></td>
           </tr>`;
         }).join('')}
       </tbody>
     </table>` : `<p class="muted">${t('market.noOtherListings')}</p>`;
+}
+
+// Dias restantes até expirar (pra a coluna ⏳ da tabela de compra).
+function daysLeft(expiresAt) {
+  if (!expiresAt) return '';
+  const d = Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 86400000);
+  return d > 0 ? `⏳ ${d}d` : '';
+}
+
+// Busca e exibe a estatística de preço do item selecionado no form de venda
+// (últimas vendas reais) — ajuda a precificar. Emoji+número, sem i18n.
+export async function showMarketStats(itemId) {
+  const el = document.getElementById('mk-sell-stats');
+  if (!el || !itemId) return;
+  el.textContent = '📊 …';
+  const s = await fetchMarketStats(itemId);
+  if (!s || !s.count) { el.textContent = '📊 sem vendas registradas'; return; }
+  el.innerHTML = `📊 últ ${formatNum(s.last)} · méd ${formatNum(s.avg)} · min ${formatNum(s.min)} · máx ${formatNum(s.max)} (${s.count})`;
 }
 
 export async function handleMarketRegisterClick(name) {

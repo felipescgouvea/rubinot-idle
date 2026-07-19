@@ -10,7 +10,7 @@ import { t } from '../i18n/i18n.js?v=143';
 import {
   fetchMarketWallet, depositToMarketOnServer, withdrawFromMarketOnServer,
   fetchMarketListingsOnServer, listItemOnServerMarket, cancelListingOnServerMarket,
-  buyListingOnServerMarket,
+  buyListingOnServerMarket, fetchMarketStatsOnServer,
 } from '../infrastructure/authClient.js';
 import { saveGame } from './saveGameUseCase.js?v=129';
 
@@ -19,11 +19,17 @@ export async function fetchMyMarketWallet() {
   return result.ok ? result.balance : null;
 }
 
-// Retorna a lista já com `mine` calculado pelo servidor (campos: id,
-// sellerName, itemId, qty, pricePerUnit, mine).
+// Retorna { listings: [...], feePct } — cada listing tem id, sellerName,
+// itemId, qty, pricePerUnit, expiresAt, mine.
 export async function fetchMarketListings() {
   const result = await fetchMarketListingsOnServer(ACCOUNT.activeSlot);
-  return result.ok ? result.listings : null;
+  return result.ok ? { listings: result.listings, feePct: result.feePct } : null;
+}
+
+// Estatística de preço de um item (últimas vendas): { count, last, avg, min, max }.
+export async function fetchMarketStats(itemId) {
+  const result = await fetchMarketStatsOnServer(ACCOUNT.activeSlot, itemId);
+  return result.ok ? result : null;
 }
 
 export async function depositToMarket(amount) {
