@@ -202,6 +202,13 @@ async function startAuthedSession() {
   // tivesse sumido.
   await bootGame();
   hideAuthGate();
+  // Re-render do painel de personagem DEPOIS de revelar o #app: no 1º login em
+  // dispositivo novo, o renderCharPanel() do bootGame roda enquanto o gate ainda
+  // cobre a tela e não "pega" — o jogador via "criar personagem" mesmo já tendo
+  // char (G carregado certo, só a UI travada; bug pego pelo auditor de browser).
+  // Um render aqui, com a tela já visível, reflete o estado real.
+  renderCharPanel();
+  emit(EVENTS.HEADER_STATS);
 }
 
 // ---- idioma: aplica ANTES de qualquer render, senão a UI pisca em inglês e
