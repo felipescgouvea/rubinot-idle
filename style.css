@@ -1651,6 +1651,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .absorb-chip { display: inline-flex; align-items: center; gap: 2px; padding: 2px 7px; border-radius: 10px; font-weight: 700; font-variant-numeric: tabular-nums; background: #1c2136; border: 1px solid #2b3350; }
 .absorb-chip.stat-up { color: #4ade80; }
 .absorb-chip.stat-down { color: #f87171; }
+/* Achievements + Títulos */
+.ach-titles { margin: 8px 0 12px; }
+.ach-title-btn { background: #1c2136; border: 1px solid #2b3350; color: #b8c0e0; border-radius: 12px; padding: 3px 10px; font-size: 12px; font-weight: 700; cursor: pointer; margin: 2px; }
+.ach-title-btn.active { border-color: #f0c14b; color: #f0c14b; background: rgba(240,193,75,.14); }
+.ach-list { display: flex; flex-direction: column; gap: 5px; max-height: 46vh; overflow-y: auto; }
+.ach-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; background: #1c2136; border: 1px solid #2b3350; }
+.ach-row.off { opacity: .5; }
+.ach-row.on { border-color: rgba(240,193,75,.4); }
+.ach-icon { font-size: 1.3rem; width: 26px; text-align: center; }
+.ach-text { display: flex; flex-direction: column; line-height: 1.25; flex: 1; }
+.ach-text small { color: #8a92b8; font-size: 11px; }
+.ach-check { color: #4ade80; font-weight: 800; }
 
 /* ============ MODAL DE BATALHA ============ */
 /* separado do modal genérico de propósito — ver o comentário no index.html */

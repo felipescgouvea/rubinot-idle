@@ -96,6 +96,7 @@ export function loadGame() {
   if (!G.autoSell) G.autoSell = { enabled: false, maxValue: 50 };
   if (typeof G.stamina !== 'number') G.stamina = STAMINA_MAX;
   if (typeof G.promoted !== 'boolean') G.promoted = false; // migração: promoção de vocação é nova
+  if (G.title === undefined) G.title = null; // migração: título de achievement é novo
   // migração: Mochila-item + ordem do inventário (drag) são novos. Todo save
   // ganha o bag inicial e uma ordem inicial a partir dos itens que já tem.
   if (!G.backpack) G.backpack = 'bag';

@@ -217,7 +217,8 @@ function renderCharInfo() {
   const v = VOCATIONS[G.vocation];
   mountPlayerPortrait(document.getElementById('char-voc-icon'), 'char-voc-big');
   document.getElementById('char-name-display').textContent = G.playerName || '';
-  document.getElementById('char-voc-name').textContent = vocationDisplayName(G.vocation, G.promoted);
+  // Vocação (título de elite se promovido) + título de achievement escolhido.
+  document.getElementById('char-voc-name').textContent = vocationDisplayName(G.vocation, G.promoted) + (G.title ? `, ${G.title}` : '');
   // Botão Promover: some quando já promovido; senão mostra custo/requisito.
   const promoBtn = document.getElementById('promote-btn');
   if (promoBtn) {

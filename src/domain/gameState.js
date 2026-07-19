@@ -22,6 +22,7 @@ export function createDefaultState() {
     // específicos do baú de tasks).
     taskCoins: 0,
     promoted: false, // promoção de vocação (ver domain/character.js: PROMOTION)
+    title: null,     // título escolhido pelo jogador (ver domain/achievements.js)
     hp: 0,
     mana: 0,
     sk: createDefaultSkills(),
