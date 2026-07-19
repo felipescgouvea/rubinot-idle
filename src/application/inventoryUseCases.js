@@ -36,6 +36,7 @@ export function equipItem(itemId) {
   const block = equipBlockReason(item, G.vocation, t);
   if (block) { emit(EVENTS.NOTIFY, { msg: t('inventory.equipBlocked', { item: item.name, reason: block }), type: 'error' }); return; }
   G.equipment[item.type] = itemId;
+  if (G.imbuements) delete G.imbuements[item.type]; // trocar de item perde o imbuement (ver server /equip)
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
@@ -55,6 +56,7 @@ export function unequipItem(itemId) {
   const item = resolveEquippedItem(itemId, G.relics);
   if (!item) return;
   G.equipment[item.type] = null;
+  if (G.imbuements) delete G.imbuements[item.type];
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.CHAR_INFO);
@@ -73,6 +75,7 @@ export function equipRelic(relicId) {
   const block = equipBlockReason(base, G.vocation, t);
   if (block) { emit(EVENTS.NOTIFY, { msg: t('inventory.equipBlocked', { item: base.name, reason: block }), type: 'error' }); return; }
   G.equipment[base.type] = relicId;
+  if (G.imbuements) delete G.imbuements[base.type];
   const tier = RARITY_TIERS[relic.rarity];
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);

@@ -26,6 +26,7 @@ import { elementMod } from '../../src/domain/elements.js?v=125';
 import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/blessings.js?v=125';
 import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
+import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows } from './db.js';
 
@@ -280,7 +281,19 @@ async function resolveTick(session) {
   const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
   let basicDmg = atkRoll.damage * elementMod(primary.defKey, atkRoll.element);
   if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
-  primary.hp -= Math.max(1, Math.floor(basicDmg));
+  const dealt = Math.max(1, Math.floor(basicDmg));
+  primary.hp -= dealt;
+  // Imbuement da ARMA (Tibia): Vampirism (life leech), Void (mana leech) e
+  // Scorch (dano elemental extra) — aplicados sobre o dano do ataque básico se
+  // o imbuement ainda vale (ver domain/imbuements.js: expiresAt). Efeito
+  // resolvido aqui, no servidor autoritativo.
+  const wImb = activeImbuementFor(session.imbuements, 'weapon', now);
+  if (wImb) {
+    const e = wImb.effect;
+    if (e.type === 'lifeleech' && session.hp > 0) session.hp = Math.min(session.maxHp, session.hp + Math.max(1, Math.floor(dealt * e.pct)));
+    else if (e.type === 'manaleech') session.mana = Math.min(session.maxMana, session.mana + Math.max(1, Math.floor(dealt * e.pct)));
+    else if (e.type === 'elemental') primary.hp -= Math.max(1, Math.floor(dealt * e.pct * elementMod(primary.defKey, e.element)));
+  }
   if (voc.attackSkill !== 'magic') {
     const meleeSkillId = equippedWeaponSkillId(session.equipment, session.relics);
     trainSkill(session, meleeSkillId, meleeSkillId === 'distance' ? 2 : 1, cfg);

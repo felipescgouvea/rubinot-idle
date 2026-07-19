@@ -45,6 +45,7 @@ import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125
 import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
+import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
@@ -181,7 +182,8 @@ const server = http.createServer(async (req, res) => {
 
       const eqRows = await selectMany('player_equipment', { user_id: user.id, slot });
       const equipment = {};
-      eqRows.forEach(r => { equipment[r.eq_slot] = r.item_id; });
+      const imbuements = {}; // eq_slot -> { id, expiresAt } (ver domain/imbuements.js)
+      eqRows.forEach(r => { equipment[r.eq_slot] = r.item_id; if (r.imbuement) imbuements[r.eq_slot] = r.imbuement; });
 
       const relicRows = await selectMany('player_relics', { user_id: user.id, slot });
       const relics = relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) }));
@@ -246,7 +248,7 @@ const server = http.createServer(async (req, res) => {
 
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
-        vocation: body.vocation, level, skills, equipment, relics,
+        vocation: body.vocation, level, skills, equipment, relics, imbuements,
         spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
         density: body.density, // 'solo'|'normal'|'pack' — undefined = tamanho natural
@@ -383,9 +385,12 @@ const server = http.createServer(async (req, res) => {
         const relicRow = !invRow || Number(invRow.qty) <= 0 ? await selectOne('player_relics', { user_id: user.id, slot, id: itemId }) : null;
         const owned = (invRow && Number(invRow.qty) > 0) || relicRow;
         if (!owned) return send(res, 403, { error: 'item não pertence a esta conta/personagem' });
-        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+        // imbuement: null ao trocar de item — o aprimoramento é do item que estava
+        // equipado; trocar de arma perde o imbuement (evita imbuir arma barata e
+        // migrar o efeito pra uma melhor).
+        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, imbuement: null, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
       } else {
-        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: null, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: null, imbuement: null, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
       }
       return send(res, 200, { ok: true });
     }
@@ -468,6 +473,36 @@ const server = http.createServer(async (req, res) => {
       if (gold < PROMOTION.cost) return send(res, 400, { error: 'gold insuficiente' });
       await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - PROMOTION.cost, promoted: true, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, gold: gold - PROMOTION.cost, promoted: true });
+    }
+
+    // Aplicar um Imbuement num equipamento — valida gold + materiais no servidor
+    // (nunca aceita o cliente declarar "imbui"). O efeito é resolvido no combate
+    // (ver huntEngine.js) enquanto não expira. `vocation` não é usado aqui.
+    if (url.pathname === '/imbue' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const def = IMBUEMENTS[body.imbuementId];
+      if (!def) return send(res, 400, { error: 'imbuement inválido' });
+      const eqSlot = def.slot;
+      const eqRow = await selectOne('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot });
+      if (!eqRow || !eqRow.item_id) return send(res, 400, { error: 'equipe uma arma primeiro' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const gold = stats ? Number(stats.gold) : 0;
+      if (gold < def.cost.gold) return send(res, 400, { error: 'gold insuficiente' });
+      for (const [itemId, qty] of def.cost.materials) {
+        const inv = await selectOne('player_inventory', { user_id: user.id, slot, item_id: itemId });
+        if (!inv || Number(inv.qty) < qty) return send(res, 400, { error: `falta material: ${itemId} x${qty}` });
+      }
+      await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - def.cost.gold, updated_at: new Date().toISOString() }, 'user_id,slot');
+      for (const [itemId, qty] of def.cost.materials) await incrementInventory(user.id, slot, itemId, -qty);
+      const imbuement = { id: body.imbuementId, expiresAt: new Date(Date.now() + def.durationH * 3600 * 1000).toISOString() };
+      await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: eqRow.item_id, imbuement, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+      const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+      if (activeRow) { const s = getLiveSession(activeRow.id); if (s) { s.imbuements = s.imbuements || {}; s.imbuements[eqSlot] = imbuement; } }
+      return send(res, 200, { ok: true, gold: gold - def.cost.gold, eqSlot, imbuement });
     }
 
     // ---- Treino de dummy AUTORITATIVO (aba Training) ----

@@ -1663,6 +1663,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .ach-text { display: flex; flex-direction: column; line-height: 1.25; flex: 1; }
 .ach-text small { color: #8a92b8; font-size: 11px; }
 .ach-check { color: #4ade80; font-weight: 800; }
+/* Imbuements */
+.imbue-active { margin: 6px 0; padding: 7px 10px; border-radius: 8px; background: rgba(240,193,75,.1); border: 1px solid rgba(240,193,75,.3); font-size: 13px; }
+.imbue-active.muted { background: #1c2136; border-color: #2b3350; }
+.imbue-list { display: flex; flex-direction: column; gap: 7px; max-height: 44vh; overflow-y: auto; }
+.imbue-row { padding: 8px 10px; border-radius: 8px; background: #1c2136; border: 1px solid #2b3350; }
+.imbue-head { display: flex; align-items: center; gap: 6px; }
+.imbue-head small { color: #8a92b8; font-weight: 400; }
+.imbue-icon { font-size: 1.2rem; }
+.imbue-cost { font-size: 11.5px; color: #b8c0e0; margin: 4px 0 6px; }
+.imbue-lack { color: #f87171; }
+.imbue-btn { background: #7b4bd5; border: none; color: #fff; padding: 5px 14px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+.imbue-btn:disabled { opacity: .4; cursor: not-allowed; }
 
 /* ============ MODAL DE BATALHA ============ */
 /* separado do modal genérico de propósito — ver o comentário no index.html */

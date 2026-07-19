@@ -11,12 +11,12 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=129';
-import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=165';
+import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=166';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=134';
 import { selectVocation } from './application/characterUseCases.js?v=128';
 import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession, setFightMode, renderFightModeButtons, setDensity, renderDensityButtons } from './application/huntUseCases.js?v=191';
-import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=134';
+import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=135';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=126';
@@ -55,6 +55,7 @@ import { setSkillsSubtab } from './ui/skillsPanel.js?v=128';
 import { openDailyReward, renderDailyBadge, wireDailyRewardEvents } from './ui/dailyRewardPanel.js?v=128';
 import { renderBoostedPanel } from './ui/boostedPanel.js?v=130';
 import { openAchievements, setPlayerTitle } from './ui/achievementsPanel.js?v=125';
+import { openImbueModal, applyImbuementClick } from './ui/imbuementPanel.js?v=125';
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=134';
 import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=126';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=129';
@@ -95,7 +96,7 @@ Object.assign(window, {
   handleClaimArenaDivision,
   selectWorld,
   claimBpReward, claimMissionReward,
-  buyShopItem, confirmBuyShopItem, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing, promoteVocation, openAchievements, setPlayerTitle,
+  buyShopItem, confirmBuyShopItem, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing, promoteVocation, openAchievements, setPlayerTitle, openImbueModal, applyImbuementClick,
   setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell,
   registerPlayerName, refreshHighscoresClick, setHighscoresCategory,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,

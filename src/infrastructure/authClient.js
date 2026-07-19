@@ -347,6 +347,12 @@ export function trainStopOnServer(slot, vocation) {
   return huntFetch('/train/stop', { method: 'POST', body: { slot, vocation } });
 }
 
+// Aplicar um imbuement validado no servidor (gold + materiais conferidos lá —
+// ver server/src/index.js: /imbue). Retorna { ok, gold, eqSlot, imbuement }.
+export function imbueOnServer(slot, imbuementId) {
+  return huntFetch('/imbue', { method: 'POST', body: { slot, imbuementId } });
+}
+
 // Uso manual de item da Bag (poção bebida ou runa mirada por clique do
 // jogador, fora do RTC automático) — validado no servidor (posse/vocação/ML
 // e, pra runa, dano/morte pelo MESMO settleKill do tick automático; ver

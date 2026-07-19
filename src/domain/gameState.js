@@ -23,6 +23,7 @@ export function createDefaultState() {
     taskCoins: 0,
     promoted: false, // promoção de vocação (ver domain/character.js: PROMOTION)
     title: null,     // título escolhido pelo jogador (ver domain/achievements.js)
+    imbuements: {},  // eq_slot -> { id, expiresAt } (ver domain/imbuements.js) — autoritativo no servidor
     hp: 0,
     mana: 0,
     sk: createDefaultSkills(),
