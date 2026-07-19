@@ -245,7 +245,7 @@ function buildHuntSnapshot() {
   // risco de forjar valor, o servidor sempre valida mana/cooldown/posse do
   // item na hora de usar (ver server/src/huntEngine.js). Travado pra sessão
   // inteira: mudar o RTC no meio da caçada só vale a partir da próxima.
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, fightMode: G.fightMode || 'balanced' };
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, fightMode: G.fightMode || 'balanced', density: G.density || 'normal' };
 }
 
 // Estilo de Luta (Fight Mode do TFS, ver domain/combatFormulas: FIGHT_MODES) —
@@ -265,6 +265,25 @@ export function setFightMode(mode) {
 export function renderFightModeButtons() {
   const active = G.fightMode || 'balanced';
   document.querySelectorAll('.fight-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === active));
+}
+
+// Controle de DENSIDADE (ver server/src/huntEngine.js: packSize) — Solo (1 por
+// vez) / Normal (tamanho natural) / Pack (grupo dobrado: mais XP/h, mais
+// perigo). Mesmo padrão do Fight Mode: persiste no save e reinicia a caçada pra
+// o servidor aplicar (buildHuntSnapshot). Botões na janela de batalha.
+const DENSITY_IDS = ['solo', 'normal', 'pack'];
+export function setDensity(mode) {
+  if (!DENSITY_IDS.includes(mode)) return;
+  if ((G.density || 'normal') !== mode) {
+    G.density = mode;
+    saveGame();
+    if (G.hunting) { stopHunt(); startHunt(); }
+  }
+  renderDensityButtons();
+}
+export function renderDensityButtons() {
+  const active = G.density || 'normal';
+  document.querySelectorAll('.density-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === active));
 }
 
 async function reconcileWithServer() {

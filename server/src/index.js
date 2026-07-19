@@ -225,6 +225,7 @@ const server = http.createServer(async (req, res) => {
         vocation: body.vocation, level, skills, equipment, relics,
         spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
+        density: body.density, // 'solo'|'normal'|'pack' — undefined = tamanho natural
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }

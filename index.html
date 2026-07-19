@@ -375,6 +375,13 @@
               <button class="fight-mode-btn active" data-mode="balanced" onclick="setFightMode('balanced')" title="⚖️ Equilibrado">⚖️</button>
               <button class="fight-mode-btn" data-mode="defense" onclick="setFightMode('defense')" title="🛡️ Defensivo — metade do dano, defesa cheia (sobrevive mais)">🛡️</button>
             </div>
+            <!-- Densidade da caçada — Solo / Normal / Pack. Ver
+                 application/huntUseCases.js: setDensity / server: packSize -->
+            <div id="density-row" class="fight-mode-row" title="Densidade da caçada">
+              <button class="density-btn fight-mode-btn" data-mode="solo" onclick="setDensity('solo')" title="🎯 Solo — puxa 1 por vez (controlado, seguro)">🎯</button>
+              <button class="density-btn fight-mode-btn active" data-mode="normal" onclick="setDensity('normal')" title="👥 Normal — tamanho natural da zona">👥</button>
+              <button class="density-btn fight-mode-btn" data-mode="pack" onclick="setDensity('pack')" title="🐝 Pack — grupo dobrado (muito mais XP/h, muito mais perigo)">🐝</button>
+            </div>
           </div>
           <div class="battle-col battle-col-right">
             <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma.
@@ -408,6 +415,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=198"></script>
+  <script type="module" src="src/main.js?v=199"></script>
 </body>
 </html>

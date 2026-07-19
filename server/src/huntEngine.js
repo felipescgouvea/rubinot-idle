@@ -419,7 +419,14 @@ async function tick(session) {
     const spawnZone = session.bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
     const bossMult = session.bossOnly ? 1 : 1; // tier de Boss Rush ainda não escala aqui (ver nota abaixo)
     const spawnCfg = session.bossOnly ? null : resolveZoneSpawn(cfg, session.zoneId, zone.monsters);
-    const packSize = session.bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
+    let packSize = session.bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
+    // Controle de DENSIDADE (ver client: setDensity) — como caçar cada zona:
+    // 'solo' puxa 1 por vez (seguro/controlado), 'pack' dobra o grupo (mais
+    // XP/h, mais perigo), 'normal' é o tamanho natural da zona. Não vale no Boss.
+    if (!session.bossOnly) {
+      if (session.density === 'solo') packSize = 1;
+      else if (session.density === 'pack') packSize = Math.min(8, packSize * 2 + 1);
+    }
     // uid sequencial por instância spawnada — o cliente usa isso pra saber
     // (diffando entre polls de /hunt/state) quando um monstro NOVO apareceu
     // ou quando um que já existia SUMIU (morreu), em vez de sortear/simular

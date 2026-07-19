@@ -137,6 +137,17 @@ try {
   }
   log('estilo de luta: botões + 3 modos testados');
 
+  // --- Cenário 2c: Densidade da caçada — os 3 botões aplicam sem erro ---
+  const hasDensity = await page.evaluate(() => document.querySelectorAll('.density-btn').length === 3);
+  if (!hasDensity) problems.push('DENSITY: os 3 botões de densidade não estão na janela de batalha');
+  else for (const mode of ['solo', 'pack', 'normal']) {
+    await page.evaluate(m => window.setDensity && window.setDensity(m), mode);
+    await page.waitForTimeout(1200);
+    const active = await page.evaluate(() => document.querySelector('.density-btn.active')?.dataset.mode);
+    if (active !== mode) problems.push(`DENSITY: '${mode}' não ficou ativo na UI (ativo=${active})`);
+  }
+  log('densidade: botões + 3 modos testados');
+
   // --- Cenário 3: regen ocioso + sem drop de mana ao dar play ---
   // continua caçando até haver DÉFICIT real (senão o regen não tem o que
   // recuperar e o teste fica inconclusivo/flaky) — depois para NA HORA.
