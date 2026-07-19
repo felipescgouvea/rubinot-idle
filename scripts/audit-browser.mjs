@@ -125,6 +125,18 @@ try {
   if (!manaMovedDown && !spellLogged) problems.push('C2: mana nunca dipou nem magia logou — magia não está sendo usada');
   if (fxSeen === 0) problems.push('C2: nenhum efeito de combate renderizado no palco (fx=0)');
 
+  // --- Cenário 2b: Estilo de Luta (Fight Mode) — os 3 modos aplicam sem erro e
+  // destacam o botão ativo na janela de batalha ---
+  const hasBtns = await page.evaluate(() => document.querySelectorAll('.fight-mode-btn').length === 3);
+  if (!hasBtns) problems.push('FIGHTMODE: os 3 botões de estilo de luta não estão na janela de batalha');
+  else for (const mode of ['defense', 'attack', 'balanced']) {
+    await page.evaluate(m => window.setFightMode && window.setFightMode(m), mode);
+    await page.waitForTimeout(1200);
+    const active = await page.evaluate(() => document.querySelector('.fight-mode-btn.active')?.dataset.mode);
+    if (active !== mode) problems.push(`FIGHTMODE: '${mode}' não ficou ativo na UI (ativo=${active})`);
+  }
+  log('estilo de luta: botões + 3 modos testados');
+
   // --- Cenário 3: regen ocioso + sem drop de mana ao dar play ---
   // continua caçando até haver DÉFICIT real (senão o regen não tem o que
   // recuperar e o teste fica inconclusivo/flaky) — depois para NA HORA.

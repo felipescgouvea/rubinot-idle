@@ -245,7 +245,26 @@ function buildHuntSnapshot() {
   // risco de forjar valor, o servidor sempre valida mana/cooldown/posse do
   // item na hora de usar (ver server/src/huntEngine.js). Travado pra sessão
   // inteira: mudar o RTC no meio da caçada só vale a partir da próxima.
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc };
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, fightMode: G.fightMode || 'balanced' };
+}
+
+// Estilo de Luta (Fight Mode do TFS, ver domain/combatFormulas: FIGHT_MODES) —
+// Ofensivo / Equilibrado / Defensivo. Botões na janela de batalha (index.html).
+// Persiste no save; caçando, reinicia a sessão pra o servidor aplicar o novo
+// modo (via buildHuntSnapshot). Sem modo escolhido = 'balanced'.
+const FIGHT_MODE_IDS = ['attack', 'balanced', 'defense'];
+export function setFightMode(mode) {
+  if (!FIGHT_MODE_IDS.includes(mode)) return;
+  if (G.fightMode !== mode) {
+    G.fightMode = mode;
+    saveGame();
+    if (G.hunting) { stopHunt(); startHunt(); } // reenvia o snapshot com o novo modo
+  }
+  renderFightModeButtons();
+}
+export function renderFightModeButtons() {
+  const active = G.fightMode || 'balanced';
+  document.querySelectorAll('.fight-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === active));
 }
 
 async function reconcileWithServer() {

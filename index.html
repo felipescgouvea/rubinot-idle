@@ -6,6 +6,15 @@
   <title>Rubinot Idle</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=125" />
   <link rel="stylesheet" href="style.css?v=137" />
+  <style>
+    /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
+    .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+    .fight-mode-btn { flex: 1; max-width: 72px; padding: 6px 0; font-size: 1.15rem; line-height: 1;
+      background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+      cursor: pointer; opacity: .55; transition: all .12s; }
+    .fight-mode-btn:hover { opacity: .85; }
+    .fight-mode-btn.active { opacity: 1; border-color: #f0c14b; background: rgba(240,193,75,.18); box-shadow: 0 0 6px rgba(240,193,75,.4); }
+  </style>
 </head>
 <body>
   <div id="app">
@@ -359,6 +368,13 @@
               </div>
             </div>
             <button id="hunt-toggle" onclick="toggleHunt()">▶ <span data-i18n="battle.startHunt">Start Hunt</span></button>
+            <!-- Estilo de Luta (Fight Mode) — alterna como caçar. Ver
+                 application/huntUseCases.js: setFightMode / domain/combatFormulas: FIGHT_MODES -->
+            <div id="fight-mode-row" class="fight-mode-row" title="Estilo de luta">
+              <button class="fight-mode-btn" data-mode="attack" onclick="setFightMode('attack')" title="⚔️ Ofensivo — dano máximo, defesa reduzida">⚔️</button>
+              <button class="fight-mode-btn active" data-mode="balanced" onclick="setFightMode('balanced')" title="⚖️ Equilibrado">⚖️</button>
+              <button class="fight-mode-btn" data-mode="defense" onclick="setFightMode('defense')" title="🛡️ Defensivo — metade do dano, defesa cheia (sobrevive mais)">🛡️</button>
+            </div>
           </div>
           <div class="battle-col battle-col-right">
             <!-- Battle List (Tibia): criaturas da sala atual + a vida de cada uma.
@@ -392,6 +408,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=197"></script>
+  <script type="module" src="src/main.js?v=198"></script>
 </body>
 </html>

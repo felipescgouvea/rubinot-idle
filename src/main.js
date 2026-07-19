@@ -15,7 +15,7 @@ import { loadGame, confirmReset, applyCloudSave } from './application/persistenc
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=134';
 import { selectVocation } from './application/characterUseCases.js?v=128';
-import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession } from './application/huntUseCases.js?v=189';
+import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession, setFightMode, renderFightModeButtons } from './application/huntUseCases.js?v=190';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=134';
 import { startTask, cancelTask } from './application/taskUseCases.js?v=129';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=129';
@@ -84,7 +84,7 @@ wireAdminPanelEvents();
 // HTML é gerado como string e usa onclick inline — não há outra forma de ligar
 // eventos a conteúdo que nem existe no DOM ainda no momento em que o módulo carrega.
 Object.assign(window, {
-  saveGame, confirmReset, selectVocation, createCharacter, toggleHunt, selectTarget, closeModal,
+  saveGame, confirmReset, selectVocation, createCharacter, toggleHunt, selectTarget, closeModal, setFightMode,
   openItemModal, equipItem, unequipItem, sellItem, sellAllItem, useItem, setAutoSell, setAutoSellMax,
   openRelicModal, equipRelic, sellRelic, toggleBackpack,
   challengeBoss, stopBossRushClick,
@@ -153,6 +153,7 @@ async function bootGame() {
   // resume/reconcile re-renderiza depois com hp/mana/level já reconciliados.
   renderCharPanel();
   emit(EVENTS.HEADER_STATS);
+  renderFightModeButtons(); // destaca o estilo de luta ativo na janela de batalha
   await checkAndResumeHuntSession();
   renderAuthUser();
   renderCharPanel();
