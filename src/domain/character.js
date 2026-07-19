@@ -29,12 +29,28 @@ export const VOCATIONS = {
   druid: {
     name: 'Druid', icon: '🌿',
     baseHp: 100, baseMana: 200, baseAtk: 6, baseDef: 4, baseMgc: 18, baseSpd: 1.0,
-    hpPerLevel: 5, manaPerLevel: 30, atkPerLevel: 1, defPerLevel: 1,
     hpRegen: 1, manaRegen: 6,
+    hpPerLevel: 5, manaPerLevel: 30, atkPerLevel: 1, defPerLevel: 1,
     style: 'magic',
     color: '#2ecc71',
   },
 };
+
+// Promoção de vocação (fiel ao Tibia): a partir do nível 20, pagando um custo em
+// ouro, a vocação vira a versão promovida (Elite Knight / Royal Paladin / Master
+// Sorcerer / Elder Druid) com REGENERAÇÃO de HP/mana dobrada — o principal
+// benefício mecânico da promoção no Tibia (regenera o dobro descansando).
+export const PROMOTION = {
+  level: 20,
+  cost: 20000,      // ouro (fiel ao custo clássico de promoção do Tibia)
+  regenMult: 2,     // regeneração ociosa de HP/mana dobrada quando promovido
+  names: { knight: 'Elite Knight', paladin: 'Royal Paladin', sorcerer: 'Master Sorcerer', druid: 'Elder Druid' },
+};
+// Nome exibido da vocação: promovido usa o título de elite, senão o nome base.
+export function vocationDisplayName(vocation, promoted) {
+  if (!vocation || !VOCATIONS[vocation]) return '';
+  return promoted && PROMOTION.names[vocation] ? PROMOTION.names[vocation] : VOCATIONS[vocation].name;
+}
 
 // Skills no estilo Tibia: sobem POR USO, não por pontos.
 // Cada vocação treina sua skill primária ao atacar; Shielding treina ao ser atingido;

@@ -11,7 +11,7 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=129';
-import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=163';
+import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=164';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=127';
 import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect } from './infrastructure/authClient.js?v=134';
 import { selectVocation } from './application/characterUseCases.js?v=128';
@@ -22,6 +22,7 @@ import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v
 import { claimBpReward, claimMissionReward } from './application/battlePassUseCases.js?v=126';
 import { buyShopItem } from './application/shopUseCases.js?v=133';
 import { buyBlessing } from './application/blessingUseCases.js?v=127';
+import { promoteVocation } from './application/promotionUseCases.js?v=125';
 import { setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold } from './application/rtcUseCases.js?v=161';
 import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=129';
 import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing } from './application/marketUseCases.js?v=127';
@@ -33,7 +34,7 @@ import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad 
 
 // ui
 import { closeModal, setLogFilter, wireSharedEvents } from './ui/shared.js?v=132';
-import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=132';
+import { renderCharPanel, renderPlayerBattleSide, wireCharacterPanelEvents, createCharacter } from './ui/characterPanel.js?v=133';
 import { renderMonsterDisplay, wireHuntPanelEvents } from './ui/huntPanel.js?v=144';
 import { renderEquipmentSlots, openItemModal, openRelicModal, toggleBackpack, wireInventoryAndEquipmentEvents } from './ui/inventoryAndEquipmentPanel.js?v=130';
 import { wireTasksPanelEvents, setTaskRoom } from './ui/tasksPanel.js?v=132';
@@ -93,7 +94,7 @@ Object.assign(window, {
   handleClaimArenaDivision,
   selectWorld,
   claimBpReward, claimMissionReward,
-  buyShopItem, confirmBuyShopItem, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing,
+  buyShopItem, confirmBuyShopItem, setShopTab, setShopGroup, onShopQtyInput, stepShopQty, scrollShopQty, getShopQty, buyBlessing, promoteVocation,
   setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, handleRtcPotionDrop, setRtcThreshold, setRtcSubTab, openRtcPotionPicker, pickRtcPotion, openRtcAttackSpellPicker, pickRtcAttackSpell,
   registerPlayerName, refreshHighscoresClick, setHighscoresCategory,
   handleMarketRegisterClick, depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing,

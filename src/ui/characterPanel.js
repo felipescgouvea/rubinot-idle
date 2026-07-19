@@ -1,7 +1,7 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
 import { G } from '../application/gameStore.js?v=129';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=156';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=157';
 import { getEquippedWeaponSkillId } from '../application/stats.js?v=126';
 import { skillIconImg } from './shared.js?v=132';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=125';
@@ -217,7 +217,22 @@ function renderCharInfo() {
   const v = VOCATIONS[G.vocation];
   mountPlayerPortrait(document.getElementById('char-voc-icon'), 'char-voc-big');
   document.getElementById('char-name-display').textContent = G.playerName || '';
-  document.getElementById('char-voc-name').textContent = v.name;
+  document.getElementById('char-voc-name').textContent = vocationDisplayName(G.vocation, G.promoted);
+  // Botão Promover: some quando já promovido; senão mostra custo/requisito.
+  const promoBtn = document.getElementById('promote-btn');
+  if (promoBtn) {
+    if (G.promoted) {
+      promoBtn.style.display = 'none';
+    } else {
+      promoBtn.style.display = 'inline-block';
+      const canPromote = G.level >= PROMOTION.level && G.gold >= PROMOTION.cost;
+      promoBtn.textContent = `⭐ ${PROMOTION.names[G.vocation]} (${(PROMOTION.cost / 1000)}k)`;
+      promoBtn.disabled = !canPromote;
+      promoBtn.title = G.level < PROMOTION.level
+        ? `Requer nível ${PROMOTION.level}`
+        : (G.gold < PROMOTION.cost ? `Requer ${PROMOTION.cost.toLocaleString()} de ouro` : 'Dobra a regeneração de HP/mana');
+    }
+  }
   document.getElementById('char-level').textContent = G.level;
   document.getElementById('char-xp').textContent = G.xp;
   document.getElementById('char-xp-next').textContent = XP_TABLE[G.level - 1] || '---';

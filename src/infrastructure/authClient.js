@@ -327,6 +327,12 @@ export function buyBlessingOnServer(slot) {
   return huntFetch('/buy-blessing', { method: 'POST', body: { slot } });
 }
 
+// Promoção de vocação validada no servidor (nível e gold conferidos lá — ver
+// server/src/index.js: /promote). Retorna { ok, gold, promoted }.
+export function promoteOnServer(slot) {
+  return huntFetch('/promote', { method: 'POST', body: { slot } });
+}
+
 // Uso manual de item da Bag (poção bebida ou runa mirada por clique do
 // jogador, fora do RTC automático) — validado no servidor (posse/vocação/ML
 // e, pra runa, dano/morte pelo MESMO settleKill do tick automático; ver

@@ -42,7 +42,7 @@ import { TIBIA_SKILLS } from '../../src/domain/character.js?v=156';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=139';
-import { XP_TABLE, VOCATIONS } from '../../src/domain/character.js?v=156';
+import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
@@ -182,9 +182,10 @@ const server = http.createServer(async (req, res) => {
       if (stats && stats.updated_at) {
         const voc = VOCATIONS[body.vocation];
         const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
+        const regenMult = stats.promoted ? PROMOTION.regenMult : 1; // promoção dobra o regen ocioso
         if (voc) {
-          hp = Math.min(maxHp, hp + (voc.hpRegen || 0) * 90 * idleMin);
-          mana = Math.min(maxMana, mana + (voc.manaRegen || 0) * 90 * idleMin);
+          hp = Math.min(maxHp, hp + (voc.hpRegen || 0) * 90 * idleMin * regenMult);
+          mana = Math.min(maxMana, mana + (voc.manaRegen || 0) * 90 * idleMin * regenMult);
         }
       }
       // Stamina regenera (1/3 da taxa de queda) pelo tempo REAL que passou
@@ -291,8 +292,9 @@ const server = http.createServer(async (req, res) => {
           const maxHp = computeMaxHp({ vocation, level: stats.level, equipment, relics });
           const maxMana = computeMaxMana({ vocation, level: stats.level });
           const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
-          stats.hp = Math.min(maxHp, Number(stats.hp) + (voc.hpRegen || 0) * 90 * idleMin);
-          stats.mana = Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin);
+          const regenMult = stats.promoted ? PROMOTION.regenMult : 1; // promoção dobra o regen ocioso
+          stats.hp = Math.min(maxHp, Number(stats.hp) + (voc.hpRegen || 0) * 90 * idleMin * regenMult);
+          stats.mana = Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin * regenMult);
         }
       }
       // Com sessão VIVA, o hp/mana autoritativos são os DELA (tempo real, todo
@@ -423,6 +425,26 @@ const server = http.createServer(async (req, res) => {
       if (gold < cost) return send(res, 400, { error: 'gold insuficiente' });
       await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - cost, blessings: blessings + 1, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, gold: gold - cost, blessings: blessings + 1 });
+    }
+
+    // Promover vocação (Elite Knight / Royal Paladin / etc.) — valida nível e
+    // gold no servidor (nunca aceita o cliente declarar "promovi"). Permanente,
+    // dobra a regeneração ociosa (ver PROMOTION em character.js e o regen em
+    // /hunt/start e /hunt/state).
+    if (url.pathname === '/promote' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const level = stats ? stats.level : 1;
+      const gold = stats ? Number(stats.gold) : 0;
+      if (stats && stats.promoted) return send(res, 400, { error: 'já promovido' });
+      if (level < PROMOTION.level) return send(res, 400, { error: `precisa do nível ${PROMOTION.level}` });
+      if (gold < PROMOTION.cost) return send(res, 400, { error: 'gold insuficiente' });
+      await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - PROMOTION.cost, promoted: true, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, gold: gold - PROMOTION.cost, promoted: true });
     }
 
     // Uso manual de item (poção/runa) clicado na Bag — ação VALIDADA: confere

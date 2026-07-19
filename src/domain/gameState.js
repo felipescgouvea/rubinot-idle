@@ -21,6 +21,7 @@ export function createDefaultState() {
     // pra ela ainda, é fiel ao RubinOT real onde Task Coins trocam por itens
     // específicos do baú de tasks).
     taskCoins: 0,
+    promoted: false, // promoção de vocação (ver domain/character.js: PROMOTION)
     hp: 0,
     mana: 0,
     sk: createDefaultSkills(),
