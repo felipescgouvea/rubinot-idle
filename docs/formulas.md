@@ -1,70 +1,106 @@
-# Fórmulas de combate por vocação (referência técnica)
+# Fórmulas de combate (referência técnica)
 
-Documento de apoio à **auditoria por vocação** do [TODO](../TODO.md). Descreve o
-que cada vocação usa hoje no jogo e a intenção de fidelidade ao Tibia. As
-funções vivem em `src/domain/combatFormulas.js` e a orquestração em
-`src/application/huntUseCases.js`.
+Todo o dano de combate segue **à risca o source do The Forgotten Server**
+(otland/forgottenserver). As funções puras vivem em
+`src/domain/combatFormulas.js`; o combate real (servidor-autoritativo) roda em
+`server/src/huntEngine.js` (`resolveTick`). Cada fórmula abaixo cita o arquivo
+C++ de origem.
 
-> **Base power (magias e runas):** o dano/cura usa a **fórmula real do Tibia/TFS**.
-> Cada magia/runa tem 4 coeficientes `power: [aMin, baseMin, aMax, baseMax]` (o
-> "base power"), extraídos dos scripts oficiais do TFS. O valor é aleatório
-> uniforme entre `min` e `max`, onde `min = nível/5 + aMin·X + baseMin` (idem
-> `max`), e `X` = Magic Level (padrão), ou `skill·ataque` (físicas melee), ou
-> skill de distância (Ethereal Spear). Ver `levelMagicRoll` em `combatFormulas.js`.
+## Primitivas de aleatoriedade (`src/tools.cpp`)
 
-## Ataque derivado (`computeAtk`)
+- **`uniformRandom(min,max)`** — inteiro uniforme em `[min,max]`.
+- **`normalRandom(min,max)`** — `normal_distribution<float>(0.5, 0.25)` reamostrada
+  até cair em `[0,1]`, mapeada linearmente pra `[min,max]`. O dano tende ao
+  **meio** da faixa (média comum, extremos raros). É a distribuição usada em
+  **todo** rolo de dano no TFS (arma, melee de monstro, magia, runa).
 
-| Vocação | Fonte do ataque | Fórmula (aprox.) |
-|---|---|---|
-| Knight | arma melee (sword/axe/club) + skill da arma | `0.09 · atkArma · (skill+5) + nível/4` |
-| Paladin | munição (flecha/dardo) + Distance | `0.09 · atkMunição · (dist+5) + nível/4` |
-| Sorcerer/Druid | Magic Level + dano-base da wand/rod | `ML·2.5 + wandDmg·(1 + ML·0.03) + nível/4` |
+## Golpe básico do jogador (`WeaponMelee/Distance/Wand::getWeaponDamage`)
+
+O dano final é `normalRandom(0, max)` (melee) — o `max` vem de
+`Weapons::getMaxWeaponDamage` (`src/weapons.cpp`):
+
+```
+max = round( nível/5 + (((skill/4 + 1) · (ataque/3)) · 1.03) / attackFactor )
+```
+
+`nível/5` é divisão inteira. `attackFactor = 1.0` (modo ofensivo — o único do
+jogo). Por vocação:
+
+| Vocação | ataque | skill | dano |
+|---|---|---|---|
+| Knight | ataque da **arma** equipada (sword/axe/club), ou 7 (Fist) | skill da arma | `normalRandom(0, max)` |
+| Paladin | ataque da **munição** + ataque do **arco** (arco soma no ataque, não na skill) | Distance | `normalRandom(ceil(nível·0.2), max)` |
+| Sorcerer/Druid | — (wand tem dano fixo) | — | `normalRandom(min, max)` fixo do cajado (≈ wandDmg ±40%), **sem** escala por ML |
 
 Só a **arma/munição/wand** conta pro ataque — elmo/armadura/anel não somam
-(fiel ao Tibia). A **arma errada não pode ser equipada** (`canVocationEquip`).
+(fiel ao Tibia).
 
-## Golpe básico (auto-ataque, todo tick)
+## Redução de dano no alvo (`Creature::blockHit`, `src/creature.cpp`)
 
-- **Knight/Paladin:** `calcDamage(atk, defAlvo)` (arma). Paladino gasta munição se
-  o consumo estiver ligado no Admin.
-- **Mago (wand/rod):** `calcDamage(atk, defAlvo) × 0.5` — **poke fraco** de propósito
-  (calibração): o dano do mago vem das magias, não do cajado grátis.
+Aplicada só a dano **FÍSICO** (melee/distância). Elemental (fogo/energia/gelo/
+terra/morte/sagrado) **ignora** armadura — só resistência do alvo reduz
+(`domain/elements.js`, aplicada por fora).
 
-## Magia de ataque (`spellAttackDamage`)
+```
+defesa (bloqueio de escudo): dano -= uniformRandom(defesa/2, defesa)
+armadura > 3:                dano -= uniformRandom(arm/2, arm-(arm%2+1))
+armadura 1..3:               dano -= 1
+```
 
-Fórmula do Tibia `random(min, max)` com o base power da magia (ver acima):
+- **Armadura do jogador** (`Player::getArmor`): soma o `def` das peças de corpo
+  (elmo/armadura/pernas/botas/anel). **Não** inclui escudo nem arma.
+- **Defesa do jogador** (`Player::getDefense`, parte de escudo):
+  `(shielding/4 + 2.23) · defEscudo · 0.15 · defenseFactor` (`defenseFactor = 1.0`).
+  Sem escudo equipado, não há bloqueio de defesa.
+- **Monstro**: `monster.def` do bestiário é usado como **armadura** do monstro
+  na redução do golpe do jogador.
 
-- **Físicas melee** (`scale:'melee'` — Berserk/Groundshaker/Fierce Berserk):
-  `X = skill·ataqueArma`. Ex.: Berserk = `nível/5 + skill·atk·0.03 + 7` … `·0.05 + 11`.
-- **Física de distância** (`scale:'distance'` — Ethereal Spear): `X = skill de distância`.
-- **Elementais/holy** (fogo/gelo/energia/terra/sagrado): `X = Magic Level`.
-  Ex.: Energy Wave = `nível/5 + ML·4.5 + 20` … `ML·7.6 + 48`.
+## Ataque do monstro (`rollMonsterAttack`)
 
-O **modificador elemental** do alvo (`domain/elements.js`) é aplicado por cima do
-resultado. Cada magia só casta pras vocações em `spell.voc` (`isSpellAvailable`).
+`monster.atk` do bestiário é o dano **MÁXIMO de melee** (equivale a um monstro
+TFS com melee `min=0 max=-atk`):
 
-## Cura por magia (`spellHealAmount`)
+- **Melee** (físico): `normalRandom(0, atk)`, reduzido por armadura+defesa do
+  jogador.
+- **Magia** (50% de chance se o monstro tiver `spells`, mantendo a cadência de
+  um ataque por tick): `normalRandom(min, max)` do elemento. Físico reduz por
+  armadura; elemental passa direto.
 
-Mesma fórmula do Tibia com o base power da cura. Ex.: Ultimate Healing =
-`nível/5 + ML·6.8 + 42` … `ML·12.9 + 90`. Knight (ML baixíssimo) cura pouco.
+> Consequência importante do rolo real: como o dano é `normalRandom(0, max)`
+> (média ≈ max/2) **e** armadura/defesa agora reduzem de verdade o físico, um
+> personagem bem equipado sofre muito menos dano físico (a ameaça vira o dano
+> **elemental**, como no Tibia). Kills também ficam mais lentas que na fórmula
+> antiga (que dava quase sempre o máximo). Ajuste as taxas de XP/gold no Painel
+> Admin se quiser compensar — a **matemática** de combate agora é fiel.
 
-## Runas (`runeDamage` + gate por ML)
+## Magias e runas (`levelMagicRoll` / `spellAttackDamage` / `runeDamage`)
 
-- Dano: **mesma fórmula do Tibia** com o `rune.power` real (ex.: Sudden Death =
-  `nível/5 + ML·4.3 + 32` … `ML·7.4 + 48`). Vale no RTC **e** no uso manual.
-- Uso: exige a **vocação** (knight nunca — runa não rende sem ML) **E** o
-  `reqMl` mínimo da runa (`canUseAttackRune`).
+Fórmula real do TFS (scripts Lua de `data/scripts/spells`), com o `power` de
+cada magia/runa `[aMin, baseMin, aMax, baseMax]`:
 
-| Runa | reqMl |
-|---|---|
-| Fireball | 4 |
-| Great Fireball | 7 |
-| Avalanche | 9 |
-| Explosion | 6 |
-| Sudden Death | 15 |
+```
+min = nível/5 + X·aMin + baseMin
+max = nível/5 + X·aMax + baseMax
+dano = normalRandom((int)min, (int)max)
+```
+
+`X` = Magic Level (padrão), ou `skill·ataque` (físicas melee: Berserk/
+Groundshaker/Fierce Berserk), ou skill de distância (Ethereal Spear). O
+modificador elemental do alvo é aplicado por cima. Cada magia só casta pras
+vocações em `spell.voc` (`isSpellAvailable`).
+
+Cura por magia (`spellHealAmount`): mesma fórmula, escalando com nível + ML.
 
 ## Morte (com bênçãos)
 
 - Perde `deathXpLossPct(bênçãos)` do XP: 5% base → 1% com as 5 bênçãos.
 - Revive com `reviveHpPct(bênçãos)`: 30% base → 60% com as 5.
 - Bênçãos são consumidas ao morrer.
+
+## Fora de escopo desta referência
+
+- **Arena (PvP)** usa um cálculo próprio simplificado (`arenaUseCases.js`), não
+  este caminho.
+- **Preview do cliente**: a linha "X te acertou em N" mostra o dano REAL (delta
+  de HP do servidor); a *tag* de elemento ao lado ainda é um sorteio cosmético
+  (não reflete o golpe exato). Não afeta o dano, só o rótulo.

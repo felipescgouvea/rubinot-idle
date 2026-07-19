@@ -101,6 +101,168 @@ export function computeSpd({ vocation, equipment, relics }) {
   return +(v.baseSpd + (computeEquipBonus(equipment, relics).spd || 0)).toFixed(2);
 }
 
+// ===========================================================================
+// FÓRMULAS FIÉIS AO THE FORGOTTEN SERVER (otland/forgottenserver) — extraídas
+// verbatim do source (src/weapons.cpp, src/creature.cpp, src/tools.cpp). É o
+// caminho de dano REAL do combate (servidor-autoritativo, ver
+// server/src/huntEngine.js). Substituem o antigo calcDamage/monsterAttack
+// caseiros (mantidos abaixo só pro preview cosmético do cliente).
+// ===========================================================================
+
+// uniform_random (src/tools.cpp): inteiro uniforme em [min,max].
+export function uniformRandom(minNumber, maxNumber) {
+  const a = Math.min(minNumber, maxNumber);
+  const b = Math.max(minNumber, maxNumber);
+  return a + Math.floor(Math.random() * (b - a + 1));
+}
+
+// normal_random (src/tools.cpp): normal_distribution<float>(0.5, 0.25)
+// reamostrada até cair em [0,1], mapeada linearmente pra [min,max]. O efeito é
+// que o dano tende ao MEIO da faixa (o dano "médio" é o mais comum, os extremos
+// raros) — diferente do uniforme chapado do antigo calcDamage. Gauss padrão via
+// Box–Muller (com cache do 2º valor).
+let _gaussSpare = null;
+function _standardNormal() {
+  if (_gaussSpare !== null) { const s = _gaussSpare; _gaussSpare = null; return s; }
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  const mag = Math.sqrt(-2 * Math.log(u));
+  _gaussSpare = mag * Math.sin(2 * Math.PI * v);
+  return mag * Math.cos(2 * Math.PI * v);
+}
+export function normalRandom(minNumber, maxNumber) {
+  let x;
+  do { x = 0.5 + 0.25 * _standardNormal(); } while (x < 0 || x > 1);
+  const a = Math.min(minNumber, maxNumber);
+  const b = Math.max(minNumber, maxNumber);
+  return a + Math.round(x * (b - a));
+}
+
+// Weapons::getMaxWeaponDamage (src/weapons.cpp) — dano MÁXIMO de arma do jogador:
+//   round( level/5 + (((skill/4 + 1) * (atk/3)) * 1.03) / attackFactor )
+// level/5 é divisão INTEIRA no C++. attackFactor: modo ofensivo = 1.0 (o único
+// do jogo — não há modo balanceado/defensivo). O dano real é normal_random(0, max).
+export function getMaxWeaponDamage(level, attackSkill, attackValue, attackFactor = 1) {
+  return Math.round(Math.floor(level / 5) + ((((attackSkill / 4) + 1) * (attackValue / 3)) * 1.03) / attackFactor);
+}
+
+// Weapons::getMaxMeleeDamage (src/weapons.cpp) — dano MÁXIMO de melee de MONSTRO:
+//   ceil( skill*(atk*0.05) + atk*0.5 ). Usada quando o monstro define melee por
+// skill+attack (aqui tratamos monster.atk direto como o max, ver rollMonsterAttack).
+export function getMaxMeleeDamage(attackSkill, attackValue) {
+  return Math.ceil((attackSkill * (attackValue * 0.05)) + (attackValue * 0.5));
+}
+
+// Creature::blockHit (src/creature.cpp) — redução de dano FÍSICO no ALVO:
+//   defesa (bloqueio de escudo): dano -= uniform_random(def/2, def)
+//   armadura > 3:                dano -= uniform_random(arm/2, arm-(arm%2+1))
+//   armadura 1..3:               dano -= 1
+// Só FÍSICO passa por aqui; elemental (fogo/energia/gelo/terra/morte/sagrado)
+// ignora armadura (só resistência reduz, aplicada por fora).
+export function reducePhysical(damage, armor, defense) {
+  let d = damage;
+  if (defense > 0) {
+    d -= uniformRandom(Math.floor(defense / 2), defense);
+    if (d <= 0) return 0;
+  }
+  if (armor > 3) {
+    d -= uniformRandom(Math.floor(armor / 2), armor - (armor % 2 + 1));
+  } else if (armor > 0) {
+    d -= 1;
+  }
+  return Math.max(0, d);
+}
+
+// Player::getArmor (src/player.cpp) — soma o `def` das peças de CORPO
+// (elmo/armadura/pernas/botas/anel). NÃO inclui o escudo (isso é defesa, ver
+// computePlayerDefense) nem a arma.
+const ARMOR_SLOTS = ['helmet', 'armor', 'legs', 'boots', 'ring'];
+export function computePlayerArmor(equipment, relics) {
+  let armor = 0;
+  ARMOR_SLOTS.forEach(slot => {
+    const item = resolveEquippedItem(equipment[slot], relics);
+    if (item && item.def) armor += item.def;
+  });
+  return armor;
+}
+
+// Player::getDefense (src/player.cpp), só a parte de ESCUDO (nossas armas não
+// têm defense): (shielding/4 + 2.23) * defEscudo * 0.15 * defenseFactor.
+// defenseFactor = 1.0 (sem modo de luta / sem exhaust no jogo). Sem escudo
+// equipado não há bloqueio de defesa (fist defense é desprezível).
+export function computePlayerDefense({ skills, equipment, relics }) {
+  const shield = resolveEquippedItem(equipment.shield, relics);
+  if (!shield || !shield.def) return 0;
+  const shielding = (skills.shielding && skills.shielding.lv) || 0;
+  return Math.floor((shielding / 4 + 2.23) * shield.def * 0.15);
+}
+
+// Golpe básico do jogador ANTES da redução do alvo, fiel ao TFS (WeaponMelee/
+// WeaponDistance/WeaponWand::getWeaponDamage). Retorna { damage, element,
+// physical }: `physical` diz se o alvo reduz por armadura (melee/distância) ou
+// não (wand elemental).
+export function rollPlayerAttack({ vocation, level, skills, equipment, relics }) {
+  if (!vocation) return { damage: 0, element: 'physical', physical: true };
+  const voc = VOC_TRAINING[vocation];
+  const weapon = resolveEquippedItem(equipment.weapon, relics);
+
+  if (voc.attackSkill === 'magic') {
+    // Wand/rod: dano FIXO em faixa (normal_random(minChange,maxChange)), sem
+    // escala por Magic Level — igual ao Tibia. wandDmg guardado é a MÉDIA;
+    // faixa ≈ ±40% (ex.: 13 -> 8..18, como a Wand of Vortex real). Elemental:
+    // não reduz por armadura.
+    const wd = (weapon && weapon.weaponType === 'magic' && weapon.wandDmg) || 0;
+    if (!wd) return { damage: 0, element: 'physical', physical: false };
+    const spread = Math.round(wd * 0.4);
+    return { damage: normalRandom(wd - spread, wd + spread), element: 'physical', physical: false };
+  }
+
+  if (voc.attackSkill === 'distance') {
+    // WeaponDistance: attackValue = ataque da MUNIÇÃO + ataque do arco (o arco
+    // SOMA no ataque, não na skill). distanceBonus histórico do jogo é tratado
+    // como ataque extra do arco. min vs monstro = ceil(level*0.2).
+    const ammo = resolveEquippedItem(equipment.ammo, relics);
+    const ammoAtk = (ammo && ammo.type === 'ammo' && ammo.atk) || 0;
+    const bowAtk = (weapon && weapon.weaponType === 'distance') ? ((weapon.atk || 0) + (weapon.distanceBonus || 0)) : 0;
+    const attackValue = ammoAtk + bowAtk;
+    const skill = (skills.distance && skills.distance.lv) || 0;
+    const max = getMaxWeaponDamage(level, skill, attackValue, 1);
+    const min = Math.ceil(level * 0.2);
+    return { damage: normalRandom(min, max), element: 'physical', physical: true };
+  }
+
+  // Melee (knight): a arma REALMENTE equipada decide skill+ataque; sem arma de
+  // corpo-a-corpo, Fist com ataque base 7.
+  const skillId = equippedWeaponSkillId(equipment, relics);
+  const isMelee = weapon && (weapon.weaponType === 'sword' || weapon.weaponType === 'axe' || weapon.weaponType === 'club');
+  const attackValue = isMelee ? (weapon.atk || 0) : 7;
+  const skill = (skills[skillId] && skills[skillId].lv) || 0;
+  const max = getMaxWeaponDamage(level, skill, attackValue, 1);
+  return { damage: normalRandom(0, max), element: 'physical', physical: true };
+}
+
+// Ataque do MONSTRO contra o jogador ANTES da redução, fiel ao TFS. `monster.atk`
+// do bestiário é tratado como o dano MÁXIMO de melee (equivale a um monstro TFS
+// com melee `min=0 max=-atk`) — melee = normal_random(0, atk), físico. Se tem
+// magias, 50% de chance de castar uma (mantém a cadência de UM ataque por tick,
+// só corrige a matemática): normal_random(min,max) do elemento. `physical` diz se
+// o jogador reduz por armadura+defesa (físico) ou não (elemental).
+export function rollMonsterAttack(monster) {
+  const spells = monster.spells;
+  if (spells && spells.length && Math.random() < 0.5) {
+    const s = spells[Math.floor(Math.random() * spells.length)];
+    const min = Number.isFinite(+s.min) ? +s.min : +s.max;
+    // spells: min/max NÃO vêm pré-escalados (só o atk de melee vem), então o
+    // spellMult do Boss Rush é aplicado aqui.
+    const raw = normalRandom(min, +s.max) * (monster.spellMult || 1);
+    const element = s.element || 'physical';
+    return { damage: Math.max(0, Math.floor(raw)), element, kind: 'spell', physical: element === 'physical' };
+  }
+  // melee: monster.atk JÁ vem escalado por spawnMonsterInstance — não re-escalar.
+  return { damage: normalRandom(0, Math.max(0, monster.atk || 0)), element: 'physical', kind: 'melee', physical: true };
+}
+
 export function calcDamage(atk, def) {
   const base = Math.max(1, atk - Math.floor(def * 0.6));
   return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));
@@ -136,7 +298,10 @@ export function levelMagicRoll(level, x, power) {
   const base = level / 5;
   const min = base + x * aMin + bMin;
   const max = base + x * aMax + bMax;
-  return Math.max(1, Math.floor(min + Math.random() * Math.max(0, max - min)));
+  // TFS rola o valor entre min e max com normal_random (o engine trunca pra int:
+  // normal_random((int)mina, (int)maxa)), não uniforme — dano tende ao meio da
+  // faixa. Mesma média de antes; só a distribuição fica fiel.
+  return Math.max(1, normalRandom(Math.floor(min), Math.floor(max)));
 }
 
 // Dano de UMA magia de ataque num alvo, pela fórmula do Tibia acima. A escala

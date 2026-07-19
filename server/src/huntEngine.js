@@ -9,8 +9,9 @@
 // restavam (documentadas antes, agora corrigidas).
 import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=147';
 import {
-  spawnMonsterInstance, calcDamage, monsterAttack, computeMaxHp, computeMaxMana,
+  spawnMonsterInstance, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
+  rollPlayerAttack, rollMonsterAttack, reducePhysical, computePlayerArmor, computePlayerDefense,
 } from '../../src/domain/combatFormulas.js?v=157';
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
@@ -49,6 +50,15 @@ function getAtk(session) {
 }
 function getDef(session) {
   return computeDef({ skills: session.skills, equipment: session.equipment, relics: session.relics });
+}
+// Armadura (peças de corpo) e defesa (escudo) do jogador — separadas, fiéis ao
+// TFS (Player::getArmor / Player::getDefense), usadas na redução de dano físico
+// que o jogador SOFRE (Creature::blockHit, ver rollMonsterAttack + reducePhysical).
+function getPlayerArmor(session) {
+  return computePlayerArmor(session.equipment, session.relics);
+}
+function getPlayerDefense(session) {
+  return computePlayerDefense({ skills: session.skills, equipment: session.equipment, relics: session.relics });
 }
 
 // Exportada (também usada por index.js: rotas do Market, pra decrementar/
@@ -223,11 +233,15 @@ async function resolveTick(session) {
   decayStamina(session, cfg, now - (session.lastTickAt || now));
   session.lastTickAt = now;
 
-  // (1) golpe básico — só o alvo da frente (fiel ao cliente: o básico nunca
-  // tem área, só magia/runa podem ter).
-  const atk = getAtk(session);
-  let basicDmg = calcDamage(atk, primary.def) * elementMod(primary.defKey, 'physical');
-  if (voc.attackSkill === 'magic') basicDmg *= 0.5; // poke fraco do mago, mesma calibragem do cliente
+  // (1) golpe básico — só o alvo da frente (o básico nunca tem área, só magia/
+  // runa podem ter). Dano FIEL ao TFS: rola normal_random sobre a fórmula de
+  // arma (WeaponMelee/Distance/Wand::getWeaponDamage) e, se físico (melee/
+  // distância), o monstro reduz pela sua armadura (monster.def) via
+  // reducePhysical (Creature::blockHit). Wand é elemental: não reduz por
+  // armadura, só pelo modificador elemental do alvo.
+  const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics });
+  let basicDmg = atkRoll.damage * elementMod(primary.defKey, atkRoll.element);
+  if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
   primary.hp -= Math.max(1, Math.floor(basicDmg));
   if (voc.attackSkill !== 'magic') {
     const meleeSkillId = equippedWeaponSkillId(session.equipment, session.relics);
@@ -315,8 +329,14 @@ async function resolveTick(session) {
   // "RTC não cura, não usa poção".
   const newPrimary = session.currentPack[0] || null;
   if (newPrimary && !primaryDied && Date.now() - (session.packSpawnedAt || 0) >= SPAWN_GRACE_MS) {
-    const atkResult = monsterAttack(newPrimary, getDef(session));
-    session.hp = Math.max(0, session.hp - atkResult.dmg);
+    // Contra-ataque FIEL ao TFS: rola o ataque do monstro (melee normal_random
+    // (0,atk) físico, ou spell do elemento) e, se FÍSICO, o jogador reduz por
+    // armadura + defesa de escudo (Creature::blockHit); elemental (fogo/energia/
+    // ...) passa direto (jogador não tem resistência modelada).
+    const atkResult = rollMonsterAttack(newPrimary);
+    let dmg = atkResult.damage;
+    if (atkResult.physical) dmg = reducePhysical(dmg, getPlayerArmor(session), getPlayerDefense(session));
+    session.hp = Math.max(0, session.hp - Math.floor(dmg));
   }
   await applyRtcHealing(session, cfg);
 
