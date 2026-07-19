@@ -65,6 +65,26 @@ for (const id of huntMonsterIds) {
   });
 }
 
+// --- Integridade de referências (catálogo inteiro): loot/loja/kit apontando
+// pra item que não existe em ITEMS = drop/compra quebrada. ---
+problems.brokenRef = [];
+for (const [id, m] of Object.entries(MONSTERS)) {
+  (m.loot || []).forEach(([itemId]) => {
+    if (!ITEMS[itemId]) problems.brokenRef.push(`monstro ${id}: loot '${itemId}' não existe`);
+  });
+}
+try {
+  const it = await import('file://' + join(ROOT, 'src/domain/items.js').replace(/\\/g, '/') + v);
+  Object.entries(it.STARTER_KITS || {}).forEach(([voc, kit]) =>
+    Object.values(kit).forEach(id => { if (id && !ITEMS[id]) problems.brokenRef.push(`starter kit ${voc}: item '${id}' não existe`); }));
+  Object.entries(it.STARTER_SUPPLIES || {}).forEach(([voc, kit]) =>
+    Object.keys(kit).forEach(id => { if (!ITEMS[id]) problems.brokenRef.push(`starter supplies ${voc}: item '${id}' não existe`); }));
+} catch (e) { problems.brokenRef.push('erro lendo starter kits: ' + e.message); }
+try {
+  const sc = await import('file://' + join(ROOT, 'src/domain/shopCatalog.js').replace(/\\/g, '/') + v);
+  (sc.SHOP_ITEMS || []).forEach(s => { if (s.itemId && !ITEMS[s.itemId]) problems.brokenRef.push(`loja '${s.id}': item '${s.itemId}' não existe`); });
+} catch {}
+
 let total = 0;
 const section = (title, arr) => {
   if (!arr.length) return;
@@ -79,5 +99,6 @@ section('Sprites de ITEM faltando (404 no console)', problems.missingItemSprite)
 section('Sprites de MONSTRO faltando (404 no console)', problems.missingMonSprite);
 section('Monstros com dados inválidos/placeholder', problems.badMonster);
 section('Magias inválidas', problems.badSpell);
+section('Referências quebradas (loot/loja/kit -> item inexistente)', problems.brokenRef);
 console.log(total ? `\n❌ ${total} problemas` : '\n✅ nenhum problema estático');
 process.exit(total ? 1 : 0);
