@@ -271,6 +271,29 @@ const server = http.createServer(async (req, res) => {
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
       const inventory = {};
       invRows.forEach(r => { inventory[r.item_id] = Number(r.qty); });
+      // Quando NÃO está caçando, player_stats.hp/mana ficam CONGELADOS (o tick
+      // só roda na caçada). Sem regenerar aqui, um reconcile que rode parado
+      // sobrescreve o hp/mana que o cliente regenerou LOCAL pelo valor velho —
+      // a mana/hp "pulam pra baixo sozinhas" no ocioso (bug pego pelo auditor de
+      // browser: regen ocioso oscila). Regenera o valor DEVOLVIDO pelo tempo
+      // desde updated_at, na mesma taxa do cliente (regen*90/min), cap no teto —
+      // mesmo padrão do /hunt/start. Custa 2 reads a mais só nos polls ociosos
+      // (na caçada, activeRow existe e o bloco é pulado).
+      if (!activeRow && stats && stats.updated_at && stats.hp != null && stats.mana != null) {
+        const lastSession = await selectLatest('hunt_sessions', { user_id: user.id, slot }, 'started_at');
+        const vocation = lastSession && lastSession.vocation;
+        const voc = vocation && VOCATIONS[vocation];
+        if (voc) {
+          const eqRows = await selectMany('player_equipment', { user_id: user.id, slot });
+          const equipment = {}; eqRows.forEach(r => { equipment[r.eq_slot] = r.item_id; });
+          const relics = relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) }));
+          const maxHp = computeMaxHp({ vocation, level: stats.level, equipment, relics });
+          const maxMana = computeMaxMana({ vocation, level: stats.level });
+          const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
+          stats.hp = Math.min(maxHp, Number(stats.hp) + (voc.hpRegen || 0) * 90 * idleMin);
+          stats.mana = Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin);
+        }
+      }
       return send(res, 200, {
         ok: true,
         hunting: !!activeRow,
