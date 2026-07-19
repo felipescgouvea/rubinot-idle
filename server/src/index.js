@@ -376,6 +376,7 @@ const server = http.createServer(async (req, res) => {
         // que o servidor realmente matava e pagava.
         pack: liveSession ? liveSession.currentPack.map(m => ({ uid: m.uid, defKey: m.defKey, name: m.name, hp: Math.max(0, m.hp), maxHp: m.maxHp })) : [],
         lastKill: liveSession ? liveSession.lastKill || null : null,
+        combatEvents: liveSession ? (liveSession.combatEvents || []) : [], // log server-truth (dano/cura por ação, ver huntEngine: pushCombat)
       });
     }
 

@@ -184,6 +184,11 @@ let reconcileEpoch = 0;
 // server/src/huntEngine.js: settleKill) — evita reprocessar o mesmo kill em
 // polls sucessivos, já que lastKill fica "parado" no servidor até a próxima morte.
 let lastSeenKillAt = 0;
+// Sequência do último evento de combate já logado (ver server/src/huntEngine.js:
+// pushCombat / /hunt/state combatEvents). O servidor reporta o dano/cura REAL de
+// cada ação; renderCombatEvents loga cada um com o valor NA MESMA LINHA da ação
+// (pedido do Felipe). Reseta a cada início de caçada (o servidor zera combatSeq).
+let lastCombatSeq = 0;
 // Mesma ideia de lastSeenKillAt, pro evento de morte (ver server/src/
 // huntEngine.js: resolveTick — hp<=0 agora encerra a sessão de verdade e
 // grava stats.last_death, em vez de reviver em silêncio e seguir caçando).
@@ -286,6 +291,31 @@ export function renderDensityButtons() {
   document.querySelectorAll('.density-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === active));
 }
 
+// Loga os eventos de combate REPORTADOS pelo servidor (dano/cura real por ação),
+// cada um com o valor NA MESMA LINHA da ação. Substitui a inferência antiga (que
+// derivava o dano do delta de HP e logava a magia/cura em linha separada, sem
+// número). A barra de vida continua animando por applyServerPack; aqui é só o log.
+function renderCombatEvents(events) {
+  if (!Array.isArray(events)) return;
+  for (const ev of events) {
+    if (!ev || ev.seq == null || ev.seq <= lastCombatSeq) continue;
+    lastCombatSeq = ev.seq;
+    if (ev.kind === 'basic') {
+      emit(EVENTS.LOG, t('log.basicAttack', { label: t('hunt.logBasicHit'), dmg: ev.amount, name: ev.target }));
+    } else if (ev.kind === 'spell') {
+      // magia + dano na MESMA linha (reusa o formato de log.basicAttack com um rótulo de magia).
+      emit(EVENTS.LOG, { html: t('log.basicAttack', { label: `🗣️ "${ev.label}"`, dmg: ev.amount, name: ev.target }), cat: 'magia' });
+    } else if (ev.kind === 'heal') {
+      emit(EVENTS.LOG, { html: `💚 "${ev.label}" +${ev.amount}`, cat: 'magia' });
+    } else if (ev.kind === 'monsterhit') {
+      const elKey = MONSTER_ELEMENT_KEYS[ev.element];
+      const spellTag = (ev.element && ev.element !== 'physical') ? t('hunt.logElementTag', { element: elKey ? t(elKey) : ev.element }) : '';
+      emit(EVENTS.LOG, t('log.monsterHitsYou', { name: ev.monster, dmg: ev.amount, spellTag }));
+      emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true, spellElement: ev.element !== 'physical' ? ev.element : null });
+    }
+  }
+}
+
 async function reconcileWithServer() {
   const myEpoch = reconcileEpoch;
   const res = await getHuntState(ACCOUNT.activeSlot);
@@ -377,20 +407,13 @@ async function reconcileWithServer() {
   // esta auditoria. Atualiza ANTES do log de contra-ataque abaixo, pra usar o
   // nome do alvo já correto.
   if (G.hunting && res.pack) applyServerPack(res.pack);
-  // Contra-ataque REAL do monstro (Marco 5/6b, agora sem preview inventado):
-  // se o HP caiu desde a última reconciliação (e não foi level-up, que já
-  // restaura o HP cheio acima), foi o monstro da frente que bateu de verdade.
-  // O NÚMERO vem do delta real; o elemento (spellTag) é só flavor cosmético,
-  // reconstruído a partir do bestiário estático do alvo (ver monsterAttack).
-  if (!leveledUp && G.hunting && currentMonster && s.hp != null && prevPlayerHp != null && s.hp < prevPlayerHp) {
-    const dmg = prevPlayerHp - s.hp;
-    const monDef = MONSTERS[currentMonster.defKey];
-    const preview = monDef ? monsterAttack(monDef, getDef()) : null;
-    const elKey = preview ? MONSTER_ELEMENT_KEYS[preview.element] : null;
-    const spellTag = preview && preview.kind === 'spell' ? t('hunt.logElementTag', { element: elKey ? t(elKey) : preview.element }) : '';
-    emit(EVENTS.LOG, t('log.monsterHitsYou', { name: currentMonster.name, dmg, spellTag }));
-    emit(EVENTS.PLAYER_BATTLE_SIDE, { hit: true, spellElement: preview && preview.kind === 'spell' ? preview.element : null });
-  }
+  // Log de combate SERVER-TRUTH: dano do golpe básico, dano da magia/runa (na
+  // MESMA linha da magia), cura (na linha da magia de cura) e contra-ataque do
+  // monstro — cada um com o VALOR REAL reportado pelo servidor (ver pushCombat).
+  // Substitui a inferência antiga por delta de HP (que logava a magia/cura sem
+  // número, em linha separada). A barra de vida continua animando via
+  // applyServerPack; isto aqui é só o texto do log.
+  if (G.hunting) renderCombatEvents(res.combatEvents);
   // Evento de morte REAL (Marco 6b) — nenhuma simulação local grava mais
   // gold/xp/loot/relic (ver doCosmeticTick); quem alimenta o log de kill, o
   // Hunt Analyzer, o Battle Pass, as missões, os contadores de bestiário/
@@ -446,7 +469,9 @@ function applyServerPack(pack) {
       const applyHit = () => {
         const vis = currentPack.find(cm => String(cm.uid) === uid);
         if (vis) { vis.hp = m.hp; vis._hitAt = Date.now(); }
-        emit(EVENTS.LOG, t('log.basicAttack', { label: t('hunt.logBasicHit'), dmg, name: m.name }));
+        // O LOG do dano do jogador agora vem dos combatEvents server-truth
+        // (renderCombatEvents), com o valor por AÇÃO (básico vs magia). Aqui só
+        // a animação da barra/flash quando o projétil pousa.
         emit(EVENTS.BATTLE_LIST);
         emit(EVENTS.MONSTER_DISPLAY, {});
       };
@@ -553,6 +578,7 @@ function applyServerKillEvents(k) {
 // enquanto a aba estava fechada (ver checkAndResumeHuntSession abaixo).
 function beginLocalLoop() {
   reconcileEpoch++; // invalida qualquer poll pendente da caçada/pausa ANTERIOR (ver reconcileEpoch)
+  lastCombatSeq = 0; // o servidor zera combatSeq a cada startSession (ver pushCombat)
   huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
   // Sala/alvo/estado de diff zerados — o servidor é quem decide quando o
   // próximo grupo aparece (ver server/src/huntEngine.js: tick/nextSpawnAt);
@@ -736,7 +762,8 @@ function applyRtcHealing() {
   // parece que tá usando magia de cura").
   if (spellWants && isSpellReady(healSpellId)) {
     startSpellCd(healSpellId, healSpell.cd);
-    emit(EVENTS.LOG, { html: t('log.spellCast', { words: healSpell.words }), cat: 'magia' });
+    // O log da cura (com o VALOR curado) agora vem dos combatEvents server-truth
+    // (renderCombatEvents) — antes logava só "casting" sem número, em linha à parte.
   }
 }
 
@@ -854,13 +881,13 @@ export function doCosmeticTick() {
       const rune = pick.rune;
       const areaId = rune.area || 'single';
       startAttackGroupCd();
-      emit(EVENTS.LOG, { html: t('log.rtcRuneUsed', { name: rune.name }), cat: 'suprimento' });
+      // Log (com dano) vem dos combatEvents server-truth; aqui só o efeito visual.
       emit(EVENTS.COMBAT_FX, { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid });
     } else if (pick && pick.kind === 'spell') {
       const atkSpellId = pick.id, atkSpell = pick.s;
       startSpellCd(atkSpellId, atkSpell.cd);
       startAttackGroupCd();
-      emit(EVENTS.LOG, { html: t('log.spellCast', { words: atkSpell.words }), cat: 'magia' });
+      // Log (com dano) vem dos combatEvents server-truth; aqui só o efeito/projétil.
       const missile = spellMissileName(atkSpellId);
       if (missile) {
         // Ethereal Spear/Strong Ethereal Spear: joga uma lança de verdade

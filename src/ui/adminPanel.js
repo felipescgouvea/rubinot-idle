@@ -9,7 +9,7 @@ import { ITEMS } from '../domain/items.js?v=140';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=130';
 import { itemIconImg } from './shared.js?v=132';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=144';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=145';
 import { t } from '../i18n/i18n.js?v=143';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders

@@ -78,6 +78,18 @@ function getPlayerAbsorb(session) {
   return computePlayerAbsorb(session.equipment, session.relics);
 }
 
+// Registra um evento de combate com o VALOR REAL (dano/cura) pra o cliente logar
+// — o dano da magia e a cura vão na MESMA linha da ação (pedido do Felipe), em
+// vez de o cliente inferir do delta de HP e logar em linha separada. Ring buffer
+// de ~40; o cliente pega os com seq maior que o último que renderizou (ver
+// /hunt/state: combatEvents). kind: 'basic'|'spell'|'heal'|'monsterhit'.
+function pushCombat(session, ev) {
+  if (!session.combatEvents) { session.combatEvents = []; session.combatSeq = 0; }
+  ev.seq = ++session.combatSeq;
+  session.combatEvents.push(ev);
+  if (session.combatEvents.length > 40) session.combatEvents.shift();
+}
+
 // Resolve a magia de cura EFETIVA do RTC. Usa a escolhida pelo jogador, mas se
 // ela não está disponível pro nível atual, CAI no default apropriado pro nível
 // (defaultHealSpellId já é level-aware: Bruise Bane/Magic Patch < 8, exura/
@@ -130,6 +142,7 @@ async function applyRtcHealing(session, cfg) {
     session.mana -= healSpell.mana;
     startSpellCd(session, healSpellId, healSpell.cd);
     trainSkill(session, 'magic', healSpell.mana, cfg);
+    if (heal > 0) pushCombat(session, { kind: 'heal', label: healSpell.words, amount: heal }); // cura NA MESMA LINHA da magia
   }
 
   const potionReady = Date.now() >= session.potionCdUntil;
@@ -283,6 +296,7 @@ async function resolveTick(session) {
   if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
   const dealt = Math.max(1, Math.floor(basicDmg));
   primary.hp -= dealt;
+  pushCombat(session, { kind: 'basic', amount: dealt, target: primary.name });
   // Imbuement da ARMA (Tibia): Vampirism (life leech), Void (mana leech) e
   // Scorch (dano elemental extra) — aplicados sobre o dano do ataque básico se
   // o imbuement ainda vale (ver domain/imbuements.js: expiresAt). Efeito
@@ -350,7 +364,13 @@ async function resolveTick(session) {
     }
 
     if (hitFn) {
-      if (primary.hp > 0) primary.hp -= Math.max(1, Math.floor(hitFn() * elementMod(primary.defKey, element)));
+      const label = pick.kind === 'spell' ? pick.s.words : pick.rune.name;
+      if (primary.hp > 0) {
+        const sdmg = Math.max(1, Math.floor(hitFn() * elementMod(primary.defKey, element)));
+        primary.hp -= sdmg;
+        // dano da magia/runa vai NA MESMA LINHA da ação no log do cliente.
+        pushCombat(session, { kind: 'spell', label, element, amount: sdmg, target: primary.name });
+      }
       if (isAreaAttack(areaId) && pack.length > 1) {
         const maxTargets = areaMaxTargets(areaId);
         pack.slice(1, maxTargets).forEach(tgt => {
@@ -387,8 +407,9 @@ async function resolveTick(session) {
     const pDef = getPlayerDefense(session);
     const pAbsorb = getPlayerAbsorb(session);
     // (a) melee do monstro — sempre, físico.
-    const meleeDmg = reducePhysical(rollMonsterMelee(newPrimary), pArmor, pDef);
-    session.hp = Math.max(0, session.hp - Math.floor(meleeDmg));
+    const meleeDmg = Math.floor(reducePhysical(rollMonsterMelee(newPrimary), pArmor, pDef));
+    session.hp = Math.max(0, session.hp - meleeDmg);
+    let monsterDealt = meleeDmg, monsterElement = 'physical';
     // (b) magia do monstro — com chance, independente do melee. Físico reduz por
     // armadura/defesa; elemental reduz pela RESISTÊNCIA do jogador (fiel ao TFS).
     if (session.hp > 0 && newPrimary.spells && newPrimary.spells.length && Math.random() < MONSTER_SPELL_CHANCE) {
@@ -397,9 +418,13 @@ async function resolveTick(session) {
         let sdmg = sp.damage;
         if (sp.physical) sdmg = reducePhysical(sdmg, pArmor, pDef);
         else sdmg = reduceElemental(sdmg, sp.element, pAbsorb);
-        session.hp = Math.max(0, session.hp - Math.floor(sdmg));
+        sdmg = Math.floor(sdmg);
+        session.hp = Math.max(0, session.hp - sdmg);
+        monsterDealt += sdmg;
+        if (sdmg > 0 && !sp.physical) monsterElement = sp.element;
       }
     }
+    if (monsterDealt > 0) pushCombat(session, { kind: 'monsterhit', amount: monsterDealt, element: monsterElement, monster: newPrimary.name });
   }
   await applyRtcHealing(session, cfg);
 
@@ -502,6 +527,8 @@ export function startSession(session) {
   session.attackGroupCdUntil = 0;
   session.potionCdUntil = 0;
   session.lastTickAt = Date.now();
+  session.combatSeq = 0;      // sequência dos eventos de combate (log server-truth)
+  session.combatEvents = [];  // ring buffer dos últimos eventos (ver pushCombat)
   // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
   // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
   session.timer = setInterval(() => doTick(session), TICK_MS);
