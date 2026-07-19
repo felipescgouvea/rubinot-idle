@@ -170,8 +170,23 @@ const server = http.createServer(async (req, res) => {
       const maxMana = computeMaxMana({ vocation: body.vocation, level });
       // hp/mana retomam de onde a sessão anterior deixou (ver flushVitals em
       // huntEngine.js); sem valor salvo ainda (personagem novo), começa cheio.
-      const hp = stats && stats.hp != null ? Math.min(maxHp, stats.hp) : maxHp;
-      const mana = stats && stats.mana != null ? Math.min(maxMana, stats.mana) : maxMana;
+      let hp = stats && stats.hp != null ? Math.min(maxHp, stats.hp) : maxHp;
+      let mana = stats && stats.mana != null ? Math.min(maxMana, stats.mana) : maxMana;
+      // Regeneração natural de hp/mana pelo tempo OCIOSO desde o último flush —
+      // espelha o regen local do cliente enquanto parado (huntUseCases.js:
+      // startRegen faz +regen*3 a cada 2s = regen*90/min sem caçar). Sem isto,
+      // o cliente mostra mais mana do que player_stats tem (o regen ocioso só
+      // era local) e o 1º reconcile ao dar play DERRUBA a mana pro valor velho
+      // do servidor (bug: "mana caiu de 600 pra 500 sozinha ao dar play"). Mesmo
+      // padrão da stamina abaixo. Cap no teto.
+      if (stats && stats.updated_at) {
+        const voc = VOCATIONS[body.vocation];
+        const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
+        if (voc) {
+          hp = Math.min(maxHp, hp + (voc.hpRegen || 0) * 90 * idleMin);
+          mana = Math.min(maxMana, mana + (voc.manaRegen || 0) * 90 * idleMin);
+        }
+      }
       // Stamina regenera (1/3 da taxa de queda) pelo tempo REAL que passou
       // desde o último flush — cobre tanto "parado no jogo" quanto "com a
       // aba fechada", igual seria descansando (não caçando) nesse intervalo.
