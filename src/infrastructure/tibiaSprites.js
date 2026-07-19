@@ -18,6 +18,15 @@ export const SPRITE_OVERRIDE = {
   morgul: 'Spectre.gif',
   corrupted_one: 'Blightwalker.gif',
   nzoth: 'World_Devourer.gif',
+  // A sprite real existe com o "Of" maiúsculo (nome antigo); o nome exibido
+  // virou 'Guardian of Tales' (correto), então o override aponta pro arquivo.
+  guardian_of_tales: 'Guardian_Of_Tales.gif',
+  // Shadowthorn (elfos corrompidos do jogo) não existem no Tibia — usam sprites
+  // de elfo, tematicamente corretos, em vez de cair no 404/emoji.
+  shadowthorn: 'Elf.gif',
+  shadowthorn_splinter: 'Elf_Scout.gif',
+  shadowthorn_deceiver: 'Elf_Overseer.gif',
+  shadowthorn_templar: 'Elf_Arcanist.gif',
 };
 
 // ?sv (sprite version) força o navegador a re-baixar quando o CONTEÚDO dos
@@ -100,11 +109,19 @@ export function markSpriteFailed(url) { failedSprites.add(url); }
 // conseguir registrar a falha antes de trocar pelo emoji.
 if (typeof window !== 'undefined') window.__markSpriteFailed = markSpriteFailed;
 
-// Runas iniciais de mago/paladino com nome INVENTADO (não existem no Tibia,
-// logo não têm sprite próprio em assets/sprites/items) — pré-marca como falho
-// pra o ícone ir direto pro emoji 📜, sem disparar um GET 404 no console a cada
-// personagem novo (bug reportado: "vários erros no dev console").
-['lightest_missile_rune', 'light_stone_shower_rune'].forEach(id => {
+// Itens renderizados (kit/loja) cujo sprite .webp NÃO existe em
+// assets/sprites/items — pré-marca como falho pra o ícone ir direto pro emoji,
+// sem disparar GET 404 no console (bug: "vários erros no dev console"). Lista
+// derivada de scripts/audit-static.mjs — se a auditoria acusar sprite de item
+// novo faltando, adicione o id aqui (ou baixe a sprite real). Os rods/wands são
+// itens reais do Tibia ainda não baixados; as 2 runas são inventadas do jogo.
+export const SPRITELESS_ITEMS = [
+  'lightest_missile_rune', 'light_stone_shower_rune', 'create_food_rune', 'great_light_rune',
+  'springsprout_rod', 'terra_rod', 'hailstorm_rod', 'necrotic_rod',
+  'wand_of_draconia', 'wand_of_starstorm', 'wand_of_voodoo', 'wand_of_decay',
+  'wand_of_dementia', 'cluster_of_solace',
+];
+SPRITELESS_ITEMS.forEach(id => {
   markSpriteFailed(spriteUrl(itemSpriteFile(id)));
 });
 
