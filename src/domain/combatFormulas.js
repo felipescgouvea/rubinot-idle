@@ -263,6 +263,29 @@ export function rollMonsterAttack(monster) {
   return { damage: normalRandom(0, Math.max(0, monster.atk || 0)), element: 'physical', kind: 'melee', physical: true };
 }
 
+// Cadência FIEL ao TFS: melee e magia do monstro disparam INDEPENDENTES (cada um
+// no seu intervalo), não "um ou outro". Estas duas funções separam os dois golpes
+// pro tick do servidor agendar cada um por conta própria (ver huntEngine.js).
+
+// Só o MELEE físico do monstro (dano cru; a redução por armadura/defesa é feita
+// por fora). monster.atk é o dano MÁXIMO — normal_random(0, atk).
+export function rollMonsterMelee(monster) {
+  return normalRandom(0, Math.max(0, monster.atk || 0));
+}
+
+// Uma magia do monstro (elemento + dano), ou null se não tiver spells.
+// normal_random(min, max) com o spellMult (Boss Rush) aplicado. `physical` diz
+// se o alvo reduz por armadura (só físico) — elemental passa direto.
+export function rollMonsterSpell(monster) {
+  const spells = monster.spells;
+  if (!spells || !spells.length) return null;
+  const s = spells[Math.floor(Math.random() * spells.length)];
+  const min = Number.isFinite(+s.min) ? +s.min : +s.max;
+  const raw = normalRandom(min, +s.max) * (monster.spellMult || 1);
+  const element = s.element || 'physical';
+  return { damage: Math.max(0, Math.floor(raw)), element, physical: element === 'physical' };
+}
+
 export function calcDamage(atk, def) {
   const base = Math.max(1, atk - Math.floor(def * 0.6));
   return Math.max(1, Math.floor(base * (0.8 + Math.random() * 0.4)));

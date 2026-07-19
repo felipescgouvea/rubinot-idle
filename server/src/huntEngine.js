@@ -11,7 +11,7 @@ import { ZONES, MONSTERS, boostedZoneForDate, BOSS_MONSTER_IDS } from '../../src
 import {
   spawnMonsterInstance, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
-  rollPlayerAttack, rollMonsterAttack, reducePhysical, computePlayerArmor, computePlayerDefense,
+  rollPlayerAttack, rollMonsterMelee, rollMonsterSpell, reducePhysical, computePlayerArmor, computePlayerDefense,
 } from '../../src/domain/combatFormulas.js?v=157';
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
@@ -34,6 +34,14 @@ const live = new Map();
 
 const ATTACK_GROUP_CD_MS = 2000;
 const POTION_CD_MS = 1000;
+// Cadência de ataque FIEL ao TFS: o tick roda numa batida fixa de 2s (a
+// velocidade de ataque de arma padrão do Tibia, ~2000ms — NÃO escala com
+// spd/haste, que no Tibia é só movimento). A cada tick o jogador dá um golpe,
+// o monstro dá um melee, e — independente do melee, como no TFS — tenta uma
+// magia com MONSTER_SPELL_CHANCE. Antes o tick escalava por spd e o monstro
+// fazia "50% melee OU 50% magia" (um ou outro), o que não é o TFS.
+const TICK_MS = 2000;
+const MONSTER_SPELL_CHANCE = 0.5;
 // Folga entre um monstro spawnar e poder contra-atacar — dá tempo do cliente
 // (poll de /hunt/state a cada 250ms) mostrar "X appeared!" na tela antes de
 // qualquer risco de dano real (ver tick()/resolveTick abaixo).
@@ -329,14 +337,24 @@ async function resolveTick(session) {
   // "RTC não cura, não usa poção".
   const newPrimary = session.currentPack[0] || null;
   if (newPrimary && !primaryDied && Date.now() - (session.packSpawnedAt || 0) >= SPAWN_GRACE_MS) {
-    // Contra-ataque FIEL ao TFS: rola o ataque do monstro (melee normal_random
-    // (0,atk) físico, ou spell do elemento) e, se FÍSICO, o jogador reduz por
-    // armadura + defesa de escudo (Creature::blockHit); elemental (fogo/energia/
-    // ...) passa direto (jogador não tem resistência modelada).
-    const atkResult = rollMonsterAttack(newPrimary);
-    let dmg = atkResult.damage;
-    if (atkResult.physical) dmg = reducePhysical(dmg, getPlayerArmor(session), getPlayerDefense(session));
-    session.hp = Math.max(0, session.hp - Math.floor(dmg));
+    // Contra-ataque FIEL ao TFS: melee e magia disparam INDEPENDENTES no mesmo
+    // tick (2s), não "um ou outro". Físico reduz por armadura + defesa de escudo
+    // (Creature::blockHit); elemental (fogo/energia/...) passa direto (jogador
+    // sem resistência modelada). Reusa a armadura/defesa calculada uma vez.
+    const pArmor = getPlayerArmor(session);
+    const pDef = getPlayerDefense(session);
+    // (a) melee do monstro — sempre, físico.
+    const meleeDmg = reducePhysical(rollMonsterMelee(newPrimary), pArmor, pDef);
+    session.hp = Math.max(0, session.hp - Math.floor(meleeDmg));
+    // (b) magia do monstro — com chance, independente do melee.
+    if (session.hp > 0 && newPrimary.spells && newPrimary.spells.length && Math.random() < MONSTER_SPELL_CHANCE) {
+      const sp = rollMonsterSpell(newPrimary);
+      if (sp) {
+        let sdmg = sp.damage;
+        if (sp.physical) sdmg = reducePhysical(sdmg, pArmor, pDef);
+        session.hp = Math.max(0, session.hp - Math.floor(sdmg));
+      }
+    }
   }
   await applyRtcHealing(session, cfg);
 
@@ -432,8 +450,9 @@ export function startSession(session) {
   session.attackGroupCdUntil = 0;
   session.potionCdUntil = 0;
   session.lastTickAt = Date.now();
-  const tickMs = Math.max(400, 2400 / Math.max(0.1, session.spd));
-  session.timer = setInterval(() => doTick(session), tickMs);
+  // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
+  // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
+  session.timer = setInterval(() => doTick(session), TICK_MS);
   session.flushTimer = setInterval(() => flushVitals(session).catch(() => {}), 5000);
   live.set(session.id, session);
 }
