@@ -60,7 +60,10 @@ try {
   await page.click('#auth-submit');
   log('login enviado; aguardando boot...');
   await page.waitForFunction(() => { const g = document.getElementById('auth-gate'); return !g || g.style.display === 'none' || g.offsetParent === null; }, { timeout: 45000 }).catch(() => {});
-  await page.waitForTimeout(4000);
+  // dá um tempo curto pro char aparecer — com o fix ele mostra rápido; sem o
+  // fix, fica ~5s na tela de "criar personagem" (char bloqueado atrás das idas
+  // ao servidor do resume). Checa dentro dessa janela.
+  await page.waitForTimeout(2000);
 
   // hook: conta efeitos de combate (projétil/área) criados no palco
   await page.evaluate(() => {
@@ -82,11 +85,13 @@ try {
     };
   });
   log('estado pós-boot:', JSON.stringify(boot));
-  // teste: se o localStorage TEM o char mas a UI mostra criação, recarrega e vê
-  // se aparece — discrimina bug do 1º login (ordem) vs load quebrado de vez.
+  // Bug do 1º login (dispositivo novo): se o localStorage TEM o char mas a UI
+  // ainda mostra "criar personagem" depois da janela, o render do char está
+  // travado atrás das idas ao servidor do resume (ver main.js: render antes do
+  // await). Flaga e recarrega pra o resto do teste seguir.
   if (boot.nameInputVisible && boot.localStorageSave && boot.localStorageSave.voc0) {
-    problems.push('LOAD: char não carrega no 1º login — localStorage tem o char mas a UI mostra "criar personagem" (jogador em dispositivo novo acha que perdeu o char); só reload resolve');
-    log('DIVERGE: localStorage tem char mas UI mostra criação — recarregando pra prosseguir o resto do teste...');
+    problems.push('RENDER: char demora a aparecer no 1º login — localStorage tem o char mas a UI segue em "criar personagem" (bloqueado atrás do resume/servidor); jogador em dispositivo novo acha que perdeu o char');
+    log('DIVERGE: char não apareceu na janela — recarregando pra prosseguir...');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(7000);
   }

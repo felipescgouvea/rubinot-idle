@@ -145,6 +145,14 @@ async function bootGame() {
   // offline (ver persistenceUseCases.js: applyOfflineProgress) — se o
   // servidor caiu enquanto o jogador estava fora, essa janela específica
   // simplesmente não rende nada, de propósito (ver comentário lá).
+  // Renderiza o personagem JÁ (G tem vocação/level/etc. do loadGame), ANTES do
+  // await abaixo — checkAndResumeHuntSession faz idas ao servidor que podem
+  // levar segundos (conexão lenta / servidor frio). Sem isto, a tela ficava em
+  // "criar personagem" durante esse await mesmo o char já carregado (bug pego
+  // pelo auditor de browser: G=druid mas a UI só reagia ~5s depois). O
+  // resume/reconcile re-renderiza depois com hp/mana/level já reconciliados.
+  renderCharPanel();
+  emit(EVENTS.HEADER_STATS);
   await checkAndResumeHuntSession();
   renderAuthUser();
   renderCharPanel();
@@ -202,13 +210,6 @@ async function startAuthedSession() {
   // tivesse sumido.
   await bootGame();
   hideAuthGate();
-  // Re-render do painel de personagem após revelar a tela. No 1º login em
-  // dispositivo novo o estado do char assenta num tick POSTERIOR ao render do
-  // boot (G.vocation ainda falsy na hora), então a UI ficava travada na tela de
-  // "criar personagem" mesmo o jogador já tendo char (bug pego pelo auditor de
-  // browser: G carregava certo segundos depois; só reload resolvia). Re-renderiza
-  // em alguns instantes pra refletir o estado quando ele assenta.
-  [0, 250, 800].forEach(d => setTimeout(() => { renderCharPanel(); emit(EVENTS.HEADER_STATS); }, d));
 }
 
 // ---- idioma: aplica ANTES de qualquer render, senão a UI pisca em inglês e
