@@ -1,6 +1,6 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { VOCATIONS } from '../domain/character.js?v=156';
-import { STARTER_KITS, STARTER_SUPPLIES } from '../domain/items.js?v=139';
+import { STARTER_KITS, STARTER_SUPPLIES } from '../domain/items.js?v=140';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { addItemToInventory } from './inventoryCore.js?v=127';
 import { startRegen } from './huntUseCases.js?v=191';

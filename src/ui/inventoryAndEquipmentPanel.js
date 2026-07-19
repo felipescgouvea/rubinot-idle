@@ -2,7 +2,7 @@
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
 import { G } from '../application/gameStore.js?v=129';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=139';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=140';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { saveGame } from '../application/saveGameUseCase.js?v=129';
@@ -35,6 +35,25 @@ function statCompareHtml(newItem, slotType, alreadyEquipped = false) {
   }).join('');
   const head = isEquippedItself ? t('inventory.equipped') : current ? t('inventory.compareWith', { name: current.name }) : t('inventory.noItemInSlot');
   return `<div class="stat-cmp"><div class="stat-cmp-head">${head}</div>${rows}</div>`;
+}
+
+// Resistência elemental do item (objeto `absorb`, % por elemento). Renderiza uma
+// linha "🔥 +8% ❄️ +6%" no detalhe — sem isso o jogador não sabe que aquela peça
+// protege contra fogo/energia/etc. (o lever de sobrevivência no endgame). Valor
+// negativo = vulnerabilidade (leva mais dano), destacado em vermelho.
+// Rótulo por emoji (universal, sem i18n): 🛡️ + chips "🔥 +8%". Emoji+número já é
+// autoexplicativo em qualquer idioma, evitando um bump em cascata do i18n só por
+// causa deste rótulo. Positivo = resistência (verde); negativo = vulnerabilidade
+// (vermelho).
+const ELEMENT_ICON = { fire: '🔥', energy: '⚡', ice: '❄️', earth: '🌿', death: '💀', holy: '✨' };
+function absorbHtml(item) {
+  if (!item || !item.absorb) return '';
+  const parts = Object.entries(item.absorb).filter(([, p]) => p).map(([el, p]) => {
+    const cls = p > 0 ? 'stat-up' : 'stat-down';
+    return `<span class="absorb-chip ${cls}">${ELEMENT_ICON[el] || el} ${p > 0 ? '+' : ''}${p}%</span>`;
+  }).join(' ');
+  if (!parts) return '';
+  return `<div class="item-absorb">🛡️ ${parts}</div>`;
 }
 
 // Ordem de exibição dos itens: começa por G.inventoryOrder (escolha do
@@ -148,6 +167,7 @@ export function openRelicModal(relicId, fromBag = false) {
     <h3>${itemIconImg(relic.itemId)} ${base.name}</h3>
     <p style="color:${tier.color};font-weight:700">${t('inventory.relicTier', { tier: t(tier.name) })}</p>
     ${EQUIPPABLE_TYPES.includes(base.type) ? statCompareHtml(resolved, base.type, equipped) : ''}
+    ${absorbHtml(resolved)}
     <p style="margin-top:8px; color:#6272a4; font-size:12px">${t('inventory.sellLabel')} ${sellPrice} ${goldIconImg('inline-icon')}</p>
     ${!equipped ? `<button onclick="equipRelic('${relic.id}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('inventory.equip')}</button>` : ''}
     ${equipped ? `<button onclick="unequipItem('${relic.id}')" style="margin-top:8px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('inventory.unequip')}</button>` : ''}
@@ -177,6 +197,7 @@ export function openItemModal(itemId, fromBag = false) {
     <h3>${itemIconImg(itemId)} ${item.name}</h3>
     <p class="muted" style="font-size:12px">${t('inventory.qtyLabel', { qty })}</p>
     ${statsHtml}
+    ${absorbHtml(item)}
     <p style="margin-top:8px; color:#6272a4; font-size:12px">${t('inventory.sellLabel')} ${item.sell} ${goldIconImg('inline-icon')}</p>
     ${isConsumable ? `<button onclick="useItem('${itemId}')" style="margin-top:8px;background:#3a7bd5;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('inventory.use')}</button>` : ''}
     ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" style="margin-top:8px;background:#c45c1a;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('inventory.equip')}</button>` : ''}

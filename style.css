@@ -1646,6 +1646,11 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .stat-cmp-val .stat-up { color: #4ade80; }
 .stat-cmp-val .stat-down { color: #f87171; }
 .stat-cmp-val .stat-same { color: #8a92b8; }
+/* Resistência elemental (item.absorb) — chips no detalhe do item */
+.item-absorb { margin: 8px 0 2px; font-size: 12px; color: #b8c0e0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.absorb-chip { display: inline-flex; align-items: center; gap: 2px; padding: 2px 7px; border-radius: 10px; font-weight: 700; font-variant-numeric: tabular-nums; background: #1c2136; border: 1px solid #2b3350; }
+.absorb-chip.stat-up { color: #4ade80; }
+.absorb-chip.stat-down { color: #f87171; }
 
 /* ============ MODAL DE BATALHA ============ */
 /* separado do modal genérico de propósito — ver o comentário no index.html */

@@ -12,7 +12,7 @@ const [CF, BE, CH, SP, IT, EL, RT] = await Promise.all([
   import(base + 'combatFormulas.js' + v), import(base + 'bestiary.js' + v), import(base + 'character.js' + v),
   import(base + 'spells.js' + v), import(base + 'items.js' + v), import(base + 'elements.js' + v), import(base + 'rtcConfig.js' + v),
 ]);
-const { rollPlayerAttack, reducePhysical, rollMonsterAttack, computeMaxHp, computeMaxMana, computePlayerArmor, computePlayerDefense, spellAttackDamage, spellHealAmount, equippedWeaponSkillId } = CF;
+const { rollPlayerAttack, reducePhysical, reduceElemental, computePlayerAbsorb, rollMonsterAttack, computeMaxHp, computeMaxMana, computePlayerArmor, computePlayerDefense, spellAttackDamage, spellHealAmount, equippedWeaponSkillId } = CF;
 const { MONSTERS } = BE;
 const { VOCATIONS, VOC_TRAINING, XP_TABLE } = CH;
 const { SPELLS, isSpellAvailable, defaultHealSpellId } = SP;
@@ -84,11 +84,12 @@ const TARGET = { 8: 'troll', 25: 'minotaur', 50: 'dragon', 75: 'hydra', 100: 'de
 const HEAL_POTION = lvl => lvl >= 130 ? 'ultimate_health_potion' : lvl >= 80 ? 'great_health_potion' : lvl >= 50 ? 'strong_health_potion' : 'health_potion';
 const MANA_POTION = lvl => lvl >= 80 ? 'great_mana_potion' : lvl >= 50 ? 'strong_mana_potion' : 'mana_potion';
 
-function simulate(voc, lvl, minutes, mode = 'attack') {
+function simulate(voc, lvl, minutes, mode = 'attack', absorbOverride = null) {
   const equipment = gearTier(voc, lvl), skills = skillsFor(voc, lvl), relics = [];
   const maxHp = computeMaxHp({ vocation: voc, level: lvl, equipment, relics });
   const maxMana = computeMaxMana({ vocation: voc, level: lvl });
   const armor = computePlayerArmor(equipment, relics), defense = computePlayerDefense({ skills, equipment, relics, fightMode: mode });
+  const absorb = absorbOverride || computePlayerAbsorb(equipment, relics);
   const ml = skills.magic.lv, meleeSkillId = equippedWeaponSkillId(equipment, relics);
   const meleeSkill = (skills[meleeSkillId] || { lv: 10 }).lv;
   const weapon = ITEMS[equipment.weapon] || {}; const weaponAtk = weapon.atk || 7;
@@ -132,7 +133,9 @@ function simulate(voc, lvl, minutes, mode = 'attack') {
     // (5) contra-ataque do monstro (sem grace no sim)
     if (mon.hp > 0) {
       const mr = rollMonsterAttack(mon);
-      let d = mr.damage; if (mr.physical) d = reducePhysical(d, armor, defense);
+      let d = mr.damage;
+      if (mr.physical) d = reducePhysical(d, armor, defense);
+      else d = reduceElemental(d, mr.element, absorb); // resistência elemental do equipamento (fiel ao TFS)
       d = Math.floor(d); state.hp -= d; state.dmgTaken += d;
     }
     // morte
@@ -178,4 +181,23 @@ for (const lvl of [25, 50]) {
     const label = { attack: '⚔️ Ofensivo', balanced: '⚖️ Equilibrado', defense: '🛡️ Defensivo' }[mode];
     console.log(label.padEnd(12), String(lvl).padEnd(4), String(r.dps).padStart(5), String(r.dtps).padStart(15), String(r.killsH).padStart(8), String(r.deathsH).padStart(9));
   }
+}
+
+// --- RESISTÊNCIA ELEMENTAL: o lever de sobrevivência. Mesmo mago, mesmo alvo
+// mono-elemento, variando só a % de resistência daquele elemento. Mostra que
+// equipar o set certo (Magma/Dragon vs fogo, Frozen vs gelo) reduce dano sofrido
+// e mortes/h — o objetivo da feature (endgame injogável p/ magos sem isso). ---
+console.log('\n\n=== RESISTÊNCIA ELEMENTAL — impacto na sobrevivência (mesmo char, varia só a resistência) ===');
+console.log('cenário'.padEnd(34), 'dano/s sofrido'.padStart(15), 'mortes/h'.padStart(9));
+const resistCases = [
+  { label: 'Sorcerer 50 vs Dragon (fogo) — 0%', voc: 'sorcerer', lvl: 50, absorb: {} },
+  { label: 'Sorcerer 50 vs Dragon (fogo) — 40%', voc: 'sorcerer', lvl: 50, absorb: { fire: 40 } },
+  { label: 'Sorcerer 50 vs Dragon (fogo) — 80%', voc: 'sorcerer', lvl: 50, absorb: { fire: 80 } },
+  { label: 'Druid 75 vs Hydra (gelo/terra) — 0%', voc: 'druid', lvl: 75, absorb: {} },
+  { label: 'Druid 75 vs Hydra (gelo/terra) — 60%', voc: 'druid', lvl: 75, absorb: { ice: 60, earth: 60 } },
+  { label: 'Druid 75 vs Hydra (gelo/terra) — 80%', voc: 'druid', lvl: 75, absorb: { ice: 80, earth: 80 } },
+];
+for (const c of resistCases) {
+  const r = simulate(c.voc, c.lvl, 30, 'attack', c.absorb);
+  console.log(c.label.padEnd(34), String(r.dtps).padStart(15), String(r.deathsH).padStart(9));
 }

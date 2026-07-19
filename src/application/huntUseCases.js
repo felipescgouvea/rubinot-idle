@@ -12,7 +12,7 @@ import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } fro
 import { monsterAttack } from '../domain/combatFormulas.js?v=158';
 import { elementMod } from '../domain/elements.js?v=125';
 import { STAMINA_MAX } from '../domain/stamina.js?v=125';
-import { ITEMS } from '../domain/items.js?v=139';
+import { ITEMS } from '../domain/items.js?v=140';
 import { MONSTERS } from '../domain/bestiary.js?v=147';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=127';

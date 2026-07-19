@@ -12,7 +12,8 @@ import {
   spawnMonsterInstance, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
   rollPlayerAttack, rollMonsterMelee, rollMonsterSpell, reducePhysical, computePlayerArmor, computePlayerDefense,
-} from '../../src/domain/combatFormulas.js?v=158';
+  computePlayerAbsorb, reduceElemental,
+} from '../../src/domain/combatFormulas.js?v=159';
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
 import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/character.js?v=156';
@@ -67,6 +68,13 @@ function getPlayerArmor(session) {
 }
 function getPlayerDefense(session) {
   return computePlayerDefense({ skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
+}
+// Resistência elemental do jogador (% de absorção por elemento, das peças
+// equipadas) — fiel ao TFS (Item::getAbsorbPercent). Reduz o dano elemental
+// que o jogador SOFRE das magias do monstro (ver reduceElemental no contra-
+// ataque). Lida fresca a cada tick pra respeitar troca de equipamento na caçada.
+function getPlayerAbsorb(session) {
+  return computePlayerAbsorb(session.equipment, session.relics);
 }
 
 // Exportada (também usada por index.js: rotas do Market, pra decrementar/
@@ -343,15 +351,18 @@ async function resolveTick(session) {
     // sem resistência modelada). Reusa a armadura/defesa calculada uma vez.
     const pArmor = getPlayerArmor(session);
     const pDef = getPlayerDefense(session);
+    const pAbsorb = getPlayerAbsorb(session);
     // (a) melee do monstro — sempre, físico.
     const meleeDmg = reducePhysical(rollMonsterMelee(newPrimary), pArmor, pDef);
     session.hp = Math.max(0, session.hp - Math.floor(meleeDmg));
-    // (b) magia do monstro — com chance, independente do melee.
+    // (b) magia do monstro — com chance, independente do melee. Físico reduz por
+    // armadura/defesa; elemental reduz pela RESISTÊNCIA do jogador (fiel ao TFS).
     if (session.hp > 0 && newPrimary.spells && newPrimary.spells.length && Math.random() < MONSTER_SPELL_CHANCE) {
       const sp = rollMonsterSpell(newPrimary);
       if (sp) {
         let sdmg = sp.damage;
         if (sp.physical) sdmg = reducePhysical(sdmg, pArmor, pDef);
+        else sdmg = reduceElemental(sdmg, sp.element, pAbsorb);
         session.hp = Math.max(0, session.hp - Math.floor(sdmg));
       }
     }

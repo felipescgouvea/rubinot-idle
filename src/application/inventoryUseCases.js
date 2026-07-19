@@ -1,6 +1,6 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
 import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer } from '../infrastructure/authClient.js?v=134';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=139';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=140';
 import { RARITY_TIERS } from '../domain/rarity.js?v=126';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { getMagic } from './stats.js?v=126';

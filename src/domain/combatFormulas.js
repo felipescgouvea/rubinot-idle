@@ -5,7 +5,7 @@
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
 import { VOCATIONS, VOC_TRAINING } from './character.js?v=156';
-import { resolveEquippedItem } from './items.js?v=139';
+import { resolveEquippedItem } from './items.js?v=140';
 import { pickWeightedMonster } from './adminConfig.js?v=128';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
@@ -188,6 +188,39 @@ export function computePlayerArmor(equipment, relics) {
     if (item && item.def) armor += item.def;
   });
   return armor;
+}
+
+// ---- Resistência elemental do jogador (Tibia/TFS: Item::getAbsorbPercent) ----
+// No TFS, dano elemental (fogo/energia/gelo/terra/morte/sagrado) NÃO reduz por
+// armadura/defesa — só pela RESISTÊNCIA do alvo, uma % de absorção por elemento
+// que vem das peças de equipamento (`absorbPercent[COMBAT_*]`). Sem isso, no
+// endgame o dano elemental dos monstros passava 100% direto e magos/paladinos
+// (sem escudo/armadura pesada) morriam sem chance. Aqui somamos o `absorb` de
+// cada peça equipada e reduzimos o dano daquele elemento por essa %.
+export const ELEMENTAL_RESIST_CAP = 80; // teto por elemento — nunca imunidade total (fiel: Tibia não deixa chegar a 100%)
+export const ELEMENTS = ['fire', 'energy', 'ice', 'earth', 'death', 'holy'];
+export function computePlayerAbsorb(equipment, relics) {
+  const totals = {};
+  Object.values(equipment).forEach(slotValue => {
+    const item = resolveEquippedItem(slotValue, relics);
+    if (!item || !item.absorb) return;
+    Object.entries(item.absorb).forEach(([el, pct]) => {
+      if (pct) totals[el] = (totals[el] || 0) + pct;
+    });
+  });
+  Object.keys(totals).forEach(el => { totals[el] = Math.min(ELEMENTAL_RESIST_CAP, totals[el]); });
+  return totals;
+}
+
+// Reduz um dano de `element` pela resistência (%) do jogador. Físico não passa
+// aqui (reduz por armadura/defesa em reducePhysical). `absorb` é o mapa vindo de
+// computePlayerAbsorb. Também suporta VULNERABILIDADE (absorb negativo = leva
+// mais dano), fiel ao Tibia (ex.: fogo em quem é fraco a fogo).
+export function reduceElemental(damage, element, absorb) {
+  if (!absorb || !element || element === 'physical') return damage;
+  const pct = absorb[element] || 0;
+  if (!pct) return damage;
+  return Math.max(0, damage * (1 - pct / 100));
 }
 
 // Estilo de luta (Fight Mode do Tibia/TFS). attackFactor DIVIDE o dano do
