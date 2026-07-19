@@ -430,6 +430,15 @@ export function fetchMarketStatsOnServer(slot, itemId) {
   return huntFetch(`/market/stats?slot=${slot}&itemId=${encodeURIComponent(itemId)}`);
 }
 
+// Buy offer (ordem de compra): reserva o gold da carteira — ver /market/list-buy.
+export function listBuyOfferOnServer(slot, itemId, qty, price, buyerName) {
+  return huntFetch('/market/list-buy', { method: 'POST', body: { slot, itemId, qty, price, sellerName: buyerName } });
+}
+// Preencher uma buy offer (vendedor entrega o item) — ver /market/fill.
+export function fillBuyOfferOnServer(slot, listingId, qty) {
+  return huntFetch('/market/fill', { method: 'POST', body: { slot, listingId, qty } });
+}
+
 // ---- Highscores globais (ver server/src/index.js) ----
 // payload: { slot, playerName, arenaPoints, tasksDone, world, bestiaryCount }
 // — level/xp/kills/skills o servidor já lê sozinho de player_stats/player_skills.

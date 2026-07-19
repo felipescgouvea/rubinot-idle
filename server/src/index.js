@@ -73,6 +73,17 @@ function defaultSkills() {
   return out;
 }
 
+// Devolve o gold RESERVADO de uma buy offer à carteira do comprador (o poster).
+// Numa buy offer, o "seller_*" da linha guarda o COMPRADOR (quem quer comprar) e
+// o gold fica reservado na carteira desde o /market/list-buy. Usado ao cancelar
+// ou expirar a oferta.
+async function refundBuyOfferGold(listing) {
+  const total = Number(listing.price_per_unit) * Number(listing.qty);
+  const wallet = await selectOne('market_wallet', { user_id: listing.seller_user_id, slot: listing.seller_slot });
+  const balance = (wallet ? Number(wallet.balance) : 0) + total;
+  await upsertRow('market_wallet', { user_id: listing.seller_user_id, slot: listing.seller_slot, balance, updated_at: new Date().toISOString() }, 'user_id,slot');
+}
+
 // Credita o treino de dummy acumulado desde training_since em player_skills —
 // AUTORITATIVO, igual a caçada credita skill (huntEngine.trainSkill). Antes o
 // treino da aba Training só mexia em G.sk no cliente e o reconcile do servidor
@@ -720,7 +731,10 @@ const server = http.createServer(async (req, res) => {
       for (const r of rows) {
         if (r.expires_at && new Date(r.expires_at).getTime() < now) {
           await updateRows('market_listings', { id: r.id }, { status: 'expired', closed_at: new Date().toISOString() });
-          await incrementInventory(r.seller_user_id, r.seller_slot, r.item_id, Number(r.qty));
+          // sell: devolve o item ao vendedor; buy: devolve o gold reservado à
+          // carteira do comprador (escrow diferente por tipo de oferta).
+          if (r.kind === 'buy') await refundBuyOfferGold(r);
+          else await incrementInventory(r.seller_user_id, r.seller_slot, r.item_id, Number(r.qty));
         } else active.push(r);
       }
       return send(res, 200, {
@@ -728,6 +742,7 @@ const server = http.createServer(async (req, res) => {
         feePct: MARKET_FEE_PCT,
         listings: active.map(r => ({
           id: r.id,
+          kind: r.kind || 'sell',
           sellerName: r.seller_name,
           itemId: r.item_id,
           qty: Number(r.qty),
@@ -773,8 +788,72 @@ const server = http.createServer(async (req, res) => {
       if (!listing || listing.status !== 'active') return send(res, 400, { error: 'anúncio não encontrado ou já encerrado' });
       if (listing.seller_user_id !== user.id || listing.seller_slot !== slot) return send(res, 403, { error: 'este anúncio não é seu' });
       await updateRows('market_listings', { id: listingId }, { status: 'closed', closed_at: new Date().toISOString() });
-      await incrementInventory(user.id, slot, listing.item_id, Number(listing.qty));
+      // sell: devolve o item; buy: devolve o gold reservado.
+      if (listing.kind === 'buy') await refundBuyOfferGold(listing);
+      else await incrementInventory(user.id, slot, listing.item_id, Number(listing.qty));
       return send(res, 200, { ok: true });
+    }
+
+    // Postar uma BUY OFFER (ordem de compra): reserva o gold da carteira agora e
+    // qualquer vendedor pode preencher (ver /market/fill). O "seller_*" da linha
+    // guarda o COMPRADOR (poster). Fiel ao Tibia, onde o Market tem ordens de
+    // compra e de venda.
+    if (url.pathname === '/market/list-buy' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      const itemId = typeof body.itemId === 'string' ? body.itemId : null;
+      const qty = Math.floor(Number(body.qty));
+      const price = Math.floor(Number(body.price));
+      if (slot === null || !itemId || !ITEMS[itemId] || !qty || qty <= 0 || !price || price <= 0) {
+        return send(res, 400, { error: 'parâmetros inválidos' });
+      }
+      const total = price * qty;
+      const wallet = await selectOne('market_wallet', { user_id: user.id, slot });
+      const balance = wallet ? Number(wallet.balance) : 0;
+      if (balance < total) return send(res, 400, { error: 'saldo insuficiente na carteira pra reservar a compra' });
+      await upsertRow('market_wallet', { user_id: user.id, slot, balance: balance - total, updated_at: new Date().toISOString() }, 'user_id,slot');
+      const buyerName = String(body.sellerName || '').slice(0, 20) || 'Jogador';
+      const expiresAt = new Date(Date.now() + MARKET_LISTING_DAYS * 86400 * 1000).toISOString();
+      const inserted = await insertRow('market_listings', {
+        seller_user_id: user.id, seller_slot: slot, seller_name: buyerName, kind: 'buy',
+        item_id: itemId, qty, price_per_unit: price, status: 'active', expires_at: expiresAt,
+      });
+      return send(res, 200, { ok: true, listingId: inserted.id, balance: balance - total });
+    }
+
+    // Preencher uma BUY OFFER: um VENDEDOR entrega o item e recebe o gold (menos
+    // a taxa) que já estava reservado. O comprador (poster) recebe o item.
+    if (url.pathname === '/market/fill' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      const listingId = typeof body.listingId === 'string' ? body.listingId : null;
+      const qtyToFill = Math.floor(Number(body.qty));
+      if (slot === null || !listingId || !qtyToFill || qtyToFill <= 0) return send(res, 400, { error: 'parâmetros inválidos' });
+      const listing = await selectOne('market_listings', { id: listingId });
+      if (!listing || listing.status !== 'active' || listing.kind !== 'buy') return send(res, 400, { error: 'ordem de compra não encontrada' });
+      if (listing.seller_user_id === user.id && listing.seller_slot === slot) return send(res, 400, { error: 'você não pode preencher sua própria ordem' });
+      const available = Number(listing.qty);
+      if (qtyToFill > available) return send(res, 400, { error: 'quantidade indisponível' });
+      const invRow = await selectOne('player_inventory', { user_id: user.id, slot, item_id: listing.item_id });
+      if (!invRow || Number(invRow.qty) < qtyToFill) return send(res, 400, { error: 'você não tem esse item pra vender' });
+      const total = Number(listing.price_per_unit) * qtyToFill;
+      const proceeds = sellerProceeds(total);
+      // vendedor: -item, +gold (menos taxa); comprador (poster): +item. O gold já
+      // saiu da carteira do comprador no /market/list-buy (reserva).
+      await incrementInventory(user.id, slot, listing.item_id, -qtyToFill);
+      await incrementInventory(listing.seller_user_id, listing.seller_slot, listing.item_id, qtyToFill);
+      const sellerWallet = await selectOne('market_wallet', { user_id: user.id, slot });
+      const sellerBalance = (sellerWallet ? Number(sellerWallet.balance) : 0) + proceeds;
+      await upsertRow('market_wallet', { user_id: user.id, slot, balance: sellerBalance, updated_at: new Date().toISOString() }, 'user_id,slot');
+      await insertRow('market_transactions', { item_id: listing.item_id, price_per_unit: Number(listing.price_per_unit), qty: qtyToFill });
+      const remaining = available - qtyToFill;
+      if (remaining <= 0) await updateRows('market_listings', { id: listingId }, { status: 'closed', closed_at: new Date().toISOString(), qty: 0 });
+      else await updateRows('market_listings', { id: listingId }, { qty: remaining });
+      return send(res, 200, { ok: true, itemId: listing.item_id, qty: qtyToFill, balance: sellerBalance, fee: marketFee(total) });
     }
 
     if (url.pathname === '/market/buy' && req.method === 'POST') {
@@ -786,7 +865,7 @@ const server = http.createServer(async (req, res) => {
       const qtyToBuy = Math.floor(Number(body.qty));
       if (slot === null || !listingId || !qtyToBuy || qtyToBuy <= 0) return send(res, 400, { error: 'parâmetros inválidos' });
       const listing = await selectOne('market_listings', { id: listingId });
-      if (!listing || listing.status !== 'active') return send(res, 400, { error: 'anúncio não encontrado ou já encerrado' });
+      if (!listing || listing.status !== 'active' || listing.kind === 'buy') return send(res, 400, { error: 'anúncio não encontrado ou já encerrado' });
       if (listing.seller_user_id === user.id && listing.seller_slot === slot) return send(res, 400, { error: 'você não pode comprar do seu próprio anúncio' });
       const available = Number(listing.qty);
       if (qtyToBuy > available) return send(res, 400, { error: 'quantidade indisponível' });
