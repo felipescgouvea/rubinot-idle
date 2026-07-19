@@ -102,17 +102,17 @@ export const MONSTERS = {
 
   // --- Bestiário clássico de Tibia (o mundo do RubinOT) ---
   cave_rat:      { name: 'Cave Rat', icon: '🐀', hp: 30,  atk: 10,  def: 1,  xp: 10,   gold: [0,2],   loot: [['cheese',0.4]] },
-  goblin:        { name: 'Goblin', icon: '👺', hp: 50,  atk: 10,  def: 2,  xp: 25,  gold: [1,4],   loot: [['goblin_ear',0.5],['bones',0.3]], spells: [{ element: 'physical', min: 0, max: 25 }] },
+  goblin:        { name: 'Goblin', icon: '👺', hp: 50,  atk: 10,  def: 6,  xp: 25,  gold: [1,4],   loot: [['goblin_ear',0.5],['bones',0.3]], spells: [{ element: 'physical', min: 0, max: 25 }] },
   // Femor Hills (Carlin) é o acampamento goblin — ver domain/bestiary.js:
   // ZONES.femor_hills. goblin_leader é o chefe da hunt.
-  goblin_scavenger:{ name: 'Goblin Scavenger', icon: '👺', hp: 65,  atk: 18,  def: 3,  xp: 35,  gold: [2,6],   loot: [['goblin_ear',0.5],['bones',0.3]] },
-  goblin_assassin: { name: 'Goblin Assassin', icon: '🗡️', hp: 80,  atk: 25,  def: 4,  xp: 45,  gold: [3,9],   loot: [['dagger',0.05],['goblin_ear',0.5],['bones',0.3]] },
-  goblin_leader:   { name: 'Goblin Leader', icon: '👑', hp: 110, atk: 30,  def: 6,  xp: 70,  gold: [6,15],  loot: [['goblin_ear',0.6],['leather_armor',0.1],['bones',0.3]] },
+  goblin_scavenger:{ name: 'Goblin Scavenger', icon: '👺', hp: 60,  atk: 15,  def: 7,  xp: 37,  gold: [2,6],   loot: [['goblin_ear',0.5],['bones',0.3]], spells: [{ element: 'physical', min: 0, max: 30 }] },
+  goblin_assassin: { name: 'Goblin Assassin', icon: '🗡️', hp: 75,  atk: 15,  def: 6,  xp: 52,  gold: [3,9],   loot: [['dagger',0.05],['goblin_ear',0.5],['bones',0.3]], spells: [{ element: 'physical', min: 0, max: 35 }] },
+  goblin_leader:   { name: 'Goblin Leader', icon: '👑', hp: 110, atk: 50,  def: 7,  xp: 75,  gold: [6,15],  loot: [['goblin_ear',0.6],['leather_armor',0.1],['bones',0.3]], spells: [{ element: 'physical', min: 0, max: 45 }] },
   dwarf:         { name: 'Dwarf', icon: '⛏️', hp: 90,  atk: 30, def: 5,  xp: 45,  gold: [3,10],  loot: [['dwarven_ring',0.02],['studded_armor',0.05]] },
   dwarf_soldier: { name: 'Dwarf Soldier', icon: '⛏️', hp: 135, atk: 70, def: 10, xp: 75,  gold: [5,16],  loot: [['studded_armor',0.06],['halberd',0.02]], spells: [{ element: 'physical', min: 0, max: 60 }] },
   dwarf_geomancer:{ name: 'Dwarf Geomancer', icon: '🪄', hp: 380, atk: 100, def: 8,  xp: 140, gold: [8,25],  loot: [['wand_of_vortex',0.03],['dwarven_ring',0.02]], spells: [{ element: 'earth', min: 50, max: 110 }, { element: 'death', min: 25, max: 80 }] },
   dwarf_guard:   { name: 'Dwarf Guard', icon: '🛡️', hp: 245, atk: 140, def: 18, xp: 165, gold: [10,30], loot: [['dwarven_ring',0.03],['halberd',0.04]] },
-  elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 4,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 25 }] },
+  elf:           { name: 'Elf', icon: '🧝', hp: 100, atk: 15, def: 6,  xp: 42,  gold: [3,9],   loot: [['elvish_talisman',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 25 }] },
   // Shadowthorn (Venore) — elfos corrompidos por fogo, hunt de entrada
   // fraca (ver ZONES.shadowthorn) — shadowthorn_templar é o chefe.
   shadowthorn:         { name: 'Shadowthorn', icon: '🧝', hp: 55, atk: 12, def: 3, xp: 20, gold: [1,5], loot: [['bones',0.3],['small_stone',0.2]], spells: [{ element: 'fire', min: 0, max: 18 }] },
@@ -134,20 +134,20 @@ export const MONSTERS = {
   hellhound:     { name: 'Hellhound', icon: '🐕', hp: 7500,atk: 520,def: 50, xp: 5440,gold: [180,380],loot: [['hellhound_slobber',0.3],['demon_dust',0.5],['crystal_coin',0.08]], spells: [{ element: 'earth', min: 300, max: 700 }, { element: 'death', min: 350, max: 976 }, { element: 'fire', min: 350, max: 660 }] },
   plaguesmith:   { name: 'Plaguesmith', icon: '🔨', hp: 8250,atk: 539,def: 55, xp: 3800,gold: [160,340],loot: [['behemoth_claw',0.2],['giant_sword',0.008],['platinum_coin',0.7]], spells: [{ element: 'earth', min: 100, max: 350 }] },
   rotworm:       { name: 'Rotworm', icon: '🪱', hp: 65,  atk: 40,  def: 2,  xp: 40,  gold: [1,5],   loot: [['meat',0.7],['worm_dirt',0.5]] },
-  troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 15,  def: 3,  xp: 20,  gold: [2,6],   loot: [['bones',0.9],['leather_boots',0.12]] },
+  troll:         { name: 'Troll', icon: '👹', hp: 50,  atk: 15,  def: 6,  xp: 20,  gold: [2,6],   loot: [['bones',0.9],['leather_boots',0.12]] },
   orc:           { name: 'Orc', icon: '🗡️', hp: 70,  atk: 35, def: 4,  xp: 25,  gold: [3,8],   loot: [['orc_tooth',0.5],['studded_armor',0.06]] },
   // Orc Fortress (Venore) vira 2 hunts: essa é a mais simples, ver
   // ZONES.orc_fortress — orc_warrior é o chefe. Os mais fortes (orc_rider/
   // orc_shaman/orc_berserker/orc_warlord) ficam em ZONES.orc_warlord_camp.
   orc_spearman:  { name: 'Orc Spearman', icon: '🔱', hp: 95,  atk: 40, def: 5,  xp: 40,  gold: [4,10],  loot: [['orc_tooth',0.5],['bones',0.3]] },
   orc_warrior:   { name: 'Orc Warrior', icon: '⚔️', hp: 120, atk: 55, def: 6,  xp: 55,  gold: [5,12],  loot: [['orc_tooth',0.5],['studded_armor',0.05],['bones',0.3]] },
-  cyclops:       { name: 'Cyclops', icon: '🗿', hp: 260, atk: 105, def: 10, xp: 150, gold: [10,30], loot: [['cyclops_toe',0.4],['halberd',0.04]] },
+  cyclops:       { name: 'Cyclops', icon: '🗿', hp: 260, atk: 105, def: 17, xp: 150, gold: [10,30], loot: [['cyclops_toe',0.4],['halberd',0.04]] },
   cyclops_drone: { name: 'Cyclops Drone', icon: '🗿', hp: 325, atk: 105, def: 12, xp: 200, gold: [12,34], loot: [['cyclops_toe',0.4],['studded_armor',0.05]], spells: [{ element: 'physical', min: 0, max: 80 }] },
   cyclops_smith: { name: 'Cyclops Smith', icon: '🗿', hp: 435, atk: 150, def: 15, xp: 255, gold: [16,42], loot: [['cyclops_toe',0.5],['halberd',0.05],['iron_helmet',0.05]], spells: [{ element: 'physical', min: 0, max: 70 }] },
-  minotaur:      { name: 'Minotaur', icon: '🐂', hp: 100, atk: 45, def: 6,  xp: 50,  gold: [5,15],  loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
-  minotaur_archer:{ name: 'Minotaur Archer', icon: '🐂', hp: 100, atk: 25, def: 5,  xp: 65, gold: [6,18],  loot: [['minotaur_horn',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 80 }] },
-  minotaur_mage: { name: 'Minotaur Mage', icon: '🐂', hp: 155, atk: 20, def: 7,  xp: 150, gold: [10,28], loot: [['minotaur_horn',0.4],['wand_of_vortex',0.02]], spells: [{ element: 'energy', min: 20, max: 58 }, { element: 'fire', min: 50, max: 105 }] },
-  minotaur_guard:{ name: 'Minotaur Guard', icon: '🐂', hp: 185, atk: 100, def: 10, xp: 160, gold: [12,32], loot: [['minotaur_horn',0.5],['chain_armor',0.06],['studded_shield',0.04]] },
+  minotaur:      { name: 'Minotaur', icon: '🐂', hp: 100, atk: 45, def: 11,  xp: 50,  gold: [5,15],  loot: [['minotaur_horn',0.4],['chain_armor',0.05]] },
+  minotaur_archer:{ name: 'Minotaur Archer', icon: '🐂', hp: 100, atk: 25, def: 6,  xp: 65, gold: [6,18],  loot: [['minotaur_horn',0.3],['power_bolt',0.4]], spells: [{ element: 'physical', min: 0, max: 80 }] },
+  minotaur_mage: { name: 'Minotaur Mage', icon: '🐂', hp: 155, atk: 21, def: 18,  xp: 150, gold: [10,28], loot: [['minotaur_horn',0.4],['wand_of_vortex',0.02]], spells: [{ element: 'energy', min: 20, max: 58 }, { element: 'fire', min: 50, max: 105 }] },
+  minotaur_guard:{ name: 'Minotaur Guard', icon: '🐂', hp: 185, atk: 100, def: 15, xp: 160, gold: [12,32], loot: [['minotaur_horn',0.5],['chain_armor',0.06],['studded_shield',0.04]] },
   amazon:        { name: 'Amazon', icon: '🏹', hp: 110, atk: 45, def: 5,  xp: 60,  gold: [4,10],  loot: [['amazon_armor',0.08],['power_bolt',0.5]], spells: [{ element: 'physical', min: 0, max: 40 }] },
   valkyrie:      { name: 'Valkyrie', icon: '⚔️', hp: 190, atk: 70, def: 12, xp: 85, gold: [8,20],  loot: [['gold_coin',1.0]], spells: [{ element: 'physical', min: 0, max: 50 }] },
   giant_spider:  { name: 'Giant Spider', icon: '🕷️', hp: 1300,atk: 300, def: 20, xp: 900, gold: [40,100], loot: [['spider_silk',0.4],['knight_armor',0.02],['plate_legs',0.05]], spells: [{ element: 'earth', min: 40, max: 70 }] },
@@ -274,8 +274,8 @@ export const MONSTERS = {
   // moradas dos órfãos, verificado via TibiaWiki antes de entrar aqui (ver
   // .spec/90-regras-de-negocio-gerais.md). xp é o valor oficial do Tibia; hp/
   // atk/def seguem a mesma curva escalada dos demais (não são o hp real).
-  elf_scout:           { name: 'Elf Scout', icon: '🏹', hp: 160, atk: 35, def: 6, xp: 75, gold: [5,14], loot: [['elvish_talisman',0.35],['power_bolt',0.5]], spells: [{ element: 'physical', min: 0, max: 45 }] },
-  elf_arcanist:        { name: 'Elf Arcanist', icon: '🪄', hp: 220, atk: 20, def: 8, xp: 175, gold: [8,20], loot: [['elvish_talisman',0.4],['wand_of_vortex',0.03],['crystal_coin',0.02]], spells: [{ element: 'energy', min: 30, max: 70 }, { element: 'earth', min: 20, max: 50 }] },
+  elf_scout:           { name: 'Elf Scout', icon: '🏹', hp: 160, atk: 30, def: 7, xp: 75, gold: [5,14], loot: [['elvish_talisman',0.35],['power_bolt',0.5]], spells: [{ element: 'physical', min: 0, max: 80 }] },
+  elf_arcanist:        { name: 'Elf Arcanist', icon: '🪄', hp: 220, atk: 35, def: 15, xp: 175, gold: [8,20], loot: [['elvish_talisman',0.4],['wand_of_vortex',0.03],['crystal_coin',0.02]], spells: [{ element: 'energy', min: 30, max: 70 }, { element: 'earth', min: 20, max: 50 }] },
   dark_magician:       { name: 'Dark Magician', icon: '🧙', hp: 200, atk: 20, def: 10, xp: 185, gold: [10,22], loot: [['bones',0.4],['life_crystal',0.05]], spells: [{ element: 'death', min: 20, max: 50 }, { element: 'energy', min: 15, max: 40 }] },
   dark_apprentice:     { name: 'Dark Apprentice', icon: '📕', hp: 90, atk: 15, def: 5, xp: 90, gold: [4,12], loot: [['bones',0.3]], spells: [{ element: 'death', min: 10, max: 25 }] },
   rustheap_golem:      { name: 'Rustheap Golem', icon: '⚙️', hp: 2600, atk: 260, def: 60, xp: 2350, gold: [180,280], loot: [['chain_armor',0.08],['crystal_coin',0.1]], spells: [{ element: 'earth', min: 80, max: 150 }] },
@@ -354,7 +354,7 @@ export const MONSTERS = {
   // primeiras (Goblin xp25 ~ task1) e últimas tasks (task94, mobs de endgame).
   // Ícone: emoji heurístico por palavra-chave do nome (sem sprite real baixado
   // — volume grande demais pra baixar 1 a 1 nesta rodada; ver relatório final).
-  swamp_troll: { name: 'Swamp Troll', icon: '👹', hp: 67, atk: 10, def: 6, xp: 19, gold: [0,5], loot: [['fish',0.2],['leather_boots',0.1],['mouldy_cheese',0.1],['spear',0.1],['torch',0.1],['swamp_grass',0.06],['wood',0.06],['medicine_pouch',0.06],['troll_green',0.025],['fishing_rod',0.007]] },
+  swamp_troll: { name: 'Swamp Troll', icon: '👹', hp: 55, atk: 13, def: 6, xp: 25, gold: [0,5], loot: [['fish',0.2],['leather_boots',0.1],['mouldy_cheese',0.1],['spear',0.1],['torch',0.1],['swamp_grass',0.06],['wood',0.06],['medicine_pouch',0.06],['troll_green',0.025],['fishing_rod',0.007]] },
   island_troll: { name: 'Island Troll', icon: '👹', hp: 67, atk: 10, def: 6, xp: 19, gold: [1,2], loot: [['bones',0.3]] },
   dark_monk: { name: 'Dark Monk', icon: '👹', hp: 97, atk: 13, def: 17, xp: 41, gold: [2,5], loot: [['bones',0.3]] },
   assassin: { name: 'Assassin', icon: '👹', hp: 97, atk: 13, def: 17, xp: 41, gold: [2,5], loot: [['bones',0.3]] },
