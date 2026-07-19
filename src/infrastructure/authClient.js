@@ -333,6 +333,20 @@ export function promoteOnServer(slot) {
   return huntFetch('/promote', { method: 'POST', body: { slot } });
 }
 
+// Treino de dummy AUTORITATIVO (aba Training) — o servidor guarda o estado e
+// credita skill real em player_skills (ver server/src/index.js: /train/*).
+// `vocation` é reportado pelo cliente (não é progressão — usado só pra fórmula
+// de tries por nível, mesma exceção de baixo risco do /hunt/start).
+export function trainStartOnServer(slot, skillId, mode, vocation) {
+  return huntFetch('/train/start', { method: 'POST', body: { slot, skillId, mode, vocation } });
+}
+export function trainCreditOnServer(slot, vocation) {
+  return huntFetch('/train/credit', { method: 'POST', body: { slot, vocation } });
+}
+export function trainStopOnServer(slot, vocation) {
+  return huntFetch('/train/stop', { method: 'POST', body: { slot, vocation } });
+}
+
 // Uso manual de item da Bag (poção bebida ou runa mirada por clique do
 // jogador, fora do RTC automático) — validado no servidor (posse/vocação/ML
 // e, pra runa, dano/morte pelo MESMO settleKill do tick automático; ver

@@ -503,7 +503,11 @@ const server = http.createServer(async (req, res) => {
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
       if (!stats || !stats.training_skill) return send(res, 200, { ok: true, active: false });
       const { skills, tries } = await creditTraining(user.id, slot, stats, body.vocation);
-      await upsertRow('player_stats', { user_id: user.id, slot, training_since: new Date().toISOString(), updated_at: new Date().toISOString() }, 'user_id,slot');
+      // Só REANCORA quando creditou de fato (>=1 try). Um tick curto de treino
+      // lento (offline) credita 0 por arredondamento — reancorar aí perderia a
+      // fração acumulada a cada tick e o treino nunca renderia. Sem reancorar,
+      // training_since acumula até fechar 1 try.
+      if (tries > 0) await upsertRow('player_stats', { user_id: user.id, slot, training_since: new Date().toISOString(), updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, active: true, skills, tries, skill: stats.training_skill, mode: stats.training_mode });
     }
 
