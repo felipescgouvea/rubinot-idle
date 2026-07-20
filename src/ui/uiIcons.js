@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=143';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=144';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -43,6 +43,9 @@ export const UI_ICONS = {
   dens_solo:       { file: 'items/Spear.webp',                emoji: '🎯' },
   dens_normal:     { file: 'items/Battle_Axe.webp',           emoji: '👥' },
   dens_pack:       { file: 'items/Beehive.webp',              emoji: '🐝' }, // enxame
+
+  // labels de conteúdo (Hunt Analyzer etc.)
+  kills:           { file: 'items/Demon_Skull.webp',          emoji: '💀' },
 
   // janela de batalha: título + categorias do log de combate
   battle:          { file: 'items/Sword.webp',                emoji: '⚔️' },

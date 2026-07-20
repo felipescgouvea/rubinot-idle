@@ -1,18 +1,19 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=142';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=160';
-import { MONSTERS } from '../domain/bestiary.js?v=160';
-import { cityName } from '../domain/cities.js?v=145';
-import { ITEMS } from '../domain/items.js?v=153';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=144';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=140';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=145';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=206';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=138';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=143';
-import { t } from '../i18n/i18n.js?v=156';
+import { G } from '../application/gameStore.js?v=143';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=161';
+import { MONSTERS } from '../domain/bestiary.js?v=161';
+import { cityName } from '../domain/cities.js?v=146';
+import { ITEMS } from '../domain/items.js?v=154';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=145';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=141';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=146';
+import { uiIcon } from './uiIcons.js?v=144';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=207';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=139';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=144';
+import { t } from '../i18n/i18n.js?v=157';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -279,12 +280,12 @@ function renderHuntAnalyzer() {
   const profitColor = st.profit >= 0 ? 'var(--positive, #2ecc71)' : '#e05a5a';
   el.innerHTML = `
     <div class="hunt-analyzer-grid">
-      <div class="ha-cell"><span class="ha-label">💀 ${t('hunt.analyzerKills')}</span><span class="ha-val">${formatNum(st.kills)}</span></div>
+      <div class="ha-cell"><span class="ha-label">${uiIcon('kills', 'inline-icon')} ${t('hunt.analyzerKills')}</span><span class="ha-val">${formatNum(st.kills)}</span></div>
       <div class="ha-cell"><span class="ha-label">${xi} XP</span><span class="ha-val">${formatNum(st.xp)}</span><span class="ha-rate">${formatNum(st.xpH)}/h</span></div>
       <div class="ha-cell"><span class="ha-label">${gi} ${t('hunt.analyzerGold')}</span><span class="ha-val">${formatNum(st.gold)}</span><span class="ha-rate">${formatNum(st.goldH)}/h</span></div>
-      <div class="ha-cell"><span class="ha-label">📦 ${t('hunt.analyzerLoot')}</span><span class="ha-val">${formatNum(st.loot)}</span></div>
-      <div class="ha-cell"><span class="ha-label">🧪 ${t('hunt.analyzerSupplies')}</span><span class="ha-val">-${formatNum(st.supplies)}</span></div>
-      <div class="ha-cell"><span class="ha-label">💰 ${t('hunt.analyzerProfit')}</span><span class="ha-val" style="color:${profitColor}">${formatNum(st.profit)}</span><span class="ha-rate">${formatNum(st.profitH)}/h</span></div>
+      <div class="ha-cell"><span class="ha-label">${uiIcon('log_loot', 'inline-icon')} ${t('hunt.analyzerLoot')}</span><span class="ha-val">${formatNum(st.loot)}</span></div>
+      <div class="ha-cell"><span class="ha-label">${uiIcon('log_supplies', 'inline-icon')} ${t('hunt.analyzerSupplies')}</span><span class="ha-val">-${formatNum(st.supplies)}</span></div>
+      <div class="ha-cell"><span class="ha-label">${gi} ${t('hunt.analyzerProfit')}</span><span class="ha-val" style="color:${profitColor}">${formatNum(st.profit)}</span><span class="ha-rate">${formatNum(st.profitH)}/h</span></div>
     </div>
     <div class="ha-note muted">${t('hunt.analyzerNote')}</div>`;
 }
