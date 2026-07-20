@@ -503,7 +503,7 @@ async function tick(session) {
     // escada bossTierMultiplier — antes ficava fixo em 1 (mesmo boss em todo
     // tier). O tier vem do cliente no hunt-start (session.bossTier).
     const bossMult = session.bossOnly ? bossTierMultiplier(session.bossTier || 1) : 1;
-    const spawnCfg = session.bossOnly ? null : resolveZoneSpawn(cfg, session.zoneId, zone.monsters);
+    const spawnCfg = session.bossOnly ? null : resolveZoneSpawn(cfg, session.zoneId, zone.monsters, zone.spawn);
     let packSize = session.bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
     // Controle de DENSIDADE (ver client: setDensity) — como caçar cada zona:
     // 'solo' puxa 1 por vez (seguro/controlado), 'pack' dobra o grupo (mais

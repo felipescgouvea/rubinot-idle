@@ -2413,6 +2413,82 @@ export const MONSTERS = {
   zushuka: { name: 'Zushuka', icon: '👾', hp: 15000, atk: 4125, def: 10, xp: 9000, gold: [101,476], loot: [['silver_raid_token',0.015],['shard',0.3],['crystal_sword',0.3],['great_spirit_potion',0.3],['bullseye_potion',0.3],['glacier_shoes',0.3],['ice_rapier',0.3],['life_ring',0.3],['berserk_potion',0.3],['blue_gem',0.3],['mastermind_potion',0.3],['mystic_turban',0.3],['white_piece_of_cloth',0.3],['glacier_amulet',0.3],['great_health_potion',0.3],['great_mana_potion',0.3],['blue_piece_of_cloth',0.3],['crystal_mace',0.3],['dragon_necklace',0.3],['glacier_kilt',0.3],['gold_ingot',0.3],['pair_of_earmuffs',0.3],['skull_staff',0.3],['boots_of_haste',0.3],['glacier_mask',0.3],['glacier_robe',0.3],['red_piece_of_cloth',0.3],['trapped_lightning',0.3],['icy_culottes',0.3],['queens_sceptre',0.3]] },
 };
 
+// Distribuição de SPAWN por zona: a % (peso) de cada monstro aparecer numa
+// caçada normal. Aposenta a antiga gambiarra de repetir o id no array
+// (['goblin','goblin','goblin',...] = 50%) por números explícitos e ajustáveis.
+// Vira o peso DEFAULT do sorteio (ver domain/adminConfig.js: resolveZoneSpawn /
+// pickWeightedMonster) — o Painel Admin ainda sobrepõe por save. Somam 100 por
+// zona (mas o sorteador normaliza qualquer soma). Edite aqui pra rebalancear.
+export const ZONE_SPAWN = {
+  rat_cave: { rat: 88, cave_rat: 12 },
+  wolf_den: { wolf: 100 },
+  bug_nest: { bug: 100 },
+  troll_cave: { troll: 88, swamp_troll: 12 },
+  dawnport_hunt: { troll_trained_salamander: 47, dawnfly: 32, woodling: 16, meadow_strider: 5 },
+  elf_hunt: { elf: 61, elf_scout: 31, elf_arcanist: 8 },
+  femor_hills: { goblin: 47, goblin_scavenger: 32, goblin_assassin: 16, goblin_leader: 5 },
+  minotaur_hunt: { minotaur: 47, minotaur_archer: 32, minotaur_mage: 16, minotaur_guard: 5 },
+  cyclopolis: { cyclops: 100 },
+  kongra_hunt: { sibang: 61, merlkin: 31, kongra: 8 },
+  crawler_hunt: { swarmer: 61, insectoid_worker: 31, crawler: 8 },
+  behemoth_hunt: { drillworm: 47, devourer: 32, glooth_anemone: 16, behemoth: 5 },
+  orc_fortress: { orc: 61, orc_spearman: 31, orc_warrior: 8 },
+  shadowthorn: { shadowthorn: 47, shadowthorn_splinter: 32, shadowthorn_deceiver: 16, shadowthorn_templar: 5 },
+  amazon_hunt: { amazon: 88, valkyrie: 12 },
+  giant_spider_hunt: { spider: 61, tarantula: 31, giant_spider: 8 },
+  corym_skirmisher: { corym_charlatan: 61, corym_skirmisher: 31, corym_vanguard: 8 },
+  stone_refiner: { stonerefiner: 100 },
+  orc_warlord_camp: { orc_shaman: 47, orc_rider: 32, orc_berserker: 16, orc_warlord: 5 },
+  glooth_bandit: { glooth_bandit: 88, glooth_brigand: 12 },
+  hero_hunt: { vicious_squire: 61, renegade_knight: 31, hero: 8 },
+  cult_hunt: { cult_believer: 61, cult_enforcer: 31, vile_grandmaster: 8 },
+  dragon_lair: { dragon: 88, dragon_lord: 12 },
+  hydra_hunt: { bog_raider: 88, hydra: 12 },
+  wyrm_hunt: { wyrm: 88, elder_wyrm: 12 },
+  grim_reaper_hunt: { banshee: 61, spectre: 31, grim_reaper: 8 },
+  werehyaena_hunt: { werehyaena: 88, werehyaena_shaman: 12 },
+  wereliones_hunt: { werelion: 61, white_lion: 31, werelioness: 8 },
+  cobras_hunt: { cobra_assassin: 61, cobra_scout: 31, cobra_vizier: 8 },
+  asuras_hunt: { hellspawn: 61, dawnfire_asura: 31, midnight_asura: 8 },
+  draken_hunt: { draken_spellweaver: 88, draken_warmaster: 12 },
+  falcon_hunt: { falcon_knight: 88, falcon_paladin: 12 },
+  vexclaw_hunt: { dark_torturer: 61, grimeleech: 31, vexclaw: 8 },
+  grimeleech_hunt: { defiler: 61, plaguesmith: 31, grimeleech: 8 },
+  choking_fear_hunt: { retching_horror: 88, choking_fear: 12 },
+  crazed_elfs_hunt: { crazed_winter_rearguard: 47, crazed_summer_rearguard: 32, crazed_summer_vanguard: 16, crazed_winter_vanguard: 5 },
+  guzzlemaw_hunt: { frazzlemaw: 61, silencer: 31, guzzlemaw: 8 },
+  lion_knight_hunt: { warlock: 61, usurper_archer: 31, usurper_knight: 8 },
+  mega_dragon_hunt: { dragolisk: 61, wardragon: 31, mega_dragon: 8 },
+  bulltaur_hunt: { bulltaur_alchemist: 61, bulltaur_brute: 31, bulltaur_forgepriest: 8 },
+  gazer_hunt: { ripper_spectre: 61, burster_spectre: 31, gazer_spectre: 8 },
+  inferniarch_hunt: { gorger_inferniarch: 61, broodrider_inferniarch: 31, sineater_inferniarch: 8 },
+  girtablilu_hunt: { girtablilu_warrior: 88, venerable_girtablilu: 12 },
+  livraria_ice: { animated_feather: 61, icecold_book: 31, squid_warden: 8 },
+  livraria_fire: { burning_book: 47, ink_blob: 32, rage_squid: 16, guardian_of_tales: 5 },
+  livraria_earth: { biting_book: 61, ink_blob: 31, cursed_book: 8 },
+  livraria_energy: { knowledge_elemental: 61, energetic_book: 31, brain_squid: 8 },
+  lavafungos_hunt: { lavafungus: 61, lavaworm: 31, streaked_devourer: 8 },
+};
+
+// Aplica a distribuição em cada zona: `spawn` (peso default do sorteio) e a
+// lista de exibição `monsters` = exatamente as chaves do spawn, na ordem acima.
+for (const [zid, spawn] of Object.entries(ZONE_SPAWN)) {
+  if (!ZONES[zid]) continue;
+  ZONES[zid].spawn = spawn;
+  ZONES[zid].monsters = Object.keys(spawn);
+}
+// Rede de segurança (só avisa, nunca quebra): pega no console qualquer zona sem
+// spawn, que não some ~100, ou cujo boss ficou de fora — útil ao editar acima.
+if (typeof console !== 'undefined') {
+  for (const [zid, z] of Object.entries(ZONES)) {
+    const sp = ZONE_SPAWN[zid];
+    if (!sp) { console.warn('[spawn] zona sem ZONE_SPAWN:', zid); continue; }
+    const sum = Object.values(sp).reduce((a, b) => a + b, 0);
+    if (Math.abs(sum - 100) > 1) console.warn('[spawn] % não soma ~100 em', zid, '=', sum);
+    if (z.boss && sp[z.boss] == null) console.warn('[spawn] boss fora do spawn em', zid, z.boss);
+  }
+}
+
 // Definição única de "o que conta como boss" no jogo inteiro — reaproveitada
 // tanto pra Relíquias (só caem de boss, ver application/huntUseCases.js)
 // quanto pro Boss Rush (ver application/bossRushUseCases.js). Não duplicar

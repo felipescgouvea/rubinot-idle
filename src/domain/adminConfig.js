@@ -76,12 +76,17 @@ export const DEFAULT_PACK_MAX = 5;
 // por monstro (default = uniforme, todos com peso igual) e a faixa do grupo
 // (min..max). `zoneMonsters` é a lista de ids válidos da zona — pesos de ids que
 // não estão mais na zona são ignorados.
-export function resolveZoneSpawn(cfg, zoneId, zoneMonsters) {
+export function resolveZoneSpawn(cfg, zoneId, zoneMonsters, zoneSpawn = null) {
   const hs = (cfg && cfg.huntSpawns && cfg.huntSpawns[zoneId]) || {};
   const weights = {};
   zoneMonsters.forEach(id => {
-    const w = hs.weights && Number.isFinite(+hs.weights[id]) ? Math.max(0, +hs.weights[id]) : 1;
-    weights[id] = w;
+    // Prioridade do peso: (1) override do Painel Admin, se houver; senão (2) o %
+    // DEFAULT da zona (zone.spawn, ver domain/bestiary.js: ZONE_SPAWN); senão
+    // (3) 1 (uniforme). Assim o dono ajusta pontualmente no Admin sem apagar a
+    // distribuição base de cada hunt.
+    const adminW = hs.weights && Number.isFinite(+hs.weights[id]) ? Math.max(0, +hs.weights[id]) : null;
+    const defW = zoneSpawn && Number.isFinite(+zoneSpawn[id]) ? Math.max(0, +zoneSpawn[id]) : 1;
+    weights[id] = adminW != null ? adminW : defW;
   });
   const sum = zoneMonsters.reduce((s, id) => s + weights[id], 0);
   if (sum <= 0) zoneMonsters.forEach(id => { weights[id] = 1; }); // tudo zerado => uniforme

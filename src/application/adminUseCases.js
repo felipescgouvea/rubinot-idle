@@ -6,9 +6,9 @@
 // cache local (configCache) populado no boot por initGameConfig() — os
 // getters abaixo são síncronos de propósito (chamados no hot path da caçada),
 // então NUNCA fazem fetch, só leem o cache.
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=134';
-import { emit, EVENTS } from '../shared/eventBus.js?v=132';
-import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=139';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=135';
+import { emit, EVENTS } from '../shared/eventBus.js?v=133';
+import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=140';
 
 // Antes do primeiro fetch resolver (ou se ele falhar), usa o default — nunca
 // trava o jogo por causa da config privilegiada ainda não ter chegado.
@@ -32,8 +32,8 @@ export function getAdminConfig() { return configCache; }
 // assinatura de antes, só a fonte dos dados mudou.
 export const getXpRate = () => getAdminConfig().xpRate;
 export const getSkillRate = () => getAdminConfig().skillRate;
-export function getZoneSpawn(zoneId, zoneMonsters) {
-  return resolveZoneSpawn(getAdminConfig(), zoneId, zoneMonsters);
+export function getZoneSpawn(zoneId, zoneMonsters, zoneSpawn = null) {
+  return resolveZoneSpawn(getAdminConfig(), zoneId, zoneMonsters, zoneSpawn);
 }
 
 export function getMonsterLoot(monsterId, baseLoot) {
