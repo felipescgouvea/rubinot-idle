@@ -100,6 +100,10 @@ export function loadGame() {
   if (!G.imbuements || typeof G.imbuements !== 'object') G.imbuements = {}; // migração: imbuements são novos
   if (typeof G.bpPremium !== 'boolean') G.bpPremium = false; // migração: trilha premium do BP é nova
   if (!Array.isArray(G.bpClaimedPremium)) G.bpClaimedPremium = [];
+  if (!G.bpWeeklyProgress || typeof G.bpWeeklyProgress !== 'object') G.bpWeeklyProgress = { kills: 0, gold: 0, tasks: 0, arenaWins: 0 };
+  if (!Array.isArray(G.bpWeeklyClaimed)) G.bpWeeklyClaimed = [];
+  if (G.bpSeason === undefined) G.bpSeason = null;
+  if (G.bpWeekId === undefined) G.bpWeekId = null;
   // migração: Mochila-item + ordem do inventário (drag) são novos. Todo save
   // ganha o bag inicial e uma ordem inicial a partir dos itens que já tem.
   if (!G.backpack) G.backpack = 'bag';

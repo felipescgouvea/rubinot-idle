@@ -272,3 +272,36 @@ export function dailyMissionsFor(dateStr) {
   }
   return picks;
 }
+
+// ---- Missões SEMANAIS: metas maiores, mais XP, resetam por semana ----
+const BP_WEEKLY_POOL = [
+  { id: 'w_kill_1000', name: 'battlepass.mission.kill_300', goal: 1000, track: 'kills',     xp: 1500 },
+  { id: 'w_kill_2500', name: 'battlepass.mission.kill_300', goal: 2500, track: 'kills',     xp: 3000 },
+  { id: 'w_gold_50k',  name: 'battlepass.mission.gold_5000', goal: 50000, track: 'gold',    xp: 1500 },
+  { id: 'w_task_10',   name: 'battlepass.mission.task_2',    goal: 10,   track: 'tasks',     xp: 2000 },
+  { id: 'w_arena_15',  name: 'battlepass.mission.arena_3',   goal: 15,   track: 'arenaWins', xp: 2000 },
+];
+const BP_WEEKLY_PER_WEEK = 2;
+
+// Id monotônico da semana a partir da data "YYYY-MM-DD" (semanas de 7 dias desde
+// a época) — troca a cada 7 dias, sem depender de ISO week nem de servidor.
+export function bpWeekId(dateStr) {
+  const days = Math.floor(Date.parse(dateStr + 'T00:00:00Z') / 86400000);
+  return Math.floor(days / 7);
+}
+
+// 2 missões semanais fixas pra a semana (hash do id da semana vira o índice).
+export function weeklyMissionsFor(dateStr) {
+  const wk = bpWeekId(dateStr) >>> 0;
+  const picks = [];
+  for (let i = 0; i < BP_WEEKLY_PER_WEEK; i++) picks.push(BP_WEEKLY_POOL[(wk + i * 3) % BP_WEEKLY_POOL.length]);
+  return picks;
+}
+
+// Temporada do Battle Pass = mês calendário (year*12 + month) a partir da data.
+// Ao virar o mês, a temporada muda e o progresso reseta (fiel a battle passes
+// sazonais). O reset do lado premium reflete no servidor (ver /bp/*).
+export function currentBpSeason(dateStr) {
+  const [y, m] = dateStr.split('-').map(Number);
+  return y * 12 + (m - 1);
+}

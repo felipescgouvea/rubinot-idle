@@ -1,5 +1,5 @@
 import { G, ACCOUNT } from './gameStore.js?v=129';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor } from '../domain/progression.js?v=129';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=130';
 import { ITEMS } from '../domain/items.js?v=140';
 import { emit, EVENTS } from '../shared/eventBus.js?v=127';
 import { addItemToInventory } from './inventoryCore.js?v=127';
@@ -7,16 +7,30 @@ import { saveGame } from './saveGameUseCase.js?v=129';
 import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=136';
 import { t } from '../i18n/i18n.js?v=143';
 
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Fim de temporada: a cada mês novo (ver currentBpSeason) o Battle Pass reseta —
+// tier/xp/resgates/premium zeram e uma nova temporada começa. O lado premium
+// (bp em player_stats) reseta no servidor de forma preguiçosa no próximo
+// /bp/claim ou /bp/buy-premium (checa bp.season). Aqui zeramos o estado local.
+export function ensureSeason() {
+  const season = currentBpSeason(todayStr());
+  if (G.bpSeason === season) return;
+  const first = G.bpSeason == null;
+  G.bpSeason = season;
+  G.bpXp = 0; G.bpTier = 0; G.bpClaimed = []; G.bpClaimedPremium = []; G.bpPremium = false;
+  if (!first) emit(EVENTS.NOTIFY, { msg: '🎖️ Nova temporada do Battle Pass! O progresso foi reiniciado.', type: 'info' });
+}
+
 export function checkBpTier() {
+  ensureSeason();
   const newTier = bpTierForXp(G.bpXp);
   if (newTier > G.bpTier) {
     G.bpTier = newTier;
     emit(EVENTS.NOTIFY, { msg: t('battlepass.tierReached', { tier: G.bpTier }), type: 'success' });
   }
-}
-
-function todayStr() {
-  return new Date().toISOString().slice(0, 10);
 }
 
 // Zera o progresso das missões diárias quando o dia muda — chamada antes de
@@ -35,12 +49,41 @@ export function currentMissions() {
   return dailyMissionsFor(G.bpMissionDate);
 }
 
-// Chamada pelos pontos do jogo onde essas ações acontecem (matar criatura,
-// completar task, vencer na Arena) — soma no contador do dia, sem se importar
-// se a missão que usa essa trilha está ou não no sorteio de hoje.
+// Missões SEMANAIS: mesmo esquema, mas o contador zera por semana (ver bpWeekId).
+function ensureWeeklyMissions() {
+  const wk = bpWeekId(todayStr());
+  if (G.bpWeekId === wk) return;
+  G.bpWeekId = wk;
+  G.bpWeeklyProgress = { kills: 0, gold: 0, tasks: 0, arenaWins: 0 };
+  G.bpWeeklyClaimed = [];
+}
+
+export function currentWeeklyMissions() {
+  ensureWeeklyMissions();
+  return weeklyMissionsFor(todayStr());
+}
+
+// Chamada pelos pontos do jogo (matar/task/arena) — soma no contador do dia E
+// da semana, sem se importar se a missão está no sorteio de hoje/semana.
 export function bumpMissionProgress(track, amount = 1) {
   ensureDailyMissions();
+  ensureWeeklyMissions();
   G.bpMissionProgress[track] = (G.bpMissionProgress[track] || 0) + amount;
+  G.bpWeeklyProgress[track] = (G.bpWeeklyProgress[track] || 0) + amount;
+}
+
+// Resgate de uma missão SEMANAL — concede bpXp (mesma matemática da diária).
+export function claimWeeklyMissionReward(missionId) {
+  ensureWeeklyMissions();
+  const mission = currentWeeklyMissions().find(m => m.id === missionId);
+  if (!mission || G.bpWeeklyClaimed.includes(missionId)) return;
+  if ((G.bpWeeklyProgress[mission.track] || 0) < mission.goal) return;
+  G.bpWeeklyClaimed.push(missionId);
+  G.bpXp += mission.xp;
+  checkBpTier();
+  emit(EVENTS.NOTIFY, { msg: t('battlepass.missionComplete', { xp: mission.xp }), type: 'success' });
+  emit(EVENTS.BATTLE_PASS_PANEL);
+  saveGame();
 }
 
 export function claimMissionReward(missionId) {

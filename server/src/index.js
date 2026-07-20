@@ -47,7 +47,15 @@ import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp } from '../../src/domain/progression.js?v=128';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason } from '../../src/domain/progression.js?v=130';
+
+// Reseta o bp (resgates + premium) se a temporada virou desde o último — mês
+// calendário (ver currentBpSeason). Preguiçoso: aplicado no próximo /bp/*.
+function resetBpIfNewSeason(bp) {
+  const season = currentBpSeason(new Date().toISOString().slice(0, 10));
+  if (bp.season !== season) { bp.claimedFree = []; bp.claimedPremium = []; bp.premium = false; bp.season = season; }
+  return bp;
+}
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
@@ -507,7 +515,7 @@ const server = http.createServer(async (req, res) => {
       const reward = rewards.find(r => r.tier === tier);
       if (!reward) return send(res, 400, { error: 'recompensa inválida' });
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
-      const bp = (stats && stats.bp) || { claimedFree: [], claimedPremium: [], premium: false };
+      const bp = resetBpIfNewSeason((stats && stats.bp) || { claimedFree: [], claimedPremium: [], premium: false });
       bp.claimedFree = bp.claimedFree || []; bp.claimedPremium = bp.claimedPremium || [];
       const claimed = kind === 'premium' ? bp.claimedPremium : bp.claimedFree;
       if (claimed.includes(tier)) return send(res, 400, { error: 'já resgatado' });
@@ -532,7 +540,7 @@ const server = http.createServer(async (req, res) => {
       const slot = validSlot(body.slot);
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
-      const bp = (stats && stats.bp) || { claimedFree: [], claimedPremium: [], premium: false };
+      const bp = resetBpIfNewSeason((stats && stats.bp) || { claimedFree: [], claimedPremium: [], premium: false });
       if (bp.premium) return send(res, 400, { error: 'você já tem a trilha premium' });
       const rubini = stats ? Number(stats.rubini) || 0 : 0;
       if (rubini < BP_PREMIUM_COST_RUBINI) return send(res, 400, { error: 'Rubini Coins insuficientes' });

@@ -2,7 +2,7 @@ import { G } from '../application/gameStore.js?v=129';
 import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=129';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=132';
-import { currentMissions } from '../application/battlePassUseCases.js?v=127';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=128';
 import { t } from '../i18n/i18n.js?v=143';
 
 function bpRewardIcon(r) {
@@ -12,14 +12,14 @@ function bpRewardIcon(r) {
   return r.icon;
 }
 
-function renderBpMissions() {
-  const el = document.getElementById('bp-missions-area');
+// Render genérico de uma lista de missões (diária ou semanal) num elemento.
+function renderMissionsInto(elId, missions, progressObj, claimedArr, claimFn) {
+  const el = document.getElementById(elId);
   if (!el) return;
-  const missions = currentMissions();
   el.innerHTML = missions.map(m => {
-    const progress = Math.min(m.goal, G.bpMissionProgress[m.track] || 0);
+    const progress = Math.min(m.goal, progressObj[m.track] || 0);
     const pct = Math.round((progress / m.goal) * 100);
-    const claimed = G.bpMissionClaimed.includes(m.id);
+    const claimed = claimedArr.includes(m.id);
     const done = progress >= m.goal;
     return `<div class="bp-mission ${claimed ? 'claimed' : ''}">
       <div class="bp-mission-name">${t(m.name)}</div>
@@ -28,7 +28,7 @@ function renderBpMissions() {
         <div class="bp-xp-bar-track" style="height:10px"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
         <span style="font-size:11px;color:var(--muted)">+${m.xp} XP</span>
       </div>
-      <button class="bp-claim-btn" style="margin-top:6px" onclick="claimMissionReward('${m.id}')" ${(!done || claimed) ? 'disabled' : ''}>
+      <button class="bp-claim-btn" style="margin-top:6px" onclick="${claimFn}('${m.id}')" ${(!done || claimed) ? 'disabled' : ''}>
         ${claimed ? `✓ ${t('battlepass.claimed')}` : done ? t('battlepass.claim') : t('battlepass.inProgress')}
       </button>
     </div>`;
@@ -36,11 +36,13 @@ function renderBpMissions() {
 }
 
 export function renderBattlePassPanel() {
+  ensureSeason(); // vira a temporada (reseta o BP) se o mês mudou
   const xpInTier = G.bpXp % BP_XP_PER_TIER;
   const pct = Math.round((xpInTier / BP_XP_PER_TIER) * 100);
+  const seasonName = new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
   document.getElementById('bp-progress-area').innerHTML = `
-    <div><strong>${t('battlepass.currentTier', { tier: `<span style="color:var(--accent)">${G.bpTier}</span>` })}</strong></div>
+    <div><strong>${t('battlepass.currentTier', { tier: `<span style="color:var(--accent)">${G.bpTier}</span>` })}</strong> <span class="muted" style="font-size:12px">· 🎖️ Temporada de ${seasonName}</span></div>
     <div class="bp-xp-row">
       <span style="font-size:12px;color:var(--muted)">${xpInTier}/${BP_XP_PER_TIER} XP</span>
       <div class="bp-xp-bar-track"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
@@ -49,7 +51,8 @@ export function renderBattlePassPanel() {
     <div style="font-size:12px;color:var(--muted);margin-top:4px">${t('battlepass.xpHint')}</div>
   `;
 
-  renderBpMissions();
+  renderMissionsInto('bp-missions-area', currentMissions(), G.bpMissionProgress, G.bpMissionClaimed, 'claimMissionReward');
+  renderMissionsInto('bp-weekly-area', currentWeeklyMissions(), G.bpWeeklyProgress, G.bpWeeklyClaimed, 'claimWeeklyMissionReward');
 
   // Banner da trilha premium (comprar / já ativa).
   const premEl = document.getElementById('bp-premium-banner');

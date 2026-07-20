@@ -282,8 +282,12 @@ function renderBars() {
   applyHpState(hpBar, hpPct);
   document.getElementById('mana-bar').style.width = manaPct + '%';
   document.getElementById('xp-bar').style.width = xpPct + '%';
-  document.getElementById('hp-text').textContent = `${G.hp}/${maxHp}`;
-  document.getElementById('mana-text').textContent = `${G.mana}/${maxMana}`;
+  // Clampa o número exibido ao teto: num frame de level-up o G.hp/G.mana pode
+  // ficar 1 tick à frente do maxHp/maxMana recomputado, mostrando "530/500"
+  // (barra >100%) por um instante. Cosmético, mas o auditor flagava — nunca
+  // exibe atual > teto.
+  document.getElementById('hp-text').textContent = `${Math.min(G.hp, maxHp)}/${maxHp}`;
+  document.getElementById('mana-text').textContent = `${Math.min(G.mana, maxMana)}/${maxMana}`;
   // XP mostra o número atual/próximo E a porcentagem (igual HP/mana mostram números).
   const xpNext = XP_TABLE[G.level - 1];
   document.getElementById('xp-text').textContent = (G.level < 100 && xpNext)
@@ -353,13 +357,13 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
   const hpFill = document.getElementById('player-hp-fill');
   hpFill.style.width = pct + '%';
   applyHpState(hpFill, pct);
-  document.getElementById('player-hp-label').textContent = `${Math.max(0, G.hp)}/${maxHp}`;
+  document.getElementById('player-hp-label').textContent = `${Math.min(Math.max(0, G.hp), maxHp)}/${maxHp}`;
 
   // Mana e XP na janela de batalha (mesmas contas da barra de status do char).
   const maxMana = getMaxMana();
   const manaPct = Math.max(0, Math.round((G.mana / maxMana) * 100));
   document.getElementById('player-mana-fill').style.width = manaPct + '%';
-  document.getElementById('player-mana-label').textContent = `${Math.max(0, G.mana)}/${maxMana}`;
+  document.getElementById('player-mana-label').textContent = `${Math.min(Math.max(0, G.mana), maxMana)}/${maxMana}`;
   const xpNext = XP_TABLE[G.level - 1];
   const xpPct = (G.level < 100 && xpNext) ? Math.max(0, Math.round((G.xp / xpNext) * 100)) : 100;
   document.getElementById('player-xp-fill').style.width = xpPct + '%';
