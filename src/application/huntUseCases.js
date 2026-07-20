@@ -250,7 +250,7 @@ function buildHuntSnapshot() {
   // risco de forjar valor, o servidor sempre valida mana/cooldown/posse do
   // item na hora de usar (ver server/src/huntEngine.js). Travado pra sessão
   // inteira: mudar o RTC no meio da caçada só vale a partir da próxima.
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, fightMode: G.fightMode || 'balanced', density: G.density || 'normal' };
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1 };
 }
 
 // Estilo de Luta (Fight Mode do TFS, ver domain/combatFormulas: FIGHT_MODES) —

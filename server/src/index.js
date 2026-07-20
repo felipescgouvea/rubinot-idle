@@ -269,6 +269,7 @@ const server = http.createServer(async (req, res) => {
 
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
+        bossTier: Math.max(1, Math.floor(Number(body.bossTier) || 1)), // Boss Zone: tier desafiado (escala dificuldade + prestígio)
         vocation: body.vocation, level, skills, equipment, relics, imbuements,
         spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)

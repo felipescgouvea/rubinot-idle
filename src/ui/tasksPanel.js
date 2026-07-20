@@ -3,7 +3,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=147';
 import { ITEMS } from '../domain/items.js?v=140';
 import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=128';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
-import { monsterSpriteImg } from './huntPanel.js?v=145';
+import { monsterSpriteImg } from './huntPanel.js?v=146';
 import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=132';
 import { t } from '../i18n/i18n.js?v=143';
 

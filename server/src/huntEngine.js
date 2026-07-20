@@ -7,7 +7,7 @@
 // skill). Marco 6: respingo de área (pack de monstros, não só alvo único),
 // bênçãos e stamina autoritativas — fecha as 3 limitações que ainda
 // restavam (documentadas antes, agora corrigidas).
-import { ZONES, MONSTERS, boostedZoneForDate, boostedCreatureForDate, boostedBossForDate, BOSS_MONSTER_IDS } from '../../src/domain/bestiary.js?v=147';
+import { ZONES, MONSTERS, boostedZoneForDate, boostedCreatureForDate, boostedBossForDate, BOSS_MONSTER_IDS, bossTierMultiplier } from '../../src/domain/bestiary.js?v=147';
 import {
   spawnMonsterInstance, computeMaxHp, computeMaxMana,
   computeAtk, computeDef, equippedWeaponSkillId, spellAttackDamage, spellHealAmount, runeDamage, potionRestore,
@@ -225,10 +225,22 @@ async function settleKill(session, mon, cfg) {
     session.mana = session.maxMana;
   }
 
+  // Boss Zone meta: vencer o BOSS da zona numa sessão bossOnly concede boss
+  // points (prestígio, escala com o tier) e registra o tier MÁXIMO por zona
+  // (base do ranking de boss). Só o boss conta — não os monstros normais.
+  let bossPoints = row ? Number(row.boss_points) || 0 : 0;
+  const bossMaxTier = (row && row.boss_max_tier && typeof row.boss_max_tier === 'object') ? row.boss_max_tier : {};
+  if (session.bossOnly && BOSS_MONSTER_IDS.has(mon.defKey)) {
+    const tier = session.bossTier || 1;
+    bossPoints += 5 * tier;
+    if ((bossMaxTier[session.zoneId] || 0) < tier) bossMaxTier[session.zoneId] = tier;
+  }
+
   await upsertRow('player_stats', {
     user_id: session.userId, slot: session.slot, gold, xp, level,
     total_gold_earned: totalGoldEarned, total_kills: totalKills,
-    hp: session.hp, mana: session.mana, stamina: session.stamina, updated_at: new Date().toISOString(),
+    hp: session.hp, mana: session.mana, stamina: session.stamina,
+    boss_points: bossPoints, boss_max_tier: bossMaxTier, updated_at: new Date().toISOString(),
   }, 'user_id,slot');
   await updateRows('hunt_sessions', { id: session.id }, { last_settled_at: new Date().toISOString() });
   await upsertRow('player_skills', { user_id: session.userId, slot: session.slot, skills: session.skills, updated_at: new Date().toISOString() }, 'user_id,slot');
@@ -487,7 +499,10 @@ async function tick(session) {
     // antigo doHuntTick do cliente, agora única fonte de verdade — ver
     // application/huntUseCases.js: setBossOnlyMode).
     const spawnZone = session.bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
-    const bossMult = session.bossOnly ? 1 : 1; // tier de Boss Rush ainda não escala aqui (ver nota abaixo)
+    // Boss Zone: o tier ESCALA a dificuldade do boss (HP/atk/xp/gold) pela
+    // escada bossTierMultiplier — antes ficava fixo em 1 (mesmo boss em todo
+    // tier). O tier vem do cliente no hunt-start (session.bossTier).
+    const bossMult = session.bossOnly ? bossTierMultiplier(session.bossTier || 1) : 1;
     const spawnCfg = session.bossOnly ? null : resolveZoneSpawn(cfg, session.zoneId, zone.monsters);
     let packSize = session.bossOnly ? 1 : (spawnCfg.packMin + Math.floor(Math.random() * (spawnCfg.packMax - spawnCfg.packMin + 1)));
     // Controle de DENSIDADE (ver client: setDensity) — como caçar cada zona:

@@ -5,9 +5,9 @@
 // motor por baixo (ver application/bossRushUseCases.js).
 import { G } from '../application/gameStore.js?v=129';
 import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=147';
-import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=129';
+import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=130';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
-import { monsterSpriteImg } from './huntPanel.js?v=145';
+import { monsterSpriteImg } from './huntPanel.js?v=146';
 import { openBattleModal } from './battleModal.js?v=125';
 import { t, getLocale } from '../i18n/i18n.js?v=143';
 
