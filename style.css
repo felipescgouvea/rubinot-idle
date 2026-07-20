@@ -1774,8 +1774,16 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* Log de Combate: linha inteira, abaixo do botão de caçada. Altura MÍNIMA
    garantida (não pode encolher pra virar uma frestinha de 1 linha só porque a
    cena/battle list acima é alta) — cresce além disso se sobrar espaço. */
-#battle-modal-box #combat-log-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
-#battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 130px; }
+#battle-modal-box #combat-log-card { margin: 0 !important; flex: 1; min-height: 150px; display: flex; flex-direction: column; }
+/* min-height:0 (não 130): o log PREENCHE o card via flex e rola por dentro
+   (overflow-y:auto herdado da regra base). Com min-height:130 ele estourava
+   o card e caía ABAIXO do modal/viewport — só ~2 linhas visíveis, o resto
+   cortado (bug reportado pelo Felipe). O card guarda o mínimo de 150px. */
+#battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
+/* Palco mais baixo DENTRO do modal (fora dele segue 200px): a cena+controles
+   da coluna esquerda somavam ~467px num modal de 660px, espremendo o Log.
+   140px ainda mostra o boneco com folga e devolve ~60px pro Log. */
+#battle-modal-box #dungeon-stage { height: 140px; }
 /* entrada de monstro MORTO na Battle List: acinzentada, some após 1s */
 .battle-list-entry.dead { opacity: 0.5; filter: grayscale(0.7); }
 .battle-list-entry.dead .battle-list-hp-fill { background: #8a8a8a; }
