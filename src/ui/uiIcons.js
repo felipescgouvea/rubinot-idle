@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=140';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=141';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -34,6 +34,12 @@ export const UI_ICONS = {
   charms:          { file: 'currency/Charm_Points_Icon.gif',  emoji: '✨' }, // símbolo real de charm
   boosted:         { file: 'items/Torch.webp',                emoji: '🔥' }, // boosted do dia (chama)
   daily:           { file: 'items/Reward_Box.webp',           emoji: '🎁' }, // recompensa diária
+
+  // cards de vocação: a arma-assinatura de cada uma (mesma linguagem de item)
+  voc_knight:      { file: 'items/Fire_Sword.webp',           emoji: '🛡️' }, // melee
+  voc_paladin:     { file: 'items/Bow.webp',                  emoji: '🏹' }, // distância
+  voc_sorcerer:    { file: 'items/Wand_of_Inferno.webp',      emoji: '🔮' }, // wand ofensiva
+  voc_druid:       { file: 'items/Snakebite_Rod.webp',        emoji: '🌿' }, // rod de suporte
 };
 
 // Markup do ícone: sprite real + fallback emoji (se a imagem falhar/não existir).

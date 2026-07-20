@@ -2,14 +2,14 @@
 // de prioridade que mistura magias E runas livremente — ver domain/rtcConfig.js
 // sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
 // limiar de % de HP) — a UI mora em rtcPanel.js.
-import { G, ACCOUNT } from './gameStore.js?v=139';
-import { isSpellAvailable } from '../domain/spells.js?v=137';
-import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=169';
-import { getMagic } from './stats.js?v=136';
-import { emit, EVENTS } from '../shared/eventBus.js?v=137';
-import { saveGame } from './saveGameUseCase.js?v=139';
-import { updateHuntRtc } from '../infrastructure/authClient.js?v=144';
-import { t } from '../i18n/i18n.js?v=153';
+import { G, ACCOUNT } from './gameStore.js?v=140';
+import { isSpellAvailable } from '../domain/spells.js?v=138';
+import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=170';
+import { getMagic } from './stats.js?v=137';
+import { emit, EVENTS } from '../shared/eventBus.js?v=138';
+import { saveGame } from './saveGameUseCase.js?v=140';
+import { updateHuntRtc } from '../infrastructure/authClient.js?v=145';
+import { t } from '../i18n/i18n.js?v=154';
 
 // Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar
 // prioridade de ataque/cura no meio da luta só valia a partir da PRÓXIMA

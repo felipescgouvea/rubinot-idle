@@ -1055,6 +1055,16 @@ img.hdr-icon {
 }
 span.hdr-icon { margin-right: 5px; }
 
+/* Ícone grande do card de vocação: arma-assinatura em pixel-art (ver ui/uiIcons.js) */
+img.voc-icon-img {
+  height: 42px;
+  width: 42px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  vertical-align: middle;
+}
+span.voc-icon-img { font-size: 2.3rem; line-height: 1; }
+
 /* ============ LOG DE COMBATE ============ */
 #combat-log {
   height: 215px;

@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=135" />
-  <link rel="stylesheet" href="style.css?v=154" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=136" />
+  <link rel="stylesheet" href="style.css?v=155" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -144,22 +144,22 @@
             </div>
             <div id="vocation-select" class="vocation-grid">
               <div class="voc-btn" data-voc="knight" onclick="createCharacter('knight')">
-                <div class="voc-icon">🛡️</div>
+                <div class="voc-icon" data-icon="voc_knight" data-icon-class="voc-icon-img"></div>
                 <div class="voc-name">Knight</div>
                 <div class="voc-desc" data-i18n="hunt.vocKnight">Melee tank. High HP, steady damage.</div>
               </div>
               <div class="voc-btn" data-voc="paladin" onclick="createCharacter('paladin')">
-                <div class="voc-icon">🏹</div>
+                <div class="voc-icon" data-icon="voc_paladin" data-icon-class="voc-icon-img"></div>
                 <div class="voc-name">Paladin</div>
                 <div class="voc-desc" data-i18n="hunt.vocPaladin">Balanced ranged fighter. Even mana and HP.</div>
               </div>
               <div class="voc-btn" data-voc="sorcerer" onclick="createCharacter('sorcerer')">
-                <div class="voc-icon">🔮</div>
+                <div class="voc-icon" data-icon="voc_sorcerer" data-icon-class="voc-icon-img"></div>
                 <div class="voc-name">Sorcerer</div>
                 <div class="voc-desc" data-i18n="hunt.vocSorcerer">Offensive mage. High damage, fragile. Uses mana.</div>
               </div>
               <div class="voc-btn" data-voc="druid" onclick="createCharacter('druid')">
-                <div class="voc-icon">🌿</div>
+                <div class="voc-icon" data-icon="voc_druid" data-icon-class="voc-icon-img"></div>
                 <div class="voc-name">Druid</div>
                 <div class="voc-desc" data-i18n="hunt.vocDruid">Healing mage. Support plus elemental damage.</div>
               </div>
@@ -419,6 +419,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=224"></script>
+  <script type="module" src="src/main.js?v=225"></script>
 </body>
 </html>
