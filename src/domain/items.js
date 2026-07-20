@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=137';
+import { primaryStatKeyForItem } from './rarity.js?v=138';
 
 // Capacidade da bag: quantos tipos DISTINTOS de item cabem (cada item já
 // possuído empilha à vontade, sem limite de quantidade — só um tipo NOVO

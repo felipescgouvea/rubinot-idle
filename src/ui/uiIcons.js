@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=141';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=142';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -34,6 +34,22 @@ export const UI_ICONS = {
   charms:          { file: 'currency/Charm_Points_Icon.gif',  emoji: '✨' }, // símbolo real de charm
   boosted:         { file: 'items/Torch.webp',                emoji: '🔥' }, // boosted do dia (chama)
   daily:           { file: 'items/Reward_Box.webp',           emoji: '🎁' }, // recompensa diária
+
+  // janela de batalha: título + categorias do log de combate
+  battle:          { file: 'items/Sword.webp',                emoji: '⚔️' },
+  log_combat:      { file: 'items/Sword.webp',                emoji: '⚔️' },
+  log_spells:      { file: 'items/Sudden_Death_Rune.webp',    emoji: '🗣️' }, // magia (runa)
+  log_supplies:    { file: 'items/Health_Potion.webp',        emoji: '🧪' }, // suprimentos (poção)
+  log_loot:        { file: 'items/Backpack.webp',             emoji: '📦' }, // loot (mochila)
+  // Obs.: os toggles de estilo de luta (ofensivo/equilibrado/defensivo) e de
+  // densidade (solo/normal/pack) seguem com emoji de propósito — são conceitos
+  // de mecânica abstratos, sem objeto canônico no Tibia; um sprite ali seria
+  // inventado e menos legível como botão de alternância.
+
+  // botões do topo / barra do personagem
+  outfit:          { file: 'items/Doublet.webp',              emoji: '👕' },
+  imbue:           { file: 'items/Blue_Gem.webp',             emoji: '🔮' }, // imbuement (gema)
+  achievements:    { file: 'items/Crown.webp',                emoji: '🏆' }, // conquistas/prestígio
 
   // cards de vocação: a arma-assinatura de cada uma (mesma linguagem de item)
   voc_knight:      { file: 'items/Fire_Sword.webp',           emoji: '🛡️' }, // melee
