@@ -394,6 +394,7 @@ const server = http.createServer(async (req, res) => {
         pack: liveSession ? liveSession.currentPack.filter(m => m.hp > 0).map(m => ({ uid: m.uid, defKey: m.defKey, name: m.name, hp: Math.max(0, m.hp), maxHp: m.maxHp })) : [],
         lastKill: liveSession ? liveSession.lastKill || null : null,
         combatEvents: liveSession ? (liveSession.combatEvents || []) : [], // log server-truth (dano/cura por ação, ver huntEngine: pushCombat)
+        killEvents: liveSession ? (liveSession.killEvents || []) : [], // TODAS as mortes do tick (crédito server-truth — cobre multi-kill de área, ver huntEngine: pushKill)
       });
     }
 

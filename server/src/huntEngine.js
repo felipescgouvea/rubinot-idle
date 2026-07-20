@@ -90,6 +90,18 @@ function pushCombat(session, ev) {
   if (session.combatEvents.length > 40) session.combatEvents.shift();
 }
 
+// Fila de KILLS (seq'd, mesma ideia do pushCombat). Um tick de ÁREA/pack pode
+// matar VÁRIOS monstros no MESMO tick; com um único session.lastKill o cliente
+// só creditava o ÚLTIMO — contadores de kill, bestiário, tasks, Battle Pass e o
+// log de loot subcontavam (deaths-1) a cada multi-kill. Agora cada morte entra
+// na fila e o cliente processa TODAS as novas (ver huntUseCases: lastKillSeq).
+function pushKill(session, k) {
+  if (!session.killEvents) { session.killEvents = []; session.killSeq = 0; }
+  k.seq = ++session.killSeq;
+  session.killEvents.push(k);
+  if (session.killEvents.length > 20) session.killEvents.shift();
+}
+
 // Resolve a magia de cura EFETIVA do RTC. Usa a escolhida pelo jogador, mas se
 // ela não está disponível pro nível atual, CAI no default apropriado pro nível
 // (defaultHealSpellId já é level-aware: Bruise Bane/Magic Patch < 8, exura/
@@ -273,7 +285,9 @@ async function settleKill(session, mon, cfg) {
     }
   }
 
-  session.lastKill = { monster: mon.name, defKey: mon.defKey, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
+  const kill = { monster: mon.name, defKey: mon.defKey, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
+  pushKill(session, kill);
+  session.lastKill = kill; // mantido por compat; o crédito real do cliente vem da fila killEvents
 }
 
 // Um "tick" inteiro: golpe básico (só no alvo da frente) + magia/runa por
@@ -553,6 +567,8 @@ export function startSession(session) {
   session.lastTickAt = Date.now();
   session.combatSeq = 0;      // sequência dos eventos de combate (log server-truth)
   session.combatEvents = [];  // ring buffer dos últimos eventos (ver pushCombat)
+  session.killSeq = 0;        // sequência das mortes (crédito de kill server-truth)
+  session.killEvents = [];    // fila das últimas mortes (ver pushKill) — cobre multi-kill de área
   // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
   // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
   session.timer = setInterval(() => doTick(session), TICK_MS);
@@ -724,6 +740,15 @@ export async function useItemInSession(session, itemId) {
   const isRune = item.type === 'rune' && item.dmg;
   if (!isPotion && !isRune) return { error: 'item não pode ser usado assim' };
 
+  // Serializa com o tick da caçada: doTick segura session.busy durante o tick
+  // inteiro (incl. os awaits de DB). Sem isto, um uso manual de runa que caísse
+  // DENTRO de um tick mexia no MESMO session.currentPack em paralelo — os dois
+  // podiam matar o mesmo pack[0] e chamar settleKill nele (double gold/xp/loot),
+  // ou o tick sobrescrevia a sala e perdia o kill da runa (M3). Ocupado → o
+  // cliente pode tentar de novo no próximo clique.
+  if (session.busy) return { error: 'ocupado, tente de novo' };
+  session.busy = true;
+  try {
   const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: itemId });
   if (!row || Number(row.qty) <= 0) return { error: 'item não pertence a esta conta/personagem' };
 
@@ -771,6 +796,7 @@ export async function useItemInSession(session, itemId) {
     ok: true, hp: session.hp, mana: session.mana,
     dmg: primaryDmg, targetName: primaryName, killed: deaths.length > 0, hitCount: targets.length,
   };
+  } finally { session.busy = false; }
 }
 
 // Vocação/nível/maxHp/maxMana pra ações fora de sessão (compra/venda/refill) —

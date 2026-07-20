@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=135';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=140';
-import { ZONES } from '../domain/bestiary.js?v=153';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=162';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=133';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=165';
-import { monsterAttack } from '../domain/combatFormulas.js?v=164';
-import { elementMod } from '../domain/elements.js?v=131';
-import { STAMINA_MAX } from '../domain/stamina.js?v=131';
-import { ITEMS } from '../domain/items.js?v=146';
-import { MONSTERS } from '../domain/bestiary.js?v=153';
-import { RARITY_TIERS } from '../domain/rarity.js?v=132';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=133';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=133';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=132';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=132';
-import { saveGame } from './saveGameUseCase.js?v=135';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=136';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=134';
-import { t } from '../i18n/i18n.js?v=149';
+import { G, ACCOUNT } from './gameStore.js?v=136';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=141';
+import { ZONES } from '../domain/bestiary.js?v=154';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=163';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=134';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=166';
+import { monsterAttack } from '../domain/combatFormulas.js?v=165';
+import { elementMod } from '../domain/elements.js?v=132';
+import { STAMINA_MAX } from '../domain/stamina.js?v=132';
+import { ITEMS } from '../domain/items.js?v=147';
+import { MONSTERS } from '../domain/bestiary.js?v=154';
+import { RARITY_TIERS } from '../domain/rarity.js?v=133';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=134';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=134';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=133';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=133';
+import { saveGame } from './saveGameUseCase.js?v=136';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=137';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=135';
+import { t } from '../i18n/i18n.js?v=150';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -189,6 +189,11 @@ let lastSeenKillAt = 0;
 // cada ação; renderCombatEvents loga cada um com o valor NA MESMA LINHA da ação
 // (pedido do Felipe). Reseta a cada início de caçada (o servidor zera combatSeq).
 let lastCombatSeq = 0;
+// Sequência da última MORTE já creditada (fila killEvents, ver server/src/
+// huntEngine.js: pushKill). Substitui o antigo lastSeenKillAt de UM único kill:
+// um tick de área/pack pode matar vários no mesmo tick e TODOS precisam ser
+// creditados (contadores/bestiário/tasks/Battle Pass/loot). Reseta a cada caçada.
+let lastKillSeq = 0;
 // Mesma ideia de lastSeenKillAt, pro evento de morte (ver server/src/
 // huntEngine.js: resolveTick — hp<=0 agora encerra a sessão de verdade e
 // grava stats.last_death, em vez de reviver em silêncio e seguir caçando).
@@ -414,12 +419,22 @@ async function reconcileWithServer() {
   // número, em linha separada). A barra de vida continua animando via
   // applyServerPack; isto aqui é só o texto do log.
   if (G.hunting) renderCombatEvents(res.combatEvents);
-  // Evento de morte REAL (Marco 6b) — nenhuma simulação local grava mais
-  // gold/xp/loot/relic (ver doCosmeticTick); quem alimenta o log de kill, o
-  // Hunt Analyzer, o Battle Pass, as missões, os contadores de bestiário/
-  // task e o desbloqueio de zona/tier do Boss Rush é o ÚLTIMO kill real que o
-  // servidor reporta aqui (server/src/huntEngine.js: session.lastKill).
-  if (res.lastKill && res.lastKill.at && res.lastKill.at > lastSeenKillAt) {
+  // Mortes REAIS (Marco 6b) — nenhuma simulação local grava gold/xp/loot/relic
+  // (ver doCosmeticTick); quem alimenta o log de kill, o Hunt Analyzer, o Battle
+  // Pass, as missões, os contadores de bestiário/task e o tier do Boss Rush são
+  // os kills que o servidor reporta na FILA killEvents (server/src/huntEngine.js:
+  // pushKill). Processa TODAS as novas (seq > lastKillSeq) — um tick de área/pack
+  // mata vários de uma vez e cada morte tem que ser creditada UMA vez (H1: antes,
+  // com o lastKill único, só o ÚLTIMO morto contava e o resto sumia).
+  if (Array.isArray(res.killEvents) && res.killEvents.length) {
+    for (const k of res.killEvents) {
+      if (k.seq == null || k.seq <= lastKillSeq) continue;
+      lastKillSeq = k.seq;
+      lastSeenKillAt = k.at || lastSeenKillAt;
+      applyServerKillEvents(k);
+    }
+  } else if (res.lastKill && res.lastKill.at && res.lastKill.at > lastSeenKillAt) {
+    // Fallback pra servidor antigo (ainda sem killEvents) durante o rollout.
     lastSeenKillAt = res.lastKill.at;
     applyServerKillEvents(res.lastKill);
   }
@@ -595,6 +610,7 @@ function applyServerKillEvents(k) {
 function beginLocalLoop() {
   reconcileEpoch++; // invalida qualquer poll pendente da caçada/pausa ANTERIOR (ver reconcileEpoch)
   lastCombatSeq = 0; // o servidor zera combatSeq a cada startSession (ver pushCombat)
+  lastKillSeq = 0;   // idem killSeq (ver pushKill) — nova sessão recomeça do zero
   huntSession = newHuntSession(); // zera o Hunt Analyzer a cada nova caçada
   // Sala/alvo/estado de diff zerados — o servidor é quem decide quando o
   // próximo grupo aparece (ver server/src/huntEngine.js: tick/nextSpawnAt);
@@ -672,6 +688,12 @@ function tryResumeServerSession() {
     if (res && res.ok) {
       currentSessionId = res.sessionId || null;
       startGraceUntil = Date.now() + START_GRACE_MS;
+      // A sessão NOVA do servidor recomeça combatSeq/killSeq do zero (ver
+      // startSession). Sem zerar os cursores do cliente aqui, renderCombatEvents
+      // ignorava todo evento com seq <= o high-water da sessão ANTIGA e o log de
+      // combate ficava MUDO até o seq novo ultrapassá-lo (M4). Reseta ambos.
+      lastCombatSeq = 0;
+      lastKillSeq = 0;
     }
   }).catch(() => { starting = false; });
 }
@@ -946,12 +968,14 @@ export function startRegen() {
   regenInterval = setInterval(() => {
     if (!G.vocation) return;
     const v = VOCATIONS[G.vocation];
+    // SÓ regenera HP/mana LOCALMENTE quando PARADO. Durante a caça, HP/mana são
+    // autoritativos do servidor (reconcile a cada 250ms, ver linha ~350) e o
+    // servidor NÃO faz regen passiva dentro da luta — só cura por magia/poção.
+    // Antes, este tick somava v.hpRegen caçando e o reconcile seguinte "puxava
+    // de volta" pro valor do servidor: HP/mana TREMIAM pra cima e caíam (M5).
     if (!G.hunting) {
       G.hp = Math.min(getMaxHp(), G.hp + v.hpRegen * 3);
       G.mana = Math.min(getMaxMana(), G.mana + v.manaRegen * 3);
-    } else {
-      G.hp = Math.min(getMaxHp(), G.hp + v.hpRegen);
-      G.mana = Math.min(getMaxMana(), G.mana + v.manaRegen);
     }
     // Stamina (se ligada no Admin): cai 1min/min caçando; regenera ~1/3 disso
     // descansando. O tick roda a cada 2s → 2/60 min por tick.
