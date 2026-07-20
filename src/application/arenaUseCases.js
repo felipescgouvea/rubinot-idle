@@ -4,17 +4,17 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=141';
-import { emit, EVENTS } from '../shared/eventBus.js?v=139';
-import { getMagic, getMaxHp } from './stats.js?v=138';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=170';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=138';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=140';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=138';
-import { addItemToInventory } from './inventoryCore.js?v=139';
-import { ITEMS } from '../domain/items.js?v=152';
-import { saveGame } from './saveGameUseCase.js?v=141';
-import { t } from '../i18n/i18n.js?v=155';
+import { G } from './gameStore.js?v=142';
+import { emit, EVENTS } from '../shared/eventBus.js?v=140';
+import { getMagic, getMaxHp } from './stats.js?v=139';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=171';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=139';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=141';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=139';
+import { addItemToInventory } from './inventoryCore.js?v=140';
+import { ITEMS } from '../domain/items.js?v=153';
+import { saveGame } from './saveGameUseCase.js?v=142';
+import { t } from '../i18n/i18n.js?v=156';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 

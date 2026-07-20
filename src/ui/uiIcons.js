@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=142';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=143';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -34,6 +34,15 @@ export const UI_ICONS = {
   charms:          { file: 'currency/Charm_Points_Icon.gif',  emoji: '✨' }, // símbolo real de charm
   boosted:         { file: 'items/Torch.webp',                emoji: '🔥' }, // boosted do dia (chama)
   daily:           { file: 'items/Reward_Box.webp',           emoji: '🎁' }, // recompensa diária
+
+  // toggles de estilo de luta (arma 2H = sem escudo = full attack; escudo = full defense)
+  fm_attack:       { file: 'items/Two_Handed_Sword.webp',     emoji: '⚔️' },
+  fm_balanced:     { file: 'items/Sword.webp',                emoji: '⚖️' },
+  fm_defense:      { file: 'items/Steel_Shield.webp',         emoji: '🛡️' },
+  // toggles de densidade (metáfora: 1 por vez → enxame)
+  dens_solo:       { file: 'items/Spear.webp',                emoji: '🎯' },
+  dens_normal:     { file: 'items/Battle_Axe.webp',           emoji: '👥' },
+  dens_pack:       { file: 'items/Beehive.webp',              emoji: '🐝' }, // enxame
 
   // janela de batalha: título + categorias do log de combate
   battle:          { file: 'items/Sword.webp',                emoji: '⚔️' },

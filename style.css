@@ -1076,6 +1076,19 @@ img.btn-icon {
 }
 span.btn-icon { font-size: 14px; }
 
+/* Ícone dos toggles de estilo de luta / densidade (janela de batalha).
+   Herda a opacidade do .fight-mode-btn (.55 inativo, 1 ativo) — o sprite
+   apagado nos inativos e cheio no ativo reforça o estado. Ver ui/uiIcons.js. */
+img.fm-icon {
+  height: 22px;
+  width: 22px;
+  object-fit: contain;
+  vertical-align: middle;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 1px 1px #00000088);
+}
+span.fm-icon { font-size: 1.15rem; line-height: 1; }
+
 /* ============ LOG DE COMBATE ============ */
 #combat-log {
   height: 215px;
