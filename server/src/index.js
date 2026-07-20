@@ -384,7 +384,14 @@ const server = http.createServer(async (req, res) => {
         // PRÓPRIA simulação local com spawn/dano independentes — a causa raiz
         // do bug em que o monstro mostrado na tela não tinha nada a ver com o
         // que o servidor realmente matava e pagava.
-        pack: liveSession ? liveSession.currentPack.map(m => ({ uid: m.uid, defKey: m.defKey, name: m.name, hp: Math.max(0, m.hp), maxHp: m.maxHp })) : [],
+        // filter(hp>0): NUNCA manda um monstro morto como se estivesse vivo. Sem
+        // isto, um GET /hunt/state que caia DENTRO da janela de `await settleKill`
+        // de um tick (a rota HTTP não respeita session.busy) lê currentPack ANTES
+        // do filtro de mortos rodar (huntEngine: resolveTick) e devolvia o alvo em
+        // hp:0 — o cliente pintava "Goblin Leader 0/110" ainda vivo, "morto mas
+        // atacando" (bug reportado pelo Felipe). O filtro real do pack acontece no
+        // próprio tick logo a seguir; aqui é só não expor o estado intermediário.
+        pack: liveSession ? liveSession.currentPack.filter(m => m.hp > 0).map(m => ({ uid: m.uid, defKey: m.defKey, name: m.name, hp: Math.max(0, m.hp), maxHp: m.maxHp })) : [],
         lastKill: liveSession ? liveSession.lastKill || null : null,
         combatEvents: liveSession ? (liveSession.combatEvents || []) : [], // log server-truth (dano/cura por ação, ver huntEngine: pushCombat)
       });

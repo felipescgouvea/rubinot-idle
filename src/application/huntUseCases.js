@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=132';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=137';
-import { ZONES } from '../domain/bestiary.js?v=150';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=159';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=130';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=162';
-import { monsterAttack } from '../domain/combatFormulas.js?v=161';
-import { elementMod } from '../domain/elements.js?v=128';
-import { STAMINA_MAX } from '../domain/stamina.js?v=128';
-import { ITEMS } from '../domain/items.js?v=143';
-import { MONSTERS } from '../domain/bestiary.js?v=150';
-import { RARITY_TIERS } from '../domain/rarity.js?v=129';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=130';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=130';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=129';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=129';
-import { saveGame } from './saveGameUseCase.js?v=132';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=133';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=131';
-import { t } from '../i18n/i18n.js?v=146';
+import { G, ACCOUNT } from './gameStore.js?v=133';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=138';
+import { ZONES } from '../domain/bestiary.js?v=151';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=160';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=131';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=163';
+import { monsterAttack } from '../domain/combatFormulas.js?v=162';
+import { elementMod } from '../domain/elements.js?v=129';
+import { STAMINA_MAX } from '../domain/stamina.js?v=129';
+import { ITEMS } from '../domain/items.js?v=144';
+import { MONSTERS } from '../domain/bestiary.js?v=151';
+import { RARITY_TIERS } from '../domain/rarity.js?v=130';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=131';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=131';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=130';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=130';
+import { saveGame } from './saveGameUseCase.js?v=133';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=134';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=132';
+import { t } from '../i18n/i18n.js?v=147';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -434,6 +434,11 @@ async function reconcileWithServer() {
 // próprio monstro fake — currentPack/currentMonster passam a ser um espelho
 // exato de session.currentPack (ver server/src/huntEngine.js).
 function applyServerPack(pack) {
+  // Blindagem: um monstro em hp<=0 já está morto — nunca deve entrar na sala
+  // viva (o servidor já filtra em /hunt/state, isto é a rede de segurança).
+  // Sem isto, um alvo em hp:0 (pego num estado intermediário do servidor)
+  // aparecia "vivo com 0/110 e sendo atacado" no cliente.
+  pack = (pack || []).filter(m => m.hp > 0);
   const wasEmpty = prevPackByUid.size === 0;
   // uid do alvo da frente ANTES deste diff — se ele estiver entre os que
   // sumiram agora, é ele quem acabou de morrer (dispara o flash "☠️ nome" no
