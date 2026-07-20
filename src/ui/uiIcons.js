@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=139';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=140';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -24,6 +24,16 @@ export const UI_ICONS = {
   shop:       { file: 'items/Gold_Pouch.webp',           emoji: '🛒' }, // bolsa de ouro
   market:     { file: 'items/Parcel.webp',               emoji: '🏪' }, // encomenda (troca entre players)
   highscores: { file: 'items/Golden_Goblet.webp',        emoji: '🏆' }, // troféu
+
+  // conceitos que só aparecem em cabeçalhos de painel / botões (não têm aba própria)
+  analyzer:        { file: 'items/Abacus.webp',                emoji: '📊' }, // Hunt Analyzer (contagem/estatística)
+  blessings:       { file: 'items/Blessed_Ankh.webp',         emoji: '🛡️' }, // bênçãos
+  equipment:       { file: 'items/Warrior_Helmet.webp',       emoji: '⚔️' },
+  training_online: { file: 'skills/Sword_Fighting_Icon.webp', emoji: '⚔️' }, // treino ativo
+  prey:            { file: 'items/Wolf_Paw.webp',             emoji: '🐾' },
+  charms:          { file: 'currency/Charm_Points_Icon.gif',  emoji: '✨' }, // símbolo real de charm
+  boosted:         { file: 'items/Torch.webp',                emoji: '🔥' }, // boosted do dia (chama)
+  daily:           { file: 'items/Reward_Box.webp',           emoji: '🎁' }, // recompensa diária
 };
 
 // Markup do ícone: sprite real + fallback emoji (se a imagem falhar/não existir).

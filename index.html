@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=134" />
-  <link rel="stylesheet" href="style.css?v=153" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=135" />
+  <link rel="stylesheet" href="style.css?v=154" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -40,7 +40,7 @@
     <!-- Boosted do Dia — DESTACADO do header, alinhado à direita e bem próximo dele -->
     <div id="boosted-strip">
       <div class="card" id="boosted-card">
-        <h3>🔥 Boosted</h3>
+        <h3 data-icon="boosted" data-icon-class="hdr-icon">Boosted</h3>
         <div id="boosted-body" class="boosted-body"></div>
       </div>
     </div>
@@ -105,7 +105,7 @@
       <section id="tab-hunt" class="panel active">
         <div class="panel-left">
           <div class="card" id="hunt-status-card">
-            <h3>🗺️ <span data-i18n="shell.tabHunt">Hunt</span></h3>
+            <h3 data-icon="hunt" data-icon-class="hdr-icon"><span data-i18n="shell.tabHunt">Hunt</span></h3>
             <div id="hunt-status-body">
               <div id="zone-current-bar">
                 <span id="zone-current-icon">🗺️</span>
@@ -119,7 +119,7 @@
           </div>
           <div class="hunt-mid-row">
             <div class="card" id="hunt-analyzer-card">
-              <h3>📊 Hunt Analyzer</h3>
+              <h3 data-icon="analyzer" data-icon-class="hdr-icon">Hunt Analyzer</h3>
               <div id="hunt-analyzer-body"></div>
             </div>
             <div class="card" id="loot-card" style="display:none">
@@ -128,13 +128,13 @@
             </div>
           </div>
           <div class="card" id="blessings-card">
-            <h3>🛡️ <span data-i18n="hunt.blessings">Blessings</span></h3>
+            <h3 data-icon="blessings" data-icon-class="hdr-icon"><span data-i18n="hunt.blessings">Blessings</span></h3>
             <div id="blessings-body"></div>
           </div>
         </div>
         <div class="panel-right">
           <div class="card" id="equip-card">
-            <h3>⚔️ <span data-i18n="hunt.equipment">Equipment</span></h3>
+            <h3 data-icon="equipment" data-icon-class="hdr-icon"><span data-i18n="hunt.equipment">Equipment</span></h3>
             <div class="equipment-slots"></div>
           </div>
           <div class="card" id="char-card">
@@ -171,7 +171,7 @@
       <!-- RTC -->
       <section id="tab-rtc" class="panel">
         <div class="card full-card">
-          <h3>🖥️ RTC — Rubinot Custom Client</h3>
+          <h3 data-icon="rtc" data-icon-class="hdr-icon">RTC — Rubinot Custom Client</h3>
           <p class="muted" data-i18n="rtc.intro">Configure automatic attack and healing for your hunt, just like the real RTCaster in RubinOT.</p>
           <div id="rtc-settings"></div>
         </div>
@@ -180,7 +180,7 @@
       <!-- TASKS -->
       <section id="tab-tasks" class="panel">
         <div class="card full-card">
-          <h3>📜 Linked Tasks</h3>
+          <h3 data-icon="tasks" data-icon-class="hdr-icon">Linked Tasks</h3>
           <p class="muted" data-i18n="tasks.intro">Complete creature tasks to earn bonus XP and exclusive rewards.</p>
           <div id="active-task-display"></div>
           <div class="admin-subtabs" id="task-room-tabs"></div>
@@ -201,7 +201,7 @@
             </div>
           </div>
           <div id="skills-subtab-upgrades">
-            <h3>⚡ <span data-i18n="skills.skillsUpgrades">Skills & Upgrades</span></h3>
+            <h3 data-icon="skills" data-icon-class="hdr-icon"><span data-i18n="skills.skillsUpgrades">Skills & Upgrades</span></h3>
             <p class="muted" data-i18n="skills.intro">Skills level up through use while hunting — or train a chosen one above, even offline.</p>
             <div id="skill-points-display"></div>
             <div id="skills-grid"></div>
@@ -212,11 +212,11 @@
       <!-- TRAINING (Online + Offline) — aba própria, antes ficava dentro de Skills -->
       <section id="tab-training" class="panel">
         <div class="card full-card">
-          <h3>⚔️ <span data-i18n="training.onlineTraining">Online Training</span></h3>
+          <h3 data-icon="training_online" data-icon-class="hdr-icon"><span data-i18n="training.onlineTraining">Online Training</span></h3>
           <div id="online-training-body"></div>
         </div>
         <div class="card full-card">
-          <h3>🏋️ <span data-i18n="skills.offlineTraining">Offline Training</span></h3>
+          <h3 data-icon="training" data-icon-class="hdr-icon"><span data-i18n="skills.offlineTraining">Offline Training</span></h3>
           <div id="training-body"></div>
         </div>
       </section>
@@ -224,18 +224,18 @@
       <!-- BESTIARY (Prey + Bestiário + Charms) -->
       <section id="tab-bestiary" class="panel">
         <div class="card full-card">
-          <h3>🐾 Prey</h3>
+          <h3 data-icon="prey" data-icon-class="hdr-icon">Prey</h3>
           <p class="muted" data-i18n="bestiary.preyIntro">Choose one creature per slot and gain a damage, XP, or loot bonus against it for 2 hours.</p>
           <div id="prey-slots" class="prey-slots"></div>
         </div>
         <div class="card full-card">
-          <h3>✨ Charms</h3>
+          <h3 data-icon="charms" data-icon-class="hdr-icon">Charms</h3>
           <div id="charm-points-display" class="charm-points-row"></div>
           <p class="muted" data-i18n="bestiary.charmsIntro">Unlock charms with Charm Points (earned by filling out the bestiary) and equip up to 3 for passive bonuses.</p>
           <div id="charms-list" class="charms-grid"></div>
         </div>
         <div class="card full-card">
-          <h3>📖 <span data-i18n="shell.tabBestiary">Bestiary</span></h3>
+          <h3 data-icon="bestiary" data-icon-class="hdr-icon"><span data-i18n="shell.tabBestiary">Bestiary</span></h3>
           <p class="muted" data-i18n="bestiary.intro">Each creature has kill milestones that award Charm Points when reached.</p>
           <div id="bestiary-list" class="bestiary-grid"></div>
         </div>
@@ -244,7 +244,7 @@
       <!-- ARENA -->
       <section id="tab-arena" class="panel">
         <div class="card full-card">
-          <h3>🏟️ Prestige Arena</h3>
+          <h3 data-icon="arena" data-icon-class="hdr-icon">Prestige Arena</h3>
           <p class="muted" data-i18n="arena.intro">Battle opponents in your division. Requires Level 30+.</p>
           <div id="arena-info"></div>
           <h4 style="margin:14px 0 8px">🏆 <span data-i18n="arena.divisionRewards">Division Rewards</span></h4>
@@ -256,7 +256,7 @@
       <!-- BOSS RUSH -->
       <section id="tab-bossrush" class="panel">
         <div class="card full-card">
-          <h3>💀 Boss Zone</h3>
+          <h3 data-icon="bossrush" data-icon-class="hdr-icon">Boss Zone</h3>
           <p class="muted" data-i18n="bossrush.intro">Challenge the boss of any zone you've already unlocked directly — skip its regular monsters along the way.</p>
           <div id="bossrush-stop-area" style="padding:0 14px 8px"></div>
           <div id="bossrush-grid"></div>
@@ -267,7 +267,7 @@
       <!-- WORLDS -->
       <section id="tab-worlds" class="panel">
         <div class="card full-card">
-          <h3>🌍 <span data-i18n="worlds.title">Worlds of Rubinot</span></h3>
+          <h3 data-icon="worlds" data-icon-class="hdr-icon"><span data-i18n="worlds.title">Worlds of Rubinot</span></h3>
           <p class="muted" data-i18n="worlds.intro">Each world unlocks new hunting grounds and exclusive bonuses.</p>
           <div id="worlds-grid"></div>
         </div>
@@ -276,7 +276,7 @@
       <!-- BATTLE PASS -->
       <section id="tab-battlepass" class="panel">
         <div class="card full-card">
-          <h3>🎖️ <span data-i18n="battlepass.title">Battle Pass — Current Season</span></h3>
+          <h3 data-icon="battlepass" data-icon-class="hdr-icon"><span data-i18n="battlepass.title">Battle Pass — Current Season</span></h3>
           <div id="bp-progress-area"></div>
           <h4 style="margin:14px 0 8px">📋 <span data-i18n="battlepass.dailyMissions">Daily Missions</span></h4>
           <div id="bp-missions-area" class="bp-missions-grid"></div>
@@ -291,7 +291,7 @@
       <!-- SHOP -->
       <section id="tab-shop" class="panel">
         <div class="card full-card">
-          <h3>🛒 <span data-i18n="shop.title">Shops</span></h3>
+          <h3 data-icon="shop" data-icon-class="hdr-icon"><span data-i18n="shop.title">Shops</span></h3>
           <p class="muted" data-i18n="shop.intro">Rubini Store, Equipment Shop, and Magic Supplies Shop — each one a different NPC from RubinOT.</p>
           <div id="shop-content"></div>
         </div>
@@ -300,7 +300,7 @@
       <!-- MARKET -->
       <section id="tab-market" class="panel">
         <div class="card full-card">
-          <h3>🏪 <span data-i18n="market.title">Market — Buy and Sell Items Between Players</span></h3>
+          <h3 data-icon="market" data-icon-class="hdr-icon"><span data-i18n="market.title">Market — Buy and Sell Items Between Players</span></h3>
           <p class="muted" data-i18n="market.intro">List items from your inventory and buy items other players are selling, all in gold. Characters aren't tradeable here — only items.</p>
           <div id="market-content"></div>
         </div>
@@ -309,7 +309,7 @@
       <!-- HIGHSCORES -->
       <section id="tab-highscores" class="panel">
         <div class="card full-card">
-          <h3>🏆 <span data-i18n="highscores.title">Highscores — Global Ranking</span></h3>
+          <h3 data-icon="highscores" data-icon-class="hdr-icon"><span data-i18n="highscores.title">Highscores — Global Ranking</span></h3>
           <div id="highscores-content"></div>
         </div>
       </section>
@@ -419,6 +419,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=223"></script>
+  <script type="module" src="src/main.js?v=224"></script>
 </body>
 </html>

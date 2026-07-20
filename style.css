@@ -1041,6 +1041,20 @@ img.tab-icon {
 /* fallback emoji (quando o sprite falha): mesmo tamanho aproximado */
 span.tab-icon { font-size: 15px; line-height: 1; flex: 0 0 auto; }
 
+/* Ícones dos cabeçalhos de painel (.card h3) — sprite real no lugar do emoji.
+   As flâmulas ◆◈◆ do h3 são position:absolute nas pontas, então o img inline
+   centraliza junto do texto sem colidir. Ver ui/uiIcons.js. */
+img.hdr-icon {
+  height: 17px;
+  width: 17px;
+  object-fit: contain;
+  vertical-align: -4px;
+  margin-right: 6px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 1px 1px #00000077);
+}
+span.hdr-icon { margin-right: 5px; }
+
 /* ============ LOG DE COMBATE ============ */
 #combat-log {
   height: 215px;
