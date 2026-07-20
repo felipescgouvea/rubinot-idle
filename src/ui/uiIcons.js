@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=147';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=148';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -36,9 +36,9 @@ export const UI_ICONS = {
   daily:           { file: 'items/Reward_Box.webp',           emoji: '🎁' }, // recompensa diária
 
   // toggles de estilo de luta (arma 2H = sem escudo = full attack; escudo = full defense)
-  fm_attack:       { file: 'items/Two_Handed_Sword.webp',     emoji: '⚔️' },
-  fm_balanced:     { file: 'items/Sword.webp',                emoji: '⚖️' },
-  fm_defense:      { file: 'items/Steel_Shield.webp',         emoji: '🛡️' },
+  fm_attack:       { file: 'items/Giant_Sword.webp',          emoji: '⚔️' }, // 2H imponente = ofensivo
+  fm_balanced:     { file: 'items/Sword.webp',                emoji: '⚖️' }, // 1H (dá pra usar escudo)
+  fm_defense:      { file: 'items/Tower_Shield.webp',         emoji: '🛡️' }, // escudão = defensivo
   // toggles de densidade (metáfora: 1 por vez → enxame)
   dens_solo:       { file: 'items/Spear.webp',                emoji: '🎯' },
   dens_normal:     { file: 'items/Battle_Axe.webp',           emoji: '👥' },
@@ -46,6 +46,18 @@ export const UI_ICONS = {
 
   // labels de conteúdo (Hunt Analyzer etc.)
   kills:           { file: 'items/Demon_Skull.webp',          emoji: '💀' },
+
+  // charms (efeito de cada um, sprite temática — Tibia não tem ícone de charm baixável)
+  charm_wound:     { file: 'items/Blood_Herb.webp',           emoji: '🩸' }, // dano físico (sangramento)
+  charm_enflame:   { file: 'items/Fire_Sword.webp',           emoji: '🔥' }, // dano de fogo
+  charm_scavenge:  { file: 'items/Backpack.webp',             emoji: '🍀' }, // loot
+  charm_gut:       { file: 'items/Gold_Coin.webp',            emoji: '💰' }, // gold
+  charm_divine:    { file: 'items/Blessed_Ankh.webp',         emoji: '⭐' }, // xp/sagrado
+  charm_vampiric:  { file: 'items/Vampire_Shield.webp',       emoji: '🧛' }, // lifeleech
+  // bônus de prey
+  prey_damage:     { file: 'items/Sword.webp',                emoji: '⚔️' },
+  prey_xp:         { file: 'vitals/Experience_Icon.webp',     emoji: '⭐' },
+  prey_loot:       { file: 'items/Backpack.webp',             emoji: '🍀' },
 
   // janela de batalha: título + categorias do log de combate
   battle:          { file: 'items/Sword.webp',                emoji: '⚔️' },

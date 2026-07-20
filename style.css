@@ -2011,50 +2011,108 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .boosted-name { font-size: 11px; font-weight: 700; color: var(--ink); }
 .boosted-bonus { font-size: 9px; font-weight: 700; color: #f0c14b; margin-top: 1px; white-space: nowrap; }
 
-/* ---- Presas (Prey) ---- */
-.prey-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-.prey-slot {
-  border: 2px solid var(--gold-dim); border-radius: 8px; padding: 10px;
-  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
-  text-align: center; box-shadow: inset 0 1px 0 #ffffff88;
+/* ---- Presas (Prey) — no estilo do Prey Dialog do Tibia ---- */
+.prey-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 680px) { .prey-slots { grid-template-columns: 1fr; } }
+.prey-card {
+  position: relative; border: 2px solid var(--gold-dim); border-radius: 10px;
+  padding: 14px 12px 10px; background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
+  box-shadow: inset 0 1px 0 #ffffff88, 0 2px 6px #00000033;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
 }
-.prey-slot.active { border-color: var(--gold); box-shadow: inset 0 1px 0 #ffffff88, 0 0 8px #d4a01755; }
-.prey-slot.empty { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; opacity: 0.9; }
-.prey-slot-empty-label { font-size: 12px; color: var(--ink-soft); }
-.prey-slot-monster { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; font-size: 13px; }
-.prey-monster-icon { width: 32px; height: 32px; image-rendering: pixelated; vertical-align: middle; }
-.prey-bonus { margin-top: 4px; font-size: 12px; font-weight: 700; color: var(--green-2); }
-.prey-stars { color: var(--gold-soft); font-size: 13px; letter-spacing: 1px; }
-.prey-timer { font-size: 11px; color: var(--ink-soft); margin: 3px 0 6px; }
-.prey-actions { display: flex; gap: 6px; justify-content: center; }
+.prey-card.active { border-color: var(--gold); box-shadow: inset 0 1px 0 #ffffff88, 0 0 10px #d4a01766; }
+.prey-slot-no {
+  position: absolute; top: 6px; left: 8px; width: 19px; height: 19px; border-radius: 50%;
+  background: linear-gradient(180deg, var(--navy-1), var(--navy-2)); color: var(--gold-bright);
+  font-family: var(--serif); font-weight: 700; font-size: 11px; display: flex; align-items: center;
+  justify-content: center; border: 1px solid var(--gold-dim); box-shadow: 0 1px 2px #00000066;
+}
+.prey-portrait {
+  width: 76px; height: 76px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 32%, #4a3d2a, #221a10);
+  border: 2px solid #6d5836; box-shadow: inset 0 2px 7px #000000aa, inset 0 0 0 1px #00000055;
+}
+.prey-portrait-img { width: 62px; height: 62px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 2px #000000aa); }
+.prey-portrait.empty { border-style: dashed; border-color: #8a6f4d; background: #241c1288; }
+.prey-portrait-q { font-family: var(--serif); font-size: 32px; color: #8a6f4d; }
+.prey-creature-name { font-family: var(--serif); font-weight: 700; font-size: 13px; color: var(--navy-2); text-align: center; line-height: 1.2; }
+.prey-bonus-box {
+  display: flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 20px;
+  background: linear-gradient(180deg, #2e7d3226, #1b5e200f); border: 1px solid var(--green-1);
+}
+.prey-bonus-icon { width: 18px; height: 18px; object-fit: contain; image-rendering: pixelated; }
+.prey-bonus-val { font-family: var(--serif); font-weight: 900; font-size: 15px; color: var(--green-2); }
+.prey-bonus-label { font-size: 10px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .5px; }
+.prey-stars { letter-spacing: 2px; font-size: 14px; line-height: 1; }
+.prey-star { color: #cbb68a; }
+.prey-star.on { color: var(--gold-bright); text-shadow: 0 0 5px #f1c40f99; }
+.prey-timer-track {
+  position: relative; width: 100%; height: 16px; border-radius: 8px; overflow: hidden;
+  background: #00000026; border: 1px solid var(--line-soft);
+}
+.prey-timer-fill { height: 100%; background: linear-gradient(180deg, #5cc860, #2e7d32); box-shadow: inset 0 1px 0 #ffffff66; transition: width .6s linear; }
+.prey-timer-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 1px #000000cc; }
+.prey-empty-text { font-size: 12px; color: var(--ink-faint); text-align: center; font-style: italic; }
+.prey-card-actions { display: flex; gap: 6px; width: 100%; margin-top: 2px; }
+.prey-btn {
+  flex: 1; cursor: pointer; font-family: var(--serif); font-weight: 700; font-size: 11px;
+  padding: 7px 8px; border-radius: 6px; border: 1px solid var(--brown-btn-line);
+  background: linear-gradient(180deg, #a98b5f, var(--brown-btn)); color: #fff;
+  letter-spacing: .5px; text-shadow: 0 1px 1px #00000088; transition: filter .12s;
+}
+.prey-btn:hover { filter: brightness(1.12); }
+.prey-btn.cancel { flex: 0 0 36px; background: linear-gradient(180deg, #c05a4a, #8e2f22); border-color: #6e1e14; }
+.prey-btn.choose { width: 100%; flex: none; background: linear-gradient(180deg, var(--navy-1), var(--navy-2)); border-color: var(--navy-deep); }
 
 /* modal de escolha da presa */
 .prey-pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; max-height: 360px; overflow-y: auto; margin-top: 8px; }
-.prey-pick, .charm-card button, .training-skill-btn {
-  cursor: pointer; font-family: var(--body);
-}
+.prey-pick, .training-skill-btn { cursor: pointer; font-family: var(--body); }
 .prey-pick {
   display: flex; align-items: center; gap: 8px; padding: 7px 10px;
   border: 1px solid var(--line-soft); border-radius: 6px;
   background: var(--cream); color: var(--ink); font-size: 12px; font-weight: 600;
 }
 .prey-pick:hover { border-color: var(--gold); background: #fff; }
+.prey-monster-icon { width: 32px; height: 32px; image-rendering: pixelated; vertical-align: middle; }
 
-/* ---- Charms ---- */
+/* ---- Charms — no estilo da lista de Charms do Cyclopedia do Tibia ---- */
 .charm-points-row { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
 .charm-points-badge { color: var(--gold-soft); font-family: var(--serif); }
-.charms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
-.charm-card {
-  border: 2px solid var(--line-soft); border-radius: 8px; padding: 10px;
-  background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
-  display: flex; flex-direction: column; gap: 8px;
+.charms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 8px; }
+.charm-row {
+  display: grid; grid-template-columns: 48px 1fr auto; align-items: center; gap: 11px;
+  padding: 8px 11px; border-radius: 8px; border: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-2));
+  transition: border-color .12s, box-shadow .12s;
 }
-.charm-card.equipped { border-color: var(--green-1); box-shadow: 0 0 8px #2e7d3255; }
-.charm-head { display: flex; gap: 8px; align-items: flex-start; }
-.charm-icon { font-size: 22px; }
-.charm-name { font-size: 13px; font-weight: 700; color: var(--ink); }
-.charm-name small { color: var(--ink-faint); font-weight: 600; }
-.charm-desc { font-size: 11px; color: var(--ink-soft); }
+.charm-row.locked { opacity: .82; }
+.charm-row.equipped { border-color: var(--green-1); box-shadow: 0 0 8px #2e7d3244; background: linear-gradient(180deg, #ecfbe2, var(--parch-2)); }
+.charm-icon-frame {
+  width: 46px; height: 46px; border-radius: 7px; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 32%, #4a3d2a, #221a10); border: 2px solid #6d5836; box-shadow: inset 0 1px 5px #000000aa;
+}
+.charm-icon-img { width: 30px; height: 30px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 1px #000000aa); }
+.charm-row.locked .charm-icon-img { filter: grayscale(1) brightness(.65); }
+.charm-info { min-width: 0; }
+.charm-title-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.charm-name { font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--ink); }
+.charm-type { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; padding: 1px 6px; border-radius: 9px; color: #fff; box-shadow: 0 1px 2px #00000044; }
+.charm-type.off { background: #c0392b; }
+.charm-type.def { background: var(--navy-1); }
+.charm-type.util { background: var(--green-1); }
+.charm-type.pass { background: #8a6f4d; }
+.charm-desc { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+.charm-action { display: flex; align-items: center; }
+.charm-btn {
+  cursor: pointer; font-family: var(--serif); font-weight: 700; font-size: 11px; white-space: nowrap;
+  padding: 7px 13px; border-radius: 6px; border: 1px solid var(--navy-deep); color: #fff;
+  background: linear-gradient(180deg, var(--navy-1), var(--navy-2)); text-shadow: 0 1px 1px #00000088; transition: filter .12s;
+}
+.charm-btn:hover { filter: brightness(1.13); }
+.charm-btn.on { background: linear-gradient(180deg, #c05a4a, #8e2f22); border-color: #6e1e14; }
+.charm-btn.buy { background: linear-gradient(180deg, #a98b5f, var(--brown-btn)); border-color: var(--brown-btn-line); }
+.charm-btn.buy:disabled { opacity: .5; cursor: not-allowed; filter: grayscale(.4); }
+.charm-cost { display: inline-flex; align-items: center; gap: 3px; }
 
 /* ---- Bestiário ---- */
 .bestiary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
