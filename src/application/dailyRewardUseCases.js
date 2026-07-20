@@ -4,11 +4,11 @@
 // server/src/index.js: /daily-reward/state e /daily-reward/claim); este
 // arquivo só chama as rotas e mantém um cache local (G.dailyLastClaim/
 // G.dailyStreak) pra feedback visual entre reloads.
-import { G, ACCOUNT } from './gameStore.js?v=151';
+import { G, ACCOUNT } from './gameStore.js?v=152';
 import { fetchDailyRewardState, claimDailyRewardOnServer } from '../infrastructure/authClient.js';
-import { emit, EVENTS } from '../shared/eventBus.js?v=149';
-import { saveGame } from './saveGameUseCase.js?v=151';
-import { t } from '../i18n/i18n.js?v=165';
+import { emit, EVENTS } from '../shared/eventBus.js?v=150';
+import { saveGame } from './saveGameUseCase.js?v=152';
+import { t } from '../i18n/i18n.js?v=166';
 
 export async function getDailyState() {
   const result = await fetchDailyRewardState(ACCOUNT.activeSlot);

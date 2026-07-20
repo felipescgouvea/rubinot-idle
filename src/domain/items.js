@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=148';
+import { primaryStatKeyForItem } from './rarity.js?v=149';
 
 // Capacidade da bag: quantos tipos DISTINTOS de item cabem (cada item já
 // possuído empilha à vontade, sem limite de quantidade — só um tipo NOVO
@@ -1027,7 +1027,7 @@ export const ITEMS = {
   soulhexer:         { name: 'Soulhexer', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 37, sell: 4551, rare: true },
   stellar_moonsilver_sceptre: { name: 'Stellar Moonsilver Sceptre', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 19, sell: 969 },
   tempest_rod:       { name: 'Tempest Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 34, sell: 3774, rare: true },
-  the_chiller:       { name: 'The Chiller', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 400 },
+  the_chiller:       { name: 'The Chiller', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 6, sell: 400 },
   valuable_carving_rod: { name: 'Valuable Carving Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 25, sell: 1875 },
   valuable_mayhem_rod: { name: 'Valuable Mayhem Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 22, sell: 1386 },
   valuable_remedy_rod: { name: 'Valuable Remedy Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 19, sell: 969 },
@@ -1068,7 +1068,7 @@ export const ITEMS = {
   sorcerer_test_weapon_test: { name: 'Sorcerer Test Weapon Test', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 22, sell: 1386 },
   soultainter:       { name: 'Soultainter', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 16, sell: 624 },
   stellar_moonsilver_channeler: { name: 'Stellar Moonsilver Channeler', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 19, sell: 969 },
-  the_scorcher:      { name: 'The Scorcher', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 400 },
+  the_scorcher:      { name: 'The Scorcher', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 6, sell: 400 },
   valuable_carving_wand: { name: 'Valuable Carving Wand', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 34, sell: 3774, rare: true },
   valuable_mayhem_wand: { name: 'Valuable Mayhem Wand', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 13, sell: 351 },
   valuable_remedy_wand: { name: 'Valuable Remedy Wand', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 16, sell: 624 },
@@ -9863,8 +9863,8 @@ export const STARTER_AMMO_QTY = 100;
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   paladin:  { weapon: 'bow', ammo: 'simple_arrow_weak', armor: 'leather_armor',          helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  sorcerer: { weapon: 'wand_of_vortex', armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  druid:    { weapon: 'snakebite_rod',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  sorcerer: { weapon: 'the_scorcher', armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  druid:    { weapon: 'the_chiller',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
 // Supply inicial por vocação (poções/comida/runas), entregue junto com o STARTER_KITS
