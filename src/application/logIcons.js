@@ -3,9 +3,9 @@
 // as duas tinham CÓPIAS idênticas desta função (a application não pode
 // importar de ui/*.js, então não dá pra reusar ui/shared.js: itemIconImg,
 // mas as duas application/*.js podem compartilhar um helper entre si).
-import { ITEMS } from '../domain/items.js?v=142';
-import { MONSTERS } from '../domain/bestiary.js?v=149';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=132';
+import { ITEMS } from '../domain/items.js?v=143';
+import { MONSTERS } from '../domain/bestiary.js?v=150';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=133';
 
 export function itemLogIcon(itemId) {
   const item = ITEMS[itemId];

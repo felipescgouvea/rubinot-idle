@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=131';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=136';
-import { ZONES } from '../domain/bestiary.js?v=149';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=158';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=129';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=161';
-import { monsterAttack } from '../domain/combatFormulas.js?v=160';
-import { elementMod } from '../domain/elements.js?v=127';
-import { STAMINA_MAX } from '../domain/stamina.js?v=127';
-import { ITEMS } from '../domain/items.js?v=142';
-import { MONSTERS } from '../domain/bestiary.js?v=149';
-import { RARITY_TIERS } from '../domain/rarity.js?v=128';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=129';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=129';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=128';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=128';
-import { saveGame } from './saveGameUseCase.js?v=131';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=132';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=130';
-import { t } from '../i18n/i18n.js?v=145';
+import { G, ACCOUNT } from './gameStore.js?v=132';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=137';
+import { ZONES } from '../domain/bestiary.js?v=150';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=159';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=130';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=162';
+import { monsterAttack } from '../domain/combatFormulas.js?v=161';
+import { elementMod } from '../domain/elements.js?v=128';
+import { STAMINA_MAX } from '../domain/stamina.js?v=128';
+import { ITEMS } from '../domain/items.js?v=143';
+import { MONSTERS } from '../domain/bestiary.js?v=150';
+import { RARITY_TIERS } from '../domain/rarity.js?v=129';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=130';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=130';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=129';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=129';
+import { saveGame } from './saveGameUseCase.js?v=132';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=133';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=131';
+import { t } from '../i18n/i18n.js?v=146';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -781,17 +781,21 @@ async function performIdleRtcHeal() {
   const hpPct = maxHp > 0 ? (G.hp / maxHp) * 100 : 100;
   const manaPct = maxMana > 0 ? (G.mana / maxMana) * 100 : 100;
   const wantsHp = G.hp > 0 && (
-    (G.rtc.healPotion && hpPct < (G.rtc.healPotionThreshold || 0) && (G.inventory[G.rtc.healPotion] || 0) > 0) ||
+    (G.rtc.healPotion && hpPct < (G.rtc.healPotionThreshold || 0) && ((G.inventory && G.inventory[G.rtc.healPotion]) || 0) > 0) ||
     hpPct < (G.rtc.healSpellThreshold || 0)
   );
-  const wantsMana = G.rtc.manaPotion && G.mana < maxMana && manaPct < (G.rtc.manaPotionThreshold || 0) && (G.inventory[G.rtc.manaPotion] || 0) > 0;
+  const wantsMana = G.rtc.manaPotion && G.mana < maxMana && manaPct < (G.rtc.manaPotionThreshold || 0) && ((G.inventory && G.inventory[G.rtc.manaPotion]) || 0) > 0;
   if (!wantsHp && !wantsMana) return;
   idleHealBusy = true;
   try {
     const res = await idleHealOnServer(ACCOUNT.activeSlot, G.rtc);
     if (!res.ok) return;
-    G.hp = res.hp;
-    G.mana = res.mana;
+    // Parado, a vida/mana só SOBEM (regen passiva + poção). Math.max evita que
+    // o valor do servidor (calculado do seu próprio updated_at, às vezes 1 poll
+    // atrás) puxe pra baixo o que a regen LOCAL (startRegen) já mostrou —
+    // causava o HP "tremer" (43→42→45) parado (bug pego no probe de morte).
+    G.hp = Math.max(G.hp, res.hp);
+    G.mana = Math.max(G.mana, res.mana);
     if (res.usedPotionHeal && G.rtc.healPotion) {
       G.inventory[G.rtc.healPotion] = Math.max(0, (G.inventory[G.rtc.healPotion] || 0) - 1);
       emit(EVENTS.LOG, { html: `${itemLogIcon(G.rtc.healPotion)} ${t('inventory.logHealHp', { item: ITEMS[G.rtc.healPotion].name, amount: res.healedHp })}`, cat: 'suprimento' });

@@ -2,8 +2,8 @@
 // battle pass e market — deixá-lo dentro de inventoryUseCases.js (que por
 // sua vez precisa chamar de volta a resolução de combate ao usar uma runa)
 // criaria import circular com metade do jogo.
-import { G } from './gameStore.js?v=131';
-import { BAG_MAX_SLOTS } from '../domain/items.js?v=142';
+import { G } from './gameStore.js?v=132';
+import { BAG_MAX_SLOTS } from '../domain/items.js?v=143';
 
 // Um item já possuído sempre empilha (sem limite de quantidade). Um item
 // NOVO só entra se ainda houver slot livre (máx. BAG_MAX_SLOTS tipos

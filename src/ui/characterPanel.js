@@ -1,23 +1,23 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=131';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=159';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=128';
-import { skillIconImg } from './shared.js?v=134';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=127';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=127';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=127';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=127';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=128';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=129';
-import { formatNum, applyHpState } from './shared.js?v=134';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=148';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=195';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=132';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=127';
-import { selectVocation } from '../application/characterUseCases.js?v=132';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=131';
-import { t } from '../i18n/i18n.js?v=145';
+import { G } from '../application/gameStore.js?v=132';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=160';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=129';
+import { skillIconImg } from './shared.js?v=135';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=128';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=128';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=128';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=128';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=129';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=130';
+import { formatNum, applyHpState } from './shared.js?v=135';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=149';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=196';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=133';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=128';
+import { selectVocation } from '../application/characterUseCases.js?v=133';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=132';
+import { t } from '../i18n/i18n.js?v=146';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -286,8 +286,11 @@ function renderBars() {
   // ficar 1 tick à frente do maxHp/maxMana recomputado, mostrando "530/500"
   // (barra >100%) por um instante. Cosmético, mas o auditor flagava — nunca
   // exibe atual > teto.
-  document.getElementById('hp-text').textContent = `${Math.min(G.hp, maxHp)}/${maxHp}`;
-  document.getElementById('mana-text').textContent = `${Math.min(G.mana, maxMana)}/${maxMana}`;
+  // Math.floor: HP/mana são inteiros no Tibia, mas a regen passiva acumula
+  // frações em G.hp/G.mana (ver huntUseCases: startRegen) — sem o piso, a tela
+  // mostrava "39.4575/110" (bug pego no probe de morte).
+  document.getElementById('hp-text').textContent = `${Math.floor(Math.min(G.hp, maxHp))}/${maxHp}`;
+  document.getElementById('mana-text').textContent = `${Math.floor(Math.min(G.mana, maxMana))}/${maxMana}`;
   // XP mostra o número atual/próximo E a porcentagem (igual HP/mana mostram números).
   const xpNext = XP_TABLE[G.level - 1];
   document.getElementById('xp-text').textContent = (G.level < 100 && xpNext)
@@ -303,8 +306,8 @@ function renderHeaderStats() {
   const huntPill = document.getElementById('hdr-hunt-status');
   const staminaPill = document.getElementById('hdr-stamina');
   if (G.vocation) {
-    document.getElementById('hdr-hp').textContent = `${G.hp}/${getMaxHp()}`;
-    document.getElementById('hdr-mana').textContent = `${G.mana}/${getMaxMana()}`;
+    document.getElementById('hdr-hp').textContent = `${Math.floor(G.hp)}/${getMaxHp()}`;
+    document.getElementById('hdr-mana').textContent = `${Math.floor(G.mana)}/${getMaxMana()}`;
     // Status de caçada + Stamina: moraram no Analisador de Caçada (só visível
     // na aba Caçada); agora ficam no header, visíveis em qualquer aba.
     const st = getHuntStats();
@@ -357,13 +360,13 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
   const hpFill = document.getElementById('player-hp-fill');
   hpFill.style.width = pct + '%';
   applyHpState(hpFill, pct);
-  document.getElementById('player-hp-label').textContent = `${Math.min(Math.max(0, G.hp), maxHp)}/${maxHp}`;
+  document.getElementById('player-hp-label').textContent = `${Math.floor(Math.min(Math.max(0, G.hp), maxHp))}/${maxHp}`;
 
   // Mana e XP na janela de batalha (mesmas contas da barra de status do char).
   const maxMana = getMaxMana();
   const manaPct = Math.max(0, Math.round((G.mana / maxMana) * 100));
   document.getElementById('player-mana-fill').style.width = manaPct + '%';
-  document.getElementById('player-mana-label').textContent = `${Math.min(Math.max(0, G.mana), maxMana)}/${maxMana}`;
+  document.getElementById('player-mana-label').textContent = `${Math.floor(Math.min(Math.max(0, G.mana), maxMana))}/${maxMana}`;
   const xpNext = XP_TABLE[G.level - 1];
   const xpPct = (G.level < 100 && xpNext) ? Math.max(0, Math.round((G.xp / xpNext) * 100)) : 100;
   document.getElementById('player-xp-fill').style.width = xpPct + '%';
