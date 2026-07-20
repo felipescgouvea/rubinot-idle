@@ -1,13 +1,13 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=148';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=159';
-import { RARITY_TIERS } from '../domain/rarity.js?v=145';
-import { on, EVENTS } from '../shared/eventBus.js?v=146';
-import { saveGame } from '../application/saveGameUseCase.js?v=148';
-import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=151';
-import { t } from '../i18n/i18n.js?v=162';
+import { G } from '../application/gameStore.js?v=149';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=160';
+import { RARITY_TIERS } from '../domain/rarity.js?v=146';
+import { on, EVENTS } from '../shared/eventBus.js?v=147';
+import { saveGame } from '../application/saveGameUseCase.js?v=149';
+import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=152';
+import { t } from '../i18n/i18n.js?v=163';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -210,6 +210,9 @@ export function openItemModal(itemId, fromBag = false) {
 // Ícone-fantasma de cada slot vazio, ao estilo Tibia (silhueta acinzentada do
 // que vai ali) — o CSS deixa em cinza/baixa opacidade (ver .equip-slot-ghost).
 const SLOT_PLACEHOLDER = { weapon: '🗡️', armor: '🧥', shield: '🛡️', helmet: '⛑️', ammo: '🏹', ring: '💍', legs: '👖', boots: '🥾' };
+// Silhueta REAL do slot vazio, do client (OTClient — assets/sprites/ui/slots/):
+// mapeia cada slot deste jogo pro slot do inventário do Tibia.
+const SLOT_GHOST = { helmet: 'head', armor: 'torso', legs: 'legs', boots: 'feet', ring: 'finger', weapon: 'right-hand', shield: 'left-hand', ammo: 'hip' };
 const SLOT_LABEL_KEYS = { weapon: 'inventory.slotWeapon', armor: 'inventory.slotArmor', shield: 'inventory.slotShield', helmet: 'inventory.slotHelmet', ammo: 'inventory.slotAmmo', ring: 'inventory.slotRing', legs: 'inventory.slotLegs', boots: 'inventory.slotBoots' };
 const slotLabel = slot => t(SLOT_LABEL_KEYS[slot]);
 
@@ -236,7 +239,9 @@ export function renderEquipmentSlots() {
     return `<div class="equip-slot slot-${slot} ${item ? 'filled' : ''}"${style} title="${title}" onclick="${clickTarget}">
       ${item
         ? `<div class="equip-slot-icon">${itemIconImg(relic ? relic.itemId : slotValue, 'equip-slot-icon')}</div>${slot === 'ammo' ? `<div class="equip-slot-ammo-qty">${ammoQty}</div>` : ''}`
-        : `<div class="equip-slot-ghost">${SLOT_PLACEHOLDER[slot]}</div>`}
+        : `<div class="equip-slot-ghost">${SLOT_GHOST[slot]
+            ? `<img class="equip-slot-ghost-img" src="assets/sprites/ui/slots/${SLOT_GHOST[slot]}.png" alt="" onerror="this.outerHTML='<span>${SLOT_PLACEHOLDER[slot]}</span>'">`
+            : SLOT_PLACEHOLDER[slot]}</div>`}
     </div>`;
   }).join('');
   // Slot da Bag — guarda um item de verdade (o "bag" inicial do Tibia, ver

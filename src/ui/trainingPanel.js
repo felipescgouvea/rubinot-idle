@@ -1,14 +1,14 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=148';
-import { TIBIA_SKILLS } from '../domain/character.js?v=175';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=146';
-import { SPELLS } from '../domain/spells.js?v=146';
-import { on, EVENTS } from '../shared/eventBus.js?v=146';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=151';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=152';
-import { t } from '../i18n/i18n.js?v=162';
+import { G } from '../application/gameStore.js?v=149';
+import { TIBIA_SKILLS } from '../domain/character.js?v=176';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=147';
+import { SPELLS } from '../domain/spells.js?v=147';
+import { on, EVENTS } from '../shared/eventBus.js?v=147';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=152';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=153';
+import { t } from '../i18n/i18n.js?v=163';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
