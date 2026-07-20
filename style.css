@@ -1699,8 +1699,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   padding: 0;
   /* TAMANHO FIXO: não cresce/encolhe com a quantidade de monstros ou o log —
      as seções internas rolam sozinhas. */
-  width: min(940px, 96vw);
-  height: min(660px, 92vh);
+  width: min(1200px, 96vw);
+  height: min(820px, 94vh);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1736,61 +1736,45 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   opacity: 0.8;
 }
 .battle-modal-close-x:hover { opacity: 1; }
-/* Corpo do modal de batalha em 2 colunas (telas largas): esquerda = cena +
-   botão; direita = Battle List + Log. Reduz muito a altura pra caber sem rolar. */
+/* Corpo do modal em 2 COLUNAS lado a lado: ESQUERDA = cena grande (palco
+   imersivo) + barras + controles; DIREITA = Battle List (cima) e Log de
+   Combate (baixo) empilhados. Cada seção rola por dentro; o modal em si não
+   cresce nem rola no todo (layout "cena grande + pilha", escolha do Felipe). */
 #battle-modal-body {
   flex: 1;               /* ocupa a altura fixa do modal */
   min-height: 0;
   display: flex;
-  flex-direction: column; /* linha de 2 colunas em cima; Log full-width embaixo */
+  flex-direction: row;   /* cena | (lista + log) */
   gap: 14px;
   padding: 14px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-/* #combat-log-card é um .card, que por padrão tem overflow:hidden (pros
-   cantos arredondados) — mas isso cortava o fim do Log quando a linha de
-   cima (cena + Battle List) era alta o bastante pra espremer o card abaixo
-   do min-height de #combat-log (texto "cortado embaixo"). Como o card já
-   não precisa de cantos internos escondendo nada além do próprio #combat-log
-   (que rola sozinho), soltar o overflow aqui resolve sem afetar o visual. */
-#battle-modal-box #combat-log-card { overflow: visible; }
-/* Linha de cima: 2 colunas (cena+botão | Battle List). Altura natural da coluna
-   esquerda; a direita estica pra igualar (a Battle List preenche até embaixo). */
-.battle-top-row {
-  display: grid;
-  grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
-  gap: 14px;
-  align-items: stretch;
-  flex: none;
-  min-height: 0;
+  overflow: hidden;
 }
 .battle-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; }
-#battle-modal-box #battle-scene { margin: 0 !important; flex: none; }
+.battle-col-left { flex: 1.15; }   /* cena em destaque */
+.battle-col-right { flex: 1; }     /* Battle List + Log empilhados */
+/* Esquerda: o PALCO cresce pra preencher a coluna (boneco/efeitos maiores);
+   nome + barras + controles ficam com altura natural abaixo dele. */
+#battle-modal-box #battle-scene { margin: 0 !important; flex: 1; min-height: 0; }
+#battle-modal-box #dungeon-stage { flex: 1; height: auto; min-height: 200px; }
 #battle-modal-box #hunt-toggle { margin: 0 !important; flex: none; }
-/* Battle List preenche a coluna direita inteira, até onde começa o Log. */
+/* #combat-log-card é .card com overflow:hidden — solto aqui pro log rolar
+   por dentro sem ser cortado pelos cantos arredondados do card. */
+#battle-modal-box #combat-log-card { overflow: visible; }
+/* Direita: Battle List (cima) e Log (baixo) dividem a altura; cada um rola. O
+   Log ganha um pouco mais (flex 1.25) por ser o que o jogador mais acompanha. */
 #battle-modal-box #battle-list-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 #battle-modal-box #battle-list { flex: 1; height: auto; max-height: none; overflow-y: auto; }
-/* Log de Combate: linha inteira, abaixo do botão de caçada. Altura MÍNIMA
-   garantida (não pode encolher pra virar uma frestinha de 1 linha só porque a
-   cena/battle list acima é alta) — cresce além disso se sobrar espaço. */
-#battle-modal-box #combat-log-card { margin: 0 !important; flex: 1; min-height: 150px; display: flex; flex-direction: column; }
-/* min-height:0 (não 130): o log PREENCHE o card via flex e rola por dentro
-   (overflow-y:auto herdado da regra base). Com min-height:130 ele estourava
-   o card e caía ABAIXO do modal/viewport — só ~2 linhas visíveis, o resto
-   cortado (bug reportado pelo Felipe). O card guarda o mínimo de 150px. */
+#battle-modal-box #combat-log-card { margin: 0 !important; flex: 1.25; min-height: 0; display: flex; flex-direction: column; }
 #battle-modal-box #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
-/* Palco mais baixo DENTRO do modal (fora dele segue 200px): a cena+controles
-   da coluna esquerda somavam ~467px num modal de 660px, espremendo o Log.
-   140px ainda mostra o boneco com folga e devolve ~60px pro Log. */
-#battle-modal-box #dungeon-stage { height: 140px; }
 /* entrada de monstro MORTO na Battle List: acinzentada, some após 1s */
 .battle-list-entry.dead { opacity: 0.5; filter: grayscale(0.7); }
 .battle-list-entry.dead .battle-list-hp-fill { background: #8a8a8a; }
-/* telas estreitas: volta pra 1 coluna (empilha tudo), altura livre */
-@media (max-width: 780px) {
-  #battle-modal-box { height: auto; max-height: 92vh; overflow-y: auto; }
-  .battle-top-row { grid-template-columns: 1fr; }
+/* telas estreitas: empilha as colunas (cena → lista → log), altura livre */
+@media (max-width: 820px) {
+  #battle-modal-box { height: auto; max-height: 94vh; overflow-y: auto; }
+  #battle-modal-body { flex-direction: column; }
+  #battle-modal-box #battle-scene { flex: none; }
+  #battle-modal-box #dungeon-stage { flex: none; height: 160px; }
   #battle-modal-box #battle-list { height: 140px; max-height: 140px; flex: none; }
   #battle-modal-box #combat-log { height: 200px; flex: none; }
 }

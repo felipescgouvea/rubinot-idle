@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=128" />
-  <link rel="stylesheet" href="style.css?v=146" />
+  <link rel="stylesheet" href="style.css?v=147" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -346,7 +346,6 @@
              Battle List que preenche a coluna toda) e, ABAIXO ocupando a linha
              inteira, o Log de Combate. Em telas estreitas vira 1 coluna. -->
         <div id="battle-modal-body">
-          <div class="battle-top-row">
           <div class="battle-col battle-col-left">
             <!-- Cena única: o boneco fica no meio do palco da dungeon. Ao caçar,
                  anda pra baixo (chão rolando) procurando; quando um monstro
@@ -396,10 +395,8 @@
               <h3>🎯 Battle List</h3>
               <div id="battle-list"><div class="battle-list-empty" data-i18n="battle.noCreatures">No creatures.</div></div>
             </div>
-          </div>
-          </div>
-          <!-- Log de Combate: abaixo do botão de caçada, ocupando a linha inteira -->
-          <div class="card" id="combat-log-card">
+            <!-- Log de Combate: empilhado abaixo da Battle List (coluna direita) -->
+            <div class="card" id="combat-log-card">
             <h3 data-i18n="battle.combatLog">Combat Log</h3>
             <div id="combat-log-tabs">
               <button class="log-tab active" data-cat="tudo" onclick="setLogFilter('tudo')" data-i18n="battle.logAll">All</button>
@@ -409,6 +406,7 @@
               <button class="log-tab" data-cat="loot" onclick="setLogFilter('loot')">📦 <span data-i18n="battle.logLoot">Loot</span></button>
             </div>
             <div id="combat-log" data-filter="tudo"></div>
+          </div>
           </div>
         </div>
       </div>
