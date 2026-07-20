@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=150';
-import { VOCATIONS } from '../domain/character.js?v=177';
-import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=149';
-import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=148';
-import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=153';
-import { t } from '../i18n/i18n.js?v=164';
+import { G } from '../application/gameStore.js?v=151';
+import { VOCATIONS } from '../domain/character.js?v=178';
+import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=150';
+import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=149';
+import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=154';
+import { t } from '../i18n/i18n.js?v=165';
 
 function divisionRewardIcon(r) {
   if (r.type === 'gold') return goldIconImg('inline-icon');

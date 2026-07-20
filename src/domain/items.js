@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=147';
+import { primaryStatKeyForItem } from './rarity.js?v=148';
 
 // Capacidade da bag: quantos tipos DISTINTOS de item cabem (cada item já
 // possuído empilha à vontade, sem limite de quantidade — só um tipo NOVO
@@ -9863,8 +9863,8 @@ export const STARTER_AMMO_QTY = 100;
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   paladin:  { weapon: 'bow', ammo: 'simple_arrow_weak', armor: 'leather_armor',          helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  sorcerer: { weapon: 'the_scorcher',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  druid:    { weapon: 'the_chiller',   armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  sorcerer: { weapon: 'wand_of_vortex', armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  druid:    { weapon: 'snakebite_rod',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
 
 // Supply inicial por vocação (poções/comida/runas), entregue junto com o STARTER_KITS
