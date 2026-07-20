@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=140" />
-  <link rel="stylesheet" href="style.css?v=159" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=141" />
+  <link rel="stylesheet" href="style.css?v=160" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -372,7 +372,7 @@
                 <div class="player-hp-label" id="player-xp-label">-- XP</div>
               </div>
             </div>
-            <button id="hunt-toggle" onclick="toggleHunt()">▶ <span data-i18n="battle.startHunt">Start Hunt</span></button>
+            <button id="hunt-toggle" onclick="toggleHunt()"><svg class="ht-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="htPlayInit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe491"/><stop offset=".55" stop-color="#f3b13a"/><stop offset="1" stop-color="#e2871a"/></linearGradient></defs><path d="M6.6 3.8 L20.4 12 L6.6 20.2 Z" fill="url(#htPlayInit)" stroke="#1c1206" stroke-width="1.7" stroke-linejoin="round"/></svg> <span data-i18n="battle.startHunt">Start Hunt</span></button>
             <!-- Estilo de Luta (Fight Mode) — alterna como caçar. Ver
                  application/huntUseCases.js: setFightMode / domain/combatFormulas: FIGHT_MODES -->
             <div id="fight-mode-row" class="fight-mode-row" title="Estilo de luta">
@@ -419,6 +419,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=229"></script>
+  <script type="module" src="src/main.js?v=230"></script>
 </body>
 </html>
