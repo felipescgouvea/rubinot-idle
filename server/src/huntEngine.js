@@ -396,8 +396,17 @@ async function resolveTick(session) {
   // pelo respingo de área) — mesmo espírito de doHuntTick no cliente.
   const primaryDied = primary.hp <= 0;
   const deaths = pack.filter(m => m.hp <= 0);
-  for (const m of deaths) await settleKill(session, m, cfg);
+  // Remove os mortos da sala ANTES de gravar o kill. settleKill escreve no
+  // Supabase (await) e PODE estourar (blip de rede); se o filtro rodasse só
+  // DEPOIS do await, um settleKill que falhasse deixava o cadáver preso em
+  // session.currentPack — e o próximo tick voltava a atacá-lo pra sempre:
+  // Battle List vazia + log "golpe básico ao Goblin" sem monstro na tela
+  // (bug reportado pelo Felipe). O corpo sai da sala mesmo se o crédito falhar.
   session.currentPack = pack.filter(m => m.hp > 0);
+  for (const m of deaths) {
+    try { await settleKill(session, m, cfg); }
+    catch (e) { console.error('settleKill falhou (corpo já removido da sala):', session.id, m.defKey, e.message); }
+  }
 
   // (3) contra-ataque do monstro da frente (o que sobrou, se algum) — só
   // depois de uma folga desde o spawn do pack (GRACE_MS), pra o cliente
@@ -749,8 +758,13 @@ export async function useItemInSession(session, itemId) {
   await incrementInventory(session.userId, session.slot, itemId, -1);
 
   const deaths = pack.filter(m => m.hp <= 0);
-  for (const m of deaths) await settleKill(session, m, cfg);
+  // Remove antes de creditar (mesma blindagem do resolveTick): um settleKill que
+  // estoure não pode deixar o cadáver preso na sala.
   session.currentPack = pack.filter(m => m.hp > 0);
+  for (const m of deaths) {
+    try { await settleKill(session, m, cfg); }
+    catch (e) { console.error('settleKill (runa) falhou (corpo já removido):', session.id, m.defKey, e.message); }
+  }
   if (!session.currentPack.length) session.nextSpawnAt = Date.now() + 1500;
   await flushVitals(session);
   return {
