@@ -307,6 +307,22 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
+    // Alvo escolhido pelo jogador (clique na Battle List/palco) — o motor passa a
+    // mirar essa criatura no golpe básico/magia enquanto ela estiver viva na sala
+    // (ver huntEngine.js: resolveTick, session.targetUid). Sem estado no banco:
+    // é preferência efêmera da sessão viva, some quando a caçada acaba.
+    if (url.pathname === '/hunt/target' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+      const live = activeRow ? getLiveSession(activeRow.id) : null;
+      if (live) live.targetUid = (body.uid != null && body.uid !== '') ? String(body.uid) : null;
+      return send(res, 200, { ok: true });
+    }
+
     if (url.pathname === '/hunt/state' && req.method === 'GET') {
       const user = await requireUser(req, res);
       if (!user) return;

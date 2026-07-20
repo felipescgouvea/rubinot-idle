@@ -306,7 +306,13 @@ async function resolveTick(session) {
   if (session.stopped) return;
   const voc = VOC_TRAINING[session.vocation];
   const pack = session.currentPack;
-  const primary = pack[0];
+  // Alvo do jogador: a criatura que ele escolheu na Battle List/palco (clique →
+  // /hunt/target seta session.targetUid), SE ainda estiver viva na sala; senão
+  // cai no primeiro da fila. Antes o servidor SEMPRE batia no pack[0] e o clique
+  // do jogador não mudava nada no combate real — só o destaque visual (M2). A
+  // ORDEM da sala não muda (o Felipe já reclamou de reordenar): só troca QUEM
+  // leva o golpe. O contra-ataque abaixo continua vindo da frente da sala.
+  const primary = (session.targetUid != null && pack.find(m => String(m.uid) === String(session.targetUid) && m.hp > 0)) || pack[0];
   const now = Date.now();
   decayStamina(session, cfg, now - (session.lastTickAt || now));
   session.lastTickAt = now;
@@ -399,7 +405,11 @@ async function resolveTick(session) {
       }
       if (isAreaAttack(areaId) && pack.length > 1) {
         const maxTargets = areaMaxTargets(areaId);
-        pack.slice(1, maxTargets).forEach(tgt => {
+        // Respingo de área nos OUTROS da sala (exclui o alvo principal, que já
+        // levou o golpe cheio acima) — antes era pack.slice(1,...), que assumia
+        // primary = pack[0]; agora que o alvo pode ser outro (ver session.targetUid)
+        // filtra pelo próprio primary pra não bater duas vezes nele nem pular um.
+        pack.filter(m => m !== primary).slice(0, maxTargets - 1).forEach(tgt => {
           tgt.hp -= Math.max(1, Math.floor(hitFn() * elementMod(tgt.defKey, element)));
         });
       }
@@ -569,6 +579,7 @@ export function startSession(session) {
   session.combatEvents = [];  // ring buffer dos últimos eventos (ver pushCombat)
   session.killSeq = 0;        // sequência das mortes (crédito de kill server-truth)
   session.killEvents = [];    // fila das últimas mortes (ver pushKill) — cobre multi-kill de área
+  session.targetUid = null;   // alvo escolhido pelo jogador (clique → /hunt/target); null = ataca a frente
   // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
   // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
   session.timer = setInterval(() => doTick(session), TICK_MS);

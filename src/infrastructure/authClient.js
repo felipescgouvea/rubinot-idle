@@ -306,6 +306,14 @@ export function getHuntState(slot) {
   return huntFetch(`/hunt/state?slot=${slot}`);
 }
 
+// Informa ao servidor qual criatura o jogador escolheu atacar (clique na Battle
+// List/palco) — o motor passa a mirar esse uid no golpe básico/magia enquanto
+// ela viver (ver server: /hunt/target, huntEngine: session.targetUid). uid null
+// volta a atacar a frente. Silencioso se não houver caçada ativa.
+export function setHuntTarget(slot, uid) {
+  return huntFetch('/hunt/target', { method: 'POST', body: { slot, uid } });
+}
+
 // Equipar/desequipar validado no servidor (confere posse antes de aceitar —
 // ver server/src/index.js: /equip). itemId=null desequipa. Chamado depois da
 // UI já ter mutado G.equipment localmente (mesmo padrão otimista do resto).

@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=136';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=141';
-import { ZONES } from '../domain/bestiary.js?v=154';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=163';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=134';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=166';
-import { monsterAttack } from '../domain/combatFormulas.js?v=165';
-import { elementMod } from '../domain/elements.js?v=132';
-import { STAMINA_MAX } from '../domain/stamina.js?v=132';
-import { ITEMS } from '../domain/items.js?v=147';
-import { MONSTERS } from '../domain/bestiary.js?v=154';
-import { RARITY_TIERS } from '../domain/rarity.js?v=133';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=134';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=134';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=133';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=133';
-import { saveGame } from './saveGameUseCase.js?v=136';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=137';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=135';
-import { t } from '../i18n/i18n.js?v=150';
+import { G, ACCOUNT } from './gameStore.js?v=137';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget } from '../infrastructure/authClient.js?v=142';
+import { ZONES } from '../domain/bestiary.js?v=155';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=164';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=135';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=167';
+import { monsterAttack } from '../domain/combatFormulas.js?v=166';
+import { elementMod } from '../domain/elements.js?v=133';
+import { STAMINA_MAX } from '../domain/stamina.js?v=133';
+import { ITEMS } from '../domain/items.js?v=148';
+import { MONSTERS } from '../domain/bestiary.js?v=155';
+import { RARITY_TIERS } from '../domain/rarity.js?v=134';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=135';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=135';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=134';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=134';
+import { saveGame } from './saveGameUseCase.js?v=137';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=138';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=136';
+import { t } from '../i18n/i18n.js?v=151';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -124,6 +124,11 @@ export function selectTarget(uid) {
   if (!picked || picked === currentMonster) return; // já é o alvo, ou uid não existe na sala
   manualTargetUid = key;
   currentMonster = picked;
+  // Avisa o SERVIDOR pra mirar esse alvo de verdade (golpe básico/magia) — antes
+  // o clique só mudava o destaque visual e o servidor seguia batendo na frente
+  // (M2). Silencioso se falhar: o próximo reconcile/tick ainda usa o último alvo
+  // aceito, e o realce local já mudou na hora.
+  setHuntTarget(ACCOUNT.activeSlot, key).catch(() => {});
   emit(EVENTS.MONSTER_DISPLAY, {});
 }
 
