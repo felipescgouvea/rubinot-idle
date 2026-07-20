@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=133';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=138';
-import { ZONES } from '../domain/bestiary.js?v=151';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=160';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=131';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=163';
-import { monsterAttack } from '../domain/combatFormulas.js?v=162';
-import { elementMod } from '../domain/elements.js?v=129';
-import { STAMINA_MAX } from '../domain/stamina.js?v=129';
-import { ITEMS } from '../domain/items.js?v=144';
-import { MONSTERS } from '../domain/bestiary.js?v=151';
-import { RARITY_TIERS } from '../domain/rarity.js?v=130';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=131';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=131';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=130';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=130';
-import { saveGame } from './saveGameUseCase.js?v=133';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=134';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=132';
-import { t } from '../i18n/i18n.js?v=147';
+import { G, ACCOUNT } from './gameStore.js?v=134';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer } from '../infrastructure/authClient.js?v=139';
+import { ZONES } from '../domain/bestiary.js?v=152';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=161';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=132';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=164';
+import { monsterAttack } from '../domain/combatFormulas.js?v=163';
+import { elementMod } from '../domain/elements.js?v=130';
+import { STAMINA_MAX } from '../domain/stamina.js?v=130';
+import { ITEMS } from '../domain/items.js?v=145';
+import { MONSTERS } from '../domain/bestiary.js?v=152';
+import { RARITY_TIERS } from '../domain/rarity.js?v=131';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=132';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=132';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=131';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=131';
+import { saveGame } from './saveGameUseCase.js?v=134';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=135';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=133';
+import { t } from '../i18n/i18n.js?v=148';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -492,15 +492,26 @@ function applyServerPack(pack) {
     }
   });
   const nowUids = new Set(pack.map(m => String(m.uid)));
-  let killedFrontDefKey = null;
+  let killedFrontDefKey = null, killedFrontUid = null;
   for (const [uid, prev] of prevPackByUid) {
     if (!nowUids.has(uid)) {
       const deadEntry = { defKey: prev.defKey, name: prev.name, maxHp: prev.maxHp, uid: ++deadSeq };
       recentDead.push(deadEntry);
       setTimeout(() => { recentDead = recentDead.filter(d => d.uid !== deadEntry.uid); emit(EVENTS.BATTLE_LIST); }, 1000);
       if (manualTargetUid === uid) manualTargetUid = null;
-      if (uid === oldFrontUid) killedFrontDefKey = prev.defKey;
+      if (uid === oldFrontUid) { killedFrontDefKey = prev.defKey; killedFrontUid = uid; }
     }
+  }
+  // Projétil do golpe FATAL no alvo da frente: o loop de dano acima (pack.forEach)
+  // só dispara projétil pra quem SOBREVIVE (hp caiu, ainda no pack). Quando o
+  // golpe MATA de primeira, o alvo sai do pack e cai aqui — sem isto, todo golpe
+  // que abate o monstro num tiro só ficava SEM a seta/projétil (bug do Felipe:
+  // "às vezes o projétil não sai"). O alvo ainda está no DOM neste instante
+  // (o re-render só vem no emit MONSTER_DISPLAY abaixo), então a seta voa até ele.
+  if (killedFrontUid) {
+    const voc = VOC_TRAINING[G.vocation];
+    const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
+    if (missile) emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid });
   }
   // Reconstrói currentPack: quem já existia mantém o hp ANTIGO (o setTimeout
   // acima corrige assim que o golpe "chega") — só quem acabou de aparecer
