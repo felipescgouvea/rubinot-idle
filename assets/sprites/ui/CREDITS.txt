@@ -1,0 +1,4 @@
+Ícones de UI em assets/sprites/ui/ extraídos do OTClient (https://github.com/mehah/otclient),
+disponibilizado sob a licença MIT — Copyright (c) 2010-2020 OTClient.
+Usados aqui: fight-mode (offensive/balanced/defensive), charms (Wound/Enflame/Scavenge/
+Gut/Divine/Vampiric) e bônus de prey (damage/xp/loot).
