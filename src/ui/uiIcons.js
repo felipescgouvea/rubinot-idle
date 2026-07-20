@@ -67,10 +67,9 @@ export const UI_ICONS = {
   log_spells:      { file: 'items/Sudden_Death_Rune.webp',    emoji: '🗣️' }, // magia (runa)
   log_supplies:    { file: 'items/Health_Potion.webp',        emoji: '🧪' }, // suprimentos (poção)
   log_loot:        { file: 'items/Backpack.webp',             emoji: '📦' }, // loot (mochila)
-  // Obs.: os toggles de estilo de luta (ofensivo/equilibrado/defensivo) e de
-  // densidade (solo/normal/pack) seguem com emoji de propósito — são conceitos
-  // de mecânica abstratos, sem objeto canônico no Tibia; um sprite ali seria
-  // inventado e menos legível como botão de alternância.
+  // Obs.: densidade (solo/normal/pack) usa sprite de item porque não tem objeto
+  // nem no client (é mecânica só deste idle); fight-mode já usa o ícone REAL do
+  // client (ver acima).
 
   // botões do topo / barra do personagem
   outfit:          { file: 'items/Doublet.webp',              emoji: '👕' },
