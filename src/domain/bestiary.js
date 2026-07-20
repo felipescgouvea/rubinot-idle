@@ -18,6 +18,13 @@ export const ZONES = {
   // progression.js). ---
 
   // --- Rookgaard (ilha inicial, sempre desbloqueada) ---
+  // Hunts temáticas de criatura única/dupla das mais fracas do Rook (pedido do
+  // Felipe) — ordenam sozinhas antes da Troll Cave (zonePicker ordena por XP
+  // médio dos monstros). Boss = a criatura mais forte da zona (mesma convenção
+  // da Troll Cave, onde o boss é também um spawn comum).
+  rat_cave:       { city: 'rookgaard',  name: 'zone.rat_cave',       icon: '🐁', worldReq: 'auroria', monsters: ['rat', 'cave_rat'], theme: ['#6b5a3a', '#2b2416'], boss: 'cave_rat' },
+  wolf_den:       { city: 'rookgaard',  name: 'zone.wolf_den',       icon: '🐺', worldReq: 'auroria', monsters: ['wolf'], theme: ['#5a5a5a', '#232323'], boss: 'wolf' },
+  bug_nest:       { city: 'rookgaard',  name: 'zone.bug_nest',       icon: '🐛', worldReq: 'auroria', monsters: ['bug'], theme: ['#4a6b3a', '#1e2b16'], boss: 'bug' },
   troll_cave:     { city: 'rookgaard',  name: 'zone.troll_cave',     icon: '🧌', worldReq: 'auroria', monsters: ['troll', 'swamp_troll'], theme: ['#3d5c3a', '#182b16'], boss: 'swamp_troll' },
 
   // --- Dawnport (ilha alternativa de treino, também sempre desbloqueada —

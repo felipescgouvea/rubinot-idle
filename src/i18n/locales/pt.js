@@ -140,6 +140,9 @@ export default {
   'city.ferumbras': 'O covil do arquimago — o fim do mundo.',
 
   // ---- hunting grounds / dungeons (domain/bestiary.js: ZONES[id].name) ----
+  'zone.rat_cave': 'Caverna dos Ratos',
+  'zone.wolf_den': 'Covil dos Lobos',
+  'zone.bug_nest': 'Ninho de Insetos',
   'zone.troll_cave': 'Caverna dos Trolls',
   'zone.dawnport_hunt': 'Arredores de Dawnport',
   'zone.elf_hunt': 'Bosque dos Elfos',

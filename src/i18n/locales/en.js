@@ -139,6 +139,9 @@ export default {
   'city.ferumbras': "The archmage's lair — the end of the world.",
 
   // ---- hunting grounds / dungeons (domain/bestiary.js: ZONES[id].name) ----
+  'zone.rat_cave': 'Rat Cave',
+  'zone.wolf_den': 'Wolf Den',
+  'zone.bug_nest': 'Bug Nest',
   'zone.troll_cave': 'Troll Cave',
   'zone.dawnport_hunt': 'Dawnport Outskirts',
   'zone.elf_hunt': 'Elf Woods',
