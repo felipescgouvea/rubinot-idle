@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=146';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=147';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -82,9 +82,19 @@ export function huntToggleIcon(kind) {
   return `<svg class="ht-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe491"/><stop offset=".55" stop-color="#f3b13a"/><stop offset="1" stop-color="#e2871a"/></linearGradient></defs>${shape}</svg>`;
 }
 
+// Conceitos SEM objeto no Tibia que ganham um ícone CUSTOM (SVG à mão, estilo
+// favicon) em vez de emoji do SO. `settings`/`admin` = engrenagem — o Tibia não
+// tem item de engrenagem, então é desenhado. Fill dourado sólido (sem gradiente)
+// de propósito: o ícone aparece em 2+ lugares e ids de gradiente duplicados
+// conflitariam. `cls` = classe de contexto (tab-icon/btn-icon) só pra herança.
+const CUSTOM_SVG = {
+  settings: (cls) => `<svg class="${cls} gear-svg" viewBox="0 0 24 24" aria-hidden="true"><g stroke="#1c1206" stroke-width="1.3" fill="#efb43a"><rect x="10.4" y="1.7" width="3.2" height="4.9" rx="1"/><rect x="10.4" y="17.4" width="3.2" height="4.9" rx="1"/><rect x="1.7" y="10.4" width="4.9" height="3.2" rx="1"/><rect x="17.4" y="10.4" width="4.9" height="3.2" rx="1"/><g transform="rotate(45 12 12)"><rect x="10.4" y="1.7" width="3.2" height="4.9" rx="1"/><rect x="10.4" y="17.4" width="3.2" height="4.9" rx="1"/><rect x="1.7" y="10.4" width="4.9" height="3.2" rx="1"/><rect x="17.4" y="10.4" width="4.9" height="3.2" rx="1"/></g><circle cx="12" cy="12" r="6.7"/></g><circle cx="12" cy="12" r="2.5" fill="#2a1c10"/></svg>`,
+};
+
 // Markup do ícone: sprite real + fallback emoji (se a imagem falhar/não existir).
 // `cls` é a classe de contexto que dimensiona a imagem (ex.: 'tab-icon').
 export function uiIcon(id, cls = '') {
+  if (CUSTOM_SVG[id]) return CUSTOM_SVG[id](cls);
   const ic = UI_ICONS[id];
   if (!ic) return '';
   return spriteImgOrFallback(spriteUrl(ic.file), id, ic.emoji, cls);

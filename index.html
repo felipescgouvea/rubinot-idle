@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=141" />
-  <link rel="stylesheet" href="style.css?v=160" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=142" />
+  <link rel="stylesheet" href="style.css?v=161" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -32,7 +32,7 @@
       </div>
       <div id="header-btns">
         <span id="auth-user" class="auth-user"></span>
-        <button class="btn-small" onclick="openSettingsPanel()">⚙️ <span data-i18n="shell.config">Settings</span></button>
+        <button class="btn-small" onclick="openSettingsPanel()" data-icon="settings" data-icon-class="btn-icon"><span data-i18n="shell.config">Settings</span></button>
         <button class="btn-small daily-btn" onclick="openDailyReward()" data-icon="daily" data-icon-class="btn-icon"><span data-i18n="shell.daily">Daily</span><span id="daily-reward-badge" class="daily-badge">!</span></button>
       </div>
     </header>
@@ -60,7 +60,7 @@
       <button class="tab" data-tab="shop" data-icon="shop">Shop</button>
       <button class="tab" data-tab="market" data-icon="market"><span data-i18n="shell.tabMarket">Market</span></button>
       <button class="tab" data-tab="highscores" data-icon="highscores">Highscores</button>
-      <button class="tab" data-tab="admin">⚙️ Admin</button>
+      <button class="tab" data-tab="admin" data-icon="settings">Admin</button>
     </nav>
 
     <!-- BARRA DE STATUS DO PERSONAGEM — fina e horizontal, visível em
@@ -419,6 +419,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=230"></script>
+  <script type="module" src="src/main.js?v=231"></script>
 </body>
 </html>
