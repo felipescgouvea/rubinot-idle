@@ -47,7 +47,30 @@ export function renderBossRushPanel() {
     grid.innerHTML = `<p class="muted">${t('bossrush.noBossesUnlocked')}</p>`;
     return;
   }
-  grid.innerHTML = `<div class="zone-picker-gallery">${bosses.map(({ zoneId, zone }) => bossCard(zoneId, zone)).join('')}</div>`;
+  grid.innerHTML = `${prestigeBanner()}<div class="zone-picker-gallery">${bosses.map(({ zoneId, zone }) => bossCard(zoneId, zone)).join('')}</div>`;
+}
+
+// Faixa de prestígio de Boss Zone: pontos totais (💀) e a soma dos tiers
+// máximos derrotados (🏆, o mesmo número que ranqueia no Highscore de Boss).
+// Derivado de G.bossTiers (já carregado do save, bumped no kill em
+// huntUseCases.js) — espelha EXATAMENTE a fórmula server-autoritativa
+// (5×tier por tier vencido, ver huntEngine.js: boss_points), sem precisar
+// puxar do reconcile (evita o cascade do huntUseCases). Emoji + número de
+// propósito: legível nos dois idiomas sem cascatear o i18n (ver memória).
+function prestigeBanner() {
+  const tiers = G.bossTiers || {};
+  let points = 0, maxTierSum = 0;
+  for (const cur of Object.values(tiers)) {
+    const cleared = Math.max(0, (Number(cur) || 1) - 1); // bossTiers começa em 1 = nunca vencido
+    maxTierSum += cleared;
+    points += 5 * cleared * (cleared + 1) / 2; // Σ 5·t, t=1..cleared
+  }
+  if (!points && !maxTierSum) return '';
+  const fmt = getLocale() === 'pt' ? 'pt-BR' : 'en-US';
+  return `<div class="zone-card-mults" style="display:flex;gap:18px;justify-content:center;padding:6px 0 12px;font-weight:700;font-size:15px">
+    <span title="Boss prestige points">💀 ${points.toLocaleString(fmt)}</span>
+    <span title="Total boss tiers cleared">🏆 ${maxTierSum.toLocaleString(fmt)}</span>
+  </div>`;
 }
 
 export function challengeBoss(zoneId) {

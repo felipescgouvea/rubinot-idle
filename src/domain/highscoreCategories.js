@@ -13,6 +13,11 @@ export const HIGHSCORE_CATEGORIES = [
   { key: 'distance',  column: 'skill_distance',  icon: '🏹', labelKey: 'highscores.catDistance' },
   { key: 'shielding', column: 'skill_shielding', icon: '🛡️', labelKey: 'highscores.catShielding' },
   { key: 'bestiary',  column: 'bestiary_count',  icon: '📖', labelKey: 'highscores.catBestiary' },
+  // Ranking de Boss Zone: soma dos tiers máximos derrotados em cada zona
+  // (server-autoritativo, ver server/src/index.js: boss_max_tier). `label`
+  // literal ("Boss" é igual em PT e EN) evita ter que cascatear o i18n só por
+  // uma palavra — o painel usa `c.label || t(c.labelKey)`.
+  { key: 'boss',      column: 'boss_tier',       icon: '💀', label: 'Boss' },
 ];
 
 export function highscoreCategory(key) {

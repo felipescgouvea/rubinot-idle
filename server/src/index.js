@@ -44,7 +44,7 @@ import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
-import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=125';
+import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
 import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason } from '../../src/domain/progression.js?v=130';
@@ -1010,6 +1010,11 @@ const server = http.createServer(async (req, res) => {
         skill_axe: (sk.axe && sk.axe.lv) || 10,
         skill_distance: (sk.distance && sk.distance.lv) || 10,
         skill_shielding: (sk.shielding && sk.shielding.lv) || 10,
+        // Ranking de Boss Zone: soma dos tiers máximos derrotados em cada zona
+        // (server-autoritativo, ver settleKill em huntEngine.js: boss_max_tier).
+        // Um número só, "quão longe empurrou os bosses no total".
+        boss_tier: stats && stats.boss_max_tier && typeof stats.boss_max_tier === 'object'
+          ? Object.values(stats.boss_max_tier).reduce((a, b) => a + (Number(b) || 0), 0) : 0,
         updated_at: new Date().toISOString(),
       };
       Object.keys(row).forEach(k => { if (row[k] === undefined) delete row[k]; });
@@ -1043,7 +1048,7 @@ const server = http.createServer(async (req, res) => {
           total_kills: r.total_kills, arena_points: r.arena_points, tasks_done: r.tasks_done,
           world: r.world, skill_magic: r.skill_magic, skill_fist: r.skill_fist, skill_club: r.skill_club,
           skill_sword: r.skill_sword, skill_axe: r.skill_axe, skill_distance: r.skill_distance,
-          skill_shielding: r.skill_shielding, bestiary_count: r.bestiary_count, updated_at: r.updated_at,
+          skill_shielding: r.skill_shielding, bestiary_count: r.bestiary_count, boss_tier: r.boss_tier, updated_at: r.updated_at,
         })),
       });
     }

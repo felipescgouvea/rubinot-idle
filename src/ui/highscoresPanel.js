@@ -1,6 +1,6 @@
 import { G } from '../application/gameStore.js?v=129';
 import { MONSTERS } from '../domain/bestiary.js?v=147';
-import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=125';
+import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=126';
 import { on, EVENTS } from '../shared/eventBus.js?v=127';
 import { escapeHtml, notify, skillIconImg } from './shared.js?v=132';
 import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=129';
@@ -18,6 +18,11 @@ const RANK_MEDAL = ['🥇', '🥈', '🥉'];
 const SKILL_CATEGORY_KEYS = new Set(['magic', 'fist', 'club', 'sword', 'axe', 'distance', 'shielding']);
 function categoryIcon(c) {
   return SKILL_CATEGORY_KEYS.has(c.key) ? skillIconImg(c.key, c.icon, 'hs-category-icon-img') : c.icon;
+}
+// Rótulo da categoria: `label` literal quando existe (ex.: "Boss", igual nos
+// dois idiomas), senão a chave i18n normal.
+function categoryLabel(c) {
+  return c.label || t(c.labelKey);
 }
 
 // Categoria ativa (estado só de UI, sobrevive a re-renders — mesmo padrão do
@@ -70,7 +75,7 @@ function skillOrBestiaryTable(category, rows) {
   return `
     <table class="hs-table">
       <thead><tr>
-        <th>#</th><th>${t('highscores.colName')}</th><th>${t('highscores.colVocation')}</th><th>${t('highscores.colLevel')}</th><th>${categoryIcon(category)} ${t(category.labelKey)}</th><th>${t('highscores.colWorld')}</th>
+        <th>#</th><th>${t('highscores.colName')}</th><th>${t('highscores.colVocation')}</th><th>${t('highscores.colLevel')}</th><th>${categoryIcon(category)} ${categoryLabel(category)}</th><th>${t('highscores.colWorld')}</th>
       </tr></thead>
       <tbody>
         ${rows.map((r, i) => `
@@ -92,7 +97,7 @@ export async function renderHighscoresPanel() {
   const category = highscoreCategory(activeCategory);
 
   const categoryBtns = HIGHSCORE_CATEGORIES.map(c => `
-    <button class="hs-category-btn ${c.key === category.key ? 'active' : ''}" onclick="setHighscoresCategory('${c.key}')">${categoryIcon(c)} ${t(c.labelKey)}</button>
+    <button class="hs-category-btn ${c.key === category.key ? 'active' : ''}" onclick="setHighscoresCategory('${c.key}')">${categoryIcon(c)} ${categoryLabel(c)}</button>
   `).join('');
 
   if (!G.playerName) {
