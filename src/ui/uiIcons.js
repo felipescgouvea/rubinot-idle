@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=144';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=145';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -69,6 +69,18 @@ export const UI_ICONS = {
   voc_sorcerer:    { file: 'items/Wand_of_Inferno.webp',      emoji: '🔮' }, // wand ofensiva
   voc_druid:       { file: 'items/Snakebite_Rod.webp',        emoji: '🌿' }, // rod de suporte
 };
+
+// Ícones CUSTOM (SVG desenhado à mão, no estilo do favicon: ouro + contorno
+// escuro) pra conceitos que NÃO têm objeto equivalente no Tibia — o jogo
+// original não tem "iniciar/parar caçada" (é mecânica de idle), então não há
+// sprite pra reaproveitar e o ▶/⏹ do SO destoava. `kind` = 'play' | 'stop'.
+export function huntToggleIcon(kind) {
+  const gid = kind === 'stop' ? 'htStop' : 'htPlay';
+  const shape = kind === 'stop'
+    ? `<rect x="5.5" y="5.5" width="13" height="13" rx="2.6" fill="url(#${gid})" stroke="#1c1206" stroke-width="1.7"/>`
+    : `<path d="M6.6 3.8 L20.4 12 L6.6 20.2 Z" fill="url(#${gid})" stroke="#1c1206" stroke-width="1.7" stroke-linejoin="round"/>`;
+  return `<svg class="ht-icon" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe491"/><stop offset=".55" stop-color="#f3b13a"/><stop offset="1" stop-color="#e2871a"/></linearGradient></defs>${shape}</svg>`;
+}
 
 // Markup do ícone: sprite real + fallback emoji (se a imagem falhar/não existir).
 // `cls` é a classe de contexto que dimensiona a imagem (ex.: 'tab-icon').

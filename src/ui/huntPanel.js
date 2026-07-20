@@ -1,19 +1,19 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=143';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=161';
-import { MONSTERS } from '../domain/bestiary.js?v=161';
-import { cityName } from '../domain/cities.js?v=146';
-import { ITEMS } from '../domain/items.js?v=154';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=145';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=141';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=146';
-import { uiIcon } from './uiIcons.js?v=144';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=207';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=139';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=144';
-import { t } from '../i18n/i18n.js?v=157';
+import { G } from '../application/gameStore.js?v=144';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=162';
+import { MONSTERS } from '../domain/bestiary.js?v=162';
+import { cityName } from '../domain/cities.js?v=147';
+import { ITEMS } from '../domain/items.js?v=155';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=146';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=142';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=147';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=145';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=208';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=140';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=145';
+import { t } from '../i18n/i18n.js?v=158';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -229,8 +229,8 @@ function renderHuntStatusButton() {
   const viewBtn = document.getElementById('hunt-status-view-btn');
   const switchBtn = document.getElementById('hunt-status-switch-btn');
   if (!viewBtn || !switchBtn) return;
-  viewBtn.innerHTML = `⚔️ ${t('hunt.viewBattle')}`;
-  switchBtn.innerHTML = `🗺️ ${t('hunt.switchHunt')}`;
+  viewBtn.innerHTML = `${uiIcon('battle', 'inline-icon')} ${t('hunt.viewBattle')}`;
+  switchBtn.innerHTML = `${uiIcon('hunt', 'inline-icon')} ${t('hunt.switchHunt')}`;
 }
 
 // Cada dungeon tinge o fundo da cena de batalha com sua própria paleta (ver
@@ -316,9 +316,9 @@ function renderHuntButton({ hunting }) {
   // o jogador desafiar o próximo tier explicitamente (não sobe automático).
   if (isBossOnlyHunt()) {
     const tier = (G.bossTiers && G.bossTiers[G.activeZone]) || 1;
-    btn.textContent = hunting ? `⏹ ${t('hunt.stopTier', { tier })}` : `💀 ${t('bossrush.challengeTier', { tier })}`;
+    btn.innerHTML = hunting ? `${huntToggleIcon('stop')} ${t('hunt.stopTier', { tier })}` : `${uiIcon('bossrush', 'inline-icon')} ${t('bossrush.challengeTier', { tier })}`;
   } else {
-    btn.textContent = hunting ? `⏹ ${t('battle.stopHunt')}` : `▶ ${t('battle.startHunt')}`;
+    btn.innerHTML = hunting ? `${huntToggleIcon('stop')} ${t('battle.stopHunt')}` : `${huntToggleIcon('play')} ${t('battle.startHunt')}`;
   }
   btn.classList.toggle('stop', hunting);
 }

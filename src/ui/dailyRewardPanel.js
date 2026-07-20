@@ -1,11 +1,11 @@
 // Recompensa Diária (Reward Shrine) — não ocupa uma aba: é um botão no header
 // que abre um modal com o ciclo de 7 dias e o botão de resgate. Um "selo"
 // vermelho no botão avisa quando há recompensa disponível hoje.
-import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=140';
-import { on, EVENTS } from '../shared/eventBus.js?v=141';
-import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=146';
-import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=141';
-import { t } from '../i18n/i18n.js?v=157';
+import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=141';
+import { on, EVENTS } from '../shared/eventBus.js?v=142';
+import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=147';
+import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=142';
+import { t } from '../i18n/i18n.js?v=158';
 
 // Sprite real pro gold/Rubini Coin (mesmo dispatcher do Battle Pass, ver
 // ui/battlePassPanel.js: bpRewardIcon); XP Boost e Supply Completo não têm
