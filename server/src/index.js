@@ -42,7 +42,7 @@ import { TIBIA_SKILLS, applySkillGain } from '../../src/domain/character.js?v=15
 import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, triesForTraining } from '../../src/domain/training.js?v=127';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
-import { STARTER_KITS, STARTER_SUPPLIES, ITEMS } from '../../src/domain/items.js?v=139';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, ITEMS } from '../../src/domain/items.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
@@ -443,7 +443,10 @@ const server = http.createServer(async (req, res) => {
 
       const kit = STARTER_KITS[vocation] || {};
       for (const [eqSlot, itemId] of Object.entries(kit)) {
-        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty: 1, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+        // munição entra como PILHA (ver STARTER_AMMO_QTY / selectVocation no
+        // cliente) — 1 flecha só era o mesmo que começar "sem flecha".
+        const qty = eqSlot === 'ammo' ? STARTER_AMMO_QTY : 1;
+        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
         await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
       }
       const supplies = STARTER_SUPPLIES[vocation] || {};

@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=127';
+import { primaryStatKeyForItem } from './rarity.js?v=128';
 
 // Capacidade da bag: quantos tipos DISTINTOS de item cabem (cada item já
 // possuído empilha à vontade, sem limite de quantidade — só um tipo NOVO
@@ -9852,9 +9852,17 @@ export const ITEMS = {
 // Dawnport TRAINING Set real do Tibia (TibiaWiki: Dawnport Set) — o kit dado ao sair pelo
 // portão da vocação na ilha inicial, já que neste jogo não existe uma etapa de nível 8
 // separada da criação (o Graduate Set do Tibia real não se aplica aqui).
+// Quantidade de munição no kit inicial do paladino: como a munição é um item
+// EMPILHÁVEL e consumível (mesmo com consumeAmmo desligado por padrão, ver
+// adminConfig), entregar 1 só é o mesmo que "sem flecha" na prática — o
+// paladino recém-criado começa com uma pilha de verdade da flecha mais fraca
+// (simple_arrow_weak), como no Dawnport real. Usado no cliente (selectVocation)
+// e no servidor (grant do kit) pra ficarem idênticos.
+export const STARTER_AMMO_QTY = 100;
+
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow', ammo: 'simple_arrow', armor: 'leather_armor',               helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'simple_arrow_weak', armor: 'leather_armor',          helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   sorcerer: { weapon: 'the_scorcher',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   druid:    { weapon: 'the_chiller',   armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };

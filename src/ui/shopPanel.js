@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=130';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=129';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=141';
-import { on, EVENTS } from '../shared/eventBus.js?v=128';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=133';
-import { buyShopItem } from '../application/shopUseCases.js?v=134';
-import { t } from '../i18n/i18n.js?v=144';
+import { G } from '../application/gameStore.js?v=131';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=130';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=142';
+import { on, EVENTS } from '../shared/eventBus.js?v=129';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=134';
+import { buyShopItem } from '../application/shopUseCases.js?v=135';
+import { t } from '../i18n/i18n.js?v=145';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
