@@ -28,3 +28,10 @@ export function outfitWalkAtlasPath(outfitId, gender) {
   // re-baixar os atlases (1.4MB) à toa. Bumpe só ao mudar o conteúdo do atlas.
   return `assets/outfits-walk-north/${outfitId}-${gender}.png?av=2`;
 }
+
+// Mesma coisa na direção SUL (de frente, mostrando o rosto). Usado no palco do
+// Treino Online do mago, onde o boneco fica virado pra baixo lançando a magia.
+// Só existem estas DUAS direções nos atlases (norte e sul) — não há leste/oeste.
+export function outfitWalkAtlasPathSouth(outfitId, gender) {
+  return `assets/outfits-walk/${outfitId}-${gender}.png?av=2`;
+}

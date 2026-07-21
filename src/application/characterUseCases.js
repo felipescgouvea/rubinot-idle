@@ -1,12 +1,12 @@
-import { G, ACCOUNT } from './gameStore.js?v=170';
-import { VOCATIONS } from '../domain/character.js?v=197';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY } from '../domain/items.js?v=181';
-import { emit, EVENTS } from '../shared/eventBus.js?v=168';
-import { addItemToInventory } from './inventoryCore.js?v=168';
-import { startRegen } from './huntUseCases.js?v=234';
-import { saveGame } from './saveGameUseCase.js?v=170';
-import { grantStarterKit } from '../infrastructure/authClient.js?v=175';
-import { t } from '../i18n/i18n.js?v=184';
+import { G, ACCOUNT } from './gameStore.js?v=171';
+import { VOCATIONS } from '../domain/character.js?v=198';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY } from '../domain/items.js?v=182';
+import { emit, EVENTS } from '../shared/eventBus.js?v=169';
+import { addItemToInventory } from './inventoryCore.js?v=169';
+import { startRegen } from './huntUseCases.js?v=235';
+import { saveGame } from './saveGameUseCase.js?v=171';
+import { grantStarterKit } from '../infrastructure/authClient.js?v=176';
+import { t } from '../i18n/i18n.js?v=185';
 
 export function selectVocation(voc) {
   if (G.vocation) return;

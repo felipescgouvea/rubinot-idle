@@ -1,56 +1,37 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=170';
-import { TIBIA_SKILLS } from '../domain/character.js?v=197';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=168';
-import { SPELLS } from '../domain/spells.js?v=168';
-import { on, EVENTS } from '../shared/eventBus.js?v=168';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=173';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=174';
-import { t } from '../i18n/i18n.js?v=184';
-import { ITEMS } from '../domain/items.js?v=181';
-import { missileSpriteFile, spriteUrl } from '../infrastructure/tibiaSprites.js?v=171';
+import { G } from '../application/gameStore.js?v=171';
+import { TIBIA_SKILLS } from '../domain/character.js?v=198';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=169';
+import { SPELLS } from '../domain/spells.js?v=169';
+import { on, EVENTS } from '../shared/eventBus.js?v=169';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=174';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=175';
+import { t } from '../i18n/i18n.js?v=185';
+import { trainingStageHtml, mountTrainingStagePlayer } from './trainingStage.js?v=2';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
 let pickedTrainingSpell = null;
 
-// Projétil que voa até o boneco durante o treino ONLINE, pra a cena não ser um
-// ícone parado: flecha pro Distance, virote pra quem usa crossbow, e o míssil
-// do elemento da magia escolhida pro Magic Level. Melee não tem projétil — o
-// baque no boneco (classe .training-hit) já conta a história.
-function trainingProjectileHtml(mode, spell) {
-  if (mode !== 'online') return '';
-  let missile = null;
-  if (G.trainingSkill === 'distance') {
-    // virote se a arma equipada for crossbow; flecha no resto
-    const arma = G.equipment && G.equipment.weapon ? ITEMS[G.equipment.weapon] : null;
-    missile = arma && /crossbow/i.test(arma.name || '') ? 'bolt' : 'arrow';
-  } else if (G.trainingSkill === 'magic') {
-    // 'physical' não tem míssil próprio: as magias físicas do Paladino são de
-    // arremesso (Ethereal Spear), então a lança é o projétil certo.
-    const el = (spell && spell.element) || 'energy';
-    missile = el === 'physical' ? 'spear' : el;
-  }
-  const file = missile ? missileSpriteFile(missile) : null;
-  if (!file) return '';
-  return `<img class="training-projectile" src="${spriteUrl(file)}" alt="" aria-hidden="true" />`;
-}
-
 function activeTrainingCard(mode) {
   const s = TIBIA_SKILLS[G.trainingSkill];
   const rate = triesPerMinuteFor(G.trainingSkill) * (mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1);
   const spell = mode === 'online' && G.trainingSpell ? SPELLS[G.trainingSpell] : null;
-  const projetil = trainingProjectileHtml(mode, spell);
-  return `
-    <div class="training-active">
-      <div class="training-active-info">
-        <div class="training-dummy-wrap ${mode === 'online' ? 'training-online-anim' : ''}">
-          ${projetil}
+  // Online ganha um PALCO de verdade (boneco + dummy + projétil, ver
+  // ui/trainingStage.js). Offline continua com o ícone: ali o jogo nem precisa
+  // estar aberto, então animar não faz sentido.
+  const cena = mode === 'online'
+    ? trainingStageHtml(G.trainingSkill, spell)
+    : `<div class="training-dummy-wrap">
           ${trainingDummyImg('training-dummy-icon')}
-          ${spell ? spellIconImg(spell.name, spell.icon, 'training-dummy-badge') : skillIconImg(G.trainingSkill, s.icon, 'training-dummy-badge')}
-        </div>
+          ${skillIconImg(G.trainingSkill, s.icon, 'training-dummy-badge')}
+        </div>`;
+  return `
+    <div class="training-active ${mode === 'online' ? 'training-active-stage' : ''}">
+      <div class="training-active-info">
+        ${cena}
         <div>
           <div class="training-active-title">${mode === 'online' ? '⚔️' : '🏋️'} ${t('training.trainingSkill', { skill: s.name })}</div>
           ${spell ? `<div class="muted">${t('training.usingSpell', { spell: spell.name })}</div>` : ''}
@@ -69,6 +50,7 @@ function renderOnlineTrainingSection() {
 
   if (G.trainingSkill && G.trainingMode === 'online') {
     el.innerHTML = activeTrainingCard('online');
+    mountTrainingStagePlayer(G.trainingSkill);   // desenha o boneco recolorido
     return;
   }
   if (G.trainingSkill && G.trainingMode !== 'online') {
