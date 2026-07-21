@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=183';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=183';
-import { on, EVENTS } from '../shared/eventBus.js?v=181';
-import { rewardIcon } from './uiIcons.js?v=184';
-import { rubiniIconImg } from './shared.js?v=186';
-import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=182';
-import { t } from '../i18n/i18n.js?v=197';
+import { G } from '../application/gameStore.js?v=184';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=184';
+import { on, EVENTS } from '../shared/eventBus.js?v=182';
+import { rewardIcon } from './uiIcons.js?v=185';
+import { rubiniIconImg } from './shared.js?v=187';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=183';
+import { t } from '../i18n/i18n.js?v=198';
 
 function bpRewardIcon(r) {
   return rewardIcon(r, 'bp-reward-sprite');

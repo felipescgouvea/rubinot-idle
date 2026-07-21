@@ -2,11 +2,11 @@
 // Druid). Paga em gold, permanente, dobra a regeneração ociosa de HP/mana.
 // Validada no servidor (nível e gold conferidos lá — nunca o cliente declara
 // "promovi"; mesmo modelo de blessingUseCases/shopUseCases).
-import { G, ACCOUNT } from './gameStore.js?v=183';
-import { PROMOTION } from '../domain/character.js?v=211';
-import { emit, EVENTS } from '../shared/eventBus.js?v=181';
-import { saveGame } from './saveGameUseCase.js?v=183';
-import { promoteOnServer } from '../infrastructure/authClient.js?v=189';
+import { G, ACCOUNT } from './gameStore.js?v=184';
+import { PROMOTION } from '../domain/character.js?v=212';
+import { emit, EVENTS } from '../shared/eventBus.js?v=182';
+import { saveGame } from './saveGameUseCase.js?v=184';
+import { promoteOnServer } from '../infrastructure/authClient.js?v=190';
 
 export async function promoteVocation() {
   if (!G.vocation) return;

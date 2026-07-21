@@ -21,9 +21,15 @@ export const CITIES = [
   { id: 'porthope',   name: 'Port Hope',            icon: '🌴', blurb: 'city.porthope' },
   { id: 'edron',      name: 'Edron',                icon: '☠️', blurb: 'city.edron' },
   { id: 'cormaya',    name: 'Cormaya',              icon: '😈', blurb: 'city.cormaya' },
+  { id: 'candia', name: 'Candia', icon: '🍭', blurb: 'city.candia' },
   { id: 'yalahar',    name: 'Yalahar',              icon: '🦞', blurb: 'city.yalahar' },
+  { id: 'feyrist', name: 'Feyrist', icon: '🦋', blurb: 'city.feyrist' },
+  { id: 'graybeach', name: 'Gray Beach', icon: '🏖️', blurb: 'city.graybeach' },
   { id: 'roshamuul',  name: 'Roshamuul',            icon: '🔥', blurb: 'city.roshamuul' },
   { id: 'zao',        name: 'Zao',                  icon: '🐲', blurb: 'city.zao' },
+  { id: 'kilmaresh', name: 'Kilmaresh', icon: '🌑', blurb: 'city.kilmaresh' },
+  { id: 'marapur', name: 'Marapur', icon: '🐢', blurb: 'city.marapur' },
+  { id: 'northerndarama', name: 'Darama do Norte', icon: '🍄', blurb: 'city.northerndarama' },
   { id: 'ferumbras',  name: 'Ferumbras Citadel',    icon: '👑', blurb: 'city.ferumbras' },
 ];
 

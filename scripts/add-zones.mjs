@@ -13,6 +13,38 @@ import { readFileSync, writeFileSync } from 'node:fs';
 const novas = JSON.parse(readFileSync('scripts/zones-to-add.json', 'utf8'));
 const { MONSTERS, ZONES } = await import('../src/domain/bestiary.js?v=addzones');
 
+// ---- conveniências para lotes grandes ----
+// `monsterNames` (nomes como aparecem no TibiaWiki) vira `monsters` (ids); e sem
+// `spawn` os pesos são derivados do XP: quanto mais forte a criatura, mais rara.
+// Em lote grande, digitar id por id e pesos que somem 100 é onde o erro entra.
+const porNome = new Map();
+for (const [id, mo] of Object.entries(MONSTERS)) if (mo && mo.name) porNome.set(mo.name.toLowerCase(), id);
+
+for (const z of novas) {
+  if (z.monsterNames && !z.monsters) {
+    const naoAchados = [];
+    z.monsters = z.monsterNames.map(n => {
+      const id = porNome.get(String(n).toLowerCase());
+      if (!id) naoAchados.push(n);
+      return id;
+    }).filter(Boolean);
+    if (naoAchados.length) { console.error(`ABORTADO: ${z.id}: monstros sem correspondência -> ${naoAchados.join(', ')}`); process.exit(1); }
+  }
+  if (z.bossName && !z.boss) {
+    z.boss = porNome.get(String(z.bossName).toLowerCase());
+    if (!z.boss) { console.error(`ABORTADO: ${z.id}: boss "${z.bossName}" não encontrado`); process.exit(1); }
+  }
+  if (!z.spawn) {
+    // peso ∝ 1/xp, normalizado para somar exatamente 100 (o resto vai pro 1º)
+    const pesos = z.monsters.map(id => 1 / Math.max(1, MONSTERS[id].xp || 1));
+    const total = pesos.reduce((a, b) => a + b, 0);
+    const brutos = pesos.map(p => Math.max(3, Math.round((p / total) * 100)));
+    const dif = 100 - brutos.reduce((a, b) => a + b, 0);
+    brutos[brutos.indexOf(Math.max(...brutos))] += dif;
+    z.spawn = Object.fromEntries(z.monsters.map((id, i) => [id, brutos[i]]));
+  }
+}
+
 // ---- valida TUDO antes de escrever qualquer arquivo ----
 const erros = [];
 for (const z of novas) {
@@ -76,11 +108,17 @@ for (const [cidade, zs] of porCidade) {
   let m = re.exec(src);
   if (!m) {
     // Sem seção ainda (cidade nova): cria uma logo antes do fim do objeto ZONES.
+    // O cabeçalho começa pelo ID da cidade justamente pra esta mesma busca
+    // encontrá-lo — o nome de exibição ("Gray Beach") vem depois, entre
+    // parênteses, porque não casaria com o id ("graybeach").
     const nomeCidade = (zs[0].cidadeNova && zs[0].cidadeNova.name) || titulo;
     const fim = /^\};\r?\n/m.exec(src.slice(src.indexOf('export const ZONES')));
     if (!fim) aborta('não achei o fim do objeto ZONES');
     const pos = src.indexOf('export const ZONES') + fim.index;
-    src = src.slice(0, pos) + `  // --- ${nomeCidade} ---${EOL}` + src.slice(pos);
+    const cabecalho = nomeCidade.toLowerCase() === titulo.toLowerCase()
+      ? `  // --- ${titulo} ---${EOL}`
+      : `  // --- ${titulo} (${nomeCidade}) ---${EOL}`;
+    src = src.slice(0, pos) + cabecalho + src.slice(pos);
     m = re.exec(src);
     if (!m) aborta(`não consegui criar a seção da cidade "${titulo}"`);
   }
