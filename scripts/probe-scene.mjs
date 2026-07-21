@@ -28,6 +28,8 @@ try {
 
   // cria personagem se a conta estiver zerada (createCharacter EXIGE um nome)
   const made = await page.evaluate(async () => {
+    // Só cria se a conta estiver mesmo vazia. (Este probe já sobrescreveu o
+    // Paladino do slot 1 uma vez criando um Knight por cima — por isso o aviso.)
     const btn = document.querySelector('.voc-btn[data-voc="knight"]');
     if (!btn || btn.offsetParent === null) return 'ja tinha personagem';
     const input = document.getElementById('char-name-input');

@@ -17,14 +17,14 @@
 // em lugar nenhum do projeto nem na wiki, então um boneco de frente atirando pro
 // lado ficaria olhando pra câmera enquanto acerta algo fora do seu campo de
 // visão. Encarando o alvo, a cena lê certo com as sprites que existem.
-import { G } from '../application/gameStore.js?v=170';
+import { G } from '../application/gameStore.js?v=171';
 import { outfitWalkAtlasPath, outfitWalkAtlasPathSouth } from '../infrastructure/outfitAssets.js?v=167';
 import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=167';
 import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=167';
-import { VOCATIONS } from '../domain/character.js?v=197';
-import { ITEMS } from '../domain/items.js?v=181';
-import { SPELLS } from '../domain/spells.js?v=168';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=171';
+import { VOCATIONS } from '../domain/character.js?v=198';
+import { ITEMS } from '../domain/items.js?v=182';
+import { SPELLS } from '../domain/spells.js?v=169';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=172';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.

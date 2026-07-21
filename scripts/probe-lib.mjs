@@ -38,3 +38,13 @@ export async function login(page, acct) {
     await page.waitForTimeout(8000);
   }
 }
+
+// A troca de personagem chama location.reload(). Dormir por tempo fixo corre
+// com o reload: as leituras seguintes podem cair na página VELHA (que some logo
+// depois) e devolver o estado errado. Aqui esperamos o reload de fato acontecer
+// — o helper __liveImport some quando a página é recriada.
+export async function esperarReload(page) {
+  await page.waitForFunction(() => typeof window.__liveImport === 'undefined', null, { timeout: 30000 }).catch(() => {});
+  await page.waitForLoadState('domcontentloaded').catch(() => {});
+  await page.waitForTimeout(2500);
+}

@@ -6,7 +6,7 @@ import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js
 import { MONSTERS } from '../domain/bestiary.js?v=189';
 import { cityName } from '../domain/cities.js?v=174';
 import { ITEMS } from '../domain/items.js?v=182';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=173';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=172';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=169';
 import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=174';
 import { uiIcon, huntToggleIcon } from './uiIcons.js?v=172';
