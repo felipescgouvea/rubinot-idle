@@ -13,15 +13,15 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G, ACCOUNT } from './gameStore.js?v=159';
-import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=157';
-import { TIBIA_SKILLS } from '../domain/character.js?v=186';
-import { SPELLS } from '../domain/spells.js?v=157';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=157';
-import { stopHunt } from './huntUseCases.js?v=223';
-import { saveGame } from './saveGameUseCase.js?v=159';
-import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=166';
-import { t } from '../i18n/i18n.js?v=173';
+import { G, ACCOUNT } from './gameStore.js?v=160';
+import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=158';
+import { TIBIA_SKILLS } from '../domain/character.js?v=187';
+import { SPELLS } from '../domain/spells.js?v=158';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=158';
+import { stopHunt } from './huntUseCases.js?v=224';
+import { saveGame } from './saveGameUseCase.js?v=160';
+import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=167';
+import { t } from '../i18n/i18n.js?v=174';
 
 let trainingInterval = null;
 let creditBusy = false;

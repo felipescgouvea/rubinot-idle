@@ -777,7 +777,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 #dungeon-stage[data-biome]:not([data-biome=""]).searching::before { animation: scene-scroll 16s linear infinite; }
 @keyframes scene-scroll { to { background-position: center 1024px; } }
 
-#dungeon-stage[data-biome="cave"] { --scene: url(assets/sprites/ui/scenes/scene-cave.png); }
+#dungeon-stage[data-biome="cave"] { --scene: url(assets/sprites/ui/scenes/scene-cave.png?v=2); }
 
 /* boneco: no meio do palco (centralizado por left/top + margem negativa, pra
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */

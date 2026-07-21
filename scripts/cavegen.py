@@ -66,6 +66,9 @@ for y in range(H):
     rock[y, max(0, c-half):min(W, c+half)] = False
 rock = ca(rock, 1)
 rock[:, :int(W*0.02)] = True; rock[:, -int(W*0.02):] = True
+# faixa central SEMPRE livre: o boneco fica fixo no meio do palco, entao
+# o caminho tem que passar por ali (as paredes variam ao redor).
+rock[:, W//2-74:W//2+74] = False
 
 # ---------- texturas ----------
 def tile_of(fn):
