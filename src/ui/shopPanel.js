@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=166';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=165';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=177';
-import { on, EVENTS } from '../shared/eventBus.js?v=164';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=169';
-import { buyShopItem } from '../application/shopUseCases.js?v=170';
-import { t } from '../i18n/i18n.js?v=180';
+import { G } from '../application/gameStore.js?v=167';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=166';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=178';
+import { on, EVENTS } from '../shared/eventBus.js?v=165';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=170';
+import { buyShopItem } from '../application/shopUseCases.js?v=171';
+import { t } from '../i18n/i18n.js?v=181';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -178,8 +178,8 @@ export function setShopGroup(shopKey, groupKey) {
 // tela e não tinha nada a ver com o jogo.
 const shopSelection = new Map(); // shopKey -> id do item selecionado
 
-export function selectShopItem(shopKey, id) {
-  shopSelection.set(shopKey, id);
+export function selectShopItem(selKey, id) {
+  shopSelection.set(selKey, id);
   renderShopPanel();
 }
 
@@ -190,12 +190,12 @@ function isBulkItem(s) {
 }
 
 // Linha da lista: ícone, nome (+ stats), preço. Igual à lista do trade do Tibia.
-function tradeRowHtml(shop, s, selectedId) {
+function tradeRowHtml(selKey, s, selectedId) {
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const stats = item ? ['atk', 'def', 'magic', 'heal', 'mana'].filter(k => item[k]).map(k => `${k.toUpperCase()} ${item[k]}`).join(' · ') : '';
   const req = item ? potionReqLabel(item, t) : '';
   const sub = [stats, req ? `🔒 ${req}` : ''].filter(Boolean).join(' · ');
-  return `<div class="trade-row ${s.id === selectedId ? 'selected' : ''}" onclick="selectShopItem('${shop.key}', '${s.id}')">
+  return `<div class="trade-row ${s.id === selectedId ? 'selected' : ''}" onclick="selectShopItem('${selKey}', '${s.id}')">
     <span class="trade-row-icon">${shopIconHtml(s)}</span>
     <span class="trade-row-text"><span class="trade-row-name">${t(s.name)}</span>${sub ? `<span class="trade-row-sub">${sub}</span>` : ''}</span>
     <span class="trade-row-price">${shopPriceLabel(s)}</span>
@@ -203,10 +203,25 @@ function tradeRowHtml(shop, s, selectedId) {
 }
 
 function renderTradeWindow(shop) {
-  const items = SHOP_ITEMS.filter(s => s.shop === shop.key);
+  // A loja continua dividida por tipo (Equipamentos / Arcos e Munição / Wands
+  // e Rods; Poções / Runas) — o NPC do Tibia também separa o estoque por aba.
+  // A lista rolável e o botão único valem DENTRO da aba escolhida.
+  const activeGroup = shop.groups ? (activeShopGroup.get(shop.key) || shop.groups[0].key) : null;
+  const subsDoGrupo = shop.sub.filter(sub => !activeGroup || sub.group === activeGroup);
+  const items = SHOP_ITEMS
+    .filter(s => s.shop === shop.key)
+    .filter(s => subsDoGrupo.some(sub => sub.filter(s, ITEMS)));
   if (!items.length) return '';
-  const selId = shopSelection.has(shop.key) && items.some(s => s.id === shopSelection.get(shop.key))
-    ? shopSelection.get(shop.key)
+
+  const groupTabs = shop.groups ? `<div class="admin-subtabs">
+      ${shop.groups.map(g => `<button class="admin-subtab-btn ${g.key === activeGroup ? 'active' : ''}" onclick="setShopGroup('${shop.key}', '${g.key}')">${t(g.title)}</button>`).join('')}
+    </div>` : '';
+
+  // A seleção é POR GRUPO: guardar só por loja faria a aba nova abrir com um
+  // item que nem está na lista dela.
+  const selKey = `${shop.key}:${activeGroup || ''}`;
+  const selId = shopSelection.has(selKey) && items.some(s => s.id === shopSelection.get(selKey))
+    ? shopSelection.get(selKey)
     : items[0].id;
   const sel = items.find(s => s.id === selId);
 
@@ -236,8 +251,9 @@ function renderTradeWindow(shop) {
   return `
     <h3 style="margin:0 0 2px !important">${t(shop.title)}</h3>
     <p class="muted" style="margin:0 0 8px !important;font-size:12px">${t(shop.subtitle)}</p>
+    ${groupTabs}
     <div class="trade-window">
-      <div class="trade-list">${items.map(s => tradeRowHtml(shop, s, selId)).join('')}</div>
+      <div class="trade-list">${items.map(s => tradeRowHtml(selKey, s, selId)).join('')}</div>
       <div class="trade-footer">
         <div class="trade-selected">
           <span class="trade-selected-icon">${shopIconHtml(sel)}</span>

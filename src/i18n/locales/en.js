@@ -845,6 +845,8 @@ export default {
   'shop.equipment.subRings': '💍 Rings',
   'shop.magic.title': '🧪 Magic Supplies Shop',
   'shop.magic.subtitle': 'Full supply, potions, and runes, paid in gold.',
+  'shop.magic.groupPotions': '🧪 Potions',
+  'shop.magic.groupRunes': '📜 Runes',
   'shop.magic.subRefill': '🔋 Full Supply',
   'shop.magic.subPotions': '🧪 Potions',
   'shop.magic.subRunes': '📜 Runes',

@@ -164,10 +164,16 @@ export const SHOPS = [
       { title: 'shop.equipment.subAmmo', group: 'ranged', filter: (s, items) => items[s.itemId]?.type === 'ammo' },
       { title: 'shop.equipment.subWands', group: 'magic', filter: (s, items) => items[s.itemId]?.weaponType === 'magic' },
     ]},
-  { key: 'magic', trade: true, title: 'shop.magic.title', subtitle: 'shop.magic.subtitle', sub: [
-      { title: 'shop.magic.subRefill', filter: s => s.type === 'refill' },
-      { title: 'shop.magic.subPotions', filter: (s, items) => items[s.itemId]?.type === 'potion' },
-      { title: 'shop.magic.subRunes', filter: (s, items) => items[s.itemId]?.type === 'rune' },
+  // Separada em duas abas (poções e runas) — é assim que o jogador procura, e
+  // uma lista única misturando as duas ficava longa demais pra achar qualquer
+  // coisa. O Supply Completo entra junto das poções, que é o que ele repõe.
+  { key: 'magic', trade: true, title: 'shop.magic.title', subtitle: 'shop.magic.subtitle', groups: [
+      { key: 'potions', title: 'shop.magic.groupPotions' },
+      { key: 'runes', title: 'shop.magic.groupRunes' },
+    ], sub: [
+      { title: 'shop.magic.subRefill', group: 'potions', filter: s => s.type === 'refill' },
+      { title: 'shop.magic.subPotions', group: 'potions', filter: (s, items) => items[s.itemId]?.type === 'potion' },
+      { title: 'shop.magic.subRunes', group: 'runes', filter: (s, items) => items[s.itemId]?.type === 'rune' },
     ]},
 ];
 
