@@ -4,7 +4,7 @@
 // da região marcada é multiplicado pela cor escolhida naquele canal (ver
 // domain/outfitColors.js pra paleta). Addons são sobrepostos (compositados)
 // antes da coloração, exatamente como no jogo real.
-import { outfitAssetPath, outfitTemplatePath , outfitDirPath, outfitDirTemplatePath } from './outfitAssets.js?v=175';
+import { outfitAssetPath, outfitTemplatePath , outfitDirPath, outfitDirTemplatePath } from './outfitAssets.js?v=176';
 
 const SIZE = 64;
 const imageCache = new Map();

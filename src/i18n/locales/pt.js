@@ -698,6 +698,7 @@ export default {
   // ---- training use-cases (application/trainingUseCases.js) ----
   'training.chooseVocationFirst': 'Escolha uma vocação primeiro!',
   'training.startedNotify': '🏋️ Treinando {skill}. Volte depois pra colher o progresso!',
+  'training.pickSpellFirst': 'Escolha uma magia que você já pode lançar para treinar Magic Level.',
   'training.stopFailed': 'Não foi possível parar o treino. Tente de novo.',
   'training.stoppedNotify': 'Treino de {skill} encerrado.',
   'training.stoppedNotifyGain': '🏋️ Treino de {skill} encerrado: +{tries} tentativas.',

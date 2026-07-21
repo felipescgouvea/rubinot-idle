@@ -13,15 +13,15 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G, ACCOUNT } from './gameStore.js?v=179';
-import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=177';
-import { TIBIA_SKILLS } from '../domain/character.js?v=206';
-import { SPELLS } from '../domain/spells.js?v=177';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=177';
-import { stopHunt } from './huntUseCases.js?v=243';
-import { saveGame } from './saveGameUseCase.js?v=179';
-import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=186';
-import { t } from '../i18n/i18n.js?v=193';
+import { G, ACCOUNT } from './gameStore.js?v=180';
+import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=178';
+import { TIBIA_SKILLS } from '../domain/character.js?v=207';
+import { SPELLS } from '../domain/spells.js?v=178';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=178';
+import { stopHunt } from './huntUseCases.js?v=244';
+import { saveGame } from './saveGameUseCase.js?v=180';
+import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=187';
+import { t } from '../i18n/i18n.js?v=194';
 
 let trainingInterval = null;
 let creditBusy = false;
@@ -92,8 +92,15 @@ export async function startOnlineTraining(skillId, spellId = null) {
   if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('training.chooseVocationFirst'), type: 'error' }); return; }
   if (!onlineTrainableSkills(G.vocation).includes(skillId)) return;
   if (skillId === 'magic') {
+    // QUALQUER magia da vocação treina Magic Level (o ML sobe por mana gasta —
+    // ver ui/trainingPanel.js). O filtro exigia type === 'attack', o que fazia o
+    // botão "Iniciar Treino Online" não fazer NADA, em silêncio, quando a magia
+    // escolhida era de cura — o caso normal do Paladino abaixo do nível 23.
     const spell = spellId ? SPELLS[spellId] : null;
-    if (!spell || spell.type !== 'attack' || !spell.voc.includes(G.vocation) || G.level < spell.level) return;
+    if (!spell || !spell.voc.includes(G.vocation) || G.level < spell.level) {
+      emit(EVENTS.NOTIFY, { msg: t('training.pickSpellFirst'), type: 'error' });
+      return;
+    }
   }
   stopHunt();
   const res = await trainStartOnServer(ACCOUNT.activeSlot, skillId, 'online', G.vocation, (G.boosts && G.boosts.training) || 0);

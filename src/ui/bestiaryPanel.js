@@ -4,23 +4,23 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=179';
-import { MONSTERS } from '../domain/bestiary.js?v=197';
+import { G } from '../application/gameStore.js?v=180';
+import { MONSTERS } from '../domain/bestiary.js?v=198';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, PREY_DURATION_MS, isPreyActive,
-} from '../domain/prey.js?v=175';
+} from '../domain/prey.js?v=176';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=176';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=175';
-import { on, EVENTS } from '../shared/eventBus.js?v=177';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=182';
-import { monsterSpriteImg } from './huntPanel.js?v=196';
-import { uiIcon } from './uiIcons.js?v=180';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=177';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=177';
-import { t } from '../i18n/i18n.js?v=193';
+} from '../domain/charms.js?v=177';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=176';
+import { on, EVENTS } from '../shared/eventBus.js?v=178';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=183';
+import { monsterSpriteImg } from './huntPanel.js?v=197';
+import { uiIcon } from './uiIcons.js?v=181';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=178';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=178';
+import { t } from '../i18n/i18n.js?v=194';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
