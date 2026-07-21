@@ -121,7 +121,9 @@ try {
 
   // ---------- PARTE B: integração pelo painel ----------
   await page.evaluate(() => { const h = document.getElementById('probe-stages'); if (h) h.remove(); });
-  await page.click('.tab[data-tab="training"]');
+  // clique via JS: o chrome do jogo às vezes tem overlay por cima e o
+  // click "de verdade" do Playwright fica em retry até estourar
+  await page.evaluate(() => document.querySelector('.tab[data-tab="training"]').click());
   await page.waitForTimeout(900);
   await page.evaluate(() => { if (window.__G.trainingSkill) window.stopTraining(); });
   await page.waitForFunction(() => !window.__G.trainingSkill, null, { timeout: 15000 }).catch(() => {});

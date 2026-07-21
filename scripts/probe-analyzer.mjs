@@ -13,7 +13,9 @@ try {
   await page.fill('#auth-email', acct.email); await page.fill('#auth-password', acct.password);
   await page.click('#auth-submit');
   await page.waitForTimeout(6500);
-  await page.click('.tab[data-tab="hunt"]'); await page.waitForTimeout(800);
+  // clique via JS: o chrome do jogo às vezes tem overlay por cima e o
+  // click "de verdade" do Playwright fica em retry até estourar
+  await page.evaluate(() => document.querySelector('.tab[data-tab="hunt"]').click()); await page.waitForTimeout(800);
   const res = await page.evaluate(() => {
     const labels = Array.from(document.querySelectorAll('#hunt-analyzer-body .ha-label'));
     return labels.map(l => ({ text: l.textContent.trim(), img: !!l.querySelector('img'), loaded: (()=>{const i=l.querySelector('img');return i?(i.complete&&i.naturalWidth>0):null;})() }));

@@ -22,7 +22,9 @@ try {
     const btn = await page.$(`.tab[data-tab="${t}"]`);
     if (btn) { await btn.click().catch(() => {}); await page.waitForTimeout(120); }
   }
-  await page.click('.tab[data-tab="hunt"]');
+  // clique via JS: o chrome do jogo às vezes tem overlay por cima e o
+  // click "de verdade" do Playwright fica em retry até estourar
+  await page.evaluate(() => document.querySelector('.tab[data-tab="hunt"]').click());
   await page.waitForTimeout(1200);
   const res = await page.evaluate(() => {
     return Array.from(document.querySelectorAll('h3[data-icon]')).map(h => {
@@ -42,7 +44,9 @@ try {
   if (bad.length) console.log('[probe] NÃO-sprite:', JSON.stringify(bad));
   const hunt = await page.$('#tab-hunt');
   if (hunt) await hunt.screenshot({ path: join(ROOT, 'scripts', 'hdr-hunt.png') });
-  await page.click('.tab[data-tab="bestiary"]'); await page.waitForTimeout(800);
+  // clique via JS: o chrome do jogo às vezes tem overlay por cima e o
+  // click "de verdade" do Playwright fica em retry até estourar
+  await page.evaluate(() => document.querySelector('.tab[data-tab="bestiary"]').click()); await page.waitForTimeout(800);
   const best = await page.$('#tab-bestiary');
   if (best) await best.screenshot({ path: join(ROOT, 'scripts', 'hdr-bestiary.png') });
   ok = good.length === res.length && res.length >= 20;

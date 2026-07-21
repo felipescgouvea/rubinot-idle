@@ -37,6 +37,26 @@ export async function login(page, acct) {
     await page.click('#auth-submit');
     await page.waitForTimeout(8000);
   }
+  // O #auth-gate fica por cima da página inteira e continua interceptando
+  // clique por um instante depois do login — sem esperar ele sumir, qualquer
+  // page.click() seguinte entra num loop de retry até estourar o timeout.
+  await page.waitForFunction(() => {
+    const g = document.getElementById('auth-gate');
+    return !g || g.offsetParent === null || getComputedStyle(g).display === 'none';
+  }, null, { timeout: 25000 }).catch(() => {});
+
+  // FALHA RUIDOSA se a sessão não ficou de pé. Sem isto o probe segue
+  // deslogado, TODA chamada ao servidor volta "não logado" e o resultado parece
+  // bug do jogo — foi exatamente o que aconteceu (o Supabase limita tentativas
+  // seguidas de login, e vários probes em sequência esbarram nisso).
+  // A sessão fica em 'rubinot_session' (chave própria do jogo), NÃO no formato
+  // 'sb-<projeto>-auth-token' do SDK do Supabase — checar a chave errada me fez
+  // acusar "login não persistiu" num login que tinha dado 200.
+  const logado = await page.evaluate(() => (localStorage.getItem('rubinot_session') || '').length > 20);
+  if (!logado) {
+    throw new Error('LOGIN NÃO PERSISTIU (sessão ausente no localStorage) — provável limite de tentativas do Supabase. '
+      + 'O resultado deste probe NÃO vale como veredito sobre o jogo; espere alguns minutos e rode de novo.');
+  }
 }
 
 // A troca de personagem chama location.reload(). Dormir por tempo fixo corre

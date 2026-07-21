@@ -54,7 +54,9 @@ try {
   // ---- 1) treino online mostra Distance E Magic Level ----
   // As abas são trocadas por CLIQUE (não há função global) — sem isso o painel
   // fica com display:none e todo getBoundingClientRect volta zerado.
-  await page.click('.tab[data-tab="training"]');
+  // clique via JS: o chrome do jogo às vezes tem overlay por cima e o
+  // click "de verdade" do Playwright fica em retry até estourar
+  await page.evaluate(() => document.querySelector('.tab[data-tab="training"]').click());
   await page.waitForTimeout(1200);
   // Pode ter ficado um treino ativo de uma rodada anterior: nesse caso o painel
   // mostra o cartão em andamento, não a seleção de skill.

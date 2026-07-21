@@ -12,7 +12,9 @@ try {
   await page.fill('#auth-email', acct.email); await page.fill('#auth-password', acct.password);
   await page.click('#auth-submit');
   await page.waitForTimeout(6500);
-  await page.click('.tab[data-tab="bestiary"]'); await page.waitForTimeout(1200);
+  // clique via JS: o chrome do jogo às vezes tem overlay por cima e o
+  // click "de verdade" do Playwright fica em retry até estourar
+  await page.evaluate(() => document.querySelector('.tab[data-tab="bestiary"]').click()); await page.waitForTimeout(1200);
   const info = await page.evaluate(() => ({
     preyCards: document.querySelectorAll('.prey-card').length,
     charmRows: document.querySelectorAll('.charm-row').length,
