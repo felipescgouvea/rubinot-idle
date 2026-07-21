@@ -757,26 +757,27 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 /* ===== CENÁRIO DE BATALHA POR BIOMA (arte CC0 — ver assets/sprites/ui/scenes/CREDITS.txt) =====
    Piloto: CAVE. Piso de pedra que rola + paredes de cobblestone nas laterais +
    vinheta escura. renderZoneTheme() põe data-biome no #dungeon-stage. */
-/* Corredor de caverna procedural: piso scatter (::before, rola por baixo) +
-   paredes de rocha ORGÂNICA com borda ondulada e entulho (::after, por cima) +
-   vinheta radial pra profundidade. Arte: Cave Floor Earth + Mountain Wall +
-   Basalt (Tibia) + Debris/Rubble. Ver assets/sprites/ui/scenes/CREDITS.txt. */
-#dungeon-stage[data-biome="cave"] { background: #14110b; image-rendering: pixelated; }
-#dungeon-stage[data-biome="cave"]::before {
-  inset: -128px 0;
-  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 128px 128px repeat;
+/* ===== CENÁRIO DE BATALHA POR BIOMA =====
+   Cada bioma é uma CENA gerada proceduralmente (560x1024, tileável em Y):
+   massa de rocha conectada (ruído + autômato celular) com passagem que
+   serpenteia, chão feito de VÁRIOS tiles misturados em manchas (não repete) e
+   sombra de contato. Arte = tiles reais do Tibia. Gerador: scripts/cavegen.py.
+   Cada bioma só define --scene. */
+#dungeon-stage[data-biome]:not([data-biome=""]) { background: #14110b; image-rendering: pixelated; }
+#dungeon-stage[data-biome]:not([data-biome=""])::before {
+  inset: 0;
+  background: var(--scene) center top / 560px 1024px repeat-y;
   opacity: 1; image-rendering: pixelated; z-index: 0;
 }
-#dungeon-stage[data-biome="cave"]::after {
+/* vinheta: profundidade, escurece as bordas sem tapar o centro */
+#dungeon-stage[data-biome]:not([data-biome=""])::after {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
-  background:
-    url(assets/sprites/ui/scenes/cave-wall.png)   left  top / 100px 128px repeat-y,
-    url(assets/sprites/ui/scenes/cave-wall-r.png) right top / 100px 128px repeat-y,
-    radial-gradient(ellipse 72% 82% at 50% 46%, transparent 36%, #000000b0 100%);
-  image-rendering: pixelated;
+  background: radial-gradient(ellipse 78% 88% at 50% 46%, transparent 46%, #00000099 100%);
 }
-#dungeon-stage[data-biome="cave"].searching::before { animation: floor-scroll-128 2s linear infinite; }
-@keyframes floor-scroll-128 { to { background-position: 0 128px; } }
+#dungeon-stage[data-biome]:not([data-biome=""]).searching::before { animation: scene-scroll 16s linear infinite; }
+@keyframes scene-scroll { to { background-position: center 1024px; } }
+
+#dungeon-stage[data-biome="cave"] { --scene: url(assets/sprites/ui/scenes/scene-cave.png); }
 
 /* boneco: no meio do palco (centralizado por left/top + margem negativa, pra
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
