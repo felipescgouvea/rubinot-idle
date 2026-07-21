@@ -1047,10 +1047,20 @@ const server = http.createServer(async (req, res) => {
       const totalXp = xpNow + XP_TABLE.slice(0, level - 1).reduce((a, b) => a + b, 0);
       const sk = (skillsRow && skillsRow.skills) || {};
 
+      // Vocação do ranking: vinha fixa em `undefined` com a justificativa de que
+      // "já é gravada em outro lugar" — mas nada nunca gravava, e a coluna ficava
+      // NULL para TODO mundo (a auditoria pegou o ranking inteiro mostrando
+      // "null" na coluna Vocação). player_stats não guarda vocação; quem guarda
+      // é hunt_sessions. Usa a da última sessão e, se o jogador ainda não caçou,
+      // aceita a informada pelo cliente — validada contra a lista real.
+      const ultimaSessao = await selectLatest('hunt_sessions', { user_id: user.id, slot }, 'started_at');
+      const vocacaoInformada = VOCATIONS[body.vocation] ? body.vocation : undefined;
+      const vocacao = (ultimaSessao && ultimaSessao.vocation) || vocacaoInformada;
+
       const row = {
         user_id: user.id, slot,
         name: playerName || undefined,
-        vocation: undefined, // não muda por aqui (vem do character.js já criado)
+        vocation: vocacao,
         level, xp: totalXp, total_kills: stats ? Number(stats.total_kills) : 0,
         // TODO: migrar arena/tasks/bestiário pro servidor quando essas
         // mecânicas virarem autoritativas — hoje ainda são calculadas e

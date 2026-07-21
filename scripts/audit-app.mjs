@@ -121,6 +121,68 @@ try {
     const n = achados.filter(a => a.aba === aba).length;
     console.log(`  ${aba.padEnd(11)} ${n ? n + ' achado(s)' : 'ok'}`);
   }
+  // ---- MODAIS: abrir cada janela e conferir que renderiza e fecha ----
+  abaAtual = 'modais';
+  const MODAIS = [
+    ['Configurações', 'openSettingsPanel'],
+    ['Recompensa diária', 'openDailyReward'],
+    ['Outfit', 'openOutfitPicker'],
+    ['Imbuements', 'openImbueModal'],
+    ['Conquistas', 'openAchievements'],
+    ['Mochila', 'toggleBackpack'],
+  ];
+  for (const [nome, fn] of MODAIS) {
+    const r = await page.evaluate(async f => {
+      if (typeof window[f] !== 'function') return { erro: 'função global inexistente' };
+      try { window[f](); } catch (e) { return { erro: 'lançou: ' + e.message.slice(0, 120) }; }
+      await new Promise(r => setTimeout(r, 700));
+      // NÃO usar offsetParent aqui: ele é null para elementos position:fixed —
+      // que é justamente o caso de um overlay de modal. Com esse teste, todas
+      // as janelas apareciam como "não abriu". Medir pela caixa renderizada.
+      const visivel = e => {
+        const cs = getComputedStyle(e);
+        if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+        const r = e.getBoundingClientRect();
+        return r.width > 0 && r.height > 0;
+      };
+      const m = [...document.querySelectorAll('.modal-overlay, .modal, [id$="-overlay"]')].filter(visivel);
+      if (!m.length) return { erro: 'não abriu nenhuma janela' };
+      const alvo = m[m.length - 1];
+      const texto = (alvo.textContent || '').trim();
+      const imgsQuebradas = [...alvo.querySelectorAll('img')]
+        .filter(i => i.complete && i.naturalWidth === 0).map(i => (i.getAttribute('src') || '').split('/').pop());
+      return { conteudo: texto.length, imgsQuebradas: imgsQuebradas.slice(0, 5) };
+    }, fn);
+    if (r.erro) add('modal:' + nome, 'modal', r.erro);
+    else {
+      if (r.conteudo < 30) add('modal:' + nome, 'modal', `abriu quase vazio (${r.conteudo} caracteres)`);
+      (r.imgsQuebradas || []).forEach(q => add('modal:' + nome, 'img', `não carregou: ${q}`));
+      await page.screenshot({ path: `scripts/audit/modal-${fn}.png` }).catch(() => {});
+    }
+    await page.evaluate(() => { if (typeof window.closeModal === 'function') window.closeModal(); });
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(400);
+  }
+
+  // ---- CELULAR: a largura mais apertada é onde o layout quebra ----
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(600);
+  for (const aba of ABAS) {
+    abaAtual = `celular:${aba}`;
+    const ok = await page.evaluate(t => {
+      const b = document.querySelector(`.tab[data-tab="${t}"]`);
+      if (!b || b.offsetParent === null) return null;
+      b.click();
+      return true;
+    }, aba);
+    if (!ok) continue;
+    await page.waitForTimeout(900);
+    const r = await page.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      largura: document.documentElement.scrollWidth,
+    }));
+    if (r.overflow > 2) add(`celular:${aba}`, 'responsivo', `rolagem horizontal de ${r.overflow}px (conteúdo ${r.largura}px em tela de 390px)`);
+  }
 } catch (e) {
   add(abaAtual, 'exceção', e.message.slice(0, 200));
 } finally {
