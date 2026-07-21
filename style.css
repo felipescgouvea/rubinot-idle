@@ -758,15 +758,18 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    Piloto: CAVE. Piso de pedra que rola + paredes de cobblestone nas laterais +
    vinheta escura. renderZoneTheme() põe data-biome no #dungeon-stage. */
 #dungeon-stage[data-biome="cave"] {
+  /* paredes = rocha REAL do Tibia (Mountain Wall), espelhada L/R; piso = Cave
+     Floor Earth. Ver assets/sprites/ui/scenes/CREDITS.txt. */
   background:
-    url(assets/sprites/ui/scenes/cave-wall.png) left top / 46px 64px repeat-y,
-    url(assets/sprites/ui/scenes/cave-wall.png) right top / 46px 64px repeat-y,
-    #14110d;
-  box-shadow: inset 0 2px 18px #000000cc, inset 0 0 55px 16px #000000c0;
+    url(assets/sprites/ui/scenes/cave-wall.png)   left  top / 60px 64px repeat-y,
+    url(assets/sprites/ui/scenes/cave-wall-r.png) right top / 60px 64px repeat-y,
+    #12100b;
+  box-shadow: inset 0 2px 18px #000000cc, inset 0 0 60px 8px #00000099;
+  image-rendering: pixelated;
 }
 #dungeon-stage[data-biome="cave"]::before {
-  inset: -32px 46px;                 /* deixa as paredes (46px) aparecerem nas laterais */
-  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 32px 32px repeat;  /* piso REAL do Tibia (Cave Floor Earth, 32px) */
+  inset: -32px 58px;                 /* paredes de rocha (60px) aparecem nas laterais */
+  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 32px 32px repeat;
   opacity: 1;
   image-rendering: pixelated;
 }
