@@ -1,0 +1,2292 @@
+{
+ "cheese": {
+  "name": "Cheese",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "worm": {
+  "name": "Worm",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "cookie": {
+  "name": "Cookie",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "meat": {
+  "name": "Meat",
+  "npcvalue": 2,
+  "raw": "2"
+ },
+ "wolf_paw": {
+  "name": "Wolf Paw",
+  "npcvalue": 70,
+  "raw": "70"
+ },
+ "cherry": {
+  "name": "Cherry",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "hand_axe": {
+  "name": "Hand Axe",
+  "npcvalue": 5,
+  "raw": "5"
+ },
+ "leather_boots": {
+  "name": "Leather Boots",
+  "npcvalue": 2,
+  "raw": "2"
+ },
+ "leather_helmet": {
+  "name": "Leather Helmet",
+  "npcvalue": 4,
+  "raw": "4"
+ },
+ "rope": {
+  "name": "Rope",
+  "npcvalue": 15,
+  "raw": "15"
+ },
+ "spear": {
+  "name": "Spear",
+  "npcvalue": 3,
+  "raw": "3"
+ },
+ "studded_club": {
+  "name": "Studded Club",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "wooden_shield": {
+  "name": "Wooden Shield",
+  "npcvalue": 5,
+  "raw": "5"
+ },
+ "heavy_old_tome": {
+  "name": "Heavy Old Tome",
+  "npcvalue": 30,
+  "raw": "30"
+ },
+ "silver_amulet": {
+  "name": "Silver Amulet",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "fish": {
+  "name": "Fish",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "mouldy_cheese": {
+  "name": "Mouldy Cheese",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "torch": {
+  "name": "Torch",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "swamp_grass": {
+  "name": "Swamp Grass",
+  "npcvalue": 20,
+  "raw": "20"
+ },
+ "wood": {
+  "name": "Wood",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "medicine_pouch": {
+  "name": "Medicine Pouch",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "fishing_rod": {
+  "name": "Fishing Rod",
+  "npcvalue": 40,
+  "raw": "40"
+ },
+ "insectoid_eggs": {
+  "name": "Insectoid Eggs",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "simple_arrow": {
+  "name": "Simple Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "chain_helmet": {
+  "name": "Chain Helmet",
+  "npcvalue": 17,
+  "raw": "17"
+ },
+ "axe": {
+  "name": "Axe",
+  "npcvalue": 7,
+  "raw": "7"
+ },
+ "bone_club": {
+  "name": "Bone Club",
+  "npcvalue": 5,
+  "raw": "5"
+ },
+ "short_sword": {
+  "name": "Short Sword",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "studded_helmet": {
+  "name": "Studded Helmet",
+  "npcvalue": 20,
+  "raw": "20"
+ },
+ "poison_arrow": {
+  "name": "Poison Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "shovel": {
+  "name": "Shovel",
+  "npcvalue": 8,
+  "raw": "8"
+ },
+ "health_potion": {
+  "name": "Health Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "simple_jo_staff": {
+  "name": "Simple Jo Staff",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "doublet": {
+  "name": "Doublet",
+  "npcvalue": 3,
+  "raw": "3"
+ },
+ "mana_potion": {
+  "name": "Mana Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "white_mushroom": {
+  "name": "White Mushroom",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "studded_armor": {
+  "name": "Studded Armor",
+  "npcvalue": 25,
+  "raw": "25"
+ },
+ "hatchet": {
+  "name": "Hatchet",
+  "npcvalue": 25,
+  "raw": "25"
+ },
+ "studded_shield": {
+  "name": "Studded Shield",
+  "npcvalue": 16,
+  "raw": "16"
+ },
+ "mace": {
+  "name": "Mace",
+  "npcvalue": 30,
+  "raw": "30"
+ },
+ "longsword": {
+  "name": "Longsword",
+  "npcvalue": 51,
+  "raw": "51"
+ },
+ "arrow": {
+  "name": "Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "plate_shield": {
+  "name": "Plate Shield",
+  "npcvalue": 45,
+  "raw": "45"
+ },
+ "plum": {
+  "name": "Plum",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "elvish_talisman": {
+  "name": "Elvish Talisman",
+  "npcvalue": 45,
+  "raw": "45"
+ },
+ "grapes": {
+  "name": "Grapes",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "bow": {
+  "name": "Bow",
+  "npcvalue": 130,
+  "raw": "130"
+ },
+ "waterskin": {
+  "name": "Waterskin",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "sandals": {
+  "name": "Sandals",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "elvish_bow": {
+  "name": "Elvish Bow",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "scroll": {
+  "name": "Scroll",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "melon": {
+  "name": "Melon",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "blank_rune": {
+  "name": "Blank Rune",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "bread": {
+  "name": "Bread",
+  "npcvalue": 2,
+  "raw": "2"
+ },
+ "green_tunic": {
+  "name": "Green Tunic",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "strong_mana_potion": {
+  "name": "Strong Mana Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "candlestick": {
+  "name": "Candlestick",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "holy_orchid": {
+  "name": "Holy Orchid",
+  "npcvalue": 90,
+  "raw": "90"
+ },
+ "elven_amulet": {
+  "name": "Elven Amulet",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "wand_of_cosmic_energy": {
+  "name": "Wand of Cosmic Energy",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "inkwell": {
+  "name": "Inkwell",
+  "npcvalue": 9,
+  "raw": "9"
+ },
+ "life_crystal": {
+  "name": "Life Crystal",
+  "npcvalue": 85,
+  "raw": "85"
+ },
+ "yellow_gem": {
+  "name": "Yellow Gem",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "small_axe": {
+  "name": "Small Axe",
+  "npcvalue": 5,
+  "raw": "5"
+ },
+ "small_stone": {
+  "name": "Small Stone",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "leather_armor": {
+  "name": "Leather Armor",
+  "npcvalue": 12,
+  "raw": "12"
+ },
+ "bone": {
+  "name": "Bone",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "dagger": {
+  "name": "Dagger",
+  "npcvalue": 2,
+  "raw": "2"
+ },
+ "goblin_ear": {
+  "name": "Goblin Ear",
+  "npcvalue": 20,
+  "raw": "20"
+ },
+ "brass_helmet": {
+  "name": "Brass Helmet",
+  "npcvalue": 30,
+  "raw": "30"
+ },
+ "chain_armor": {
+  "name": "Chain Armor",
+  "npcvalue": 70,
+  "raw": "70"
+ },
+ "sword": {
+  "name": "Sword",
+  "npcvalue": 25,
+  "raw": "25"
+ },
+ "minotaur_horn": {
+  "name": "Minotaur Horn",
+  "npcvalue": 75,
+  "raw": "75"
+ },
+ "minotaur_leather": {
+  "name": "Minotaur Leather",
+  "npcvalue": 80,
+  "raw": "80"
+ },
+ "bronze_amulet": {
+  "name": "Bronze Amulet",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "bolt": {
+  "name": "Bolt",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "piercing_bolt": {
+  "name": "Piercing Bolt",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "brass_armor": {
+  "name": "Brass Armor",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "crossbow": {
+  "name": "Crossbow",
+  "npcvalue": 160,
+  "raw": "160"
+ },
+ "scale_armor": {
+  "name": "Scale Armor",
+  "npcvalue": 75,
+  "raw": "75"
+ },
+ "carrot": {
+  "name": "Carrot",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "purple_robe": {
+  "name": "Purple Robe",
+  "npcvalue": 110,
+  "raw": "110"
+ },
+ "leather_legs": {
+  "name": "Leather Legs",
+  "npcvalue": 9,
+  "raw": "9"
+ },
+ "taurus_mace": {
+  "name": "Taurus Mace",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "battle_shield": {
+  "name": "Battle Shield",
+  "npcvalue": 95,
+  "raw": "95"
+ },
+ "double_axe": {
+  "name": "Double Axe",
+  "npcvalue": 260,
+  "raw": "260"
+ },
+ "minotaur_trophy": {
+  "name": "Minotaur Trophy",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "cyclops_toe": {
+  "name": "Cyclops Toe",
+  "npcvalue": 55,
+  "raw": "55"
+ },
+ "halberd": {
+  "name": "Halberd",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "dark_helmet": {
+  "name": "Dark Helmet",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "wolf_tooth_chain": {
+  "name": "Wolf Tooth Chain",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "club_ring": {
+  "name": "Club Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "cyclops_trophy": {
+  "name": "Cyclops Trophy",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "banana": {
+  "name": "Banana",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "orange": {
+  "name": "Orange",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "banana_sash": {
+  "name": "Banana Sash",
+  "npcvalue": 55,
+  "raw": "55"
+ },
+ "ape_fur": {
+  "name": "Ape Fur",
+  "npcvalue": 120,
+  "raw": "120"
+ },
+ "coconut": {
+  "name": "Coconut",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "magic_light_wand": {
+  "name": "Magic Light Wand",
+  "npcvalue": 35,
+  "raw": "35"
+ },
+ "wand_of_decay": {
+  "name": "Wand of Decay",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "banana_staff": {
+  "name": "Banana Staff",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "small_amethyst": {
+  "name": "Small Amethyst",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "plate_armor": {
+  "name": "Plate Armor",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "protection_amulet": {
+  "name": "Protection Amulet",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "power_ring": {
+  "name": "Power Ring",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "compound_eye": {
+  "name": "Compound Eye",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "small_emerald": {
+  "name": "Small Emerald",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "epee": {
+  "name": "Epee",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "great_health_potion": {
+  "name": "Great Health Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "great_mana_potion": {
+  "name": "Great Mana Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "small_topaz": {
+  "name": "Small Topaz",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "war_hammer": {
+  "name": "War Hammer",
+  "npcvalue": 1200,
+  "raw": "1200"
+ },
+ "springsprout_rod": {
+  "name": "Springsprout Rod",
+  "npcvalue": 3600,
+  "raw": "3600"
+ },
+ "coal": {
+  "name": "Coal",
+  "npcvalue": 20,
+  "raw": "20"
+ },
+ "terra_amulet": {
+  "name": "Terra Amulet",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "dwarven_ring": {
+  "name": "Dwarven Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "pick": {
+  "name": "Pick",
+  "npcvalue": 15,
+  "raw": "15"
+ },
+ "iron_ore": {
+  "name": "Iron Ore",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "spiked_squelcher": {
+  "name": "Spiked Squelcher",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "small_diamond": {
+  "name": "Small Diamond",
+  "npcvalue": 300,
+  "raw": "300"
+ },
+ "small_sapphire": {
+  "name": "Small Sapphire",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "small_ruby": {
+  "name": "Small Ruby",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "glooth_blade": {
+  "name": "Glooth Blade",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "glooth_club": {
+  "name": "Glooth Club",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "glooth_axe": {
+  "name": "Glooth Axe",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "talon": {
+  "name": "Talon",
+  "npcvalue": 320,
+  "raw": "320"
+ },
+ "glooth_spear": {
+  "name": "Glooth Spear",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "glooth_amulet": {
+  "name": "Glooth Amulet",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "terra_rod": {
+  "name": "Terra Rod",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "green_gem": {
+  "name": "Green Gem",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "strong_health_potion": {
+  "name": "Strong Health Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "green_mushroom": {
+  "name": "Green Mushroom",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "ultimate_health_potion": {
+  "name": "Ultimate Health Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "assassin_star": {
+  "name": "Assassin Star",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "two_handed_sword": {
+  "name": "Two Handed Sword",
+  "npcvalue": 450,
+  "raw": "450"
+ },
+ "dark_armor": {
+  "name": "Dark Armor",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "crystal_necklace": {
+  "name": "Crystal Necklace",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "giant_sword": {
+  "name": "Giant Sword",
+  "npcvalue": 17000,
+  "raw": "17000"
+ },
+ "strange_symbol": {
+  "name": "Strange Symbol",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "big_bone": {
+  "name": "Big Bone",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "behemoth_claw": {
+  "name": "Behemoth Claw",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "steel_boots": {
+  "name": "Steel Boots",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "behemoth_trophy": {
+  "name": "Behemoth Trophy",
+  "npcvalue": 20000,
+  "raw": "20000"
+ },
+ "crowbar": {
+  "name": "Crowbar",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "titan_axe": {
+  "name": "Titan Axe",
+  "npcvalue": 4000,
+  "raw": "4000"
+ },
+ "war_axe": {
+  "name": "War Axe",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "sabre": {
+  "name": "Sabre",
+  "npcvalue": 12,
+  "raw": "12"
+ },
+ "orc_leather": {
+  "name": "Orc Leather",
+  "npcvalue": 30,
+  "raw": "30"
+ },
+ "orc_tooth": {
+  "name": "Orc Tooth",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "studded_legs": {
+  "name": "Studded Legs",
+  "npcvalue": 15,
+  "raw": "15"
+ },
+ "machete": {
+  "name": "Machete",
+  "npcvalue": 6,
+  "raw": "6"
+ },
+ "copper_shield": {
+  "name": "Copper Shield",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "skull_belt": {
+  "name": "Skull Belt",
+  "npcvalue": 80,
+  "raw": "80"
+ },
+ "poison_dagger": {
+  "name": "Poison Dagger",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "light_bandana": {
+  "name": "Light Bandana",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "bones": {
+  "name": "Bones",
+  "npcvalue": 0,
+  "raw": ""
+ },
+ "brown_bread": {
+  "name": "Brown Bread",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "girlish_hair_decoration": {
+  "name": "Girlish Hair Decoration",
+  "npcvalue": 30,
+  "raw": "30"
+ },
+ "protective_charm": {
+  "name": "Protective Charm",
+  "npcvalue": 60,
+  "raw": "60"
+ },
+ "red_apple": {
+  "name": "Red Apple",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "hunting_spear": {
+  "name": "Hunting Spear",
+  "npcvalue": 25,
+  "raw": "25"
+ },
+ "spider_fangs": {
+  "name": "Spider Fangs",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "brass_legs": {
+  "name": "Brass Legs",
+  "npcvalue": 49,
+  "raw": "49"
+ },
+ "steel_helmet": {
+  "name": "Steel Helmet",
+  "npcvalue": 293,
+  "raw": "293"
+ },
+ "monk_robe": {
+  "name": "Monk Robe",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "time_ring": {
+  "name": "Time Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "plate_legs": {
+  "name": "Plate Legs",
+  "npcvalue": 115,
+  "raw": "115"
+ },
+ "spider_silk": {
+  "name": "Spider Silk",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "knight_armor": {
+  "name": "Knight Armor",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "knight_legs": {
+  "name": "Knight Legs",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "lightning_headband": {
+  "name": "Lightning Headband",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "platinum_amulet": {
+  "name": "Platinum Amulet",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "bola": {
+  "name": "Bola",
+  "npcvalue": 35,
+  "raw": "35"
+ },
+ "earflap": {
+  "name": "Earflap",
+  "npcvalue": 40,
+  "raw": "40"
+ },
+ "cheese_cutter": {
+  "name": "Cheese Cutter",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "ratana": {
+  "name": "Ratana",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "life_preserver": {
+  "name": "Life Preserver",
+  "npcvalue": 300,
+  "raw": "300"
+ },
+ "leather_harness": {
+  "name": "Leather Harness",
+  "npcvalue": 750,
+  "raw": "750"
+ },
+ "spike_shield": {
+  "name": "Spike Shield",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "rat_cheese": {
+  "name": "Rat Cheese",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "soft_cheese": {
+  "name": "Soft Cheese",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "cheesy_figurine": {
+  "name": "Cheesy Figurine",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "rat_god_doll": {
+  "name": "Rat God Doll",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "spiky_club": {
+  "name": "Spiky Club",
+  "npcvalue": 300,
+  "raw": "300"
+ },
+ "corncob": {
+  "name": "Corncob",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "orcish_axe": {
+  "name": "Orcish Axe",
+  "npcvalue": 350,
+  "raw": "350"
+ },
+ "obsidian_lance": {
+  "name": "Obsidian Lance",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "battle_axe": {
+  "name": "Battle Axe",
+  "npcvalue": 80,
+  "raw": "80"
+ },
+ "ham": {
+  "name": "Ham",
+  "npcvalue": 4,
+  "raw": "4"
+ },
+ "lamp": {
+  "name": "Lamp",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "throwing_star": {
+  "name": "Throwing Star",
+  "npcvalue": 2,
+  "raw": "2"
+ },
+ "scimitar": {
+  "name": "Scimitar",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "crusader_helmet": {
+  "name": "Crusader Helmet",
+  "npcvalue": 6000,
+  "raw": "6000"
+ },
+ "dragon_hammer": {
+  "name": "Dragon Hammer",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "magma_boots": {
+  "name": "Magma Boots",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "stealth_ring": {
+  "name": "Stealth Ring",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "orc_trophy": {
+  "name": "Orc Trophy",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "great_spirit_potion": {
+  "name": "Great Spirit Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "glooth_bag": {
+  "name": "Glooth Bag",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "glooth_steak": {
+  "name": "Glooth Steak",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "glooth_sandwich": {
+  "name": "Glooth Sandwich",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "glooth_capsule": {
+  "name": "Glooth Capsule",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "tainted_glooth_capsule": {
+  "name": "Tainted Glooth Capsule",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "terra_mantle": {
+  "name": "Terra Mantle",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "terra_boots": {
+  "name": "Terra Boots",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "terra_hood": {
+  "name": "Terra Hood",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "glooth_cape": {
+  "name": "Glooth Cape",
+  "npcvalue": 7000,
+  "raw": "7000"
+ },
+ "beastslayer_axe": {
+  "name": "Beastslayer Axe",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "rubber_cap": {
+  "name": "Rubber Cap",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "terra_legs": {
+  "name": "Terra Legs",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "skull_staff": {
+  "name": "Skull Staff",
+  "npcvalue": 6000,
+  "raw": "6000"
+ },
+ "mercenary_sword": {
+  "name": "Mercenary Sword",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "butchers_axe": {
+  "name": "Butcher's Axe",
+  "npcvalue": 18000,
+  "raw": "18000"
+ },
+ "scarf": {
+  "name": "Scarf",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "might_ring": {
+  "name": "Might Ring",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "guardian_shield": {
+  "name": "Guardian Shield",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "warrior_helmet": {
+  "name": "Warrior Helmet",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "piggy_bank": {
+  "name": "Piggy Bank",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "scroll_of_heroic_deeds": {
+  "name": "Scroll of Heroic Deeds",
+  "npcvalue": 230,
+  "raw": "230"
+ },
+ "red_piece_of_cloth": {
+  "name": "Red Piece of Cloth",
+  "npcvalue": 300,
+  "raw": "300"
+ },
+ "crown_legs": {
+  "name": "Crown Legs",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "crown_armor": {
+  "name": "Crown Armor",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "crown_helmet": {
+  "name": "Crown Helmet",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "fire_sword": {
+  "name": "Fire Sword",
+  "npcvalue": 4000,
+  "raw": "4000"
+ },
+ "crown_shield": {
+  "name": "Crown Shield",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "red_rose": {
+  "name": "Red Rose",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "sniper_arrow": {
+  "name": "Sniper Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "wedding_ring": {
+  "name": "Wedding Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "lyre": {
+  "name": "Lyre",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "cultish_robe": {
+  "name": "Cultish Robe",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "dragon_ham": {
+  "name": "Dragon Ham",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "steel_shield": {
+  "name": "Steel Shield",
+  "npcvalue": 80,
+  "raw": "80"
+ },
+ "dragons_tail": {
+  "name": "Dragon's Tail",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "burst_arrow": {
+  "name": "Burst Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "broadsword": {
+  "name": "Broadsword",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "green_dragon_leather": {
+  "name": "Green Dragon Leather",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "wand_of_inferno": {
+  "name": "Wand of Inferno",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "green_dragon_scale": {
+  "name": "Green Dragon Scale",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "serpent_sword": {
+  "name": "Serpent Sword",
+  "npcvalue": 900,
+  "raw": "900"
+ },
+ "dragon_shield": {
+  "name": "Dragon Shield",
+  "npcvalue": 4000,
+  "raw": "4000"
+ },
+ "dragonbone_staff": {
+  "name": "Dragonbone Staff",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "dragon_trophy": {
+  "name": "Dragon Trophy",
+  "npcvalue": 4000,
+  "raw": "4000"
+ },
+ "royal_spear": {
+  "name": "Royal Spear",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "power_bolt": {
+  "name": "Power Bolt",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "energy_ring": {
+  "name": "Energy Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "golden_mug": {
+  "name": "Golden Mug",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "red_dragon_scale": {
+  "name": "Red Dragon Scale",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "red_dragon_leather": {
+  "name": "Red Dragon Leather",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "strange_helmet": {
+  "name": "Strange Helmet",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "royal_helmet": {
+  "name": "Royal Helmet",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "tower_shield": {
+  "name": "Tower Shield",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "dragon_scale_mail": {
+  "name": "Dragon Scale Mail",
+  "npcvalue": 40000,
+  "raw": "40000"
+ },
+ "dragon_lord_trophy": {
+  "name": "Dragon Lord Trophy",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "dragon_slayer": {
+  "name": "Dragon Slayer",
+  "npcvalue": 15000,
+  "raw": "15000"
+ },
+ "belted_cape": {
+  "name": "Belted Cape",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "paladin_armor": {
+  "name": "Paladin Armor",
+  "npcvalue": 15000,
+  "raw": "15000"
+ },
+ "hydra_head": {
+  "name": "Hydra Head",
+  "npcvalue": 600,
+  "raw": "600"
+ },
+ "cucumber": {
+  "name": "Cucumber",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "ring_of_healing": {
+  "name": "Ring of Healing",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "hydra_egg": {
+  "name": "Hydra Egg",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "medusa_shield": {
+  "name": "Medusa Shield",
+  "npcvalue": 9000,
+  "raw": "9000"
+ },
+ "boots_of_haste": {
+  "name": "Boots of Haste",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "stone_skin_amulet": {
+  "name": "Stone Skin Amulet",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "wyrm_scale": {
+  "name": "Wyrm Scale",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "focus_cape": {
+  "name": "Focus Cape",
+  "npcvalue": 6000,
+  "raw": "6000"
+ },
+ "wand_of_draconia": {
+  "name": "Wand of Draconia",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "lightning_pendant": {
+  "name": "Lightning Pendant",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "wand_of_starstorm": {
+  "name": "Wand of Starstorm",
+  "npcvalue": 3600,
+  "raw": "3600"
+ },
+ "shockwave_amulet": {
+  "name": "Shockwave Amulet",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "composite_hornbow": {
+  "name": "Composite Hornbow",
+  "npcvalue": 25000,
+  "raw": "25000"
+ },
+ "soul_orb": {
+  "name": "Soul Orb",
+  "npcvalue": 25,
+  "raw": "25"
+ },
+ "lightning_legs": {
+  "name": "Lightning Legs",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "lightning_boots": {
+  "name": "Lightning Boots",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "lightning_robe": {
+  "name": "Lightning Robe",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "shadow_sceptre": {
+  "name": "Shadow Sceptre",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "legs_of_wisdom": {
+  "name": "Legs of Wisdom",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "simple_dress": {
+  "name": "Simple Dress",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "black_pearl": {
+  "name": "Black Pearl",
+  "npcvalue": 280,
+  "raw": "280"
+ },
+ "silver_brooch": {
+  "name": "Silver Brooch",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "white_pearl": {
+  "name": "White Pearl",
+  "npcvalue": 160,
+  "raw": "160"
+ },
+ "blue_robe": {
+  "name": "Blue Robe",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "spellbook": {
+  "name": "Spellbook",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "red_robe": {
+  "name": "Red Robe",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "crystal_ring": {
+  "name": "Crystal Ring",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "demonic_essence": {
+  "name": "Demonic Essence",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "white_piece_of_cloth": {
+  "name": "White Piece of Cloth",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "shiny_stone": {
+  "name": "Shiny Stone",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "relic_sword": {
+  "name": "Relic Sword",
+  "npcvalue": 25000,
+  "raw": "25000"
+ },
+ "death_ring": {
+  "name": "Death Ring",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "demonbone_amulet": {
+  "name": "Demonbone Amulet",
+  "npcvalue": 32000,
+  "raw": "32000"
+ },
+ "flask_of_demonic_blood": {
+  "name": "Flask of Demonic Blood",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "scythe": {
+  "name": "Scythe",
+  "npcvalue": 10,
+  "raw": "10"
+ },
+ "dark_shield": {
+  "name": "Dark Shield",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "slightly_rusted_armor": {
+  "name": "Slightly Rusted Armor",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "orichalcum_pearl": {
+  "name": "Orichalcum Pearl",
+  "npcvalue": 40,
+  "raw": "40"
+ },
+ "nightmare_blade": {
+  "name": "Nightmare Blade",
+  "npcvalue": 35000,
+  "raw": "35000"
+ },
+ "underworld_rod": {
+  "name": "Underworld Rod",
+  "npcvalue": 4400,
+  "raw": "4400"
+ },
+ "glacier_kilt": {
+  "name": "Glacier Kilt",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "skullcracker_armor": {
+  "name": "Skullcracker Armor",
+  "npcvalue": 18000,
+  "raw": "18000"
+ },
+ "small_enchanted_amethyst": {
+  "name": "Small Enchanted Amethyst",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "moonlight_crystals": {
+  "name": "Moonlight Crystals",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "red_gem": {
+  "name": "Red Gem",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "combat_knife": {
+  "name": "Combat Knife",
+  "npcvalue": 1,
+  "raw": "1"
+ },
+ "red_crystal_fragment": {
+  "name": "Red Crystal Fragment",
+  "npcvalue": 800,
+  "raw": "800"
+ },
+ "knife": {
+  "name": "Knife",
+  "npcvalue": 1,
+  "raw": "1"
+ },
+ "green_crystal_fragment": {
+  "name": "Green Crystal Fragment",
+  "npcvalue": 800,
+  "raw": "800"
+ },
+ "werehyaena_trophy": {
+  "name": "Werehyaena Trophy",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "hailstorm_rod": {
+  "name": "Hailstorm Rod",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "green_crystal_splinter": {
+  "name": "Green Crystal Splinter",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "small_enchanted_emerald": {
+  "name": "Small Enchanted Emerald",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "sword_ring": {
+  "name": "Sword Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "black_shield": {
+  "name": "Black Shield",
+  "npcvalue": 800,
+  "raw": "800"
+ },
+ "wand_of_voodoo": {
+  "name": "Wand of Voodoo",
+  "npcvalue": 4400,
+  "raw": "4400"
+ },
+ "brown_crystal_splinter": {
+  "name": "Brown Crystal Splinter",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "small_enchanted_ruby": {
+  "name": "Small Enchanted Ruby",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "crystal_sword": {
+  "name": "Crystal Sword",
+  "npcvalue": 600,
+  "raw": "600"
+ },
+ "lions_mane": {
+  "name": "Lion's Mane",
+  "npcvalue": 60,
+  "raw": "60"
+ },
+ "glorious_axe": {
+  "name": "Glorious Axe",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "spirit_cloak": {
+  "name": "Spirit Cloak",
+  "npcvalue": 350,
+  "raw": "350"
+ },
+ "onyx_chip": {
+  "name": "Onyx Chip",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "coral_brooch": {
+  "name": "Coral Brooch",
+  "npcvalue": 750,
+  "raw": "750"
+ },
+ "rainbow_quartz": {
+  "name": "Rainbow Quartz",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "ivory_carving": {
+  "name": "Ivory Carving",
+  "npcvalue": 300,
+  "raw": "300"
+ },
+ "noble_axe": {
+  "name": "Noble Axe",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "white_silk_flower": {
+  "name": "White Silk Flower",
+  "npcvalue": 9000,
+  "raw": "9000"
+ },
+ "lion_figurine": {
+  "name": "Lion Figurine",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "green_crystal_shard": {
+  "name": "Green Crystal Shard",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "twin_hooks": {
+  "name": "Twin Hooks",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "cyan_crystal_fragment": {
+  "name": "Cyan Crystal Fragment",
+  "npcvalue": 800,
+  "raw": "800"
+ },
+ "small_enchanted_sapphire": {
+  "name": "Small Enchanted Sapphire",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "rapier": {
+  "name": "Rapier",
+  "npcvalue": 5,
+  "raw": "5"
+ },
+ "ankh": {
+  "name": "Ankh",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "magma_legs": {
+  "name": "Magma Legs",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "opal": {
+  "name": "Opal",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "heavy_machete": {
+  "name": "Heavy Machete",
+  "npcvalue": 90,
+  "raw": "90"
+ },
+ "bone_sword": {
+  "name": "Bone Sword",
+  "npcvalue": 20,
+  "raw": "20"
+ },
+ "gold_ingot": {
+  "name": "Gold Ingot",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "carlin_sword": {
+  "name": "Carlin Sword",
+  "npcvalue": 118,
+  "raw": "118"
+ },
+ "earth_arrow": {
+  "name": "Earth Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "violet_gem": {
+  "name": "Violet Gem",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "sacred_tree_amulet": {
+  "name": "Sacred Tree Amulet",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "ring_of_red_plasma": {
+  "name": "Ring of Red Plasma",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "snakebite_rod": {
+  "name": "Snakebite Rod",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "giant_shimmering_pearl": {
+  "name": "Giant Shimmering Pearl",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "violet_crystal_shard": {
+  "name": "Violet Crystal Shard",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "emerald_bangle": {
+  "name": "Emerald Bangle",
+  "npcvalue": 800,
+  "raw": "800"
+ },
+ "morning_star": {
+  "name": "Morning Star",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "red_mushroom": {
+  "name": "Red Mushroom",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "rusted_armor": {
+  "name": "Rusted Armor",
+  "npcvalue": 0,
+  "raw": ""
+ },
+ "berserk_potion": {
+  "name": "Berserk Potion",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "onyx_flail": {
+  "name": "Onyx Flail",
+  "npcvalue": 22000,
+  "raw": "22000"
+ },
+ "golden_lotus_brooch": {
+  "name": "Golden Lotus Brooch",
+  "npcvalue": 270,
+  "raw": "270"
+ },
+ "peacock_feather_fan": {
+  "name": "Peacock Feather Fan",
+  "npcvalue": 350,
+  "raw": "350"
+ },
+ "mystic_turban": {
+  "name": "Mystic Turban",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "magma_coat": {
+  "name": "Magma Coat",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "ruby_necklace": {
+  "name": "Ruby Necklace",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "oriental_shoes": {
+  "name": "Oriental Shoes",
+  "npcvalue": 15000,
+  "raw": "15000"
+ },
+ "blue_gem": {
+  "name": "Blue Gem",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "necrotic_rod": {
+  "name": "Necrotic Rod",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "tribal_mask": {
+  "name": "Tribal Mask",
+  "npcvalue": 250,
+  "raw": "250"
+ },
+ "assassin_dagger": {
+  "name": "Assassin Dagger",
+  "npcvalue": 20000,
+  "raw": "20000"
+ },
+ "zaoan_shoes": {
+  "name": "Zaoan Shoes",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "draken_sulphur": {
+  "name": "Draken Sulphur",
+  "npcvalue": 550,
+  "raw": "550"
+ },
+ "zaoan_legs": {
+  "name": "Zaoan Legs",
+  "npcvalue": 14000,
+  "raw": "14000"
+ },
+ "spellweavers_robe": {
+  "name": "Spellweaver's Robe",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "zaoan_robe": {
+  "name": "Zaoan Robe",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "ring_of_the_sky": {
+  "name": "Ring of the Sky",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "draken_trophy": {
+  "name": "Draken Trophy",
+  "npcvalue": 15000,
+  "raw": "15000"
+ },
+ "bone_shoulderplate": {
+  "name": "Bone Shoulderplate",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "zaoan_halberd": {
+  "name": "Zaoan Halberd",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "drakinata": {
+  "name": "Drakinata",
+  "npcvalue": 10000,
+  "raw": "10000"
+ },
+ "zaoan_armor": {
+  "name": "Zaoan Armor",
+  "npcvalue": 14000,
+  "raw": "14000"
+ },
+ "onyx_arrow": {
+  "name": "Onyx Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "falcon_crest": {
+  "name": "Falcon Crest",
+  "npcvalue": 650,
+  "raw": "650"
+ },
+ "golden_armor": {
+  "name": "Golden Armor",
+  "npcvalue": 20000,
+  "raw": "20000"
+ },
+ "mastermind_shield": {
+  "name": "Mastermind Shield",
+  "npcvalue": 50000,
+  "raw": "50000"
+ },
+ "heavy_mace": {
+  "name": "Heavy Mace",
+  "npcvalue": 50000,
+  "raw": "50000"
+ },
+ "saw": {
+  "name": "Saw",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "jewelled_backpack": {
+  "name": "Jewelled Backpack",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "vile_axe": {
+  "name": "Vile Axe",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "golden_legs": {
+  "name": "Golden Legs",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "fire_mushroom": {
+  "name": "Fire Mushroom",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "devil_helmet": {
+  "name": "Devil Helmet",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "demon_shield": {
+  "name": "Demon Shield",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "magic_plate_armor": {
+  "name": "Magic Plate Armor",
+  "npcvalue": 90000,
+  "raw": "90000"
+ },
+ "vexclaw_talon": {
+  "name": "Vexclaw Talon",
+  "npcvalue": 1100,
+  "raw": "1100"
+ },
+ "ice_rapier": {
+  "name": "Ice Rapier",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "fire_axe": {
+  "name": "Fire Axe",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "demonrage_sword": {
+  "name": "Demonrage Sword",
+  "npcvalue": 36000,
+  "raw": "36000"
+ },
+ "dirty_cape": {
+  "name": "Dirty Cape",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "piece_of_iron": {
+  "name": "Piece of Iron",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "battle_hammer": {
+  "name": "Battle Hammer",
+  "npcvalue": 120,
+  "raw": "120"
+ },
+ "axe_ring": {
+  "name": "Axe Ring",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "hammer_of_wrath": {
+  "name": "Hammer of Wrath",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "war_horn": {
+  "name": "War Horn",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "brown_mushroom": {
+  "name": "Brown Mushroom",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "cluster_of_solace": {
+  "name": "Cluster Of Solace",
+  "npcvalue": null,
+  "raw": "PAGINA_NAO_ENCONTRADA"
+ },
+ "hemp_rope": {
+  "name": "Hemp Rope",
+  "npcvalue": 350,
+  "raw": "350"
+ },
+ "blue_crystal_splinter": {
+  "name": "Blue Crystal Splinter",
+  "npcvalue": 400,
+  "raw": "400"
+ },
+ "brown_piece_of_cloth": {
+  "name": "Brown Piece of Cloth",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "life_ring": {
+  "name": "Life Ring",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "yellow_piece_of_cloth": {
+  "name": "Yellow Piece of Cloth",
+  "npcvalue": 150,
+  "raw": "150"
+ },
+ "traditional_sai": {
+  "name": "Traditional Sai",
+  "npcvalue": 16500,
+  "raw": "16500"
+ },
+ "ice_flower": {
+  "name": "Ice Flower",
+  "npcvalue": 0,
+  "raw": ""
+ },
+ "glacier_mask": {
+  "name": "Glacier Mask",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "moonlight_rod": {
+  "name": "Moonlight Rod",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "northwind_rod": {
+  "name": "Northwind Rod",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "glacier_amulet": {
+  "name": "Glacier Amulet",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "glacier_robe": {
+  "name": "Glacier Robe",
+  "npcvalue": 11000,
+  "raw": "11000"
+ },
+ "leaf_star": {
+  "name": "Leaf Star",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "ring_of_blue_plasma": {
+  "name": "Ring of Blue Plasma",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "wood_cape": {
+  "name": "Wood Cape",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "collar_of_blue_plasma": {
+  "name": "Collar of Blue Plasma",
+  "npcvalue": 6000,
+  "raw": "6000"
+ },
+ "crystal_crossbow": {
+  "name": "Crystal Crossbow",
+  "npcvalue": 35000,
+  "raw": "35000"
+ },
+ "dragon_necklace": {
+  "name": "Dragon Necklace",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "magma_amulet": {
+  "name": "Magma Amulet",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "wand_of_dragonbreath": {
+  "name": "Wand of Dragonbreath",
+  "npcvalue": 200,
+  "raw": "200"
+ },
+ "bullseye_potion": {
+  "name": "Bullseye Potion",
+  "npcvalue": 500,
+  "raw": "500"
+ },
+ "fish_tail": {
+  "name": "Fish Tail",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "hardened_bone": {
+  "name": "Hardened Bone",
+  "npcvalue": 70,
+  "raw": "70"
+ },
+ "haunted_blade": {
+  "name": "Haunted Blade",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "diamond_sceptre": {
+  "name": "Diamond Sceptre",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "dark_mushroom": {
+  "name": "Dark Mushroom",
+  "npcvalue": 100,
+  "raw": "100"
+ },
+ "mind_stone": {
+  "name": "Mind Stone",
+  "npcvalue": 170,
+  "raw": "170"
+ },
+ "mino_shield": {
+  "name": "Mino Shield",
+  "npcvalue": 3000,
+  "raw": "3000"
+ },
+ "lion_crest": {
+  "name": "Lion Crest",
+  "npcvalue": 270,
+  "raw": "270"
+ },
+ "ornate_crossbow": {
+  "name": "Ornate Crossbow",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "glacier_shoes": {
+  "name": "Glacier Shoes",
+  "npcvalue": 2500,
+  "raw": "2500"
+ },
+ "ultimate_mana_potion": {
+  "name": "Ultimate Mana Potion",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "dragon_tongue": {
+  "name": "Dragon Tongue",
+  "npcvalue": 550,
+  "raw": "550"
+ },
+ "white_gem": {
+  "name": "White Gem",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "prismatic_quartz": {
+  "name": "Prismatic Quartz",
+  "npcvalue": 450,
+  "raw": "450"
+ },
+ "gold_ring": {
+  "name": "Gold Ring",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "gold_nugget": {
+  "name": "Gold Nugget",
+  "npcvalue": 850,
+  "raw": "850"
+ },
+ "hexagonal_ruby": {
+  "name": "Hexagonal Ruby",
+  "npcvalue": 30000,
+  "raw": "30000"
+ },
+ "spike_sword": {
+  "name": "Spike Sword",
+  "npcvalue": 1000,
+  "raw": "1000"
+ },
+ "wyvern_fang": {
+  "name": "Wyvern Fang",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "orb": {
+  "name": "Orb",
+  "npcvalue": 750,
+  "raw": "750"
+ },
+ "garlic_necklace": {
+  "name": "Garlic Necklace",
+  "npcvalue": 50,
+  "raw": "50"
+ },
+ "drill_bolt": {
+  "name": "Drill Bolt",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "arbalest": {
+  "name": "Arbalest",
+  "npcvalue": 42000,
+  "raw": "42000"
+ },
+ "wooden_spellbook": {
+  "name": "Wooden Spellbook",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "knight_axe": {
+  "name": "Knight Axe",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "blue_crystal_shard": {
+  "name": "Blue Crystal Shard",
+  "npcvalue": 1500,
+  "raw": "1500"
+ },
+ "fur_armor": {
+  "name": "Fur Armor",
+  "npcvalue": 5000,
+  "raw": "5000"
+ },
+ "scorpion_charm": {
+  "name": "Scorpion Charm",
+  "npcvalue": 620,
+  "raw": "620"
+ },
+ "crystal_mace": {
+  "name": "Crystal Mace",
+  "npcvalue": 12000,
+  "raw": "12000"
+ },
+ "sapphire_hammer": {
+  "name": "Sapphire Hammer",
+  "npcvalue": 7000,
+  "raw": "7000"
+ },
+ "crystalline_armor": {
+  "name": "Crystalline Armor",
+  "npcvalue": 16000,
+  "raw": "16000"
+ },
+ "book_page": {
+  "name": "Book Page",
+  "npcvalue": 640,
+  "raw": "640"
+ },
+ "envenomed_arrow": {
+  "name": "Envenomed Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "clay_lump": {
+  "name": "Clay Lump",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "swamplair_armor": {
+  "name": "Swamplair Armor",
+  "npcvalue": 16000,
+  "raw": "16000"
+ },
+ "purple_tome": {
+  "name": "Purple Tome",
+  "npcvalue": 2000,
+  "raw": "2000"
+ },
+ "flash_arrow": {
+  "name": "Flash Arrow",
+  "npcvalue": 0,
+  "raw": "0"
+ },
+ "collar_of_red_plasma": {
+  "name": "Collar of Red Plasma",
+  "npcvalue": 6000,
+  "raw": "6000"
+ },
+ "ring_of_green_plasma": {
+  "name": "Ring of Green Plasma",
+  "npcvalue": 8000,
+  "raw": "8000"
+ },
+ "collar_of_green_plasma": {
+  "name": "Collar of Green Plasma",
+  "npcvalue": 6000,
+  "raw": "6000"
+ }
+}
