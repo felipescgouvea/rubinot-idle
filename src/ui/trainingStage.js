@@ -11,21 +11,17 @@
 //  • Mago: SEM dummy. Só o boneco, virado pra baixo (de frente), lançando a
 //    magia escolhida — o efeito real da magia estoura em volta dele.
 //
-// RESSALVA DA ARTE: os atlases de outfit deste projeto só existem em DUAS
-// direções — norte (de costas) e sul (de frente). Não há sprite virado pra
-// leste aqui nem nos gifs de outfit da TibiaWiki (que são só a caminhada
-// frontal). Por isso o boneco usa a direção SUL nas duas montagens: de frente
-// ele ao menos aparece inteiro e reconhecível. Trocar pra um boneco realmente
-// virado pra direita depende de garimpar sprites leste das 28 outfits × 2
-// gêneros — é um trabalho à parte.
-import { G } from '../application/gameStore.js?v=173';
-import { outfitWalkAtlasPath, outfitWalkAtlasPathSouth } from '../infrastructure/outfitAssets.js?v=169';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=169';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=169';
-import { VOCATIONS } from '../domain/character.js?v=200';
-import { ITEMS } from '../domain/items.js?v=184';
-import { SPELLS } from '../domain/spells.js?v=171';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=174';
+// O boneco encara o alvo de verdade: as sprites das QUATRO direções foram
+// trazidas pro projeto (assets/outfits-dir/, ver
+// scripts/fetch_outfit_directions.py), então aqui ele usa LESTE quando bate no
+// dummy à direita e SUL quando é o mago lançando magia de frente.
+import { G } from '../application/gameStore.js?v=174';
+import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=170';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=170';
+import { VOCATIONS } from '../domain/character.js?v=201';
+import { ITEMS } from '../domain/items.js?v=185';
+import { SPELLS } from '../domain/spells.js?v=172';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=175';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
@@ -81,27 +77,20 @@ export function mountTrainingStagePlayer(skillId) {
   if (!wrap) return;
   const outfitId = currentOutfitId();
   if (!outfitId) return;                       // fica o emoji de fallback
-  const gender = G.outfitGender || 'male';
-  // Sempre a direção SUL: com o alvo à direita, o boneco de costas (norte) daria
-  // a impressão de estar atirando pra trás. Ver a ressalva no topo do arquivo —
-  // não existe sprite leste no acervo.
-  const atlas = outfitWalkAtlasPathSouth(outfitId, gender);
-
-  buildWalkFrames(atlas, {
+  // Mago fica de frente lançando a magia; quem treina arma encara o dummy, que
+  // está à DIREITA — daí a direção leste.
+  const direction = skillId === 'magic' ? 'south' : 'east';
+  const canvas = document.createElement('canvas');
+  canvas.className = 'tstage-player-canvas';
+  renderOutfitDirectionToCanvas(canvas, {
+    outfitId,
+    gender: G.outfitGender || 'male',
+    direction,
     colors: G.outfitColors,
-    addon1: G.outfitAddon1,
-    addon2: G.outfitAddon2,
-  }).then(({ idle, frames }) => {
-    const base = idle || frames[0];
-    if (!base || !wrap.isConnected) return;
-    const canvas = document.createElement('canvas');
-    canvas.width = 64; canvas.height = 64;
-    canvas.className = 'tstage-player-canvas';
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(base, 0, 0);
+  }).then(ok => {
+    if (!ok || !wrap.isConnected) return;      // falhou: mantém o emoji
     const fb = wrap.querySelector('.tstage-player-fallback');
     if (fb) fb.remove();
     wrap.insertBefore(canvas, wrap.firstChild);
-  }).catch(() => {});
+  });
 }

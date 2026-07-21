@@ -35,3 +35,19 @@ export function outfitWalkAtlasPath(outfitId, gender) {
 export function outfitWalkAtlasPathSouth(outfitId, gender) {
   return `assets/outfits-walk/${outfitId}-${gender}.png?av=2`;
 }
+
+// Sprite do outfit numa DIREÇÃO específica ('south' | 'east' | 'north' | 'west'),
+// com o mesmo par base+template dos PNGs frontais — ver
+// scripts/fetch_outfit_directions.py pra origem dos arquivos.
+// Existe porque os atlas de caminhada só cobrem norte e sul, e o palco do
+// Treino Online precisa do boneco virado pra DIREITA (leste).
+// Sem addons: são quadros parados, usados em cena, não no vestiário.
+export const OUTFIT_DIRECTIONS = ['south', 'east', 'north', 'west'];
+
+export function outfitDirPath(outfitId, gender, direction) {
+  return `assets/outfits-dir/${outfitId}-${gender}-${direction}.png`;
+}
+
+export function outfitDirTemplatePath(outfitId, gender, direction) {
+  return `assets/outfits-dir/${outfitId}-${gender}-${direction}-template.png`;
+}

@@ -4,7 +4,7 @@
 // da região marcada é multiplicado pela cor escolhida naquele canal (ver
 // domain/outfitColors.js pra paleta). Addons são sobrepostos (compositados)
 // antes da coloração, exatamente como no jogo real.
-import { outfitAssetPath, outfitTemplatePath } from './outfitAssets.js?v=169';
+import { outfitAssetPath, outfitTemplatePath , outfitDirPath, outfitDirTemplatePath } from './outfitAssets.js?v=170';
 
 const SIZE = 64;
 const imageCache = new Map();
@@ -73,6 +73,29 @@ export async function renderOutfitToCanvas(canvas, { outfitId, gender, addon1, a
     const tplData = compositeLayers(templates);
     colorizeInPlace(imgData, tplData, colors || {});
 
+    canvas.width = SIZE;
+    canvas.height = SIZE;
+    const outCtx = canvas.getContext('2d');
+    outCtx.imageSmoothingEnabled = false;
+    outCtx.putImageData(imgData, 0, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Mesma recoloração, mas do quadro PARADO numa direção ('south'|'east'|'north'|
+// 'west'). Usado pelo palco do Treino Online, onde o boneco precisa encarar o
+// dummy à direita. Não aceita addons: estes quadros são só o visual base.
+export async function renderOutfitDirectionToCanvas(canvas, { outfitId, gender, direction, colors }) {
+  try {
+    const [img, tpl] = await Promise.all([
+      loadImage(outfitDirPath(outfitId, gender, direction)),
+      loadImage(outfitDirTemplatePath(outfitId, gender, direction)),
+    ]);
+    const imgData = compositeLayers([img]);
+    const tplData = compositeLayers([tpl]);
+    colorizeInPlace(imgData, tplData, colors || {});
     canvas.width = SIZE;
     canvas.height = SIZE;
     const outCtx = canvas.getContext('2d');
