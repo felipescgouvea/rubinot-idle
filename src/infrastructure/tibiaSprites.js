@@ -60,6 +60,12 @@ const ITEM_SPRITE_OVERRIDE = {
   // id legado de um item que era inventado ("Wand of Dementia"); agora é a
   // Wand of Defiance real — ver domain/items.js.
   wand_of_dementia: 'Wand_of_Defiance.gif',
+  // Recompensas de Task cujo nome no jogo é genérico e não existe como item
+  // único no Tibia — a sprite usa o representante real de cada conceito:
+  // "exercise weapon" é uma família (sword/axe/club/bow/rod/wand) e a carta de
+  // presa corresponde ao reroll de bônus do painel de Prey.
+  exercise_weapon: 'Exercise_Sword.gif',
+  prey_cards: 'Prey_Bonus_Reroll.png',
   worm_dirt: 'Lump_of_Dirt.gif',
   // "Dragon Scale" é uma página de desambiguação no TibiaWiki (não existe um
   // item genérico "Dragon Scale") — a variante correspondente ao drop do

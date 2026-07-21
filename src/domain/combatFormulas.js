@@ -4,9 +4,9 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=211';
-import { resolveEquippedItem } from './items.js?v=195';
-import { pickWeightedMonster } from './adminConfig.js?v=183';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=212';
+import { resolveEquippedItem } from './items.js?v=196';
+import { pickWeightedMonster } from './adminConfig.js?v=184';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
