@@ -2506,13 +2506,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .training-active-stage .training-active-info { align-items: flex-start; gap: 14px; }
 .training-stage {
   position: relative;
-  width: 260px;
-  height: 118px;
-  flex: 0 0 auto;
+  /* Largo: é uma CENA, não um selo. O corredor precisa de espaço horizontal
+     pro voo do projétil ficar legível entre o boneco e o dummy. */
+  width: 100%;
+  max-width: 440px;
+  min-width: 300px;
+  height: 132px;
+  flex: 1 1 340px;
   border: 2px solid var(--brown-btn-line);
   border-radius: 8px;
   overflow: hidden;
-  background: #14110b url(assets/sprites/ui/scenes/scene-cave.png?v=3) center -300px / 520px 952px no-repeat;
+  /* cena no tamanho NATIVO (560x1024), sem esticar — esticada ela borrava */
+  background: #14110b url(assets/sprites/ui/scenes/scene-cave.png?v=3) center -330px / 560px 1024px no-repeat;
   image-rendering: pixelated;
   box-shadow: inset 0 2px 14px #00000088;
 }
@@ -2520,28 +2525,32 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
   background: radial-gradient(ellipse 80% 88% at 50% 50%, transparent 46%, #00000099 100%);
 }
-.tstage-player { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); z-index: 2; }
-.tstage-player-canvas { width: 54px; height: 54px; image-rendering: pixelated; display: block; }
-.tstage-player-fallback { font-size: 32px; line-height: 1; }
-.tstage-dummy { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); z-index: 1; }
-.tstage-dummy img { width: 44px; height: 44px; image-rendering: pixelated; display: block; }
+.tstage-player { position: absolute; left: 26px; top: 50%; transform: translateY(-50%); z-index: 2; }
+.tstage-player-canvas { width: 58px; height: 58px; image-rendering: pixelated; display: block; }
+.tstage-player-fallback { font-size: 34px; line-height: 1; }
+.tstage-dummy { position: absolute; right: 30px; top: 50%; transform: translateY(-50%); z-index: 1; }
+.tstage-dummy img { width: 48px; height: 48px; image-rendering: pixelated; display: block; }
 
-/* Projétil: parte do boneco (esquerda) e chega no dummy (direita). */
+/* Projétil: parte do boneco (esquerda) e chega no dummy (direita).
+   A sprite de míssil do Tibia é ALTA e ESTREITA (a flecha é 7x23) e aponta pra
+   cima. Forçar 20x20 nela esmagava a proporção — a flecha aparecia achatada e
+   parecendo cortada. Aqui só a ALTURA é fixada e a largura acompanha, com o
+   +90° alinhando o "nariz" ao voo horizontal. Sem scale no meio do caminho:
+   flecha não encolhe em pleno ar (era o "diminuindo" que o Felipe viu).
+   O percurso é em %, então acompanha a largura do palco sem reajuste. */
 .tstage-missile {
-  position: absolute; left: 62px; top: 50%;
-  width: 20px; height: 20px; margin-top: -10px;
+  position: absolute; left: 84px; top: 50%;
+  height: 24px; width: auto; margin-top: -12px;
+  transform-origin: 50% 50%;
   image-rendering: pixelated; pointer-events: none; z-index: 3;
-  animation: tstage-shot 1.4s cubic-bezier(.4, 0, .7, .45) infinite;
+  animation: tstage-shot 1.4s cubic-bezier(.35, 0, .65, .5) infinite;
 }
 @keyframes tstage-shot {
-  0%   { transform: translateX(0) rotate(90deg) scale(.8); opacity: 0; }
-  10%  { opacity: 1; }
-  /* 132px leva o centro do projétil (x=72) até ~204, dentro do corpo do dummy
-     (centro em x=216, 44px de largura) — parar antes deixava a flecha morrendo
-     no ar, a um palmo do alvo. */
-  76%  { transform: translateX(132px) rotate(90deg) scale(1); opacity: 1; }
-  88%  { transform: translateX(144px) rotate(90deg) scale(1); opacity: 0; }
-  100% { transform: translateX(144px) rotate(90deg); opacity: 0; }
+  0%   { transform: translateX(0) rotate(90deg); opacity: 0; }
+  8%   { transform: translateX(0) rotate(90deg); opacity: 1; }
+  /* até a borda do dummy (que fica a 30px da direita, 48px de largura) */
+  78%  { transform: translateX(calc(100% - 0px)) rotate(90deg); opacity: 1; }
+  100% { transform: translateX(calc(100% - 0px)) rotate(90deg); opacity: 0; }
 }
 /* O dummy reage no instante do impacto (mesmo ciclo de 1.4s do projétil). */
 .tstage-melee .tstage-dummy img { animation: tstage-hit 1.4s ease-out infinite; }

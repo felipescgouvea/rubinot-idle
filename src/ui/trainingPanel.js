@@ -1,15 +1,15 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=176';
-import { TIBIA_SKILLS } from '../domain/character.js?v=203';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=174';
-import { SPELLS } from '../domain/spells.js?v=174';
-import { on, EVENTS } from '../shared/eventBus.js?v=174';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=179';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=180';
-import { t } from '../i18n/i18n.js?v=190';
-import { trainingStageHtml, mountTrainingStagePlayer } from './trainingStage.js?v=7';
+import { G } from '../application/gameStore.js?v=177';
+import { TIBIA_SKILLS } from '../domain/character.js?v=204';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=175';
+import { SPELLS } from '../domain/spells.js?v=175';
+import { on, EVENTS } from '../shared/eventBus.js?v=175';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=180';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=181';
+import { t } from '../i18n/i18n.js?v=191';
+import { trainingStageHtml, mountTrainingStagePlayer } from './trainingStage.js?v=8';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
@@ -84,8 +84,15 @@ function renderOnlineTrainingSection() {
 
   // Magic Level exige escolher ANTES qual magia de ataque vai ser lançada no
   // dummy — é ela que aparece na animação e define o elemento do golpe.
+  // TODA magia da vocação serve pra treinar Magic Level — de ataque E de cura.
+  // No Tibia o ML sobe por mana gasta, não pelo tipo da magia; restringir a
+  // ataque deixava o Paladino sem NENHUMA opção antes do nível 23 (a primeira
+  // magia de ataque dele é Ethereal Spear), com a lista inteira cadeada.
+  // Ordena por nível: as que já dá pra usar aparecem primeiro.
   const attackSpells = temMagia
-    ? Object.entries(SPELLS).filter(([, sp]) => sp.type === 'attack' && sp.voc.includes(G.vocation))
+    ? Object.entries(SPELLS)
+        .filter(([, sp]) => sp.voc.includes(G.vocation))
+        .sort((a, b) => a[1].level - b[1].level)
     : [];
   // O cabeçalho + explicação da magia só aparecem quando há TAMBÉM skill de
   // arma na tela (Paladino) — pro mago puro a intro geral já diz isso, e

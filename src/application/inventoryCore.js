@@ -2,7 +2,7 @@
 // battle pass e market — deixá-lo dentro de inventoryUseCases.js (que por
 // sua vez precisa chamar de volta a resolução de combate ao usar uma runa)
 // criaria import circular com metade do jogo.
-import { G } from './gameStore.js?v=176';
+import { G } from './gameStore.js?v=177';
 
 // A bag NÃO tem limite de tipos distintos: antes um teto de 20 fazia o loot
 // novo ser silenciosamente recusado com a bag cheia, o que num jogo idle
