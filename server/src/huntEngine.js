@@ -16,7 +16,7 @@ import {
 } from '../../src/domain/combatFormulas.js?v=159';
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
-import { XP_TABLE, VOC_TRAINING, applySkillGain } from '../../src/domain/character.js?v=156';
+import { XP_TABLE, VOC_TRAINING, applySkillGain, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=156';
 import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=139';
 import { SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
@@ -524,7 +524,26 @@ function doTick(session) {
   tick(session).catch(err => console.error('tick falhou', session.id, err.message)).finally(() => { session.busy = false; });
 }
 
+// Regeneração natural de HP/mana. Roda a CADA tick (2s), inclusive no meio da
+// luta e enquanto espera o próximo grupo nascer — no Tibia a regeneração nunca
+// para. Antes ela só existia com o jogo parado (um laço no cliente), então
+// caçar significava zero recuperação passiva: o personagem só se curava por
+// magia ou poção.
+//
+// Mesma taxa do modo parado (regen*3 a cada 2s = regen*90/min), pra não haver
+// diferença de ritmo entre caçar e descansar. Valores inteiros de propósito:
+// hp/mana são colunas INTEGER (ver vitalInt).
+function regenVitals(session) {
+  if (session.hp <= 0) return;                 // morto não regenera
+  const voc = VOCATIONS[session.vocation];
+  if (!voc) return;
+  const mult = session.promoted ? PROMOTION.regenMult : 1;
+  session.hp = Math.min(session.maxHp, session.hp + (voc.hpRegen || 0) * 3 * mult);
+  session.mana = Math.min(session.maxMana, session.mana + (voc.manaRegen || 0) * 3 * mult);
+}
+
 async function tick(session) {
+  regenVitals(session);   // antes de qualquer saída antecipada: regenera sempre
   const zone = ZONES[session.zoneId];
   if (!zone) return;
   if (!session.currentPack || !session.currentPack.length) {

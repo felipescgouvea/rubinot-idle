@@ -6,9 +6,9 @@
 // cache local (configCache) populado no boot por initGameConfig() — os
 // getters abaixo são síncronos de propósito (chamados no hot path da caçada),
 // então NUNCA fazem fetch, só leem o cache.
-import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=180';
-import { emit, EVENTS } from '../shared/eventBus.js?v=178';
-import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=185';
+import { DEFAULT_ADMIN_CONFIG, sanitizeAdminConfig, resolveZoneSpawn, resolveMonsterLoot, DEFAULT_PACK_MIN, DEFAULT_PACK_MAX } from '../domain/adminConfig.js?v=181';
+import { emit, EVENTS } from '../shared/eventBus.js?v=179';
+import { fetchGameConfig, pushGameConfig, checkIsAdmin } from '../infrastructure/authClient.js?v=186';
 
 // Antes do primeiro fetch resolver (ou se ele falhar), usa o default — nunca
 // trava o jogo por causa da config privilegiada ainda não ter chegado.

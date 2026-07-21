@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=180';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=185';
-import { ZONES } from '../domain/bestiary.js?v=198';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=207';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=178';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=210';
-import { monsterAttack } from '../domain/combatFormulas.js?v=209';
-import { elementMod } from '../domain/elements.js?v=176';
-import { STAMINA_MAX } from '../domain/stamina.js?v=176';
-import { ITEMS } from '../domain/items.js?v=191';
-import { MONSTERS } from '../domain/bestiary.js?v=198';
-import { RARITY_TIERS } from '../domain/rarity.js?v=177';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=178';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=178';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=177';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=177';
-import { saveGame } from './saveGameUseCase.js?v=180';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=181';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=179';
-import { t } from '../i18n/i18n.js?v=194';
+import { G, ACCOUNT } from './gameStore.js?v=181';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=186';
+import { ZONES } from '../domain/bestiary.js?v=199';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=208';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=179';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=211';
+import { monsterAttack } from '../domain/combatFormulas.js?v=210';
+import { elementMod } from '../domain/elements.js?v=177';
+import { STAMINA_MAX } from '../domain/stamina.js?v=177';
+import { ITEMS } from '../domain/items.js?v=192';
+import { MONSTERS } from '../domain/bestiary.js?v=199';
+import { RARITY_TIERS } from '../domain/rarity.js?v=178';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=179';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=179';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=178';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=178';
+import { saveGame } from './saveGameUseCase.js?v=181';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=182';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=180';
+import { t } from '../i18n/i18n.js?v=195';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -988,11 +988,11 @@ export function startRegen() {
   regenInterval = setInterval(() => {
     if (!G.vocation) return;
     const v = VOCATIONS[G.vocation];
-    // SÓ regenera HP/mana LOCALMENTE quando PARADO. Durante a caça, HP/mana são
-    // autoritativos do servidor (reconcile a cada 250ms, ver linha ~350) e o
-    // servidor NÃO faz regen passiva dentro da luta — só cura por magia/poção.
-    // Antes, este tick somava v.hpRegen caçando e o reconcile seguinte "puxava
-    // de volta" pro valor do servidor: HP/mana TREMIAM pra cima e caíam (M5).
+    // SÓ regenera HP/mana LOCALMENTE quando PARADO — e isso NÃO quer dizer que
+    // caçando não há regeneração: durante a caça quem regenera é o SERVIDOR, a
+    // cada tick (ver huntEngine.js: regenVitals), e o cliente só espelha o valor
+    // que vem no reconcile (a cada 250ms). Somar aqui também faria o HP/mana
+    // TREMEREM pra cima e caírem a cada poll (M5).
     if (!G.hunting) {
       G.hp = Math.min(getMaxHp(), G.hp + v.hpRegen * 3);
       G.mana = Math.min(getMaxMana(), G.mana + v.manaRegen * 3);
