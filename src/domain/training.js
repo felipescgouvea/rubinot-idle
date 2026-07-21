@@ -43,7 +43,10 @@ export function triesForTraining(skillId, seconds, multiplier = 1) {
 // como já era (dummy passivo, sem exigir animação de ataque real).
 export function onlineTrainableSkills(vocation) {
   if (vocation === 'knight') return ['sword', 'axe', 'club'];
-  if (vocation === 'paladin') return ['distance'];
+  // Paladino treina Distance E Magic Level: no Tibia ele tem magias de ataque
+  // próprias (Ethereal Spear, Divine Missile…) e sobe ML com elas como
+  // qualquer vocação — só mais devagar que um mago.
+  if (vocation === 'paladin') return ['distance', 'magic'];
   if (vocation === 'sorcerer' || vocation === 'druid') return ['magic'];
   return TRAINABLE_SKILLS;
 }

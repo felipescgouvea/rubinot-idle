@@ -2492,3 +2492,45 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .trade-buy-btn:hover:not(:disabled) { background: #359349; }
 .trade-buy-btn:disabled { background: #8d8d8d; border-color: #6f6f6f; cursor: not-allowed; }
 @media (max-width: 620px) { .trade-total { margin-left: 0; } .trade-buy-btn { width: 100%; } }
+
+/* ===== TREINO ONLINE: projétil voando até o boneco =====
+   O cartão de treino ativo era um ícone parado; agora a flecha (ou virote /
+   míssil do elemento da magia) atravessa a caixa e o boneco reage ao impacto.
+   Os dois tempos são o MESMO ciclo de 1.4s: o baque cai no instante em que o
+   projétil chega (85% do percurso), senão o boneco reagiria fora de hora.
+   Ver ui/trainingPanel.js: trainingProjectileHtml. */
+.training-online-anim { overflow: visible; }
+.training-projectile {
+  position: absolute;
+  left: -34px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 2;
+  animation: training-shot 1.4s cubic-bezier(.45, 0, .75, .4) infinite;
+}
+@keyframes training-shot {
+  0%   { transform: translateX(0) scale(.85); opacity: 0; }
+  12%  { opacity: 1; }
+  70%  { transform: translateX(40px) scale(1); opacity: 1; }
+  85%  { transform: translateX(48px) scale(1); opacity: 0; }
+  100% { transform: translateX(48px); opacity: 0; }
+}
+.training-online-anim .training-dummy-icon { animation: training-hit 1.4s ease-out infinite; }
+@keyframes training-hit {
+  0%, 80%  { transform: translateX(0); filter: none; }
+  86%      { transform: translateX(3px); filter: brightness(1.7) saturate(.6); }
+  92%      { transform: translateX(-2px); filter: brightness(1.2); }
+  100%     { transform: translateX(0); filter: none; }
+}
+/* Quem pediu menos movimento não vê o projétil nem o baque — só o ícone. */
+@media (prefers-reduced-motion: reduce) {
+  .training-projectile { display: none; }
+  .training-online-anim .training-dummy-icon { animation: none; }
+}
+/* Cabeçalho da sub-seção de Magic Level (Paladino treina arma E magia) */
+.training-subhead { display: flex; align-items: center; gap: 6px; margin: 14px 0 4px !important; font-size: 14px; }
+.training-subhead-icon { width: 18px; height: 18px; image-rendering: pixelated; }
