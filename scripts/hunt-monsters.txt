@@ -1,0 +1,130 @@
+rat | Rat | cheese:0.4, bones:0.2
+cave_rat | Cave Rat | cheese:0.4
+wolf | Wolf | meat:0.5, bones:0.3
+bug | Bug | worm_dirt:0.3, cheese:0.2
+troll | Troll | bones:0.9, leather_boots:0.12
+swamp_troll | Swamp Troll | fish:0.2, leather_boots:0.1, mouldy_cheese:0.1, spear:0.1, torch:0.1, swamp_grass:0.06, wood:0.06, medicine_pouch:0.06, troll_green:0.025, fishing_rod:0.007
+troll_trained_salamander | Troll-Trained Salamander | insectoid_eggs:0.35, simple_arrow:0.3, meat:0.3, chain_helmet:0.05, axe:0.05, bone_club:0.03, short_sword:0.03, studded_helmet:0.03, poison_arrow:0.08, shovel:0.015, health_potion:0.015
+dawnfly | Dawnfly | simple_arrow:0.4, poison_arrow:0.25, simple_jo_staff:0.04, doublet:0.03, mana_potion:0.06, health_potion:0.06
+woodling | Woodling | white_mushroom:0.35, simple_arrow:0.35, rope:0.15, studded_armor:0.05, hatchet:0.05, studded_shield:0.05
+meadow_strider | Meadow Strider | meat:0.4, fish:0.25, worm:0.25, mace:0.05, longsword:0.04, hatchet:0.05, rope:0.08
+elf | Elf | elvish_talisman:0.3, power_bolt:0.4
+elf_scout | Elf Scout | elvish_talisman:0.35, power_bolt:0.5
+elf_arcanist | Elf Arcanist | elvish_talisman:0.4, wand_of_vortex:0.03, crystal_coin:0.02
+goblin | Goblin | goblin_ear:0.5, bones:0.3
+goblin_scavenger | Goblin Scavenger | goblin_ear:0.5, bones:0.3
+goblin_assassin | Goblin Assassin | dagger:0.05, goblin_ear:0.5, bones:0.3
+goblin_leader | Goblin Leader | goblin_ear:0.6, leather_armor:0.1, bones:0.3
+minotaur | Minotaur | minotaur_horn:0.4, chain_armor:0.05
+minotaur_archer | Minotaur Archer | minotaur_horn:0.3, power_bolt:0.4
+minotaur_mage | Minotaur Mage | minotaur_horn:0.4, wand_of_vortex:0.02
+minotaur_guard | Minotaur Guard | minotaur_horn:0.5, chain_armor:0.06, studded_shield:0.04
+cyclops | Cyclops | cyclops_toe:0.4, halberd:0.04
+sibang | Sibang | cheese:0.3, bones:0.2
+merlkin | Merlkin | elvish_talisman:0.1, meat:0.3
+kongra | Kongra | meat:0.4, orc_tooth:0.2
+swarmer | Swarmer | compound_eye:0.15, swarmer_antenna:0.15, small_emerald:0.015, epee:0.005
+insectoid_worker | Insectoid Worker | compound_eye:0.3, dung_ball:0.3, health_potion:0.05, small_emerald:0.05, epee:0.015
+crawler | Crawler | platinum_coin:0.25, compound_eye:0.12, crawler_head_plating:0.12, great_health_potion:0.12, great_mana_potion:0.12, small_topaz:0.12, war_hammer:0.06, springsprout_rod:0.025, yellow_gem:0.025, grasshopper_legs:0.007
+drillworm | Drillworm | gold_coin:0.3
+devourer | Devourer | glob_of_glooth:0.15, small_diamond:0.15, small_sapphire:0.15, small_topaz:0.15, small_ruby:0.15, small_amethyst:0.15, small_emerald:0.15, glooth_blade:0.05, glooth_club:0.05, glooth_axe:0.05, talon:0.05, glooth_spear:0.05, springsprout_rod:0.05, glooth_amulet:0.015, yellow_gem:0.015, terra_rod:0.015, glooth_cape:0.005, green_gem:0.005
+glooth_anemone | Glooth Anemone | slimy_leaf_tentacle:0.15, bowl_of_glooth_soup:0.15, small_topaz:0.15, small_emerald:0.15, small_ruby:0.15, strong_mana_potion:0.15, strong_health_potion:0.15, glooth_whip:0.05, green_mushroom:0.05, ultimate_health_potion:0.05, glooth_axe:0.015, glooth_amulet:0.015, glooth_club:0.015, glooth_spear:0.015, glooth_blade:0.015, glooth_cape:0.015
+behemoth | Behemoth | behemoth_claw:0.3, giant_sword:0.015, crystal_coin:0.05
+orc | Orc | orc_tooth:0.5, studded_armor:0.06
+orc_spearman | Orc Spearman | orc_tooth:0.5, bones:0.3
+orc_warrior | Orc Warrior | orc_tooth:0.5, studded_armor:0.05, bones:0.3
+shadowthorn | Shadowthorn | bones:0.3, small_stone:0.2
+shadowthorn_splinter | Shadowthorn Splinter | bones:0.3, small_stone:0.2
+shadowthorn_deceiver | Shadowthorn Deceiver | elvish_talisman:0.2, bones:0.3
+shadowthorn_templar | Shadowthorn Templar | elvish_talisman:0.3, studded_armor:0.05, bones:0.3
+amazon | Amazon | amazon_armor:0.08, power_bolt:0.5
+valkyrie | Valkyrie | gold_coin:1
+spider | Spider | spider_fangs:0.3, worm_dirt:0.2
+tarantula | Tarantula | spider_fangs:0.6
+giant_spider | Giant Spider | spider_silk:0.4, knight_armor:0.02, plate_legs:0.05
+corym_charlatan | Corym Charlatan | rat_cheese:0.1, soft_cheese:0.1, cheese:0.1, bola:0.1, earflap:0.1, cheese_cutter:0.1, ratana:0.025, life_preserver:0.025, leather_harness:0.025, cheesy_figurine:0.025, spike_shield:0.025, rat_god_doll:0.007
+corym_skirmisher | Corym Skirmisher | cheese:0.1, rat_cheese:0.1, soft_cheese:0.1, cheese_cutter:0.1, earflap:0.1, bola:0.1, life_preserver:0.06, ratana:0.06, cheesy_figurine:0.025, spike_shield:0.025, leather_harness:0.025, rat_god_doll:0.007
+corym_vanguard | Corym Vanguard | cheese:0.1, bola:0.1, cheese_cutter:0.1, earflap:0.1, soft_cheese:0.1, rat_cheese:0.1, spike_shield:0.06, ratana:0.06, life_preserver:0.06, cheesy_figurine:0.06, leather_harness:0.06, spiky_club:0.06, rat_god_doll:0.007
+stonerefiner | Stonerefiner | platinum_coin:0.3, glob_of_acid_slime:0.25, coal:0.25, rare_earth:0.25, poisonous_slime:0.1, halfdigested_stones:0.1, rat_cheese:0.1, stonerefiners_skull:0.12
+orc_shaman | Orc Shaman | orc_tooth:0.5, elvish_talisman:0.15, wand_of_cosmic_energy:0.02
+orc_rider | Orc Rider | orc_tooth:0.5, studded_armor:0.06
+orc_berserker | Orc Berserker | orc_tooth:0.5, studded_armor:0.08
+orc_warlord | Orc Warlord | orc_tooth:0.6, studded_armor:0.15, halberd:0.05
+glooth_bandit | Glooth Bandit | ultimate_health_potion:0.12, great_mana_potion:0.15, great_spirit_potion:0.1, great_health_potion:0.12, small_emerald:0.15, small_topaz:0.15, glooth_bag:0.15, glooth_steak:0.25, glooth_sandwich:0.25, glooth_capsule:0.08, tainted_glooth_capsule:0.08, glooth_amulet:0.05, glooth_blade:0.06, green_gem:0.06, glooth_axe:0.05, war_axe:0.04, terra_mantle:0.04, terra_boots:0.04, terra_hood:0.03, glooth_cape:0.03, beastslayer_axe:0.03, glooth_spear:0.03, rubber_cap:0.02, terra_legs:0.02, glooth_club:0.01, skull_staff:0.008
+glooth_brigand | Glooth Brigand | great_mana_potion:0.15, ultimate_health_potion:0.12, great_spirit_potion:0.1, glooth_steak:0.25, glooth_sandwich:0.25, glooth_bag:0.15, tainted_glooth_capsule:0.08, glooth_capsule:0.08, glooth_blade:0.06, glooth_amulet:0.05, green_gem:0.06, glooth_axe:0.05, terra_mantle:0.04, terra_boots:0.04, giant_shimmering_pearl_green:0.04, terra_hood:0.03, terra_amulet:0.03, mercenary_sword:0.03, glooth_spear:0.03, rubber_cap:0.02, terra_legs:0.02, butchers_axe:0.02, dreaded_cleaver:0.02, glooth_club:0.01, heat_core:0.01
+vicious_squire | Vicious Squire | bolt:0.1, crossbow:0.09, meat:0.12, great_health_potion:0.1, small_amethyst:0.06, small_diamond:0.06, small_emerald:0.06, halberd:0.05, war_hammer:0.025, scarf:0.025, might_ring:0.008, guardian_shield:0.007, knight_legs:0.007, warrior_helmet:0.007, piggy_bank:0.006
+renegade_knight | Renegade Knight | platinum_coin:0.3, meat:0.12, great_health_potion:0.1, scroll_of_heroic_deeds:0.1, two_handed_sword:0.06, small_ruby:0.06, red_piece_of_cloth:0.06, small_notebook:0.06, war_hammer:0.025, crown_legs:0.02, crown_armor:0.02, crown_helmet:0.02, fire_sword:0.025, piggy_bank:0.007, crown_shield:0.006
+hero | Hero | plate_legs:0.05, giant_sword:0.005
+cult_believer | Cult Believer | meat:0.1, great_health_potion:0.1, small_diamond:0.06, small_emerald:0.06, small_amethyst:0.06, cultish_robe:0.06, scarf:0.025, piggy_bank:0.007, might_ring:0.007
+cult_enforcer | Cult Enforcer | meat:0.12, great_health_potion:0.1, cultish_robe:0.06, small_diamond:0.06, small_amethyst:0.06, small_emerald:0.06, halberd:0.05, scarf:0.025, war_hammer:0.025, might_ring:0.008, guardian_shield:0.007, knight_legs:0.007, warrior_helmet:0.007, piggy_bank:0.006
+vile_grandmaster | Vile Grandmaster | platinum_coin:0.3, meat:0.12, great_health_potion:0.1, scroll_of_heroic_deeds:0.1, wedding_ring:0.06, small_sapphire:0.06, small_ruby:0.06, small_notebook:0.06, war_hammer:0.06, red_piece_of_cloth:0.06, crown_armor:0.02, crown_legs:0.02, fire_sword:0.025, crown_helmet:0.02, platinum_amulet:0.008, crown_shield:0.006, piggy_bank:0.007
+dragon | Dragon | dragon_scale:0.6, dragon_ham:0.8, dragonbone_staff:0.02
+dragon_lord | Dragon Lord | royal_helmet:0.01, life_crystal:0.5
+bog_raider | Bog Raider | boggy_dreads:0.15, great_health_potion:0.05, great_spirit_potion:0.05, plate_legs:0.05, belted_cape:0.015, springsprout_rod:0.015, ultimate_health_potion:0.015, paladin_armor:0.005
+hydra | Hydra | hydra_head:0.3, hydra_egg:0.05, medusa_shield:0.01
+wyrm | Wyrm | dragon_scale:0.3, life_crystal:0.15
+elder_wyrm | Elder Wyrm | platinum_coin:0.3, dragon_ham:0.3, strong_health_potion:0.1, strong_mana_potion:0.1, crossbow:0.1, wyrm_scale:0.1, small_diamond:0.06, soul_orb:0.06, wand_of_draconia:0.06, lightning_pendant:0.025, lightning_legs:0.025, power_bolt:0.025, wand_of_starstorm:0.025, lightning_boots:0.007, lightning_robe:0.007, dragonbone_staff:0.007, shadow_sceptre:0.007, composite_hornbow:0.007, legs_of_wisdom:0.007, shockwave_amulet:0.007
+banshee | Banshee | life_crystal:0.2, death_ring:0.01
+spectre | Spectre | blank_rune:0.3, wand_of_cosmic_energy:0.15, lyre:0.15, demonic_essence:0.15, soul_orb:0.15, white_piece_of_cloth:0.05, shiny_stone:0.015, great_mana_potion:0.015, silver_brooch:0.015, relic_sword:0.015, death_ring:0.005, stealth_ring:0.005, demonbone_amulet:0.005, shadow_sceptre:0.005, stone_skin_amulet:0.005
+grim_reaper | Grim Reaper | demon_dust:0.5, death_ring:0.03, crystal_coin:0.05
+werehyaena | Werehyaena | great_health_potion:0.25, platinum_coin:0.25, werehyaena_nose:0.12, small_enchanted_amethyst:0.12, life_preserver:0.12, moonlight_crystals:0.12, red_gem:0.12, combat_knife:0.12, yellow_gem:0.12, halberd:0.12, red_crystal_fragment:0.12, axe:0.12, meat:0.12, knife:0.12, green_crystal_fragment:0.06, ratana:0.06, werehyaena_talisman:0.025, werehyaena_trophy:0.007
+werehyaena_shaman | Werehyaena Shaman | platinum_coin:0.25, great_mana_potion:0.12, small_amethyst:0.12, hailstorm_rod:0.12, wand_of_starstorm:0.12, green_crystal_splinter:0.12, moonlight_crystals:0.12, werehyaena_nose:0.12, small_enchanted_emerald:0.06, protection_amulet:0.06, sword_ring:0.06, doublet:0.06, black_shield:0.06, wand_of_voodoo:0.06, brown_crystal_splinter:0.06, werehyaena_talisman:0.025, werehyaena_trophy:0.007
+werelion | Werelion | demon_dust:0.35, crystal_coin:0.2
+white_lion | White Lion | terra_boots:0.15, axe:0.15, leather_boots:0.15, great_spirit_potion:0.15, green_crystal_shard:0.15, lions_mane:0.15, twin_hooks:0.15, war_hammer:0.05, green_crystal_fragment:0.05, cyan_crystal_fragment:0.05, yellow_gem:0.05, combat_knife:0.05
+werelioness | Werelioness | platinum_coin:0.25, ham:0.25, small_enchanted_sapphire:0.12, black_pearl:0.12, crystal_sword:0.12, moonlight_crystals:0.12, lions_mane:0.12, rapier:0.12, soul_orb:0.12, meat:0.12, ankh:0.12, leather_helmet:0.12, serpent_sword:0.12, ivory_carving:0.06, white_pearl:0.06, steel_helmet:0.06, lightning_headband:0.06, magma_legs:0.025, crown_helmet:0.025, lion_figurine:0.007, white_silk_flower:0.007
+cobra_assassin | Cobra Assassin | platinum_coin:0.3
+cobra_scout | Cobra Scout | platinum_coin:0.3
+cobra_vizier | Cobra Vizier | platinum_coin:0.3
+hellspawn | Hellspawn | great_health_potion:0.25, hellspawn_tail:0.12, battle_shield:0.12, morning_star:0.12, assassin_star:0.12, ultimate_health_potion:0.12, demonic_essence:0.12, red_mushroom:0.12, small_topaz:0.06, rusted_armor:0.06, knight_legs:0.06, warrior_helmet:0.06, spiked_squelcher:0.025, berserk_potion:0.025, slightly_rusted_armor:0.007, black_skull_item:0.007, dracoyle_statue:0.007, onyx_flail:0.007
+dawnfire_asura | Dawnfire Asura | platinum_coin:0.25, flask_of_demonic_blood:0.25, soul_orb:0.12, golden_lotus_brooch:0.12, peacock_feather_fan:0.12, demonic_essence:0.12, great_mana_potion:0.12, small_ruby:0.12, small_diamond:0.06, small_emerald:0.06, small_topaz:0.06, small_amethyst:0.06, mystic_turban:0.06, red_piece_of_cloth:0.06, wand_of_inferno:0.06, mysterious_fetish:0.06, red_gem:0.06, focus_cape:0.06, magma_coat:0.025, ruby_necklace:0.025, death_ring:0.025, oriental_shoes:0.007, blue_gem:0.007, spellbook_of_mind_control:0.007
+midnight_asura | Midnight Asura | platinum_coin:0.15, flask_of_demonic_blood:0.1, soul_orb:0.1, golden_lotus_brooch:0.1, peacock_feather_fan:0.1, demonic_essence:0.1, great_health_potion:0.1, assassin_star:0.1, white_pearl:0.1, small_diamond:0.1, small_sapphire:0.1, silver_brooch:0.06, black_pearl:0.06, small_topaz:0.06, small_ruby:0.06, small_emerald:0.06, necrotic_rod:0.06, tribal_mask:0.06, silver_amulet:0.06, yellow_gem:0.025, underworld_rod:0.025, blue_robe:0.025, oriental_shoes:0.008, assassin_dagger:0.008, crystal_ring:0.008, blue_gem:0.008, skullcracker_armor:0.008, gold_ingot:0.008, spellbook_of_mind_control:0.008
+draken_spellweaver | Draken Spellweaver | dragon_scale:0.25, crystal_coin:0.3
+draken_warmaster | Draken Warmaster | dragon_scale:0.4, titan_axe:0.01, crystal_coin:0.5
+falcon_knight | Falcon Knight | chain_armor:0.1, studded_shield:0.1, crystal_coin:0.18
+falcon_paladin | Falcon Paladin | chain_armor:0.1, studded_shield:0.1, crystal_coin:0.2
+dark_torturer | Dark Torturer | demon_dust:0.2, strange_helmet:0.015
+grimeleech | Grimeleech | gold_coin:0.3
+vexclaw | Vexclaw | demon_dust:0.35, platinum_coin:1, crystal_coin:0.25
+defiler | Defiler | demonic_essence:0.15, glob_of_acid_slime:0.15, glob_of_tar:0.15, small_emerald:0.15, soul_orb:0.15, small_diamond:0.05, small_ruby:0.05, talon:0.05, death_ring:0.05, yellow_gem:0.05, red_gem:0.05, blue_gem:0.015, green_gem:0.015
+plaguesmith | Plaguesmith | behemoth_claw:0.2, giant_sword:0.008, platinum_coin:0.7
+retching_horror | Retching Horror | demon_dust:0.3, platinum_coin:0.6
+choking_fear | Choking Fear | platinum_coin:0.3, brown_crystal_splinter:0.25, great_spirit_potion:0.1, great_mana_potion:0.1, ultimate_health_potion:0.1, dead_weight:0.1, hemp_rope:0.1, blue_crystal_splinter:0.1, brown_piece_of_cloth:0.06, life_ring:0.06, beastslayer_axe:0.06, yellow_piece_of_cloth:0.06, energy_ring:0.06, ring_of_healing:0.06, guardian_shield:0.06, green_crystal_shard:0.06, shadow_sceptre:0.025, red_piece_of_cloth:0.025, spellbook_of_mind_control:0.025, traditional_sai:0.025, terra_boots:0.008, underworld_rod:0.008, springsprout_rod:0.008, cluster_of_solace:0.008, terra_mantle:0.008
+crazed_winter_rearguard | Crazed Winter Rearguard | platinum_coin:0.3
+crazed_summer_rearguard | Crazed Summer Rearguard | platinum_coin:0.3
+crazed_summer_vanguard | Crazed Summer Vanguard | platinum_coin:0.3
+crazed_winter_vanguard | Crazed Winter Vanguard | platinum_coin:0.3
+frazzlemaw | Frazzlemaw | demon_dust:0.3, crystal_coin:0.3
+silencer | Silencer | gold_coin:0.3
+guzzlemaw | Guzzlemaw | demon_dust:0.35, platinum_coin:0.6, crystal_coin:0.35
+warlock | Warlock | skull_staff:0.03, demon_dust:0.3, crystal_coin:0.03, boots_of_haste:0.004
+usurper_archer | Usurper Archer | meat:0.3, ultimate_health_potion:0.3, broken_longbow:0.15, black_pearl:0.15, silver_brooch:0.15, mino_shield:0.15, warrior_helmet:0.15, lion_crest:0.15, lion_cloak_patch:0.15, knife:0.15, assassin_dagger:0.05, white_pearl:0.05, ornate_crossbow:0.05, knight_armor:0.05, gemmed_figurine:0.05, coral_brooch:0.05, glacier_shoes:0.05, giant_shimmering_pearl_green:0.05, wood_cape:0.05, emerald_bangle:0.015, elvish_bow:0.005
+usurper_knight | Usurper Knight | leather_legs:0.3, knight_legs:0.15, violet_gem:0.15, lion_cloak_patch:0.15, meat:0.15, lion_crest:0.15, great_mana_potion:0.05, collar_of_orange_plasma:0.05, gold_ingot:0.05, blue_gem:0.05, green_gem:0.05, magma_legs:0.05
+dragolisk | Dragolisk | platinum_coin:0.3
+wardragon | Wardragon | platinum_coin:0.3
+mega_dragon | Mega Dragon | platinum_coin:0.3
+bulltaur_alchemist | Bulltaur Alchemist | platinum_coin:0.3
+bulltaur_brute | Bulltaur Brute | platinum_coin:0.3
+bulltaur_forgepriest | Bulltaur Forgepriest | platinum_coin:0.3, bulltaur_horn:0.35, small_topaz:0.15, staff_piece:0.1, soul_orb:0.1, gold_nugget:0.1, idol_of_the_forge:0.06, gold_ingot:0.02, spellbook_of_mind_control:0.02, lightning_robe:0.02, wand_of_defiance:0.02, bulltaur_forgepriest_soul_core:0.03, blue_gem:0.015, violet_gem:0.015, stone_skin_amulet:0.008, white_gem:0.01
+ripper_spectre | Ripper Spectre | platinum_coin:0.3, great_spirit_potion:0.1, two_handed_sword:0.1, terra_rod:0.1, silver_brooch:0.1, emerald_bangle:0.06, twin_hooks:0.06, springsprout_rod:0.06, green_ectoplasm:0.06, coral_brooch:0.06, serpent_sword:0.025, hexagonal_ruby:0.025, assassin_dagger:0.025, spike_sword:0.008, wyvern_fang:0.008, stone_skin_amulet:0.008
+burster_spectre | Burster Spectre | platinum_coin:0.3, great_spirit_potion:0.1, protection_amulet:0.1, life_crystal:0.1, wand_of_voodoo:0.06, wand_of_cosmic_energy:0.06, dragon_necklace:0.06, blue_ectoplasm:0.06, glacier_amulet:0.06, orb:0.06, platinum_amulet:0.06, hailstorm_rod:0.025, hexagonal_ruby:0.025, glacial_rod:0.025, mind_stone:0.008, elven_amulet:0.008, garlic_necklace:0.008, shockwave_amulet:0.008, strange_symbol:0.008, stone_skin_amulet:0.008
+gazer_spectre | Gazer Spectre | platinum_coin:0.3, small_diamond:0.1, brown_crystal_splinter:0.1, small_sapphire:0.1, red_gem:0.1, red_crystal_fragment:0.1, small_enchanted_ruby:0.1, yellow_gem:0.06, golden_idol_of_tukh:0.06, wand_of_draconia:0.06, wand_of_inferno:0.06, red_ectoplasm:0.06, magma_coat:0.06, prismatic_quartz:0.06, small_enchanted_emerald:0.06, onyx_chip:0.06, hexagonal_ruby:0.025, stone_skin_amulet:0.008
+gorger_inferniarch | Gorger Inferniarch | small_sapphire:0.05, club_ring:0.05, spiked_squelcher:0.05, demonic_core_essence:0.05, gorger_antlers:0.05, time_ring:0.015, demonic_matter:0.015, mummified_demon_finger:0.015, gold_nugget:0.005
+broodrider_inferniarch | Broodrider Inferniarch | blue_crystal_splinter:0.15, power_bolt:0.05, drill_bolt:0.05, onyx_chip:0.05, demonic_core_essence:0.05, broodrider_saddle:0.05, magma_legs:0.015, demonic_matter:0.015, mummified_demon_finger:0.015, arbalest:0.005
+sineater_inferniarch | Sineater Inferniarch | great_mana_potion:0.15, ruby_necklace:0.05, small_ruby:0.05, red_gem:0.05, wand_of_defiance:0.05, demonic_core_essence:0.05, sineater_wing:0.05, wooden_spellbook:0.015, demonic_matter:0.015, mummified_demon_finger:0.015
+girtablilu_warrior | Girtablilu Warrior | platinum_coin:0.3
+venerable_girtablilu | Venerable Girtablilu | platinum_coin:0.3
+animated_feather | Animated Feather | small_sapphire:0.3
+icecold_book | Icecold Book | platinum_coin:0.3
+squid_warden | Squid Warden | platinum_coin:0.3
+burning_book | Burning Book | platinum_coin:0.3
+ink_blob | Ink Blob | small_diamond:0.3
+rage_squid | Rage Squid | platinum_coin:0.3
+guardian_of_tales | Guardian of Tales | small_diamond:0.3
+biting_book | Biting Book | book_page:0.3, glowing_rune:0.3, silken_bookmark:0.3, big_bone:0.15, meat:0.05, ruby_necklace:0.05
+cursed_book | Cursed Book | book_page:0.3
+knowledge_elemental | Knowledge Elemental | silken_bookmark:0.3, book_page:0.3, glowing_rune:0.3, small_amethyst:0.3, quill:0.15, energy_ring:0.15, flash_arrow:0.15, guardian_shield:0.15, mana_potion:0.15, throwing_star:0.15, crystal_sword:0.15, ultimate_health_potion:0.15, wand_of_cosmic_energy:0.05, ultimate_mana_potion:0.05, wand_of_defiance:0.05, obsidian_lance:0.05, silver_amulet:0.05, crystal_ring:0.05, lightning_pendant:0.05, might_ring:0.015, spellweavers_robe:0.005
+energetic_book | Energetic Book | platinum_coin:0.3
+brain_squid | Brain Squid | violet_crystal_shard:0.3
+lavafungus | Lavafungus | platinum_coin:0.3
+lavaworm | Lavaworm | platinum_coin:0.3
+streaked_devourer | Streaked Devourer | platinum_coin:0.3
