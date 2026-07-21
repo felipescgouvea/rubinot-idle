@@ -768,13 +768,13 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   image-rendering: pixelated;
 }
 #dungeon-stage[data-biome="cave"]::before {
-  inset: -32px 58px;                 /* paredes de rocha (60px) aparecem nas laterais */
-  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 32px 32px repeat;
+  inset: -128px 58px;                /* paredes de rocha (60px) aparecem nas laterais */
+  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 128px 128px repeat;  /* terra + pedrinhas espalhadas (natural) */
   opacity: 1;
   image-rendering: pixelated;
 }
-#dungeon-stage[data-biome="cave"].searching::before { animation: floor-scroll-32 0.55s linear infinite; }
-@keyframes floor-scroll-32 { to { background-position: 0 32px; } }
+#dungeon-stage[data-biome="cave"].searching::before { animation: floor-scroll-128 2s linear infinite; }
+@keyframes floor-scroll-128 { to { background-position: 0 128px; } }
 
 /* boneco: no meio do palco (centralizado por left/top + margem negativa, pra
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */
