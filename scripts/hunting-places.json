@@ -1,0 +1,4659 @@
+[
+ {
+  "nome": "Ab'Dendriel Elf Cave",
+  "cidade": "Ab'Dendriel",
+  "nivel": 20,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Wand of Cosmic Energy",
+   "Elvish Bow",
+   "Holy Orchid"
+  ]
+ },
+ {
+  "nome": "Ab'Dendriel Slimes Cave",
+  "cidade": "Ab'Dendriel",
+  "nivel": 13,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Life Ring",
+   "Bat Wing",
+   "Silver Amulet"
+  ]
+ },
+ {
+  "nome": "Abandoned Sewers",
+  "cidade": "Rathleton",
+  "nivel": 200,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Magic Plate Armor",
+   "Mastermind Shield",
+   "Demon Trophy"
+  ]
+ },
+ {
+  "nome": "Al Dee Rat Cave",
+  "cidade": "Rookgaard",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Alatar Lake",
+  "cidade": "Thais",
+  "nivel": 15,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Bonelord Eye",
+   "Terra Rod",
+   "Bonelord Shield"
+  ]
+ },
+ {
+  "nome": "Alchemist Quarter",
+  "cidade": "Yalahar",
+  "nivel": 35,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Magic Plate Armor",
+   "Mastermind Shield",
+   "Skull Helmet"
+  ]
+ },
+ {
+  "nome": "Amazon Tower",
+  "cidade": "Carlin",
+  "nivel": 15,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Witch Hat",
+   "Necrotic Rod"
+  ]
+ },
+ {
+  "nome": "Ambassador's Mind",
+  "cidade": "Issavi",
+  "nivel": 350,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Ancient Ancestorial Grounds",
+  "cidade": "Gray Beach",
+  "nivel": 250,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Warrior's Axe",
+   "Warrior's Shield",
+   "Necklace of the Deep"
+  ]
+ },
+ {
+  "nome": "Ancient Ruins Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 11,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Ancient Tiara",
+   "Maxilla Maximus",
+   "Mini Mummy"
+  ]
+ },
+ {
+  "nome": "Ancient Temple",
+  "cidade": "Thais",
+  "nivel": 8,
+  "exp": "Varies",
+  "loot": "Varies",
+  "melhorLoot": [
+   "Dragon Shield",
+   "Wand of Inferno",
+   "Dragonbone Staff"
+  ]
+ },
+ {
+  "nome": "Ankrahmun Library Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 10,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Holy Scarab",
+   "Maxilla Maximus",
+   "Mini Mummy"
+  ]
+ },
+ {
+  "nome": "Antrum of the Fallen",
+  "cidade": "Kazordoon",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Aragonia",
+  "cidade": "Thais",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Arena and Zoo Quarter",
+  "cidade": "Yalahar",
+  "nivel": 15,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Ashta'daramai",
+  "cidade": "Ankrahmun",
+  "nivel": 50,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Blue Gem",
+   "Hailstorm Rod",
+   "Magma Monocle"
+  ]
+ },
+ {
+  "nome": "Astral Shaper Dungeon",
+  "cidade": "Port Hope",
+  "nivel": 120,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Astral Shaper Ruins",
+  "cidade": "Port Hope",
+  "nivel": 130,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Asura Citadel",
+  "cidade": "Marapur",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Asura Palace",
+  "cidade": "Port Hope",
+  "nivel": 200,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Asura Vaults",
+  "cidade": "Port Hope",
+  "nivel": 300,
+  "exp": "Good",
+  "loot": "Very Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Azzilon Castle",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Azzilon Catacombs",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Banuta",
+  "cidade": "Port Hope",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Carrot on a Stick",
+   "Banana Staff",
+   "Wand of Inferno"
+  ]
+ },
+ {
+  "nome": "Barbarian Settlements",
+  "cidade": "Svargrond",
+  "nivel": 22,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Barkless Cult Trial Zone",
+  "cidade": "Ab'dendriel",
+  "nivel": 150,
+  "exp": "Very Good",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Bed of Nails",
+   "Tiger Eye",
+   "Fig Leaf"
+  ]
+ },
+ {
+  "nome": "Barren Drift",
+  "cidade": "Edron",
+  "nivel": 300,
+  "exp": "Moderate",
+  "loot": "Poor",
+  "melhorLoot": [
+   "Spectral Gold Nugget",
+   "Diamond",
+   "Spectral Silver Nugget"
+  ]
+ },
+ {
+  "nome": "Beregar/Bonelord Cave",
+  "cidade": "Yalahar",
+  "nivel": 60,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Haunted Blade",
+   "Bonelord Helmet",
+   "Spiked Squelcher"
+  ]
+ },
+ {
+  "nome": "Beregar Mines",
+  "cidade": "Yalahar",
+  "nivel": 55,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Terra Boots",
+   "Guardian Shield",
+   "Iron Ore"
+  ]
+ },
+ {
+  "nome": "Bittermor",
+  "cidade": "Svargrond",
+  "nivel": 28,
+  "exp": "good",
+  "loot": "good",
+  "melhorLoot": [
+   "Red Piece of Cloth",
+   "Mammoth Fur Cape",
+   "Fur Boots"
+  ]
+ },
+ {
+  "nome": "Bloodfire Gorge",
+  "cidade": "Roshamuul",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Book World",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Blank Imbuement Scroll"
+  ]
+ },
+ {
+  "nome": "Bounac",
+  "cidade": "Thais",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Bounacean Lion",
+  "cidade": "Edron",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Brain Grounds",
+  "cidade": "Venore",
+  "nivel": 300,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Brimstone Bug Caves",
+  "cidade": "Farmine",
+  "nivel": 90,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Magic Sulphur",
+   "Wailing Widow's Necklace",
+   "Platinum Amulet"
+  ]
+ },
+ {
+  "nome": "Bulltaur Lair",
+  "cidade": "Venore",
+  "nivel": 400,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Spellweaver's Robe",
+   "White Gem"
+  ]
+ },
+ {
+  "nome": "Buried Cathedral",
+  "cidade": "Roshamuul",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Calassa",
+  "cidade": "Liberty Bay",
+  "nivel": 90,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Giant Shrimp",
+   "Skull Helmet",
+   "Relic Sword"
+  ]
+ },
+ {
+  "nome": "Carlin Amazon Camp",
+  "cidade": "Carlin",
+  "nivel": 8,
+  "exp": "--",
+  "loot": "--",
+  "melhorLoot": [
+   "Bear Paw",
+   "Small Diamond",
+   "Protective Charm"
+  ]
+ },
+ {
+  "nome": "Carlin Corym Cave",
+  "cidade": "Carlin",
+  "nivel": 35,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Rat God Doll",
+   "Leather Harness",
+   "Ratana"
+  ]
+ },
+ {
+  "nome": "Carlin Dragon Lair",
+  "cidade": "Carlin",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Carlin Graveyard",
+  "cidade": "Carlin",
+  "nivel": 8,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Silver Amulet",
+   "Bunch of Troll Hair",
+   "Gold Coin"
+  ]
+ },
+ {
+  "nome": "Carlin Sewers",
+  "cidade": "Carlin",
+  "nivel": 8,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Bat Wing"
+  ]
+ },
+ {
+  "nome": "Carnivora's Rocks",
+  "cidade": "Port Hope",
+  "nivel": 250,
+  "exp": "bad",
+  "loot": "very good",
+  "melhorLoot": [
+   "Blue Robe",
+   "Warrior Helmet",
+   "Terra Mantle"
+  ]
+ },
+ {
+  "nome": "Caverna Exanima",
+  "cidade": "Darashia",
+  "nivel": 80,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Little Bowl of Myrrh"
+  ]
+ },
+ {
+  "nome": "Caves of the Lost",
+  "cidade": "Kazordoon",
+  "nivel": 110,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "War Axe",
+   "Fire Axe",
+   "Terra Legs"
+  ]
+ },
+ {
+  "nome": "Cemetery Quarter",
+  "cidade": "Yalahar",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Sweet Smelling Bait",
+   "Maxilla Maximus",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Chakoya Iceberg",
+  "cidade": "Port Hope",
+  "nivel": 15,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Chaochai",
+  "cidade": "Farmine",
+  "nivel": 70,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Lizard Trophy",
+   "Zaoan Legs",
+   "Zaoan Armor"
+  ]
+ },
+ {
+  "nome": "Chazorai",
+  "cidade": "Farmine",
+  "nivel": 90,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Lizard Trophy",
+   "Ring of the Sky",
+   "Zaoan Legs"
+  ]
+ },
+ {
+  "nome": "Chocolate Mines",
+  "cidade": "Candia",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Chor",
+  "cidade": "Port Hope",
+  "nivel": 50,
+  "exp": "average",
+  "loot": "good",
+  "melhorLoot": [
+   "Wand of Inferno",
+   "Terra Rod",
+   "Wyvern Fang"
+  ]
+ },
+ {
+  "nome": "Chyllfroest",
+  "cidade": "Svargrond",
+  "nivel": null,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Bunnyslippers",
+   "Magic Plate Armor",
+   "Divine Plate"
+  ]
+ },
+ {
+  "nome": "Claustrophobic Inferno",
+  "cidade": "Kilmaresh",
+  "nivel": 600,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Cobra Bastion",
+  "cidade": "Ankrahmun",
+  "nivel": 300,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Cormaya Dwarf Cave",
+  "cidade": "Edron",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Terra Boots",
+   "Iron Ore",
+   "Dwarven Ring"
+  ]
+ },
+ {
+  "nome": "Corruption Hole",
+  "cidade": "Farmine",
+  "nivel": 100,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Zaoan Helmet",
+   "Guardian Boots",
+   "Zaoan Sword"
+  ]
+ },
+ {
+  "nome": "Corym Black Market",
+  "cidade": "Liberty Bay",
+  "nivel": 45,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Corym Mines",
+  "cidade": "Venore",
+  "nivel": 60,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Court of Summer",
+  "cidade": "Feyrist",
+  "nivel": 150,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Crystal Crossbow",
+   "Magma Monocle",
+   "Magma Legs"
+  ]
+ },
+ {
+  "nome": "Court of Winter",
+  "cidade": "Svargrond",
+  "nivel": 150,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Collar of Green Plasma",
+   "Glacier Kilt",
+   "Spellbook of Mind Control"
+  ]
+ },
+ {
+  "nome": "Crimson Court",
+  "cidade": "Thais",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Crumbling Caverns",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Spiked Squelcher",
+   "Blank Imbuement Scroll",
+   "Book with a Dragon"
+  ]
+ },
+ {
+  "nome": "Crystal Enigma",
+  "cidade": "Edron",
+  "nivel": 600,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Crystal Gardens",
+  "cidade": "Liberty Bay",
+  "nivel": 70,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Sapphire Hammer",
+   "Dragon Scale Mail",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Crystal Grounds",
+  "cidade": "Kazordoon",
+  "nivel": 80,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Wand of Inferno",
+   "Wyvern Fang",
+   "Emerald Bangle"
+  ]
+ },
+ {
+  "nome": "Cult Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 25,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Red Robe",
+   "Vampire Shield"
+  ]
+ },
+ {
+  "nome": "Cyclopolis",
+  "cidade": "Edron",
+  "nivel": 34,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Steel Boots",
+   "Royal Helmet"
+  ]
+ },
+ {
+  "nome": "Cyclops Camp",
+  "cidade": "Thais",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Moon Backpack",
+   "Spiked Squelcher",
+   "Club Ring"
+  ]
+ },
+ {
+  "nome": "Darama Terramite Cave",
+  "cidade": "Ankrahmun",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Terramite Shell",
+   "Terramite Legs",
+   "Terramite Eggs"
+  ]
+ },
+ {
+  "nome": "Darashia Dragon Lair",
+  "cidade": "Darashia",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Darashia Rotworm Caves",
+  "cidade": "Darashia",
+  "nivel": 7,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Carrion Worm Fang",
+   "Mace",
+   "Sword"
+  ]
+ },
+ {
+  "nome": "Darashia Wyrm Hills",
+  "cidade": "Darashia",
+  "nivel": 60,
+  "exp": "Bad",
+  "loot": "Average",
+  "melhorLoot": [
+   "Composite Hornbow",
+   "Focus Cape",
+   "Wand of Starstorm"
+  ]
+ },
+ {
+  "nome": "Dark Cathedral",
+  "cidade": "Venore",
+  "nivel": 20,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Mini Mummy",
+   "Reins"
+  ]
+ },
+ {
+  "nome": "Dark Grounds",
+  "cidade": "Roshamuul",
+  "nivel": 200,
+  "exp": "Bad",
+  "loot": "Average",
+  "melhorLoot": [
+   "String of Mending",
+   "Magic Plate Armor",
+   "Steel Boots"
+  ]
+ },
+ {
+  "nome": "Dark Pyramid",
+  "cidade": "Darashia",
+  "nivel": 7,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Mini Mummy",
+   "Wand of Cosmic Energy",
+   "Black Shield"
+  ]
+ },
+ {
+  "nome": "Darklight Core",
+  "cidade": "Northern Darama",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Dawnport Crystal Dungeon",
+  "cidade": "Dawnport",
+  "nivel": 10,
+  "exp": "okay",
+  "loot": "okay",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Deep Desert",
+  "cidade": "Darashia",
+  "nivel": 250,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Skull Helmet"
+  ]
+ },
+ {
+  "nome": "Deeper Banuta",
+  "cidade": "Port Hope",
+  "nivel": 90,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Zaoan Helmet",
+   "Spirit Container",
+   "Dragon Scale Mail"
+  ]
+ },
+ {
+  "nome": "Deeper Catacombs",
+  "cidade": "Darashia",
+  "nivel": 10,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Life Ring",
+   "Small Diamond",
+   "Two Handed Sword"
+  ]
+ },
+ {
+  "nome": "Demon Forge",
+  "cidade": "Edron",
+  "nivel": 100,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Golden Boots",
+   "Demonwing Axe",
+   "Great Axe"
+  ]
+ },
+ {
+  "nome": "Demon Hell",
+  "cidade": "Edron",
+  "nivel": 100,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Magic Plate Armor",
+   "Sweet Smelling Bait",
+   "Mastermind Shield"
+  ]
+ },
+ {
+  "nome": "Demona",
+  "cidade": "Carlin",
+  "nivel": 70,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Ring of the Sky",
+   "Golden Armor",
+   "Spellbook of Mind Control"
+  ]
+ },
+ {
+  "nome": "Demonwar Crypt",
+  "cidade": "Edron",
+  "nivel": 60,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Demonic Finger",
+   "Steel Boots",
+   "Butcher's Axe"
+  ]
+ },
+ {
+  "nome": "Desecrated Glade",
+  "cidade": "Kazordoon",
+  "nivel": 100,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Berserk Potion",
+   "Pair of Iron Fists",
+   "War Drum"
+  ]
+ },
+ {
+  "nome": "Desert Dungeon",
+  "cidade": "Kazordoon",
+  "nivel": 25,
+  "exp": "Bad",
+  "loot": "Average",
+  "melhorLoot": [
+   "Bonelord Eye",
+   "Terra Rod",
+   "Wand of Cosmic Energy"
+  ]
+ },
+ {
+  "nome": "Dessert Dungeons",
+  "cidade": "Candia",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Draconia",
+  "cidade": "Ab'Dendriel",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Mini Mummy",
+   "Dragon Scale Mail",
+   "Royal Helmet"
+  ]
+ },
+ {
+  "nome": "Dragonblaze Peaks",
+  "cidade": "Farmine",
+  "nivel": 40,
+  "exp": "Very Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Dream Labyrinth",
+  "cidade": "Feyrist",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Drefia",
+  "cidade": "Darashia",
+  "nivel": 13,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Drefia Grim Reaper Dungeons",
+  "cidade": "Darashia",
+  "nivel": 150,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Sweet Smelling Bait",
+   "Nightmare Blade",
+   "Demonbone Amulet"
+  ]
+ },
+ {
+  "nome": "Drefia Wyrm Lair",
+  "cidade": "Darashia",
+  "nivel": 80,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Nightmare Blade",
+   "Composite Hornbow",
+   "Skullcracker Armor"
+  ]
+ },
+ {
+  "nome": "Drillworm Caves",
+  "cidade": "Kazordoon",
+  "nivel": 90,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Spiked Squelcher",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Druid Room",
+  "cidade": "Venore",
+  "nivel": 70,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Demonbone Amulet",
+   "Boots of Haste",
+   "Relic Sword"
+  ]
+ },
+ {
+  "nome": "Dryad Gardens",
+  "cidade": "Edron",
+  "nivel": 40,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Small Emerald",
+   "Bullseye Potion",
+   "Elvish Bow"
+  ]
+ },
+ {
+  "nome": "Dusalk's Troll Clan Cave",
+  "cidade": "Kazordoon",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Wand of Cosmic Energy",
+   "Taurus Mace",
+   "Purple Robe"
+  ]
+ },
+ {
+  "nome": "Dwacatra",
+  "cidade": "Kazordoon",
+  "nivel": 27,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Wand of Cosmic Energy",
+   "Wand of Decay",
+   "Iron Ore"
+  ]
+ },
+ {
+  "nome": "Dwarf Mines",
+  "cidade": "Kazordoon",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Dwelling of the Forgotten",
+  "cidade": "Kazordoon",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Dworc Camp",
+  "cidade": "Port Hope",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Earth Sphere",
+  "cidade": "Edron",
+  "nivel": 80,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Swamplair Armor",
+   "Terra Mantle",
+   "Mother Soil"
+  ]
+ },
+ {
+  "nome": "Ebb and Flow",
+  "cidade": "Kilmaresh",
+  "nivel": 600,
+  "exp": "Extremely Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Bag You Desire"
+  ]
+ },
+ {
+  "nome": "Edron Bog Raider Cave",
+  "cidade": "Edron",
+  "nivel": 42,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Paladin Armor",
+   "Springsprout Rod",
+   "Belted Cape"
+  ]
+ },
+ {
+  "nome": "Edron Dragon Lair",
+  "cidade": "Edron",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Edron Earth Elemental Cave",
+  "cidade": "Edron",
+  "nivel": 25,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Paladin Armor",
+   "Springsprout Rod",
+   "Belted Cape"
+  ]
+ },
+ {
+  "nome": "Edron Goblin Cave",
+  "cidade": "Edron",
+  "nivel": 10,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Honeycomb",
+   "Small Stone",
+   "Gold Coin"
+  ]
+ },
+ {
+  "nome": "Edron Lycanthropes Cave",
+  "cidade": "Edron",
+  "nivel": 100,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Edron Orc Cave",
+  "cidade": "Edron",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Warrior Helmet",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Edron Rotworm Cave",
+  "cidade": "Edron",
+  "nivel": 7,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Carrion Worm Fang",
+   "Mace",
+   "Sword"
+  ]
+ },
+ {
+  "nome": "Edron Troll-Goblin Peninsula",
+  "cidade": "Edron",
+  "nivel": 7,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Wolf Paw",
+   "Silver Amulet",
+   "Small Stone"
+  ]
+ },
+ {
+  "nome": "Edron Troll Cave",
+  "cidade": "Edron",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Bear Paw",
+   "Honeycomb",
+   "Silver Amulet"
+  ]
+ },
+ {
+  "nome": "Edron Undead Cave",
+  "cidade": "Edron",
+  "nivel": 45,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Vampire Shield",
+   "Ice Rapier",
+   "Spike Sword"
+  ]
+ },
+ {
+  "nome": "Edron Vampire Crypt",
+  "cidade": "Edron",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Vampire Shield",
+   "Noble Axe",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Edron Wyvern Hill",
+  "cidade": "Edron",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Wand of Inferno",
+   "Wyvern Fang",
+   "Emerald Bangle"
+  ]
+ },
+ {
+  "nome": "Elvenbane",
+  "cidade": "Ab'Dendriel",
+  "nivel": 19,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Slingshot",
+   "Dragon Shield",
+   "Wolf Trophy"
+  ]
+ },
+ {
+  "nome": "Energy Elemental Lair",
+  "cidade": "Darashia",
+  "nivel": 70,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Wand of Cosmic Energy",
+   "Guardian Shield",
+   "Crystal Sword"
+  ]
+ },
+ {
+  "nome": "Energy Sphere",
+  "cidade": "Edron",
+  "nivel": 80,
+  "exp": "average",
+  "loot": "average",
+  "melhorLoot": [
+   "Voltage Armor",
+   "Pure Energy",
+   "Wand of Starstorm"
+  ]
+ },
+ {
+  "nome": "Exotic Cave",
+  "cidade": "Issavi",
+  "nivel": 100,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Terra Mantle",
+   "Terra Boots",
+   "Terra Amulet"
+  ]
+ },
+ {
+  "nome": "Factory Quarter",
+  "cidade": "Yalahar",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Tin Key",
+   "Reins",
+   "Berserker"
+  ]
+ },
+ {
+  "nome": "Falcon Bastion",
+  "cidade": "Farmine",
+  "nivel": 250,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Mastermind Shield",
+   "Golden Armor",
+   "Demonbone Amulet"
+  ]
+ },
+ {
+  "nome": "Farmine Mines",
+  "cidade": "Farmine",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Iron Ore",
+   "Red Gem",
+   "Piece of Marble Rock"
+  ]
+ },
+ {
+  "nome": "Femor Hills",
+  "cidade": "Carlin",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Slingshot",
+   "Deer Trophy",
+   "Wolf Trophy"
+  ]
+ },
+ {
+  "nome": "Fenrock",
+  "cidade": "Yalahar",
+  "nivel": 25,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Fenrock Dragon Lair",
+  "cidade": "Yalahar",
+  "nivel": 80,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Ferngrims Gate",
+  "cidade": "Kazordoon",
+  "nivel": 45,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Moon Backpack",
+   "Slingshot",
+   "Dragon Shield"
+  ]
+ },
+ {
+  "nome": "Ferumbras Citadel",
+  "cidade": "Liberty Bay",
+  "nivel": 140,
+  "exp": "Very good",
+  "loot": "Very good",
+  "melhorLoot": [
+   "Maxilla Maximus",
+   "Magic Plate Armor",
+   "Mastermind Shield"
+  ]
+ },
+ {
+  "nome": "Feyrist Meadows",
+  "cidade": "Feyrist",
+  "nivel": 70,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Nightmare Blade",
+   "Boots of Haste",
+   "Wooden Spellbook"
+  ]
+ },
+ {
+  "nome": "Fibula Dungeon",
+  "cidade": "Thais",
+  "nivel": 9,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Fiehonja",
+  "cidade": "Gray Beach",
+  "nivel": 120,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Foxtail",
+   "Ornate Crossbow",
+   "Warrior's Axe"
+  ]
+ },
+ {
+  "nome": "Fields of Glory",
+  "cidade": "Carlin",
+  "nivel": 15,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Witch Hat",
+   "Bear Paw"
+  ]
+ },
+ {
+  "nome": "Fire Dragon Dojo",
+  "cidade": "Farmine",
+  "nivel": 90,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Zaoan Helmet",
+   "Zaoan Legs",
+   "Zaoan Armor"
+  ]
+ },
+ {
+  "nome": "Fire Sphere",
+  "cidade": "Edron",
+  "nivel": 80,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Lavos Armor",
+   "Magma Coat",
+   "Eternal Flames"
+  ]
+ },
+ {
+  "nome": "Folda",
+  "cidade": "Carlin",
+  "nivel": 7,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Wand of Inferno",
+   "Leviathan's Amulet",
+   "Giant Shimmering Pearl"
+  ]
+ },
+ {
+  "nome": "Forbidden Lands",
+  "cidade": "Port Hope",
+  "nivel": 60,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Carrot on a Stick",
+   "Boots of Haste",
+   "Steel Boots"
+  ]
+ },
+ {
+  "nome": "Forbidden Temple",
+  "cidade": "Ankrahmun",
+  "nivel": 40,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Lunar Staff",
+   "Blue Robe",
+   "Amber Staff"
+  ]
+ },
+ {
+  "nome": "Forbidden Temple (Carlin)",
+  "cidade": "Carlin",
+  "nivel": 90,
+  "exp": "Very Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Crown Legs",
+   "Crown Armor",
+   "Crown Shield"
+  ]
+ },
+ {
+  "nome": "Foreigner Quarter",
+  "cidade": "Yalahar",
+  "nivel": 19,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Foreigner Quarter/Elves",
+  "cidade": "Yalahar",
+  "nivel": 19,
+  "exp": "25-30k",
+  "loot": "Good",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Royal Helmet",
+   "Swamplair Armor"
+  ]
+ },
+ {
+  "nome": "Forest Fury Camp",
+  "cidade": "Carlin",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Elvish Bow",
+   "Small Emerald",
+   "Small Topaz"
+  ]
+ },
+ {
+  "nome": "Forest of Life",
+  "cidade": "Edron",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Forgotten Crypt",
+  "cidade": "Ab'Dendriel",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Forgotten Tomb",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Formorgar Glacier",
+  "cidade": "Svargrond",
+  "nivel": 30,
+  "exp": "Bad",
+  "loot": "Very bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Formorgar Glacier/Crystal Spiders",
+  "cidade": "Svargrond",
+  "nivel": 65,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Spider Silk",
+   "Sapphire Hammer",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Formorgar Glacier/Mammoths",
+  "cidade": "Svargrond",
+  "nivel": 28,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Mammoth Fur Cape",
+   "Wand of Inferno",
+   "Wyvern Fang"
+  ]
+ },
+ {
+  "nome": "Formorgar Mines",
+  "cidade": "Svargrond",
+  "nivel": 70,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Magic Plate Armor",
+   "Heavy Mace",
+   "Mastermind Shield"
+  ]
+ },
+ {
+  "nome": "Forsaken Crypt",
+  "cidade": "Ab'Dendriel",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Forsaken Mine/Cyclopes",
+  "cidade": "Ab'Dendriel",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Forsaken Mine/Forest Furies",
+  "cidade": "Ab'Dendriel",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Forsaken Mine/Lost Dwarves",
+  "cidade": "Ab'Dendriel",
+  "nivel": 110,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "War Axe",
+   "Terra Legs",
+   "Chaos Mace"
+  ]
+ },
+ {
+  "nome": "Forsaken Mine/Rorcs",
+  "cidade": "Ab'Dendriel",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Frost Dragon Tunnel",
+  "cidade": "Svargrond",
+  "nivel": 75,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Frozen Trench",
+  "cidade": "Svargrond",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Giant Shrimp",
+   "Skull Helmet",
+   "Relic Sword"
+  ]
+ },
+ {
+  "nome": "Furious Crater",
+  "cidade": "Kilmaresh",
+  "nivel": 600,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Fury Dungeon",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Gardens of Night",
+  "cidade": "Darashia",
+  "nivel": 70,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Hailstorm Rod",
+   "Black Shield",
+   "Crystal Necklace"
+  ]
+ },
+ {
+  "nome": "Gaz'haragoth's Nightmare",
+  "cidade": "Roshamuul",
+  "nivel": 200,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Ghastly Dragon Lair",
+  "cidade": "Farmine",
+  "nivel": 130,
+  "exp": "Average",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Zaoan Helmet",
+   "Guardian Boots",
+   "Zaoan Sword"
+  ]
+ },
+ {
+  "nome": "Ghostlands",
+  "cidade": "Carlin",
+  "nivel": 13,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Knight Legs",
+   "Knight Armor",
+   "Spider Silk"
+  ]
+ },
+ {
+  "nome": "Ghostship",
+  "cidade": "Darashia",
+  "nivel": 45,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Vampire Shield",
+   "Guardian Shield",
+   "Ice Rapier"
+  ]
+ },
+ {
+  "nome": "Ghoul Hill",
+  "cidade": "Edron",
+  "nivel": 19,
+  "exp": "Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Guardian Shield",
+   "Life Ring",
+   "Black Pearl"
+  ]
+ },
+ {
+  "nome": "Gloom Pillars",
+  "cidade": "Northern Darama",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Glooth Bandit Hideouts",
+  "cidade": "Rathleton",
+  "nivel": 100,
+  "exp": "Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "War Axe",
+   "Control Unit",
+   "Glooth Cape"
+  ]
+ },
+ {
+  "nome": "Glooth Factory",
+  "cidade": "Rathleton",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Gnarlhound Caves",
+  "cidade": "Farmine",
+  "nivel": 20,
+  "exp": "very bad",
+  "loot": "very bad",
+  "melhorLoot": [
+   "Shaggy Tail"
+  ]
+ },
+ {
+  "nome": "Gnome Deep Hub",
+  "cidade": "Kazordoon",
+  "nivel": 100,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Golem Workshop",
+  "cidade": "Kazordoon",
+  "nivel": 80,
+  "exp": "bad",
+  "loot": "bad",
+  "melhorLoot": [
+   "Glorious Axe",
+   "Cyan Crystal Fragment",
+   "Crystal Sword"
+  ]
+ },
+ {
+  "nome": "Goroma",
+  "cidade": "Liberty Bay",
+  "nivel": 60,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Goroma/Dragon Lairs",
+  "cidade": "Liberty Bay",
+  "nivel": 65,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Great Pearl Fan Reef",
+  "cidade": "Marapur",
+  "nivel": 350,
+  "exp": "Bad",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Green Belt",
+  "cidade": "Issavi",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Green Claw Swamp",
+  "cidade": "Venore",
+  "nivel": 25,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Mini Mummy",
+   "Witch Hat"
+  ]
+ },
+ {
+  "nome": "Grimvale",
+  "cidade": "Edron",
+  "nivel": 100,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grotto of the Lost",
+  "cidade": "Kazordoon",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Damnation",
+  "cidade": "Roshamuul",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Deceit",
+  "cidade": "Roshamuul",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Despair",
+  "cidade": "Roshamuul",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Destruction",
+  "cidade": "Roshamuul",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Fire",
+  "cidade": "Roshamuul",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Plague",
+  "cidade": "Farmine",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Grounds of Undeath",
+  "cidade": "Roshamuul",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Guzzlemaw Valley",
+  "cidade": "Roshamuul",
+  "nivel": 200,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "String of Mending",
+   "Nightmare Blade",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Halls of Ascension",
+  "cidade": "Farmine",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Haunted Cellar",
+  "cidade": "Venore",
+  "nivel": 200,
+  "exp": "good",
+  "loot": "good",
+  "melhorLoot": [
+   "Hexagonal Ruby",
+   "Assassin Dagger",
+   "Spider Silk"
+  ]
+ },
+ {
+  "nome": "Haunted Temple",
+  "cidade": "Port Hope",
+  "nivel": 200,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Haunted Tomb",
+  "cidade": "Darashia",
+  "nivel": 250,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Hexagonal Ruby",
+   "Glacial Rod",
+   "Stone Skin Amulet"
+  ]
+ },
+ {
+  "nome": "Helheim",
+  "cidade": "Svargrond",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Divine Plate",
+   "Skull Helmet",
+   "Amulet of Loss"
+  ]
+ },
+ {
+  "nome": "Hell Hub",
+  "cidade": "Roshamuul",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Hellgate",
+  "cidade": "Ab'Dendriel",
+  "nivel": 35,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Bonelord Helmet",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Hellgorge",
+  "cidade": "Liberty Bay",
+  "nivel": 80,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Magic Plate Armor",
+   "Mastermind Shield"
+  ]
+ },
+ {
+  "nome": "Hero Cave",
+  "cidade": "Edron",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Reins"
+  ]
+ },
+ {
+  "nome": "Hero Cave/Star Room",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Reins",
+   "Hailstorm Rod",
+   "Terra Rod"
+  ]
+ },
+ {
+  "nome": "Hidden Lizard Temple",
+  "cidade": "Thais",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Hive Outpost",
+  "cidade": "Liberty Bay",
+  "nivel": 130,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Horestis Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Fist on a Stick",
+   "Gold Ingot",
+   "Clay Lump"
+  ]
+ },
+ {
+  "nome": "Hot Spot",
+  "cidade": "Kazordoon",
+  "nivel": 90,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Hrodmir Quara Scout Caves",
+  "cidade": "Svargrond",
+  "nivel": 40,
+  "exp": "60k+",
+  "loot": "",
+  "melhorLoot": [
+   "Knight Armor",
+   "Wand of Cosmic Energy",
+   "Fish Fin"
+  ]
+ },
+ {
+  "nome": "Hrodmir Stone Golem Caves",
+  "cidade": "Svargrond",
+  "nivel": 15,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Iron Ore",
+   "Shiny Stone",
+   "Piece of Marble Rock"
+  ]
+ },
+ {
+  "nome": "Hunter Camp",
+  "cidade": "Port Hope",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Hyaena Lairs",
+  "cidade": "Darashia",
+  "nivel": 200,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Hydra Hill",
+  "cidade": "Port Hope",
+  "nivel": 75,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Royal Helmet",
+   "Medusa Shield"
+  ]
+ },
+ {
+  "nome": "Hydra Mountain",
+  "cidade": "Port Hope",
+  "nivel": 75,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Royal Helmet",
+   "Medusa Shield"
+  ]
+ },
+ {
+  "nome": "Ice Sphere",
+  "cidade": "Edron",
+  "nivel": 80,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Crystalline Armor",
+   "Flawless Ice Crystal",
+   "Giant Shimmering Pearl"
+  ]
+ },
+ {
+  "nome": "Ice Witch Temple",
+  "cidade": "Svargrond",
+  "nivel": 60,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Iksupan",
+  "cidade": "Port Hope",
+  "nivel": 150,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Iksupan Last Stand",
+  "cidade": "Port Hope",
+  "nivel": 400,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Iksupan Occupied Sanctuary",
+  "cidade": "Port Hope",
+  "nivel": 400,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Iksupan Undercity",
+  "cidade": "Port Hope",
+  "nivel": 400,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Iksupan Waterways",
+  "cidade": "Port Hope",
+  "nivel": 400,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Inukaya",
+  "cidade": "Svargrond",
+  "nivel": 25,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Northern Pike",
+   "Shard",
+   "Rainbow Trout"
+  ]
+ },
+ {
+  "nome": "Isle of Ada",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Isle of the Kings",
+  "cidade": "Carlin",
+  "nivel": 20,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Sweet Smelling Bait",
+   "Ring of the Sky",
+   "Golden Armor"
+  ]
+ },
+ {
+  "nome": "Isle of the Mists",
+  "cidade": "Venore",
+  "nivel": 25,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Issavi Sewers",
+  "cidade": "Issavi",
+  "nivel": 300,
+  "exp": "Very Good",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Jaccus Maxxen's Dungeon",
+  "cidade": "Rathleton",
+  "nivel": 200,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Jaded Roots",
+  "cidade": "Northern Darama",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Jakundaf Desert",
+  "cidade": "Kazordoon",
+  "nivel": 7,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Lion's Mane",
+   "Scorpion Tail",
+   "Antlers"
+  ]
+ },
+ {
+  "nome": "Jotunar",
+  "cidade": "Svargrond",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Shard",
+   "Norse Shield",
+   "Furry Club"
+  ]
+ },
+ {
+  "nome": "Kazordoon Dragon Lair",
+  "cidade": "Kazordoon",
+  "nivel": 40,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Dragon Shield",
+   "Wand of Inferno",
+   "Dragonbone Staff"
+  ]
+ },
+ {
+  "nome": "Kazordoon Minotaurs",
+  "cidade": "Kazordoon",
+  "nivel": 15,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Wand of Cosmic Energy",
+   "Minotaur Trophy",
+   "Taurus Mace"
+  ]
+ },
+ {
+  "nome": "Kendram Benson's Grave",
+  "cidade": "Rookgaard",
+  "nivel": 7,
+  "exp": "very bad",
+  "loot": "very bad",
+  "melhorLoot": [
+   "Mace",
+   "Sword",
+   "Hatchet"
+  ]
+ },
+ {
+  "nome": "Kha'zeel Dragon Lairs/Kha'labal",
+  "cidade": "Ankrahmun",
+  "nivel": 25,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Kha'zeel Dragon Lairs/Tiquanda",
+  "cidade": "Port Hope",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Kha'zeel Scarab Lair",
+  "cidade": "Ankrahmun",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Killer Caiman Cave",
+  "cidade": "Farmine",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Giant Shimmering Pearl",
+   "Crocodile Boots",
+   "Obsidian Lance"
+  ]
+ },
+ {
+  "nome": "Kilmaresh Catacombs",
+  "cidade": "Issavi",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Kilmaresh Central Steppe",
+  "cidade": "Issavi",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Kilmaresh Mountains",
+  "cidade": "Issavi",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Kilmaresh Southern Steppe",
+  "cidade": "Issavi",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Krailos Ruins",
+  "cidade": "Rathleton",
+  "nivel": 110,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Krailos Spider Lair",
+  "cidade": "Rathleton",
+  "nivel": 100,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Krailos Steppe",
+  "cidade": "Rathleton",
+  "nivel": 70,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Krimhorn",
+  "cidade": "Svargrond",
+  "nivel": 35,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Red Piece of Cloth",
+   "Mammoth Fur Cape",
+   "Diamond Sceptre"
+  ]
+ },
+ {
+  "nome": "Laguna Islands",
+  "cidade": "Liberty Bay",
+  "nivel": 27,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "War Hammer",
+   "Crystal Necklace",
+   "Small Ruby"
+  ]
+ },
+ {
+  "nome": "Lair of the Treeling Witch",
+  "cidade": "Edron",
+  "nivel": 30,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Bullseye Potion",
+   "Bag of Apple Slices",
+   "Witch Hat"
+  ]
+ },
+ {
+  "nome": "Larva Caves",
+  "cidade": "Ankrahmun",
+  "nivel": 13,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Terra Hood",
+   "Scarab Shield",
+   "Daramian Waraxe"
+  ]
+ },
+ {
+  "nome": "Last Sanctum",
+  "cidade": "Edron",
+  "nivel": 100,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Lich Hell",
+  "cidade": "Liberty Bay",
+  "nivel": 90,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Maxilla Maximus",
+   "Mini Mummy",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Lion's Rock",
+  "cidade": "Darashia",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Bonebeast Trophy",
+   "Crown Helmet",
+   "Terra Hood"
+  ]
+ },
+ {
+  "nome": "Lion Sanctum",
+  "cidade": "Darashia",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Lost Mines",
+  "cidade": "Edron",
+  "nivel": 7,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Life Ring",
+   "Brown Piece of Cloth",
+   "Viking Helmet"
+  ]
+ },
+ {
+  "nome": "Lower Drainage Area",
+  "cidade": "Rathleton",
+  "nivel": 150,
+  "exp": "",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Mycological Bow",
+   "Terra Mantle",
+   "Muck Rod"
+  ]
+ },
+ {
+  "nome": "Lower Roshamuul",
+  "cidade": "Roshamuul",
+  "nivel": 130,
+  "exp": "Good",
+  "loot": "Very good",
+  "melhorLoot": [
+   "Nightmare Blade",
+   "Boots of Haste",
+   "Assassin Dagger"
+  ]
+ },
+ {
+  "nome": "Lower Spike",
+  "cidade": "Kazordoon",
+  "nivel": 150,
+  "exp": "Poor",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Lycanthrope Grounds",
+  "cidade": "Edron",
+  "nivel": 100,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Mad Mage Room",
+  "cidade": "Thais",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Spider Silk",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Mad Mage Valley",
+  "cidade": "Kazordoon",
+  "nivel": 8,
+  "exp": "very poor",
+  "loot": "very poor",
+  "melhorLoot": [
+   "honeycomb"
+  ]
+ },
+ {
+  "nome": "Magician Quarter",
+  "cidade": "Yalahar",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Magician Quarter/Academy of Magic",
+  "cidade": "Yalahar",
+  "nivel": null,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Reins",
+   "Mastermind Potion",
+   "Cream Cake"
+  ]
+ },
+ {
+  "nome": "Magician Quarter/Efreet Territory",
+  "cidade": "Yalahar",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Green Gem",
+   "Green Piece of Cloth",
+   "Magma Monocle"
+  ]
+ },
+ {
+  "nome": "Magician Quarter/Marid Territory",
+  "cidade": "Yalahar",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Blue Gem",
+   "Hailstorm Rod",
+   "Magma Monocle"
+  ]
+ },
+ {
+  "nome": "Magician Quarter/Research Centre",
+  "cidade": "Yalahar",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Crown Armor",
+   "Royal Helmet",
+   "Mercenary Sword"
+  ]
+ },
+ {
+  "nome": "Magician Quarter/Residential Area",
+  "cidade": "Yalahar",
+  "nivel": null,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Reins",
+   "Ring of the Sky",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Magician Quarter/Restricted Area",
+  "cidade": "Yalahar",
+  "nivel": null,
+  "exp": "Good",
+  "loot": "Very good",
+  "melhorLoot": [
+   "Magic Plate Armor",
+   "Mastermind Shield",
+   "Demon Trophy"
+  ]
+ },
+ {
+  "nome": "Magician Tower",
+  "cidade": "Kazordoon",
+  "nivel": 16,
+  "exp": "Very Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Reins",
+   "Wolf Trophy",
+   "Guardian Shield"
+  ]
+ },
+ {
+  "nome": "Mal'ouquah",
+  "cidade": "Ankrahmun",
+  "nivel": 50,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Mini Mummy",
+   "Green Gem",
+   "Wand of Inferno"
+  ]
+ },
+ {
+  "nome": "Malada",
+  "cidade": "Liberty Bay",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Paladin Armor",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Mammoth Shearing Factory",
+  "cidade": "Svargrond",
+  "nivel": 30,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Shard",
+   "Witch Hat"
+  ]
+ },
+ {
+  "nome": "Mawhawk's Lair",
+  "cidade": "Roshamuul",
+  "nivel": 140,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Maze of Lost Souls",
+  "cidade": "Carlin",
+  "nivel": 40,
+  "exp": "bad",
+  "loot": "average",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Medusa Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 120,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Royal Helmet",
+   "Swamplair Armor",
+   "Spellbook of Mind Control"
+  ]
+ },
+ {
+  "nome": "Medusa Tower",
+  "cidade": "Port Hope",
+  "nivel": 200,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Meriana",
+  "cidade": "Liberty Bay",
+  "nivel": 10,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Crocodile Boots",
+   "Honeycomb",
+   "Steel Helmet"
+  ]
+ },
+ {
+  "nome": "Meriana Gargoyle Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Middle Spike",
+  "cidade": "Kazordoon",
+  "nivel": 70,
+  "exp": "Poor",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Minotaur Camp",
+  "cidade": "Thais",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Minotaur Leather",
+   "Bronze Amulet",
+   "Minotaur Horn"
+  ]
+ },
+ {
+  "nome": "Minotaur Hell",
+  "cidade": "Rookgaard",
+  "nivel": 6,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Mace",
+   "Plate Shield",
+   "Chain Armor"
+  ]
+ },
+ {
+  "nome": "Minotaurs Cult Cave",
+  "cidade": "Thais",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Mino Lance",
+   "Warrior Helmet",
+   "Gold Ingot"
+  ]
+ },
+ {
+  "nome": "Mintwallin",
+  "cidade": "Thais",
+  "nivel": 27,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Shield",
+   "Wand of Inferno",
+   "Dragonbone Staff"
+  ]
+ },
+ {
+  "nome": "Mirrored Nightmare",
+  "cidade": "Kilmaresh",
+  "nivel": 600,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Misguided Camp",
+  "cidade": "Thais",
+  "nivel": 150,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Mistrock",
+  "cidade": "Yalahar",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Spiked Squelcher",
+   "Club Ring",
+   "Cyclops Trophy"
+  ]
+ },
+ {
+  "nome": "Monster Graveyard",
+  "cidade": "Edron",
+  "nivel": 600,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Mother of Scarabs Lair",
+  "cidade": "Ankrahmun",
+  "nivel": 55,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Mini Mummy",
+   "Boots of Haste",
+   "Bonebeast Trophy"
+  ]
+ },
+ {
+  "nome": "Mount Sternum",
+  "cidade": "Thais",
+  "nivel": 20,
+  "exp": "good",
+  "loot": "bad",
+  "melhorLoot": [
+   "Spiked Squelcher",
+   "Life Ring",
+   "Club Ring"
+  ]
+ },
+ {
+  "nome": "Mount Sternum/Dragon Cave",
+  "cidade": "Thais",
+  "nivel": 28,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Shield",
+   "Wand of Inferno",
+   "Dragonbone Staff"
+  ]
+ },
+ {
+  "nome": "Mount Sternum/Undead Cave",
+  "cidade": "Thais",
+  "nivel": 13,
+  "exp": "Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "War Axe",
+   "Terra Legs",
+   "Fire Axe"
+  ]
+ },
+ {
+  "nome": "Mountain Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 10,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Pharaoh Sword",
+   "Maxilla Maximus",
+   "Mini Mummy"
+  ]
+ },
+ {
+  "nome": "Muggy Plains",
+  "cidade": "Farmine",
+  "nivel": 60,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Lizard Trophy",
+   "Zaoan Legs",
+   "Zaoan Armor"
+  ]
+ },
+ {
+  "nome": "Murky Caverns",
+  "cidade": "Ankrahmun",
+  "nivel": 200,
+  "exp": "Bad",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Museum of Tibian Arts",
+  "cidade": "Thais",
+  "nivel": 100,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Mushroom Gardens",
+  "cidade": "Kazordoon",
+  "nivel": 80,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Sapphire Hammer",
+   "Tower Shield",
+   "Knight Legs"
+  ]
+ },
+ {
+  "nome": "Nargor",
+  "cidade": "Liberty Bay",
+  "nivel": 35,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Pirate Boots",
+   "Deer Trophy",
+   "Pirate Hat"
+  ]
+ },
+ {
+  "nome": "Nargor Undead Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Red Robe",
+   "Spike Sword",
+   "Life Ring"
+  ]
+ },
+ {
+  "nome": "Netherworld",
+  "cidade": "Venore",
+  "nivel": 300,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Nibelor",
+  "cidade": "Svargrond",
+  "nivel": 15,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Northern Pike",
+   "Rainbow Trout",
+   "Green Perch"
+  ]
+ },
+ {
+  "nome": "Nibelor Ice Cave",
+  "cidade": "Svargrond",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Sapphire Hammer",
+   "Knight Armor",
+   "Knight Legs"
+  ]
+ },
+ {
+  "nome": "Nightmare Isles",
+  "cidade": "Darama",
+  "nivel": 250,
+  "exp": "good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Cluster of Solace",
+   "Boots of Haste",
+   "Giant Sword"
+  ]
+ },
+ {
+  "nome": "Nimmersatt's Breeding Ground",
+  "cidade": "Zao",
+  "nivel": 400,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Dragon Slayer",
+   "White Gem",
+   "Violet Gem"
+  ]
+ },
+ {
+  "nome": "Nomad Cave",
+  "cidade": "Ankrahmun",
+  "nivel": 12,
+  "exp": "average",
+  "loot": "average",
+  "melhorLoot": [
+   "Nomad Parchment",
+   "Iron Helmet",
+   "Brass Armor"
+  ]
+ },
+ {
+  "nome": "Norcferatu Dungeons",
+  "cidade": "Yalahar",
+  "nivel": 550,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Norcferatu Talisman",
+   "Blood Sceptre"
+  ]
+ },
+ {
+  "nome": "Norcferatu Fortress",
+  "cidade": "Yalahar",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Northern Zao Plantations",
+  "cidade": "Farmine",
+  "nivel": 90,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Lizard Trophy",
+   "Spirit Container",
+   "Souleater Trophy"
+  ]
+ },
+ {
+  "nome": "Nykri Delta",
+  "cidade": "Issavi",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Oasis Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 10,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Twin Axe",
+   "Maxilla Maximus",
+   "Mini Mummy"
+  ]
+ },
+ {
+  "nome": "Okolnir",
+  "cidade": "Svargrond",
+  "nivel": 80,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Old Fortress",
+  "cidade": "Edron",
+  "nivel": 60,
+  "exp": "Very Good",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Old Masonry",
+  "cidade": "Ab'Dendriel",
+  "nivel": 120,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Oramond/Western Plains",
+  "cidade": "Rathleton",
+  "nivel": 200,
+  "exp": "Very good",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Glooth Cape",
+   "Green Gem",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Oramond Dungeon",
+  "cidade": "Rathleton",
+  "nivel": 140,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Oramond Factory Raids",
+  "cidade": "Rathleton",
+  "nivel": 300,
+  "exp": "Very Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Silver Raid Token",
+   "Glooth Glider Gear Wheel",
+   "Glooth Glider Crank"
+  ]
+ },
+ {
+  "nome": "Oramond Fury Dungeon",
+  "cidade": "Rathleton",
+  "nivel": null,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Oramond Hydra/Bog Raider Cave",
+  "cidade": "Rathleton",
+  "nivel": 100,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Royal Helmet",
+   "Paladin Armor"
+  ]
+ },
+ {
+  "nome": "Oramond Marshes",
+  "cidade": "Rathleton",
+  "nivel": 70,
+  "exp": "Very good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Mooh'tah Plate",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Oramond Minotaur Camp",
+  "cidade": "Rathleton",
+  "nivel": 70,
+  "exp": "Very good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Chaos Mace",
+   "Crown Armor",
+   "Mooh'tah Plate"
+  ]
+ },
+ {
+  "nome": "Orc Peninsula",
+  "cidade": "Thais",
+  "nivel": 25,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Wolf Trophy",
+   "Light Bandana",
+   "Orc Tooth"
+  ]
+ },
+ {
+  "nome": "Oskayaat Undercity",
+  "cidade": "Ankrahmun",
+  "nivel": 200,
+  "exp": "Bad",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Otherworld",
+  "cidade": "Svargrond",
+  "nivel": 200,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Otherworld (Dwarf Bridge)",
+  "cidade": "Thais",
+  "nivel": 90,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Otherworld (Edron)",
+  "cidade": "Edron",
+  "nivel": 120,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Outlaw Camp",
+  "cidade": "Kazordoon",
+  "nivel": 20,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Outlaw Camp/Water Elemental Dungeon",
+  "cidade": "Kazordoon",
+  "nivel": 55,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Giant Shimmering Pearl",
+   "Leviathan's Amulet",
+   "Life Ring"
+  ]
+ },
+ {
+  "nome": "Peninsula Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 13,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Mini Mummy",
+   "Boots of Haste",
+   "Hammer of Wrath"
+  ]
+ },
+ {
+  "nome": "Percht Island",
+  "cidade": "Gray Beach",
+  "nivel": 80,
+  "exp": "Bad",
+  "loot": "Good",
+  "melhorLoot": [
+   "Glacial Rod",
+   "Glacier Robe",
+   "Glacier Kilt"
+  ]
+ },
+ {
+  "nome": "Pirat Mine",
+  "cidade": "Issavi",
+  "nivel": 100,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Focus Cape",
+   "Knight Armor",
+   "Wood Cape"
+  ]
+ },
+ {
+  "nome": "Pits of Inferno",
+  "cidade": "Venore",
+  "nivel": 130,
+  "exp": "average",
+  "loot": "average",
+  "melhorLoot": [
+   "Maxilla Maximus",
+   "Magic Plate Armor",
+   "Sweet Smelling Bait"
+  ]
+ },
+ {
+  "nome": "Pits of Inferno Dragon Lair",
+  "cidade": "Venore",
+  "nivel": 80,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Plains of Havoc",
+  "cidade": "Venore",
+  "nivel": 19,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Plains of Havoc/Dragon Lair",
+  "cidade": "Venore",
+  "nivel": 65,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Poacher Caves/Game",
+  "cidade": "Venore",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Poacher Caves/Gloomy",
+  "cidade": "Venore",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Poacher Caves/Poachers",
+  "cidade": "Venore",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Slingshot",
+   "Wolf_Trophy",
+   "Lion_Trophy"
+  ]
+ },
+ {
+  "nome": "Podzilla",
+  "cidade": "Oramond",
+  "nivel": 600,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Amber Crossbow",
+   "Amber Axe",
+   "Strange Inedible Fruit"
+  ]
+ },
+ {
+  "nome": "Port Hope Swamp Trolls",
+  "cidade": "Port Hope",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Bonelord Eye",
+   "Terra Rod",
+   "Bonelord Shield"
+  ]
+ },
+ {
+  "nome": "Putrefactory",
+  "cidade": "Northern Darama",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Quara Grotto",
+  "cidade": "Liberty Bay",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Radiant Ascendancy",
+  "cidade": "Marapur",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Radiant Skyhold",
+  "cidade": "Marapur",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Ragnir",
+  "cidade": "Svargrond",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Red Piece of Cloth",
+   "Mammoth Fur Cape",
+   "Fur Boots"
+  ]
+ },
+ {
+  "nome": "Ramoa",
+  "cidade": "Liberty Bay",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Bonebeast Trophy",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Rathleton Ancient Sewers",
+  "cidade": "Rathleton",
+  "nivel": null,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Rathleton New Sewers",
+  "cidade": "Rathleton",
+  "nivel": null,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Razachai",
+  "cidade": "Farmine",
+  "nivel": 120,
+  "exp": "very good",
+  "loot": "very good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Razachai/Inner Sanctum",
+  "cidade": "Farmine",
+  "nivel": 190,
+  "exp": "Average",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Shield of Corruption",
+   "Cobra Crown",
+   "Snake God's Wristguard"
+  ]
+ },
+ {
+  "nome": "Replica Dungeon",
+  "cidade": "Port Hope",
+  "nivel": 110,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Spellbook of Enlightenment",
+   "Yellow Gem",
+   "Wand of Cosmic Energy"
+  ]
+ },
+ {
+  "nome": "Robson's Isle",
+  "cidade": "Kazordoon",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Sweet Smelling Bait",
+   "Boots of Haste",
+   "Paladin Armor"
+  ]
+ },
+ {
+  "nome": "Rookgaard Bear Cave",
+  "cidade": "Rookgaard",
+  "nivel": 5,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Bear Paw",
+   "Honeycomb"
+  ]
+ },
+ {
+  "nome": "Rookgaard Orc Fortress",
+  "cidade": "Rookgaard",
+  "nivel": 7,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Honeycomb",
+   "Orc Tooth",
+   "Antlers"
+  ]
+ },
+ {
+  "nome": "Rorc Plains",
+  "cidade": "Kazordoon",
+  "nivel": 45,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Roshamuul Cistern",
+  "cidade": "Roshamuul",
+  "nivel": null,
+  "exp": "?",
+  "loot": "?",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Roshamuul Mines",
+  "cidade": "Roshamuul",
+  "nivel": null,
+  "exp": "very poor",
+  "loot": "very poor",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Roshamuul Prison",
+  "cidade": "Roshamuul",
+  "nivel": 250,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Rotten Wasteland",
+  "cidade": "Kilmaresh",
+  "nivel": 600,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Ruins of Nuur",
+  "cidade": "Issavi",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Salt Caves",
+  "cidade": "Issavi",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Sea Serpent Area",
+  "cidade": "Svargrond",
+  "nivel": 70,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Crystalline Armor",
+   "Glacier Kilt",
+   "Focus Cape"
+  ]
+ },
+ {
+  "nome": "Seacrest Grounds",
+  "cidade": "Rathleton",
+  "nivel": 120,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Relic Sword",
+   "Crown Armor",
+   "Crystalline Armor"
+  ]
+ },
+ {
+  "nome": "Secret Library",
+  "cidade": "Carlin",
+  "nivel": 300,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Shadow Caves",
+  "cidade": "Ab'Dendriel",
+  "nivel": 8,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Silver Amulet",
+   "Trollroot",
+   "Bunch of Troll Hair"
+  ]
+ },
+ {
+  "nome": "Shadow Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 19,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Phoenix Shield",
+   "Holy Falcon",
+   "Mini Mummy"
+  ]
+ },
+ {
+  "nome": "Shadowthorn",
+  "cidade": "Venore",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Shield",
+   "Wand of Inferno",
+   "Dragonbone Staff"
+  ]
+ },
+ {
+  "nome": "Silencer Plateau",
+  "cidade": "Roshamuul",
+  "nivel": null,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Souleater Mountains",
+  "cidade": "Farmine",
+  "nivel": 95,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Spirit Container",
+   "Souleater Trophy",
+   "Mercenary Sword"
+  ]
+ },
+ {
+  "nome": "Sparkling Pools",
+  "cidade": "Edron",
+  "nivel": 600,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Spider Caves",
+  "cidade": "Port Hope",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Spider Silk",
+   "Knight Legs",
+   "Knight Armor"
+  ]
+ },
+ {
+  "nome": "Stag Bastion",
+  "cidade": "Edron",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Stalker Cave",
+  "cidade": "Thais",
+  "nivel": 28,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Stampor Cave",
+  "cidade": "Farmine",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Spiked Squelcher",
+   "Knight Armor",
+   "Hollow Stampor Hoof"
+  ]
+ },
+ {
+  "nome": "Stone Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 13,
+  "exp": "Unknown",
+  "loot": "Unknown",
+  "melhorLoot": [
+   "Djinn Blade",
+   "Mini Mummy",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Sunken Mines",
+  "cidade": "Kazordoon",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Fish Fin",
+   "Heavy Trident",
+   "Life Ring"
+  ]
+ },
+ {
+  "nome": "Sunken Quarter",
+  "cidade": "Yalahar",
+  "nivel": 55,
+  "exp": "average",
+  "loot": "average",
+  "melhorLoot": [
+   "Giant Shrimp",
+   "Skull Helmet",
+   "Relic Sword"
+  ]
+ },
+ {
+  "nome": "Sunken Temple",
+  "cidade": "Port Hope",
+  "nivel": 250,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Swamp Troll Cave",
+  "cidade": "Venore",
+  "nivel": 7,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Moon Backpack",
+   "Medicine Pouch",
+   "Life Ring"
+  ]
+ },
+ {
+  "nome": "Tainted Caves",
+  "cidade": "Venore",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Talahu",
+  "cidade": "Liberty Bay",
+  "nivel": 60,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Royal Helmet",
+   "Paladin Armor"
+  ]
+ },
+ {
+  "nome": "Tarpit Tomb",
+  "cidade": "Ankrahmun",
+  "nivel": 20,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Ravager's Axe",
+   "Mini Mummy",
+   "Demonbone Amulet"
+  ]
+ },
+ {
+  "nome": "Temple Complex",
+  "cidade": "Farmine",
+  "nivel": 150,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Temple of Equilibrium",
+  "cidade": "Farmine",
+  "nivel": 80,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Zaoan Helmet",
+   "Lizard Trophy",
+   "Zaoan Legs"
+  ]
+ },
+ {
+  "nome": "Temple of the Moon Goddess",
+  "cidade": "Marapur",
+  "nivel": 400,
+  "exp": "Very Good",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Terramite Breeding Tunnels",
+  "cidade": "Darashia",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Terramite Shell",
+   "Terramite Legs",
+   "Terramite Eggs"
+  ]
+ },
+ {
+  "nome": "Thais Bandit Cave",
+  "cidade": "Thais",
+  "nivel": 15,
+  "exp": "Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Iron Helmet",
+   "Brass Armor",
+   "Bat Wing"
+  ]
+ },
+ {
+  "nome": "Thais Bat Dungeon",
+  "cidade": "Thais",
+  "nivel": 8,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Bat Wing"
+  ]
+ },
+ {
+  "nome": "Thais Dragon Lair",
+  "cidade": "Thais",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Thais Sewers",
+  "cidade": "Thais",
+  "nivel": 6,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Bat Wing",
+   "Spider Fangs",
+   "Cookie"
+  ]
+ },
+ {
+  "nome": "Thais Troll Cave",
+  "cidade": "Thais",
+  "nivel": 8,
+  "exp": "Very Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Honeycomb",
+   "Orc Tooth",
+   "Wolf Paw"
+  ]
+ },
+ {
+  "nome": "Thais Wasp Dungeon",
+  "cidade": "Thais",
+  "nivel": 10,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Honeycomb"
+  ]
+ },
+ {
+  "nome": "Thais Wolf Den",
+  "cidade": "Thais",
+  "nivel": 8,
+  "exp": "Bad",
+  "loot": "2",
+  "melhorLoot": [
+   "Mana Potion",
+   "Platinum Coin",
+   "Wolf Paw"
+  ]
+ },
+ {
+  "nome": "Thais Wolf Dungeon",
+  "cidade": "Thais",
+  "nivel": 10,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Wolf Trophy",
+   "Wolf Paw",
+   "Warwolf Fur"
+  ]
+ },
+ {
+  "nome": "The Cave",
+  "cidade": "Carlin",
+  "nivel": 28,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Red Robe",
+   "Spike Sword",
+   "Pirate Shirt"
+  ]
+ },
+ {
+  "nome": "The Extension Site",
+  "cidade": "Thais",
+  "nivel": 350,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "The First Dragon's Lair",
+  "cidade": "Ankrahmun",
+  "nivel": null,
+  "exp": "",
+  "loot": "Average",
+  "melhorLoot": [
+   "Skullcracker Armor",
+   "Divine Plate",
+   "Dragon Scale Mail"
+  ]
+ },
+ {
+  "nome": "The Hive",
+  "cidade": "Gray Beach",
+  "nivel": 70,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Four-Leaf Clover",
+   "Buggy Backpack",
+   "Steel Boots"
+  ]
+ },
+ {
+  "nome": "The Witches' Cliff",
+  "cidade": "Kazordoon",
+  "nivel": 30,
+  "exp": "Bad",
+  "loot": "Good",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Reins",
+   "Witch Hat"
+  ]
+ },
+ {
+  "nome": "The Wreckoning",
+  "cidade": "Issavi",
+  "nivel": 150,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Time Travel Dungeon",
+  "cidade": "Thais",
+  "nivel": 100,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Tiquanda",
+  "cidade": "Port Hope",
+  "nivel": 35,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Tiquanda/Bandit Caves",
+  "cidade": "Port Hope",
+  "nivel": 15,
+  "exp": "Bad",
+  "loot": "Very Bad",
+  "melhorLoot": [
+   "Deer Trophy",
+   "Iron Helmet",
+   "Brass Armor"
+  ]
+ },
+ {
+  "nome": "Tiquanda/Dwarf Cave",
+  "cidade": "Port Hope",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Terra Boots",
+   "Iron Ore",
+   "Dwarven Ring"
+  ]
+ },
+ {
+  "nome": "Tiquanda/Reptile and Crustacean Caves",
+  "cidade": "Port Hope",
+  "nivel": 15,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Crocodile Boots",
+   "Turtle Shell",
+   "Tortoise Shield"
+  ]
+ },
+ {
+  "nome": "Tiquanda/Tarantula Caves",
+  "cidade": "Port Hope",
+  "nivel": 20,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Monk Robe",
+   "War Hammer",
+   "Time Ring"
+  ]
+ },
+ {
+  "nome": "Tiquanda/Trapwood",
+  "cidade": "Port Hope",
+  "nivel": 20,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Voodoo Doll",
+   "Carrot on a Stick",
+   "Bast Skirt"
+  ]
+ },
+ {
+  "nome": "Tiquanda/Water Elemental Cave",
+  "cidade": "Port Hope",
+  "nivel": 55,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Giant Shimmering Pearl",
+   "Leviathan's Amulet",
+   "Fish Fin"
+  ]
+ },
+ {
+  "nome": "Tiquanda Corym Cave",
+  "cidade": "Port Hope",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Rat God Doll",
+   "Leather Harness",
+   "Ratana"
+  ]
+ },
+ {
+  "nome": "Tiquanda Laboratory",
+  "cidade": "Port Hope",
+  "nivel": 30,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Carrot on a Stick",
+   "Mastermind Potion",
+   "Bullseye Potion"
+  ]
+ },
+ {
+  "nome": "Trade Quarter",
+  "cidade": "Yalahar",
+  "nivel": 27,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Sniper Gloves",
+   "Witch Hat"
+  ]
+ },
+ {
+  "nome": "Treasure Island",
+  "cidade": "Liberty Bay",
+  "nivel": 10,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Red Robe",
+   "Fish Fin",
+   "Spike Sword"
+  ]
+ },
+ {
+  "nome": "Triangle Tower",
+  "cidade": "Thais",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Witch Hat",
+   "Terra Boots"
+  ]
+ },
+ {
+  "nome": "Truffels Garden",
+  "cidade": "Kazordoon",
+  "nivel": 80,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Wand of Inferno",
+   "Diamond Sceptre",
+   "Clay Lump"
+  ]
+ },
+ {
+  "nome": "Tyrsung",
+  "cidade": "Svargrond",
+  "nivel": 25,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Slingshot",
+   "Deer Trophy",
+   "Lion Trophy"
+  ]
+ },
+ {
+  "nome": "Tyrsung Furrier Camp",
+  "cidade": "Svargrond",
+  "nivel": 20,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Slingshot",
+   "Deer Trophy",
+   "Lion Trophy"
+  ]
+ },
+ {
+  "nome": "Ulderek's Rock",
+  "cidade": "Venore",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Gold Ring",
+   "Crusader Helmet",
+   "Warrior Helmet"
+  ]
+ },
+ {
+  "nome": "Underground Glooth Factory",
+  "cidade": "Rathleton",
+  "nivel": 100,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dreaded Cleaver",
+   "Butcher's Axe",
+   "Terra Legs"
+  ]
+ },
+ {
+  "nome": "Underground Nightmare Knights Base",
+  "cidade": "Venore",
+  "nivel": 50,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Ancient Shield",
+   "Guardian Shield",
+   "Stone Skin Amulet"
+  ]
+ },
+ {
+  "nome": "Unhallowed Crypt",
+  "cidade": "Ab'Dendriel",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Upper Roshamuul",
+  "cidade": "Roshamuul",
+  "nivel": 200,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Upper Spike",
+  "cidade": "Kazordoon",
+  "nivel": 30,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Vampire Crypts",
+  "cidade": "Darashia",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Maxilla Maximus",
+   "Sweet Smelling Bait",
+   "Leather Whip"
+  ]
+ },
+ {
+  "nome": "Vandura Bonelord Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Bonelord Helmet",
+   "Haunted Blade",
+   "Spiked Squelcher"
+  ]
+ },
+ {
+  "nome": "Vandura Mountain",
+  "cidade": "Liberty Bay",
+  "nivel": 80,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Steel Boots",
+   "Composite Hornbow"
+  ]
+ },
+ {
+  "nome": "Vandura Rotworm Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 7,
+  "exp": "Good",
+  "loot": "Average",
+  "melhorLoot": [
+   "Honeycomb",
+   "Steel Helmet",
+   "Time Ring"
+  ]
+ },
+ {
+  "nome": "Vandura Wyrm Cave",
+  "cidade": "Liberty Bay",
+  "nivel": 80,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Composite Hornbow",
+   "Lightning Robe",
+   "Lightning Legs"
+  ]
+ },
+ {
+  "nome": "Vengoth",
+  "cidade": "Yalahar",
+  "nivel": 40,
+  "exp": "good",
+  "loot": "good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Vengoth/Castle",
+  "cidade": "Yalahar",
+  "nivel": 90,
+  "exp": "Very Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Sweet Smelling Bait",
+   "Demonbone Amulet",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Vengoth/Werewolf Cave",
+  "cidade": "Yalahar",
+  "nivel": 80,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Relic Sword",
+   "Dreaded Cleaver",
+   "Bonebreaker"
+  ]
+ },
+ {
+  "nome": "Venore Amazon Camp",
+  "cidade": "Venore",
+  "nivel": 10,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Stuffed Toad",
+   "Mini Mummy",
+   "Witch Hat"
+  ]
+ },
+ {
+  "nome": "Venore Corym Cave",
+  "cidade": "Venore",
+  "nivel": 35,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": [
+   "Rat God Doll",
+   "Leather Harness",
+   "Ratana"
+  ]
+ },
+ {
+  "nome": "Venore Dragon Lair",
+  "cidade": "Venore",
+  "nivel": 40,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Dragon Scale Mail",
+   "Royal Helmet",
+   "Dragon Slayer"
+  ]
+ },
+ {
+  "nome": "Venore Orc Cave",
+  "cidade": "Venore",
+  "nivel": 13,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Wand of Decay",
+   "Orc Tooth",
+   "Shamanic Hood"
+  ]
+ },
+ {
+  "nome": "Venore Salamander Cave",
+  "cidade": "Venore",
+  "nivel": 7,
+  "exp": "Bad",
+  "loot": "Good",
+  "melhorLoot": [
+   "Seeds",
+   "Scimitar",
+   "Bow"
+  ]
+ },
+ {
+  "nome": "Villa Scapula",
+  "cidade": "Venore",
+  "nivel": 50,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Boots of Haste",
+   "Lightning Legs",
+   "Dragon Lance"
+  ]
+ },
+ {
+  "nome": "Warzone 1",
+  "cidade": "Kazordoon",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Shiny Blade",
+   "Crystalline Axe",
+   "Decorative Ribbon"
+  ]
+ },
+ {
+  "nome": "Warzone 2",
+  "cidade": "Kazordoon",
+  "nivel": null,
+  "exp": "Fair",
+  "loot": "Fair",
+  "melhorLoot": [
+   "Shiny Blade",
+   "Crystalline Axe",
+   "Decorative Ribbon"
+  ]
+ },
+ {
+  "nome": "Warzone 3",
+  "cidade": "Kazordoon",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Shiny Blade",
+   "Crystalline Axe",
+   "Decorative Ribbon"
+  ]
+ },
+ {
+  "nome": "Warzone 4",
+  "cidade": "Kazordoon",
+  "nivel": 100,
+  "exp": "Good",
+  "loot": "Very Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Warzone 5",
+  "cidade": "Kazordoon",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Warzone 6",
+  "cidade": "Kazordoon",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Water Elemental Dungeon",
+  "cidade": "Port Hope",
+  "nivel": 55,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Giant Shimmering Pearl",
+   "Leviathan's Amulet",
+   "Fish Fin"
+  ]
+ },
+ {
+  "nome": "White Flower Temple",
+  "cidade": "Thais",
+  "nivel": 28,
+  "exp": "Bad",
+  "loot": "Bad",
+  "melhorLoot": [
+   "Sweet Smelling Bait",
+   "Red Robe",
+   "Terra Mantle"
+  ]
+ },
+ {
+  "nome": "Yakchal Crypt",
+  "cidade": "Svargrond",
+  "nivel": 130,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Queen's Sceptre",
+   "Dragon Scale Mail",
+   "Boots of Haste"
+  ]
+ },
+ {
+  "nome": "Yielothax Dimension",
+  "cidade": "Farmine",
+  "nivel": 100,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Lightning Legs",
+   "Epee",
+   "Yielocks"
+  ]
+ },
+ {
+  "nome": "Zao Orc Land",
+  "cidade": "Farmine",
+  "nivel": 40,
+  "exp": "Average",
+  "loot": "Good",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Zao Palace",
+  "cidade": "Farmine",
+  "nivel": 120,
+  "exp": "Very Good",
+  "loot": "Very Good",
+  "melhorLoot": [
+   "Draken Trophy",
+   "Zaoan Helmet",
+   "Guardian Boots"
+  ]
+ },
+ {
+  "nome": "Zao Palace Antechambers",
+  "cidade": "Farmine",
+  "nivel": 90,
+  "exp": "Good",
+  "loot": "Good",
+  "melhorLoot": [
+   "Zaoan Legs",
+   "Zaoan Armor",
+   "Zaoan Robe"
+  ]
+ },
+ {
+  "nome": "Zao Steppe",
+  "cidade": "Farmine",
+  "nivel": null,
+  "exp": "",
+  "loot": "",
+  "melhorLoot": [
+   "Silkweaver Bow",
+   "Wolf Trophy",
+   "Wand of Decay"
+  ]
+ },
+ {
+  "nome": "Zao Terramite Caves",
+  "cidade": "Farmine",
+  "nivel": 30,
+  "exp": "Average",
+  "loot": "Average",
+  "melhorLoot": [
+   "Terramite Shell",
+   "Terramite Legs",
+   "Sandcrawler Shell"
+  ]
+ },
+ {
+  "nome": "Zao Wailing Widow Cave",
+  "cidade": "Farmine",
+  "nivel": 50,
+  "exp": "Average",
+  "loot": "good",
+  "melhorLoot": [
+   "Wailing Widow's Necklace",
+   "Beetle Necklace",
+   "Zaoan Halberd"
+  ]
+ },
+ {
+  "nome": "Zarganash",
+  "cidade": "Issavi",
+  "nivel": 300,
+  "exp": "Average",
+  "loot": "Bad",
+  "melhorLoot": []
+ },
+ {
+  "nome": "Zzaion",
+  "cidade": "Farmine",
+  "nivel": 55,
+  "exp": "good",
+  "loot": "good",
+  "melhorLoot": [
+   "Draken Trophy",
+   "Harness",
+   "Ring of the Sky"
+  ]
+ }
+]
