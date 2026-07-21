@@ -1174,7 +1174,8 @@
    "Terra Boots",
    "Iron Ore",
    "Dwarven Ring"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Corruption Hole",
@@ -2293,7 +2294,8 @@
    "Paladin Armor",
    "Springsprout Rod",
    "Belted Cape"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Edron Goblin Cave",
@@ -2312,7 +2314,8 @@
    "Honeycomb",
    "Small Stone",
    "Gold Coin"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Edron Lycanthropes Cave",
@@ -2366,7 +2369,8 @@
    "Warrior Helmet",
    "Knight Legs",
    "Knight Armor"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Edron Rotworm Cave",
@@ -2383,7 +2387,8 @@
    "Carrion Worm Fang",
    "Mace",
    "Sword"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Edron Troll-Goblin Peninsula",
@@ -2425,7 +2430,8 @@
    "Bear Paw",
    "Honeycomb",
    "Silver Amulet"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Edron Undead Cave",
@@ -4931,7 +4937,8 @@
    "Bullseye Potion",
    "Bag of Apple Slices",
    "Witch Hat"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Larva Caves",
@@ -5047,7 +5054,8 @@
    "Life Ring",
    "Brown Piece of Cloth",
    "Viking Helmet"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Lower Drainage Area",

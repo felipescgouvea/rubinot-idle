@@ -89,6 +89,9 @@ try {
     falhas.push(`muito mais "apareceu" (${surgiu.length}) do que mortes logadas (${mortes.length})`);
   }
   if (!surgiu.length && !mortes.length) falhas.push('nada aconteceu na caçada — teste inconclusivo');
+  // Sem NENHUMA morte o teste não prova nada sobre o crédito de XP: pode ser só
+  // um personagem fraco demais pra zona. Antes isso passava como sucesso.
+  else if (!mortes.length && !killsDelta) falhas.push('nenhuma criatura morreu — INCONCLUSIVO (personagem fraco pra esta zona?)');
 } catch (e) {
   falhas.push('EXCEÇÃO ' + e.message);
 } finally {
