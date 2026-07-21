@@ -4,6 +4,7 @@ import { ITEMS, potionReqLabel } from '../domain/items.js?v=179';
 import { on, EVENTS } from '../shared/eventBus.js?v=166';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=171';
 import { buyShopItem } from '../application/shopUseCases.js?v=172';
+import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=170';
 import { t } from '../i18n/i18n.js?v=182';
 
 function shopPriceLabel(s) {
@@ -19,6 +20,10 @@ function shopPriceLabel(s) {
 function shopIconHtml(s) {
   if (s.itemId) return itemIconImg(s.itemId, 'shop-item-icon');
   if (s.type === 'currency') return rubiniIconImg();
+  // Supply Completo não é item de inventário (é uma recarga), mas o Tibia tem
+  // um objeto pra esse conceito: a Supply Stash. Sem isso ele era o único item
+  // da loja caindo no emoji.
+  if (s.type === 'refill') return spriteImgOrFallback(spriteUrl('items/Supply_Stash.webp'), t(s.name), s.icon, 'shop-item-icon');
   if (s.boost === 'xp') return vitalIconImg('xp');
   if (s.boost === 'gold') return goldIconImg();
   return s.icon;
