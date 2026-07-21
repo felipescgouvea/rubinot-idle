@@ -15,13 +15,13 @@
 // trazidas pro projeto (assets/outfits-dir/, ver
 // scripts/fetch_outfit_directions.py), então aqui ele usa LESTE quando bate no
 // dummy à direita e SUL quando é o mago lançando magia de frente.
-import { G } from '../application/gameStore.js?v=178';
-import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=174';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=174';
-import { VOCATIONS } from '../domain/character.js?v=205';
-import { ITEMS } from '../domain/items.js?v=189';
-import { SPELLS } from '../domain/spells.js?v=176';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=179';
+import { G } from '../application/gameStore.js?v=179';
+import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=175';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=175';
+import { VOCATIONS } from '../domain/character.js?v=206';
+import { ITEMS } from '../domain/items.js?v=190';
+import { SPELLS } from '../domain/spells.js?v=177';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=180';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
@@ -50,7 +50,11 @@ export function trainingStageHtml(skillId, spell) {
   const semDummy = skillId === 'magic';
   const missile = semDummy ? null : missileFor(skillId, spell);
   const missileFile = missile ? missileSpriteFile(missile) : null;
-  const efeito = semDummy && spell ? effectSpriteFile(spell.element) : null;
+  // Magia de cura não tem elemento (agora ela também treina ML — ver
+  // ui/trainingPanel.js), então cai no brilho 'holy', que é o mais próximo do
+  // efeito de cura do Tibia. Sem isso o palco do mago ficava sem animação
+  // nenhuma quando a magia escolhida era de cura.
+  const efeito = semDummy && spell ? effectSpriteFile(spell.element || 'holy') : null;
 
   const dummy = semDummy ? '' : `
     <div class="tstage-dummy">
