@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=191';
-import { createDefaultRtc } from './rtcConfig.js?v=194';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=160';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=163';
+import { createDefaultSkills } from './character.js?v=192';
+import { createDefaultRtc } from './rtcConfig.js?v=195';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=161';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=164';
 
 export function createDefaultState() {
   return {
@@ -109,6 +109,10 @@ export function createDefaultState() {
     // Presas (Prey): 3 slots, cada um null ou { monster, bonusType, stars,
     // bonusPct, expires } — ver domain/prey.js e application/preyUseCases.js.
     prey: [null, null, null],
+    // Cartas de presa: cada uma vale um reroll de slot SEM pagar gold. Vêm de
+    // prêmio de Arena/Battle Pass (ver application/rewardGrants.js) — é assim
+    // que esses modos recompensam sem injetar dinheiro na economia.
+    preyCards: 0,
     // Bestiário/Charms: pontos acumulados, charms desbloqueados e equipados,
     // e o "carimbo" de quantos pontos já foram creditados por criatura (pra
     // não pagar a mesma etapa de bestiário duas vezes) — ver domain/charms.js.

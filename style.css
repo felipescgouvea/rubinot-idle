@@ -764,9 +764,14 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    sombra de contato. Arte = tiles reais do Tibia. Gerador: scripts/cavegen.py.
    Cada bioma só define --scene. */
 #dungeon-stage[data-biome]:not([data-biome=""]) { background: #14110b; image-rendering: pixelated; }
+/* O deslocamento vertical vem de --scene-y, escrito por ui/stageWalk.js a cada
+   quadro. NÃO usar @keyframes aqui: ao tirar a classe que liga a animação, o
+   background-position volta a zero e a cena SALTA pra outro trecho no exato
+   instante em que o monstro aparece (bug reportado). Com a variável, parar é só
+   deixar de incrementá-la — a cena congela onde está. */
 #dungeon-stage[data-biome]:not([data-biome=""])::before {
   inset: 0;
-  background: var(--scene) center top / 560px 1024px repeat-y;
+  background: var(--scene) center var(--scene-y, 0px) / 560px 1024px repeat-y;
   opacity: 1; image-rendering: pixelated; z-index: 0;
 }
 /* vinheta: profundidade, escurece as bordas sem tapar o centro */
@@ -774,8 +779,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
   background: radial-gradient(ellipse 78% 88% at 50% 46%, transparent 46%, #00000099 100%);
 }
-#dungeon-stage[data-biome]:not([data-biome=""]).searching::before { animation: scene-scroll 16s linear infinite; }
-@keyframes scene-scroll { to { background-position: center 1024px; } }
+/* (a rolagem da cena é feita por --scene-y, ver ui/stageWalk.js) */
 
 #dungeon-stage[data-biome="cave"]   { --scene: url(assets/sprites/ui/scenes/scene-cave.png?v=3); }
 #dungeon-stage[data-biome="forest"] { --scene: url(assets/sprites/ui/scenes/scene-forest.png?v=1); }
@@ -2457,3 +2461,29 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .admin-loot-reset { background: none; border: none; color: var(--ink-soft); font-size: 14px; cursor: pointer; padding: 0; line-height: 1; }
 .admin-loot-reset:hover { color: var(--ink); }
 .admin-loot-reset-spacer { display: inline-block; width: 14px; }
+.bp-reward-sprite { width: 30px; height: 30px; image-rendering: pixelated; vertical-align: middle; }
+
+/* ===== JANELA DE TRADE DO NPC (lojas de Equipamento e Artigos Mágicos) =====
+   Réplica da negociação do Tibia: UMA lista rolável + o item selecionado com
+   quantidade e um único botão Comprar embaixo. Ver ui/shopPanel.js. */
+.trade-window { display: flex; flex-direction: column; gap: 0; border: 2px solid var(--brown-btn-line); border-radius: 6px; overflow: hidden; background: #f6efdc; }
+.trade-list { max-height: 46vh; overflow-y: auto; background: #fffdf5; }
+.trade-row { display: flex; align-items: center; gap: 10px; padding: 6px 10px; cursor: pointer; border-bottom: 1px solid #00000012; }
+.trade-row:hover { background: #fff6d9; }
+.trade-row.selected { background: #ffe9a8; box-shadow: inset 3px 0 0 var(--gold); }
+.trade-row-icon { width: 34px; min-width: 34px; text-align: center; }
+.trade-row-icon img { width: 32px; height: 32px; image-rendering: pixelated; vertical-align: middle; }
+.trade-row-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.trade-row-name { font-weight: 600; font-size: 13px; }
+.trade-row-sub { font-size: 11px; color: var(--muted); }
+.trade-row-price { font-size: 12px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.trade-footer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 10px; border-top: 2px solid var(--brown-btn-line); background: #efe3c4; }
+.trade-selected { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.trade-selected-icon img { width: 32px; height: 32px; image-rendering: pixelated; vertical-align: middle; }
+.trade-selected-name { font-weight: 700; font-size: 13px; }
+.trade-total { margin-left: auto; font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.trade-total-lbl { color: var(--muted); }
+.trade-buy-btn { background: #2c7d3f; border: 1px solid #1d5a2c; color: #fff; font-weight: 700; padding: 7px 22px; border-radius: 5px; cursor: pointer; }
+.trade-buy-btn:hover:not(:disabled) { background: #359349; }
+.trade-buy-btn:disabled { background: #8d8d8d; border-color: #6f6f6f; cursor: not-allowed; }
+@media (max-width: 620px) { .trade-total { margin-left: 0; } .trade-buy-btn { width: 100%; } }

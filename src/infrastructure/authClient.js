@@ -356,8 +356,10 @@ export function bpBuyPremiumOnServer(slot) {
 // credita skill real em player_skills (ver server/src/index.js: /train/*).
 // `vocation` é reportado pelo cliente (não é progressão — usado só pra fórmula
 // de tries por nível, mesma exceção de baixo risco do /hunt/start).
-export function trainStartOnServer(slot, skillId, mode, vocation) {
-  return huntFetch('/train/start', { method: 'POST', body: { slot, skillId, mode, vocation } });
+// `trainingBoostUntil` = validade da varinha de treino (G.boosts.training). O
+// servidor guarda a janela pra dobrar o rendimento mesmo com o jogo fechado.
+export function trainStartOnServer(slot, skillId, mode, vocation, trainingBoostUntil) {
+  return huntFetch('/train/start', { method: 'POST', body: { slot, skillId, mode, vocation, trainingBoostUntil } });
 }
 export function trainCreditOnServer(slot, vocation) {
   return huntFetch('/train/credit', { method: 'POST', body: { slot, vocation } });

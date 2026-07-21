@@ -1,13 +1,13 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=164';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem, BAG_MAX_SLOTS } from '../domain/items.js?v=175';
-import { RARITY_TIERS } from '../domain/rarity.js?v=161';
-import { on, EVENTS } from '../shared/eventBus.js?v=162';
-import { saveGame } from '../application/saveGameUseCase.js?v=164';
-import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=167';
-import { t } from '../i18n/i18n.js?v=178';
+import { G } from '../application/gameStore.js?v=165';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=176';
+import { RARITY_TIERS } from '../domain/rarity.js?v=162';
+import { on, EVENTS } from '../shared/eventBus.js?v=163';
+import { saveGame } from '../application/saveGameUseCase.js?v=165';
+import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=168';
+import { t } from '../i18n/i18n.js?v=179';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -96,17 +96,20 @@ function renderInventory() {
   renderAutoSellControls();
   const grid = document.getElementById('inventory-grid');
   if (!grid) return;
-  const counter = document.getElementById('bag-slot-counter');
-  if (counter) {
-    const used = (G.inventoryOrder || []).length;
-    counter.textContent = `(${used}/${BAG_MAX_SLOTS})`;
-    counter.classList.toggle('bag-slot-counter-full', used >= BAG_MAX_SLOTS);
-  }
   grid.innerHTML = '';
   // Itens EQUIPADOS não aparecem na Bag — estão "no corpo" (nos slots de
   // equipamento). Munição equipada também sai da Bag; a quantidade dela fica
   // num contador no próprio slot de munição (ver renderEquipmentSlots).
   const equippedIds = new Set(Object.values(G.equipment).filter(Boolean));
+  // A bag não tem mais teto de slots, então o contador vira só "quantos tipos
+  // de item estão aqui dentro". Conta DEPOIS de tirar os equipados — antes ele
+  // somava o inventoryOrder cru e mostrava "16/20" com 10 itens na tela.
+  const counter = document.getElementById('bag-slot-counter');
+  if (counter) {
+    const shown = orderedInventoryIds().filter(id => !equippedIds.has(id) && ITEMS[id]).length;
+    counter.textContent = `(${shown})`;
+    counter.classList.remove('bag-slot-counter-full');
+  }
   orderedInventoryIds().forEach(id => {
     if (equippedIds.has(id)) return;
     const qty = G.inventory[id];
@@ -212,7 +215,10 @@ export function openItemModal(itemId, fromBag = false) {
 const SLOT_PLACEHOLDER = { weapon: '🗡️', armor: '🧥', shield: '🛡️', helmet: '⛑️', ammo: '🏹', ring: '💍', legs: '👖', boots: '🥾' };
 // Silhueta REAL do slot vazio, do client (OTClient — assets/sprites/ui/slots/):
 // mapeia cada slot deste jogo pro slot do inventário do Tibia.
-const SLOT_GHOST = { helmet: 'head', armor: 'torso', legs: 'legs', boots: 'feet', ring: 'finger', weapon: 'right-hand', shield: 'left-hand', ammo: 'hip' };
+// ATENÇÃO: no Tibia a silhueta do slot "right hand" é um ESCUDO e a do
+// "left hand" é uma ESPADA — estavam trocadas aqui, o que fazia o slot de arma
+// mostrar escudo e o de escudo mostrar espada (bug: "arma e escudo invertido").
+const SLOT_GHOST = { helmet: 'head', armor: 'torso', legs: 'legs', boots: 'feet', ring: 'finger', weapon: 'left-hand', shield: 'right-hand', ammo: 'hip' };
 const SLOT_LABEL_KEYS = { weapon: 'inventory.slotWeapon', armor: 'inventory.slotArmor', shield: 'inventory.slotShield', helmet: 'inventory.slotHelmet', ammo: 'inventory.slotAmmo', ring: 'inventory.slotRing', legs: 'inventory.slotLegs', boots: 'inventory.slotBoots' };
 const slotLabel = slot => t(SLOT_LABEL_KEYS[slot]);
 

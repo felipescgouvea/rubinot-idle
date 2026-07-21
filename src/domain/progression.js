@@ -192,14 +192,23 @@ export const LEGACY_ARENA_DIVISION_MAP = {
   Mestre: 'Master', 'Grão-Mestre': 'Grandmaster',
 };
 
+// Arena e Battle Pass NUNCA dão gold, Rubini Coin nem equipamento — só
+// vantagem de tempo/conveniência. A razão é de balanceamento: prêmio material
+// atalha a economia (o jogador pula a caçada que deveria financiar o item) e
+// equipamento de prêmio some com a progressão de loot. Os quatro tipos abaixo
+// aceleram o que o jogador já faz, sem entregar o resultado pronto:
+//   boost     — XP/loot/gold multiplicado por um tempo (G.boosts)
+//   charm     — pontos de charm (domain/charms.js)
+//   preyCard  — reroll de presa sem pagar gold (domain/prey.js)
+//   trainWand — janela de treino acelerado (a "varinha de treino")
 export const ARENA_DIVISION_REWARDS = {
-  Bronze: { type: 'gold', amount: 300 },
-  Silver: { type: 'gold', amount: 800 },
-  Gold: { type: 'rubini', amount: 40 },
-  Platinum: { type: 'rubini', amount: 100 },
-  Diamond: { type: 'item', itemId: 'crown_helmet' },
-  Master: { type: 'item', itemId: 'crown_shield' },
-  Grandmaster: { type: 'rubini', amount: 500 },
+  Bronze:      { type: 'boost',     boost: 'xp',       minutes: 30 },
+  Silver:      { type: 'preyCard',  amount: 1 },
+  Gold:        { type: 'charm',     amount: 25 },
+  Platinum:    { type: 'boost',     boost: 'loot',     minutes: 60 },
+  Diamond:     { type: 'preyCard',  amount: 2 },
+  Master:      { type: 'charm',     amount: 75 },
+  Grandmaster: { type: 'trainWand', minutes: 120 },
 };
 
 export const BP_XP_PER_TIER = 500;
@@ -207,16 +216,18 @@ export const BP_XP_PER_TIER = 500;
 // `name` dos tiers de item é chave de tradução (ver ui/battlePassPanel.js e
 // i18n/locales/*.js: battlepass.reward.*) — os de gold/rubini já são só
 // número+unidade, iguais nos dois idiomas, então ficam como string literal.
+// `name` é chave de tradução (ver i18n: battlepass.reward.*). Mesma regra da
+// Arena: nada material — só boost, charm, carta de presa e varinha de treino.
 export const BP_REWARDS = [
-  { tier: 1,  icon: '💰', name: '500 Gold', type: 'gold', amount: 500 },
-  { tier: 3,  icon: '💰', name: '1000 Gold', type: 'gold', amount: 1000 },
-  { tier: 5,  icon: '💎', name: '50 Rubini Coins', type: 'rubini', amount: 50 },
-  { tier: 7,  icon: '🗡️', name: 'battlepass.reward.seasonalSword', type: 'item', itemId: 'guardian_halberd' },
-  { tier: 10, icon: '💰', name: '2000 Gold', type: 'gold', amount: 2000 },
-  { tier: 12, icon: '💎', name: '100 Rubini Coins', type: 'rubini', amount: 100 },
-  { tier: 15, icon: '💎', name: '200 Rubini Coins', type: 'rubini', amount: 200 },
-  { tier: 18, icon: '🛡️', name: 'battlepass.reward.seasonalArmor', type: 'item', itemId: 'amazon_armor' },
-  { tier: 20, icon: '👑', name: 'battlepass.reward.royalHelmet', type: 'item', itemId: 'royal_helmet' },
+  { tier: 1,  icon: '⭐', name: 'battlepass.reward.xpBoost30',   type: 'boost',     boost: 'xp',   minutes: 30 },
+  { tier: 3,  icon: '🎴', name: 'battlepass.reward.preyCard1',   type: 'preyCard',  amount: 1 },
+  { tier: 5,  icon: '🔮', name: 'battlepass.reward.charm25',     type: 'charm',     amount: 25 },
+  { tier: 7,  icon: '🍀', name: 'battlepass.reward.lootBoost30', type: 'boost',     boost: 'loot', minutes: 30 },
+  { tier: 10, icon: '🪄', name: 'battlepass.reward.trainWand60', type: 'trainWand', minutes: 60 },
+  { tier: 12, icon: '🔮', name: 'battlepass.reward.charm50',     type: 'charm',     amount: 50 },
+  { tier: 15, icon: '🎴', name: 'battlepass.reward.preyCard2',   type: 'preyCard',  amount: 2 },
+  { tier: 18, icon: '⭐', name: 'battlepass.reward.xpBoost60',   type: 'boost',     boost: 'xp',   minutes: 60 },
+  { tier: 20, icon: '🪄', name: 'battlepass.reward.trainWand120', type: 'trainWand', minutes: 120 },
 ];
 
 export function bpTierForXp(bpXp) {
@@ -228,16 +239,18 @@ export function bpTierForXp(bpXp) {
 export const BP_PREMIUM_COST_RUBINI = 250;
 // Trilha PREMIUM: recompensas paralelas por tier, melhores que a gratuita. Só
 // gold/rubini (nome numérico, sem i18n) nesta v1.
+// Trilha premium: mesmos tipos, quantidades maiores — o premium compra
+// VELOCIDADE, não poder de fogo.
 export const BP_PREMIUM_REWARDS = [
-  { tier: 1,  icon: '💎', name: '100 Rubini Coins', type: 'rubini', amount: 100 },
-  { tier: 3,  icon: '💰', name: '5000 Gold', type: 'gold', amount: 5000 },
-  { tier: 5,  icon: '💎', name: '150 Rubini Coins', type: 'rubini', amount: 150 },
-  { tier: 7,  icon: '💰', name: '15000 Gold', type: 'gold', amount: 15000 },
-  { tier: 10, icon: '💎', name: '250 Rubini Coins', type: 'rubini', amount: 250 },
-  { tier: 12, icon: '💰', name: '30000 Gold', type: 'gold', amount: 30000 },
-  { tier: 15, icon: '💎', name: '400 Rubini Coins', type: 'rubini', amount: 400 },
-  { tier: 18, icon: '💰', name: '60000 Gold', type: 'gold', amount: 60000 },
-  { tier: 20, icon: '💎', name: '750 Rubini Coins', type: 'rubini', amount: 750 },
+  { tier: 1,  icon: '⭐', name: 'battlepass.reward.xpBoost60',    type: 'boost',     boost: 'xp',    minutes: 60 },
+  { tier: 3,  icon: '🔮', name: 'battlepass.reward.charm50',      type: 'charm',     amount: 50 },
+  { tier: 5,  icon: '🎴', name: 'battlepass.reward.preyCard3',    type: 'preyCard',  amount: 3 },
+  { tier: 7,  icon: '🪄', name: 'battlepass.reward.trainWand120', type: 'trainWand', minutes: 120 },
+  { tier: 10, icon: '🍀', name: 'battlepass.reward.lootBoost60',  type: 'boost',     boost: 'loot',  minutes: 60 },
+  { tier: 12, icon: '🔮', name: 'battlepass.reward.charm100',     type: 'charm',     amount: 100 },
+  { tier: 15, icon: '💰', name: 'battlepass.reward.goldBoost60',  type: 'boost',     boost: 'gold',  minutes: 60 },
+  { tier: 18, icon: '🎴', name: 'battlepass.reward.preyCard5',    type: 'preyCard',  amount: 5 },
+  { tier: 20, icon: '🪄', name: 'battlepass.reward.trainWand240', type: 'trainWand', minutes: 240 },
 ];
 
 // Missões diárias do Battle Pass: XP extra além do trickle passivo de matar

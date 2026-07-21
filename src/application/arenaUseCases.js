@@ -4,17 +4,18 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=164';
-import { emit, EVENTS } from '../shared/eventBus.js?v=162';
-import { getMagic, getMaxHp } from './stats.js?v=161';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=193';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=161';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=163';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=161';
-import { addItemToInventory } from './inventoryCore.js?v=162';
-import { ITEMS } from '../domain/items.js?v=175';
-import { saveGame } from './saveGameUseCase.js?v=164';
-import { t } from '../i18n/i18n.js?v=178';
+import { G } from './gameStore.js?v=165';
+import { emit, EVENTS } from '../shared/eventBus.js?v=163';
+import { getMagic, getMaxHp } from './stats.js?v=162';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=194';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=162';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=164';
+import { grantReward } from './rewardGrants.js?v=2';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=162';
+import { addItemToInventory } from './inventoryCore.js?v=163';
+import { ITEMS } from '../domain/items.js?v=176';
+import { saveGame } from './saveGameUseCase.js?v=165';
+import { t } from '../i18n/i18n.js?v=179';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
@@ -117,11 +118,12 @@ export async function startArenaBattle() {
   if (won) {
     G.arenaWins++;
     G.arenaStreak = (G.arenaStreak || 0) + 1;
-    // bônus de sequência: +3 RC por vitória seguida, até um teto de +30 —
-    // recompensa manter o streak sem virar a fonte principal de RC do modo.
+    // Vitória paga em CHARM POINTS, não em Rubini Coin: a Arena não pode ser
+    // torneira de moeda premium (nem de gold) — ver domain/progression.js.
+    // Bônus de sequência: +3 por vitória seguida, até um teto de +30.
     const streakBonus = Math.min(30, (G.arenaStreak - 1) * 3);
     const rcGained = 25 + streakBonus;
-    G.rubini += rcGained;
+    G.charmPoints = (G.charmPoints || 0) + rcGained;
     bumpMissionProgress('arenaWins', 1);
     const streakSuffix = streakBonus ? ` (${t('arena.streakLabel', { streak: G.arenaStreak })})` : '';
     log.push(`<span class="log-kill">🏆 ${t('arena.victoryLog', { pts: ptsDelta, rc: rcGained })}${streakSuffix}</span>`);
@@ -149,10 +151,8 @@ export function claimArenaDivisionReward(division) {
   if (!reached || G.arenaDivisionsClaimed.includes(division)) return;
   const reward = ARENA_DIVISION_REWARDS[division];
   if (!reward) return;
+  if (!grantReward(reward)) return;   // tipo desconhecido: não marca como resgatado
   G.arenaDivisionsClaimed.push(division);
-  if (reward.type === 'gold') { G.gold += reward.amount; emit(EVENTS.NOTIFY, { msg: t('arena.rewardGold', { amount: reward.amount, division }), type: 'success' }); }
-  if (reward.type === 'rubini') { G.rubini += reward.amount; emit(EVENTS.NOTIFY, { msg: t('arena.rewardRubini', { amount: reward.amount, division }), type: 'success' }); }
-  if (reward.type === 'item') { addItemToInventory(reward.itemId); emit(EVENTS.NOTIFY, { msg: t('arena.rewardItem', { item: ITEMS[reward.itemId]?.name, division }), type: 'success' }); }
   emit(EVENTS.HEADER_STATS);
   saveGame();
 }

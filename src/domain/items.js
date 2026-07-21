@@ -1,10 +1,10 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=161';
+import { primaryStatKeyForItem } from './rarity.js?v=162';
 
-// Capacidade da bag: quantos tipos DISTINTOS de item cabem (cada item já
-// possuído empilha à vontade, sem limite de quantidade — só um tipo NOVO
-// consome um slot livre). Ver application/inventoryCore.js: addItemToInventory.
-export const BAG_MAX_SLOTS = 20;
+// A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
+// Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
+// bag cheia — num jogo idle isso é perda invisível de item. Ver
+// application/inventoryCore.js: addItemToInventory.
 
 export const ITEMS = {
   // Container do inventário — o "bag" inicial do Tibia. Fica no slot de Mochila

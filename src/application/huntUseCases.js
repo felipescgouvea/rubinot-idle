@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=164';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget } from '../infrastructure/authClient.js?v=169';
-import { ZONES } from '../domain/bestiary.js?v=182';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=191';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=162';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=194';
-import { monsterAttack } from '../domain/combatFormulas.js?v=193';
-import { elementMod } from '../domain/elements.js?v=160';
-import { STAMINA_MAX } from '../domain/stamina.js?v=160';
-import { ITEMS } from '../domain/items.js?v=175';
-import { MONSTERS } from '../domain/bestiary.js?v=182';
-import { RARITY_TIERS } from '../domain/rarity.js?v=161';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=162';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=162';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=161';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=161';
-import { saveGame } from './saveGameUseCase.js?v=164';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=165';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=163';
-import { t } from '../i18n/i18n.js?v=178';
+import { G, ACCOUNT } from './gameStore.js?v=165';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget } from '../infrastructure/authClient.js?v=170';
+import { ZONES } from '../domain/bestiary.js?v=183';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=192';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=163';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=195';
+import { monsterAttack } from '../domain/combatFormulas.js?v=194';
+import { elementMod } from '../domain/elements.js?v=161';
+import { STAMINA_MAX } from '../domain/stamina.js?v=161';
+import { ITEMS } from '../domain/items.js?v=176';
+import { MONSTERS } from '../domain/bestiary.js?v=183';
+import { RARITY_TIERS } from '../domain/rarity.js?v=162';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=163';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=163';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=162';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=162';
+import { saveGame } from './saveGameUseCase.js?v=165';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=166';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=164';
+import { t } from '../i18n/i18n.js?v=179';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -565,10 +565,16 @@ function applyServerKillEvents(k) {
   bumpMissionProgress('kills', 1);
   bumpMissionProgress('gold', k.gold || 0);
 
-  emit(EVENTS.LOG, t('log.monsterDied', { name: k.monster, xp: k.xp || 0, gold: k.gold || 0 }));
-  if (k.loot && k.loot.length) {
-    const lootLine = k.loot.map(id => `${itemLogIcon(id)} ${(ITEMS[id] && ITEMS[id].name) || id}`);
-    emit(EVENTS.LOG, { html: t('log.lootLine', { items: lootLine.join(', ') }), cat: 'loot' });
+  emit(EVENTS.LOG, t('log.monsterDied', { name: k.monster, xp: k.xp || 0 }));
+  // O gold entra na linha de LOOT (junto com os itens), não na linha de morte —
+  // é como o Tibia mostra ("Loot of a wolf: 3 gold coins, a wolf paw") e é o que
+  // faz a aba Loot do log bater com o que você realmente ganhou. Antes ele
+  // aparecia grudado no XP, numa aba onde não dava pra conferir ganho.
+  const lootParts = [];
+  if (k.gold) lootParts.push(t('log.lootGold', { gold: k.gold }));
+  (k.loot || []).forEach(id => lootParts.push(`${itemLogIcon(id)} ${(ITEMS[id] && ITEMS[id].name) || id}`));
+  if (lootParts.length) {
+    emit(EVENTS.LOG, { html: t('log.lootLine', { items: lootParts.join(', ') }), cat: 'loot' });
   }
   if (k.relics && k.relics.length) {
     k.relics.forEach(r => {

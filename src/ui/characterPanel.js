@@ -1,23 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=164';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=192';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=161';
-import { skillIconImg } from './shared.js?v=167';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=160';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=160';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=160';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=160';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=161';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=162';
-import { formatNum, applyHpState } from './shared.js?v=167';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=181';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=228';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=165';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=160';
-import { selectVocation } from '../application/characterUseCases.js?v=165';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=164';
-import { t } from '../i18n/i18n.js?v=178';
+import { G } from '../application/gameStore.js?v=165';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=193';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=162';
+import { skillIconImg } from './shared.js?v=168';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=161';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=161';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=161';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=161';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=162';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=163';
+import { formatNum, applyHpState } from './shared.js?v=168';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=182';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=229';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=166';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=161';
+import { selectVocation } from '../application/characterUseCases.js?v=166';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=165';
+import { t } from '../i18n/i18n.js?v=179';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=2';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -182,17 +183,21 @@ function mountPlayerWalkSprite(wrap) {
     // Enquanto PROCURA criatura (caçando, sem monstro na cena), o boneco anda:
     // cicla os quadros de caminhada. Ao entrar em combate (ou parar a caçada),
     // volta ao quadro idle frontal, estático — só os efeitos de spell se mexem.
+    //
+    // O quadro NÃO vem mais de um timer próprio: vem da FASE da passada em
+    // ui/stageWalk.js, a mesma que desloca o cenário. Assim a perna e o chão
+    // andam juntos e, quando o monstro brota, os dois terminam a passada em vez
+    // de cortar no meio (o boneco ficava com a perna no ar).
     draw(walkIdle);
     walkTimer = setInterval(() => {
-      const searching = G.hunting && !getCurrentMonster();
-      if (searching && walkFrames.length > 1) {
-        walkIdx = (walkIdx + 1) % walkFrames.length;
-        draw(walkFrames[walkIdx]);
+      if (isStageWalking() && walkFrames.length > 1) {
+        const idx = Math.floor(stageWalkPhase() * walkFrames.length) % walkFrames.length;
+        if (idx !== walkIdx) { walkIdx = idx; draw(walkFrames[walkIdx]); }
       } else if (walkIdx !== 0) {
         walkIdx = 0;
         draw(walkIdle);
       }
-    }, 180);
+    }, 60);
   });
 }
 

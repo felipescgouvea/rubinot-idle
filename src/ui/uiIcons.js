@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=165';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=166';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -17,6 +17,14 @@ export const UI_ICONS = {
   skills:     { file: 'skills/Sword_Fighting_Icon.webp', emoji: '⚡' },
   training:   { file: 'skills/Training_Dummy.gif',       emoji: '🏋️' }, // boneco de treino real
   bestiary:   { file: 'items/Book_Brown.webp',           emoji: '📖' }, // tomo de criaturas
+  // Prêmios de Arena/Battle Pass (ver application/rewardGrants.js) — sprite
+  // real do Tibia pra cada tipo, nada de emoji genérico.
+  rw_xp:        { file: 'vitals/Experience_Icon.webp',   emoji: '⭐' },
+  rw_loot:      { file: 'ui/prey-loot.png',              emoji: '🍀' },
+  rw_gold:      { file: 'items/Gold_Coin.webp',          emoji: '💰' },
+  rw_charm:     { file: 'currency/Charm_Points_Icon.gif', emoji: '🔮' },
+  rw_preyCard:  { file: 'ui/prey-card.png',              emoji: '🎴' },
+  rw_trainWand: { file: 'skills/Training_Dummy.gif',     emoji: '🪄' },
   arena:      { file: 'items/Arena_Badge.webp',          emoji: '🏟️' }, // emblema da arena (item real)
   bossrush:   { file: 'items/Demon_Skull.webp',          emoji: '💀' }, // caveira de demônio
   worlds:     { file: 'items/Compass.webp',              emoji: '🌍' },
@@ -107,6 +115,14 @@ const CUSTOM_SVG = {
 
 // Markup do ícone: sprite real + fallback emoji (se a imagem falhar/não existir).
 // `cls` é a classe de contexto que dimensiona a imagem (ex.: 'tab-icon').
+// Ícone do prêmio de Arena/Battle Pass a partir do descritor da recompensa
+// (ver domain/progression.js). Boost usa o ícone do que ele multiplica.
+export function rewardIcon(r, cls = '') {
+  if (!r) return '';
+  const id = r.type === 'boost' ? `rw_${r.boost}` : `rw_${r.type}`;
+  return uiIcon(id, cls) || r.icon || '';
+}
+
 export function uiIcon(id, cls = '') {
   if (CUSTOM_SVG[id]) return CUSTOM_SVG[id](cls);
   const ic = UI_ICONS[id];

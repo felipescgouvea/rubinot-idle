@@ -39,7 +39,7 @@ import http from 'node:http';
 import { ZONES } from '../../src/domain/bestiary.js?v=147';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=158';
 import { TIBIA_SKILLS, applySkillGain } from '../../src/domain/character.js?v=157';
-import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, triesForTraining } from '../../src/domain/training.js?v=127';
+import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, TRAINING_WAND_MULT, triesForTraining } from '../../src/domain/training.js?v=127';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, ITEMS } from '../../src/domain/items.js?v=139';
@@ -104,9 +104,18 @@ async function creditTraining(userId, slot, stats, vocation) {
   const skillId = stats.training_skill;
   if (!skillId || !TRAINABLE_SKILLS.includes(skillId) || !stats.training_since || !vocation) return { skills: null, tries: 0 };
   const mode = stats.training_mode === 'online' ? 'online' : 'offline';
-  let elapsed = Math.max(0, (Date.now() - new Date(stats.training_since).getTime()) / 1000);
+  const since = new Date(stats.training_since).getTime();
+  let elapsed = Math.max(0, (Date.now() - since) / 1000);
   elapsed = Math.min(elapsed, mode === 'online' ? 5 * 60 : TRAINING_MAX_OFFLINE_SEC);
-  const tries = triesForTraining(skillId, elapsed, mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1);
+  const base = mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1;
+  // Varinha de treino (prêmio de Arena/Battle Pass — a "exercise weapon" do
+  // Tibia): enquanto a janela durar, o treino rende o dobro. Só vale a PARTE do
+  // tempo coberta pela janela, senão uma varinha de 1h dobraria um treino
+  // offline de 12h inteiro.
+  const boostEnd = stats.training_boost_until ? new Date(stats.training_boost_until).getTime() : 0;
+  const boostedSec = Math.max(0, Math.min(elapsed, (Math.min(Date.now(), boostEnd) - since) / 1000));
+  const tries = triesForTraining(skillId, elapsed - boostedSec, base)
+              + triesForTraining(skillId, boostedSec, base * TRAINING_WAND_MULT);
   const skillsRow = await selectOne('player_skills', { user_id: userId, slot });
   const skills = (skillsRow && skillsRow.skills) || defaultSkills();
   if (tries <= 0) return { skills, tries: 0 };
@@ -625,7 +634,19 @@ const server = http.createServer(async (req, res) => {
       // Trocar de treino sem perder o que já acumulou: credita o anterior antes.
       let skills = null;
       if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation); skills = r.skills; }
-      await upsertRow('player_stats', { user_id: user.id, slot, training_skill: body.skillId, training_since: new Date().toISOString(), training_mode: mode, updated_at: new Date().toISOString() }, 'user_id,slot');
+      // Janela da varinha de treino: o cliente informa até quando o boost dele
+      // vale (G.boosts.training) e o servidor guarda, pra creditar em dobro
+      // mesmo o jogo estando fechado. Só aceita avançar a janela — nunca
+      // encurtar uma que já estava valendo.
+      const wandUntil = Number(body.trainingBoostUntil) || 0;
+      const prevUntil = stats && stats.training_boost_until ? new Date(stats.training_boost_until).getTime() : 0;
+      const boostUntil = Math.max(wandUntil, prevUntil);
+      await upsertRow('player_stats', {
+        user_id: user.id, slot,
+        training_skill: body.skillId, training_since: new Date().toISOString(), training_mode: mode,
+        training_boost_until: boostUntil > Date.now() ? new Date(boostUntil).toISOString() : null,
+        updated_at: new Date().toISOString(),
+      }, 'user_id,slot');
       return send(res, 200, { ok: true, skills });
     }
 

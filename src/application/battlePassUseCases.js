@@ -1,11 +1,12 @@
-import { G, ACCOUNT } from './gameStore.js?v=164';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=165';
-import { ITEMS } from '../domain/items.js?v=175';
-import { emit, EVENTS } from '../shared/eventBus.js?v=162';
-import { addItemToInventory } from './inventoryCore.js?v=162';
-import { saveGame } from './saveGameUseCase.js?v=164';
-import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=171';
-import { t } from '../i18n/i18n.js?v=178';
+import { G, ACCOUNT } from './gameStore.js?v=165';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=166';
+import { grantReward } from './rewardGrants.js?v=2';
+import { ITEMS } from '../domain/items.js?v=176';
+import { emit, EVENTS } from '../shared/eventBus.js?v=163';
+import { addItemToInventory } from './inventoryCore.js?v=163';
+import { saveGame } from './saveGameUseCase.js?v=165';
+import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=172';
+import { t } from '../i18n/i18n.js?v=179';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -112,11 +113,10 @@ export async function claimBpReward(tier, kind = 'free') {
   const res = await bpClaimOnServer(ACCOUNT.activeSlot, tier, kind, G.bpXp);
   if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' }); return; }
   claimedList.push(tier);
-  if (res.gold != null) G.gold = res.gold;
-  if (res.rubini != null) G.rubini = res.rubini;
-  if (res.itemId) { addItemToInventory(res.itemId); emit(EVENTS.NOTIFY, { msg: t('battlepass.itemReceived', { item: ITEMS[res.itemId]?.name }), type: 'success' }); emit(EVENTS.INVENTORY); }
-  else if (r.type === 'gold') emit(EVENTS.NOTIFY, { msg: t('battlepass.goldCollected', { amount: r.amount }), type: 'success' });
-  else if (r.type === 'rubini') emit(EVENTS.NOTIFY, { msg: t('battlepass.rubiniCollected', { amount: r.amount }), type: 'success' });
+  // O servidor só valida o resgate (tier alcançado, uma vez só) — os prêmios
+  // atuais (boost/charm/carta de presa/varinha de treino) vivem no save do
+  // jogador, não em player_stats, então quem aplica é o cliente.
+  grantReward(r);
   emit(EVENTS.BATTLE_PASS_PANEL);
   emit(EVENTS.HEADER_STATS);
   saveGame();

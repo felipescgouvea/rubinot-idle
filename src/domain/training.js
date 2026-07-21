@@ -26,6 +26,11 @@ export function triesPerMinuteFor(skillId) {
 // fechado (ver application/trainingUseCases.js: resumeTrainingOnLoad).
 export const ONLINE_RATE_MULTIPLIER = 10;
 
+// Varinha de treino (a "exercise weapon" do Tibia) — prêmio de Arena/Battle
+// Pass que dobra o rendimento do treino enquanto a janela estiver ativa.
+// Multiplica o modo em uso (online ou offline), não substitui.
+export const TRAINING_WAND_MULT = 2;
+
 // Total de tentativas ganhas em `seconds` de treino da skill.
 export function triesForTraining(skillId, seconds, multiplier = 1) {
   return Math.floor((seconds / 60) * triesPerMinuteFor(skillId) * multiplier);

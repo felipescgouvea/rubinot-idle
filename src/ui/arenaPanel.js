@@ -1,15 +1,12 @@
-import { G } from '../application/gameStore.js?v=164';
-import { VOCATIONS } from '../domain/character.js?v=191';
-import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=163';
-import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=162';
-import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=167';
-import { t } from '../i18n/i18n.js?v=178';
+import { G } from '../application/gameStore.js?v=165';
+import { VOCATIONS } from '../domain/character.js?v=192';
+import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=164';
+import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=163';
+import { rewardIcon } from './uiIcons.js?v=166';
+import { t } from '../i18n/i18n.js?v=179';
 
 function divisionRewardIcon(r) {
-  if (r.type === 'gold') return goldIconImg('inline-icon');
-  if (r.type === 'rubini') return rubiniIconImg('inline-icon');
-  if (r.type === 'item') return itemIconImg(r.itemId, 'inline-icon');
-  return '';
+  return rewardIcon(r, 'inline-icon');
 }
 
 function renderArenaSummary() {

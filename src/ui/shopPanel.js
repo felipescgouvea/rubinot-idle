@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=164';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=163';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=175';
-import { on, EVENTS } from '../shared/eventBus.js?v=162';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=167';
-import { buyShopItem } from '../application/shopUseCases.js?v=168';
-import { t } from '../i18n/i18n.js?v=178';
+import { G } from '../application/gameStore.js?v=165';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=164';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=176';
+import { on, EVENTS } from '../shared/eventBus.js?v=163';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=168';
+import { buyShopItem } from '../application/shopUseCases.js?v=169';
+import { t } from '../i18n/i18n.js?v=179';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -170,9 +170,92 @@ export function setShopGroup(shopKey, groupKey) {
   renderShopPanel();
 }
 
+// ===== JANELA DE TRADE DO NPC (lojas de Equipamento e Artigos Mágicos) =====
+// Réplica da janela de negociação do Tibia: UMA lista rolável com todos os
+// itens do NPC, e embaixo o item selecionado com quantidade + UM botão
+// Comprar. O formato anterior (um cartão por item, cada um com sua própria
+// barra de quantidade e seu próprio botão) espalhava dezenas de controles pela
+// tela e não tinha nada a ver com o jogo.
+const shopSelection = new Map(); // shopKey -> id do item selecionado
+
+export function selectShopItem(shopKey, id) {
+  shopSelection.set(shopKey, id);
+  renderShopPanel();
+}
+
+// Só consumível se compra em lote — arma/armadura você leva uma.
+function isBulkItem(s) {
+  const item = s.itemId ? ITEMS[s.itemId] : null;
+  return !!(item && (item.type === 'potion' || item.type === 'rune' || item.type === 'ammo'));
+}
+
+// Linha da lista: ícone, nome (+ stats), preço. Igual à lista do trade do Tibia.
+function tradeRowHtml(shop, s, selectedId) {
+  const item = s.itemId ? ITEMS[s.itemId] : null;
+  const stats = item ? ['atk', 'def', 'magic', 'heal', 'mana'].filter(k => item[k]).map(k => `${k.toUpperCase()} ${item[k]}`).join(' · ') : '';
+  const req = item ? potionReqLabel(item, t) : '';
+  const sub = [stats, req ? `🔒 ${req}` : ''].filter(Boolean).join(' · ');
+  return `<div class="trade-row ${s.id === selectedId ? 'selected' : ''}" onclick="selectShopItem('${shop.key}', '${s.id}')">
+    <span class="trade-row-icon">${shopIconHtml(s)}</span>
+    <span class="trade-row-text"><span class="trade-row-name">${t(s.name)}</span>${sub ? `<span class="trade-row-sub">${sub}</span>` : ''}</span>
+    <span class="trade-row-price">${shopPriceLabel(s)}</span>
+  </div>`;
+}
+
+function renderTradeWindow(shop) {
+  const items = SHOP_ITEMS.filter(s => s.shop === shop.key);
+  if (!items.length) return '';
+  const selId = shopSelection.has(shop.key) && items.some(s => s.id === shopSelection.get(shop.key))
+    ? shopSelection.get(shop.key)
+    : items[0].id;
+  const sel = items.find(s => s.id === selId);
+
+  const bulk = isBulkItem(sel);
+  const qtyMax = bulk ? getMaxAffordableQty(sel.id) : 1;
+  const qty = bulk ? clampQty(shopQty.get(sel.id) || 1, qtyMax) : 1;
+  if (bulk) shopQty.set(sel.id, qty);
+
+  const balance = sel.currency === 'rubini' ? G.rubini : G.gold;
+  const total = sel.price * qty;
+  const canAfford = balance >= total;
+  const totalLabel = sel.currency === 'rubini'
+    ? `${formatNum(total)} ${rubiniIconImg('inline-icon')}`
+    : `${formatNum(total)} ${goldIconImg('inline-icon')}`;
+
+  // Barra de quantidade só aparece pra item empilhável — no Tibia ela fica
+  // desabilitada quando o item não é contável.
+  const qtyWidget = bulk
+    ? `<div class="shop-qty-widget" onwheel="scrollShopQty(event, '${sel.id}')">
+        <input type="number" id="shop-qty-num-${sel.id}" class="shop-qty-num" min="1" max="${qtyMax}" value="${qty}" title="${t('shop.quantity')}" oninput="onShopQtyInput('${sel.id}', this.value)" />
+        <button type="button" class="shop-qty-arrow" onclick="stepShopQty('${sel.id}', -1)">◀</button>
+        <input type="range" id="shop-qty-range-${sel.id}" class="shop-qty-range" min="1" max="${qtyMax}" value="${qty}" oninput="onShopQtyInput('${sel.id}', this.value)" />
+        <button type="button" class="shop-qty-arrow" onclick="stepShopQty('${sel.id}', 1)">▶</button>
+      </div>`
+    : '';
+
+  return `
+    <h3 style="margin:0 0 2px !important">${t(shop.title)}</h3>
+    <p class="muted" style="margin:0 0 8px !important;font-size:12px">${t(shop.subtitle)}</p>
+    <div class="trade-window">
+      <div class="trade-list">${items.map(s => tradeRowHtml(shop, s, selId)).join('')}</div>
+      <div class="trade-footer">
+        <div class="trade-selected">
+          <span class="trade-selected-icon">${shopIconHtml(sel)}</span>
+          <span class="trade-selected-name">${t(sel.name)}</span>
+        </div>
+        ${qtyWidget}
+        <div class="trade-total"><span class="trade-total-lbl">${t('shop.total')}</span> <strong>${totalLabel}</strong></div>
+        <button class="trade-buy-btn" onclick="confirmBuyShopItem('${sel.id}', ${bulk ? `getShopQty('${sel.id}')` : 1})" ${canAfford ? '' : 'disabled'}>
+          ${canAfford ? t('shop.buy') : t('shop.noBalance')}
+        </button>
+      </div>
+    </div>`;
+}
+
 // Conteúdo (itens agrupados por sub-seção) de UMA loja — o painel principal à
 // direita do menu lateral.
 function renderShopContent(shop) {
+  if (shop.trade) return renderTradeWindow(shop);
   const shopItems = SHOP_ITEMS.filter(s => s.shop === shop.key);
   const groupTabs = shop.groups ? `<div class="admin-subtabs">
       ${shop.groups.map(g => `<button class="admin-subtab-btn ${g.key === (activeShopGroup.get(shop.key) || shop.groups[0].key) ? 'active' : ''}" onclick="setShopGroup('${shop.key}', '${g.key}')">${t(g.title)}</button>`).join('')}

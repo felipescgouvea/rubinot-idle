@@ -1,14 +1,14 @@
 // Casos de uso das Presas (Prey): travar uma criatura num slot, rerolar o
 // bônus e ativar. Ver domain/prey.js pra as regras puras.
-import { G } from './gameStore.js?v=164';
-import { MONSTERS } from '../domain/bestiary.js?v=182';
+import { G } from './gameStore.js?v=165';
+import { MONSTERS } from '../domain/bestiary.js?v=183';
 import {
   PREY_SLOTS, PREY_DURATION_MS, PREY_REROLL_COST, PREY_BONUS_TYPES, PREY_STAR_PCT,
   rollPreyStars, rollPreyBonusType,
-} from '../domain/prey.js?v=160';
-import { emit, EVENTS } from '../shared/eventBus.js?v=162';
-import { saveGame } from './saveGameUseCase.js?v=164';
-import { t } from '../i18n/i18n.js?v=178';
+} from '../domain/prey.js?v=161';
+import { emit, EVENTS } from '../shared/eventBus.js?v=163';
+import { saveGame } from './saveGameUseCase.js?v=165';
+import { t } from '../i18n/i18n.js?v=179';
 
 const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
 
@@ -57,11 +57,16 @@ export function rerollPrey(slotIndex) {
   ensurePreyArray();
   const slot = G.prey[slotIndex];
   if (!slot || !slot.monster) return;
-  if (G.gold < PREY_REROLL_COST) {
+  // Carta de presa (prêmio de Arena/Battle Pass) paga o reroll no lugar do
+  // gold — sempre gasta a carta primeiro, que é o recurso mais escasso.
+  if (G.preyCards > 0) {
+    G.preyCards--;
+  } else if (G.gold >= PREY_REROLL_COST) {
+    G.gold -= PREY_REROLL_COST;
+  } else {
     emit(EVENTS.NOTIFY, { msg: t('bestiary.preyGoldInsufficient', { cost: PREY_REROLL_COST.toLocaleString() }), type: 'error' });
     return;
   }
-  G.gold -= PREY_REROLL_COST;
   G.prey[slotIndex] = makePrey(slot.monster);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.PREY_PANEL);

@@ -146,7 +146,7 @@ export const SHOPS = [
   { key: 'rubini', title: 'shop.rubini.title', subtitle: 'shop.rubini.subtitle', sub: [
       { title: 'shop.rubini.subBoosts', filter: s => s.type === 'boost' },
     ]},
-  { key: 'equipment', title: 'shop.equipment.title', subtitle: 'shop.equipment.subtitle', groups: [
+  { key: 'equipment', trade: true, title: 'shop.equipment.title', subtitle: 'shop.equipment.subtitle', groups: [
       { key: 'melee', title: 'shop.equipment.groupMelee' },
       { key: 'ranged', title: 'shop.equipment.groupRanged' },
       { key: 'magic', title: 'shop.equipment.groupMagic' },
@@ -164,7 +164,7 @@ export const SHOPS = [
       { title: 'shop.equipment.subAmmo', group: 'ranged', filter: (s, items) => items[s.itemId]?.type === 'ammo' },
       { title: 'shop.equipment.subWands', group: 'magic', filter: (s, items) => items[s.itemId]?.weaponType === 'magic' },
     ]},
-  { key: 'magic', title: 'shop.magic.title', subtitle: 'shop.magic.subtitle', sub: [
+  { key: 'magic', trade: true, title: 'shop.magic.title', subtitle: 'shop.magic.subtitle', sub: [
       { title: 'shop.magic.subRefill', filter: s => s.type === 'refill' },
       { title: 'shop.magic.subPotions', filter: (s, items) => items[s.itemId]?.type === 'potion' },
       { title: 'shop.magic.subRunes', filter: (s, items) => items[s.itemId]?.type === 'rune' },

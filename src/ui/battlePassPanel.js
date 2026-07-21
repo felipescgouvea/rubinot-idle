@@ -1,15 +1,13 @@
-import { G } from '../application/gameStore.js?v=164';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=164';
-import { on, EVENTS } from '../shared/eventBus.js?v=162';
-import { itemIconImg, goldIconImg, rubiniIconImg } from './shared.js?v=167';
-import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=163';
-import { t } from '../i18n/i18n.js?v=178';
+import { G } from '../application/gameStore.js?v=165';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=165';
+import { on, EVENTS } from '../shared/eventBus.js?v=163';
+import { rewardIcon } from './uiIcons.js?v=166';
+import { rubiniIconImg } from './shared.js?v=168';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=164';
+import { t } from '../i18n/i18n.js?v=179';
 
 function bpRewardIcon(r) {
-  if (r.type === 'item') return itemIconImg(r.itemId);
-  if (r.type === 'gold') return goldIconImg();
-  if (r.type === 'rubini') return rubiniIconImg();
-  return r.icon;
+  return rewardIcon(r, 'bp-reward-sprite');
 }
 
 // Render genérico de uma lista de missões (diária ou semanal) num elemento.
