@@ -777,7 +777,15 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 #dungeon-stage[data-biome]:not([data-biome=""]).searching::before { animation: scene-scroll 16s linear infinite; }
 @keyframes scene-scroll { to { background-position: center 1024px; } }
 
-#dungeon-stage[data-biome="cave"] { --scene: url(assets/sprites/ui/scenes/scene-cave.png?v=3); }
+#dungeon-stage[data-biome="cave"]   { --scene: url(assets/sprites/ui/scenes/scene-cave.png?v=3); }
+#dungeon-stage[data-biome="forest"] { --scene: url(assets/sprites/ui/scenes/scene-forest.png?v=1); }
+#dungeon-stage[data-biome="grass"]  { --scene: url(assets/sprites/ui/scenes/scene-grass.png?v=1); }
+#dungeon-stage[data-biome="desert"] { --scene: url(assets/sprites/ui/scenes/scene-desert.png?v=1); }
+#dungeon-stage[data-biome="snow"]   { --scene: url(assets/sprites/ui/scenes/scene-snow.png?v=1); }
+#dungeon-stage[data-biome="swamp"]  { --scene: url(assets/sprites/ui/scenes/scene-swamp.png?v=1); }
+#dungeon-stage[data-biome="jungle"] { --scene: url(assets/sprites/ui/scenes/scene-jungle.png?v=1); }
+#dungeon-stage[data-biome="ruins"]  { --scene: url(assets/sprites/ui/scenes/scene-ruins.png?v=1); }
+#dungeon-stage[data-biome="hell"]   { --scene: url(assets/sprites/ui/scenes/scene-hell.png?v=1); }
 
 /* boneco: no meio do palco (centralizado por left/top + margem negativa, pra
    as animações de hit/ataque poderem usar transform sem quebrar o centro). */

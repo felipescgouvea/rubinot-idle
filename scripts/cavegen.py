@@ -95,10 +95,15 @@ _rock_img = Image.new("RGB", (W, H))
 for x in range(0, W, _base.width):
     for y in range(0, H, _base.height): _rock_img.paste(_base, (x, y))
 _mw = Image.open(SP + "w_mountain.gif").convert("RGBA")
-_r, _g, _b, _a = _mw.split()          # tinge a rocha (cinza) de MARROM
-_mw = Image.merge("RGBA", (_r.point(lambda v: min(255, int(v*1.08))),
-                           _g.point(lambda v: int(v*0.70)),
-                           _b.point(lambda v: int(v*0.46)), _a))
+# tinge os pedacos de rocha (cinza) pra COMBINAR com o tile de parede do bioma:
+# usa a cor media do proprio tile como alvo => serve pra caverna, deserto, neve...
+_bm = np.asarray(_base.convert("RGB"), float).reshape(-1, 3).mean(0)
+_gm = np.asarray(_mw.convert("RGB"), float).reshape(-1, 3).mean(0).mean()
+_f = _bm / max(_gm, 1.0)
+_r, _g, _b, _a = _mw.split()
+_mw = Image.merge("RGBA", (_r.point(lambda v: min(255, int(v*_f[0]))),
+                           _g.point(lambda v: min(255, int(v*_f[1]))),
+                           _b.point(lambda v: min(255, int(v*_f[2]))), _a))
 for _ in range(140):
     _x = random.randrange(-40, W); _y = random.randrange(-40, H)
     _s = random.uniform(0.6, 1.4)

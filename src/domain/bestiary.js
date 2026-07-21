@@ -23,86 +23,72 @@ export const ZONES = {
   // médio dos monstros). Boss = a criatura mais forte da zona (mesma convenção
   // da Troll Cave, onde o boss é também um spawn comum).
   rat_cave:       { city: 'rookgaard',  name: 'zone.rat_cave',       icon: '🐁', worldReq: 'auroria', monsters: ['rat', 'cave_rat'], theme: ['#6b5a3a', '#2b2416'], boss: 'cave_rat', biome: 'cave' },
-  wolf_den:       { city: 'rookgaard',  name: 'zone.wolf_den',       icon: '🐺', worldReq: 'auroria', monsters: ['wolf'], theme: ['#5a5a5a', '#232323'], boss: 'wolf' },
-  bug_nest:       { city: 'rookgaard',  name: 'zone.bug_nest',       icon: '🐛', worldReq: 'auroria', monsters: ['bug'], theme: ['#4a6b3a', '#1e2b16'], boss: 'bug' },
+  wolf_den:       { city: 'rookgaard',  name: 'zone.wolf_den',       icon: '🐺', worldReq: 'auroria', monsters: ['wolf'], theme: ['#5a5a5a', '#232323'], boss: 'wolf', biome: 'forest' },
+  bug_nest:       { city: 'rookgaard',  name: 'zone.bug_nest',       icon: '🐛', worldReq: 'auroria', monsters: ['bug'], theme: ['#4a6b3a', '#1e2b16'], boss: 'bug', biome: 'grass' },
   troll_cave:     { city: 'rookgaard',  name: 'zone.troll_cave',     icon: '🧌', worldReq: 'auroria', monsters: ['troll', 'swamp_troll'], theme: ['#3d5c3a', '#182b16'], boss: 'swamp_troll', biome: 'cave' },
-
   // --- Dawnport (ilha alternativa de treino, também sempre desbloqueada —
   // ver domain/cities.js: isCityUnlocked) — só as 4 criaturas mais fracas do
   // Dawnport real (pedido do Felipe), boss = a mais forte das 4 (Meadow
   // Strider, "ainda forte pra um personagem novo" segundo o TibiaWiki).
-  dawnport_hunt:  { city: 'dawnport',   name: 'zone.dawnport_hunt',  icon: '🌅', worldReq: 'auroria', monsters: ['woodling', 'troll_trained_salamander', 'meadow_strider', 'dawnfly'], theme: ['#e0955a', '#5c3a24'], boss: 'meadow_strider' },
-
+  dawnport_hunt:  { city: 'dawnport',   name: 'zone.dawnport_hunt',  icon: '🌅', worldReq: 'auroria', monsters: ['woodling', 'troll_trained_salamander', 'meadow_strider', 'dawnfly'], theme: ['#e0955a', '#5c3a24'], boss: 'meadow_strider', biome: 'grass' },
   // --- Ab'Dendriel (cidade dos elfos) ---
-  elf_hunt:       { city: 'abdendriel', name: 'zone.elf_hunt',       icon: '🧝', worldReq: 'auroria', monsters: ['elf', 'elf_scout', 'elf_arcanist'], theme: ['#3f7052', '#1e3d2b'], boss: 'elf_arcanist' },
-
+  elf_hunt:       { city: 'abdendriel', name: 'zone.elf_hunt',       icon: '🧝', worldReq: 'auroria', monsters: ['elf', 'elf_scout', 'elf_arcanist'], theme: ['#3f7052', '#1e3d2b'], boss: 'elf_arcanist', biome: 'forest' },
   // --- Carlin (acampamento goblin de Femor Hills) ---
-  femor_hills:    { city: 'carlin',     name: 'zone.femor_hills',    icon: '👺', worldReq: 'auroria', monsters: ['goblin', 'goblin', 'goblin', 'goblin_scavenger', 'goblin_assassin', 'goblin_leader'], theme: ['#6b7a3f', '#2e3a1f'], boss: 'goblin_leader' },
-
+  femor_hills:    { city: 'carlin',     name: 'zone.femor_hills',    icon: '👺', worldReq: 'auroria', monsters: ['goblin', 'goblin', 'goblin', 'goblin_scavenger', 'goblin_assassin', 'goblin_leader'], theme: ['#6b7a3f', '#2e3a1f'], boss: 'goblin_leader', biome: 'grass' },
   // --- Thais (Mintwallin: minotauros clássicos, depois ciclopes) ---
   minotaur_hunt:  { city: 'thais',      name: 'zone.minotaur_hunt',  icon: '🐂', worldReq: 'auroria', monsters: ['minotaur', 'minotaur_archer', 'minotaur_guard', 'minotaur_mage'], theme: ['#7a5a3a', '#3a2818'], boss: 'minotaur_guard', biome: 'cave' },
-  cyclopolis:     { city: 'thais',      name: 'zone.cyclopolis',     icon: '🗿', worldReq: 'auroria', monsters: ['cyclops'], theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops', requiresBossOf: 'minotaur_guard' },
-
+  cyclopolis:     { city: 'thais',      name: 'zone.cyclopolis',     icon: '🗿', worldReq: 'auroria', monsters: ['cyclops'], theme: ['#8a6a4a', '#4a3524'], boss: 'cyclops', requiresBossOf: 'minotaur_guard', biome: 'ruins' },
   // --- Port Hope (selva de Tiquanda: macacos, depois insetoides) ---
-  kongra_hunt:    { city: 'porthope',   name: 'zone.kongra_hunt',    icon: '🐒', worldReq: 'auroria', monsters: ['kongra', 'merlkin', 'sibang'], theme: ['#2e5c2e', '#0f2b0f'], boss: 'kongra' },
-  crawler_hunt:   { city: 'porthope',   name: 'zone.crawler_hunt',   icon: '🐛', worldReq: 'auroria', monsters: ['crawler', 'insectoid_worker', 'swarmer'], theme: ['#4a5c2e', '#1f2b12'], boss: 'crawler', requiresBossOf: 'kongra' },
-
+  kongra_hunt:    { city: 'porthope',   name: 'zone.kongra_hunt',    icon: '🐒', worldReq: 'auroria', monsters: ['kongra', 'merlkin', 'sibang'], theme: ['#2e5c2e', '#0f2b0f'], boss: 'kongra', biome: 'jungle' },
+  crawler_hunt:   { city: 'porthope',   name: 'zone.crawler_hunt',   icon: '🐛', worldReq: 'auroria', monsters: ['crawler', 'insectoid_worker', 'swarmer'], theme: ['#4a5c2e', '#1f2b12'], boss: 'crawler', requiresBossOf: 'kongra', biome: 'jungle' },
   // --- Svargrond (Ilhas de Gelo: Formorgar Mines) ---
-  behemoth_hunt:  { city: 'svargrond', name: 'zone.behemoth_hunt',  icon: '👹', worldReq: 'auroria', monsters: ['behemoth', 'drillworm', 'devourer', 'glooth_anemone'], theme: ['#5a6b7a', '#28323d'], boss: 'behemoth' },
-
+  behemoth_hunt:  { city: 'svargrond', name: 'zone.behemoth_hunt',  icon: '👹', worldReq: 'auroria', monsters: ['behemoth', 'drillworm', 'devourer', 'glooth_anemone'], theme: ['#5a6b7a', '#28323d'], boss: 'behemoth', biome: 'cave' },
   // --- Venore (acampamento orc e de amazonas ao sul, elfos corrompidos de
   // Shadowthorn, a caverna clássica de aranhas gigantes, coryms e
   // refinadores de pedra — pedido do Felipe pra reunir tudo aqui) ---
-  orc_fortress:   { city: 'venore',     name: 'zone.orc_fortress',   icon: '🗡️', worldReq: 'auroria', monsters: ['orc', 'orc', 'orc_spearman', 'orc_warrior'], theme: ['#6b5a3a', '#2e2818'], boss: 'orc_warrior' },
-  shadowthorn:    { city: 'venore',     name: 'zone.shadowthorn',    icon: '🔥', worldReq: 'auroria', monsters: ['shadowthorn', 'shadowthorn', 'shadowthorn_splinter', 'shadowthorn_deceiver', 'shadowthorn_templar'], theme: ['#a5391f', '#3a1208'], boss: 'shadowthorn_templar', requiresBossOf: 'orc_warrior' },
-  amazon_hunt:    { city: 'venore',     name: 'zone.amazon_hunt',    icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'shadowthorn_templar' },
-  giant_spider_hunt:{ city: 'venore',  name: 'zone.giant_spider_hunt', icon: '🕷️', worldReq: 'auroria', monsters: ['giant_spider', 'tarantula', 'spider'], theme: ['#4a3a3a', '#201616'], boss: 'giant_spider', requiresBossOf: 'valkyrie' },
-  corym_skirmisher:{ city: 'venore',   name: 'zone.corym_skirmisher', icon: '👹', worldReq: 'auroria', monsters: ['corym_vanguard', 'corym_charlatan', 'corym_skirmisher'], theme: ['#8fb8d9', '#3a5a73'], boss: 'corym_vanguard', requiresBossOf: 'giant_spider' },
-  stone_refiner:  { city: 'venore',    name: 'zone.stone_refiner',  icon: '💎', worldReq: 'auroria', monsters: ['stonerefiner'], theme: ['#6b6a5c', '#2a2924'], boss: 'stonerefiner', requiresBossOf: 'corym_vanguard' },
-  orc_warlord_camp:{ city: 'venore',   name: 'zone.orc_warlord_camp', icon: '👑', worldReq: 'auroria', monsters: ['orc_rider', 'orc_shaman', 'orc_berserker', 'orc_warlord'], theme: ['#7a5a3a', '#3a2818'], boss: 'orc_warlord', requiresBossOf: 'stonerefiner' },
-
+  orc_fortress:   { city: 'venore',     name: 'zone.orc_fortress',   icon: '🗡️', worldReq: 'auroria', monsters: ['orc', 'orc', 'orc_spearman', 'orc_warrior'], theme: ['#6b5a3a', '#2e2818'], boss: 'orc_warrior', biome: 'ruins' },
+  shadowthorn:    { city: 'venore',     name: 'zone.shadowthorn',    icon: '🔥', worldReq: 'auroria', monsters: ['shadowthorn', 'shadowthorn', 'shadowthorn_splinter', 'shadowthorn_deceiver', 'shadowthorn_templar'], theme: ['#a5391f', '#3a1208'], boss: 'shadowthorn_templar', requiresBossOf: 'orc_warrior', biome: 'forest' },
+  amazon_hunt:    { city: 'venore',     name: 'zone.amazon_hunt',    icon: '🏹', worldReq: 'auroria', monsters: ['amazon', 'valkyrie'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'valkyrie', requiresBossOf: 'shadowthorn_templar', biome: 'forest' },
+  giant_spider_hunt:{ city: 'venore',  name: 'zone.giant_spider_hunt', icon: '🕷️', worldReq: 'auroria', monsters: ['giant_spider', 'tarantula', 'spider'], theme: ['#4a3a3a', '#201616'], boss: 'giant_spider', requiresBossOf: 'valkyrie', biome: 'cave' },
+  corym_skirmisher:{ city: 'venore',   name: 'zone.corym_skirmisher', icon: '👹', worldReq: 'auroria', monsters: ['corym_vanguard', 'corym_charlatan', 'corym_skirmisher'], theme: ['#8fb8d9', '#3a5a73'], boss: 'corym_vanguard', requiresBossOf: 'giant_spider', biome: 'cave' },
+  stone_refiner:  { city: 'venore',    name: 'zone.stone_refiner',  icon: '💎', worldReq: 'auroria', monsters: ['stonerefiner'], theme: ['#6b6a5c', '#2a2924'], boss: 'stonerefiner', requiresBossOf: 'corym_vanguard', biome: 'cave' },
+  orc_warlord_camp:{ city: 'venore',   name: 'zone.orc_warlord_camp', icon: '👑', worldReq: 'auroria', monsters: ['orc_rider', 'orc_shaman', 'orc_berserker', 'orc_warlord'], theme: ['#7a5a3a', '#3a2818'], boss: 'orc_warlord', requiresBossOf: 'stonerefiner', biome: 'grass' },
   // --- Yalahar (economia glooth, bandidos e heróis) ---
-  glooth_bandit:  { city: 'yalahar',   name: 'zone.glooth_bandit',  icon: '⚙️', worldReq: 'auroria', monsters: ['glooth_brigand', 'glooth_bandit'], theme: ['#4a6b3a', '#1f331a'], boss: 'glooth_brigand' },
-  hero_hunt:      { city: 'yalahar',   name: 'zone.hero_hunt',      icon: '🦸', worldReq: 'auroria', monsters: ['hero', 'renegade_knight', 'vicious_squire'], theme: ['#4a3a5c', '#1a1424'], boss: 'hero', requiresBossOf: 'glooth_brigand' },
-
+  glooth_bandit:  { city: 'yalahar',   name: 'zone.glooth_bandit',  icon: '⚙️', worldReq: 'auroria', monsters: ['glooth_brigand', 'glooth_bandit'], theme: ['#4a6b3a', '#1f331a'], boss: 'glooth_brigand', biome: 'ruins' },
+  hero_hunt:      { city: 'yalahar',   name: 'zone.hero_hunt',      icon: '🦸', worldReq: 'auroria', monsters: ['hero', 'renegade_knight', 'vicious_squire'], theme: ['#4a3a5c', '#1a1424'], boss: 'hero', requiresBossOf: 'glooth_brigand', biome: 'ruins' },
   // --- Edron (Catedral Negra, dragões e o pântano da hidra) ---
-  cult_hunt:      { city: 'edron',     name: 'zone.cult_hunt',      icon: '🧙', worldReq: 'auroria', monsters: ['cult_believer', 'cult_enforcer', 'vile_grandmaster'], theme: ['#3a2f4a', '#151022'], boss: 'vile_grandmaster' },
-  dragon_lair:    { city: 'edron',     name: 'zone.dragon_lair',    icon: '🔥', worldReq: 'auroria', monsters: ['dragon', 'dragon_lord'], theme: ['#a53d2b', '#4a1810'], boss: 'dragon_lord', requiresBossOf: 'vile_grandmaster' },
-  hydra_hunt:     { city: 'edron',     name: 'zone.hydra_hunt',     icon: '🐍', worldReq: 'auroria', monsters: ['hydra', 'bog_raider'], theme: ['#3c6b5e', '#173a30'], boss: 'hydra', requiresBossOf: 'dragon_lord' },
-  wyrm_hunt:      { city: 'edron',     name: 'zone.wyrm_hunt',      icon: '🐉', worldReq: 'auroria', monsters: ['wyrm', 'elder_wyrm'], theme: ['#4a6b6b', '#1c2e2e'], boss: 'elder_wyrm', requiresBossOf: 'hydra' },
-
+  cult_hunt:      { city: 'edron',     name: 'zone.cult_hunt',      icon: '🧙', worldReq: 'auroria', monsters: ['cult_believer', 'cult_enforcer', 'vile_grandmaster'], theme: ['#3a2f4a', '#151022'], boss: 'vile_grandmaster', biome: 'cave' },
+  dragon_lair:    { city: 'edron',     name: 'zone.dragon_lair',    icon: '🔥', worldReq: 'auroria', monsters: ['dragon', 'dragon_lord'], theme: ['#a53d2b', '#4a1810'], boss: 'dragon_lord', requiresBossOf: 'vile_grandmaster', biome: 'cave' },
+  hydra_hunt:     { city: 'edron',     name: 'zone.hydra_hunt',     icon: '🐍', worldReq: 'auroria', monsters: ['hydra', 'bog_raider'], theme: ['#3c6b5e', '#173a30'], boss: 'hydra', requiresBossOf: 'dragon_lord', biome: 'swamp' },
+  wyrm_hunt:      { city: 'edron',     name: 'zone.wyrm_hunt',      icon: '🐉', worldReq: 'auroria', monsters: ['wyrm', 'elder_wyrm'], theme: ['#4a6b6b', '#1c2e2e'], boss: 'elder_wyrm', requiresBossOf: 'hydra', biome: 'cave' },
   // --- Cormaya (invenção deste jogo pra área sombria de fantasmas ceifadores) ---
-  grim_reaper_hunt:{ city: 'cormaya',  name: 'zone.grim_reaper_hunt', icon: '💀', worldReq: 'auroria', monsters: ['grim_reaper', 'banshee', 'spectre'], theme: ['#4a3a63', '#1a1424'], boss: 'grim_reaper' },
-
+  grim_reaper_hunt:{ city: 'cormaya',  name: 'zone.grim_reaper_hunt', icon: '💀', worldReq: 'auroria', monsters: ['grim_reaper', 'banshee', 'spectre'], theme: ['#4a3a63', '#1a1424'], boss: 'grim_reaper', biome: 'hell' },
   // --- Darashia (deserto: hienas, leões e cobras místicas) ---
-  werehyaena_hunt:{ city: 'darashia',  name: 'zone.werehyaena_hunt', icon: '🐺', worldReq: 'auroria', monsters: ['werehyaena', 'werehyaena_shaman'], theme: ['#2e3d24', '#141c10'], boss: 'werehyaena_shaman' },
-  wereliones_hunt:{ city: 'darashia',  name: 'zone.wereliones_hunt', icon: '🦁', worldReq: 'auroria', monsters: ['werelion', 'werelioness', 'white_lion'], theme: ['#c9a35c', '#8a6a30'], boss: 'werelioness', requiresBossOf: 'werehyaena_shaman' },
-  cobras_hunt:    { city: 'darashia',  name: 'zone.cobras_hunt',    icon: '🐍', worldReq: 'auroria', monsters: ['cobra_vizier', 'cobra_assassin', 'cobra_scout'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'cobra_vizier', requiresBossOf: 'werelioness' },
-
+  werehyaena_hunt:{ city: 'darashia',  name: 'zone.werehyaena_hunt', icon: '🐺', worldReq: 'auroria', monsters: ['werehyaena', 'werehyaena_shaman'], theme: ['#2e3d24', '#141c10'], boss: 'werehyaena_shaman', biome: 'desert' },
+  wereliones_hunt:{ city: 'darashia',  name: 'zone.wereliones_hunt', icon: '🦁', worldReq: 'auroria', monsters: ['werelion', 'werelioness', 'white_lion'], theme: ['#c9a35c', '#8a6a30'], boss: 'werelioness', requiresBossOf: 'werehyaena_shaman', biome: 'desert' },
+  cobras_hunt:    { city: 'darashia',  name: 'zone.cobras_hunt',    icon: '🐍', worldReq: 'auroria', monsters: ['cobra_vizier', 'cobra_assassin', 'cobra_scout'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'cobra_vizier', requiresBossOf: 'werelioness', biome: 'desert' },
   // --- Zao (Feyrist deste jogo: asuras, draken, falcões, vexclaws e afins) ---
-  asuras_hunt:    { city: 'zao',       name: 'zone.asuras_hunt',    icon: '👺', worldReq: 'auroria', monsters: ['dawnfire_asura', 'midnight_asura', 'hellspawn'], theme: ['#3a2050', '#140a1f'], boss: 'midnight_asura' },
-  draken_hunt:    { city: 'zao',       name: 'zone.draken_hunt',    icon: '🐲', worldReq: 'auroria', monsters: ['draken_spellweaver', 'draken_warmaster'], theme: ['#5c2f2f', '#241010'], boss: 'draken_warmaster', requiresBossOf: 'midnight_asura' },
-  falcon_hunt:    { city: 'zao',       name: 'zone.falcon_hunt',    icon: '🦅', worldReq: 'auroria', monsters: ['falcon_knight', 'falcon_paladin'], theme: ['#4a6b8a', '#1c2e3f'], boss: 'falcon_paladin', requiresBossOf: 'draken_warmaster' },
-  vexclaw_hunt:   { city: 'zao',       name: 'zone.vexclaw_hunt',   icon: '🦞', worldReq: 'auroria', monsters: ['vexclaw', 'grimeleech', 'dark_torturer'], theme: ['#8a4a2f', '#3a1c10'], boss: 'vexclaw', requiresBossOf: 'falcon_paladin' },
-  grimeleech_hunt:{ city: 'zao',       name: 'zone.grimeleech_hunt', icon: '👹', worldReq: 'auroria', monsters: ['grimeleech', 'plaguesmith', 'defiler'], theme: ['#6b4a9c', '#2a1a42'], boss: 'grimeleech', requiresBossOf: 'vexclaw' },
-  choking_fear_hunt:{ city: 'zao',     name: 'zone.choking_fear_hunt', icon: '😱', worldReq: 'auroria', monsters: ['choking_fear', 'retching_horror'], theme: ['#5c2b3a', '#26101a'], boss: 'choking_fear', requiresBossOf: 'grimeleech' },
-  crazed_elfs_hunt:{ city: 'zao',      name: 'zone.crazed_elfs_hunt', icon: '🧝', worldReq: 'auroria', monsters: ['crazed_summer_rearguard', 'crazed_summer_vanguard', 'crazed_winter_rearguard', 'crazed_winter_vanguard'], theme: ['#3f7052', '#1e3d2b'], boss: 'crazed_winter_vanguard', requiresBossOf: 'choking_fear' },
-
+  asuras_hunt:    { city: 'zao',       name: 'zone.asuras_hunt',    icon: '👺', worldReq: 'auroria', monsters: ['dawnfire_asura', 'midnight_asura', 'hellspawn'], theme: ['#3a2050', '#140a1f'], boss: 'midnight_asura', biome: 'ruins' },
+  draken_hunt:    { city: 'zao',       name: 'zone.draken_hunt',    icon: '🐲', worldReq: 'auroria', monsters: ['draken_spellweaver', 'draken_warmaster'], theme: ['#5c2f2f', '#241010'], boss: 'draken_warmaster', requiresBossOf: 'midnight_asura', biome: 'jungle' },
+  falcon_hunt:    { city: 'zao',       name: 'zone.falcon_hunt',    icon: '🦅', worldReq: 'auroria', monsters: ['falcon_knight', 'falcon_paladin'], theme: ['#4a6b8a', '#1c2e3f'], boss: 'falcon_paladin', requiresBossOf: 'draken_warmaster', biome: 'ruins' },
+  vexclaw_hunt:   { city: 'zao',       name: 'zone.vexclaw_hunt',   icon: '🦞', worldReq: 'auroria', monsters: ['vexclaw', 'grimeleech', 'dark_torturer'], theme: ['#8a4a2f', '#3a1c10'], boss: 'vexclaw', requiresBossOf: 'falcon_paladin', biome: 'hell' },
+  grimeleech_hunt:{ city: 'zao',       name: 'zone.grimeleech_hunt', icon: '👹', worldReq: 'auroria', monsters: ['grimeleech', 'plaguesmith', 'defiler'], theme: ['#6b4a9c', '#2a1a42'], boss: 'grimeleech', requiresBossOf: 'vexclaw', biome: 'hell' },
+  choking_fear_hunt:{ city: 'zao',     name: 'zone.choking_fear_hunt', icon: '😱', worldReq: 'auroria', monsters: ['choking_fear', 'retching_horror'], theme: ['#5c2b3a', '#26101a'], boss: 'choking_fear', requiresBossOf: 'grimeleech', biome: 'hell' },
+  crazed_elfs_hunt:{ city: 'zao',      name: 'zone.crazed_elfs_hunt', icon: '🧝', worldReq: 'auroria', monsters: ['crazed_summer_rearguard', 'crazed_summer_vanguard', 'crazed_winter_rearguard', 'crazed_winter_vanguard'], theme: ['#3f7052', '#1e3d2b'], boss: 'crazed_winter_vanguard', requiresBossOf: 'choking_fear', biome: 'forest' },
   // --- Roshamuul (vale demoníaco: guzzlemaws e usurpadores) ---
-  guzzlemaw_hunt: { city: 'roshamuul', name: 'zone.guzzlemaw_hunt', icon: '👹', worldReq: 'auroria', monsters: ['guzzlemaw', 'frazzlemaw', 'silencer'], theme: ['#7a2a1f', '#2b0a08'], boss: 'guzzlemaw' },
-  lion_knight_hunt:{ city: 'roshamuul', name: 'zone.lion_knight_hunt', icon: '🦁', worldReq: 'auroria', monsters: ['usurper_knight', 'warlock', 'usurper_archer'], theme: ['#6b4a9c', '#2a1a42'], boss: 'usurper_knight', requiresBossOf: 'guzzlemaw' },
-
+  guzzlemaw_hunt: { city: 'roshamuul', name: 'zone.guzzlemaw_hunt', icon: '👹', worldReq: 'auroria', monsters: ['guzzlemaw', 'frazzlemaw', 'silencer'], theme: ['#7a2a1f', '#2b0a08'], boss: 'guzzlemaw', biome: 'hell' },
+  lion_knight_hunt:{ city: 'roshamuul', name: 'zone.lion_knight_hunt', icon: '🦁', worldReq: 'auroria', monsters: ['usurper_knight', 'warlock', 'usurper_archer'], theme: ['#6b4a9c', '#2a1a42'], boss: 'usurper_knight', requiresBossOf: 'guzzlemaw', biome: 'ruins' },
   // --- Ferumbras Citadel (Kilmaresh deste jogo: o tier mais alto do jogo) ---
-  mega_dragon_hunt:{ city: 'ferumbras', name: 'zone.mega_dragon_hunt', icon: '🐉', worldReq: 'auroria', monsters: ['mega_dragon', 'dragolisk', 'wardragon'], theme: ['#a53d2b', '#4a1810'], boss: 'mega_dragon' },
-  bulltaur_hunt:  { city: 'ferumbras', name: 'zone.bulltaur_hunt', icon: '🐂', worldReq: 'auroria', monsters: ['bulltaur_brute', 'bulltaur_alchemist', 'bulltaur_forgepriest'], theme: ['#7a5a3a', '#3a2818'], boss: 'bulltaur_forgepriest', requiresBossOf: 'mega_dragon' },
-  gazer_hunt:     { city: 'ferumbras', name: 'zone.gazer_hunt',    icon: '👁️', worldReq: 'auroria', monsters: ['gazer_spectre', 'ripper_spectre', 'burster_spectre'], theme: ['#4a3a63', '#1a1424'], boss: 'gazer_spectre', requiresBossOf: 'bulltaur_forgepriest' },
-  inferniarch_hunt:{ city: 'ferumbras', name: 'zone.inferniarch_hunt', icon: '🔥', worldReq: 'auroria', monsters: ['gorger_inferniarch', 'broodrider_inferniarch', 'sineater_inferniarch'], theme: ['#a52a1f', '#1f0a08'], boss: 'sineater_inferniarch', requiresBossOf: 'gazer_spectre' },
-  girtablilu_hunt:{ city: 'ferumbras', name: 'zone.girtablilu_hunt', icon: '🦂', worldReq: 'auroria', monsters: ['girtablilu_warrior', 'venerable_girtablilu'], theme: ['#c9a35c', '#8a6a30'], boss: 'venerable_girtablilu', requiresBossOf: 'sineater_inferniarch' },
-  livraria_ice:   { city: 'ferumbras', name: 'zone.livraria_ice',  icon: '📘', worldReq: 'auroria', monsters: ['icecold_book', 'squid_warden', 'animated_feather'], theme: ['#6fa3c9', '#294a63'], boss: 'squid_warden', requiresBossOf: 'venerable_girtablilu' },
-  livraria_fire:  { city: 'ferumbras', name: 'zone.livraria_fire', icon: '📕', worldReq: 'auroria', monsters: ['burning_book', 'guardian_of_tales', 'rage_squid', 'ink_blob'], theme: ['#a53d2b', '#4a1810'], boss: 'guardian_of_tales', requiresBossOf: 'squid_warden' },
-  livraria_earth: { city: 'ferumbras', name: 'zone.livraria_earth', icon: '📗', worldReq: 'auroria', monsters: ['cursed_book', 'biting_book', 'ink_blob'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'cursed_book', requiresBossOf: 'guardian_of_tales' },
-  livraria_energy:{ city: 'ferumbras', name: 'zone.livraria_energy', icon: '📙', worldReq: 'auroria', monsters: ['energetic_book', 'brain_squid', 'knowledge_elemental'], theme: ['#6b4a9c', '#2a1a42'], boss: 'brain_squid', requiresBossOf: 'cursed_book' },
-  lavafungos_hunt:{ city: 'ferumbras', name: 'zone.lavafungos_hunt', icon: '🍄', worldReq: 'auroria', monsters: ['lavafungus', 'lavaworm', 'streaked_devourer'], theme: ['#a5391f', '#3a1208'], boss: 'streaked_devourer', requiresBossOf: 'brain_squid' },
+  mega_dragon_hunt:{ city: 'ferumbras', name: 'zone.mega_dragon_hunt', icon: '🐉', worldReq: 'auroria', monsters: ['mega_dragon', 'dragolisk', 'wardragon'], theme: ['#a53d2b', '#4a1810'], boss: 'mega_dragon', biome: 'hell' },
+  bulltaur_hunt:  { city: 'ferumbras', name: 'zone.bulltaur_hunt', icon: '🐂', worldReq: 'auroria', monsters: ['bulltaur_brute', 'bulltaur_alchemist', 'bulltaur_forgepriest'], theme: ['#7a5a3a', '#3a2818'], boss: 'bulltaur_forgepriest', requiresBossOf: 'mega_dragon', biome: 'cave' },
+  gazer_hunt:     { city: 'ferumbras', name: 'zone.gazer_hunt',    icon: '👁️', worldReq: 'auroria', monsters: ['gazer_spectre', 'ripper_spectre', 'burster_spectre'], theme: ['#4a3a63', '#1a1424'], boss: 'gazer_spectre', requiresBossOf: 'bulltaur_forgepriest', biome: 'hell' },
+  inferniarch_hunt:{ city: 'ferumbras', name: 'zone.inferniarch_hunt', icon: '🔥', worldReq: 'auroria', monsters: ['gorger_inferniarch', 'broodrider_inferniarch', 'sineater_inferniarch'], theme: ['#a52a1f', '#1f0a08'], boss: 'sineater_inferniarch', requiresBossOf: 'gazer_spectre', biome: 'hell' },
+  girtablilu_hunt:{ city: 'ferumbras', name: 'zone.girtablilu_hunt', icon: '🦂', worldReq: 'auroria', monsters: ['girtablilu_warrior', 'venerable_girtablilu'], theme: ['#c9a35c', '#8a6a30'], boss: 'venerable_girtablilu', requiresBossOf: 'sineater_inferniarch', biome: 'desert' },
+  livraria_ice:   { city: 'ferumbras', name: 'zone.livraria_ice',  icon: '📘', worldReq: 'auroria', monsters: ['icecold_book', 'squid_warden', 'animated_feather'], theme: ['#6fa3c9', '#294a63'], boss: 'squid_warden', requiresBossOf: 'venerable_girtablilu', biome: 'snow' },
+  livraria_fire:  { city: 'ferumbras', name: 'zone.livraria_fire', icon: '📕', worldReq: 'auroria', monsters: ['burning_book', 'guardian_of_tales', 'rage_squid', 'ink_blob'], theme: ['#a53d2b', '#4a1810'], boss: 'guardian_of_tales', requiresBossOf: 'squid_warden', biome: 'hell' },
+  livraria_earth: { city: 'ferumbras', name: 'zone.livraria_earth', icon: '📗', worldReq: 'auroria', monsters: ['cursed_book', 'biting_book', 'ink_blob'], theme: ['#5e7d3f', '#2e4a1f'], boss: 'cursed_book', requiresBossOf: 'guardian_of_tales', biome: 'cave' },
+  livraria_energy:{ city: 'ferumbras', name: 'zone.livraria_energy', icon: '📙', worldReq: 'auroria', monsters: ['energetic_book', 'brain_squid', 'knowledge_elemental'], theme: ['#6b4a9c', '#2a1a42'], boss: 'brain_squid', requiresBossOf: 'cursed_book', biome: 'ruins' },
+  lavafungos_hunt:{ city: 'ferumbras', name: 'zone.lavafungos_hunt', icon: '🍄', worldReq: 'auroria', monsters: ['lavafungus', 'lavaworm', 'streaked_devourer'], theme: ['#a5391f', '#3a1208'], boss: 'streaked_devourer', requiresBossOf: 'brain_squid', biome: 'hell' },
 };
 
 export const MONSTERS = {
