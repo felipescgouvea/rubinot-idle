@@ -54,6 +54,21 @@ def limpar(v):
     return re.sub(r"'''|''", '', v).strip(' .')
 
 
+def criaturas(texto):
+    """Monstros da área — vêm do {{CreatureList|...}} no corpo da página, um por
+    linha depois dos parâmetros nomeados (type=, caption=)."""
+    saida = []
+    for m in re.finditer(r'\{\{\s*CreatureList([^}]*)\}\}', texto, re.I | re.S):
+        for parte in m.group(1).split('|'):
+            parte = parte.strip()
+            if not parte or '=' in parte:
+                continue
+            nome = limpar(parte)
+            if nome and nome not in saida:
+                saida.append(nome)
+    return saida
+
+
 def nivel(texto):
     """Menor nível recomendado entre as vocações — serve como 'a partir de'."""
     vals = []
@@ -86,6 +101,7 @@ def main():
                 'nivel': nivel(w),
                 'exp': limpar(campo(w, 'exp')),
                 'loot': limpar(campo(w, 'loot')),
+                'monstros': criaturas(w),
                 'melhorLoot': [limpar(campo(w, f'bestloot{n}')) for n in ('', '2', '3')
                                if limpar(campo(w, f'bestloot{n}'))],
             })

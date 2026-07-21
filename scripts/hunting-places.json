@@ -5,6 +5,12 @@
   "nivel": 20,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Snake",
+   "Elf",
+   "Elf Scout",
+   "Elf Arcanist"
+  ],
   "melhorLoot": [
    "Wand of Cosmic Energy",
    "Elvish Bow",
@@ -17,6 +23,16 @@
   "nivel": 13,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Snake",
+   "Bat",
+   "Poison Spider",
+   "troll",
+   "Skeleton",
+   "Rotworm",
+   "Ghoul",
+   "Slime"
+  ],
   "melhorLoot": [
    "Life Ring",
    "Bat Wing",
@@ -29,6 +45,11 @@
   "nivel": 200,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Metal Gargoyle",
+   "Grim Reaper",
+   "Demon"
+  ],
   "melhorLoot": [
    "Magic Plate Armor",
    "Mastermind Shield",
@@ -41,6 +62,9 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Rat"
+  ],
   "melhorLoot": []
  },
  {
@@ -49,6 +73,13 @@
   "nivel": 15,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Butterfly (Purple)",
+   "Ghoul",
+   "Bonelord",
+   "Green Frog",
+   "The Frog Prince"
+  ],
   "melhorLoot": [
    "Bonelord Eye",
    "Terra Rod",
@@ -61,6 +92,23 @@
   "nivel": 35,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Mutated Human",
+   "Mercury Blob",
+   "Slime",
+   "Acid Blob",
+   "Mutated Rat",
+   "Death Blob",
+   "Mutated Bat",
+   "Bog Raider",
+   "Mutated Tiger",
+   "Spit Nettle",
+   "Nightmare Scion",
+   "Nightmare",
+   "Destroyer",
+   "Plaguesmith",
+   "Demon"
+  ],
   "melhorLoot": [
    "Magic Plate Armor",
    "Mastermind Shield",
@@ -73,6 +121,11 @@
   "nivel": 15,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Amazon",
+   "Valkyrie",
+   "Witch"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Witch Hat",
@@ -85,6 +138,9 @@
   "nivel": 350,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Earworm"
+  ],
   "melhorLoot": []
  },
  {
@@ -93,6 +149,11 @@
   "nivel": 250,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Deepling Warrior",
+   "Deathling Scout",
+   "Deathling Spellsinger"
+  ],
   "melhorLoot": [
    "Warrior's Axe",
    "Warrior's Shield",
@@ -105,6 +166,33 @@
   "nivel": 11,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Cave Rat",
+   "Poison Spider",
+   "Cobra",
+   "Skeleton",
+   "Larva",
+   "Scorpion",
+   "Ghoul",
+   "Stalker",
+   "Ghost",
+   "Scarab",
+   "Mummy",
+   "Slime",
+   "Bonelord",
+   "Crypt Shambler",
+   "Fire Elemental",
+   "Vampire",
+   "Gargoyle",
+   "Demon Skeleton",
+   "Bonebeast",
+   "Banshee",
+   "Lich",
+   "Necromancer",
+   "Vashresamun",
+   "Magicthrower",
+   "Shredderthrower"
+  ],
   "melhorLoot": [
    "Ancient Tiara",
    "Maxilla Maximus",
@@ -117,6 +205,36 @@
   "nivel": 8,
   "exp": "Varies",
   "loot": "Varies",
+  "monstros": [
+   "Cave Rat",
+   "Orc",
+   "Orc Warrior",
+   "Orc Shaman",
+   "Orc Spearman",
+   "Rat",
+   "Snake",
+   "Spider",
+   "Troll",
+   "Carrion Worm",
+   "Cyclops",
+   "Ghoul",
+   "Poison Spider",
+   "Rotworm",
+   "Skeleton",
+   "Slime",
+   "Grorlam",
+   "Bonelord",
+   "Dragon",
+   "Orc Berserker",
+   "Fire Devil",
+   "Deer",
+   "Minotaur",
+   "Minotaur Archer",
+   "Minotaur Guard",
+   "Minotaur Mage",
+   "Demon Skeleton",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Dragon Shield",
    "Wand of Inferno",
@@ -129,6 +247,29 @@
   "nivel": 10,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Cave Rat",
+   "Snake",
+   "Hyaena",
+   "Poison Spider",
+   "Cobra",
+   "Skeleton",
+   "Larva",
+   "Scorpion",
+   "Scarab",
+   "Ghoul",
+   "Mummy",
+   "Ghost",
+   "Crypt Shambler",
+   "Vampire",
+   "Demon Skeleton",
+   "Necromancer",
+   "Ancient Scarab",
+   "Lich",
+   "Plaguethrower",
+   "Behemoth",
+   "Ashmunrah"
+  ],
   "melhorLoot": [
    "Holy Scarab",
    "Maxilla Maximus",
@@ -141,6 +282,11 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Blemished Spawn",
+   "Eyeless Devourer",
+   "Afflicted Strider"
+  ],
   "melhorLoot": []
  },
  {
@@ -149,6 +295,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Pirate Navigator",
+   "Pirate Gunner",
+   "Pirate Cook",
+   "Pirate Quartermaster",
+   "Sea Captain"
+  ],
   "melhorLoot": []
  },
  {
@@ -157,6 +310,51 @@
   "nivel": 15,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Squirrel",
+   "Snake",
+   "Cave Rat",
+   "Spider",
+   "Wolf",
+   "Bug",
+   "Troll",
+   "Hyaena",
+   "Bear",
+   "Panda",
+   "Crab",
+   "Cobra",
+   "Lion",
+   "Centipede",
+   "Tiger",
+   "Troll Champion",
+   "Crocodile",
+   "Scorpion",
+   "Toad",
+   "Carrion Worm",
+   "Tortoise",
+   "Kongra",
+   "Elephant",
+   "Terror Bird",
+   "Carniphila",
+   "Quara Constrictor",
+   "Quara Mantassin",
+   "Scarab",
+   "Quara Constrictor Scout",
+   "Ancient Scarab",
+   "Giant Spider",
+   "Massive Earth Elemental",
+   "Wyrm",
+   "Dragon Lord",
+   "Hydra",
+   "Behemoth",
+   "Gladiator",
+   "Mutated Rat",
+   "Nightmare Scion",
+   "Barbarian Bloodwalker",
+   "Undead Gladiator",
+   "Mutated Bat",
+   "Mutated Tiger"
+  ],
   "melhorLoot": []
  },
  {
@@ -165,6 +363,15 @@
   "nivel": 50,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Blue Djinn",
+   "Fire Elemental",
+   "Marid",
+   "Scarab",
+   "Lion",
+   "Stone Golem",
+   "Larva"
+  ],
   "melhorLoot": [
    "Blue Gem",
    "Hailstorm Rod",
@@ -177,6 +384,10 @@
   "nivel": 120,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Broken Shaper",
+   "Twisted Shaper"
+  ],
   "melhorLoot": []
  },
  {
@@ -185,6 +396,12 @@
   "nivel": 130,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Shaper Matriarch",
+   "Broken Shaper",
+   "Twisted Shaper",
+   "Stone Rhino"
+  ],
   "melhorLoot": []
  },
  {
@@ -193,6 +410,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "True Midnight Asura",
+   "True Frost Flower Asura",
+   "Winged Jaracal",
+   "Silverfrost Sentinel",
+   "Iceplume Strider"
+  ],
   "melhorLoot": []
  },
  {
@@ -201,6 +425,21 @@
   "nivel": 200,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Lich",
+   "Hydra",
+   "Hellspawn",
+   "Dawnfire Asura",
+   "Midnight Asura",
+   "Frost Flower Asura",
+   "Destroyer",
+   "Massive Fire Elemental",
+   "Massive Energy Elemental",
+   "True Dawnfire Asura",
+   "True Midnight Asura",
+   "True Frost Flower Asura",
+   "Hellhound"
+  ],
   "melhorLoot": []
  },
  {
@@ -209,6 +448,13 @@
   "nivel": 300,
   "exp": "Good",
   "loot": "Very Good",
+  "monstros": [
+   "Hellspawn",
+   "True Dawnfire Asura",
+   "True Midnight Asura",
+   "True Frost Flower Asura",
+   "Hellhound"
+  ],
   "melhorLoot": []
  },
  {
@@ -217,6 +463,11 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Broodrider Inferniarch",
+   "Gorger Inferniarch",
+   "Sineater Inferniarch"
+  ],
   "melhorLoot": []
  },
  {
@@ -225,6 +476,14 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Hellhunter Inferniarch",
+   "Spellreaper Inferniarch",
+   "Brinebrute Inferniarch",
+   "Gralvalon",
+   "Twisterror",
+   "Malvaroth"
+  ],
   "melhorLoot": []
  },
  {
@@ -233,6 +492,29 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Very Good",
+  "monstros": [
+   "Butterfly (Purple)",
+   "Butterfly (Red)",
+   "Parrot",
+   "Skunk",
+   "Snake",
+   "Bat",
+   "Spider",
+   "Bug",
+   "Spit Nettle",
+   "Poison Spider",
+   "Wasp",
+   "Cobra",
+   "Centipede",
+   "Tiger",
+   "Sibang",
+   "Kongra",
+   "Tarantula",
+   "Merlkin",
+   "Carniphila",
+   "Terror Bird",
+   "Wyvern"
+  ],
   "melhorLoot": [
    "Carrot on a Stick",
    "Banana Staff",
@@ -245,6 +527,21 @@
   "nivel": 22,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Badger",
+   "Chicken",
+   "Barbarian Brutetamer",
+   "Barbarian Bloodwalker",
+   "Barbarian Headsplitter",
+   "Barbarian Skullhunter",
+   "Crystal Spider",
+   "Frost Troll",
+   "Ice Golem",
+   "Ice Witch",
+   "Mammoth",
+   "Polar Bear",
+   "Winter Wolf"
+  ],
   "melhorLoot": []
  },
  {
@@ -253,6 +550,10 @@
   "nivel": 150,
   "exp": "Very Good",
   "loot": "Very Bad",
+  "monstros": [
+   "Barkless Devotee",
+   "Barkless Fanatic"
+  ],
   "melhorLoot": [
    "Bed of Nails",
    "Tiger Eye",
@@ -265,6 +566,11 @@
   "nivel": 300,
   "exp": "Moderate",
   "loot": "Poor",
+  "monstros": [
+   "Wandering Prospector",
+   "Cursed Prospector",
+   "Evil Prospector"
+  ],
   "melhorLoot": [
    "Spectral Gold Nugget",
    "Diamond",
@@ -277,6 +583,13 @@
   "nivel": 60,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Ghoul",
+   "Bonelord",
+   "Gozzler",
+   "Elder Bonelord",
+   "Braindeath"
+  ],
   "melhorLoot": [
    "Haunted Blade",
    "Bonelord Helmet",
@@ -289,6 +602,14 @@
   "nivel": 55,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Dwarf",
+   "Dwarf Soldier",
+   "Fire Devil",
+   "Dwarf Guard",
+   "Dwarf Geomancer",
+   "Stone Golem"
+  ],
   "melhorLoot": [
    "Terra Boots",
    "Guardian Shield",
@@ -301,6 +622,17 @@
   "nivel": 28,
   "exp": "good",
   "loot": "good",
+  "monstros": [
+   "Badger",
+   "Winter Wolf",
+   "Frost Troll",
+   "Polar Bear",
+   "Barbarian Headsplitter",
+   "Barbarian Skullhunter",
+   "Barbarian Brutetamer",
+   "Mammoth",
+   "Barbarian Bloodwalker"
+  ],
   "melhorLoot": [
    "Red Piece of Cloth",
    "Mammoth Fur Cape",
@@ -313,6 +645,11 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Raubritter Skirmisher",
+   "Raubritter Marksman",
+   "Raubritter Chastener"
+  ],
   "melhorLoot": []
  },
  {
@@ -321,6 +658,16 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Bramble Wyrmling",
+   "Hawk Hopper",
+   "Bluebeak",
+   "Lion Hydra",
+   "Sir Leopold",
+   "Crusader",
+   "Headwalker",
+   "Sir Leonard"
+  ],
   "melhorLoot": [
    "Blank Imbuement Scroll"
   ]
@@ -331,6 +678,35 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Aggressive Chicken",
+   "Agrestic Chicken",
+   "Ancient Lion Knight",
+   "Ancient Lion Archer",
+   "Ancient Lion Warlock",
+   "Bat",
+   "Bear",
+   "Cat",
+   "Crypt Warrior",
+   "Deer",
+   "Dog",
+   "Lion Knight",
+   "Lion Archer",
+   "Lion Warlock",
+   "Monk of the Order",
+   "Pig",
+   "Usurper Knight",
+   "Usurper Archer",
+   "Usurper Warlock",
+   "Drume",
+   "Fugue",
+   "Hardened Usurper Archer",
+   "Hardened Usurper Knight",
+   "Hardened Usurper Warlock",
+   "Kesar",
+   "Lion Commander",
+   "Usurper Commander"
+  ],
   "melhorLoot": []
  },
  {
@@ -339,6 +715,9 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Crypt Warrior"
+  ],
   "melhorLoot": []
  },
  {
@@ -347,6 +726,12 @@
   "nivel": 300,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Grim Reaper",
+   "Flimsy Lost Soul",
+   "Mean Lost Soul",
+   "Freakish Lost Soul"
+  ],
   "melhorLoot": []
  },
  {
@@ -355,6 +740,13 @@
   "nivel": 90,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Toad",
+   "Lancer Beetle",
+   "Wailing Widow",
+   "Brimstone Bug",
+   "The Keeper"
+  ],
   "melhorLoot": [
    "Magic Sulphur",
    "Wailing Widow's Necklace",
@@ -367,6 +759,11 @@
   "nivel": 400,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Bulltaur Brute",
+   "Bulltaur Alchemist",
+   "Bulltaur Forgepriest"
+  ],
   "melhorLoot": [
    "Spellweaver's Robe",
    "White Gem"
@@ -378,6 +775,12 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Ripper Spectre",
+   "Gazer Spectre",
+   "Burster Spectre",
+   "Arachnophobica"
+  ],
   "melhorLoot": []
  },
  {
@@ -386,6 +789,16 @@
   "nivel": 90,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Quara Constrictor",
+   "Quara Mantassin",
+   "Quara Hydromancer",
+   "Massive Water Elemental",
+   "Quara Pincher",
+   "Quara Predator",
+   "Crustacea Gigantica",
+   "Thul"
+  ],
   "melhorLoot": [
    "Giant Shrimp",
    "Skull Helmet",
@@ -398,6 +811,12 @@
   "nivel": 8,
   "exp": "--",
   "loot": "--",
+  "monstros": [
+   "Amazon",
+   "Bear",
+   "Spider",
+   "Valkyrie"
+  ],
   "melhorLoot": [
    "Bear Paw",
    "Small Diamond",
@@ -410,6 +829,13 @@
   "nivel": 35,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Rotworm",
+   "Carrion Worm",
+   "Corym Charlatan",
+   "Corym Skirmisher",
+   "Corym Vanguard"
+  ],
   "melhorLoot": [
    "Rat God Doll",
    "Leather Harness",
@@ -422,6 +848,11 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Dragon Hatchling",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -434,6 +865,9 @@
   "nivel": 8,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Troll"
+  ],
   "melhorLoot": [
    "Silver Amulet",
    "Bunch of Troll Hair",
@@ -446,6 +880,14 @@
   "nivel": 8,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Bat",
+   "Spider",
+   "Bug",
+   "Poison Spider",
+   "Rotworm",
+   "Slime"
+  ],
   "melhorLoot": [
    "Bat Wing"
   ]
@@ -456,6 +898,11 @@
   "nivel": 250,
   "exp": "bad",
   "loot": "very good",
+  "monstros": [
+   "Lumbering Carnivor",
+   "Spiky Carnivor",
+   "Menacing Carnivor"
+  ],
   "melhorLoot": [
    "Blue Robe",
    "Warrior Helmet",
@@ -468,6 +915,11 @@
   "nivel": 80,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Bonebeast",
+   "Putrid Mummy",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Little Bowl of Myrrh"
   ]
@@ -478,6 +930,12 @@
   "nivel": 110,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Lost Thrower",
+   "Lost Husher",
+   "Lost Basher",
+   "Enslaved Dwarf"
+  ],
   "melhorLoot": [
    "War Axe",
    "Fire Axe",
@@ -490,6 +948,28 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Corrupted Skeleton",
+   "Skeleton",
+   "Ghoul",
+   "Crypt Shambler",
+   "Demon Skeleton",
+   "Zombie",
+   "Nightstalker",
+   "Necromancer",
+   "Lich",
+   "Bonebeast",
+   "Mutated Bat",
+   "Banshee",
+   "Giant Spider",
+   "Braindeath",
+   "Tormented Ghost",
+   "Corrupted Ghost",
+   "Tarantula",
+   "Nightmare Scion",
+   "Nightmare",
+   "Grim Reaper"
+  ],
   "melhorLoot": [
    "Sweet Smelling Bait",
    "Maxilla Maximus",
@@ -502,6 +982,13 @@
   "nivel": 15,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Chakoya Toolshaper",
+   "Chakoya Tribewarden",
+   "Chakoya Windcaller",
+   "Polar Bear",
+   "Frost Giantess"
+  ],
   "melhorLoot": []
  },
  {
@@ -510,6 +997,12 @@
   "nivel": 70,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Lizard Legionnaire",
+   "Lizard High Guard",
+   "Lizard Dragon Priest",
+   "Killer Caiman"
+  ],
   "melhorLoot": [
    "Lizard Trophy",
    "Zaoan Legs",
@@ -522,6 +1015,25 @@
   "nivel": 90,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Draken Warmaster",
+   "Baron Brute",
+   "The Axeorcist",
+   "Menace",
+   "Fatality",
+   "Incineron",
+   "Coldheart",
+   "Dreadwing",
+   "Doomhowl",
+   "Haunter",
+   "The Dreadorian",
+   "Rocko",
+   "Tremorak",
+   "Tirecz"
+  ],
   "melhorLoot": [
    "Lizard Trophy",
    "Ring of the Sky",
@@ -534,6 +1046,14 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Candy Horror",
+   "Nibblemaw",
+   "Honey Elemental",
+   "Sugar Cube Worker",
+   "Fruit Drop",
+   "Sugar Daddy"
+  ],
   "melhorLoot": []
  },
  {
@@ -542,6 +1062,19 @@
   "nivel": 50,
   "exp": "average",
   "loot": "good",
+  "monstros": [
+   "Poison Spider",
+   "Bat",
+   "Cobra",
+   "Crocodile",
+   "Larva",
+   "Lizard Sentinel",
+   "Lizard Templar",
+   "Lizard Snakecharmer",
+   "Scarab",
+   "Spit Nettle",
+   "Wyvern"
+  ],
   "melhorLoot": [
    "Wand of Inferno",
    "Terra Rod",
@@ -554,6 +1087,37 @@
   "nivel": null,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Penguin",
+   "Winter Wolf",
+   "Chakoya Toolshaper",
+   "Chakoya Tribewarden",
+   "Chakoya Windcaller",
+   "Polar Bear",
+   "Pirate Skeleton",
+   "Pirate Ghost",
+   "Frost Giant",
+   "Frost Giantess",
+   "Wyvern",
+   "Ice Golem",
+   "Crystal Spider",
+   "Lancer Beetle",
+   "Wailing Widow",
+   "Brimstone Bug",
+   "Giant Spider",
+   "Killer Caiman",
+   "Stampor",
+   "Mammoth",
+   "Frost Dragon Hatchling",
+   "Yeti",
+   "Frost Dragon",
+   "Ghastly Dragon",
+   "Undead Dragon",
+   "Behemoth",
+   "Hellspawn",
+   "Demon",
+   "Hellhound"
+  ],
   "melhorLoot": [
    "Bunnyslippers",
    "Magic Plate Armor",
@@ -566,6 +1130,11 @@
   "nivel": 600,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Brachiodemon",
+   "Infernal Demon",
+   "Infernal Phantom"
+  ],
   "melhorLoot": []
  },
  {
@@ -574,6 +1143,19 @@
   "nivel": 300,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Cobra Scout",
+   "Cobra Assassin",
+   "Cobra Vizier",
+   "Clutter",
+   "Cart Packed with Gold",
+   "Strange Rat",
+   "Ugly Monster",
+   "Gaffir",
+   "Custodian",
+   "Guard Captain Quaid",
+   "Scarlett Etzel"
+  ],
   "melhorLoot": []
  },
  {
@@ -582,6 +1164,12 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Dwarf",
+   "Dwarf Soldier",
+   "Dwarf Guard",
+   "Dwarf Geomancer"
+  ],
   "melhorLoot": [
    "Terra Boots",
    "Iron Ore",
@@ -594,6 +1182,17 @@
   "nivel": 100,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Death Blob",
+   "Mutated Tiger",
+   "Mutated Bat",
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Lizard Chosen",
+   "Ghastly Dragon",
+   "The Voice of Ruin"
+  ],
   "melhorLoot": [
    "Zaoan Helmet",
    "Guardian Boots",
@@ -606,6 +1205,25 @@
   "nivel": 45,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Bat",
+   "Cave Rat",
+   "Corym Charlatan",
+   "Corym Skirmisher",
+   "Corym Vanguard",
+   "Orc Berserker",
+   "Amazon",
+   "Wild Warrior",
+   "Minotaur Poacher",
+   "Minotaur Guard",
+   "Minotaur Mage",
+   "Forest Fury",
+   "Witch",
+   "Priestess",
+   "Kongra",
+   "Lizard Sentinel",
+   "Tarantula"
+  ],
   "melhorLoot": []
  },
  {
@@ -614,6 +1232,15 @@
   "nivel": 60,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Corym Charlatan",
+   "Corym Skirmisher",
+   "Corym Vanguard",
+   "Bat",
+   "Cave Rat",
+   "Tarantula",
+   "Stonerefiner"
+  ],
   "melhorLoot": []
  },
  {
@@ -622,6 +1249,14 @@
   "nivel": 150,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Lacewing Moth",
+   "Crazed Summer Vanguard",
+   "Crazed Summer Rearguard",
+   "Insane Siren",
+   "Arachnophobica",
+   "Thanatursus"
+  ],
   "melhorLoot": [
    "Crystal Crossbow",
    "Magma Monocle",
@@ -634,6 +1269,14 @@
   "nivel": 150,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Hibernal Moth",
+   "Crazed Winter Vanguard",
+   "Crazed Winter Rearguard",
+   "Soul-Broken Harbinger",
+   "Arachnophobica",
+   "Thanatursus"
+  ],
   "melhorLoot": [
    "Collar of Green Plasma",
    "Glacier Kilt",
@@ -646,6 +1289,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Infernoid Blob",
+   "Infernoid Hound",
+   "Infernoid Soul",
+   "Infernoid Spiritual",
+   "Herald of Fire"
+  ],
   "melhorLoot": []
  },
  {
@@ -654,6 +1304,10 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Cinder Wyrmling",
+   "Shell Drake"
+  ],
   "melhorLoot": [
    "Spiked Squelcher",
    "Blank Imbuement Scroll",
@@ -666,6 +1320,13 @@
   "nivel": 600,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Headpecker",
+   "Mantosaurus",
+   "Mercurial Menace",
+   "Noxious Ripptor",
+   "Shrieking Cry-Stal"
+  ],
   "melhorLoot": []
  },
  {
@@ -674,6 +1335,20 @@
   "nivel": 70,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Pirate Skeleton",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Ghost",
+   "Earth Elemental",
+   "Crystalcrusher",
+   "Wyvern",
+   "Wiggler",
+   "Crystal Spider",
+   "Massive Earth Elemental",
+   "Drillworm",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Sapphire Hammer",
    "Dragon Scale Mail",
@@ -686,6 +1361,11 @@
   "nivel": 80,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Earth Elemental",
+   "Crystal Crusher",
+   "Wyvern"
+  ],
   "melhorLoot": [
    "Wand of Inferno",
    "Wyvern Fang",
@@ -698,6 +1378,19 @@
   "nivel": 25,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Novice of the Cult",
+   "Tarantula",
+   "Witch",
+   "Bonelord",
+   "Dark Monk",
+   "Black Sheep",
+   "Ghoul",
+   "Acolyte of the Cult",
+   "Adept of the Cult",
+   "Vampire",
+   "Elder Bonelord"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Red Robe",
@@ -710,6 +1403,26 @@
   "nivel": 34,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Cyclops",
+   "Cyclops Drone",
+   "Dwarf Soldier",
+   "Dwarf Guard",
+   "Wild Warrior",
+   "Orc Leader",
+   "Orc Berserker",
+   "Minotaur Mage",
+   "Minotaur Guard",
+   "Minotaur Archer",
+   "Elf Scout",
+   "Elf Arcanist",
+   "Scorpion",
+   "Cyclops Smith",
+   "Fire Elemental",
+   "Dragon",
+   "Dragon Lord",
+   "Behemoth"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Steel Boots",
@@ -722,6 +1435,12 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Wasp",
+   "Wisp",
+   "Cyclops",
+   "Cyclops Smith"
+  ],
   "melhorLoot": [
    "Moon Backpack",
    "Spiked Squelcher",
@@ -734,6 +1453,9 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Terramite"
+  ],
   "melhorLoot": [
    "Terramite Shell",
    "Terramite Legs",
@@ -746,6 +1468,12 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Dragon",
+   "Dragon Hatchling",
+   "Dragon Lord",
+   "Demodras"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -758,6 +1486,11 @@
   "nivel": 7,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Rotworm",
+   "Carrion Worm",
+   "Rotworm Queen"
+  ],
   "melhorLoot": [
    "Carrion Worm Fang",
    "Mace",
@@ -770,6 +1503,14 @@
   "nivel": 60,
   "exp": "Bad",
   "loot": "Average",
+  "monstros": [
+   "Deer",
+   "Sandcrawler",
+   "Lion",
+   "Wyrm",
+   "Werehyaena Shaman",
+   "Werehyaena"
+  ],
   "melhorLoot": [
    "Composite Hornbow",
    "Focus Cape",
@@ -782,6 +1523,35 @@
   "nivel": 20,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Bat",
+   "Poison Spider",
+   "Centipede",
+   "Skeleton",
+   "Rotworm",
+   "Scorpion",
+   "Smuggler",
+   "Wild Warrior",
+   "Bandit",
+   "Ghoul",
+   "Dark Apprentice",
+   "Assassin",
+   "Ghost",
+   "Tarantula",
+   "Witch",
+   "Dark Monk",
+   "Hunter",
+   "Mummy",
+   "Slime",
+   "Stone Golem",
+   "Bonelord",
+   "Dark Magician",
+   "Monk (Creature)",
+   "Demon Skeleton",
+   "Rukor Zad",
+   "Vampire",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Mini Mummy",
@@ -794,6 +1564,9 @@
   "nivel": 200,
   "exp": "Bad",
   "loot": "Average",
+  "monstros": [
+   "Sight of Surrender"
+  ],
   "melhorLoot": [
    "String of Mending",
    "Magic Plate Armor",
@@ -806,6 +1579,13 @@
   "nivel": 7,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Minotaur",
+   "Minotaur Archer",
+   "Minotaur Guard",
+   "Minotaur Mage",
+   "Mummy"
+  ],
   "melhorLoot": [
    "Mini Mummy",
    "Wand of Cosmic Energy",
@@ -818,6 +1598,12 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Walking Pillar",
+   "Darklight Source",
+   "Darklight Striker",
+   "Darklight Matter"
+  ],
   "melhorLoot": []
  },
  {
@@ -826,6 +1612,14 @@
   "nivel": 10,
   "exp": "okay",
   "loot": "okay",
+  "monstros": [
+   "Mountain Troll",
+   "Troll Trained Salamander",
+   "Dawnfly",
+   "Poison Spider",
+   "Minotaur Bruiser",
+   "Minotaur Poacher"
+  ],
   "melhorLoot": []
  },
  {
@@ -834,6 +1628,11 @@
   "nivel": 250,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Sandcrawler",
+   "Skeleton Elite Warrior",
+   "Undead Elite Gladiator"
+  ],
   "melhorLoot": [
    "Skull Helmet"
   ]
@@ -844,6 +1643,36 @@
   "nivel": 90,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Centipede",
+   "Gargoyle",
+   "Carniphila",
+   "Slime",
+   "Stone Golem",
+   "Bonelord",
+   "Green Djinn",
+   "Fire Elemental",
+   "Acid Blob",
+   "Elder Bonelord",
+   "Ice Golem",
+   "Efreet",
+   "Earth Elemental",
+   "Bonebeast",
+   "Water Elemental",
+   "Giant Spider",
+   "Souleater",
+   "Massive Fire Elemental",
+   "Eternal Guardian",
+   "Frost Dragon",
+   "Hydra",
+   "Nightmare",
+   "Behemoth",
+   "Hellspawn",
+   "Serpent Spawn",
+   "Medusa",
+   "Phantasm",
+   "Ghastly Dragon"
+  ],
   "melhorLoot": [
    "Zaoan Helmet",
    "Spirit Container",
@@ -856,6 +1685,14 @@
   "nivel": 10,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Rat",
+   "Cave Rat",
+   "Skeleton",
+   "Ghoul",
+   "Crypt Shambler",
+   "Koshei the Deathless"
+  ],
   "melhorLoot": [
    "Life Ring",
    "Small Diamond",
@@ -868,6 +1705,55 @@
   "nivel": 100,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Fire Devil",
+   "Fire Elemental",
+   "Hellfire Fighter",
+   "Massive Fire Elemental",
+   "Gargoyle",
+   "Stone Golem",
+   "Behemoth",
+   "Juggernaut",
+   "Ushuriel",
+   "Crystal Spider",
+   "Ice Golem",
+   "Spectre",
+   "Hand of Cursed Fate",
+   "Phantasm",
+   "Nightmare",
+   "Giant Spider",
+   "Massive Water Elemental",
+   "Quara Pincher",
+   "Quara Predator",
+   "Quara Hydromancer",
+   "Zugurosh",
+   "Dark Torturer",
+   "Betrayed Wraith",
+   "Lost Soul",
+   "Plaguesmith",
+   "Fury",
+   "Destroyer",
+   "Madareth",
+   "Defiler",
+   "Son of Verminor",
+   "Blightwalker",
+   "Hellhound",
+   "Latrivan",
+   "Golgordan",
+   "Warlock",
+   "Lich",
+   "Undead Dragon",
+   "Braindeath",
+   "Vampire",
+   "Efreet",
+   "Diabolic Imp",
+   "Demon",
+   "Annihilon",
+   "Bonebeast",
+   "Ancient Scarab",
+   "Dreadbeast",
+   "Hellgorak"
+  ],
   "melhorLoot": [
    "Golden Boots",
    "Demonwing Axe",
@@ -880,6 +1766,11 @@
   "nivel": 100,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Fire Elemental",
+   "Demon",
+   "Banshee"
+  ],
   "melhorLoot": [
    "Magic Plate Armor",
    "Sweet Smelling Bait",
@@ -892,6 +1783,16 @@
   "nivel": 70,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Minotaur Guard",
+   "Stone Golem",
+   "Dwarf Guard",
+   "Elf Arcanist",
+   "Dragon",
+   "Warlock",
+   "Infernalist",
+   "Zarabustor"
+  ],
   "melhorLoot": [
    "Ring of the Sky",
    "Golden Armor",
@@ -904,6 +1805,14 @@
   "nivel": 60,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Askarak Demon",
+   "Shaburak Demon",
+   "Askarak Lord",
+   "Shaburak Lord",
+   "Askarak Prince",
+   "Shaburak Prince"
+  ],
   "melhorLoot": [
    "Demonic Finger",
    "Steel Boots",
@@ -916,6 +1825,11 @@
   "nivel": 100,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cave Parrot",
+   "Orclops Doomhauler",
+   "Orclops Ravager"
+  ],
   "melhorLoot": [
    "Berserk Potion",
    "Pair of Iron Fists",
@@ -928,6 +1842,25 @@
   "nivel": 25,
   "exp": "Bad",
   "loot": "Average",
+  "monstros": [
+   "Rat",
+   "Spider",
+   "Poison Spider",
+   "Bear",
+   "Orc",
+   "Rotworm",
+   "White Tiger",
+   "Scorpion",
+   "Orc Warrior",
+   "Minotaur Archer",
+   "Fire Devil",
+   "Minotaur Mage",
+   "Slime",
+   "Minotaur Guard",
+   "Bonelord",
+   "Orc Berserker",
+   "Banshee"
+  ],
   "melhorLoot": [
    "Bonelord Eye",
    "Terra Rod",
@@ -940,6 +1873,12 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Angry Sugar Fairy",
+   "Candy Floss Elemental",
+   "Goggle Cake",
+   "Truffle Cook"
+  ],
   "melhorLoot": []
  },
  {
@@ -948,6 +1887,20 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Bat",
+   "Poison Spider",
+   "Skeleton",
+   "Rotworm",
+   "Scorpion",
+   "Carrion Worm",
+   "Ghoul",
+   "Mummy",
+   "Slime",
+   "Demon Skeleton",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Mini Mummy",
    "Dragon Scale Mail",
@@ -960,6 +1913,14 @@
   "nivel": 40,
   "exp": "Very Good",
   "loot": "Average",
+  "monstros": [
+   "Dragon Hatchling",
+   "Dragon",
+   "Dragon Lord Hatchling",
+   "Dragon Lord",
+   "Frost Dragon Hatchling",
+   "Frost Dragon"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -972,6 +1933,18 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Hibernal Moth",
+   "Lacewing Moth",
+   "Crazed Summer Rearguard",
+   "Crazed Summer Vanguard",
+   "Crazed Winter Rearguard",
+   "Crazed Winter Vanguard",
+   "Arachnophobica",
+   "Insane Siren",
+   "Soul-Broken Harbinger",
+   "Thanatursus"
+  ],
   "melhorLoot": []
  },
  {
@@ -980,6 +1953,40 @@
   "nivel": 13,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Skeleton Warrior",
+   "Ghoul",
+   "Pirate Skeleton",
+   "Stalker",
+   "Ghost",
+   "Demon Skeleton",
+   "Pirate Ghost",
+   "Deepsea Blood Crab",
+   "Necromancer",
+   "Necropharus",
+   "Blood Hand",
+   "Blood Priest",
+   "Priestess",
+   "Shadow Pupil",
+   "Zombie",
+   "Gravedigger",
+   "White Shade",
+   "Lich",
+   "Wyrm",
+   "Elder Wyrm",
+   "Grim Reaper",
+   "Tyrn",
+   "Seagull",
+   "Snake",
+   "Sandcrawler",
+   "Hyaena",
+   "Skeleton",
+   "Scorpion",
+   "Slime",
+   "Bonelord",
+   "Vampire",
+   "Tarnished Spirit"
+  ],
   "melhorLoot": []
  },
  {
@@ -988,6 +1995,18 @@
   "nivel": 150,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Tarnished Spirit",
+   "Demon Skeleton",
+   "Zombie",
+   "Necromancer",
+   "Lich",
+   "Shadow Pupil",
+   "Banshee",
+   "Gravedigger",
+   "Spectre",
+   "Grim Reaper"
+  ],
   "melhorLoot": [
    "Sweet Smelling Bait",
    "Nightmare Blade",
@@ -1000,6 +2019,22 @@
   "nivel": 80,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Skeleton",
+   "Scorpion",
+   "Skeleton Warrior",
+   "Ghoul",
+   "Ghost",
+   "Stalker",
+   "Mummy",
+   "Demon Skeleton",
+   "Vampire",
+   "Priestess",
+   "Necromancer",
+   "Wyrm",
+   "Elder Wyrm",
+   "Grim Reaper"
+  ],
   "melhorLoot": [
    "Nightmare Blade",
    "Composite Hornbow",
@@ -1012,6 +2047,14 @@
   "nivel": 90,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Carrion Worm",
+   "Stone Golem",
+   "Earth Elemental",
+   "Wyvern",
+   "Giant Spider",
+   "Drillworm"
+  ],
   "melhorLoot": [
    "Spiked Squelcher",
    "Knight Legs",
@@ -1024,6 +2067,11 @@
   "nivel": 70,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Diabolic Imp",
+   "Nightmare",
+   "Spectre"
+  ],
   "melhorLoot": [
    "Demonbone Amulet",
    "Boots of Haste",
@@ -1036,6 +2084,18 @@
   "nivel": 40,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Rabbit",
+   "Deer",
+   "Emerald Damselfly",
+   "Leaf Golem",
+   "Marsh Stalker",
+   "Wilting Leaf Golem",
+   "Forest Fury",
+   "Haunted Treeling",
+   "Elder Forest Fury",
+   "Earth Elemental"
+  ],
   "melhorLoot": [
    "Small Emerald",
    "Bullseye Potion",
@@ -1048,6 +2108,17 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Bat",
+   "Rat",
+   "Bug",
+   "Troll",
+   "Troll Champion",
+   "Rotworm",
+   "Minotaur Archer",
+   "Minotaur Mage",
+   "Slime"
+  ],
   "melhorLoot": [
    "Wand of Cosmic Energy",
    "Taurus Mace",
@@ -1060,6 +2131,21 @@
   "nivel": 27,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Cyclops",
+   "Dwarf",
+   "Dwarf Guard",
+   "Dwarf Soldier",
+   "Minotaur",
+   "Minotaur Archer",
+   "Minotaur Mage",
+   "Orc Berserker",
+   "Orc Shaman",
+   "Orc Spearman",
+   "Orc Warrior",
+   "Troll",
+   "Minotaur Guard"
+  ],
   "melhorLoot": [
    "Wand of Cosmic Energy",
    "Wand of Decay",
@@ -1072,6 +2158,29 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Deer",
+   "Snake",
+   "Bat",
+   "Spider",
+   "Wolf",
+   "Poison Spider",
+   "Bear",
+   "Rotworm",
+   "Dwarf",
+   "Dwarf Soldier",
+   "Tarantula",
+   "Witch",
+   "Slime",
+   "Deepling Scout",
+   "Dwarf Guard",
+   "Dwarf Geomancer",
+   "Giant Spider",
+   "Lost Thrower",
+   "Lost Husher",
+   "Lost Basher",
+   "Enslaved Dwarf"
+  ],
   "melhorLoot": []
  },
  {
@@ -1080,6 +2189,11 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Cave Chimera",
+   "Varnished Diremaw",
+   "Tremendous Tyrant"
+  ],
   "melhorLoot": []
  },
  {
@@ -1088,6 +2202,12 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Dworc Venomsniper",
+   "Dworc Fleshhunter",
+   "Dworc Voodoomaster",
+   "Oodok Witchmaster"
+  ],
   "melhorLoot": []
  },
  {
@@ -1096,6 +2216,11 @@
   "nivel": 80,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Muddy Earth Elemental",
+   "Jagged Earth Elemental",
+   "Earth Overlord"
+  ],
   "melhorLoot": [
    "Swamplair Armor",
    "Terra Mantle",
@@ -1108,6 +2233,12 @@
   "nivel": 600,
   "exp": "Extremely Good",
   "loot": "Very Good",
+  "monstros": [
+   "Bony Sea Devil",
+   "Capricious Phantom",
+   "Hazardous Phantom",
+   "Turbulent Elemental"
+  ],
   "melhorLoot": [
    "Bag You Desire"
   ]
@@ -1118,6 +2249,11 @@
   "nivel": 42,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Rotworm",
+   "Carrion Worm",
+   "Bog Raider"
+  ],
   "melhorLoot": [
    "Paladin Armor",
    "Springsprout Rod",
@@ -1130,6 +2266,13 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Dragon Hatchling",
+   "Dragon Lord Hatchling",
+   "Wyvern",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -1142,6 +2285,10 @@
   "nivel": 25,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Earth Elemental",
+   "Bog Raider"
+  ],
   "melhorLoot": [
    "Paladin Armor",
    "Springsprout Rod",
@@ -1154,6 +2301,13 @@
   "nivel": 10,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Goblin",
+   "Goblin Assassin",
+   "Goblin Scavenger",
+   "Bug",
+   "Wasp"
+  ],
   "melhorLoot": [
    "Honeycomb",
    "Small Stone",
@@ -1166,6 +2320,18 @@
   "nivel": 100,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Werefox",
+   "Werebadger",
+   "Werewolf",
+   "Wereboar",
+   "Werebear",
+   "Bloodback",
+   "Sharpclaw",
+   "Darkfang",
+   "Black Vixen",
+   "Shadowpelt"
+  ],
   "melhorLoot": []
  },
  {
@@ -1174,6 +2340,28 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Deer",
+   "Badger",
+   "Snake",
+   "Bat",
+   "Fox",
+   "Poison Spider",
+   "Orc",
+   "Orc Spearman",
+   "Orc Warrior",
+   "Wisp",
+   "Orc Shaman",
+   "Orc Berserker",
+   "Orc Leader",
+   "Orc Cult Minion",
+   "Orc Cult Inquisitor",
+   "Orc Cult Priest",
+   "Orc Cult Fanatic",
+   "Orc Cultist",
+   "Orclops Doomhauler",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Warrior Helmet",
    "Knight Legs",
@@ -1186,6 +2374,11 @@
   "nivel": 7,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Rotworm",
+   "Carrion Worm",
+   "Rotworm Queen"
+  ],
   "melhorLoot": [
    "Carrion Worm Fang",
    "Mace",
@@ -1198,6 +2391,17 @@
   "nivel": 7,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Butterfly (Purple)",
+   "Seagull",
+   "Deer",
+   "Snake",
+   "Bug",
+   "Wolf",
+   "Troll",
+   "Goblin",
+   "Goblin Scavenger"
+  ],
   "melhorLoot": [
    "Wolf Paw",
    "Silver Amulet",
@@ -1210,6 +2414,13 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Troll",
+   "Troll Champion",
+   "Bear",
+   "Frost Troll",
+   "Rat"
+  ],
   "melhorLoot": [
    "Bear Paw",
    "Honeycomb",
@@ -1222,6 +2433,14 @@
   "nivel": 45,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Bat",
+   "Cave Rat",
+   "Skeleton",
+   "Ghoul",
+   "Vampire",
+   "Sir Valorcrest"
+  ],
   "melhorLoot": [
    "Vampire Shield",
    "Ice Rapier",
@@ -1234,6 +2453,17 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Skeleton Warrior",
+   "Ghoul",
+   "Demon Skeleton",
+   "Vampire",
+   "Bonebeast",
+   "Necromancer",
+   "Snake",
+   "Vampire Viscount",
+   "Vampire Bride"
+  ],
   "melhorLoot": [
    "Vampire Shield",
    "Noble Axe",
@@ -1246,6 +2476,10 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Wyvern",
+   "Heoni"
+  ],
   "melhorLoot": [
    "Wand of Inferno",
    "Wyvern Fang",
@@ -1258,6 +2492,25 @@
   "nivel": 19,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Wasp",
+   "Orc",
+   "Orc Spearman",
+   "Elf",
+   "Orc Warrior",
+   "Troll",
+   "Dwarf",
+   "Minotaur",
+   "Minotaur Guard",
+   "Orc Berserker",
+   "Hunter",
+   "Minotaur Archer",
+   "Orc Shaman",
+   "Minotaur Mage",
+   "Elf Arcanist",
+   "Demon Skeleton",
+   "Dragon"
+  ],
   "melhorLoot": [
    "Slingshot",
    "Dragon Shield",
@@ -1270,6 +2523,9 @@
   "nivel": 70,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Energy Elemental"
+  ],
   "melhorLoot": [
    "Wand of Cosmic Energy",
    "Guardian Shield",
@@ -1282,6 +2538,11 @@
   "nivel": 80,
   "exp": "average",
   "loot": "average",
+  "monstros": [
+   "Charged Energy Elemental",
+   "Overcharged Energy Elemental",
+   "Energy Overlord"
+  ],
   "melhorLoot": [
    "Voltage Armor",
    "Pure Energy",
@@ -1294,6 +2555,10 @@
   "nivel": 100,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Exotic Cave Spider",
+   "Exotic Bat"
+  ],
   "melhorLoot": [
    "Terra Mantle",
    "Terra Boots",
@@ -1306,6 +2571,42 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Dog",
+   "Cat",
+   "Seagull",
+   "Pig",
+   "Rabbit",
+   "Badger",
+   "Rat",
+   "Snake",
+   "Spider",
+   "Bug",
+   "Wolf",
+   "Poison Spider",
+   "Crab",
+   "Centipede",
+   "Crazed Beggar",
+   "Goblin Scavenger",
+   "Larva",
+   "Dwarf",
+   "Smuggler",
+   "Amazon",
+   "Bandit",
+   "Gang Member",
+   "Poacher",
+   "Damaged Worker Golem",
+   "Dark Apprentice",
+   "Assassin",
+   "Pirate Marauder",
+   "Mutated Human",
+   "Slime",
+   "Mad Scientist",
+   "Fire Elemental",
+   "Frost Dragon Hatchling",
+   "Worker Golem",
+   "War Golem"
+  ],
   "melhorLoot": [
    "Tin Key",
    "Reins",
@@ -1318,6 +2619,19 @@
   "nivel": 250,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Sandcrawler",
+   "Falcon Paladin",
+   "Falcon Knight",
+   "Grand Commander Soeren",
+   "Grand Chaplain Gaunder",
+   "Preceptor Lazare",
+   "Grand Canon Dominus",
+   "Grand Master Oberon",
+   "Dazed Leaf Golem",
+   "Jailer",
+   "Thawing Dragon Lord"
+  ],
   "melhorLoot": [
    "Mastermind Shield",
    "Golden Armor",
@@ -1330,6 +2644,11 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Gargoyle",
+   "Gozzler",
+   "Stone Golem"
+  ],
   "melhorLoot": [
    "Iron Ore",
    "Red Gem",
@@ -1342,6 +2661,32 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Chicken",
+   "Black Sheep",
+   "Sheep",
+   "Pig",
+   "Bat",
+   "Wolf",
+   "Bug",
+   "Goblin",
+   "Skeleton",
+   "Goblin Scavenger",
+   "Rotworm",
+   "Goblin Assassin",
+   "Goblin Leader",
+   "Hunter",
+   "Cyclops",
+   "Demon Skeleton",
+   "Orc",
+   "Orc Warrior",
+   "War Wolf",
+   "Orc Shaman",
+   "Orc Rider",
+   "Orc Berserker",
+   "Orc Warlord",
+   "Wild Warrior"
+  ],
   "melhorLoot": [
    "Slingshot",
    "Deer Trophy",
@@ -1354,6 +2699,43 @@
   "nivel": 25,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Barbarian Headsplitter",
+   "Barbarian Skullhunter",
+   "Barbarian Brutetamer",
+   "Rotworm",
+   "Crocodile",
+   "Carrion Worm",
+   "Tortoise",
+   "Rift Scythe",
+   "Rift Worm",
+   "War Golem",
+   "Goblin",
+   "Skeleton",
+   "Goblin Scavenger",
+   "Skeleton Warrior",
+   "Goblin Assassin",
+   "Goblin Leader",
+   "Ghoul",
+   "Scarab",
+   "Bonelord",
+   "Gozzler",
+   "Dragon Hatchling",
+   "Fire Elemental",
+   "Elder Bonelord",
+   "Bonebeast",
+   "Necromancer",
+   "Wyvern",
+   "Dragon",
+   "Ancient Scarab",
+   "Lich",
+   "Giant Spider",
+   "Braindeath",
+   "Wyrm",
+   "Dragon Lord",
+   "Diabolic Imp",
+   "Warlock"
+  ],
   "melhorLoot": []
  },
  {
@@ -1362,6 +2744,10 @@
   "nivel": 80,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Dragon Lord Hatchling",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -1374,6 +2760,23 @@
   "nivel": 45,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Rabbit",
+   "Deer",
+   "White Deer",
+   "Wisp",
+   "Snake",
+   "Troll",
+   "Wolf",
+   "Bear",
+   "Rotworm",
+   "Poacher",
+   "Dwarf Soldier",
+   "Hunter",
+   "Dwarf Guard",
+   "Wyvern",
+   "Dragon"
+  ],
   "melhorLoot": [
    "Moon Backpack",
    "Slingshot",
@@ -1386,6 +2789,18 @@
   "nivel": 140,
   "exp": "Very good",
   "loot": "Very good",
+  "monstros": [
+   "Lich",
+   "Serpent Spawn",
+   "Hydra",
+   "Fire Elemental",
+   "Dragon Lord",
+   "Behemoth",
+   "Warlock",
+   "Demon",
+   "Magicthrower",
+   "Ferumbras"
+  ],
   "melhorLoot": [
    "Maxilla Maximus",
    "Magic Plate Armor",
@@ -1398,6 +2813,20 @@
   "nivel": 70,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Butterfly (Blue)",
+   "Butterfly (Purple)",
+   "Faun",
+   "Nymph",
+   "Pixie",
+   "Pooka",
+   "Swan Maiden",
+   "Boogy",
+   "Dark Faun",
+   "Twisted Pooka",
+   "Enfeebled Silencer",
+   "Weakened Frazzlemaw"
+  ],
   "melhorLoot": [
    "Nightmare Blade",
    "Boots of Haste",
@@ -1410,6 +2839,21 @@
   "nivel": 9,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Poison Spider",
+   "Orc",
+   "Rotworm",
+   "Carrion_Worm",
+   "Bonelord",
+   "Skeleton",
+   "Demon Skeleton",
+   "Minotaur",
+   "Minotaur Archer",
+   "Minotaur Guard",
+   "Minotaur Mage",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -1422,6 +2866,22 @@
   "nivel": 120,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Fish (Creature)",
+   "Jellyfish",
+   "Calamary",
+   "Northern Pike (Creature)",
+   "Manta Ray",
+   "Deepling Worker",
+   "Deepling Scout",
+   "Shark",
+   "Deepling Spellsinger",
+   "Deepling Warrior",
+   "Deepling Master Librarian",
+   "Deepling Guard",
+   "Deepling Elite",
+   "Deepling Tyrant"
+  ],
   "melhorLoot": [
    "Foxtail",
    "Ornate Crossbow",
@@ -1434,6 +2894,25 @@
   "nivel": 15,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Rabbit",
+   "Deer",
+   "Rat",
+   "Bat",
+   "Snake",
+   "Spider",
+   "Bug",
+   "Wolf",
+   "Poison Spider",
+   "Bear",
+   "Wasp",
+   "Goblin",
+   "Rotworm",
+   "Poacher",
+   "Amazon",
+   "Valkyrie",
+   "Witch"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Witch Hat",
@@ -1446,6 +2925,9 @@
   "nivel": 90,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Lizard Chosen"
+  ],
   "melhorLoot": [
    "Zaoan Helmet",
    "Zaoan Legs",
@@ -1458,6 +2940,11 @@
   "nivel": 80,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Blazing Fire Elemental",
+   "Blistering Fire Elemental",
+   "Fire Overlord"
+  ],
   "melhorLoot": [
    "Lavos Armor",
    "Magma Coat",
@@ -1470,6 +2957,35 @@
   "nivel": 7,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Winter Wolf",
+   "Frost Troll",
+   "Wyvern",
+   "Rabbit",
+   "Deer",
+   "Polar Bear",
+   "Yeti",
+   "Rat",
+   "Bat",
+   "Spider",
+   "Bug",
+   "Troll",
+   "Poison Spider",
+   "Rotworm",
+   "Minotaur",
+   "Minotaur Archer",
+   "Wasp",
+   "Orc",
+   "Orc Spearman",
+   "Orc Warrior",
+   "Minotaur Mage",
+   "Slime",
+   "Snake",
+   "Scorpion",
+   "Minotaur Guard",
+   "Bonelord",
+   "Water Elemental"
+  ],
   "melhorLoot": [
    "Wand of Inferno",
    "Leviathan's Amulet",
@@ -1482,6 +2998,24 @@
   "nivel": 60,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Snake",
+   "Crab",
+   "Cobra",
+   "Centipede",
+   "Tiger",
+   "Spit Nettle",
+   "Slime",
+   "Tarantula",
+   "Carniphila",
+   "Stone Golem",
+   "Terror Bird",
+   "Elephant",
+   "Massive Earth Elemental",
+   "Giant Spider",
+   "Hydra",
+   "Behemoth"
+  ],
   "melhorLoot": [
    "Carrot on a Stick",
    "Boots of Haste",
@@ -1494,6 +3028,16 @@
   "nivel": 40,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Cobra",
+   "Novice of the Cult",
+   "Lizard Sentinel",
+   "Lizard Templar",
+   "Lizard Snakecharmer",
+   "Acolyte of the Cult",
+   "Adept of the Cult",
+   "Enlightened of the Cult"
+  ],
   "melhorLoot": [
    "Lunar Staff",
    "Blue Robe",
@@ -1506,6 +3050,14 @@
   "nivel": 90,
   "exp": "Very Good",
   "loot": "Average",
+  "monstros": [
+   "Cult Believer",
+   "Vicious Squire",
+   "Renegade Knight",
+   "Vile Grandmaster",
+   "Cult Enforcer",
+   "Cult Scholar"
+  ],
   "melhorLoot": [
    "Crown Legs",
    "Crown Armor",
@@ -1518,6 +3070,55 @@
   "nivel": 19,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Orc Spearman",
+   "Orc Warrior",
+   "Orc Shaman",
+   "Orc Berserker",
+   "Orc Warlord",
+   "Hydra",
+   "Serpent Spawn",
+   "Dragon",
+   "Elf Arcanist",
+   "Elf Scout",
+   "Elf",
+   "Minotaur",
+   "Minotaur Mage",
+   "Minotaur Guard",
+   "Minotaur Archer",
+   "Cyclops",
+   "Blood Crab (Underwater)",
+   "Cat",
+   "Dog",
+   "Pig",
+   "Troll",
+   "Goblin",
+   "Swamp Troll",
+   "Crazed Beggar",
+   "Troll Champion",
+   "Dworc Fleshhunter",
+   "Dworc Venomsniper",
+   "Smuggler",
+   "Amazon",
+   "Wild Warrior",
+   "Nomad (Basic)",
+   "Poacher",
+   "Bandit",
+   "Gang Member",
+   "Valkyrie",
+   "Lizard Sentinel",
+   "Lizard Templar",
+   "Barbarian Headsplitter",
+   "Stalker",
+   "Assassin",
+   "Dark Monk",
+   "Hunter",
+   "Dwarf Guard",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Buccaneer",
+   "Pirate Corsair"
+  ],
   "melhorLoot": []
  },
  {
@@ -1526,6 +3127,14 @@
   "nivel": 19,
   "exp": "25-30k",
   "loot": "Good",
+  "monstros": [
+   "Elf",
+   "Elf Scout",
+   "Elf Arcanist",
+   "Dragon",
+   "Hydra",
+   "Serpent Spawn"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Royal Helmet",
@@ -1538,6 +3147,20 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Rabbit",
+   "Squirrel",
+   "Deer",
+   "White Deer",
+   "Goblin",
+   "Desperate White Deer",
+   "Leaf Golem",
+   "Starving Wolf",
+   "Poacher",
+   "Wilting Leaf Golem",
+   "Enraged White Deer",
+   "Forest Fury"
+  ],
   "melhorLoot": [
    "Elvish Bow",
    "Small Emerald",
@@ -1550,6 +3173,11 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Dark Carnisylvan",
+   "Poisonous Carnisylvan",
+   "Hulking Carnisylvan"
+  ],
   "melhorLoot": []
  },
  {
@@ -1558,6 +3186,12 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Bone Bear",
+   "Crypt Construct",
+   "Haunted Hunter",
+   "Walking Dread"
+  ],
   "melhorLoot": []
  },
  {
@@ -1566,6 +3200,18 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Skeleton",
+   "Ghoul",
+   "Mummy",
+   "Gargoyle",
+   "Crypt Shambler",
+   "Blue Djinn",
+   "Demon Skeleton",
+   "Vampire",
+   "Bonebeast",
+   "Mahatheb"
+  ],
   "melhorLoot": []
  },
  {
@@ -1574,6 +3220,23 @@
   "nivel": 30,
   "exp": "Bad",
   "loot": "Very bad",
+  "monstros": [
+   "Silver Rabbit",
+   "Deer",
+   "Penguin",
+   "Winter Wolf",
+   "Frost Troll",
+   "Polar Bear",
+   "Frost Giant",
+   "Frost Giantess",
+   "Mammoth",
+   "Ice Golem",
+   "Wyvern",
+   "Ice Witch",
+   "Crystal Spider",
+   "Dire Penguin",
+   "Man in the Cave"
+  ],
   "melhorLoot": []
  },
  {
@@ -1582,6 +3245,12 @@
   "nivel": 65,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Silver Rabbit",
+   "Wyvern",
+   "Ice Golem",
+   "Crystal Spider"
+  ],
   "melhorLoot": [
    "Spider Silk",
    "Sapphire Hammer",
@@ -1594,6 +3263,17 @@
   "nivel": 28,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Badger",
+   "Silver Rabbit",
+   "Frost Troll",
+   "Penguin",
+   "Winter Wolf",
+   "Polar Bear",
+   "Barbarian Brutetamer",
+   "Mammoth",
+   "Wyvern"
+  ],
   "melhorLoot": [
    "Mammoth Fur Cape",
    "Wand of Inferno",
@@ -1606,6 +3286,33 @@
   "nivel": 70,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Frost Troll",
+   "Bandit",
+   "Novice of the Cult",
+   "Gargoyle",
+   "Stone Golem",
+   "Hunter",
+   "Mammoth",
+   "Ghost",
+   "Acolyte of the Cult",
+   "Ice Golem",
+   "Adept of the Cult",
+   "Enlightened of the Cult",
+   "Ice Witch",
+   "Crystal Spider",
+   "Nightmare Scion",
+   "Nightmare",
+   "Destroyer",
+   "Behemoth",
+   "Hellspawn",
+   "Lost Soul",
+   "Plaguesmith",
+   "Demon",
+   "Juggernaut",
+   "Yakchal",
+   "Ghazbaran"
+  ],
   "melhorLoot": [
    "Magic Plate Armor",
    "Heavy Mace",
@@ -1618,6 +3325,11 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Roaming Dread",
+   "Cyclursus",
+   "Crypt Mage"
+  ],
   "melhorLoot": []
  },
  {
@@ -1626,6 +3338,11 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cyclops",
+   "Cyclops Drone",
+   "Cyclops Smith"
+  ],
   "melhorLoot": []
  },
  {
@@ -1634,6 +3351,11 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Leaf Golem",
+   "Wilting Leaf Golem",
+   "Forest Fury"
+  ],
   "melhorLoot": []
  },
  {
@@ -1642,6 +3364,12 @@
   "nivel": 110,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Drillworm",
+   "Lost Thrower",
+   "Lost Husher",
+   "Lost Basher"
+  ],
   "melhorLoot": [
    "War Axe",
    "Terra Legs",
@@ -1654,6 +3382,9 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Rorc"
+  ],
   "melhorLoot": []
  },
  {
@@ -1662,6 +3393,11 @@
   "nivel": 75,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Frost Dragon Hatchling",
+   "Crystal Spider",
+   "Frost Dragon"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -1674,6 +3410,14 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Quara Constrictor",
+   "Quara Mantassin",
+   "Quara Hydromancer",
+   "Quara Predator",
+   "Quara Pincher",
+   "Massive Water Elemental"
+  ],
   "melhorLoot": [
    "Giant Shrimp",
    "Skull Helmet",
@@ -1686,6 +3430,11 @@
   "nivel": 600,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cloak of Terror",
+   "Vibrant Phantom",
+   "Courage Leech"
+  ],
   "melhorLoot": []
  },
  {
@@ -1694,6 +3443,18 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Massive Fire Elemental",
+   "Dragon Lord",
+   "Dragonling",
+   "Diabolic Imp",
+   "Hellfire Fighter",
+   "Infernalist",
+   "Fury",
+   "Hellhound",
+   "Demon",
+   "Furyosa"
+  ],
   "melhorLoot": []
  },
  {
@@ -1702,6 +3463,15 @@
   "nivel": 70,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Pigeon",
+   "Rat",
+   "Bog Frog",
+   "Scorpion",
+   "Demon Skeleton",
+   "Priestess",
+   "Shadow Pupil"
+  ],
   "melhorLoot": [
    "Hailstorm Rod",
    "Black Shield",
@@ -1714,6 +3484,9 @@
   "nivel": 200,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Nightmare of Gaz'haragoth"
+  ],
   "melhorLoot": []
  },
  {
@@ -1722,6 +3495,9 @@
   "nivel": 130,
   "exp": "Average",
   "loot": "Very Good",
+  "monstros": [
+   "Ghastly Dragon"
+  ],
   "melhorLoot": [
    "Zaoan Helmet",
    "Guardian Boots",
@@ -1734,6 +3510,25 @@
   "nivel": 13,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Rat",
+   "Cave Rat",
+   "Bat",
+   "Poison Spider",
+   "Skeleton Warrior",
+   "Slime",
+   "Rabbit",
+   "Skeleton",
+   "Scorpion",
+   "Ghoul",
+   "Demon Skeleton",
+   "Rotworm",
+   "Stalker",
+   "Fire Devil",
+   "Bonelord",
+   "Vampire",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Knight Legs",
    "Knight Armor",
@@ -1746,6 +3541,14 @@
   "nivel": 45,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Skeleton",
+   "Ghoul",
+   "Ghost",
+   "Demon Skeleton",
+   "Vampire",
+   "Captain Jones"
+  ],
   "melhorLoot": [
    "Vampire Shield",
    "Guardian Shield",
@@ -1758,6 +3561,10 @@
   "nivel": 19,
   "exp": "Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Ghoul",
+   "Demon Skeleton"
+  ],
   "melhorLoot": [
    "Guardian Shield",
    "Life Ring",
@@ -1770,6 +3577,12 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Darklight Emitter",
+   "Darklight Construct",
+   "Wandering Pillar",
+   "Converter"
+  ],
   "melhorLoot": []
  },
  {
@@ -1778,6 +3591,10 @@
   "nivel": 100,
   "exp": "Good",
   "loot": "Very Good",
+  "monstros": [
+   "Glooth Bandit",
+   "Glooth Brigand"
+  ],
   "melhorLoot": [
    "War Axe",
    "Control Unit",
@@ -1790,6 +3607,14 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Glooth Blob",
+   "Rot Elemental",
+   "Devourer",
+   "Metal Gargoyle",
+   "Glooth Golem",
+   "Rustheap Golem"
+  ],
   "melhorLoot": []
  },
  {
@@ -1798,6 +3623,9 @@
   "nivel": 20,
   "exp": "very bad",
   "loot": "very bad",
+  "monstros": [
+   "Gnarlhound"
+  ],
   "melhorLoot": [
    "Shaggy Tail"
   ]
@@ -1808,6 +3636,14 @@
   "nivel": 100,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Ravenous Lava Lurker",
+   "Deepworm",
+   "Lava Lurker",
+   "Makeshift Home",
+   "Diremaw",
+   "Lost Exile"
+  ],
   "melhorLoot": []
  },
  {
@@ -1816,6 +3652,10 @@
   "nivel": 80,
   "exp": "bad",
   "loot": "bad",
+  "monstros": [
+   "Damaged Crystal Golem",
+   "Enraged Crystal Golem"
+  ],
   "melhorLoot": [
    "Glorious Axe",
    "Cyan Crystal Fragment",
@@ -1828,6 +3668,32 @@
   "nivel": 60,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Seagull",
+   "Island Troll",
+   "Crab",
+   "Cobra",
+   "Scorpion",
+   "Skeleton",
+   "Pirate Skeleton",
+   "Fire Devil",
+   "Ghost",
+   "Witch",
+   "Stone Golem",
+   "Blood Crab",
+   "Fire Elemental",
+   "Pirate Ghost",
+   "Elder Bonelord",
+   "Acolyte of the Cult",
+   "Efreet",
+   "Adept of the Cult",
+   "Enlightened of the Cult",
+   "Dragon",
+   "Dragon Lord",
+   "Demon",
+   "Hellhound",
+   "Morgaroth"
+  ],
   "melhorLoot": []
  },
  {
@@ -1836,6 +3702,12 @@
   "nivel": 65,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Fire Devil",
+   "Fire Elemental",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -1848,6 +3720,11 @@
   "nivel": 350,
   "exp": "Bad",
   "loot": "Good",
+  "monstros": [
+   "Foam Stalker",
+   "Two-Headed Turtle",
+   "Venerable Foam Stalker"
+  ],
   "melhorLoot": []
  },
  {
@@ -1856,6 +3733,15 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Scorpion",
+   "Flamingo",
+   "Lion",
+   "Young Goanna",
+   "Adult Goanna",
+   "Manticore",
+   "Feral Sphinx"
+  ],
   "melhorLoot": []
  },
  {
@@ -1864,6 +3750,36 @@
   "nivel": 25,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Rat",
+   "Snake",
+   "Cave Rat",
+   "Spider",
+   "Wolf",
+   "Bug",
+   "Troll",
+   "Poison Spider",
+   "Bear",
+   "Wasp",
+   "Skeleton",
+   "Rotworm",
+   "Troll Champion",
+   "Scorpion",
+   "Amazon",
+   "Minotaur Archer",
+   "Tarantula",
+   "Witch",
+   "Minotaur Mage",
+   "Mummy",
+   "Slime",
+   "Bonelord",
+   "Giant Spider",
+   "Black Knight",
+   "Yaga the Crone",
+   "The Weakened Count",
+   "The Count",
+   "Giant Spider (Wyda)"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Mini Mummy",
@@ -1876,6 +3792,17 @@
   "nivel": 100,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Badger",
+   "Bandit",
+   "Butterfly (Blue)",
+   "Butterfly (Red)",
+   "Werebadger",
+   "Wereboar",
+   "Owin (Creature)",
+   "Werebear",
+   "Werewolf"
+  ],
   "melhorLoot": []
  },
  {
@@ -1884,6 +3811,11 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Lavafungus",
+   "Lavaworm",
+   "Streaked Devourer"
+  ],
   "melhorLoot": []
  },
  {
@@ -1892,6 +3824,12 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Dark Torturer",
+   "Vexclaw",
+   "Grimeleech",
+   "Hellflayer"
+  ],
   "melhorLoot": []
  },
  {
@@ -1900,6 +3838,12 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Nightmare",
+   "Phantasm",
+   "Vexclaw",
+   "Grimeleech"
+  ],
   "melhorLoot": []
  },
  {
@@ -1908,6 +3852,13 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Spectre",
+   "Hand of Cursed Fate",
+   "Vexclaw",
+   "Grimeleech",
+   "Hellflayer"
+  ],
   "melhorLoot": []
  },
  {
@@ -1916,6 +3867,13 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Destroyer",
+   "Fury",
+   "Vexclaw",
+   "Hellflayer",
+   "Juggernaut"
+  ],
   "melhorLoot": []
  },
  {
@@ -1924,6 +3882,14 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Fury",
+   "Hellfire Fighter",
+   "Hellhound",
+   "Vexclaw",
+   "Grimeleech",
+   "Hellflayer"
+  ],
   "melhorLoot": []
  },
  {
@@ -1932,6 +3898,12 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Plaguesmith",
+   "Defiler",
+   "Grimeleech",
+   "Hellflayer"
+  ],
   "melhorLoot": []
  },
  {
@@ -1940,6 +3912,13 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Blightwalker",
+   "Undead Dragon",
+   "Vexclaw",
+   "Hellflayer",
+   "Death Dragon"
+  ],
   "melhorLoot": []
  },
  {
@@ -1948,6 +3927,13 @@
   "nivel": 200,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Shock Head",
+   "Silencer",
+   "Frazzlemaw",
+   "Guzzlemaw",
+   "Sight of Surrender"
+  ],
   "melhorLoot": [
    "String of Mending",
    "Nightmare Blade",
@@ -1960,6 +3946,17 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Plaguesmith",
+   "Fury",
+   "Dark Torturer",
+   "Demon",
+   "Hellhound",
+   "Vexclaw",
+   "Grimeleech",
+   "Hellflayer",
+   "Juggernaut"
+  ],
   "melhorLoot": []
  },
  {
@@ -1968,6 +3965,10 @@
   "nivel": 200,
   "exp": "good",
   "loot": "good",
+  "monstros": [
+   "Ripper Spectre",
+   "Arachnophobica"
+  ],
   "melhorLoot": [
    "Hexagonal Ruby",
    "Assassin Dagger",
@@ -1980,6 +3981,10 @@
   "nivel": 200,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Gazer Spectre",
+   "Thanatursus"
+  ],
   "melhorLoot": []
  },
  {
@@ -1988,6 +3993,9 @@
   "nivel": 250,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Burster Spectre"
+  ],
   "melhorLoot": [
    "Hexagonal Ruby",
    "Glacial Rod",
@@ -2000,6 +4008,21 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Penguin",
+   "Skeleton",
+   "Ghoul",
+   "Mummy",
+   "Crypt Shambler",
+   "Demon Skeleton",
+   "Bonebeast",
+   "Bonelord",
+   "Elder Bonelord",
+   "Braindeath",
+   "Lost Soul",
+   "Betrayed Wraith",
+   "Undead Dragon"
+  ],
   "melhorLoot": [
    "Divine Plate",
    "Skull Helmet",
@@ -2012,6 +4035,12 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Demon",
+   "Vexclaw",
+   "Grimeleech",
+   "Hellflayer"
+  ],
   "melhorLoot": []
  },
  {
@@ -2020,6 +4049,29 @@
   "nivel": 35,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Rat",
+   "Spider",
+   "Bug",
+   "Rotworm",
+   "Skeleton",
+   "Elf",
+   "Carrion Worm",
+   "Rotworm Queen",
+   "Elf Scout",
+   "Ghoul",
+   "Gazer",
+   "Slime",
+   "Bonelord",
+   "Furious Fire Elemental",
+   "Crypt Shambler",
+   "Demon Skeleton",
+   "Elder Bonelord",
+   "Vampire",
+   "The Evil Eye",
+   "Giant Spider",
+   "Zevelon Duskbringer"
+  ],
   "melhorLoot": [
    "Bonelord Helmet",
    "Knight Legs",
@@ -2032,6 +4084,23 @@
   "nivel": 80,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Fire Elemental",
+   "Fire Devil",
+   "Acolyte of the Cult",
+   "Witch",
+   "Adept of the Cult",
+   "Elder Bonelord",
+   "Demon Skeleton",
+   "Lavahole",
+   "Efreet",
+   "Enlightened of the Cult",
+   "Priestess",
+   "Dragon Lord",
+   "Demon",
+   "Hellhound",
+   "Morgaroth"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Magic Plate Armor",
@@ -2044,6 +4113,40 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Wild Warrior",
+   "Demon Skeleton",
+   "Stalker",
+   "Priestess",
+   "Monk (Creature)",
+   "Bat",
+   "Dark Magician",
+   "Hunter",
+   "Bonelord",
+   "Poison Spider",
+   "Skeleton",
+   "Slime",
+   "Dark Apprentice",
+   "Necromancer",
+   "Orc Shaman",
+   "Elf Arcanist",
+   "Minotaur Mage",
+   "Dragon Hatchling",
+   "Dragon",
+   "Giant Spider",
+   "Grim Reaper",
+   "Scorpion",
+   "Hero",
+   "Minotaur Guard",
+   "Fire Elemental",
+   "Stone Golem",
+   "Witch",
+   "Warlock",
+   "Massive Fire Elemental",
+   "Demon",
+   "Banshee",
+   "Ungreez"
+  ],
   "melhorLoot": [
    "Reins"
   ]
@@ -2054,6 +4157,15 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Priestess",
+   "Orc Shaman",
+   "Bonelord",
+   "Demon Skeleton",
+   "Elf Arcanist",
+   "Dark Magician",
+   "Minotaur Mage"
+  ],
   "melhorLoot": [
    "Reins",
    "Hailstorm Rod",
@@ -2066,6 +4178,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Lizard Commander",
+   "Lizard Executioner",
+   "Lizard Henchman",
+   "Lizard Magician",
+   "Lizard Swordmaster"
+  ],
   "melhorLoot": []
  },
  {
@@ -2074,6 +4193,20 @@
   "nivel": 130,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Swarmer",
+   "Insectoid Worker",
+   "Crawler",
+   "Spidris",
+   "Kollos",
+   "Waspoid",
+   "Spitter",
+   "Spidris Elite",
+   "Hive Overseer",
+   "The Manhunter",
+   "The Mean Masher",
+   "The Hungerer"
+  ],
   "melhorLoot": []
  },
  {
@@ -2082,6 +4215,28 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Very Good",
+  "monstros": [
+   "Hyaena",
+   "Nomad (Basic)",
+   "Ghoulish Hyaena",
+   "Tomb Servant",
+   "Sacred Spider",
+   "Clay Guardian",
+   "Elder Mummy",
+   "Grave Guard",
+   "Sandstone Scorpion",
+   "Death Priest",
+   "Skeleton",
+   "Insect Swarm",
+   "Larva",
+   "Scorpion",
+   "Grave Robber",
+   "Honour Guard",
+   "Crypt Defiler",
+   "Dark Apprentice",
+   "Squidgy Slime",
+   "Stalker"
+  ],
   "melhorLoot": [
    "Fist on a Stick",
    "Gold Ingot",
@@ -2094,6 +4249,11 @@
   "nivel": 90,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Vulcongra",
+   "Massive Fire Elemental",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -2106,6 +4266,13 @@
   "nivel": 40,
   "exp": "60k+",
   "loot": "",
+  "monstros": [
+   "Quara Mantassin Scout",
+   "Quara Constrictor Scout",
+   "Quara Predator Scout",
+   "Quara Pincher Scout",
+   "Quara Hydromancer Scout"
+  ],
   "melhorLoot": [
    "Knight Armor",
    "Wand of Cosmic Energy",
@@ -2118,6 +4285,10 @@
   "nivel": 15,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Gargoyle",
+   "Stone Golem"
+  ],
   "melhorLoot": [
    "Iron Ore",
    "Shiny Stone",
@@ -2130,6 +4301,11 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Poacher",
+   "Hunter",
+   "Arthom The Hunter"
+  ],
   "melhorLoot": []
  },
  {
@@ -2138,6 +4314,11 @@
   "nivel": 200,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Lich",
+   "Werehyaena",
+   "Werehyaena Shaman"
+  ],
   "melhorLoot": []
  },
  {
@@ -2146,6 +4327,9 @@
   "nivel": 75,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Hydra"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Royal Helmet",
@@ -2158,6 +4342,10 @@
   "nivel": 75,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Stone Golem",
+   "Hydra"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Royal Helmet",
@@ -2170,6 +4358,11 @@
   "nivel": 80,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Slick Water Elemental",
+   "Roaring Water Elemental",
+   "Ice Overlord"
+  ],
   "melhorLoot": [
    "Crystalline Armor",
    "Flawless Ice Crystal",
@@ -2182,6 +4375,13 @@
   "nivel": 60,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Ice Golem",
+   "Ice Witch",
+   "Crystal Spider",
+   "Frost Dragon Hatchling",
+   "Frost Dragon"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -2194,6 +4394,14 @@
   "nivel": 150,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Cursed Ape",
+   "Iks Aucar",
+   "Iks Pututu",
+   "Iks Chuka",
+   "Iks Churrascan",
+   "Iks Ahpututu"
+  ],
   "melhorLoot": []
  },
  {
@@ -2202,6 +4410,11 @@
   "nivel": 400,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Iks Yapunac",
+   "Mitmah Seer",
+   "Mitmah Scout"
+  ],
   "melhorLoot": []
  },
  {
@@ -2210,6 +4423,11 @@
   "nivel": 400,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Mitmah Seer",
+   "Mitmah Scout",
+   "Iks Yapunac"
+  ],
   "melhorLoot": []
  },
  {
@@ -2218,6 +4436,15 @@
   "nivel": 400,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Iks Yapunac",
+   "Mitmah Scout",
+   "Mitmah Seer",
+   "Cursed Ape",
+   "Giant Spider",
+   "Atab",
+   "Mystic Jaguar"
+  ],
   "melhorLoot": []
  },
  {
@@ -2226,6 +4453,12 @@
   "nivel": 400,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Iks Yapunac",
+   "Mitmah Scout",
+   "Mitmah Seer",
+   "Cursed Ape"
+  ],
   "melhorLoot": []
  },
  {
@@ -2234,6 +4467,15 @@
   "nivel": 25,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Penguin",
+   "Rat",
+   "Winter Wolf",
+   "Polar Bear",
+   "Chakoya Tribewarden",
+   "Chakoya Toolshaper",
+   "Chakoya Windcaller"
+  ],
   "melhorLoot": [
    "Northern Pike",
    "Shard",
@@ -2246,6 +4488,19 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Deer",
+   "Stag",
+   "Raubritter Chastener",
+   "Raubritter Marksman",
+   "Raubritter Skirmisher",
+   "Night Harpy",
+   "Adlerauge",
+   "Clavius",
+   "Court Warlock",
+   "Michael the Stalwart",
+   "Overseer Osverger"
+  ],
   "melhorLoot": []
  },
  {
@@ -2254,6 +4509,25 @@
   "nivel": 20,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Rabbit",
+   "Dog",
+   "Pig",
+   "Skeleton",
+   "Ghoul",
+   "Stalker",
+   "Ghost",
+   "Fire Devil",
+   "Monk (Creature)",
+   "Demon Skeleton",
+   "Poison Spider",
+   "Scorpion",
+   "Mummy",
+   "Banshee",
+   "Giant Spider",
+   "Warlock",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Sweet Smelling Bait",
    "Ring of the Sky",
@@ -2266,6 +4540,10 @@
   "nivel": 25,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Fernfang",
+   "War Wolf"
+  ],
   "melhorLoot": []
  },
  {
@@ -2274,6 +4552,11 @@
   "nivel": 300,
   "exp": "Very Good",
   "loot": "Bad",
+  "monstros": [
+   "Priestess of the Wild Sun",
+   "Black Sphinx Acolyte",
+   "Burning Gladiator"
+  ],
   "melhorLoot": []
  },
  {
@@ -2282,6 +4565,12 @@
   "nivel": 200,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "First Room",
+   "Second Room",
+   "Third Room",
+   "Fourth Room"
+  ],
   "melhorLoot": []
  },
  {
@@ -2290,6 +4579,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Sopping Corpus",
+   "Bloated Man-Maggot",
+   "Mycobiontic Beetle",
+   "Oozing Corpus",
+   "Decaying Totem"
+  ],
   "melhorLoot": []
  },
  {
@@ -2298,6 +4594,13 @@
   "nivel": 7,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Deer",
+   "Snake",
+   "Bug",
+   "Lion",
+   "Scorpion"
+  ],
   "melhorLoot": [
    "Lion's Mane",
    "Scorpion Tail",
@@ -2310,6 +4613,11 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Frost Giant",
+   "Frost Giantess",
+   "Mammoth"
+  ],
   "melhorLoot": [
    "Shard",
    "Norse Shield",
@@ -2322,6 +4630,9 @@
   "nivel": 40,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Dragon"
+  ],
   "melhorLoot": [
    "Dragon Shield",
    "Wand of Inferno",
@@ -2334,6 +4645,20 @@
   "nivel": 15,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Deer",
+   "Snake",
+   "Spider",
+   "Wolf",
+   "Poison Spider",
+   "Bear",
+   "Minotaur",
+   "Minotaur Archer",
+   "Bat",
+   "The Horned Fox",
+   "Minotaur Guard",
+   "Minotaur Mage"
+  ],
   "melhorLoot": [
    "Wand of Cosmic Energy",
    "Minotaur Trophy",
@@ -2346,6 +4671,14 @@
   "nivel": 7,
   "exp": "very bad",
   "loot": "very bad",
+  "monstros": [
+   "Spider",
+   "Poison Spider",
+   "Skeleton",
+   "Rotworm",
+   "Rottie the Rotworm",
+   "Ghoul"
+  ],
   "melhorLoot": [
    "Mace",
    "Sword",
@@ -2358,6 +4691,12 @@
   "nivel": 25,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Scorpion",
+   "Dragon",
+   "Dragon Lord",
+   "Fire Elemental"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -2370,6 +4709,12 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Dragon Hatchling",
+   "Dragon",
+   "Dragon Lord",
+   "Dragon Lord Hatchling"
+  ],
   "melhorLoot": []
  },
  {
@@ -2378,6 +4723,11 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Larva",
+   "Scarab",
+   "Ancient Scarab"
+  ],
   "melhorLoot": []
  },
  {
@@ -2386,6 +4736,9 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Killer Caiman"
+  ],
   "melhorLoot": [
    "Giant Shimmering Pearl",
    "Crocodile Boots",
@@ -2398,6 +4751,13 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Crypt Warden",
+   "Sphinx",
+   "Priestess of the Wild Sun",
+   "Black Sphinx Acolyte",
+   "Burning Gladiator"
+  ],
   "melhorLoot": []
  },
  {
@@ -2406,6 +4766,23 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Seagull",
+   "Flamingo",
+   "Crocodile",
+   "Hyaena",
+   "Lion",
+   "Scorpion",
+   "Young Goanna",
+   "Adult Goanna",
+   "Feral Sphinx",
+   "Manticore",
+   "Ogre Sage",
+   "Ogre Rowdy",
+   "Ogre Ruffian",
+   "Lamassu",
+   "Sphinx"
+  ],
   "melhorLoot": []
  },
  {
@@ -2414,6 +4791,13 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Priestess of the Wild Sun",
+   "Black Sphinx Acolyte",
+   "Burning Gladiator",
+   "Lamassu",
+   "Gryphon"
+  ],
   "melhorLoot": []
  },
  {
@@ -2422,6 +4806,13 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Young Goanna",
+   "Adult Goanna",
+   "Sphinx",
+   "Lamassu",
+   "Feral Sphinx"
+  ],
   "melhorLoot": []
  },
  {
@@ -2430,6 +4821,11 @@
   "nivel": 110,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Undead Gladiator",
+   "Nightmare scion",
+   "Nightmare"
+  ],
   "melhorLoot": []
  },
  {
@@ -2438,6 +4834,11 @@
   "nivel": 100,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Wailing Widow",
+   "Brimstone Bug",
+   "Giant Spider"
+  ],
   "melhorLoot": []
  },
  {
@@ -2446,6 +4847,23 @@
   "nivel": 70,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Dragon Hatchling",
+   "Clomp",
+   "Ogre Shaman",
+   "Dragon",
+   "Ogre Brute",
+   "Ogre Savage",
+   "Dragon Lord",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Buccaneer",
+   "Pirate Corsair",
+   "Pirat Cutthroat",
+   "Jellyfish",
+   "Water Elemental",
+   "Shark"
+  ],
   "melhorLoot": []
  },
  {
@@ -2454,6 +4872,14 @@
   "nivel": 35,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Barbarian Brutetamer",
+   "Barbarian Bloodwalker",
+   "Barbarian Headsplitter",
+   "Barbarian Skullhunter",
+   "Chicken",
+   "Ice Witch"
+  ],
   "melhorLoot": [
    "Red Piece of Cloth",
    "Mammoth Fur Cape",
@@ -2466,6 +4892,21 @@
   "nivel": 27,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Amazon",
+   "Azure Frog",
+   "Crab",
+   "Crimson Frog",
+   "Green Frog",
+   "Orchid Frog",
+   "Coral Frog",
+   "Crocodile",
+   "Seagull",
+   "Toad",
+   "Tortoise",
+   "Thornback Tortoise",
+   "Blood Crab"
+  ],
   "melhorLoot": [
    "War Hammer",
    "Crystal Necklace",
@@ -2478,6 +4919,14 @@
   "nivel": 30,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Bug",
+   "Swampling",
+   "Leaf Golem",
+   "Wilting Leaf Golem",
+   "Witch",
+   "Haunted Treeling"
+  ],
   "melhorLoot": [
    "Bullseye Potion",
    "Bag of Apple Slices",
@@ -2490,6 +4939,11 @@
   "nivel": 13,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Larva",
+   "Scarab",
+   "Ancient Scarab"
+  ],
   "melhorLoot": [
    "Terra Hood",
    "Scarab Shield",
@@ -2502,6 +4956,13 @@
   "nivel": 100,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Werefox",
+   "Werebadger",
+   "Werewolf",
+   "Wereboar",
+   "Werebear"
+  ],
   "melhorLoot": []
  },
  {
@@ -2510,6 +4971,17 @@
   "nivel": 90,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Ghost",
+   "Mummy",
+   "Demon Skeleton",
+   "Vampire",
+   "Priestess",
+   "Bonebeast",
+   "Necromancer",
+   "Undead Cavebear",
+   "Lich"
+  ],
   "melhorLoot": [
    "Maxilla Maximus",
    "Mini Mummy",
@@ -2522,6 +4994,21 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cobra",
+   "Larva",
+   "Scorpion",
+   "Ghoul",
+   "Scarab",
+   "Mummy",
+   "Terramite",
+   "Crypt Shambler",
+   "Demon Skeleton",
+   "Noble Lion",
+   "Bonebeast",
+   "Ancient Scarab",
+   "Roaring Lion"
+  ],
   "melhorLoot": [
    "Bonebeast Trophy",
    "Crown Helmet",
@@ -2534,6 +5021,15 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "White Lion",
+   "Werelion",
+   "Werelioness",
+   "Katex Blood Tongue",
+   "Srezz Yellow Eyes",
+   "Utua Stone Sting",
+   "Yirkas Blue Scales"
+  ],
   "melhorLoot": []
  },
  {
@@ -2542,6 +5038,11 @@
   "nivel": 7,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Rat",
+   "Undead Mine Worker",
+   "Undead Prospector"
+  ],
   "melhorLoot": [
    "Life Ring",
    "Brown Piece of Cloth",
@@ -2554,6 +5055,11 @@
   "nivel": 150,
   "exp": "",
   "loot": "Bad",
+  "monstros": [
+   "Glooth Anemone",
+   "Humongous Fungus",
+   "Hideous Fungus"
+  ],
   "melhorLoot": [
    "Mycological Bow",
    "Terra Mantle",
@@ -2566,6 +5072,11 @@
   "nivel": 130,
   "exp": "Good",
   "loot": "Very good",
+  "monstros": [
+   "Shock Head",
+   "Frazzlemaw",
+   "Silencer"
+  ],
   "melhorLoot": [
    "Nightmare Blade",
    "Boots of Haste",
@@ -2578,6 +5089,19 @@
   "nivel": 150,
   "exp": "Poor",
   "loot": "Good",
+  "monstros": [
+   "Nightmare Scion",
+   "Drillworm",
+   "Vulcongra",
+   "Enslaved Dwarf",
+   "Lost Basher",
+   "Lost Husher",
+   "Lost Thrower",
+   "Dragon Lord",
+   "Wyrm",
+   "Massive Earth Elemental",
+   "Behemoth"
+  ],
   "melhorLoot": []
  },
  {
@@ -2586,6 +5110,18 @@
   "nivel": 100,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Werefox",
+   "Werebadger",
+   "Wereboar",
+   "Werebear",
+   "Werewolf",
+   "Black Vixen",
+   "Sharpclaw",
+   "Bloodback",
+   "Shadowpelt",
+   "Darkfang"
+  ],
   "melhorLoot": []
  },
  {
@@ -2594,6 +5130,18 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Poison Spider",
+   "Skeleton",
+   "Scorpion",
+   "Ghoul",
+   "Cyclops",
+   "Bonelord",
+   "Demon Skeleton",
+   "Dragon",
+   "Giant Spider",
+   "Rat"
+  ],
   "melhorLoot": [
    "Spider Silk",
    "Knight Legs",
@@ -2606,6 +5154,15 @@
   "nivel": 8,
   "exp": "very poor",
   "loot": "very poor",
+  "monstros": [
+   "Deer",
+   "Snake",
+   "Bat",
+   "Spider",
+   "Wolf",
+   "Poison Spider",
+   "Bear"
+  ],
   "melhorLoot": [
    "honeycomb"
   ]
@@ -2616,6 +5173,7 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [],
   "melhorLoot": []
  },
  {
@@ -2624,6 +5182,12 @@
   "nivel": null,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Dark Apprentice",
+   "Dark Magician",
+   "Mad Scientist",
+   "Priestess"
+  ],
   "melhorLoot": [
    "Reins",
    "Mastermind Potion",
@@ -2636,6 +5200,11 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Green Djinn",
+   "Efreet",
+   "Merikh the Slaughterer"
+  ],
   "melhorLoot": [
    "Green Gem",
    "Green Piece of Cloth",
@@ -2648,6 +5217,11 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Blue Djinn",
+   "Marid",
+   "Fahim The Wise"
+  ],
   "melhorLoot": [
    "Blue Gem",
    "Hailstorm Rod",
@@ -2660,6 +5234,13 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Novice of the Cult",
+   "Acolyte of the Cult",
+   "Adept of the Cult",
+   "Enlightened of the Cult",
+   "Serpent Spawn"
+  ],
   "melhorLoot": [
    "Crown Armor",
    "Royal Helmet",
@@ -2672,6 +5253,19 @@
   "nivel": null,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Butterfly (Red)",
+   "Cat",
+   "Rabbit",
+   "Mad Scientist",
+   "Necromancer",
+   "Hero",
+   "Infernalist",
+   "Ice Witch",
+   "Warlock",
+   "Dark Apprentice",
+   "Dark Magician"
+  ],
   "melhorLoot": [
    "Reins",
    "Ring of the Sky",
@@ -2684,6 +5278,15 @@
   "nivel": null,
   "exp": "Good",
   "loot": "Very good",
+  "monstros": [
+   "Gozzler",
+   "Necromancer",
+   "Enlightened of the Cult",
+   "Hero",
+   "Hellspawn",
+   "Plaguesmith",
+   "Demon"
+  ],
   "melhorLoot": [
    "Magic Plate Armor",
    "Mastermind Shield",
@@ -2696,6 +5299,13 @@
   "nivel": 16,
   "exp": "Very Bad",
   "loot": "Bad",
+  "monstros": [
+   "War Wolf",
+   "Ghoul",
+   "Dark Apprentice",
+   "Fire Devil",
+   "Dark Magician"
+  ],
   "melhorLoot": [
    "Reins",
    "Wolf Trophy",
@@ -2708,6 +5318,15 @@
   "nivel": 50,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Scorpion",
+   "Gargoyle",
+   "Stalker",
+   "Green Djinn",
+   "Efreet",
+   "Mummy",
+   "Hyaena"
+  ],
   "melhorLoot": [
    "Mini Mummy",
    "Green Gem",
@@ -2720,6 +5339,19 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Seagull",
+   "Tarantula",
+   "Quara Constrictor Scout",
+   "Quara Mantassin Scout",
+   "Quara Pincher Scout",
+   "Water Elemental",
+   "Giant Spider",
+   "Quara Predator Scout",
+   "Quara Hydromancer Scout",
+   "Bog Raider",
+   "Hydra"
+  ],
   "melhorLoot": [
    "Paladin Armor",
    "Knight Legs",
@@ -2732,6 +5364,13 @@
   "nivel": 30,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Witch",
+   "Frost Giant",
+   "Frost Giantess",
+   "Elephant",
+   "Mammoth"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Shard",
@@ -2744,6 +5383,11 @@
   "nivel": 140,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Frazzlemaw",
+   "Guzzlemaw",
+   "Mawhawk"
+  ],
   "melhorLoot": []
  },
  {
@@ -2752,6 +5396,47 @@
   "nivel": 40,
   "exp": "bad",
   "loot": "average",
+  "monstros": [
+   "Rat",
+   "Snake",
+   "Spider",
+   "Bug",
+   "Wolf",
+   "Troll",
+   "Poison Spider",
+   "Bear",
+   "Wasp",
+   "Goblin",
+   "Skeleton",
+   "Rotworm",
+   "Elf",
+   "Scorpion",
+   "Dwarf",
+   "Minotaur",
+   "Orc Warrior",
+   "Wild Warrior",
+   "Minotaur Archer",
+   "Dwarf Soldier",
+   "Elf Scout",
+   "Ghoul",
+   "Orc Shaman",
+   "Hunter",
+   "Minotaur Mage",
+   "Mummy",
+   "Cyclops",
+   "Slime",
+   "Minotaur Guard",
+   "Stone Golem",
+   "Dwarf Guard",
+   "Bonelord",
+   "Orc Berserker",
+   "Monk (Creature)",
+   "Demon Skeleton",
+   "Orc Leader",
+   "Dragon",
+   "Giant Spider",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -2764,6 +5449,10 @@
   "nivel": 120,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Serpent Spawn",
+   "Medusa"
+  ],
   "melhorLoot": [
    "Royal Helmet",
    "Swamplair Armor",
@@ -2776,6 +5465,16 @@
   "nivel": 200,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Gargoyle",
+   "Slime",
+   "Stone Golem",
+   "Clay Guardian",
+   "Omnivora",
+   "Behemoth",
+   "Serpent Spawn",
+   "Medusa"
+  ],
   "melhorLoot": []
  },
  {
@@ -2784,6 +5483,29 @@
   "nivel": 10,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Azure Frog",
+   "Bat",
+   "Butterfly (Blue)",
+   "Butterfly (Purple)",
+   "Butterfly (Red)",
+   "Centipede",
+   "Chicken",
+   "Cobra",
+   "Crab",
+   "Crimson Frog",
+   "Crocodile",
+   "Flamingo",
+   "Green Frog",
+   "Parrot",
+   "Poison Spider",
+   "Rat",
+   "Seagull",
+   "Spider",
+   "Tarantula",
+   "Tiger",
+   "Wasp"
+  ],
   "melhorLoot": [
    "Crocodile Boots",
    "Honeycomb",
@@ -2796,6 +5518,13 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Tarantula",
+   "Gargoyle",
+   "Stone Golem",
+   "Blood Crab",
+   "Thornback Tortoise"
+  ],
   "melhorLoot": []
  },
  {
@@ -2804,6 +5533,15 @@
   "nivel": 70,
   "exp": "Poor",
   "loot": "Good",
+  "monstros": [
+   "Clay Guardian",
+   "Earth Elemental",
+   "Mutated Rat",
+   "Crystalcrusher",
+   "Bonebeast",
+   "Mutated Bat",
+   "Ancient Scarab"
+  ],
   "melhorLoot": []
  },
  {
@@ -2812,6 +5550,11 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Minotaur",
+   "Deer",
+   "Bat"
+  ],
   "melhorLoot": [
    "Minotaur Leather",
    "Bronze Amulet",
@@ -2824,6 +5567,13 @@
   "nivel": 6,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Wolf",
+   "Orc",
+   "Minotaur",
+   "Apprentice Sheng",
+   "Minotaur Mage"
+  ],
   "melhorLoot": [
    "Mace",
    "Plate Shield",
@@ -2836,6 +5586,11 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Minotaur Cult Follower",
+   "Minotaur Cult Zealot",
+   "Minotaur Cult Prophet"
+  ],
   "melhorLoot": [
    "Mino Lance",
    "Warrior Helmet",
@@ -2848,6 +5603,17 @@
   "nivel": 27,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Dog",
+   "Snake",
+   "Minotaur",
+   "Minotaur Archer",
+   "Minotaur Mage",
+   "Minotaur Guard",
+   "General Murius",
+   "Dragon",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Dragon Shield",
    "Wand of Inferno",
@@ -2860,6 +5626,16 @@
   "nivel": 600,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Many Faces",
+   "Distorted Phantom",
+   "Mirror Image",
+   "Druid's Apparition",
+   "Knight's Apparition",
+   "Monk's Apparition",
+   "Paladin's Apparition",
+   "Sorcerer's Apparition"
+  ],
   "melhorLoot": []
  },
  {
@@ -2868,6 +5644,10 @@
   "nivel": 150,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Misguided Thief",
+   "Misguided Bully"
+  ],
   "melhorLoot": []
  },
  {
@@ -2876,6 +5656,12 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cyclops",
+   "Cyclops Drone",
+   "Cyclops Smith",
+   "Blood Crab"
+  ],
   "melhorLoot": [
    "Spiked Squelcher",
    "Club Ring",
@@ -2888,6 +5674,13 @@
   "nivel": 600,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Sulphider",
+   "Sulphur Spouter",
+   "Nighthunter",
+   "Stalking Stalk",
+   "Undertaker"
+  ],
   "melhorLoot": []
  },
  {
@@ -2896,6 +5689,14 @@
   "nivel": 55,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Larva",
+   "Mummy",
+   "Scarab",
+   "Bonebeast",
+   "Necromancer",
+   "Ancient Scarab"
+  ],
   "melhorLoot": [
    "Mini Mummy",
    "Boots of Haste",
@@ -2908,6 +5709,23 @@
   "nivel": 20,
   "exp": "good",
   "loot": "bad",
+  "monstros": [
+   "Cave Rat",
+   "Bat",
+   "Spider",
+   "Poison Spider",
+   "Skeleton",
+   "Ghoul",
+   "Cyclops",
+   "Cyclops Drone",
+   "Cyclops Smith",
+   "Wolf",
+   "Bear",
+   "Hunter",
+   "Elf",
+   "Elf Scout",
+   "Elf Arcanist"
+  ],
   "melhorLoot": [
    "Spiked Squelcher",
    "Life Ring",
@@ -2920,6 +5738,7 @@
   "nivel": 28,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [],
   "melhorLoot": [
    "Dragon Shield",
    "Wand of Inferno",
@@ -2932,6 +5751,31 @@
   "nivel": 13,
   "exp": "Good",
   "loot": "Very Good",
+  "monstros": [
+   "Deer",
+   "Bear",
+   "Skeleton",
+   "Scorpion",
+   "Minotaur Archer",
+   "Poison Spider",
+   "Bat",
+   "Cave Rat",
+   "Ghoul",
+   "Crypt Shambler",
+   "Bonelord",
+   "Mummy",
+   "Ghost",
+   "Dragon",
+   "Dwarf Guard",
+   "Dwarf Geomancer",
+   "Giant Spider",
+   "Slime",
+   "Grorlam",
+   "Lost Husher",
+   "Lost Thrower",
+   "Lost Basher",
+   "Enslaved Dwarf"
+  ],
   "melhorLoot": [
    "War Axe",
    "Terra Legs",
@@ -2944,6 +5788,31 @@
   "nivel": 10,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Snake",
+   "Cave Rat",
+   "Hyaena",
+   "Poison Spider",
+   "Cobra",
+   "Skeleton",
+   "Larva",
+   "Ghoul",
+   "Stalker",
+   "Scarab",
+   "Mummy",
+   "Demon Skeleton",
+   "Magicthrower",
+   "Ghost",
+   "Gargoyle",
+   "Slime",
+   "Bonelord",
+   "Vampire",
+   "Priestess",
+   "Necromancer",
+   "Lich",
+   "Green Djinn",
+   "Dipthrah"
+  ],
   "melhorLoot": [
    "Pharaoh Sword",
    "Maxilla Maximus",
@@ -2956,6 +5825,20 @@
   "nivel": 60,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Death Blob",
+   "Mutated Bat",
+   "Dragon",
+   "Mutated Tiger",
+   "Killer Caiman",
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Lizard Zaogun",
+   "Dreadmaw",
+   "Draptor",
+   "Flamecaller Zazrak"
+  ],
   "melhorLoot": [
    "Lizard Trophy",
    "Zaoan Legs",
@@ -2968,6 +5851,11 @@
   "nivel": 200,
   "exp": "Bad",
   "loot": "Good",
+  "monstros": [
+   "Werepanther",
+   "Feral Werecrocodile",
+   "Werecrocodile"
+  ],
   "melhorLoot": []
  },
  {
@@ -2976,6 +5864,20 @@
   "nivel": 100,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Animated Rotworm",
+   "Animated Mummy",
+   "Animated Cyclops",
+   "Museum Stone Golem",
+   "Animated Clomp",
+   "Animated Ogre Shaman",
+   "Animated Ogre Brute",
+   "Animated Ogre Savage",
+   "Museum Stone Rhino",
+   "Animated Guzzlemaw",
+   "Goldhanded Cultist",
+   "Goldhanded Cultist Bride"
+  ],
   "melhorLoot": []
  },
  {
@@ -2984,6 +5886,15 @@
   "nivel": 80,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Mutated Rat",
+   "Wyvern",
+   "Wiggler",
+   "Giant Spider",
+   "Massive Earth Elemental",
+   "Crystal Crusher",
+   "Crystal Spider"
+  ],
   "melhorLoot": [
    "Sapphire Hammer",
    "Tower Shield",
@@ -2996,6 +5907,21 @@
   "nivel": 35,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Pig",
+   "Crab",
+   "Smuggler",
+   "Ghoul",
+   "Pirate Skeleton",
+   "Tarantula",
+   "Pirate Marauder",
+   "Thornback Tortoise",
+   "Slime",
+   "Pirate Cutthroat",
+   "Pirate Ghost",
+   "Pirate Buccaneer",
+   "Pirate Corsair"
+  ],
   "melhorLoot": [
    "Pirate Boots",
    "Deer Trophy",
@@ -3008,6 +5934,14 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Ghoul",
+   "Pirate Skeleton",
+   "Tarantula",
+   "Slime",
+   "Pirate Ghost",
+   "Diblis The Fair"
+  ],
   "melhorLoot": [
    "Red Robe",
    "Spike Sword",
@@ -3020,6 +5954,14 @@
   "nivel": 300,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Flimsy Lost Soul",
+   "Mean Lost Soul",
+   "Freakish Lost Soul",
+   "Unaz the Mean",
+   "Irgix the Flimsy",
+   "Vok the Freakish"
+  ],
   "melhorLoot": []
  },
  {
@@ -3028,6 +5970,14 @@
   "nivel": 15,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Chakoya Tribewarden",
+   "Husky",
+   "Penguin",
+   "Polar Bear",
+   "Silver Rabbit",
+   "Winter Wolf"
+  ],
   "melhorLoot": [
    "Northern Pike",
    "Rainbow Trout",
@@ -3040,6 +5990,10 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Ice Golem",
+   "Crystal Spider"
+  ],
   "melhorLoot": [
    "Sapphire Hammer",
    "Knight Armor",
@@ -3052,6 +6006,12 @@
   "nivel": 250,
   "exp": "good",
   "loot": "Very Good",
+  "monstros": [
+   "Silencer",
+   "Retching Horror",
+   "Choking Fear",
+   "Terrorsleep"
+  ],
   "melhorLoot": [
    "Cluster of Solace",
    "Boots of Haste",
@@ -3064,6 +6024,11 @@
   "nivel": 400,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Dragolisk",
+   "Mega Dragon",
+   "Wardragon"
+  ],
   "melhorLoot": [
    "Dragon Slayer",
    "White Gem",
@@ -3076,6 +6041,12 @@
   "nivel": 12,
   "exp": "average",
   "loot": "average",
+  "monstros": [
+   "Rotworm",
+   "Scorpion",
+   "Nomad (Basic)",
+   "Carrion Worm"
+  ],
   "melhorLoot": [
    "Nomad Parchment",
    "Iron Helmet",
@@ -3088,6 +6059,15 @@
   "nivel": 550,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Dworc Shadowstalker",
+   "Gloom Maw",
+   "Norcferatu Heartless",
+   "Norcferatu Nightweaver",
+   "Orclops Bloodbreaker",
+   "Varg",
+   "Vladrukh"
+  ],
   "melhorLoot": [
    "Norcferatu Talisman",
    "Blood Sceptre"
@@ -3099,6 +6079,14 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Dworc Shadowstalker",
+   "Gloom Maw",
+   "Norcferatu Heartless",
+   "Norcferatu Nightweaver",
+   "Orclops Bloodbreaker",
+   "Varg"
+  ],
   "melhorLoot": []
  },
  {
@@ -3107,6 +6095,23 @@
   "nivel": 90,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Insect Swarm",
+   "Toad",
+   "Lancer Beetle",
+   "Death Blob",
+   "Haunted Treeling",
+   "Mutated Rat",
+   "Wailing Widow",
+   "Mutated Bat",
+   "Mutated Tiger",
+   "Brimstone Bug",
+   "Killer Caiman",
+   "Lizard Legionnaire",
+   "Souleater",
+   "Lizard Dragon Priest",
+   "Lizard High Guard"
+  ],
   "melhorLoot": [
    "Lizard Trophy",
    "Spirit Container",
@@ -3119,6 +6124,18 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Sheep",
+   "Seagull",
+   "Flamingo",
+   "Cobra",
+   "Crab",
+   "Sandcrawler",
+   "Crocodile",
+   "Scorpion",
+   "Sphinx",
+   "Lamassu"
+  ],
   "melhorLoot": []
  },
  {
@@ -3127,6 +6144,33 @@
   "nivel": 10,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Snake",
+   "Hyaena",
+   "Poison Spider",
+   "Skeleton",
+   "Elf",
+   "Dwarf",
+   "Scorpion",
+   "Amazon",
+   "Ghoul",
+   "Stalker",
+   "Scarab",
+   "Mummy",
+   "Slime",
+   "Ghost",
+   "Bonelord",
+   "Green Djinn",
+   "Crypt Shambler",
+   "Vampire",
+   "Lich",
+   "Demon Skeleton",
+   "Necromancer",
+   "Warlock",
+   "Demongoblin",
+   "Rahemos",
+   "Magicthrower"
+  ],
   "melhorLoot": [
    "Twin Axe",
    "Maxilla Maximus",
@@ -3139,6 +6183,11 @@
   "nivel": 80,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Penguin",
+   "Frost Dragon Hatchling",
+   "Frost Dragon"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -3151,6 +6200,18 @@
   "nivel": 60,
   "exp": "Very Good",
   "loot": "Average",
+  "monstros": [
+   "Wyvern",
+   "Bonebeast",
+   "Necromancer",
+   "Vicious Squire",
+   "Blood Priest",
+   "Lich",
+   "Hero",
+   "Renegade Knight",
+   "Vile Grandmaster",
+   "Undead Gladiator"
+  ],
   "melhorLoot": []
  },
  {
@@ -3159,6 +6220,18 @@
   "nivel": 120,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Necromancer",
+   "Lich",
+   "Undead Gladiator",
+   "Vicious Squire",
+   "Renegade Knight",
+   "Vile Grandmaster",
+   "Warlock",
+   "Shaper Matriarch",
+   "Broken Shaper",
+   "Twisted Shaper"
+  ],
   "melhorLoot": []
  },
  {
@@ -3167,6 +6240,16 @@
   "nivel": 200,
   "exp": "Very good",
   "loot": "Bad",
+  "monstros": [
+   "Glooth Blob",
+   "Rot Elemental",
+   "Blood Beast",
+   "Devourer",
+   "Quara Constrictor Scout",
+   "Quara Pincher Scout",
+   "Quara Predator Scout",
+   "Quara Hydromancer Scout"
+  ],
   "melhorLoot": [
    "Glooth Cape",
    "Green Gem",
@@ -3179,6 +6262,22 @@
   "nivel": 140,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Glooth Golem",
+   "Rustheap Golem",
+   "Worker Golem",
+   "War Golem",
+   "Minotaur Amazon",
+   "Execowtioner",
+   "Moohtant",
+   "Destroyer",
+   "Hellspawn",
+   "Grim Reaper",
+   "Dark Torturer",
+   "Demon",
+   "Hellhound",
+   "Juggernaut"
+  ],
   "melhorLoot": []
  },
  {
@@ -3187,6 +6286,37 @@
   "nivel": 300,
   "exp": "Very Good",
   "loot": "Average",
+  "monstros": [
+   "Minotaur Totem",
+   "Depowered Minotaur",
+   "Minotaur Invader",
+   "Worm Priestess",
+   "Minotaur Hunter",
+   "Mooh'Tah Warrior",
+   "Minotaur Amazon",
+   "Execowtioner",
+   "Moohtant",
+   "Glooth Powered Minotaur",
+   "Moohtant Wallbreaker",
+   "Worker Golem",
+   "Glooth Golem",
+   "Rustheap Golem",
+   "Metal Gargoyle",
+   "War Golem",
+   "High Voltage Elemental",
+   "Walker",
+   "Glooth Battery",
+   "Control Tower",
+   "Glooth Bomb",
+   "Blood Beast",
+   "Drillworm",
+   "Wyrm",
+   "Devourer",
+   "Glooth Anemone",
+   "Behemoth",
+   "Elder Wyrm",
+   "Tremor Worm"
+  ],
   "melhorLoot": [
    "Silver Raid Token",
    "Glooth Glider Gear Wheel",
@@ -3199,6 +6329,21 @@
   "nivel": null,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Spectre",
+   "Nightmare",
+   "Fury",
+   "Minotaur Hunter",
+   "Mooh'Tah Warrior",
+   "Worm Priestess",
+   "Minotaur Amazon",
+   "Execowtioner",
+   "Moohtant",
+   "Betrayed Wraith",
+   "Lost Soul",
+   "Dark Torturer",
+   "Undead Dragon"
+  ],
   "melhorLoot": []
  },
  {
@@ -3207,6 +6352,10 @@
   "nivel": 100,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Hydra",
+   "Bog Raider"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Royal Helmet",
@@ -3219,6 +6368,12 @@
   "nivel": 70,
   "exp": "Very good",
   "loot": "Good",
+  "monstros": [
+   "Blood Beast",
+   "Mooh'Tah Warrior",
+   "Minotaur Hunter",
+   "Worm Priestess"
+  ],
   "melhorLoot": [
    "Mooh'tah Plate",
    "Knight Legs",
@@ -3231,6 +6386,14 @@
   "nivel": 70,
   "exp": "Very good",
   "loot": "Good",
+  "monstros": [
+   "Mooh'Tah Warrior",
+   "Minotaur Hunter",
+   "Worm Priestess",
+   "Execowtioner",
+   "Moohtant",
+   "Minotaur Amazon"
+  ],
   "melhorLoot": [
    "Chaos Mace",
    "Crown Armor",
@@ -3243,6 +6406,14 @@
   "nivel": 25,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Orc",
+   "Orc Spearman",
+   "Orc Warrior",
+   "War Wolf",
+   "Orc Rider",
+   "Orc Berserker"
+  ],
   "melhorLoot": [
    "Wolf Trophy",
    "Light Bandana",
@@ -3255,6 +6426,11 @@
   "nivel": 200,
   "exp": "Bad",
   "loot": "Good",
+  "monstros": [
+   "Weretiger",
+   "Cunning Werepanther",
+   "White Weretiger"
+  ],
   "melhorLoot": []
  },
  {
@@ -3263,6 +6439,36 @@
   "nivel": 200,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Sparkion",
+   "Breach Brood",
+   "Reality Reaver",
+   "Dread Intruder",
+   "Charger",
+   "Spark of Destruction",
+   "Charged Anomaly",
+   "Anomaly",
+   "Crackler",
+   "Depolarized Crackler",
+   "Damage Resonance",
+   "Rupture",
+   "Unstable Spark",
+   "Foreshock",
+   "Aftershock",
+   "Realityquake",
+   "Eradicator",
+   "Charging Outburst",
+   "Outburst",
+   "Greed",
+   "The Hunger",
+   "Disruption",
+   "Charged Disruption",
+   "Overcharged Disruption",
+   "The Destruction",
+   "Frenzy",
+   "The Rage",
+   "World Devourer"
+  ],
   "melhorLoot": []
  },
  {
@@ -3271,6 +6477,11 @@
   "nivel": 90,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Burster",
+   "Instable Breach Brood",
+   "Instable Sparkion"
+  ],
   "melhorLoot": []
  },
  {
@@ -3279,6 +6490,11 @@
   "nivel": 120,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Dreadful Disruptor",
+   "Stabilizing Reality Reaver",
+   "Stabilizing Dread Intruder"
+  ],
   "melhorLoot": []
  },
  {
@@ -3287,6 +6503,37 @@
   "nivel": 20,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Rabbit",
+   "Deer",
+   "Snake",
+   "Wolf",
+   "Smuggler",
+   "Boar",
+   "Wild Warrior",
+   "Bandit",
+   "Troll",
+   "Orc Warrior",
+   "Minotaur Archer",
+   "Poison Spider",
+   "Bear",
+   "Rat",
+   "Bat",
+   "Cyclops",
+   "Minotaur",
+   "Minotaur Mage",
+   "Minotaur Guard",
+   "Bug",
+   "Spider",
+   "Scorpion",
+   "Rotworm",
+   "Wasp",
+   "Hunter",
+   "127.103",
+   "125.253",
+   "6",
+   "8"
+  ],
   "melhorLoot": []
  },
  {
@@ -3295,6 +6542,9 @@
   "nivel": 55,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Water Elemental"
+  ],
   "melhorLoot": [
    "Giant Shimmering Pearl",
    "Leviathan's Amulet",
@@ -3307,6 +6557,35 @@
   "nivel": 13,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Snake",
+   "Spider",
+   "Poison Spider",
+   "Skeleton",
+   "Lion",
+   "Larva",
+   "Ghoul",
+   "Scarab",
+   "Cobra",
+   "Scorpion",
+   "Mummy",
+   "Slime",
+   "Stone Golem",
+   "Crypt Shambler",
+   "Stalker",
+   "Ghost",
+   "Gargoyle",
+   "Bonelord",
+   "Demon Skeleton",
+   "Vampire",
+   "Bonebeast",
+   "Green Djinn",
+   "Vampire Bride",
+   "Necromancer",
+   "Ancient Scarab",
+   "Magicthrower",
+   "Omruc"
+  ],
   "melhorLoot": [
    "Mini Mummy",
    "Boots of Haste",
@@ -3319,6 +6598,12 @@
   "nivel": 80,
   "exp": "Bad",
   "loot": "Good",
+  "monstros": [
+   "Bonny Bunny",
+   "Baleful Bunny",
+   "Schiach",
+   "Percht"
+  ],
   "melhorLoot": [
    "Glacial Rod",
    "Glacier Robe",
@@ -3331,6 +6616,11 @@
   "nivel": 100,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Pirat Cutthroat",
+   "Pirat Scoundrel",
+   "Pirat Bombardier"
+  ],
   "melhorLoot": [
    "Focus Cape",
    "Knight Armor",
@@ -3343,6 +6633,43 @@
   "nivel": 130,
   "exp": "average",
   "loot": "average",
+  "monstros": [
+   "Demon Skeleton",
+   "Spectre",
+   "Nightmare",
+   "Diabolic Imp",
+   "Defiler",
+   "Destroyer",
+   "Hellfire Fighter",
+   "Plaguesmith",
+   "Lost Soul",
+   "Fire Devil",
+   "Dark Torturer",
+   "Blightwalker",
+   "Phantasm",
+   "Betrayed Wraith",
+   "Flamethrower",
+   "Hand of Cursed Fate",
+   "Hellhound",
+   "Demon",
+   "The Imperor",
+   "The Handmaiden",
+   "Son of Verminor",
+   "The Plasmother",
+   "Banshee",
+   "Mr. Punish",
+   "Fury",
+   "Juggernaut",
+   "Massacre",
+   "Demongoblin",
+   "Countess Sorrow",
+   "Lich",
+   "Undead Dragon",
+   "Dracola",
+   "Demon (Goblin)",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Maxilla Maximus",
    "Magic Plate Armor",
@@ -3355,6 +6682,11 @@
   "nivel": 80,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Dragon Hatchling",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -3367,6 +6699,39 @@
   "nivel": 19,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Rat",
+   "Wolf",
+   "Poison Spider",
+   "Bear",
+   "Orc",
+   "Skeleton",
+   "Rotworm",
+   "Elf",
+   "Scorpion",
+   "Orc Warrior",
+   "Minotaur",
+   "Minotaur Archer",
+   "Elf Scout",
+   "Orc Shaman",
+   "Witch",
+   "Tarantula",
+   "Cyclops",
+   "Hunter",
+   "Minotaur Mage",
+   "Slime",
+   "Minotaur Guard",
+   "Orc Berserker",
+   "Demon Skeleton",
+   "Orc Leader",
+   "Vampire",
+   "Wyvern",
+   "Dragon",
+   "Giant Spider",
+   "Dragon Lord",
+   "The Old Widow",
+   "Demodras"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -3379,6 +6744,12 @@
   "nivel": 65,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Fire Devil",
+   "Dragon",
+   "Dragon Lord",
+   "Demodras"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -3391,6 +6762,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Wolf",
+   "War Wolf",
+   "Bear",
+   "Boar",
+   "Wyvern"
+  ],
   "melhorLoot": []
  },
  {
@@ -3399,6 +6777,11 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Ghost Wolf",
+   "Gloom Wolf",
+   "Wyvern"
+  ],
   "melhorLoot": []
  },
  {
@@ -3407,6 +6790,12 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Poacher",
+   "Hunter",
+   "Wolf",
+   "Wyvern"
+  ],
   "melhorLoot": [
    "Slingshot",
    "Wolf_Trophy",
@@ -3419,6 +6808,19 @@
   "nivel": 600,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Grove Guardian",
+   "Herd Weevil",
+   "Common Beetle",
+   "Rootthing Amber Shaper",
+   "Rootthing Bug Tracker",
+   "Rootthing Nutshell",
+   "Quara Raider",
+   "Quara Plunderer",
+   "Quara Looter",
+   "Shark",
+   "The Rootkraken"
+  ],
   "melhorLoot": [
    "Amber Crossbow",
    "Amber Axe",
@@ -3431,6 +6833,16 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Cave Rat",
+   "Bug",
+   "Spider",
+   "Poison Spider",
+   "Swamp Troll",
+   "Crab",
+   "Skeleton",
+   "Bonelord"
+  ],
   "melhorLoot": [
    "Bonelord Eye",
    "Terra Rod",
@@ -3443,6 +6855,12 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Oozing Carcass",
+   "Sopping Carcass",
+   "Rotten Man-Maggot",
+   "Meandering Mushroom"
+  ],
   "melhorLoot": []
  },
  {
@@ -3451,6 +6869,19 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Crab",
+   "Quara Mantassin Scout",
+   "Quara Constrictor Scout",
+   "Quara Predator Scout",
+   "Quara Pincher Scout",
+   "Quara Hydromancer Scout",
+   "Quara Mantassin",
+   "Quara Constrictor",
+   "Quara Predator",
+   "Quara Pincher",
+   "Quara Hydromancer"
+  ],
   "melhorLoot": []
  },
  {
@@ -3459,6 +6890,14 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Radiant Templar",
+   "Radiant Inquisitor",
+   "Radiant Zealot",
+   "Devoted Radiant Templar",
+   "Devoted Radiant Inquisitor",
+   "Devoted Radiant Zealot"
+  ],
   "melhorLoot": []
  },
  {
@@ -3467,6 +6906,14 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Radiant Warden",
+   "Radiant Paragon",
+   "Radiant Acolyte",
+   "Devoted Radiant Warden",
+   "Devoted Radiant Paragon",
+   "Devoted Radiant Acolyte"
+  ],
   "melhorLoot": []
  },
  {
@@ -3475,6 +6922,14 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Winter Wolf",
+   "Barbarian Skullhunter",
+   "Barbarian Headsplitter",
+   "Barbarian Brutetamer",
+   "Mammoth",
+   "Barbarian Bloodwalker"
+  ],
   "melhorLoot": [
    "Red Piece of Cloth",
    "Mammoth Fur Cape",
@@ -3487,6 +6942,21 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cobra",
+   "Scorpion",
+   "Ghost",
+   "Crypt_Shambler <!--Appears while digging-->",
+   "Demon Skeleton",
+   "Water Elemental",
+   "Bonebeast",
+   "Giant Spider",
+   "Mummy",
+   "Vampire",
+   "Priestess",
+   "Necromancer",
+   "Lich"
+  ],
   "melhorLoot": [
    "Bonebeast Trophy",
    "Knight Legs",
@@ -3499,6 +6969,13 @@
   "nivel": null,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Glooth Blob",
+   "Rot Elemental",
+   "Glooth Anemone",
+   "Glooth Golem",
+   "Rustheap Golem"
+  ],
   "melhorLoot": []
  },
  {
@@ -3507,6 +6984,15 @@
   "nivel": null,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Devourer",
+   "Glooth Anemone",
+   "Glooth Golem",
+   "Rustheap Golem",
+   "Humongous Fungus",
+   "Hideous Fungus",
+   "Glooth Fairy"
+  ],
   "melhorLoot": []
  },
  {
@@ -3515,6 +7001,44 @@
   "nivel": 120,
   "exp": "very good",
   "loot": "very good",
+  "monstros": [
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Lizard Zaogun",
+   "Lizard Noble",
+   "Lizard Magistratus",
+   "Draken Warmaster",
+   "Draken Spellweaver",
+   "Centipede",
+   "Terramite",
+   "Lancer Beetle",
+   "Mutated Rat",
+   "Wailing Widow",
+   "Brimstone Bug",
+   "Dragon Lord Hatchling",
+   "Wyrm",
+   "Frost Dragon",
+   "Dragon Lord",
+   "Lizard Chosen",
+   "Serpent Spawn",
+   "Draken Abomination",
+   "Draken Elite",
+   "Ghastly Dragon",
+   "Demon",
+   "Undead Dragon",
+   "Fury Of The Emperor",
+   "Wrath Of The Emperor",
+   "Scorn Of The Emperor",
+   "Spite Of The Emperor",
+   "Snake God Essence",
+   "Snake Thing",
+   "Lizard Abomination",
+   "Mutated Zalamon",
+   "Fazzrah",
+   "Paiz the Pauperizer",
+   "Zanakeph"
+  ],
   "melhorLoot": []
  },
  {
@@ -3523,6 +7047,17 @@
   "nivel": 190,
   "exp": "Average",
   "loot": "Very Good",
+  "monstros": [
+   "Draken Abomination",
+   "Ghastly Dragon",
+   "Undead Dragon",
+   "Hatebreeder",
+   "Draken Elite",
+   "Fury of the Emperor",
+   "Scorn of the Emperor",
+   "Spite of the Emperor",
+   "Wrath of the Emperor"
+  ],
   "melhorLoot": [
    "Shield of Corruption",
    "Cobra Crown",
@@ -3535,6 +7070,11 @@
   "nivel": 110,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Iron Servant Replica",
+   "Golden Servant Replica",
+   "Diamond Servant Replica"
+  ],
   "melhorLoot": [
    "Spellbook of Enlightenment",
    "Yellow Gem",
@@ -3547,6 +7087,18 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Tarantula",
+   "Mutated Human",
+   "Mutated Rat",
+   "Earth Elemental",
+   "Nightstalker",
+   "Bonebeast",
+   "Bog Raider",
+   "Banshee",
+   "Giant Spider",
+   "Nightmare Scion"
+  ],
   "melhorLoot": [
    "Sweet Smelling Bait",
    "Boots of Haste",
@@ -3559,6 +7111,9 @@
   "nivel": 5,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Bear"
+  ],
   "melhorLoot": [
    "Bear Paw",
    "Honeycomb"
@@ -3570,6 +7125,14 @@
   "nivel": 7,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Deer",
+   "Snake",
+   "Wasp",
+   "Orc",
+   "Orc Spearman",
+   "Kraknaknork"
+  ],
   "melhorLoot": [
    "Honeycomb",
    "Orc Tooth",
@@ -3582,6 +7145,11 @@
   "nivel": 45,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Deer",
+   "Wasp",
+   "Rorc"
+  ],
   "melhorLoot": []
  },
  {
@@ -3590,6 +7158,11 @@
   "nivel": null,
   "exp": "?",
   "loot": "?",
+  "monstros": [
+   "Terrorsleep",
+   "Feversleep",
+   "Shiversleep"
+  ],
   "melhorLoot": []
  },
  {
@@ -3598,6 +7171,7 @@
   "nivel": null,
   "exp": "very poor",
   "loot": "very poor",
+  "monstros": [],
   "melhorLoot": []
  },
  {
@@ -3606,6 +7180,23 @@
   "nivel": 250,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Betrayed Wraith",
+   "Nightmare",
+   "Lost Soul",
+   "Plaguesmith",
+   "Dark Torturer",
+   "Demon Outcast",
+   "Blightwalker",
+   "Hellhound",
+   "Juggernaut",
+   "Gaz'haragoth",
+   "Omrafir",
+   "Bronze Prison Key",
+   "Copper Prison Key",
+   "Silver Prison Key",
+   "Golden Prison Key"
+  ],
   "melhorLoot": []
  },
  {
@@ -3614,6 +7205,11 @@
   "nivel": 600,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Branchy Crawler",
+   "Mould Phantom",
+   "Rotten Golem"
+  ],
   "melhorLoot": []
  },
  {
@@ -3622,6 +7218,10 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Venerable Girtablilu",
+   "Girtablilu Warrior"
+  ],
   "melhorLoot": []
  },
  {
@@ -3630,6 +7230,10 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Juvenile Bashmu",
+   "Bashmu"
+  ],
   "melhorLoot": []
  },
  {
@@ -3638,6 +7242,11 @@
   "nivel": 70,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Deepsea Blood Crab",
+   "Young Sea Serpent",
+   "Sea Serpent"
+  ],
   "melhorLoot": [
    "Crystalline Armor",
    "Glacier Kilt",
@@ -3650,6 +7259,25 @@
   "nivel": 120,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Abyssal Calamary",
+   "Blood Crab",
+   "Shark",
+   "Quara Mantassin",
+   "Quara Constrictor",
+   "Quara Hydromancer",
+   "Quara Pincher",
+   "Quara Predator",
+   "Renegade Quara Mantassin",
+   "Renegade Quara Constrictor",
+   "Renegade Quara Hydromancer",
+   "Renegade Quara Pincher",
+   "Renegade Quara Predator",
+   "Sea Serpent",
+   "Seacrest Serpent",
+   "Young Sea Serpent",
+   "Seacrest Serpent\n <!-- during world change -->"
+  ],
   "melhorLoot": [
    "Relic Sword",
    "Crown Armor",
@@ -3662,6 +7290,28 @@
   "nivel": 300,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Flying Book",
+   "Ink Blob",
+   "Guardian of Tales",
+   "Rage Squid",
+   "Burning Book",
+   "Biting Book",
+   "Knowledge Elemental",
+   "Energuardian of Tales",
+   "Brain Squid",
+   "Energetic Book",
+   "Librarian",
+   "Animated Feather",
+   "Squid Warden",
+   "Icecold Book",
+   "Cursed Book",
+   "Lokathmor",
+   "Mazzinor",
+   "Ghulosh",
+   "Gorzindel",
+   "The Scourge of Oblivion"
+  ],
   "melhorLoot": []
  },
  {
@@ -3670,6 +7320,10 @@
   "nivel": 8,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Troll",
+   "Troll Champion"
+  ],
   "melhorLoot": [
    "Silver Amulet",
    "Trollroot",
@@ -3682,6 +7336,32 @@
   "nivel": 19,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Cave Rat",
+   "Snake",
+   "Poison Spider",
+   "Skeleton",
+   "Larva",
+   "Scorpion",
+   "Ghoul",
+   "Stalker",
+   "Scarab",
+   "Mummy",
+   "Slime",
+   "Bonelord",
+   "Ghost",
+   "Crypt Shambler",
+   "Fire Devil",
+   "Fire Elemental",
+   "Vampire",
+   "Demon Skeleton",
+   "Green Djinn",
+   "Flamethrower",
+   "Necromancer",
+   "Dragon",
+   "Dragon Lord",
+   "Mahrdis"
+  ],
   "melhorLoot": [
    "Phoenix Shield",
    "Holy Falcon",
@@ -3694,6 +7374,21 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Bog Frog",
+   "Elf",
+   "Toad",
+   "Elf Scout",
+   "Firestarter",
+   "Ghoul",
+   "Cyclops",
+   "Elf Arcanist",
+   "Demon Skeleton",
+   "Dragon",
+   "Thornfire Wolf",
+   "Crystal Wolf",
+   "Elf Overseer"
+  ],
   "melhorLoot": [
    "Dragon Shield",
    "Wand of Inferno",
@@ -3706,6 +7401,7 @@
   "nivel": null,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [],
   "melhorLoot": []
  },
  {
@@ -3714,6 +7410,14 @@
   "nivel": 95,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Death Blob",
+   "Mutated Rat",
+   "Mutated Bat",
+   "Mutated Tiger",
+   "Killer Caiman",
+   "Souleater"
+  ],
   "melhorLoot": [
    "Spirit Container",
    "Souleater Trophy",
@@ -3726,6 +7430,13 @@
   "nivel": 600,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Emerald Tortoise",
+   "Gore Horn",
+   "Gorerilla",
+   "Hulking Prehemoth",
+   "Sabretooth (Creature)"
+  ],
   "melhorLoot": []
  },
  {
@@ -3734,6 +7445,11 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Poison Spider",
+   "Tarantula",
+   "Giant Spider"
+  ],
   "melhorLoot": [
    "Spider Silk",
    "Knight Legs",
@@ -3746,6 +7462,17 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Deer",
+   "Stag",
+   "Raubritter Chastener",
+   "Raubritter Marksman",
+   "Raubritter Skirmisher",
+   "Night Harpy",
+   "Clavius",
+   "Michael the Stalwart",
+   "Overseer Osverger"
+  ],
   "melhorLoot": []
  },
  {
@@ -3754,6 +7481,11 @@
   "nivel": 28,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Stalker",
+   "Banshee",
+   "Ghoul"
+  ],
   "melhorLoot": []
  },
  {
@@ -3762,6 +7494,9 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Stampor"
+  ],
   "melhorLoot": [
    "Spiked Squelcher",
    "Knight Armor",
@@ -3774,6 +7509,30 @@
   "nivel": 13,
   "exp": "Unknown",
   "loot": "Unknown",
+  "monstros": [
+   "Hyaena",
+   "Poison Spider",
+   "Skeleton",
+   "Larva",
+   "Scorpion",
+   "Ghoul",
+   "Scarab",
+   "Cobra",
+   "Stalker",
+   "Mummy",
+   "Slime",
+   "Crypt Shambler",
+   "Bonelord",
+   "Demon Skeleton",
+   "Vampire",
+   "Ghost",
+   "Bone Beast",
+   "Necromancer",
+   "Ancient Scarab",
+   "Giant Spider",
+   "Plaguethrower",
+   "Thalas"
+  ],
   "melhorLoot": [
    "Djinn Blade",
    "Mini Mummy",
@@ -3786,6 +7545,10 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Deepling Scout",
+   "Groam"
+  ],
   "melhorLoot": [
    "Fish Fin",
    "Heavy Trident",
@@ -3798,6 +7561,16 @@
   "nivel": 55,
   "exp": "average",
   "loot": "average",
+  "monstros": [
+   "Quara Constrictor",
+   "Quara Mantassin",
+   "Quara Hydromancer",
+   "Quara Pincher",
+   "Quara Predator",
+   "Inky",
+   "Splasher",
+   "Sharptooth"
+  ],
   "melhorLoot": [
    "Giant Shrimp",
    "Skull Helmet",
@@ -3810,6 +7583,11 @@
   "nivel": 250,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Deepling Warrior",
+   "Deathling Scout",
+   "Deathling Spellsinger"
+  ],
   "melhorLoot": []
  },
  {
@@ -3818,6 +7596,15 @@
   "nivel": 7,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Swamp Troll",
+   "Slug",
+   "Rotworm",
+   "Bat",
+   "Cave Rat",
+   "Skeleton",
+   "Ghoul"
+  ],
   "melhorLoot": [
    "Moon Backpack",
    "Medicine Pouch",
@@ -3830,6 +7617,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Tainted Soul",
+   "Toad",
+   "Gloom Wolf",
+   "Witch",
+   "Ekatrix"
+  ],
   "melhorLoot": []
  },
  {
@@ -3838,6 +7632,22 @@
   "nivel": 60,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Cobra",
+   "Crocodile",
+   "Scorpion",
+   "Slime",
+   "Quara Mantassin Scout",
+   "Quara Constrictor Scout",
+   "Quara Pincher Scout",
+   "Quara Predator Scout",
+   "Water_Elemental",
+   "Quara Hydromancer Scout",
+   "Bog_Raider",
+   "Hydra",
+   "Serpent Spawn",
+   "Medusa"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Royal Helmet",
@@ -3850,6 +7660,29 @@
   "nivel": 20,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Cave Rat",
+   "Poison Spider",
+   "Skeleton",
+   "Scorpion",
+   "Ghoul",
+   "Scarab",
+   "Mummy",
+   "Bonelord",
+   "Crypt Shambler",
+   "Larva",
+   "Cobra",
+   "Stalker",
+   "Ghost",
+   "Demon Skeleton",
+   "Vampire",
+   "Bonebeast",
+   "Necromancer",
+   "Gargoyle",
+   "Stone Golem",
+   "Behemoth",
+   "Morguthis"
+  ],
   "melhorLoot": [
    "Ravager's Axe",
    "Mini Mummy",
@@ -3862,6 +7695,20 @@
   "nivel": 150,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Mutated Bat",
+   "Mutated Tiger",
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Lizard Chosen",
+   "Draken Warmaster",
+   "Draken Spellweaver",
+   "Soulcatcher",
+   "Corrupted Soul",
+   "Dragonking Zyrtarch",
+   "Soul of Dragonking Zyrtarch"
+  ],
   "melhorLoot": []
  },
  {
@@ -3870,6 +7717,14 @@
   "nivel": 80,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Lizard Legionnaire",
+   "Lizard High Guard",
+   "Lizard Dragon Priest",
+   "Lizard Zaogun",
+   "Lizard Chosen",
+   "Battlemaster Zunzu"
+  ],
   "melhorLoot": [
    "Zaoan Helmet",
    "Lizard Trophy",
@@ -3882,6 +7737,11 @@
   "nivel": 400,
   "exp": "Very Good",
   "loot": "Average",
+  "monstros": [
+   "Naga Warrior",
+   "Naga Archer",
+   "Makara"
+  ],
   "melhorLoot": []
  },
  {
@@ -3890,6 +7750,9 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Terramite"
+  ],
   "melhorLoot": [
    "Terramite Shell",
    "Terramite Legs",
@@ -3902,6 +7765,10 @@
   "nivel": 15,
   "exp": "Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Bandit",
+   "Bat"
+  ],
   "melhorLoot": [
    "Iron Helmet",
    "Brass Armor",
@@ -3914,6 +7781,9 @@
   "nivel": 8,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Bat"
+  ],
   "melhorLoot": [
    "Bat Wing"
   ]
@@ -3924,6 +7794,13 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Dragon Hatchling",
+   "Dragon Lord Hatchling",
+   "Dragon",
+   "Dragon Lord",
+   "Demodras"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -3936,6 +7813,12 @@
   "nivel": 6,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Rat",
+   "Cave Rat",
+   "Spider",
+   "Bat"
+  ],
   "melhorLoot": [
    "Bat Wing",
    "Spider Fangs",
@@ -3948,6 +7831,23 @@
   "nivel": 8,
   "exp": "Very Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Rabbit",
+   "Snake",
+   "Poison Spider",
+   "Wolf",
+   "Troll",
+   "Wasp",
+   "Orc",
+   "Troll Champion",
+   "Orc Warrior",
+   "Rat",
+   "Scorpion",
+   "Rotworm",
+   "Carrion Worm",
+   "Slime",
+   "Skeleton"
+  ],
   "melhorLoot": [
    "Honeycomb",
    "Orc Tooth",
@@ -3960,6 +7860,9 @@
   "nivel": 10,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Wasp"
+  ],
   "melhorLoot": [
    "Honeycomb"
   ]
@@ -3970,6 +7873,12 @@
   "nivel": 8,
   "exp": "Bad",
   "loot": "2",
+  "monstros": [
+   "Cave Rat",
+   "Rabid Wolf",
+   "Ragged Rabid Wolf",
+   "Trollwut"
+  ],
   "melhorLoot": [
    "Mana Potion",
    "Platinum Coin",
@@ -3982,6 +7891,12 @@
   "nivel": 10,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Snake",
+   "Spider",
+   "Wolf",
+   "War Wolf"
+  ],
   "melhorLoot": [
    "Wolf Trophy",
    "Wolf Paw",
@@ -3994,6 +7909,16 @@
   "nivel": 28,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Smuggler",
+   "Bandit",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Buccaneer",
+   "Ghoul",
+   "Pirate Skeleton",
+   "Pirate Ghost"
+  ],
   "melhorLoot": [
    "Red Robe",
    "Spike Sword",
@@ -4006,6 +7931,14 @@
   "nivel": 350,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Fury",
+   "Retching Horror",
+   "Floating Savant",
+   "Demon",
+   "Hellhound",
+   "Lava Golem"
+  ],
   "melhorLoot": []
  },
  {
@@ -4014,6 +7947,20 @@
   "nivel": null,
   "exp": "",
   "loot": "Average",
+  "monstros": [
+   "Dragon",
+   "Dragon Lord",
+   "Ice Dragon",
+   "Haunted Dragon",
+   "Fallen Challenger",
+   "Dragon Warden",
+   "Spirit of Fertility",
+   "Unbeatable Dragon",
+   "Angry Plant",
+   "Somewhat Beatable Dragon",
+   "Dragon Essence",
+   "The First Dragon"
+  ],
   "melhorLoot": [
    "Skullcracker Armor",
    "Divine Plate",
@@ -4026,6 +7973,27 @@
   "nivel": 70,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Hive Pore",
+   "Lesser Swarmer",
+   "Swarmer",
+   "Insectoid Worker",
+   "Waspoid",
+   "Crawler",
+   "Ladybug",
+   "Floor Blob",
+   "Spitter",
+   "Kollos",
+   "Spidris",
+   "Spidris Elite",
+   "Hive Overseer",
+   "Chopper",
+   "Fleshslicer",
+   "Maw",
+   "Mindmasher",
+   "Rotspit",
+   "Shadowstalker"
+  ],
   "melhorLoot": [
    "Four-Leaf Clover",
    "Buggy Backpack",
@@ -4038,6 +8006,14 @@
   "nivel": 30,
   "exp": "Bad",
   "loot": "Good",
+  "monstros": [
+   "Cat",
+   "Cave Rat",
+   "Green Frog",
+   "Ghoul",
+   "Witch",
+   "Dark Magician"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Reins",
@@ -4050,6 +8026,12 @@
   "nivel": 150,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Pirat Scoundrel",
+   "Pirat Bombardier",
+   "Pirat Cutthroat",
+   "Pirat Mate"
+  ],
   "melhorLoot": []
  },
  {
@@ -4058,6 +8040,32 @@
   "nivel": 100,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Memory of a Carnisylvan",
+   "Memory of a Manticore",
+   "Memory of a Werelion",
+   "Memory of a Book",
+   "Memory of a Shaper",
+   "Memory of a Faun",
+   "Memory of an Ogre",
+   "Memory of a Frazzlemaw",
+   "Memory of a Fungus",
+   "Memory of a Golem",
+   "Memory of an Insectoid",
+   "Memory of a Lizard",
+   "Memory of a Mammoth",
+   "Memory of a Pirate",
+   "Memory of a Vampire",
+   "Memory of a Yalahari",
+   "Memory of a Banshee",
+   "Memory of a Hydra",
+   "Memory of a Scarab",
+   "Memory of an Amazon",
+   "Memory of a Dwarf",
+   "Memory of a Hero",
+   "Memory of an Elf",
+   "Memory of a Wolf"
+  ],
   "melhorLoot": []
  },
  {
@@ -4066,6 +8074,37 @@
   "nivel": 35,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Butterfly (Blue)",
+   "Butterfly (Purple)",
+   "Butterfly (Red)",
+   "Flamingo",
+   "Bat",
+   "Cave Rat",
+   "Snake",
+   "Spider",
+   "Wolf",
+   "Bug",
+   "Spit Nettle",
+   "Poison Spider",
+   "Panda",
+   "Wasp",
+   "Swamp Troll",
+   "Crab",
+   "Cobra",
+   "Centipede",
+   "Tiger",
+   "Crocodile",
+   "Smuggler",
+   "Filth Toad",
+   "Hunter",
+   "Carniphilia",
+   "Terror Bird",
+   "Slime",
+   "Elephant",
+   "Crypt Shambler",
+   "Hydra"
+  ],
   "melhorLoot": []
  },
  {
@@ -4074,6 +8113,12 @@
   "nivel": 15,
   "exp": "Bad",
   "loot": "Very Bad",
+  "monstros": [
+   "Smuggler",
+   "Wolf",
+   "Bandit",
+   "Smuggler Baron Silvertoe"
+  ],
   "melhorLoot": [
    "Deer Trophy",
    "Iron Helmet",
@@ -4086,6 +8131,12 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Dwarf",
+   "Dwarf Soldier",
+   "Dwarf Guard",
+   "Dwarf Geomancer"
+  ],
   "melhorLoot": [
    "Terra Boots",
    "Iron Ore",
@@ -4098,6 +8149,15 @@
   "nivel": 15,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Crab",
+   "Crocodile",
+   "The Snapper",
+   "Green Frog",
+   "Tortoise",
+   "Blood Crab",
+   "Carrion Worm"
+  ],
   "melhorLoot": [
    "Crocodile Boots",
    "Turtle Shell",
@@ -4110,6 +8170,13 @@
   "nivel": 20,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Spider",
+   "Poison Spider",
+   "Tarantula",
+   "Centipede",
+   "Toad"
+  ],
   "melhorLoot": [
    "Monk Robe",
    "War Hammer",
@@ -4122,6 +8189,37 @@
   "nivel": 20,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Bug",
+   "Butterfly (Blue)",
+   "Butterfly (Purple)",
+   "Butterfly (Red)",
+   "Carniphila",
+   "Cave Rat",
+   "Centipede",
+   "Crab",
+   "Crypt Shambler",
+   "Dworc Fleshhunter",
+   "Dworc Venomsniper",
+   "Dworc Voodoomaster",
+   "Flamingo",
+   "Lizard Commander",
+   "Lizard Executioner",
+   "Lizard Henchman",
+   "Lizard Magician",
+   "Lizard Swordmaster",
+   "Panda",
+   "Poison Spider",
+   "Seagull",
+   "Snake",
+   "Spider",
+   "Spit Nettle",
+   "Tarantula",
+   "Terror Bird",
+   "Tiger",
+   "Wasp",
+   "Wisp"
+  ],
   "melhorLoot": [
    "Voodoo Doll",
    "Carrot on a Stick",
@@ -4134,6 +8232,10 @@
   "nivel": 55,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Water Elemental",
+   "Quara Mantassin Scout"
+  ],
   "melhorLoot": [
    "Giant Shimmering Pearl",
    "Leviathan's Amulet",
@@ -4146,6 +8248,11 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Corym Charlatan",
+   "Corym Skirmisher",
+   "Corym Vanguard"
+  ],
   "melhorLoot": [
    "Rat God Doll",
    "Leather Harness",
@@ -4158,6 +8265,16 @@
   "nivel": 30,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Mutated Human",
+   "Spit Nettle",
+   "Swampling",
+   "Carniphila",
+   "Haunted Treeling",
+   "Humongous Fungus",
+   "Hideous Fungus",
+   "Mad Scientist"
+  ],
   "melhorLoot": [
    "Carrot on a Stick",
    "Mastermind Potion",
@@ -4170,6 +8287,33 @@
   "nivel": 27,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Crazed Beggar",
+   "Crocodile",
+   "Elf",
+   "Smuggler",
+   "Goblin Assassin",
+   "Amazon",
+   "Wild Warrior",
+   "Nomad (Basic)",
+   "Bandit",
+   "Poacher",
+   "Gang Member",
+   "Valkyrie",
+   "Barbarian Headsplitter",
+   "Barbarian Skullhunter",
+   "Hunter",
+   "Monk (Creature)",
+   "Witch",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Buccaneer",
+   "Pirate Corsair",
+   "Stalker",
+   "Assassin",
+   "Gladiator",
+   "Mad Scientist"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Sniper Gloves",
@@ -4182,6 +8326,23 @@
   "nivel": 10,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Seagull",
+   "Crab",
+   "Larva",
+   "Scorpion",
+   "Blood Crab",
+   "Quara Constrictor Scout",
+   "Crustacea Gigantica",
+   "Skeleton",
+   "Ghoul",
+   "Pirate Skeleton",
+   "Ghost",
+   "Scarab",
+   "Crypt Shambler",
+   "Pirate Ghost",
+   "Zombie"
+  ],
   "melhorLoot": [
    "Red Robe",
    "Fish Fin",
@@ -4194,6 +8355,16 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Bonelord",
+   "Skeleton",
+   "Ghoul",
+   "Demon Skeleton",
+   "Stalker",
+   "Witch",
+   "Monk (Creature)",
+   "Dwarf Geomancer"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Witch Hat",
@@ -4206,6 +8377,12 @@
   "nivel": 80,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Mushroom Sniffer",
+   "Wyvern",
+   "Wiggler",
+   "Massive Earth Elemental"
+  ],
   "melhorLoot": [
    "Wand of Inferno",
    "Diamond Sceptre",
@@ -4218,6 +8395,21 @@
   "nivel": 25,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Penguin",
+   "Winter Wolf",
+   "Polar Bear",
+   "Smuggler",
+   "Bandit",
+   "Hunter",
+   "Mammoth",
+   "Frost Giant",
+   "Frost Giantess",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Buccaneer",
+   "Dire Penguin"
+  ],
   "melhorLoot": [
    "Slingshot",
    "Deer Trophy",
@@ -4230,6 +8422,15 @@
   "nivel": 20,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Polar Bear",
+   "Smuggler",
+   "Bandit",
+   "Hunter",
+   "Pirate Marauder",
+   "Pirate Cutthroat",
+   "Pirate Buccaneer"
+  ],
   "melhorLoot": [
    "Slingshot",
    "Deer Trophy",
@@ -4242,6 +8443,28 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Chicken",
+   "Wolf",
+   "Bear",
+   "Orc",
+   "Orc Spearman",
+   "Elf",
+   "Orc Warrior",
+   "War Wolf",
+   "Rorc",
+   "Orc Shaman",
+   "Orc Rider",
+   "Cyclops",
+   "Orc Berserker",
+   "Orc Leader",
+   "Orc Warlord",
+   "Warlord Ruzad",
+   "Slime",
+   "Stone Golem",
+   "Bonelord",
+   "Dragon"
+  ],
   "melhorLoot": [
    "Gold Ring",
    "Crusader Helmet",
@@ -4254,6 +8477,19 @@
   "nivel": 100,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Glooth Blob",
+   "Rot Elemental",
+   "Bog Raider",
+   "Metal Gargoyle",
+   "Glooth Brigand",
+   "Glooth Bandit",
+   "Glooth Anemone",
+   "Hydra",
+   "Glooth Golem",
+   "Rustheap Golem",
+   "Walker"
+  ],
   "melhorLoot": [
    "Dreaded Cleaver",
    "Butcher's Axe",
@@ -4266,6 +8502,10 @@
   "nivel": 50,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Ghost",
+   "Demon Skeleton"
+  ],
   "melhorLoot": [
    "Ancient Shield",
    "Guardian Shield",
@@ -4278,6 +8518,11 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Crypt Fiend",
+   "Creepy Crawler",
+   "Crypt Construct"
+  ],
   "melhorLoot": []
  },
  {
@@ -4286,6 +8531,20 @@
   "nivel": 200,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Frazzlemaw",
+   "Silencer",
+   "Retching Horror",
+   "Choking Fear",
+   "Guzzlemaw",
+   "Minion of Gaz'haragoth",
+   "Nightmare of Gaz'haragoth",
+   "Gaz'haragoth",
+   "Feversleep",
+   "Terrorsleep",
+   "Shiversleep",
+   "Sight of Surrender"
+  ],
   "melhorLoot": []
  },
  {
@@ -4294,6 +8553,18 @@
   "nivel": 30,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Gargoyle",
+   "Mummy",
+   "Ghost",
+   "Crypt Shambler",
+   "Corym Skirmisher",
+   "Corym Charlatan",
+   "Corym Vanguard",
+   "Enraged Soul",
+   "Demon Skeleton",
+   "Zombie"
+  ],
   "melhorLoot": []
  },
  {
@@ -4302,6 +8573,26 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Stalker",
+   "Tarnished Spirit",
+   "Demon Skeleton",
+   "Necromancer",
+   "Gravedigger",
+   "Bat",
+   "White Shade",
+   "Zombie",
+   "Vampire",
+   "Lich",
+   "Arachir The Ancient One",
+   "Gravelord Oshuran",
+   "Vampire Viscount",
+   "Blood Priest",
+   "Banshee",
+   "Vampire Bride",
+   "Nightfiend",
+   "The Pale Count"
+  ],
   "melhorLoot": [
    "Maxilla Maximus",
    "Sweet Smelling Bait",
@@ -4314,6 +8605,12 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Gazer",
+   "Bonelord",
+   "Elder Bonelord",
+   "Braindeath"
+  ],
   "melhorLoot": [
    "Bonelord Helmet",
    "Haunted Blade",
@@ -4326,6 +8623,17 @@
   "nivel": 80,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Nightstalker",
+   "Wyvern",
+   "Bonebeast",
+   "Giant Spider",
+   "Earth Elemental",
+   "Energy Elemental",
+   "Wyrm",
+   "Behemoth",
+   "Medusa"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Steel Boots",
@@ -4338,6 +8646,23 @@
   "nivel": 7,
   "exp": "Good",
   "loot": "Average",
+  "monstros": [
+   "Butterfly (Purple)",
+   "Parrot",
+   "Flamingo",
+   "Seagull",
+   "Skunk",
+   "Rat",
+   "Spider",
+   "Bug",
+   "Poison Spider",
+   "Wasp",
+   "Centipede",
+   "Rotworm",
+   "Carrion Worm",
+   "Tarantula",
+   "Rotworm Queen"
+  ],
   "melhorLoot": [
    "Honeycomb",
    "Steel Helmet",
@@ -4350,6 +8675,11 @@
   "nivel": 80,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Wyrm",
+   "Elder Wyrm",
+   "Tyrn"
+  ],
   "melhorLoot": [
    "Composite Hornbow",
    "Lightning Robe",
@@ -4362,6 +8692,18 @@
   "nivel": 40,
   "exp": "good",
   "loot": "good",
+  "monstros": [
+   "Scorpion",
+   "War Wolf",
+   "Tarantula",
+   "Slime",
+   "Demon Skeleton",
+   "Haunted Treeling",
+   "Gargoyle",
+   "Elder Bonelord",
+   "Vampire",
+   "Energy Elemental"
+  ],
   "melhorLoot": []
  },
  {
@@ -4370,6 +8712,40 @@
   "nivel": 90,
   "exp": "Very Good",
   "loot": "Good",
+  "monstros": [
+   "Ghostly Apparition",
+   "Vampire Bride",
+   "Werewolf",
+   "Hellspawn",
+   "Vampire",
+   "Mutated Bat",
+   "Spectre",
+   "Arthei",
+   "Priestess",
+   "Banshee",
+   "Nightmare Scion",
+   "Nightmare",
+   "Marziel",
+   "Nightstalker",
+   "Bonebeast",
+   "Lersatio",
+   "Haunted Treeling",
+   "Earth Elemental",
+   "Mutated Rat",
+   "Bog Raider",
+   "Boreth",
+   "Bat",
+   "Spider",
+   "Poison Spider",
+   "Skeleton",
+   "Tarantula",
+   "Bonelord",
+   "Demon Skeleton",
+   "Elder Bonelord",
+   "Giant Spider",
+   "Gargoyle",
+   "Zombie"
+  ],
   "melhorLoot": [
    "Sweet Smelling Bait",
    "Demonbone Amulet",
@@ -4382,6 +8758,10 @@
   "nivel": 80,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "War Wolf",
+   "Werewolf"
+  ],
   "melhorLoot": [
    "Relic Sword",
    "Dreaded Cleaver",
@@ -4394,6 +8774,17 @@
   "nivel": 10,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Lion",
+   "Amazon",
+   "Poacher",
+   "Ghoul",
+   "Valkyrie",
+   "Witch",
+   "Mummy",
+   "Hunter",
+   "Xenia"
+  ],
   "melhorLoot": [
    "Stuffed Toad",
    "Mini Mummy",
@@ -4406,6 +8797,11 @@
   "nivel": 35,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Corym Charlatan",
+   "Corym Skirmisher",
+   "Corym Vanguard"
+  ],
   "melhorLoot": [
    "Rat God Doll",
    "Leather Harness",
@@ -4418,6 +8814,13 @@
   "nivel": 40,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Scorpion",
+   "Dragon Hatchling",
+   "Dragon Lord Hatchling",
+   "Dragon",
+   "Dragon Lord"
+  ],
   "melhorLoot": [
    "Dragon Scale Mail",
    "Royal Helmet",
@@ -4430,6 +8833,12 @@
   "nivel": 13,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Snake",
+   "Orc",
+   "Orc Spearman",
+   "Orc Shaman"
+  ],
   "melhorLoot": [
    "Wand of Decay",
    "Orc Tooth",
@@ -4442,6 +8851,12 @@
   "nivel": 7,
   "exp": "Bad",
   "loot": "Good",
+  "monstros": [
+   "Salamander",
+   "Swampling",
+   "Emerald Damselfly",
+   "Marsh Stalker"
+  ],
   "melhorLoot": [
    "Seeds",
    "Scimitar",
@@ -4454,6 +8869,15 @@
   "nivel": 50,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Bat",
+   "Skeleton",
+   "Scorpion",
+   "Slime",
+   "Bonelord",
+   "Wyvern",
+   "Black Knight"
+  ],
   "melhorLoot": [
    "Boots of Haste",
    "Lightning Legs",
@@ -4466,6 +8890,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Humongous Fungus",
+   "Armadile",
+   "Stone Devourer",
+   "Hideous Fungus",
+   "Deathstrike"
+  ],
   "melhorLoot": [
    "Shiny Blade",
    "Crystalline Axe",
@@ -4478,6 +8909,14 @@
   "nivel": null,
   "exp": "Fair",
   "loot": "Fair",
+  "monstros": [
+   "Lost Berserker",
+   "Magma Crawler",
+   "Weeper",
+   "Lava Golem",
+   "Infected Weeper",
+   "Gnomevil"
+  ],
   "melhorLoot": [
    "Shiny Blade",
    "Crystalline Axe",
@@ -4490,6 +8929,15 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Lost Berserker",
+   "Ironblight",
+   "Orewalker",
+   "Cliff Strider",
+   "Minion of Versperoth",
+   "Versperoth",
+   "Abyssador"
+  ],
   "melhorLoot": [
    "Shiny Blade",
    "Crystalline Axe",
@@ -4502,6 +8950,16 @@
   "nivel": 100,
   "exp": "Good",
   "loot": "Very Good",
+  "monstros": [
+   "Mole",
+   "Drillworm",
+   "Elder Wyrm",
+   "Lava Lurker",
+   "Chasm Spawn",
+   "Aggressive Lava",
+   "Organic Matter",
+   "The Baron From Below"
+  ],
   "melhorLoot": []
  },
  {
@@ -4510,6 +8968,13 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "High Voltage Elemental",
+   "Cave Devourer",
+   "Tunnel Tyrant",
+   "Ember Beast",
+   "The Count Of The Core"
+  ],
   "melhorLoot": []
  },
  {
@@ -4518,6 +8983,17 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Mole",
+   "Spit Nettle",
+   "Deepworm",
+   "Diremaw",
+   "Humongous Fungus",
+   "Aggressive Lava",
+   "Fiery Blood",
+   "Fiery Heart (Creature)",
+   "The Duke Of The Depths"
+  ],
   "melhorLoot": []
  },
  {
@@ -4526,6 +9002,13 @@
   "nivel": 55,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Water Elemental",
+   "Quara Hydromancer Scout",
+   "Quara Mantassin Scout",
+   "Quara Pincher Scout",
+   "Massive Water Elemental"
+  ],
   "melhorLoot": [
    "Giant Shimmering Pearl",
    "Leviathan's Amulet",
@@ -4538,6 +9021,21 @@
   "nivel": 28,
   "exp": "Bad",
   "loot": "Bad",
+  "monstros": [
+   "Rat",
+   "Snake",
+   "Bug",
+   "Poison Spider",
+   "Wasp",
+   "Skeleton",
+   "Rotworm",
+   "Bear",
+   "Ghoul",
+   "Stalker",
+   "Slime",
+   "Demon Skeleton",
+   "Banshee"
+  ],
   "melhorLoot": [
    "Sweet Smelling Bait",
    "Red Robe",
@@ -4550,6 +9048,13 @@
   "nivel": 130,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Ice Witch",
+   "Ice Golem",
+   "Crystal Spider",
+   "Frost Dragon",
+   "Yakchal"
+  ],
   "melhorLoot": [
    "Queen's Sceptre",
    "Dragon Scale Mail",
@@ -4562,6 +9067,14 @@
   "nivel": 100,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Sandcrawler",
+   "Gnarlhound",
+   "Death Blob",
+   "Energized Raging Mage",
+   "Raging Mage",
+   "Yielothax"
+  ],
   "melhorLoot": [
    "Lightning Legs",
    "Epee",
@@ -4574,6 +9087,26 @@
   "nivel": 40,
   "exp": "Average",
   "loot": "Good",
+  "monstros": [
+   "Sandcrawler",
+   "Orc",
+   "Orc Spearman",
+   "Orc Warrior",
+   "Gnarlhound",
+   "Rat",
+   "Slime",
+   "Orc Shaman",
+   "Orc Berserker",
+   "Orc Leader",
+   "Orc Warlord",
+   "Renegade Orc",
+   "Lizard Zaogun",
+   "Lizard Legionnaire",
+   "Lizard High Guard",
+   "Dragon Lord",
+   "Mooh'Tah Master",
+   "Orc Marauder"
+  ],
   "melhorLoot": []
  },
  {
@@ -4582,6 +9115,15 @@
   "nivel": 120,
   "exp": "Very Good",
   "loot": "Very Good",
+  "monstros": [
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Lizard Zaogun",
+   "Draken Warmaster",
+   "Draken Spellweaver",
+   "Ghastly Dragon"
+  ],
   "melhorLoot": [
    "Draken Trophy",
    "Zaoan Helmet",
@@ -4594,6 +9136,11 @@
   "nivel": 90,
   "exp": "Good",
   "loot": "Good",
+  "monstros": [
+   "Lizard Legionnaire",
+   "Lizard Dragon Priest",
+   "Lizard High Guard"
+  ],
   "melhorLoot": [
    "Zaoan Legs",
    "Zaoan Armor",
@@ -4606,6 +9153,20 @@
   "nivel": null,
   "exp": "",
   "loot": "",
+  "monstros": [
+   "Sandcrawler",
+   "Hyaena",
+   "Orc",
+   "Orc Spearman",
+   "Insect Swarm",
+   "Orc Warrior",
+   "War Wolf",
+   "Gnarlhound",
+   "Orc Shaman",
+   "Terror Bird",
+   "Orc Berserker",
+   "Orc Marauder"
+  ],
   "melhorLoot": [
    "Silkweaver Bow",
    "Wolf Trophy",
@@ -4618,6 +9179,10 @@
   "nivel": 30,
   "exp": "Average",
   "loot": "Average",
+  "monstros": [
+   "Terramite",
+   "Sandcrawler"
+  ],
   "melhorLoot": [
    "Terramite Shell",
    "Terramite Legs",
@@ -4630,6 +9195,10 @@
   "nivel": 50,
   "exp": "Average",
   "loot": "good",
+  "monstros": [
+   "Lancer Beetle",
+   "Wailing Widow"
+  ],
   "melhorLoot": [
    "Wailing Widow's Necklace",
    "Beetle Necklace",
@@ -4642,6 +9211,11 @@
   "nivel": 300,
   "exp": "Average",
   "loot": "Bad",
+  "monstros": [
+   "Flimsy Lost Soul",
+   "Mean Lost Soul",
+   "Freakish Lost Soul"
+  ],
   "melhorLoot": []
  },
  {
@@ -4650,6 +9224,17 @@
   "nivel": 55,
   "exp": "good",
   "loot": "good",
+  "monstros": [
+   "Lizard Sentinel",
+   "Lizard Snakecharmer",
+   "Lizard Templar",
+   "Lizard Dragon Priest",
+   "Lizard High Guard",
+   "Lizard Legionnaire",
+   "Lizard Zaogun",
+   "Draken Warmaster",
+   "Draken Spellweaver"
+  ],
   "melhorLoot": [
    "Draken Trophy",
    "Harness",
