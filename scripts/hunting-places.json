@@ -940,7 +940,8 @@
    "War Axe",
    "Fire Axe",
    "Terra Legs"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Cemetery Quarter",
@@ -989,7 +990,8 @@
    "Polar Bear",
    "Frost Giantess"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Chaochai",
@@ -2182,7 +2184,8 @@
    "Lost Basher",
    "Enslaved Dwarf"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Dwelling of the Forgotten",
@@ -3026,7 +3029,8 @@
    "Carrot on a Stick",
    "Boots of Haste",
    "Steel Boots"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Forbidden Temple",
@@ -3650,7 +3654,8 @@
    "Diremaw",
    "Lost Exile"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Golem Workshop",
@@ -4340,7 +4345,8 @@
    "Boots of Haste",
    "Royal Helmet",
    "Medusa Shield"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Hydra Mountain",
@@ -4611,7 +4617,8 @@
    "Lion's Mane",
    "Scorpion Tail",
    "Antlers"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Jotunar",
@@ -4643,7 +4650,8 @@
    "Dragon Shield",
    "Wand of Inferno",
    "Dragonbone Staff"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Kazordoon Minotaurs",
@@ -5550,7 +5558,8 @@
    "Mutated Bat",
    "Ancient Scarab"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Minotaur Camp",
@@ -6557,7 +6566,8 @@
    "Giant Shimmering Pearl",
    "Leviathan's Amulet",
    "Life Ring"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Peninsula Tomb",
@@ -6855,7 +6865,8 @@
    "Bonelord Eye",
    "Terra Rod",
    "Bonelord Shield"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Putrefactory",
@@ -7087,7 +7098,8 @@
    "Spellbook of Enlightenment",
    "Yellow Gem",
    "Wand of Cosmic Energy"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Robson's Isle",
@@ -7462,7 +7474,8 @@
    "Spider Silk",
    "Knight Legs",
    "Knight Armor"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Stag Bastion",
@@ -8131,7 +8144,8 @@
    "Deer Trophy",
    "Iron Helmet",
    "Brass Armor"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Tiquanda/Dwarf Cave",
@@ -8189,7 +8203,8 @@
    "Monk Robe",
    "War Hammer",
    "Time Ring"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Tiquanda/Trapwood",
@@ -8573,7 +8588,8 @@
    "Demon Skeleton",
    "Zombie"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Vampire Crypts",
@@ -8968,7 +8984,8 @@
    "Organic Matter",
    "The Baron From Below"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Warzone 5",
@@ -9021,7 +9038,8 @@
    "Giant Shimmering Pearl",
    "Leviathan's Amulet",
    "Fish Fin"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "White Flower Temple",
