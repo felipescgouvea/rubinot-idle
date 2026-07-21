@@ -4,27 +4,28 @@
 //
 // Duas montagens, conforme a vocação:
 //
-//  • Arma (Knight / Paladino): o boneco fica na base do palco e o DUMMY fica à
-//    frente dele, no topo — exatamente a disposição da cena de batalha, onde as
-//    criaturas nascem em cima e o boneco embaixo as encara. O projétil sai do
-//    boneco e vai até o dummy; no corpo a corpo não há projétil, só o baque.
+//  • Arma (Knight / Paladino): boneco à ESQUERDA, dummy à DIREITA, e o projétil
+//    saindo do boneco em direção ao dummy. No corpo a corpo não há projétil: o
+//    boneco avança e o dummy leva o baque.
 //
 //  • Mago: SEM dummy. Só o boneco, virado pra baixo (de frente), lançando a
 //    magia escolhida — o efeito real da magia estoura em volta dele.
 //
-// Por que "à frente" e não "à direita": os atlases de outfit só existem em DUAS
-// direções, norte (de costas) e sul (de frente). Não há sprite virado pra leste
-// em lugar nenhum do projeto nem na wiki, então um boneco de frente atirando pro
-// lado ficaria olhando pra câmera enquanto acerta algo fora do seu campo de
-// visão. Encarando o alvo, a cena lê certo com as sprites que existem.
-import { G } from '../application/gameStore.js?v=171';
-import { outfitWalkAtlasPath, outfitWalkAtlasPathSouth } from '../infrastructure/outfitAssets.js?v=167';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=167';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=167';
-import { VOCATIONS } from '../domain/character.js?v=198';
-import { ITEMS } from '../domain/items.js?v=182';
-import { SPELLS } from '../domain/spells.js?v=169';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=172';
+// RESSALVA DA ARTE: os atlases de outfit deste projeto só existem em DUAS
+// direções — norte (de costas) e sul (de frente). Não há sprite virado pra
+// leste aqui nem nos gifs de outfit da TibiaWiki (que são só a caminhada
+// frontal). Por isso o boneco usa a direção SUL nas duas montagens: de frente
+// ele ao menos aparece inteiro e reconhecível. Trocar pra um boneco realmente
+// virado pra direita depende de garimpar sprites leste das 28 outfits × 2
+// gêneros — é um trabalho à parte.
+import { G } from '../application/gameStore.js?v=172';
+import { outfitWalkAtlasPath, outfitWalkAtlasPathSouth } from '../infrastructure/outfitAssets.js?v=168';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=168';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=168';
+import { VOCATIONS } from '../domain/character.js?v=199';
+import { ITEMS } from '../domain/items.js?v=183';
+import { SPELLS } from '../domain/spells.js?v=170';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=173';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
@@ -81,10 +82,10 @@ export function mountTrainingStagePlayer(skillId) {
   const outfitId = currentOutfitId();
   if (!outfitId) return;                       // fica o emoji de fallback
   const gender = G.outfitGender || 'male';
-  // Mago encara a câmera (sul); quem bate no dummy encara o dummy (norte).
-  const atlas = skillId === 'magic'
-    ? outfitWalkAtlasPathSouth(outfitId, gender)
-    : outfitWalkAtlasPath(outfitId, gender);
+  // Sempre a direção SUL: com o alvo à direita, o boneco de costas (norte) daria
+  // a impressão de estar atirando pra trás. Ver a ressalva no topo do arquivo —
+  // não existe sprite leste no acervo.
+  const atlas = outfitWalkAtlasPathSouth(outfitId, gender);
 
   buildWalkFrames(atlas, {
     colors: G.outfitColors,

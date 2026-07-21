@@ -2497,67 +2497,70 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .training-subhead { display: flex; align-items: center; gap: 6px; margin: 14px 0 4px !important; font-size: 14px; }
 .training-subhead-icon { width: 18px; height: 18px; image-rendering: pixelated; }
 
+
+
 /* ===== PALCO DO TREINO ONLINE (ui/trainingStage.js) =====
-   Mesma linguagem da cena de batalha: boneco embaixo, alvo em cima, projétil
-   atravessando. Antes era um ícone parado com uma flecha passando por cima. */
+   Boneco à ESQUERDA, dummy à DIREITA, projétil viajando entre os dois. O
+   sprite de míssil do Tibia aponta pra cima, então +90° alinha o "nariz" ao voo
+   horizontal — mesma conta do playProjectile da caçada. */
 .training-active-stage .training-active-info { align-items: flex-start; gap: 14px; }
 .training-stage {
   position: relative;
-  width: 190px;
-  height: 150px;
+  width: 260px;
+  height: 118px;
   flex: 0 0 auto;
   border: 2px solid var(--brown-btn-line);
   border-radius: 8px;
   overflow: hidden;
-  background: #14110b url(assets/sprites/ui/scenes/scene-cave.png?v=3) center -260px / 380px 696px no-repeat;
+  background: #14110b url(assets/sprites/ui/scenes/scene-cave.png?v=3) center -300px / 520px 952px no-repeat;
   image-rendering: pixelated;
   box-shadow: inset 0 2px 14px #00000088;
 }
-/* vinheta, igual à do palco de batalha */
 .training-stage::after {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
-  background: radial-gradient(ellipse 76% 86% at 50% 48%, transparent 44%, #00000099 100%);
+  background: radial-gradient(ellipse 80% 88% at 50% 50%, transparent 46%, #00000099 100%);
 }
-.tstage-dummy { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); z-index: 1; }
-.tstage-dummy img { width: 42px; height: 42px; image-rendering: pixelated; display: block; }
-.tstage-player { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 2; }
-.tstage-player-canvas { width: 56px; height: 56px; image-rendering: pixelated; display: block; }
-.tstage-player-fallback { font-size: 34px; line-height: 1; }
+.tstage-player { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); z-index: 2; }
+.tstage-player-canvas { width: 54px; height: 54px; image-rendering: pixelated; display: block; }
+.tstage-player-fallback { font-size: 32px; line-height: 1; }
+.tstage-dummy { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); z-index: 1; }
+.tstage-dummy img { width: 44px; height: 44px; image-rendering: pixelated; display: block; }
 
-/* Projétil: sai da altura do boneco e sobe até o dummy. O ciclo é o mesmo do
-   baque (1.4s) pra a reação do alvo cair no instante do impacto. */
+/* Projétil: parte do boneco (esquerda) e chega no dummy (direita). */
 .tstage-missile {
-  position: absolute; left: 50%; bottom: 62px;
-  width: 20px; height: 20px; margin-left: -10px;
+  position: absolute; left: 62px; top: 50%;
+  width: 20px; height: 20px; margin-top: -10px;
   image-rendering: pixelated; pointer-events: none; z-index: 3;
   animation: tstage-shot 1.4s cubic-bezier(.4, 0, .7, .45) infinite;
 }
 @keyframes tstage-shot {
-  0%   { transform: translateY(0) scale(.8); opacity: 0; }
+  0%   { transform: translateX(0) rotate(90deg) scale(.8); opacity: 0; }
   10%  { opacity: 1; }
-  72%  { transform: translateY(-56px) scale(1); opacity: 1; }
-  84%  { transform: translateY(-64px) scale(1); opacity: 0; }
-  100% { transform: translateY(-64px); opacity: 0; }
+  74%  { transform: translateX(108px) rotate(90deg) scale(1); opacity: 1; }
+  86%  { transform: translateX(120px) rotate(90deg) scale(1); opacity: 0; }
+  100% { transform: translateX(120px) rotate(90deg); opacity: 0; }
 }
+/* O dummy reage no instante do impacto (mesmo ciclo de 1.4s do projétil). */
 .tstage-melee .tstage-dummy img { animation: tstage-hit 1.4s ease-out infinite; }
 @keyframes tstage-hit {
-  0%, 78%  { transform: translateY(0); filter: none; }
-  85%      { transform: translateY(3px); filter: brightness(1.8) saturate(.5); }
-  92%      { transform: translateY(-2px); filter: brightness(1.2); }
-  100%     { transform: translateY(0); filter: none; }
+  0%, 78%  { transform: translateX(0); filter: none; }
+  85%      { transform: translateX(4px); filter: brightness(1.8) saturate(.5); }
+  92%      { transform: translateX(-3px); filter: brightness(1.2); }
+  100%     { transform: translateX(0); filter: none; }
 }
-/* Corpo a corpo não tem projétil: quem "ataca" é o próprio boneco avançando. */
+/* Corpo a corpo não tem projétil: o próprio boneco avança no dummy. */
 .training-stage[data-tskill="sword"] .tstage-player,
 .training-stage[data-tskill="axe"] .tstage-player,
 .training-stage[data-tskill="club"] .tstage-player,
 .training-stage[data-tskill="fist"] .tstage-player { animation: tstage-lunge 1.4s ease-in-out infinite; }
 @keyframes tstage-lunge {
-  0%, 70%  { transform: translateX(-50%) translateY(0); }
-  82%      { transform: translateX(-50%) translateY(-9px); }
-  100%     { transform: translateX(-50%) translateY(0); }
+  0%, 70%  { transform: translateY(-50%) translateX(0); }
+  82%      { transform: translateY(-50%) translateX(11px); }
+  100%     { transform: translateY(-50%) translateX(0); }
 }
 
-/* Mago: sem dummy — o efeito real da magia estoura em volta do boneco. */
+/* Mago: sem dummy — fica centralizado, soltando a magia escolhida. */
+.tstage-mage .tstage-player { left: 50%; transform: translate(-50%, -50%); }
 .tstage-cast {
   position: absolute; left: 50%; top: 50%;
   width: 46px; height: 46px; margin: -23px 0 0 -23px;
@@ -2565,10 +2568,10 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   animation: tstage-cast 1.6s ease-out infinite;
 }
 @keyframes tstage-cast {
-  0%       { opacity: 0; transform: scale(.5); }
-  20%      { opacity: 1; transform: scale(1); }
-  70%      { opacity: .85; transform: scale(1.1); }
-  100%     { opacity: 0; transform: scale(1.25); }
+  0%   { opacity: 0; transform: scale(.5); }
+  20%  { opacity: 1; transform: scale(1); }
+  70%  { opacity: .85; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.25); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2576,5 +2579,11 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   .tstage-melee .tstage-dummy img, .training-stage .tstage-player { animation: none; }
 }
 @media (max-width: 620px) {
-  .training-stage { width: 150px; height: 124px; }
+  .training-stage { width: 210px; height: 104px; }
+  @keyframes tstage-shot {
+    0% { transform: translateX(0) rotate(90deg) scale(.8); opacity: 0; }
+    10% { opacity: 1; }
+    74% { transform: translateX(76px) rotate(90deg); opacity: 1; }
+    100% { transform: translateX(86px) rotate(90deg); opacity: 0; }
+  }
 }

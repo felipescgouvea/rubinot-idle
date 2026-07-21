@@ -68,7 +68,8 @@ try {
       const traj = [];
       if (miss) {
         for (let i = 0; i < 24; i++) {
-          traj.push({ y: miss.getBoundingClientRect().top - sr.top, op: +getComputedStyle(miss).opacity });
+          const b = miss.getBoundingClientRect();
+          traj.push({ x: b.left - sr.left + b.width / 2, op: +getComputedStyle(miss).opacity });
           await new Promise(x => setTimeout(x, 65));
         }
       }
@@ -80,18 +81,18 @@ try {
         missil: miss ? miss.getAttribute('src').split('/').pop() : null,
         efeito: cast ? cast.getAttribute('src').split('/').pop() : null,
         efeitoAnim: cast ? getComputedStyle(cast).animationName : null,
-        dummyY: dummy ? +(dummy.getBoundingClientRect().top - sr.top).toFixed(0) : null,
-        playerY: player ? +(player.getBoundingClientRect().top - sr.top).toFixed(0) : null,
+        dummyX: dummy ? +(dummy.getBoundingClientRect().left - sr.left + dummy.getBoundingClientRect().width / 2).toFixed(0) : null,
+        playerX: player ? +(player.getBoundingClientRect().left - sr.left + player.getBoundingClientRect().width / 2).toFixed(0) : null,
         quebradas,
         traj,
       };
     });
 
-    const ys = r.traj.filter(p => p.op > 0.2).map(p => p.y);
-    const amplitude = ys.length ? Math.max(...ys) - Math.min(...ys) : 0;
+    const xs = r.traj.filter(p => p.op > 0.2).map(p => p.x);
+    const amplitude = xs.length ? Math.max(...xs) - Math.min(...xs) : 0;
     console.log(`\n[${c.skill}] boneco=${r.boneco} dummy=${r.dummy} missil=${r.missil || '-'} efeito=${r.efeito || '-'}`);
-    if (r.dummy) console.log(`   dummy y=${r.dummyY} | boneco y=${r.playerY} (dummy à frente: ${r.dummyY < r.playerY})`);
-    if (ys.length) console.log(`   trajetória do projétil: ${amplitude.toFixed(0)}px (de y=${Math.max(...ys).toFixed(0)} até y=${Math.min(...ys).toFixed(0)})`);
+    if (r.dummy) console.log(`   boneco x=${r.playerX} | dummy x=${r.dummyX} (dummy à DIREITA: ${r.dummyX > r.playerX})`);
+    if (xs.length) console.log(`   trajetória do projétil: ${amplitude.toFixed(0)}px (de x=${Math.min(...xs).toFixed(0)} até x=${Math.max(...xs).toFixed(0)})`);
 
     if (!r.boneco) falhas.push(`[${c.skill}] boneco não foi desenhado`);
     if (r.quebradas.length) falhas.push(`[${c.skill}] sprites que não carregaram: ${r.quebradas.join(', ')}`);
@@ -101,9 +102,10 @@ try {
       if (!r.missil) falhas.push(`[${c.skill}] faltou o projétil`);
       else {
         if (!/arrow|bolt/.test(r.missil)) falhas.push(`[${c.skill}] projétil errado: ${r.missil}`);
-        if (amplitude < 30) falhas.push(`[${c.skill}] projétil quase não anda (${amplitude.toFixed(0)}px)`);
-        if (Math.min(...ys) > r.dummyY + 26) falhas.push(`[${c.skill}] projétil não alcança o dummy`);
-        if (Math.max(...ys) < r.playerY - 34) falhas.push(`[${c.skill}] projétil não parte do boneco`);
+        if (amplitude < 60) falhas.push(`[${c.skill}] projétil quase não anda (${amplitude.toFixed(0)}px)`);
+        if (Math.max(...xs) < r.dummyX - 26) falhas.push(`[${c.skill}] projétil não alcança o dummy`);
+        if (Math.min(...xs) > r.playerX + 34) falhas.push(`[${c.skill}] projétil não parte do boneco`);
+        if (xs[0] > xs[xs.length - 1]) falhas.push(`[${c.skill}] projétil viaja da direita pra esquerda`);
       }
     }
     if (!c.esperaMissil && r.missil) falhas.push(`[${c.skill}] NÃO devia ter projétil`);
@@ -111,7 +113,7 @@ try {
       if (!r.efeito) falhas.push(`[${c.skill}] faltou o efeito da magia`);
       else if (r.efeitoAnim === 'none') falhas.push(`[${c.skill}] efeito da magia não animado`);
     }
-    if (r.dummy && !(r.dummyY < r.playerY)) falhas.push(`[${c.skill}] o dummy não está à frente do boneco`);
+    if (r.dummy && !(r.dummyX > r.playerX)) falhas.push(`[${c.skill}] o dummy não está à DIREITA do boneco`);
 
     const el = await page.$('#probe-stages .training-stage');
     if (el) await el.screenshot({ path: `scripts/shot-tstage-${c.skill}.png` }).catch(() => {});
