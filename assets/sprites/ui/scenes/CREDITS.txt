@@ -1,4 +1,5 @@
-Texturas de cenario de batalha (assets/sprites/ui/scenes/) extraidas do
-"Top Down Dungeon Pack" de Screaming Brain Studios, licenca CC0 (dominio publico):
-https://opengameart.org/content/top-down-dungeon-pack
-cave-floor.png / cave-wall.png = tiles 64x64 recortados do tileset Stone.
+Cenário de batalha (assets/sprites/ui/scenes/):
+- cave-floor.png = "Cave Floor Earth" (sprite do Tibia, do item-catalog — mesma
+  origem TibiaWiki/Tibia dos demais sprites do jogo).
+- cave-wall.png = derivado do "Top Down Dungeon Pack" (Screaming Brain Studios,
+  CC0 — https://opengameart.org/content/top-down-dungeon-pack), tingido marrom.

@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=149" />
-  <link rel="stylesheet" href="style.css?v=168" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=150" />
+  <link rel="stylesheet" href="style.css?v=169" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -383,9 +383,9 @@
             <!-- Densidade da caçada — Solo / Normal / Pack. Ver
                  application/huntUseCases.js: setDensity / server: packSize -->
             <div id="density-row" class="fight-mode-row" title="Densidade da caçada">
-              <button class="density-btn fight-mode-btn" data-mode="solo" onclick="setDensity('solo')" data-icon="dens_solo" data-icon-class="fm-icon" title="Solo — puxa 1 por vez (controlado, seguro)"></button>
-              <button class="density-btn fight-mode-btn active" data-mode="normal" onclick="setDensity('normal')" data-icon="dens_normal" data-icon-class="fm-icon" title="Normal — tamanho natural da zona"></button>
-              <button class="density-btn fight-mode-btn" data-mode="pack" onclick="setDensity('pack')" data-icon="dens_pack" data-icon-class="fm-icon" title="Pack — grupo dobrado (muito mais XP/h, muito mais perigo)"></button>
+              <button class="density-btn fight-mode-btn" data-mode="solo" onclick="setDensity('solo')" data-icon="dens_solo" data-icon-class="dens-icon" title="Solo — puxa 1 por vez (controlado, seguro)"></button>
+              <button class="density-btn fight-mode-btn active" data-mode="normal" onclick="setDensity('normal')" data-icon="dens_normal" data-icon-class="dens-icon" title="Normal — tamanho natural da zona"></button>
+              <button class="density-btn fight-mode-btn" data-mode="pack" onclick="setDensity('pack')" data-icon="dens_pack" data-icon-class="dens-icon" title="Pack — grupo dobrado (muito mais XP/h, muito mais perigo)"></button>
             </div>
           </div>
           <div class="battle-col battle-col-right">
@@ -419,6 +419,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=238"></script>
+  <script type="module" src="src/main.js?v=239"></script>
 </body>
 </html>

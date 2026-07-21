@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=154';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=155';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -40,10 +40,11 @@ export const UI_ICONS = {
   fm_attack:       { file: 'ui/fight-offensive.png',          emoji: '⚔️' },
   fm_balanced:     { file: 'ui/fight-balanced.png',           emoji: '⚖️' },
   fm_defense:      { file: 'ui/fight-defensive.png',          emoji: '🛡️' },
-  // toggles de densidade (metáfora: 1 por vez → enxame)
-  dens_solo:       { file: 'items/Spear.webp',                emoji: '🎯' },
-  dens_normal:     { file: 'items/Battle_Axe.webp',           emoji: '👥' },
-  dens_pack:       { file: 'items/Beehive.webp',              emoji: '🐝' }, // enxame
+  // toggles de densidade — nº de alvos: 1 / 2 / 3 cabeças de monstro (ícone do
+  // OTClient) — single target / normal / double. Ver assets/sprites/ui/CREDITS.txt.
+  dens_solo:       { file: 'ui/dens-solo.png',                emoji: '🎯' },
+  dens_normal:     { file: 'ui/dens-normal.png',              emoji: '👥' },
+  dens_pack:       { file: 'ui/dens-pack.png',                emoji: '🐝' },
 
   // labels de conteúdo (Hunt Analyzer etc.)
   kills:           { file: 'items/Demon_Skull.webp',          emoji: '💀' },
