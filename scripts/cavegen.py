@@ -132,5 +132,6 @@ for _ in range(85):
     y, x = openp[random.randrange(len(openp))]
     put(random.choice(sprites), int(x), int(y), random.uniform(0.22, 0.42))
 
-img.convert("RGB").save(OUT + "scene-%s.png" % NAME)
+out_img = img.convert("RGB").quantize(colors=192, method=Image.MEDIANCUT, dither=Image.FLOYDSTEINBERG)
+out_img.save(OUT + "scene-%s.png" % NAME, optimize=True)
 print("scene-%s.png ok %s | rocha %.0f%%" % (NAME, img.size, 100*rock.mean()))
