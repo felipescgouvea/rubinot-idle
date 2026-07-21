@@ -1,17 +1,17 @@
-import { G, ACCOUNT } from './gameStore.js?v=175';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer } from '../infrastructure/authClient.js?v=180';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=186';
-import { RARITY_TIERS } from '../domain/rarity.js?v=172';
-import { emit, EVENTS } from '../shared/eventBus.js?v=173';
-import { getMagic } from './stats.js?v=172';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=205';
-import { getCurrentMonster } from './huntUseCases.js?v=239';
-import { areaName } from '../domain/attackAreas.js?v=171';
-import { saveGame } from './saveGameUseCase.js?v=175';
-import { itemLogIcon } from './logIcons.js?v=174';
-import { t } from '../i18n/i18n.js?v=189';
+import { G, ACCOUNT } from './gameStore.js?v=176';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer } from '../infrastructure/authClient.js?v=181';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=187';
+import { RARITY_TIERS } from '../domain/rarity.js?v=173';
+import { emit, EVENTS } from '../shared/eventBus.js?v=174';
+import { getMagic } from './stats.js?v=173';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=206';
+import { getCurrentMonster } from './huntUseCases.js?v=240';
+import { areaName } from '../domain/attackAreas.js?v=172';
+import { saveGame } from './saveGameUseCase.js?v=176';
+import { itemLogIcon } from './logIcons.js?v=175';
+import { t } from '../i18n/i18n.js?v=190';
 
-export { addItemToInventory } from './inventoryCore.js?v=173';
+export { addItemToInventory } from './inventoryCore.js?v=174';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -128,13 +128,21 @@ export async function sellItem(itemId) {
   const item = ITEMS[itemId];
   const qty = G.inventory[itemId] || 0;
   if (qty <= 0) return;
-  const res = await sellItemOnServer(ACCOUNT.activeSlot, itemId, 1);
-  if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: item.name, reason: '' }), type: 'error' }); return; }
-  G.gold = res.gold;
+  // Tira da bag ANTES do round-trip: a venda só aparecia depois da resposta do
+  // servidor e a bag ficava segundos sem reagir ao clique. Se o servidor
+  // recusar, devolve o item.
   G.inventory[itemId]--;
   if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
+  const res = await sellItemOnServer(ACCOUNT.activeSlot, itemId, 1);
+  if (!res.ok) {
+    G.inventory[itemId] = (G.inventory[itemId] || 0) + 1;
+    emit(EVENTS.INVENTORY);
+    emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: item.name, reason: '' }), type: 'error' });
+    return;
+  }
+  G.gold = res.gold;                                   // gold é sempre do servidor
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemSold', { item: item.name, price: item.sell }), type: 'success' });
   saveGame();

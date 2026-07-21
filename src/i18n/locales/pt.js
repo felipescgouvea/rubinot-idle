@@ -698,6 +698,7 @@ export default {
   // ---- training use-cases (application/trainingUseCases.js) ----
   'training.chooseVocationFirst': 'Escolha uma vocação primeiro!',
   'training.startedNotify': '🏋️ Treinando {skill}. Volte depois pra colher o progresso!',
+  'training.stopFailed': 'Não foi possível parar o treino. Tente de novo.',
   'training.stoppedNotify': 'Treino de {skill} encerrado.',
   'training.stoppedNotifyGain': '🏋️ Treino de {skill} encerrado: +{tries} tentativas.',
   'training.offlineGain': '🏋️ Treino offline: +{tries} tentativas de {skill}.',
