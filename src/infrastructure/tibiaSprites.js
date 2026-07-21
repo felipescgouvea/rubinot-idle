@@ -57,6 +57,9 @@ const ITEM_SPRITE_OVERRIDE = {
   // O "bag" inicial usa a sprite real da Backpack do Tibia (a mochila), não o
   // ícone genérico de bolsinha — é o container que o jogador abre pra ver o loot.
   bag: 'Backpack.gif',
+  // id legado de um item que era inventado ("Wand of Dementia"); agora é a
+  // Wand of Defiance real — ver domain/items.js.
+  wand_of_dementia: 'Wand_of_Defiance.gif',
   worm_dirt: 'Lump_of_Dirt.gif',
   // "Dragon Scale" é uma página de desambiguação no TibiaWiki (não existe um
   // item genérico "Dragon Scale") — a variante correspondente ao drop do
@@ -116,10 +119,10 @@ if (typeof window !== 'undefined') window.__markSpriteFailed = markSpriteFailed;
 // novo faltando, adicione o id aqui (ou baixe a sprite real). Os rods/wands são
 // itens reais do Tibia ainda não baixados; as 2 runas são inventadas do jogo.
 export const SPRITELESS_ITEMS = [
+  // Os rods/wands saíram daqui: as sprites reais foram baixadas do catálogo
+  // (assets/item-catalog) — eles apareciam com emoji na loja.
   'lightest_missile_rune', 'light_stone_shower_rune', 'create_food_rune', 'great_light_rune',
-  'springsprout_rod', 'terra_rod', 'hailstorm_rod', 'necrotic_rod',
-  'wand_of_draconia', 'wand_of_starstorm', 'wand_of_voodoo', 'wand_of_decay',
-  'wand_of_dementia', 'cluster_of_solace',
+  'cluster_of_solace',
 ];
 SPRITELESS_ITEMS.forEach(id => {
   markSpriteFailed(spriteUrl(itemSpriteFile(id)));

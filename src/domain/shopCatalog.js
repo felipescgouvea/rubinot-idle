@@ -62,7 +62,7 @@ export const SHOP_ITEMS = [
   { id: 'buy_wand_draconia',    name: 'Wand of Draconia',  icon: '🪄', currency: 'gold', price: 2600,  type: 'item', itemId: 'wand_of_draconia', shop: 'equipment' },
   { id: 'buy_wand_starstorm',   name: 'Wand of Starstorm', icon: '🪄', currency: 'gold', price: 3600,  type: 'item', itemId: 'wand_of_starstorm', shop: 'equipment' },
   { id: 'buy_wand_voodoo',      name: 'Wand of Voodoo',    icon: '🪄', currency: 'gold', price: 5200,  type: 'item', itemId: 'wand_of_voodoo', shop: 'equipment' },
-  { id: 'buy_wand_dementia',    name: 'Wand of Dementia',  icon: '🪄', currency: 'gold', price: 15200, type: 'item', itemId: 'wand_of_dementia', shop: 'equipment' },
+  { id: 'buy_wand_dementia',    name: 'Wand of Defiance',  icon: '🪄', currency: 'gold', price: 15200, type: 'item', itemId: 'wand_of_dementia', shop: 'equipment' },
   { id: 'buy_necrotic_rod',     name: 'Necrotic Rod',      icon: '🪄', currency: 'gold', price: 15200, type: 'item', itemId: 'necrotic_rod', shop: 'equipment' },
   { id: 'buy_terra_rod',        name: 'Terra Rod',         icon: '🪄', currency: 'gold', price: 2000,  type: 'item', itemId: 'terra_rod', shop: 'equipment' },
   { id: 'buy_springsprout_rod', name: 'Springsprout Rod',  icon: '🪄', currency: 'gold', price: 3600,  type: 'item', itemId: 'springsprout_rod', shop: 'equipment' },
@@ -124,14 +124,12 @@ export const SHOP_ITEMS = [
   { id: 'buy_soulfire_rune',             name: 'Soulfire Rune',             icon: '📜', currency: 'gold', price: 880,  type: 'item', itemId: 'soulfire_rune', shop: 'magic' },
   { id: 'buy_desintegrate_rune',         name: 'Desintegrate Rune',         icon: '📜', currency: 'gold', price: 200,  type: 'item', itemId: 'desintegrate_rune', shop: 'magic' },
   { id: 'buy_cure_poison_rune',          name: 'Cure Poison Rune',          icon: '📜', currency: 'gold', price: 60,   type: 'item', itemId: 'cure_poison_rune', shop: 'magic' },
-  { id: 'buy_create_food_rune',          name: 'Create Food Rune',          icon: '📜', currency: 'gold', price: 80,   type: 'item', itemId: 'create_food_rune', shop: 'magic' },
   { id: 'buy_chameleon_rune',            name: 'Chameleon Rune',            icon: '📜', currency: 'gold', price: 800,  type: 'item', itemId: 'chameleon_rune', shop: 'magic' },
   { id: 'buy_convince_creature_rune',    name: 'Convince Creature Rune',    icon: '📜', currency: 'gold', price: 1000, type: 'item', itemId: 'convince_creature_rune', shop: 'magic' },
   { id: 'buy_animate_dead_rune',         name: 'Animate Dead Rune',         icon: '📜', currency: 'gold', price: 2000, type: 'item', itemId: 'animate_dead_rune', shop: 'magic' },
   { id: 'buy_magic_wall_rune',           name: 'Magic Wall Rune',           icon: '📜', currency: 'gold', price: 320,  type: 'item', itemId: 'magic_wall_rune', shop: 'magic' },
   { id: 'buy_wild_growth_rune',          name: 'Wild Growth Rune',          icon: '📜', currency: 'gold', price: 240,  type: 'item', itemId: 'wild_growth_rune', shop: 'magic' },
   { id: 'buy_paralyze_rune',             name: 'Paralyze Rune',             icon: '📜', currency: 'gold', price: 1600, type: 'item', itemId: 'paralyze_rune', shop: 'magic' },
-  { id: 'buy_great_light_rune',          name: 'Great Light Rune',          icon: '📜', currency: 'gold', price: 60,   type: 'item', itemId: 'great_light_rune', shop: 'magic' },
   { id: 'buy_great_spirit_potion',  name: 'Great Spirit Potion',    icon: '🧪', currency: 'gold', price: 1280, type: 'item', itemId: 'great_spirit_potion', shop: 'magic' },
 ];
 

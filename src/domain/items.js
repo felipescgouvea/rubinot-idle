@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=164';
+import { primaryStatKeyForItem } from './rarity.js?v=165';
 
 // A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
 // Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
@@ -180,7 +180,11 @@ export const ITEMS = {
   wand_of_draconia:   { name: 'Wand of Draconia', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 17, sell: 1500 },
   wand_of_starstorm:  { name: 'Wand of Starstorm', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 20, sell: 3600 },
   wand_of_voodoo:     { name: 'Wand of Voodoo', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 23, sell: 4400 },
-  wand_of_dementia:   { name: 'Wand of Dementia', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 31, sell: 3800, rare: true },
+  // Era "Wand of Dementia", nome INVENTADO — o Tibia não tem essa wand (o wiki
+  // vai de Defiance direto pra Destruction). Wand of Defiance é a wand real
+  // desse tier. O id fica como está: é interno e trocá-lo quebraria o save de
+  // quem já comprou. Ver .spec/90-regras-de-negocio-gerais.md, regra 4.1.
+  wand_of_dementia:   { name: 'Wand of Defiance', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 31, sell: 3800, rare: true },
   necrotic_rod:       { name: 'Necrotic Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 31, sell: 1000, rare: true },
   terra_rod:          { name: 'Terra Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 15, sell: 2000 },
   springsprout_rod:   { name: 'Springsprout Rod', icon: '🪄', type: 'weapon', weaponType: 'magic', wandDmg: 20, sell: 3600 },
