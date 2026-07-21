@@ -757,20 +757,22 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 /* ===== CENÁRIO DE BATALHA POR BIOMA (arte CC0 — ver assets/sprites/ui/scenes/CREDITS.txt) =====
    Piloto: CAVE. Piso de pedra que rola + paredes de cobblestone nas laterais +
    vinheta escura. renderZoneTheme() põe data-biome no #dungeon-stage. */
-#dungeon-stage[data-biome="cave"] {
-  /* paredes = rocha REAL do Tibia (Mountain Wall), espelhada L/R; piso = Cave
-     Floor Earth. Ver assets/sprites/ui/scenes/CREDITS.txt. */
-  background:
-    url(assets/sprites/ui/scenes/cave-wall.png)   left  top / 60px 64px repeat-y,
-    url(assets/sprites/ui/scenes/cave-wall-r.png) right top / 60px 64px repeat-y,
-    #12100b;
-  box-shadow: inset 0 2px 18px #000000cc, inset 0 0 60px 8px #00000099;
-  image-rendering: pixelated;
-}
+/* Corredor de caverna procedural: piso scatter (::before, rola por baixo) +
+   paredes de rocha ORGÂNICA com borda ondulada e entulho (::after, por cima) +
+   vinheta radial pra profundidade. Arte: Cave Floor Earth + Mountain Wall +
+   Basalt (Tibia) + Debris/Rubble. Ver assets/sprites/ui/scenes/CREDITS.txt. */
+#dungeon-stage[data-biome="cave"] { background: #14110b; image-rendering: pixelated; }
 #dungeon-stage[data-biome="cave"]::before {
-  inset: -128px 58px;                /* paredes de rocha (60px) aparecem nas laterais */
-  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 128px 128px repeat;  /* terra + pedrinhas espalhadas (natural) */
-  opacity: 1;
+  inset: -128px 0;
+  background: url(assets/sprites/ui/scenes/cave-floor.png) 0 0 / 128px 128px repeat;
+  opacity: 1; image-rendering: pixelated; z-index: 0;
+}
+#dungeon-stage[data-biome="cave"]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 4;
+  background:
+    url(assets/sprites/ui/scenes/cave-wall.png)   left  top / 100px 128px repeat-y,
+    url(assets/sprites/ui/scenes/cave-wall-r.png) right top / 100px 128px repeat-y,
+    radial-gradient(ellipse 72% 82% at 50% 46%, transparent 36%, #000000b0 100%);
   image-rendering: pixelated;
 }
 #dungeon-stage[data-biome="cave"].searching::before { animation: floor-scroll-128 2s linear infinite; }
