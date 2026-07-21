@@ -2,14 +2,14 @@
 // de prioridade que mistura magias E runas livremente — ver domain/rtcConfig.js
 // sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
 // limiar de % de HP) — a UI mora em rtcPanel.js.
-import { G, ACCOUNT } from './gameStore.js?v=174';
-import { isSpellAvailable } from '../domain/spells.js?v=172';
-import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=204';
-import { getMagic } from './stats.js?v=171';
-import { emit, EVENTS } from '../shared/eventBus.js?v=172';
-import { saveGame } from './saveGameUseCase.js?v=174';
-import { updateHuntRtc } from '../infrastructure/authClient.js?v=179';
-import { t } from '../i18n/i18n.js?v=188';
+import { G, ACCOUNT } from './gameStore.js?v=175';
+import { isSpellAvailable } from '../domain/spells.js?v=173';
+import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=205';
+import { getMagic } from './stats.js?v=172';
+import { emit, EVENTS } from '../shared/eventBus.js?v=173';
+import { saveGame } from './saveGameUseCase.js?v=175';
+import { updateHuntRtc } from '../infrastructure/authClient.js?v=180';
+import { t } from '../i18n/i18n.js?v=189';
 
 // Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar
 // prioridade de ataque/cura no meio da luta só valia a partir da PRÓXIMA
@@ -17,7 +17,9 @@ import { t } from '../i18n/i18n.js?v=188';
 // Parado (G.hunting=false), não há sessão viva pra atualizar — a próxima
 // startHunt() já manda o RTC atual via buildHuntSnapshot, então não faz nada.
 function syncRtcToServer() {
-  if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc);
+  // manda também estilo/densidade: o endpoint é o mesmo e assim uma mudança de
+  // RTC não desatualiza as outras preferências na sessão viva.
+  if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc, G.fightMode, G.density || 'normal');
 }
 
 function refresh(msg) {

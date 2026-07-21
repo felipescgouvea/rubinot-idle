@@ -239,8 +239,13 @@ const server = http.createServer(async (req, res) => {
         const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
         const regenMult = stats.promoted ? PROMOTION.regenMult : 1; // promoção dobra o regen ocioso
         if (voc) {
-          hp = Math.min(maxHp, hp + (voc.hpRegen || 0) * 90 * idleMin * regenMult);
-          mana = Math.min(maxMana, mana + (voc.manaRegen || 0) * 90 * idleMin * regenMult);
+          // Math.floor: idleMin é FRACIONÁRIO, então sem arredondar o hp/mana
+          // viram 323.63 — e as colunas hp/mana são INTEGER. O upsert seguinte
+          // devolvia 400 ("invalid input syntax for type integer") e derrubava
+          // settleKill ANTES do pushKill: a criatura morria sem creditar XP,
+          // gold nem loot, e sem linha no log (bug: "goblins não dão XP").
+          hp = Math.floor(Math.min(maxHp, hp + (voc.hpRegen || 0) * 90 * idleMin * regenMult));
+          mana = Math.floor(Math.min(maxMana, mana + (voc.manaRegen || 0) * 90 * idleMin * regenMult));
         }
       }
       // Stamina regenera (1/3 da taxa de queda) pelo tempo REAL que passou
@@ -301,7 +306,7 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
-      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {}, body.fightMode);
+      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {}, body.fightMode, body.density);
       return send(res, 200, { ok: true, applied: !!liveSession });
     }
 
@@ -365,8 +370,10 @@ const server = http.createServer(async (req, res) => {
           const maxMana = computeMaxMana({ vocation, level: stats.level });
           const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
           const regenMult = stats.promoted ? PROMOTION.regenMult : 1; // promoção dobra o regen ocioso
-          stats.hp = Math.min(maxHp, Number(stats.hp) + (voc.hpRegen || 0) * 90 * idleMin * regenMult);
-          stats.mana = Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin * regenMult);
+          // floor pelo mesmo motivo do /hunt/start: idleMin é fracionário e as
+          // colunas hp/mana são INTEGER (ver comentário lá).
+          stats.hp = Math.floor(Math.min(maxHp, Number(stats.hp) + (voc.hpRegen || 0) * 90 * idleMin * regenMult));
+          stats.mana = Math.floor(Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin * regenMult));
         }
       }
       // Com sessão VIVA, o hp/mana autoritativos são os DELA (tempo real, todo

@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=174';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget } from '../infrastructure/authClient.js?v=179';
-import { ZONES } from '../domain/bestiary.js?v=192';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=201';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=172';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=204';
-import { monsterAttack } from '../domain/combatFormulas.js?v=203';
-import { elementMod } from '../domain/elements.js?v=170';
-import { STAMINA_MAX } from '../domain/stamina.js?v=170';
-import { ITEMS } from '../domain/items.js?v=185';
-import { MONSTERS } from '../domain/bestiary.js?v=192';
-import { RARITY_TIERS } from '../domain/rarity.js?v=171';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=172';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=172';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=171';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=171';
-import { saveGame } from './saveGameUseCase.js?v=174';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=175';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=173';
-import { t } from '../i18n/i18n.js?v=188';
+import { G, ACCOUNT } from './gameStore.js?v=175';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=180';
+import { ZONES } from '../domain/bestiary.js?v=193';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=202';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=173';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=205';
+import { monsterAttack } from '../domain/combatFormulas.js?v=204';
+import { elementMod } from '../domain/elements.js?v=171';
+import { STAMINA_MAX } from '../domain/stamina.js?v=171';
+import { ITEMS } from '../domain/items.js?v=186';
+import { MONSTERS } from '../domain/bestiary.js?v=193';
+import { RARITY_TIERS } from '../domain/rarity.js?v=172';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=173';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=173';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=172';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=172';
+import { saveGame } from './saveGameUseCase.js?v=175';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=176';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=174';
+import { t } from '../i18n/i18n.js?v=189';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -268,12 +268,21 @@ function buildHuntSnapshot() {
 // Persiste no save; caçando, reinicia a sessão pra o servidor aplicar o novo
 // modo (via buildHuntSnapshot). Sem modo escolhido = 'balanced'.
 const FIGHT_MODE_IDS = ['attack', 'balanced', 'defense'];
+// Estilo de luta e densidade são PREFERÊNCIA: mudar não pode interromper a
+// caçada em andamento (o Felipe reclamou de a hunt pausar ao trocar). O servidor
+// aceita os dois ao vivo em /hunt/rtc — o estilo passa a valer no próximo golpe
+// e a densidade na próxima leva de monstros. Antes era stopHunt()+startHunt(),
+// que além de pausar abria uma sessão nova e zerava a sala.
+function syncPrefsToServer() {
+  if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc, G.fightMode, G.density || 'normal');
+}
+
 export function setFightMode(mode) {
   if (!FIGHT_MODE_IDS.includes(mode)) return;
   if (G.fightMode !== mode) {
     G.fightMode = mode;
     saveGame();
-    if (G.hunting) { stopHunt(); startHunt(); } // reenvia o snapshot com o novo modo
+    syncPrefsToServer();
   }
   renderFightModeButtons();
 }
@@ -292,7 +301,7 @@ export function setDensity(mode) {
   if ((G.density || 'normal') !== mode) {
     G.density = mode;
     saveGame();
-    if (G.hunting) { stopHunt(); startHunt(); }
+    syncPrefsToServer();   // vale a partir da PRÓXIMA leva, sem cortar a atual
   }
   renderDensityButtons();
 }

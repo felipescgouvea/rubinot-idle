@@ -1,21 +1,21 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=179';
-import { renderSkillsPanel } from './skillsPanel.js?v=173';
-import { renderArenaPanel } from './arenaPanel.js?v=172';
-import { renderWorldsPanel } from './worldsPanel.js?v=171';
-import { renderBattlePassPanel } from './battlePassPanel.js?v=171';
-import { renderRtcPanel } from './rtcPanel.js?v=206';
-import { renderShopPanel } from './shopPanel.js?v=179';
-import { renderMarketPanel } from './marketPanel.js?v=175';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=176';
-import { renderBossRushPanel } from './bossRushPanel.js?v=177';
-import { renderBestiaryTab } from './bestiaryPanel.js?v=177';
-import { renderTrainingSection } from './trainingPanel.js?v=180';
-import { renderAdminPanel } from './adminPanel.js?v=181';
-import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=175';
-import { on, EVENTS } from '../shared/eventBus.js?v=172';
+import { renderTasksPanel } from './tasksPanel.js?v=180';
+import { renderSkillsPanel } from './skillsPanel.js?v=174';
+import { renderArenaPanel } from './arenaPanel.js?v=173';
+import { renderWorldsPanel } from './worldsPanel.js?v=172';
+import { renderBattlePassPanel } from './battlePassPanel.js?v=172';
+import { renderRtcPanel } from './rtcPanel.js?v=207';
+import { renderShopPanel } from './shopPanel.js?v=180';
+import { renderMarketPanel } from './marketPanel.js?v=176';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=177';
+import { renderBossRushPanel } from './bossRushPanel.js?v=178';
+import { renderBestiaryTab } from './bestiaryPanel.js?v=178';
+import { renderTrainingSection } from './trainingPanel.js?v=181';
+import { renderAdminPanel } from './adminPanel.js?v=182';
+import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=176';
+import { on, EVENTS } from '../shared/eventBus.js?v=173';
 
 const RENDER_BY_TAB = {
   tasks: renderTasksPanel,

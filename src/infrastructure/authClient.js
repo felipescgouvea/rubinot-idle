@@ -298,8 +298,10 @@ export function stopHuntSession(slot) {
 // ataque no meio de uma caçada só valia a partir da PRÓXIMA (bug reportado:
 // "rtc de cura não está funcionando"). Silencioso se não houver caçada ativa
 // (aplicado normalmente no próximo hunt-start via buildHuntSnapshot).
-export function updateHuntRtc(slot, rtc) {
-  return huntFetch('/hunt/rtc', { method: 'POST', body: { slot, rtc } });
+// Atualiza AO VIVO as preferências da sessão: RTC, estilo de luta e densidade.
+// As três são preferência do jogador, não motivo pra interromper a caçada.
+export function updateHuntRtc(slot, rtc, fightMode, density) {
+  return huntFetch('/hunt/rtc', { method: 'POST', body: { slot, rtc, fightMode, density } });
 }
 
 export function getHuntState(slot) {

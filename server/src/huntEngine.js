@@ -95,6 +95,12 @@ function pushCombat(session, ev) {
 // só creditava o ÚLTIMO — contadores de kill, bestiário, tasks, Battle Pass e o
 // log de loot subcontavam (deaths-1) a cada multi-kill. Agora cada morte entra
 // na fila e o cliente processa TODAS as novas (ver huntUseCases: lastKillSeq).
+// hp/mana são colunas INTEGER no banco. Qualquer fração (regen ocioso, cura
+// parcial) faz o upsert devolver 400 e, como settleKill grava ANTES de registrar
+// a morte, a criatura morria sem creditar XP/gold/loot e sem linha no log. Esta
+// é a rede de segurança: tudo que vai pro banco passa por aqui.
+const vitalInt = v => Math.max(0, Math.round(Number(v) || 0));
+
 function pushKill(session, k) {
   if (!session.killEvents) { session.killEvents = []; session.killSeq = 0; }
   k.seq = ++session.killSeq;
@@ -122,10 +128,10 @@ function resolveHealSpell(healSpellId, vocation, level) {
 // arquivo.
 export async function incrementInventory(userId, slot, itemId, delta) {
   const existing = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
-  if (delta > 0 && !existing) {
-    const rows = await selectMany('player_inventory', { user_id: userId, slot });
-    if (rows.length >= 20) return false; // bag cheia (BAG_MAX_SLOTS) — não captura item NOVO
-  }
+  // A bag NÃO tem teto de tipos — mesma regra do cliente (ver domain/items.js).
+  // Havia aqui um limite de 20 tipos distintos que o cliente já não tinha: com
+  // 20 itens diferentes na mochila, comprar qualquer coisa nova falhava com
+  // "bag cheia" e todo loot de item inédito era descartado em silêncio.
   const newQty = Math.max(0, (existing ? Number(existing.qty) : 0) + delta);
   await upsertRow('player_inventory', { user_id: userId, slot, item_id: itemId, qty: newQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
   return newQty;
@@ -188,7 +194,7 @@ async function applyRtcHealing(session, cfg) {
 // estado se o processo cair no meio de uma luta sem matar nada.
 async function flushVitals(session) {
   try {
-    await updateRows('player_stats', { user_id: session.userId, slot: session.slot }, { hp: session.hp, mana: session.mana, stamina: session.stamina });
+    await updateRows('player_stats', { user_id: session.userId, slot: session.slot }, { hp: vitalInt(session.hp), mana: vitalInt(session.mana), stamina: session.stamina });
     await upsertRow('player_skills', { user_id: session.userId, slot: session.slot, skills: session.skills, updated_at: new Date().toISOString() }, 'user_id,slot');
   } catch (e) { console.error('flushVitals falhou', session.id, e.message); }
 }
@@ -251,7 +257,7 @@ async function settleKill(session, mon, cfg) {
   await upsertRow('player_stats', {
     user_id: session.userId, slot: session.slot, gold, xp, level,
     total_gold_earned: totalGoldEarned, total_kills: totalKills,
-    hp: session.hp, mana: session.mana, stamina: session.stamina,
+    hp: vitalInt(session.hp), mana: vitalInt(session.mana), stamina: session.stamina,
     boss_points: bossPoints, boss_max_tier: bossMaxTier, updated_at: new Date().toISOString(),
   }, 'user_id,slot');
   await updateRows('hunt_sessions', { id: session.id }, { last_settled_at: new Date().toISOString() });
@@ -498,7 +504,7 @@ async function resolveTick(session) {
     const lastDeath = { sessionId: session.id, monster: newPrimary.name, xpLost, blessingsUsed: blessings, at: Date.now() };
     await upsertRow('player_stats', {
       user_id: session.userId, slot: session.slot, xp: Math.max(0, curXp - xpLost),
-      hp: session.hp, mana: session.mana, stamina: session.stamina, blessings: 0,
+      hp: vitalInt(session.hp), mana: vitalInt(session.mana), stamina: session.stamina, blessings: 0,
       last_death: lastDeath, updated_at: new Date().toISOString(),
     }, 'user_id,slot');
     session.currentPack = [];
@@ -614,10 +620,15 @@ export function getLiveSession(sessionId) {
 // NENHUM efeito até parar e começar a caçar de novo (bug reportado pelo
 // Felipe: "rtc de cura nao esta funcionando"). Agora /hunt/rtc chama isto a
 // cada mudança na UI enquanto G.hunting.
-export function updateSessionRtc(sessionId, rtc, fightMode) {
+export function updateSessionRtc(sessionId, rtc, fightMode, density) {
   const s = live.get(sessionId);
   if (!s) return false;
   s.rtc = rtc || {};
+  // Densidade ao vivo: vale a partir do PRÓXIMO grupo que nascer (ver o cálculo
+  // de packSize no spawn). Antes o cliente parava e recomeçava a caçada só pra
+  // mandar a densidade nova, o que interrompia a luta em andamento — não é o
+  // que se espera de um botão de preferência.
+  if (density) s.density = density;
   if (fightMode) s.fightMode = fightMode; // estilo de luta ao vivo (ver combatFormulas: FIGHT_MODES)
   return true;
 }
