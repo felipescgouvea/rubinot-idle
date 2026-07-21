@@ -30,5 +30,40 @@
     "Spider Caves",
     "Hydra Hill",
     "Replica Dungeon"
+  ],
+  "Candia": [
+    "Chocolate Mines",
+    "Dessert Dungeons"
+  ],
+  "Feyrist": [
+    "Feyrist Meadows",
+    "Court of Summer",
+    "Dream Labyrinth"
+  ],
+  "Gray Beach": [
+    "The Hive",
+    "Percht Island",
+    "Fiehonja",
+    "Ancient Ancestorial Grounds"
+  ],
+  "Kilmaresh": [
+    "Rotten Wasteland",
+    "Mirrored Nightmare",
+    "Furious Crater",
+    "Ebb and Flow",
+    "Claustrophobic Inferno"
+  ],
+  "Marapur": [
+    "Great Pearl Fan Reef",
+    "Temple of the Moon Goddess"
+  ],
+  "Northern Darama": [
+    "Putrefactory",
+    "Jaded Roots",
+    "Gloom Pillars",
+    "Darklight Core"
+  ],
+  "Ab'dendriel": [
+    "Barkless Cult Trial Zone"
   ]
 }

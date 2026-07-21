@@ -158,7 +158,8 @@
    "Warrior's Axe",
    "Warrior's Shield",
    "Necklace of the Deep"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Ancient Ruins Tomb",
@@ -558,7 +559,8 @@
    "Bed of Nails",
    "Tiger Eye",
    "Fig Leaf"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Barren Drift",
@@ -1056,7 +1058,8 @@
    "Fruit Drop",
    "Sugar Daddy"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Chor",
@@ -1137,7 +1140,8 @@
    "Infernal Demon",
    "Infernal Phantom"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Cobra Bastion",
@@ -1264,7 +1268,8 @@
    "Crystal Crossbow",
    "Magma Monocle",
    "Magma Legs"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Court of Winter",
@@ -1607,7 +1612,8 @@
    "Darklight Striker",
    "Darklight Matter"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Dawnport Crystal Dungeon",
@@ -1882,7 +1888,8 @@
    "Goggle Cake",
    "Truffle Cook"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Draconia",
@@ -1948,7 +1955,8 @@
    "Soul-Broken Harbinger",
    "Thanatursus"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Drefia",
@@ -2245,7 +2253,8 @@
   ],
   "melhorLoot": [
    "Bag You Desire"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Edron Bog Raider Cave",
@@ -2840,7 +2849,8 @@
    "Nightmare Blade",
    "Boots of Haste",
    "Wooden Spellbook"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Fibula Dungeon",
@@ -2895,7 +2905,8 @@
    "Foxtail",
    "Ornate Crossbow",
    "Warrior's Axe"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Fields of Glory",
@@ -3445,7 +3456,8 @@
    "Vibrant Phantom",
    "Courage Leech"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Fury Dungeon",
@@ -3593,7 +3605,8 @@
    "Wandering Pillar",
    "Converter"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Glooth Bandit Hideouts",
@@ -3736,7 +3749,8 @@
    "Two-Headed Turtle",
    "Venerable Foam Stalker"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Green Belt",
@@ -4598,7 +4612,8 @@
    "Oozing Corpus",
    "Decaying Totem"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Jakundaf Desert",
@@ -5653,7 +5668,8 @@
    "Paladin's Apparition",
    "Sorcerer's Apparition"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Misguided Camp",
@@ -6626,7 +6642,8 @@
    "Glacial Rod",
    "Glacier Robe",
    "Glacier Kilt"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "Pirat Mine",
@@ -6880,7 +6897,8 @@
    "Rotten Man-Maggot",
    "Meandering Mushroom"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Quara Grotto",
@@ -7230,7 +7248,8 @@
    "Mould Phantom",
    "Rotten Golem"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Ruins of Nuur",
@@ -7763,7 +7782,8 @@
    "Naga Archer",
    "Makara"
   ],
-  "melhorLoot": []
+  "melhorLoot": [],
+  "feita": true
  },
  {
   "nome": "Terramite Breeding Tunnels",
@@ -8019,7 +8039,8 @@
    "Four-Leaf Clover",
    "Buggy Backpack",
    "Steel Boots"
-  ]
+  ],
+  "feita": true
  },
  {
   "nome": "The Witches' Cliff",
