@@ -14,6 +14,7 @@ export const CITIES = [
   { id: 'abdendriel', name: "Ab'Dendriel",          icon: '🌳', blurb: 'city.abdendriel' },
   { id: 'carlin',     name: 'Carlin',               icon: '🏹', blurb: 'city.carlin' },
   { id: 'ankrahmun',  name: 'Ankrahmun',            icon: '⚱️', blurb: 'city.ankrahmun' },
+  { id: 'kazordoon', name: 'Kazordoon', icon: '⛏️', blurb: 'city.kazordoon' },
   { id: 'venore',     name: 'Venore',               icon: '🕷️', blurb: 'city.venore' },
   { id: 'darashia',   name: 'Darashia',             icon: '🐉', blurb: 'city.darashia' },
   { id: 'svargrond',  name: 'Svargrond',            icon: '🧊', blurb: 'city.svargrond' },

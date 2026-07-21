@@ -39,11 +39,51 @@ for (const z of novas) {
   porCidade.get(z.city).push(z);
 }
 
+// Cidade nova (sem nenhuma zona ainda) precisa existir em CITIES e ter blurb,
+// senão o seletor de zona não a lista. `cidadeNova` no JSON traz nome/ícone.
+const cidadesNovas = novas.filter(z => z.cidadeNova)
+  .map(z => ({ id: z.city, ...z.cidadeNova }))
+  .filter((c, i, arr) => arr.findIndex(x => x.id === c.id) === i);
+
+if (cidadesNovas.length) {
+  let c = readFileSync('src/domain/cities.js', 'utf8');
+  const eolC = c.includes('\r\n') ? '\r\n' : '\n';
+  for (const nova of cidadesNovas) {
+    if (c.includes(`id: '${nova.id}'`)) { console.log(`cidade ${nova.id} já existe, mantida`); continue; }
+    // entra ANTES da cidade indicada em `antesDe` (mantém a ordem geográfica)
+    const alvo = c.indexOf(`  { id: '${nova.antesDe}'`);
+    if (alvo === -1) aborta(`cidade de referência "${nova.antesDe}" não encontrada em CITIES`);
+    const linha = `  { id: '${nova.id}', name: '${nova.name}', icon: '${nova.icon}', blurb: 'city.${nova.id}' },${eolC}`;
+    c = c.slice(0, alvo) + linha + c.slice(alvo);
+    console.log(`cidade criada: ${nova.id}`);
+  }
+  writeFileSync('src/domain/cities.js', c);
+
+  for (const [arquivo, idioma] of [['src/i18n/locales/pt.js', 'blurbPt'], ['src/i18n/locales/en.js', 'blurbEn']]) {
+    let t = readFileSync(arquivo, 'utf8');
+    const eol = t.includes('\r\n') ? '\r\n' : '\n';
+    const i = t.indexOf("  'city.edron'");
+    if (i === -1) aborta(`âncora de blurb de cidade não encontrada em ${arquivo}`);
+    const linhas = cidadesNovas.filter(n => !t.includes(`'city.${n.id}'`))
+      .map(n => `  'city.${n.id}': '${n[idioma].replace(/'/g, "\\'")}',`);
+    if (linhas.length) writeFileSync(arquivo, t.slice(0, i) + linhas.join(eol) + eol + t.slice(i));
+  }
+}
+
 for (const [cidade, zs] of porCidade) {
   const titulo = cidade[0].toUpperCase() + cidade.slice(1);
   const re = new RegExp('^  // --- ' + titulo + '[^\\r\\n]*\\r?\\n', 'mi');
-  const m = re.exec(src);
-  if (!m) aborta(`não achei a seção "// --- ${titulo}" em ZONES`);
+  let m = re.exec(src);
+  if (!m) {
+    // Sem seção ainda (cidade nova): cria uma logo antes do fim do objeto ZONES.
+    const nomeCidade = (zs[0].cidadeNova && zs[0].cidadeNova.name) || titulo;
+    const fim = /^\};\r?\n/m.exec(src.slice(src.indexOf('export const ZONES')));
+    if (!fim) aborta('não achei o fim do objeto ZONES');
+    const pos = src.indexOf('export const ZONES') + fim.index;
+    src = src.slice(0, pos) + `  // --- ${nomeCidade} ---${EOL}` + src.slice(pos);
+    m = re.exec(src);
+    if (!m) aborta(`não consegui criar a seção da cidade "${titulo}"`);
+  }
   const linhas = zs.map(z =>
     `  ${z.id}: { city: '${z.city}', name: 'zone.${z.id}', icon: '${z.icon}', worldReq: 'auroria', ` +
     `monsters: [${z.monsters.map(x => `'${x}'`).join(', ')}], theme: ['${z.theme[0]}', '${z.theme[1]}'], ` +
