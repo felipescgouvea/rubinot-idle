@@ -3,12 +3,12 @@
 // Dividida em 2 subtabs: Atributos (ATK/DEF/SPD/MGC, antes fixos na barra
 // de status — pedido do Felipe pra tirar da tela principal) e Skills
 // (treino de cada skill, conteúdo que já existia aqui).
-import { G } from '../application/gameStore.js?v=172';
-import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=199';
-import { resolveEquippedItem } from '../domain/items.js?v=183';
-import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=169';
-import { skillIconImg } from './shared.js?v=175';
-import { t } from '../i18n/i18n.js?v=186';
+import { G } from '../application/gameStore.js?v=173';
+import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=200';
+import { resolveEquippedItem } from '../domain/items.js?v=184';
+import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=170';
+import { skillIconImg } from './shared.js?v=176';
+import { t } from '../i18n/i18n.js?v=187';
 
 let activeSkillsSubtab = 'attributes';
 export function setSkillsSubtab(tab) {

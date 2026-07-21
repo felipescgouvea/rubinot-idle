@@ -2536,9 +2536,12 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 @keyframes tstage-shot {
   0%   { transform: translateX(0) rotate(90deg) scale(.8); opacity: 0; }
   10%  { opacity: 1; }
-  74%  { transform: translateX(108px) rotate(90deg) scale(1); opacity: 1; }
-  86%  { transform: translateX(120px) rotate(90deg) scale(1); opacity: 0; }
-  100% { transform: translateX(120px) rotate(90deg); opacity: 0; }
+  /* 132px leva o centro do projétil (x=72) até ~204, dentro do corpo do dummy
+     (centro em x=216, 44px de largura) — parar antes deixava a flecha morrendo
+     no ar, a um palmo do alvo. */
+  76%  { transform: translateX(132px) rotate(90deg) scale(1); opacity: 1; }
+  88%  { transform: translateX(144px) rotate(90deg) scale(1); opacity: 0; }
+  100% { transform: translateX(144px) rotate(90deg); opacity: 0; }
 }
 /* O dummy reage no instante do impacto (mesmo ciclo de 1.4s do projétil). */
 .tstage-melee .tstage-dummy img { animation: tstage-hit 1.4s ease-out infinite; }
@@ -2583,7 +2586,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   @keyframes tstage-shot {
     0% { transform: translateX(0) rotate(90deg) scale(.8); opacity: 0; }
     10% { opacity: 1; }
-    74% { transform: translateX(76px) rotate(90deg); opacity: 1; }
-    100% { transform: translateX(86px) rotate(90deg); opacity: 0; }
+    76% { transform: translateX(94px) rotate(90deg); opacity: 1; }
+    100% { transform: translateX(104px) rotate(90deg); opacity: 0; }
   }
 }

@@ -18,14 +18,14 @@
 // ele ao menos aparece inteiro e reconhecível. Trocar pra um boneco realmente
 // virado pra direita depende de garimpar sprites leste das 28 outfits × 2
 // gêneros — é um trabalho à parte.
-import { G } from '../application/gameStore.js?v=172';
-import { outfitWalkAtlasPath, outfitWalkAtlasPathSouth } from '../infrastructure/outfitAssets.js?v=168';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=168';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=168';
-import { VOCATIONS } from '../domain/character.js?v=199';
-import { ITEMS } from '../domain/items.js?v=183';
-import { SPELLS } from '../domain/spells.js?v=170';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=173';
+import { G } from '../application/gameStore.js?v=173';
+import { outfitWalkAtlasPath, outfitWalkAtlasPathSouth } from '../infrastructure/outfitAssets.js?v=169';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=169';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=169';
+import { VOCATIONS } from '../domain/character.js?v=200';
+import { ITEMS } from '../domain/items.js?v=184';
+import { SPELLS } from '../domain/spells.js?v=171';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=174';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
