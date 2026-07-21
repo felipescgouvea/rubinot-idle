@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=158';
-import { ITEMS } from '../domain/items.js?v=169';
-import { on, EVENTS } from '../shared/eventBus.js?v=156';
-import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=161';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=158';
-import { fetchMyMarketWallet, fetchMarketListings, fetchMarketStats } from '../application/marketUseCases.js?v=158';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=159';
-import { t } from '../i18n/i18n.js?v=172';
+import { G } from '../application/gameStore.js?v=159';
+import { ITEMS } from '../domain/items.js?v=170';
+import { on, EVENTS } from '../shared/eventBus.js?v=157';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=162';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=159';
+import { fetchMyMarketWallet, fetchMarketListings, fetchMarketStats } from '../application/marketUseCases.js?v=159';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=160';
+import { t } from '../i18n/i18n.js?v=173';
 
 export async function renderMarketPanel() {
   const el = document.getElementById('market-content');

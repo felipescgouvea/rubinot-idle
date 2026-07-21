@@ -40,7 +40,7 @@ field /= amp
 
 # ---------- forma: passagem serpenteia, largura varia ----------
 ys = np.arange(H)[:, None]
-center = 0.5 + np.sin(2*np.pi*ys/H)*0.10 + np.sin(6*np.pi*ys/H + 1.1)*0.06
+center = 0.5 + np.sin(2*np.pi*ys/H)*0.045 + np.sin(6*np.pi*ys/H + 1.1)*0.03
 xs = np.linspace(0, 1, W)[None, :]
 dist = np.abs(xs - center) / 0.5
 halfw = 0.46 + 0.17 * (field - 0.5)
@@ -60,7 +60,7 @@ def ca(m, iters):
 rock = ca(rock, 5)
 
 # passagem garantida (largura irregular por linha)
-pw = 52 + (coarse(7, 13)[:, 0] * 34).astype(int)
+pw = 66 + (coarse(7, 13)[:, 0] * 30).astype(int)
 for y in range(H):
     c = int(center[y, 0] * W); half = int(pw[y])
     rock[y, max(0, c-half):min(W, c+half)] = False
@@ -101,7 +101,7 @@ for _ in range(140):
     _s = random.uniform(0.6, 1.4)
     _m = _mw.resize((max(8, int(_mw.width*_s)), max(8, int(_mw.height*_s))), Image.NEAREST)
     for _dy in (0, -H, H): _rock_img.paste(_m, (_x, _y + _dy), _m)
-ra = np.asarray(_rock_img, float) * 0.55          # rocha escura => caminho contrasta
+ra = np.asarray(_rock_img, float) * 0.44          # rocha escura => caminho contrasta
 ra = np.clip(ra + (coarse(11, 21) - 0.5)[..., None] * 40, 0, 255)
 
 scene = np.where(rock[..., None], ra, fa)

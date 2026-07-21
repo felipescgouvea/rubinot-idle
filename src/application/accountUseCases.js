@@ -7,12 +7,12 @@
 // dois independentemente de quando cada um foi jogado por último. Evita
 // duplicar toda a lógica de start/stop de intervalos (caçada/treino/regen)
 // que só faz sentido rodar uma vez, no boot.
-import { G, ACCOUNT } from './gameStore.js?v=158';
-import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=158';
-import { saveState } from '../infrastructure/storage.js?v=154';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=163';
-import { emit, EVENTS } from '../shared/eventBus.js?v=156';
-import { t } from '../i18n/i18n.js?v=172';
+import { G, ACCOUNT } from './gameStore.js?v=159';
+import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=159';
+import { saveState } from '../infrastructure/storage.js?v=155';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=164';
+import { emit, EVENTS } from '../shared/eventBus.js?v=157';
+import { t } from '../i18n/i18n.js?v=173';
 
 const MAX_CHARACTER_SLOTS = 2;
 
