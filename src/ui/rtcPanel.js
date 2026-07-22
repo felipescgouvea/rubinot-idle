@@ -4,20 +4,20 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=198';
-import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=196';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=209';
-import { VOCATIONS } from '../domain/character.js?v=225';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=194';
+import { G } from '../application/gameStore.js?v=199';
+import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=197';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=210';
+import { VOCATIONS } from '../domain/character.js?v=226';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=195';
 import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAttackRune, isRuneEntry, runeEntryId, ATTACK_SLOT_COUNT,
-  HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeHealTiers } from '../domain/rtcConfig.js?v=228';
-import { getMagic } from '../application/stats.js?v=195';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=194';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=194';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=230';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=196';
-import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=201';
-import { t } from '../i18n/i18n.js?v=212';
+  HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeHealTiers } from '../domain/rtcConfig.js?v=229';
+import { getMagic } from '../application/stats.js?v=196';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=195';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=195';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=231';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=197';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=202';
+import { t } from '../i18n/i18n.js?v=213';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -78,7 +78,6 @@ export function openRtcAttackSpellPicker(idx) {
   const attackSpells = Object.entries(SPELLS).filter(([, s]) => s.type === 'attack' && s.voc.includes(voc));
   const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
   const prioSpells = normalizeAttackSpells(G.rtc);
-  const tiers = normalizeHealTiers(G.rtc);
   const currentEntry = prioSpells[idx];
   const spellRows = attackSpells.map(([id, s]) => {
     const unlocked = G.level >= s.level;
@@ -261,6 +260,7 @@ export function renderRtcPanel() {
 
   const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc, G.level);
   const prioSpells = normalizeAttackSpells(G.rtc);
+  const tiers = normalizeHealTiers(G.rtc);
   const atkSummary = prioSpells.length
     ? prioSpells.map((entry, i) => `${i + 1}. "${isRuneEntry(entry) ? ITEMS[runeEntryId(entry)].name : SPELLS[entry].words}"`).join(' → ')
     : t('rtc.noAttackConfigured');
