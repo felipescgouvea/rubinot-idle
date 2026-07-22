@@ -544,9 +544,23 @@ const server = http.createServer(async (req, res) => {
       const vocation = typeof body.vocation === 'string' ? body.vocation : null;
       if (slot === null || !vocation || !STARTER_KITS[vocation]) return send(res, 400, { error: 'slot ou vocation inválido' });
 
+      // A linha de stats vem PRIMEIRO e é idempotente. Sem ela o personagem não
+      // tem onde acumular XP/gold — e foi exatamente o que aconteceu: uma
+      // sessão fantasma gravou loot em player_inventory, o guard abaixo viu
+      // inventário não-vazio, recusou o kit com 409 e a rota terminou ANTES de
+      // criar os stats. O jogador ficou matando rato sem ganhar nada.
+      const statsExistente = await selectOne('player_stats', { user_id: user.id, slot });
+      if (!statsExistente) {
+        await insertRow('player_stats', { user_id: user.id, slot, gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, blessings: 0, stamina: STAMINA_MAX });
+      }
+
+      // "Já concedido" passa a ser medido pelo EQUIPAMENTO, não pelo
+      // inventário. Inventário ganha linha por muitos caminhos (loot, compra,
+      // mercado); equipamento só é escrito por este kit e por equipar. Usar o
+      // inventário como marca tornava o kit impossível de conceder pra sempre
+      // depois de qualquer item entrar na mochila por outro caminho.
       const existingEq = await selectMany('player_equipment', { user_id: user.id, slot });
-      const existingInv = await selectMany('player_inventory', { user_id: user.id, slot });
-      if (existingEq.length > 0 || existingInv.length > 0) {
+      if (existingEq.length > 0) {
         return send(res, 409, { error: 'kit inicial já foi concedido pra este personagem' });
       }
 
@@ -563,11 +577,7 @@ const server = http.createServer(async (req, res) => {
         await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
       }
 
-      const stats = await selectOne('player_stats', { user_id: user.id, slot });
-      if (!stats) {
-        await insertRow('player_stats', { user_id: user.id, slot, gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, blessings: 0, stamina: STAMINA_MAX });
-      }
-      return send(res, 200, { ok: true });
+      return send(res, 200, { ok: true });   // stats já garantido no início da rota
     }
 
     // GRADUAÇÃO (nível 8) — o jogador confirma ou TROCA a vocação e recebe o
