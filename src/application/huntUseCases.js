@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=218';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=223';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=223';
-import { ZONES } from '../domain/bestiary.js?v=236';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=245';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=216';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=248';
-import { monsterAttack } from '../domain/combatFormulas.js?v=247';
-import { elementMod } from '../domain/elements.js?v=214';
-import { STAMINA_MAX } from '../domain/stamina.js?v=214';
-import { ITEMS } from '../domain/items.js?v=229';
-import { MONSTERS } from '../domain/bestiary.js?v=236';
-import { RARITY_TIERS } from '../domain/rarity.js?v=215';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=216';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=216';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=215';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=215';
-import { saveGame } from './saveGameUseCase.js?v=218';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=219';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=217';
-import { t } from '../i18n/i18n.js?v=232';
+import { G, ACCOUNT } from './gameStore.js?v=219';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=224';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=224';
+import { ZONES } from '../domain/bestiary.js?v=237';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=246';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=217';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=249';
+import { monsterAttack } from '../domain/combatFormulas.js?v=248';
+import { elementMod } from '../domain/elements.js?v=215';
+import { STAMINA_MAX } from '../domain/stamina.js?v=215';
+import { ITEMS } from '../domain/items.js?v=230';
+import { MONSTERS } from '../domain/bestiary.js?v=237';
+import { RARITY_TIERS } from '../domain/rarity.js?v=216';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=217';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=217';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=216';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=216';
+import { saveGame } from './saveGameUseCase.js?v=219';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=220';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=218';
+import { t } from '../i18n/i18n.js?v=233';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -569,6 +569,17 @@ function applyServerPack(pack) {
       const applyHit = () => {
         const vis = currentPack.find(cm => String(cm.uid) === uid);
         if (vis) { vis.hp = m.hp; vis._hitAt = Date.now(); }
+        // Solta o efeito da magia AQUI, no mesmo quadro em que a vida cai.
+        // Medido antes disto: mediana de 405ms e pior caso de 1371ms entre o
+        // fogo aparecer e o dano chegar — dois relógios diferentes. Ficou
+        // visível quando o efeito passou a cair em cima da criatura.
+        // A janela de 3s descarta efeito velho (o cast pode não ter causado
+        // dano nenhum: errou, morreu antes, ou o alvo já estava morto).
+        if (pendingSpellFx && Date.now() - pendingSpellFx.at < 3000) {
+          const fx = pendingSpellFx;
+          pendingSpellFx = null;
+          emit(EVENTS.COMBAT_FX, fx);
+        }
         // O LOG do dano do jogador agora vem dos combatEvents server-truth
         // (renderCombatEvents), com o valor por AÇÃO (básico vs magia). Aqui só
         // a animação da barra/flash quando o projétil pousa.
@@ -1020,7 +1031,10 @@ export function doCosmeticTick() {
       // cima do monstro, e runa nenhuma tinha projétil.
       const runeMissile = runeMissileName(pick.id);
       if (runeMissile) emit(EVENTS.COMBAT_PROJECTILE, { missile: runeMissile, targetUid: String(primary.uid || primary.defKey) });
-      emit(EVENTS.COMBAT_FX, { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid });
+      // GUARDA em vez de emitir agora: o efeito sai junto com a queda de vida
+      // confirmada pelo servidor (ver applyServerPack). Emitir aqui é o relógio
+      // do tick LOCAL, que corre solto do dano real.
+      pendingSpellFx = { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid, at: Date.now() };
     } else if (pick && pick.kind === 'spell') {
       const atkSpellId = pick.id, atkSpell = pick.s;
       startSpellCd(atkSpellId, atkSpell.cd);
@@ -1032,7 +1046,7 @@ export function doCosmeticTick() {
         // (ver domain/combatFx.js: SPELL_MISSILE) em vez do efeito de área.
         emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
       } else {
-        emit(EVENTS.COMBAT_FX, { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid });
+        pendingSpellFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid, at: Date.now() };
       }
     }
   }

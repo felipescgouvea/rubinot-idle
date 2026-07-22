@@ -3,16 +3,20 @@
 // as duas tinham CÓPIAS idênticas desta função (a application não pode
 // importar de ui/*.js, então não dá pra reusar ui/shared.js: itemIconImg,
 // mas as duas application/*.js podem compartilhar um helper entre si).
-import { ITEMS } from '../domain/items.js?v=229';
-import { MONSTERS } from '../domain/bestiary.js?v=236';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=219';
+import { ITEMS } from '../domain/items.js?v=230';
+import { MONSTERS } from '../domain/bestiary.js?v=237';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=220';
 
+// alt VAZIO de propósito: no log o ícone vem sempre colado ao nome do item
+// ("<ícone> Lump of Dirt"). Com alt="<nome>", o nome saía DUAS vezes ao copiar
+// o texto do log — foi o que o Felipe colou: "Lump of Dirt Lump of Dirt". Um
+// ícone puramente decorativo, ao lado do próprio rótulo, deve ter alt vazio.
 export function itemLogIcon(itemId) {
   const item = ITEMS[itemId];
-  return spriteImgOrFallback(spriteUrl(itemSpriteFile(itemId)), item.name, item.icon, 'inline-icon');
+  return spriteImgOrFallback(spriteUrl(itemSpriteFile(itemId)), '', item.icon, 'inline-icon');
 }
 
 export function monsterLogIcon(monsterId) {
   const m = MONSTERS[monsterId];
-  return spriteImgOrFallback(spriteUrl(monsterSpriteFile(monsterId, m)), m.name, m.icon, 'inline-icon');
+  return spriteImgOrFallback(spriteUrl(monsterSpriteFile(monsterId, m)), '', m.icon, 'inline-icon');
 }

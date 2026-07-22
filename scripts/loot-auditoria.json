@@ -1,0 +1,17 @@
+{
+ "inventados": [
+  "carrion_worm (70xp): \"Lump of Dirt\" não está no loot real (chance 50.0%)",
+  "carrion_worm (70xp): \"Life Crystal\" não está no loot real (chance 20.0%)",
+  "carrion_worm (70xp): \"Crystal Coin\" não está no loot real (chance 5.0%)"
+ ],
+ "goldRuim": [
+  "carrion_worm (70xp): gold 160-250 vs wiki 0-45"
+ ],
+ "economia": [
+  "carrion_worm (70xp): \"Crystal Coin\" vale 10000g a 5.0% — 143x a XP do bicho"
+ ],
+ "semPagina": [],
+ "conferidos": [
+  "carrion_worm"
+ ]
+}
