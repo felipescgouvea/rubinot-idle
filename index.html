@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=208" />
-  <link rel="stylesheet" href="style.css?v=227" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=209" />
+  <link rel="stylesheet" href="style.css?v=228" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -16,107 +16,107 @@
     .fight-mode-btn.active { opacity: 1; border-color: #f0c14b; background: rgba(240,193,75,.18); box-shadow: 0 0 6px rgba(240,193,75,.4); }
   </style>
   <!-- modulepreload:inicio -->
-    <link rel="modulepreload" href="src/application/accountUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/adminUseCases.js?v=213">
-    <link rel="modulepreload" href="src/application/arenaUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/battlePassUseCases.js?v=209">
-    <link rel="modulepreload" href="src/application/bestiaryUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/blessingUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/bossRushUseCases.js?v=213">
-    <link rel="modulepreload" href="src/application/characterUseCases.js?v=213">
-    <link rel="modulepreload" href="src/application/dailyRewardUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/gameStore.js?v=212">
-    <link rel="modulepreload" href="src/application/highscoresUseCases.js?v=212">
-    <link rel="modulepreload" href="src/application/huntUseCases.js?v=276">
-    <link rel="modulepreload" href="src/application/imbuementUseCases.js?v=208">
-    <link rel="modulepreload" href="src/application/inventoryCore.js?v=210">
-    <link rel="modulepreload" href="src/application/inventoryUseCases.js?v=220">
-    <link rel="modulepreload" href="src/application/logIcons.js?v=211">
-    <link rel="modulepreload" href="src/application/marketUseCases.js?v=212">
-    <link rel="modulepreload" href="src/application/outfitUseCases.js?v=209">
-    <link rel="modulepreload" href="src/application/persistenceUseCases.js?v=251">
-    <link rel="modulepreload" href="src/application/preyUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/promotionUseCases.js?v=208">
-    <link rel="modulepreload" href="src/application/rewardGrants.js?v=49">
-    <link rel="modulepreload" href="src/application/rtcUseCases.js?v=244">
-    <link rel="modulepreload" href="src/application/saveGameUseCase.js?v=212">
-    <link rel="modulepreload" href="src/application/shopUseCases.js?v=216">
-    <link rel="modulepreload" href="src/application/spellUseCases.js?v=124">
-    <link rel="modulepreload" href="src/application/stats.js?v=209">
-    <link rel="modulepreload" href="src/application/taskUseCases.js?v=214">
-    <link rel="modulepreload" href="src/application/trainingUseCases.js?v=216">
-    <link rel="modulepreload" href="src/application/worldUseCases.js?v=214">
-    <link rel="modulepreload" href="src/domain/achievements.js?v=208">
-    <link rel="modulepreload" href="src/domain/adminConfig.js?v=211">
-    <link rel="modulepreload" href="src/domain/attackAreas.js?v=208">
-    <link rel="modulepreload" href="src/domain/bestiary.js?v=230">
-    <link rel="modulepreload" href="src/domain/blessings.js?v=208">
-    <link rel="modulepreload" href="src/domain/character.js?v=239">
-    <link rel="modulepreload" href="src/domain/charms.js?v=209">
-    <link rel="modulepreload" href="src/domain/cities.js?v=223">
-    <link rel="modulepreload" href="src/domain/combatFormulas.js?v=241">
-    <link rel="modulepreload" href="src/domain/combatFx.js?v=210">
-    <link rel="modulepreload" href="src/domain/dailyReward.js?v=209">
-    <link rel="modulepreload" href="src/domain/elements.js?v=208">
-    <link rel="modulepreload" href="src/domain/gameState.js?v=212">
-    <link rel="modulepreload" href="src/domain/highscoreCategories.js?v=209">
-    <link rel="modulepreload" href="src/domain/imbuements.js?v=208">
-    <link rel="modulepreload" href="src/domain/items.js?v=223">
-    <link rel="modulepreload" href="src/domain/outfitColors.js?v=208">
-    <link rel="modulepreload" href="src/domain/outfits.js?v=208">
-    <link rel="modulepreload" href="src/domain/prey.js?v=208">
-    <link rel="modulepreload" href="src/domain/progression.js?v=211">
-    <link rel="modulepreload" href="src/domain/rarity.js?v=209">
-    <link rel="modulepreload" href="src/domain/rtcConfig.js?v=242">
-    <link rel="modulepreload" href="src/domain/shopCatalog.js?v=211">
-    <link rel="modulepreload" href="src/domain/soul.js?v=150">
-    <link rel="modulepreload" href="src/domain/spells.js?v=210">
-    <link rel="modulepreload" href="src/domain/stamina.js?v=208">
-    <link rel="modulepreload" href="src/domain/training.js?v=210">
-    <link rel="modulepreload" href="src/i18n/i18n.js?v=226">
-    <link rel="modulepreload" href="src/i18n/locales/en.js?v=226">
-    <link rel="modulepreload" href="src/i18n/locales/pt.js?v=226">
-    <link rel="modulepreload" href="src/infrastructure/authClient.js?v=217">
-    <link rel="modulepreload" href="src/infrastructure/outfitAssets.js?v=208">
-    <link rel="modulepreload" href="src/infrastructure/outfitRenderer.js?v=208">
-    <link rel="modulepreload" href="src/infrastructure/outfitWalkRenderer.js?v=208">
-    <link rel="modulepreload" href="src/infrastructure/realtimeClient.js?v=217">
-    <link rel="modulepreload" href="src/infrastructure/storage.js?v=208">
-    <link rel="modulepreload" href="src/infrastructure/supabaseClient.js?v=209">
-    <link rel="modulepreload" href="src/infrastructure/tibiaSprites.js?v=213">
-    <link rel="modulepreload" href="src/shared/eventBus.js?v=210">
-    <link rel="modulepreload" href="src/ui/achievementsPanel.js?v=208">
-    <link rel="modulepreload" href="src/ui/adminPanel.js?v=219">
-    <link rel="modulepreload" href="src/ui/arenaPanel.js?v=210">
-    <link rel="modulepreload" href="src/ui/authPanel.js?v=209">
-    <link rel="modulepreload" href="src/ui/battleModal.js?v=208">
-    <link rel="modulepreload" href="src/ui/battlePassPanel.js?v=211">
-    <link rel="modulepreload" href="src/ui/bestiaryPanel.js?v=215">
-    <link rel="modulepreload" href="src/ui/boostedPanel.js?v=215">
-    <link rel="modulepreload" href="src/ui/bossRushPanel.js?v=215">
-    <link rel="modulepreload" href="src/ui/characterPanel.js?v=220">
-    <link rel="modulepreload" href="src/ui/dailyRewardPanel.js?v=211">
-    <link rel="modulepreload" href="src/ui/graduationModal.js?v=212">
-    <link rel="modulepreload" href="src/ui/highscoresPanel.js?v=214">
-    <link rel="modulepreload" href="src/ui/huntPanel.js?v=229">
-    <link rel="modulepreload" href="src/ui/imbuementPanel.js?v=208">
-    <link rel="modulepreload" href="src/ui/inventoryAndEquipmentPanel.js?v=213">
-    <link rel="modulepreload" href="src/ui/marketPanel.js?v=213">
-    <link rel="modulepreload" href="src/ui/outfitPicker.js?v=209">
-    <link rel="modulepreload" href="src/ui/rtcPanel.js?v=244">
-    <link rel="modulepreload" href="src/ui/settingsPanel.js?v=212">
-    <link rel="modulepreload" href="src/ui/shared.js?v=215">
-    <link rel="modulepreload" href="src/ui/shopPanel.js?v=217">
-    <link rel="modulepreload" href="src/ui/skillsPanel.js?v=211">
-    <link rel="modulepreload" href="src/ui/spellsPanel.js?v=124">
-    <link rel="modulepreload" href="src/ui/stageWalk.js?v=49">
-    <link rel="modulepreload" href="src/ui/tabs.js?v=226">
-    <link rel="modulepreload" href="src/ui/tasksPanel.js?v=217">
-    <link rel="modulepreload" href="src/ui/trainingPanel.js?v=218">
-    <link rel="modulepreload" href="src/ui/trainingStage.js?v=43">
-    <link rel="modulepreload" href="src/ui/uiIcons.js?v=213">
-    <link rel="modulepreload" href="src/ui/worldsPanel.js?v=209">
-    <link rel="modulepreload" href="src/ui/zonePicker.js?v=220">
+    <link rel="modulepreload" href="src/application/accountUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/adminUseCases.js?v=214">
+    <link rel="modulepreload" href="src/application/arenaUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/battlePassUseCases.js?v=210">
+    <link rel="modulepreload" href="src/application/bestiaryUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/blessingUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/bossRushUseCases.js?v=214">
+    <link rel="modulepreload" href="src/application/characterUseCases.js?v=214">
+    <link rel="modulepreload" href="src/application/dailyRewardUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/gameStore.js?v=213">
+    <link rel="modulepreload" href="src/application/highscoresUseCases.js?v=213">
+    <link rel="modulepreload" href="src/application/huntUseCases.js?v=277">
+    <link rel="modulepreload" href="src/application/imbuementUseCases.js?v=209">
+    <link rel="modulepreload" href="src/application/inventoryCore.js?v=211">
+    <link rel="modulepreload" href="src/application/inventoryUseCases.js?v=221">
+    <link rel="modulepreload" href="src/application/logIcons.js?v=212">
+    <link rel="modulepreload" href="src/application/marketUseCases.js?v=213">
+    <link rel="modulepreload" href="src/application/outfitUseCases.js?v=210">
+    <link rel="modulepreload" href="src/application/persistenceUseCases.js?v=252">
+    <link rel="modulepreload" href="src/application/preyUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/promotionUseCases.js?v=209">
+    <link rel="modulepreload" href="src/application/rewardGrants.js?v=50">
+    <link rel="modulepreload" href="src/application/rtcUseCases.js?v=245">
+    <link rel="modulepreload" href="src/application/saveGameUseCase.js?v=213">
+    <link rel="modulepreload" href="src/application/shopUseCases.js?v=217">
+    <link rel="modulepreload" href="src/application/spellUseCases.js?v=125">
+    <link rel="modulepreload" href="src/application/stats.js?v=210">
+    <link rel="modulepreload" href="src/application/taskUseCases.js?v=215">
+    <link rel="modulepreload" href="src/application/trainingUseCases.js?v=217">
+    <link rel="modulepreload" href="src/application/worldUseCases.js?v=215">
+    <link rel="modulepreload" href="src/domain/achievements.js?v=209">
+    <link rel="modulepreload" href="src/domain/adminConfig.js?v=212">
+    <link rel="modulepreload" href="src/domain/attackAreas.js?v=209">
+    <link rel="modulepreload" href="src/domain/bestiary.js?v=231">
+    <link rel="modulepreload" href="src/domain/blessings.js?v=209">
+    <link rel="modulepreload" href="src/domain/character.js?v=240">
+    <link rel="modulepreload" href="src/domain/charms.js?v=210">
+    <link rel="modulepreload" href="src/domain/cities.js?v=224">
+    <link rel="modulepreload" href="src/domain/combatFormulas.js?v=242">
+    <link rel="modulepreload" href="src/domain/combatFx.js?v=211">
+    <link rel="modulepreload" href="src/domain/dailyReward.js?v=210">
+    <link rel="modulepreload" href="src/domain/elements.js?v=209">
+    <link rel="modulepreload" href="src/domain/gameState.js?v=213">
+    <link rel="modulepreload" href="src/domain/highscoreCategories.js?v=210">
+    <link rel="modulepreload" href="src/domain/imbuements.js?v=209">
+    <link rel="modulepreload" href="src/domain/items.js?v=224">
+    <link rel="modulepreload" href="src/domain/outfitColors.js?v=209">
+    <link rel="modulepreload" href="src/domain/outfits.js?v=209">
+    <link rel="modulepreload" href="src/domain/prey.js?v=209">
+    <link rel="modulepreload" href="src/domain/progression.js?v=212">
+    <link rel="modulepreload" href="src/domain/rarity.js?v=210">
+    <link rel="modulepreload" href="src/domain/rtcConfig.js?v=243">
+    <link rel="modulepreload" href="src/domain/shopCatalog.js?v=212">
+    <link rel="modulepreload" href="src/domain/soul.js?v=151">
+    <link rel="modulepreload" href="src/domain/spells.js?v=211">
+    <link rel="modulepreload" href="src/domain/stamina.js?v=209">
+    <link rel="modulepreload" href="src/domain/training.js?v=211">
+    <link rel="modulepreload" href="src/i18n/i18n.js?v=227">
+    <link rel="modulepreload" href="src/i18n/locales/en.js?v=227">
+    <link rel="modulepreload" href="src/i18n/locales/pt.js?v=227">
+    <link rel="modulepreload" href="src/infrastructure/authClient.js?v=218">
+    <link rel="modulepreload" href="src/infrastructure/outfitAssets.js?v=209">
+    <link rel="modulepreload" href="src/infrastructure/outfitRenderer.js?v=209">
+    <link rel="modulepreload" href="src/infrastructure/outfitWalkRenderer.js?v=209">
+    <link rel="modulepreload" href="src/infrastructure/realtimeClient.js?v=218">
+    <link rel="modulepreload" href="src/infrastructure/storage.js?v=209">
+    <link rel="modulepreload" href="src/infrastructure/supabaseClient.js?v=210">
+    <link rel="modulepreload" href="src/infrastructure/tibiaSprites.js?v=214">
+    <link rel="modulepreload" href="src/shared/eventBus.js?v=211">
+    <link rel="modulepreload" href="src/ui/achievementsPanel.js?v=209">
+    <link rel="modulepreload" href="src/ui/adminPanel.js?v=220">
+    <link rel="modulepreload" href="src/ui/arenaPanel.js?v=211">
+    <link rel="modulepreload" href="src/ui/authPanel.js?v=210">
+    <link rel="modulepreload" href="src/ui/battleModal.js?v=209">
+    <link rel="modulepreload" href="src/ui/battlePassPanel.js?v=212">
+    <link rel="modulepreload" href="src/ui/bestiaryPanel.js?v=216">
+    <link rel="modulepreload" href="src/ui/boostedPanel.js?v=216">
+    <link rel="modulepreload" href="src/ui/bossRushPanel.js?v=216">
+    <link rel="modulepreload" href="src/ui/characterPanel.js?v=221">
+    <link rel="modulepreload" href="src/ui/dailyRewardPanel.js?v=212">
+    <link rel="modulepreload" href="src/ui/graduationModal.js?v=213">
+    <link rel="modulepreload" href="src/ui/highscoresPanel.js?v=215">
+    <link rel="modulepreload" href="src/ui/huntPanel.js?v=230">
+    <link rel="modulepreload" href="src/ui/imbuementPanel.js?v=209">
+    <link rel="modulepreload" href="src/ui/inventoryAndEquipmentPanel.js?v=214">
+    <link rel="modulepreload" href="src/ui/marketPanel.js?v=214">
+    <link rel="modulepreload" href="src/ui/outfitPicker.js?v=210">
+    <link rel="modulepreload" href="src/ui/rtcPanel.js?v=245">
+    <link rel="modulepreload" href="src/ui/settingsPanel.js?v=213">
+    <link rel="modulepreload" href="src/ui/shared.js?v=216">
+    <link rel="modulepreload" href="src/ui/shopPanel.js?v=218">
+    <link rel="modulepreload" href="src/ui/skillsPanel.js?v=212">
+    <link rel="modulepreload" href="src/ui/spellsPanel.js?v=125">
+    <link rel="modulepreload" href="src/ui/stageWalk.js?v=50">
+    <link rel="modulepreload" href="src/ui/tabs.js?v=227">
+    <link rel="modulepreload" href="src/ui/tasksPanel.js?v=218">
+    <link rel="modulepreload" href="src/ui/trainingPanel.js?v=219">
+    <link rel="modulepreload" href="src/ui/trainingStage.js?v=44">
+    <link rel="modulepreload" href="src/ui/uiIcons.js?v=214">
+    <link rel="modulepreload" href="src/ui/worldsPanel.js?v=210">
+    <link rel="modulepreload" href="src/ui/zonePicker.js?v=221">
     <!-- modulepreload:fim -->
 </head>
 <body>
@@ -573,6 +573,54 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=297"></script>
+  <!-- AUTO-CURA DE MÓDULO CACHEADO PELA METADE.
+       Precisa ser script CLÁSSICO e vir ANTES do módulo: quando um import
+       falha, main.js nem chega a executar, então nenhum código dentro do grafo
+       de módulos consegue reagir. Só um listener fora dele enxerga o erro.
+
+       Por que acontece: `?v=N` NÃO identifica conteúdo no servidor — é só query
+       string, e o GitHub Pages devolve o que estiver no caminho naquele
+       instante. Quem carrega a página no meio da propagação de um deploy pega
+       o index.html NOVO (que pede ?v=218) junto com os BYTES VELHOS daquele
+       arquivo, e o navegador guarda esse par errado por max-age=600. Resultado:
+       10 minutos de "does not provide an export named ...", com o jogo
+       totalmente morto e nada que o jogador possa fazer além de esperar.
+       Aconteceu em produção; o versionamento sozinho não protege disso.
+
+       A cura: revalidar à força o arquivo que falhou (fetch cache:'reload'
+       atualiza a entrada do cache HTTP) e recarregar. Limite de tentativas em
+       sessionStorage pra nunca virar laço de reload. -->
+  <script>
+    (function () {
+      var CHAVE = 'rubinot_recarga_modulo';
+      var LIMITE = 3;
+      window.addEventListener('error', function (ev) {
+        var msg = (ev && ev.message) || '';
+        var ehModulo = /does not provide an export|Failed to fetch dynamically imported|Unexpected token|error loading dynamically imported/i.test(msg);
+        if (!ehModulo) return;
+        var tentativas = parseInt(sessionStorage.getItem(CHAVE) || '0', 10);
+        if (tentativas >= LIMITE) return;   // desiste em vez de recarregar pra sempre
+        sessionStorage.setItem(CHAVE, String(tentativas + 1));
+        // O URL do módulo defeituoso vem na mensagem entre aspas simples.
+        var alvo = (msg.match(/'([^']+\.js[^']*)'/) || [])[1];
+        var revalidar = alvo
+          ? fetch(new URL(alvo, location.href).href, { cache: 'reload' }).catch(function () {})
+          : Promise.resolve();
+        revalidar.then(function () {
+          // Também revalida o index.html, que pode estar apontando pra um par
+          // de versões que não existe mais.
+          return fetch(location.href, { cache: 'reload' }).catch(function () {});
+        }).then(function () { location.reload(); });
+      }, true);
+      // Chegou até aqui numa carga saudável: zera o contador pra que uma falha
+      // futura tenha as tentativas inteiras de novo.
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          if (window.__jogoVivo) sessionStorage.removeItem(CHAVE);
+        }, 4000);
+      });
+    })();
+  </script>
+  <script type="module" src="src/main.js?v=298"></script>
 </body>
 </html>
