@@ -934,17 +934,10 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   animation: monster-walk 0.62s ease-in-out infinite;
   min-height: 52px;
 }
-/* tamanho PADRONIZADO do monstro no palco: caixa fixa 52x52 + object-fit
-   contain, pra todo bicho aparecer no mesmo tamanho (independente do sprite
-   nativo) e não dominar/encostar no boneco. O sprite em si já vem recortado/
-   recentralizado (ver infrastructure/tibiaSprites.js), então não precisa de
-   nenhum ajuste extra de escala aqui. */
+/* Vale pra <img> E pro <span> de emoji do fallback. O TAMANHO fica na regra
+   img.monster-sprite lá embaixo, junto de img.tibia-icon — ver o porquê lá. */
 .monster-sprite {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
   image-rendering: pixelated; /* mantém o pixel art do Tibia nítido */
-  filter: drop-shadow(0 3px 5px #00000044);
   font-size: 3.2rem; /* fallback emoji */
 }
 .monster-sprite-wrap.dead .monster-sprite { filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044); }
@@ -1065,6 +1058,23 @@ img.tibia-icon {
   vertical-align: -0.2em;
   image-rendering: pixelated;
   filter: drop-shadow(0 1px 1px #00000033);
+}
+
+/* Tamanho PADRONIZADO do monstro no palco: caixa fixa 52x52 + object-fit
+   contain, pra todo bicho aparecer no mesmo tamanho (independente do sprite
+   nativo) e não dominar/encostar no boneco.
+   Mora AQUI, e não junto das outras regras de .monster-sprite, pelo mesmo motivo
+   de img.tab-icon: `img.tibia-icon` tem especificidade 0-1-1 e ganhava de
+   `.monster-sprite` (0-1-0), então a caixa fixa era letra morta — a criatura
+   era desenhada com `height: 1.3em; width: auto`, ou seja 66,5px de altura e
+   largura livre por sprite, e ainda ficava sem sombra própria. Pior: com
+   `width: auto` a largura só existe depois que o WebP decodifica, então cada
+   criatura nascia com 0px e "pulava" pro tamanho final ao carregar. */
+img.monster-sprite {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px #00000044);
 }
 
 /* Ícones das abas de navegação: sprite pixel-art real do TibiaWiki no lugar do
