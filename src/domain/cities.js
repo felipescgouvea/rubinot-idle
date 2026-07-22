@@ -44,6 +44,21 @@ export function cityName(cityId) {
 // até nível 8 — só então pode viajar pro mainland (ver ui/zonePicker.js: cityCard).
 export const ROOKGAARD_LEVEL_CAP = 8;
 
+// É o MESMO marco: no Tibia real, sair da ilha inicial e escolher a vocação
+// definitiva são o mesmo evento (você atravessa o portão da vocação e viaja).
+// Por isso este é um apelido de ROOKGAARD_LEVEL_CAP, e não um segundo número —
+// dois valores separados poderiam divergir e criar um limbo onde o jogador
+// escolheu a vocação mas continua preso na ilha (ou o contrário).
+export const GRADUATION_LEVEL = ROOKGAARD_LEVEL_CAP;
+
+// Até a graduação, a vocação é PROVISÓRIA: o jogador escolhe um set na criação
+// e joga com ele, mas pode trocar ao graduar. Fiel ao Dawnport real, onde
+// atravessar um portão "te transforma" naquela vocação e dá pra trocar de
+// portão quantas vezes quiser até partir pro mainland.
+export function canGraduate(level, jaGraduou) {
+  return !jaGraduou && (level || 1) >= GRADUATION_LEVEL;
+}
+
 // Dawnport é a OUTRA ilha de treino (ver domain/bestiary.js: ZONES.dawnport_hunt)
 // — mesma trava (ou melhor, ausência dela) do Rookgaard: fiel ao Tibia real,
 // onde Dawnport também ficava disponível desde o nível 1, sem precisar

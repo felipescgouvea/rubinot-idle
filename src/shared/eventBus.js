@@ -65,4 +65,8 @@ export const EVENTS = {
   // precisa saber que tasks existem, só anuncia "matei uma criatura X")
   MONSTER_KILLED: 'monsterKilled',
   LEVEL_UP: 'levelUp',
+  // Graduação: o personagem atingiu o nível de sair da ilha inicial e ainda não
+  // escolheu a vocação definitiva (ver application/characterUseCases.js:
+  // graduate / ui/graduationModal.js).
+  GRADUATION: 'graduation',
 };

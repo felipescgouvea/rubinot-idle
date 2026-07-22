@@ -864,6 +864,17 @@ export default {
 
   // ---- character use-cases (application/characterUseCases.js) ----
   'character.vocationChosen': '{vocation} vocation chosen! Starter kit equipped.',
+  'hunt.starterSetHint': 'Pick the set you want to start with. You can change vocation at level 8, when you leave for the mainland.',
+  'character.graduated': 'Graduation complete! You are a {vocation} and received the Graduate Set.',
+  'character.graduatedSwitched': 'You switched to {vocation}! Graduate Set received.',
+  'graduation.title': 'Leaving the Starter Island',
+  'graduation.intro': 'You reached level {level}. Time to leave the starter island for the mainland — confirm your vocation and take your equipment for the journey.',
+  'graduation.current': 'current',
+  'graduation.keepHint': 'You keep the vocation you have been playing.',
+  'graduation.switchHint': 'You will become a {vocation}. This choice is final.',
+  'graduation.kitTitle': '{vocation} Graduate Set',
+  'graduation.confirmKeep': 'Confirm and travel to the mainland',
+  'graduation.confirmSwitch': 'Become a {vocation} and travel',
 
   // ---- blessing use-cases (application/blessingUseCases.js) ----
   'hunt.blessingsMaxed': 'You already have all blessings.',

@@ -2736,3 +2736,66 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   background: radial-gradient(circle, #6fe39a 0%, rgba(111,227,154,.35) 45%, transparent 72%);
   box-shadow: 0 0 12px 4px rgba(111,227,154,.55);
 }
+
+/* ===== TELA DE GRADUAÇÃO (nível 8) =====
+   Cobre a tela inteira porque é um marco do personagem, não um painel lateral:
+   o jogador escolhe a vocação DEFINITIVA aqui. Sem clique-fora pra fechar (ver
+   index.html) — a decisão precisa ser tomada. */
+#graduation-overlay {
+  position: fixed; inset: 0; z-index: 1200;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(8, 6, 3, .82); backdrop-filter: blur(2px);
+  padding: 16px;
+}
+#graduation-box {
+  width: min(560px, 96vw); max-height: 92vh; overflow-y: auto;
+  background: linear-gradient(180deg, #2b2317, #1b1610);
+  border: 2px solid #6b5327; border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.6);
+}
+.graduation-header {
+  padding: 14px 18px; border-bottom: 1px solid #4a3a1e;
+  background: linear-gradient(180deg, #3a2f1c, #2b2317);
+}
+.graduation-header h3 { margin: 0; font-size: 1.15rem; color: #ffd98a; letter-spacing: .3px; }
+#graduation-body { padding: 16px 18px 20px; }
+.grad-intro { margin: 0 0 14px; line-height: 1.5; color: #ddd2bd; }
+
+.grad-vocs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.grad-voc {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 6px; cursor: pointer;
+  background: #241d13; border: 2px solid #4a3a1e; border-radius: 8px;
+  color: #d8ccb4; font-size: .84rem;
+}
+.grad-voc:hover { border-color: #7a6130; }
+.grad-voc.active { border-color: #ffc14d; background: #33280f; color: #ffe3a6; }
+.grad-voc-name { font-weight: 600; }
+.grad-voc-tag { font-size: .68rem; opacity: .75; text-transform: uppercase; letter-spacing: .4px; }
+
+.grad-hint { margin: 12px 0 4px; font-size: .88rem; color: #b9ab90; min-height: 1.2em; }
+.grad-kit-title { margin: 14px 0 8px; font-size: .95rem; color: #ffd98a; }
+.grad-kit { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.grad-kit-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 4px; background: #1e1810; border: 1px solid #4a3a1e; border-radius: 6px;
+  text-align: center;
+}
+.grad-kit-icon { width: 32px; height: 32px; image-rendering: pixelated; }
+.grad-kit-name { font-size: .72rem; color: #c8bda4; line-height: 1.2; }
+.grad-kit-qty { font-size: .72rem; color: #ffc14d; font-weight: 600; }
+
+.grad-confirm {
+  width: 100%; margin-top: 18px; padding: 12px;
+  font-size: 1rem; font-weight: 600; cursor: pointer;
+  background: linear-gradient(180deg, #f3b13a, #d1871a);
+  border: 2px solid #8a5c12; border-radius: 8px; color: #241a06;
+}
+.grad-confirm:hover { filter: brightness(1.08); }
+
+@media (max-width: 480px) {
+  .grad-vocs { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Aviso da criação: o set é provisório, a vocação se decide no nível 8. */
+#starter-set-hint { margin: 4px 0 10px; font-size: .82rem; color: #b9ab90; line-height: 1.4; }

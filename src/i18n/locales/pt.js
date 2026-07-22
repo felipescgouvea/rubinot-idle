@@ -865,6 +865,17 @@ export default {
 
   // ---- character use-cases (application/characterUseCases.js) ----
   'character.vocationChosen': 'Vocação {vocation} escolhida! Kit inicial equipado.',
+  'hunt.starterSetHint': 'Escolha o set com que quer começar. Você pode trocar de vocação no nível 8, ao partir para o mainland.',
+  'character.graduated': 'Graduação concluída! Você é {vocation} e recebeu o Graduate Set.',
+  'character.graduatedSwitched': 'Você trocou para {vocation}! Graduate Set recebido.',
+  'graduation.title': 'Saindo da Ilha Inicial',
+  'graduation.intro': 'Você chegou ao nível {level}. É hora de deixar a ilha inicial rumo ao mainland — confirme sua vocação e leve seu equipamento para a jornada.',
+  'graduation.current': 'atual',
+  'graduation.keepHint': 'Você mantém a vocação com que vinha jogando.',
+  'graduation.switchHint': 'Você se tornará {vocation}. Esta escolha é definitiva.',
+  'graduation.kitTitle': 'Graduate Set de {vocation}',
+  'graduation.confirmKeep': 'Confirmar e viajar para o mainland',
+  'graduation.confirmSwitch': 'Tornar-se {vocation} e viajar',
 
   // ---- blessing use-cases (application/blessingUseCases.js) ----
   'hunt.blessingsMaxed': 'Você já tem todas as bênçãos.',

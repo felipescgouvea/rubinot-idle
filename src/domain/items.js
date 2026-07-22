@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=204';
+import { primaryStatKeyForItem } from './rarity.js?v=205';
 
 // A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
 // Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
@@ -9881,6 +9881,29 @@ export const STARTER_SUPPLIES = {
   sorcerer: { meat: 1, mana_potion: 10, small_health_potion: 2, light_stone_shower_rune: 2, lightest_missile_rune: 2 },
   druid:    { meat: 1, mana_potion: 10, small_health_potion: 2, light_stone_shower_rune: 2, lightest_missile_rune: 2 },
 };
+
+// Kit de GRADUAÇÃO — entregue ao atingir o nível da graduação, quando o jogador
+// confirma (ou troca) a vocação e parte pro mainland. Fiel ao Dawnport Graduate
+// Set real do Tibia (TibiaWiki: Dawnport Set, seção "Graduate Sets"): é o
+// equipamento de despedida da ilha inicial, melhor que o Training Set dado na
+// criação. Não confundir com STARTER_KITS, que é o Training Set.
+//
+// Diferença real entre os dois, segundo a fonte: o knight sobe de Dagger+couro
+// pra Jagged Sword + Brass/Soldier + Steel Shield; o paladino troca o couro
+// pela Ranger's Cloak/Ranger Legs e a Simple Arrow pela Arrow comum; os magos
+// ganham Mage Hat + Magician's Robe + Spellbook e a wand/rod de verdade
+// (Wand of Vortex pro sorcerer, Snakebite Rod pro druida).
+export const GRADUATE_KITS = {
+  knight:   { weapon: 'jagged_sword',   armor: 'brass_armor',      shield: 'steel_shield', helmet: 'soldier_helmet', legs: 'brass_legs',   boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'arrow', armor: 'rangers_cloak',                        helmet: 'leather_helmet', legs: 'ranger_legs',  boots: 'leather_boots' },
+  sorcerer: { weapon: 'wand_of_vortex',  armor: 'magicians_robe',  shield: 'spellbook',    helmet: 'mage_hat',       legs: 'leather_legs', boots: 'leather_boots' },
+  druid:    { weapon: 'snakebite_rod',   armor: 'magicians_robe',  shield: 'spellbook',    helmet: 'mage_hat',       legs: 'leather_legs', boots: 'leather_boots' },
+};
+
+// Munição do kit de graduação: 100 Arrows, como no Graduate Paladin Set real.
+// Mesma razão do STARTER_AMMO_QTY — munição é empilhável e consumível, então
+// entregar 1 equivale a "sem flecha".
+export const GRADUATE_AMMO_QTY = 100;
 
 export const EQUIPMENT_SLOTS = ['helmet', 'weapon', 'armor', 'shield', 'ammo', 'ring', 'legs', 'boots'];
 export const EQUIPPABLE_TYPES = ['weapon', 'armor', 'shield', 'helmet', 'ammo', 'ring', 'legs', 'boots'];

@@ -1,21 +1,21 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState, replaceAccount } from './gameStore.js?v=207';
-import { createDefaultState } from '../domain/gameState.js?v=207';
-import { createDefaultSkills } from '../domain/character.js?v=234';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=237';
-import { isSpellAvailable } from '../domain/spells.js?v=205';
-import { findOutfit } from '../domain/outfits.js?v=203';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=203';
-import { ZONES } from '../domain/bestiary.js?v=225';
-import { isRelicId, STARTER_KITS } from '../domain/items.js?v=218';
-import { addItemToInventory } from './inventoryCore.js?v=205';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=204';
-import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=206';
-import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=203';
-import { t } from '../i18n/i18n.js?v=221';
-import { getMaxHp, getMaxMana } from './stats.js?v=204';
-import { STAMINA_MAX } from '../domain/stamina.js?v=203';
+import { G, replaceState, replaceAccount } from './gameStore.js?v=208';
+import { createDefaultState } from '../domain/gameState.js?v=208';
+import { createDefaultSkills } from '../domain/character.js?v=235';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=238';
+import { isSpellAvailable } from '../domain/spells.js?v=206';
+import { findOutfit } from '../domain/outfits.js?v=204';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=204';
+import { ZONES } from '../domain/bestiary.js?v=226';
+import { isRelicId, STARTER_KITS } from '../domain/items.js?v=219';
+import { addItemToInventory } from './inventoryCore.js?v=206';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=205';
+import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=207';
+import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=204';
+import { t } from '../i18n/i18n.js?v=222';
+import { getMaxHp, getMaxMana } from './stats.js?v=205';
+import { STAMINA_MAX } from '../domain/stamina.js?v=204';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
 // nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não
@@ -106,6 +106,11 @@ export function loadGame() {
   if (!G.autoSell) G.autoSell = { enabled: false, maxValue: 50 };
   if (typeof G.stamina !== 'number') G.stamina = STAMINA_MAX;
   if (typeof G.promoted !== 'boolean') G.promoted = false; // migração: promoção de vocação é nova
+  // migração: graduação (escolha definitiva de vocação + Graduate Set) é nova.
+  // Default false de propósito: quem já passou do nível 8 sem graduar vê a tela
+  // e recebe o kit, em vez de ficar sem a recompensa por ter criado o
+  // personagem antes da mudança.
+  if (typeof G.graduated !== 'boolean') G.graduated = false;
   if (G.title === undefined) G.title = null; // migração: título de achievement é novo
   if (!G.imbuements || typeof G.imbuements !== 'object') G.imbuements = {}; // migração: imbuements são novos
   if (typeof G.bpPremium !== 'boolean') G.bpPremium = false; // migração: trilha premium do BP é nova

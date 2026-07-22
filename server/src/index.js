@@ -43,7 +43,8 @@ import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, TRA
 import { SPELLS as SPELLS_TREINO } from '../../src/domain/spells.js?v=127';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, ITEMS } from '../../src/domain/items.js?v=139';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../../src/domain/items.js?v=139';
+import { GRADUATION_LEVEL } from '../../src/domain/cities.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
@@ -567,6 +568,44 @@ const server = http.createServer(async (req, res) => {
         await insertRow('player_stats', { user_id: user.id, slot, gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, blessings: 0, stamina: STAMINA_MAX });
       }
       return send(res, 200, { ok: true });
+    }
+
+    // GRADUAÇÃO (nível 8) — o jogador confirma ou TROCA a vocação e recebe o
+    // Graduate Set pro mainland (ver domain/items.js: GRADUATE_KITS, fiel ao
+    // Dawnport Graduate Set do TibiaWiki).
+    //
+    // Tudo é conferido AQUI e não no cliente, porque esta rota troca vocação e
+    // entrega equipamento: sem as duas checagens abaixo, um cliente adulterado
+    // graduaria repetidamente, trocando de vocação e acumulando o kit a cada
+    // chamada. O nível vem do banco, não do corpo do pedido, pela mesma razão.
+    if (url.pathname === '/character/graduate' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      const vocation = typeof body.vocation === 'string' ? body.vocation : null;
+      if (slot === null || !vocation || !GRADUATE_KITS[vocation]) return send(res, 400, { error: 'slot ou vocation inválido' });
+
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      if (!stats) return send(res, 404, { error: 'personagem não encontrado' });
+      if (stats.graduated) return send(res, 409, { error: 'personagem já graduou' });
+      if ((stats.level || 1) < GRADUATION_LEVEL) {
+        return send(res, 403, { error: `graduação exige nível ${GRADUATION_LEVEL}` });
+      }
+
+      const kit = GRADUATE_KITS[vocation] || {};
+      for (const [eqSlot, itemId] of Object.entries(kit)) {
+        const qty = eqSlot === 'ammo' ? GRADUATE_AMMO_QTY : 1;
+        // Munição SOMA à pilha existente em vez de sobrescrever: o paladino
+        // chega no 8 com flechas no bolso, e um upsert com valor fixo apagaria
+        // o que ele juntou.
+        const atual = await selectOne('player_inventory', { user_id: user.id, slot, item_id: itemId });
+        const novaQty = (atual ? Number(atual.qty) || 0 : 0) + qty;
+        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty: novaQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+      }
+      await upsertRow('player_stats', { user_id: user.id, slot, graduated: true, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, vocation, graduated: true });
     }
 
     // Comprar bênção — valida gold/teto no servidor (mesma regra de

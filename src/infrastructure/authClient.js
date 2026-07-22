@@ -331,6 +331,13 @@ export function grantStarterKit(slot, vocation) {
   return huntFetch('/character/starter-kit', { method: 'POST', body: { slot, vocation } });
 }
 
+// Kit de GRADUAÇÃO (nível 8) — o servidor confere o nível e se já graduou antes
+// de conceder, porque esta rota TROCA a vocação: sem a checagem lá, um cliente
+// adulterado trocaria de vocação e pegaria o set quantas vezes quisesse.
+export function grantGraduateKit(slot, vocation) {
+  return huntFetch('/character/graduate', { method: 'POST', body: { slot, vocation } });
+}
+
 // Compra de bênção validada no servidor (gold e teto de 5 conferidos lá —
 // ver server/src/index.js: /buy-blessing). Retorna { ok, gold, blessings }.
 export function buyBlessingOnServer(slot) {

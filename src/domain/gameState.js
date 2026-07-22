@@ -3,14 +3,19 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=234';
-import { createDefaultRtc } from './rtcConfig.js?v=237';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=203';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=206';
+import { createDefaultSkills } from './character.js?v=235';
+import { createDefaultRtc } from './rtcConfig.js?v=238';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=204';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=207';
 
 export function createDefaultState() {
   return {
     vocation: null,
+    // Até a GRADUAÇÃO (nível 8, ver domain/cities.js: GRADUATION_LEVEL) a
+    // vocação acima é PROVISÓRIA — vem do set escolhido na criação e pode ser
+    // trocada ao graduar, como nos portões do Dawnport real. Depois de graduar
+    // ela é definitiva e o jogador recebe o Graduate Set pro mainland.
+    graduated: false,
     level: 1,
     xp: 0,
     gold: 0,
