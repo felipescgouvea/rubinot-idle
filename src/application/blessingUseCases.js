@@ -2,12 +2,12 @@
 // e melhoram o revive. Consumidas ao morrer (ver server/src/huntEngine.js —
 // desde o Marco 6, a contagem de bênçãos e o gasto de gold são validados no
 // servidor, não só declarados pelo cliente).
-import { G, ACCOUNT } from './gameStore.js?v=200';
-import { MAX_BLESSINGS, blessingCost } from '../domain/blessings.js?v=196';
-import { emit, EVENTS } from '../shared/eventBus.js?v=198';
-import { saveGame } from './saveGameUseCase.js?v=200';
-import { buyBlessingOnServer } from '../infrastructure/authClient.js?v=205';
-import { t } from '../i18n/i18n.js?v=214';
+import { G, ACCOUNT } from './gameStore.js?v=201';
+import { MAX_BLESSINGS, blessingCost } from '../domain/blessings.js?v=197';
+import { emit, EVENTS } from '../shared/eventBus.js?v=199';
+import { saveGame } from './saveGameUseCase.js?v=201';
+import { buyBlessingOnServer } from '../infrastructure/authClient.js?v=206';
+import { t } from '../i18n/i18n.js?v=215';
 
 export async function buyBlessing() {
   G.blessings = G.blessings || 0;

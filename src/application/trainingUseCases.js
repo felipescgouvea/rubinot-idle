@@ -13,15 +13,15 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G, ACCOUNT } from './gameStore.js?v=200';
-import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=198';
-import { TIBIA_SKILLS } from '../domain/character.js?v=227';
-import { SPELLS } from '../domain/spells.js?v=198';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=198';
-import { stopHunt } from './huntUseCases.js?v=264';
-import { saveGame } from './saveGameUseCase.js?v=200';
-import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=207';
-import { t } from '../i18n/i18n.js?v=214';
+import { G, ACCOUNT } from './gameStore.js?v=201';
+import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=199';
+import { TIBIA_SKILLS } from '../domain/character.js?v=228';
+import { SPELLS } from '../domain/spells.js?v=199';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=199';
+import { stopHunt } from './huntUseCases.js?v=265';
+import { saveGame } from './saveGameUseCase.js?v=201';
+import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=208';
+import { t } from '../i18n/i18n.js?v=215';
 
 let trainingInterval = null;
 let creditBusy = false;
@@ -96,14 +96,19 @@ export async function startOnlineTraining(skillId, spellId = null) {
     // ver ui/trainingPanel.js). O filtro exigia type === 'attack', o que fazia o
     // botão "Iniciar Treino Online" não fazer NADA, em silêncio, quando a magia
     // escolhida era de cura — o caso normal do Paladino abaixo do nível 23.
+    // Conjuração e utilidade ficam de fora: a primeira exige soul points e
+    // Blank Rune que o treino não consome (seria ML de graça), e a segunda não
+    // tem o que fazer contra um boneco. Sobram ataque e cura, que é o que o
+    // personagem realmente ficaria lançando no dummy.
     const spell = spellId ? SPELLS[spellId] : null;
-    if (!spell || !spell.voc.includes(G.vocation) || G.level < spell.level) {
+    const treinavel = spell && (spell.type === 'attack' || spell.type === 'heal');
+    if (!spell || !treinavel || !spell.voc.includes(G.vocation) || G.level < spell.level) {
       emit(EVENTS.NOTIFY, { msg: t('training.pickSpellFirst'), type: 'error' });
       return;
     }
   }
   stopHunt();
-  const res = await trainStartOnServer(ACCOUNT.activeSlot, skillId, 'online', G.vocation, (G.boosts && G.boosts.training) || 0);
+  const res = await trainStartOnServer(ACCOUNT.activeSlot, skillId, 'online', G.vocation, (G.boosts && G.boosts.training) || 0, spellId);
   if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' }); return; }
   applyServerSkills(res.skills);
   G.trainingSkill = skillId;
@@ -169,7 +174,7 @@ export async function resumeTrainingOnLoad() {
     }
   } else {
     // Online: reancora (descarta o tempo de aba fechada) sem creditar o gap.
-    await trainStartOnServer(ACCOUNT.activeSlot, G.trainingSkill, 'online', G.vocation, (G.boosts && G.boosts.training) || 0);
+    await trainStartOnServer(ACCOUNT.activeSlot, G.trainingSkill, 'online', G.vocation, (G.boosts && G.boosts.training) || 0, G.trainingSpell || null);
   }
   startTrainingLoop();
   emit(EVENTS.TRAINING_PANEL);

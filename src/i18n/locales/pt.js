@@ -574,6 +574,8 @@ export default {
   'training.trainingSkill': 'Treinando {skill}',
   'training.rateInfo': '+{rate} tentativas/min · continua enquanto você está fora (até 8h). Iniciar uma caçada encerra o treino.',
   'training.rateInfoOnline': '+{rate} tentativas/min. Iniciar uma caçada encerra o treino.',
+  'training.rateInfoMagic': "+{rate} de mana gasta/min · o Magic Level sobe pela mana consumida nas magias. Continua enquanto você está fora (até 8h). Iniciar uma caçada encerra o treino.",
+  'training.rateInfoOnlineMagic': "+{rate} de mana gasta/min · o Magic Level sobe pela mana consumida, limitada pela sua regeneração. Iniciar uma caçada encerra o treino.",
   'training.stopTraining': 'Encerrar Treino',
   'training.intro': 'Escolha uma skill para treinar nas dummies. O treino roda em segundo plano (inclusive offline) e pausa a caçada.',
   'training.level': 'Nv {lvl}',

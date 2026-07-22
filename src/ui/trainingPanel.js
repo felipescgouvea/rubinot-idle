@@ -1,15 +1,15 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=200';
-import { TIBIA_SKILLS } from '../domain/character.js?v=227';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor } from '../domain/training.js?v=198';
-import { SPELLS } from '../domain/spells.js?v=198';
-import { on, EVENTS } from '../shared/eventBus.js?v=198';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=203';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=204';
-import { t } from '../i18n/i18n.js?v=214';
-import { trainingStageHtml, mountTrainingStagePlayer } from './trainingStage.js?v=31';
+import { G } from '../application/gameStore.js?v=201';
+import { TIBIA_SKILLS, VOCATIONS } from '../domain/character.js?v=228';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=199';
+import { SPELLS } from '../domain/spells.js?v=199';
+import { on, EVENTS } from '../shared/eventBus.js?v=199';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=204';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=205';
+import { t } from '../i18n/i18n.js?v=215';
+import { trainingStageHtml, mountTrainingStagePlayer } from './trainingStage.js?v=32';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
@@ -17,8 +17,14 @@ let pickedTrainingSpell = null;
 
 function activeTrainingCard(mode) {
   const s = TIBIA_SKILLS[G.trainingSkill];
-  const rate = triesPerMinuteFor(G.trainingSkill) * (mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1);
   const spell = mode === 'online' && G.trainingSpell ? SPELLS[G.trainingSpell] : null;
+  // Magic Level não conta tentativas: conta MANA GASTA (ver domain/training.js).
+  // A tela dizia "+30 tentativas/min" pra ML, o que não existe no Tibia.
+  const ehMagia = G.trainingSkill === 'magic';
+  const mult = mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1;
+  const rate = ehMagia
+    ? manaSpentPerMinute(spell, (VOCATIONS[G.vocation] || {}).manaRegen) * mult
+    : triesPerMinuteFor(G.trainingSkill) * mult;
   // Online ganha um PALCO de verdade (boneco + dummy + projétil, ver
   // ui/trainingStage.js). Offline continua com o ícone: ali o jogo nem precisa
   // estar aberto, então animar não faz sentido.
@@ -89,9 +95,12 @@ function renderOnlineTrainingSection() {
   // ataque deixava o Paladino sem NENHUMA opção antes do nível 23 (a primeira
   // magia de ataque dele é Ethereal Spear), com a lista inteira cadeada.
   // Ordena por nível: as que já dá pra usar aparecem primeiro.
+  // Só ataque e cura: conjuração exige soul points e Blank Rune que o treino
+  // não consome (viraria ML de graça), e utilidade não tem o que fazer contra
+  // um boneco. Era por isso que aparecia "Conjure Explosive Arrow" na lista.
   const attackSpells = temMagia
     ? Object.entries(SPELLS)
-        .filter(([, sp]) => sp.voc.includes(G.vocation))
+        .filter(([, sp]) => sp.voc.includes(G.vocation) && (sp.type === 'attack' || sp.type === 'heal'))
         .sort((a, b) => a[1].level - b[1].level)
     : [];
   // O cabeçalho + explicação da magia só aparecem quando há TAMBÉM skill de

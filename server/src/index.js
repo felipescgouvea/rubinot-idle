@@ -40,6 +40,7 @@ import { ZONES } from '../../src/domain/bestiary.js?v=147';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=158';
 import { TIBIA_SKILLS, applySkillGain } from '../../src/domain/character.js?v=157';
 import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, TRAINING_WAND_MULT, triesForTraining } from '../../src/domain/training.js?v=127';
+import { SPELLS as SPELLS_TREINO } from '../../src/domain/spells.js?v=127';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
 import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, ITEMS } from '../../src/domain/items.js?v=139';
@@ -117,8 +118,15 @@ async function creditTraining(userId, slot, stats, vocation) {
   // offline de 12h inteiro.
   const boostEnd = stats.training_boost_until ? new Date(stats.training_boost_until).getTime() : 0;
   const boostedSec = Math.max(0, Math.min(elapsed, (Math.min(Date.now(), boostEnd) - since) / 1000));
-  const tries = triesForTraining(skillId, elapsed - boostedSec, base)
-              + triesForTraining(skillId, boostedSec, base * TRAINING_WAND_MULT);
+  // Magic Level precisa da MAGIA treinada e da regeneração da vocação: o que
+  // sobe ML é a mana gasta, e o que limita é quanta mana volta (ver
+  // domain/training.js: manaSpentPerMinute). Sem magia registrada, o treino de
+  // ML não rende — em vez de render um número inventado.
+  const ctx = skillId === 'magic'
+    ? { spell: SPELLS_TREINO[stats.training_spell] || null, manaRegen: (VOCATIONS[vocation] || {}).manaRegen || 0 }
+    : null;
+  const tries = triesForTraining(skillId, elapsed - boostedSec, base, ctx)
+              + triesForTraining(skillId, boostedSec, base * TRAINING_WAND_MULT, ctx);
   const skillsRow = await selectOne('player_skills', { user_id: userId, slot });
   const skills = (skillsRow && skillsRow.skills) || defaultSkills();
   if (tries <= 0) return { skills, tries: 0 };
@@ -787,6 +795,7 @@ const server = http.createServer(async (req, res) => {
       await upsertRow('player_stats', {
         user_id: user.id, slot,
         training_skill: body.skillId, training_since: new Date().toISOString(), training_mode: mode,
+        training_spell: body.skillId === 'magic' ? (SPELLS_TREINO[body.spellId] ? body.spellId : null) : null,
         training_boost_until: boostUntil > Date.now() ? new Date(boostUntil).toISOString() : null,
         updated_at: new Date().toISOString(),
       }, 'user_id,slot');
