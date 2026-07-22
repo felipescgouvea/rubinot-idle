@@ -72,6 +72,39 @@ try {
     await page.evaluate(t => document.querySelector(`.tab[data-tab="${t}"]`).click(), aba);
     await page.waitForTimeout(1400);
 
+    // SUBABAS. A auditoria só via a subaba PADRÃO de cada aba — foi assim que
+    // o RTC passou verde com a subaba de Cura estourando ("tiers is not
+    // defined"): Ataque abre primeiro, renderiza sem erro, e ninguém clicava
+    // em Cura. Agora clica em todas e reporta a que quebrar.
+    const subabas = await page.$$eval('.admin-subtab-btn, .rtc-subtab-btn',
+      bs => bs.filter(b => b.offsetParent !== null).map((b, i) => i));
+    for (const idx of subabas) {
+      const antes = achados.length;
+      await page.evaluate(i => {
+        const bs = [...document.querySelectorAll('.admin-subtab-btn, .rtc-subtab-btn')].filter(b => b.offsetParent !== null);
+        if (bs[i]) bs[i].click();
+      }, idx);
+      await page.waitForTimeout(900);
+      const rotulo = await page.evaluate(i => {
+        const bs = [...document.querySelectorAll('.admin-subtab-btn, .rtc-subtab-btn')].filter(b => b.offsetParent !== null);
+        return bs[i] ? bs[i].textContent.trim().slice(0, 24) : '?';
+      }, idx);
+      const vazia = await page.evaluate(() => {
+        const alvo = document.querySelector('#rtc-settings, .panel:not([style*="display: none"])');
+        return !alvo || alvo.innerText.trim().length < 20;
+      });
+      if (achados.length > antes) add(aba, 'js', `subaba "${rotulo}" quebrou ao abrir`);
+      else if (vazia) add(aba, 'estrutura', `subaba "${rotulo}" abriu vazia`);
+    }
+    if (subabas.length) {
+      // volta pra primeira, pra não deixar a aba num estado estranho pro resto
+      await page.evaluate(() => {
+        const bs = [...document.querySelectorAll('.admin-subtab-btn, .rtc-subtab-btn')].filter(b => b.offsetParent !== null);
+        if (bs[0]) bs[0].click();
+      });
+      await page.waitForTimeout(600);
+    }
+
     const r = await page.evaluate(async () => {
       const painel = document.querySelector('.tab-panel:not([style*="display: none"]), .panel:not([style*="display: none"])')
         || document.querySelector('main') || document.body;
