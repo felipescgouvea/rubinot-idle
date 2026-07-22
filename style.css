@@ -2837,3 +2837,22 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 #char-create-box #char-name-field { margin: 0 0 10px !important; }
 /* A dica transbordava a caixa (largura fixa herdada do layout antigo). */
 #char-create-box #starter-set-hint { margin: 0 0 12px; max-width: 100%; }
+
+/* RASTRO da magia de área — o caminho entre o conjurador e os alvos, que dá a
+   forma de cada magia (cone da wave, linha do beam). É deliberadamente mais
+   apagado e menor que o impacto: o acerto é o que importa, o rastro é leitura
+   de movimento. Sem ele, toda magia virava a mesma bola por bicho. */
+.combat-area-trail {
+  position: absolute;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 3;
+  opacity: .72;
+  animation: combat-trail-pop 0.52s ease-out forwards;
+}
+@keyframes combat-trail-pop {
+  0%   { opacity: 0; transform: scale(0.5); }
+  30%  { opacity: .72; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); }
+}

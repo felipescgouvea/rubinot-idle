@@ -1,21 +1,21 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=215';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=233';
-import { MONSTERS } from '../domain/bestiary.js?v=233';
-import { cityName } from '../domain/cities.js?v=218';
-import { ITEMS } from '../domain/items.js?v=226';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=216';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=211';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=213';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=218';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=216';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=279';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=211';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=216';
-import { t } from '../i18n/i18n.js?v=229';
-import { setStageWalking } from './stageWalk.js?v=52';
+import { G } from '../application/gameStore.js?v=216';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=234';
+import { MONSTERS } from '../domain/bestiary.js?v=234';
+import { cityName } from '../domain/cities.js?v=219';
+import { ITEMS } from '../domain/items.js?v=227';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=217';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=212';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=214';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=219';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=217';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=280';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=212';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=217';
+import { t } from '../i18n/i18n.js?v=230';
+import { setStageWalking } from './stageWalk.js?v=53';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -89,24 +89,70 @@ export function playAreaEffect({ effect, shape, targetUid } = {}) {
   // sai sobre o próprio boneco em vez de sumir sem explicação.
   if (!atingidos.length) atingidos.push(playerWrap);
 
-  for (const el of atingidos) {
-    const r = el.getBoundingClientRect();
-    if (!r.width || !r.height) continue;
+  // Ancora no SPRITE da criatura, não no elemento inteiro: cada `.stage-monster`
+  // é sprite + barra de vida empilhados, então o centro da caixa toda cai ENTRE
+  // os dois e o efeito aparecia visivelmente abaixo do bicho.
+  const caixaSprite = el => (el.querySelector('.monster-sprite-wrap') || el).getBoundingClientRect();
+
+  const solta = (x, y, lado, classe) => {
     const img = document.createElement('img');
-    img.className = 'combat-area-tile';
+    img.className = classe;
     img.src = url;
     img.alt = '';
-    // Cobre a criatura inteira com uma folga, com piso pra que bicho pequeno
-    // não receba um efeito quase invisível.
-    const lado = Math.max(34, Math.max(r.width, r.height) * 1.15);
     img.style.width = lado + 'px';
     img.style.height = lado + 'px';
     img.style.marginLeft = (-lado / 2) + 'px';
     img.style.marginTop = (-lado / 2) + 'px';
-    img.style.left = (r.left - sr.left + r.width / 2) + 'px';
-    img.style.top = (r.top - sr.top + r.height / 2) + 'px';
+    img.style.left = x + 'px';
+    img.style.top = y + 'px';
     stage.appendChild(img);
     setTimeout(() => img.remove(), 720);
+  };
+
+  // ---- RASTRO: a forma da magia, do boneco até a fileira de criaturas ----
+  // Só desenhar em cima de quem apanha resolvia a colisão mas apagava a
+  // IDENTIDADE de cada magia: onda, feixe e bola viravam a mesma bola por bicho
+  // (reclamação do Felipe: "você estragou a wave"). O rastro devolve a forma —
+  // um cone que abre, um feixe reto — ocupando o vão entre o conjurador e os
+  // alvos, que antes ficava vazio. Ele NÃO substitui o impacto: é o caminho,
+  // não o acerto.
+  const pr = playerWrap.getBoundingClientRect();
+  const px = pr.left - sr.left + pr.width / 2;
+  const py = pr.top - sr.top + pr.height / 2;
+  const caixas = atingidos.map(caixaSprite).filter(r => r.width && r.height);
+  if (caixas.length && (shape === 'wave' || shape === 'beam')) {
+    // Altura do vão e largura ocupada pelos alvos, pra escalar a forma ao palco
+    // em vez de usar um tamanho de tile fixo (que não conhece este layout).
+    const alvoY = Math.min(...caixas.map(r => r.top - sr.top + r.height / 2));
+    const esq = Math.min(...caixas.map(r => r.left - sr.left));
+    const dir = Math.max(...caixas.map(r => r.right - sr.left));
+    const vao = py - alvoY;
+    if (vao > 30) {
+      const passos = 4;
+      const ladoRastro = Math.max(22, Math.min(34, vao / passos * 0.9));
+      for (let i = 1; i <= passos; i++) {
+        const t = i / (passos + 1);            // 0 = boneco, 1 = alvos
+        const y = py - vao * t;
+        if (shape === 'beam') {
+          solta(px, y, ladoRastro, 'combat-area-trail');
+        } else {
+          // Cone: abre conforme avança, até a largura ocupada pelos alvos.
+          const meia = ((dir - esq) / 2) * t;
+          const n = Math.max(1, Math.round(meia / ladoRastro));
+          for (let k = -n; k <= n; k++) solta(px + (meia / Math.max(1, n)) * k, y, ladoRastro, 'combat-area-trail');
+        }
+      }
+    }
+  }
+
+  // ---- IMPACTO: em cima de cada criatura atingida ----
+  for (const el of atingidos) {
+    const r = caixaSprite(el);
+    if (!r.width || !r.height) continue;
+    // Cobre a criatura inteira com uma folga, com piso pra que bicho pequeno
+    // não receba um efeito quase invisível.
+    const lado = Math.max(34, Math.max(r.width, r.height) * 1.15);
+    solta(r.left - sr.left + r.width / 2, r.top - sr.top + r.height / 2, lado, 'combat-area-tile');
   }
 }
 
