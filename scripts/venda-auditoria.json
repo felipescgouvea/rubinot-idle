@@ -1,0 +1,28 @@
+{
+ "divergentes": [
+  {
+   "id": "swampling_club",
+   "nome": "Swampling Club",
+   "nosso": 7626,
+   "real": 40,
+   "razao": 190.65
+  },
+  {
+   "id": "brass_shield",
+   "nome": "Brass Shield",
+   "nosso": 2250,
+   "real": 25,
+   "razao": 90
+  },
+  {
+   "id": "ancient_shield",
+   "nome": "Ancient Shield",
+   "nosso": 11000,
+   "real": 900,
+   "razao": 12.222222222222221
+  }
+ ],
+ "semValor": [],
+ "semPagina": [],
+ "conferidos": 4
+}

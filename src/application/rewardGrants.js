@@ -5,9 +5,9 @@
 // Os quatro tipos vivem todos no save do jogador (G), não no servidor, então o
 // grant é client-side; o servidor só valida QUE o resgate pode acontecer (uma
 // vez só, tier alcançado) — ver /bp/claim.
-import { G } from './gameStore.js?v=222';
-import { emit, EVENTS } from '../shared/eventBus.js?v=220';
-import { t } from '../i18n/i18n.js?v=236';
+import { G } from './gameStore.js?v=223';
+import { emit, EVENTS } from '../shared/eventBus.js?v=221';
+import { t } from '../i18n/i18n.js?v=237';
 
 // Rótulo curto do prêmio, pra notificação e pros cartões da UI.
 export function rewardLabel(r) {

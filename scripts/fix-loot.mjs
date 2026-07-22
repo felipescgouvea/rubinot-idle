@@ -59,10 +59,16 @@ for (const id of alvos) {
     novoLoot.push([itemId, chanceDe(it.raridade)]);
   }
 
-  // Só reescreve o que a fonte de fato informou. Wiki sem Loot Table não
-  // significa "não dropa nada" — significa que não sabemos, e apagar o loot
-  // nesse caso seria trocar um erro por outro.
-  if (!itens.length && !gold) { intocados.push(`${id} (wiki sem tabela de loot)`); continue; }
+  // Distinção que faltava, e que muda o resultado de 18 monstros:
+  //   - campo `loot` AUSENTE  -> não sabemos, não mexe.
+  //   - `{{Loot Table}}` VAZIA -> a fonte diz que o bicho NÃO DROPA NADA.
+  // Snake, Slime e Monk's Apparition têm a tabela presente e vazia; tratá-las
+  // como "desconhecido" deixava loot inventado no jogo (Meat e Bones num Snake,
+  // e 14 itens caros numa Monk's Apparition) sob a desculpa de cautela.
+  const temCampoLoot = /\|\s*loot\s*=/i.test(txt);
+  const tabelaVazia = temCampoLoot && !itens.length && !gold;
+  if (!temCampoLoot) { intocados.push(`${id} (wiki sem campo de loot)`); continue; }
+  if (tabelaVazia && (m.loot || []).length === 0) { continue; }
 
   const lootTxt = '[' + novoLoot.map(([i, c]) => `['${i}',${c}]`).join(',') + ']';
   const goldTxt = gold ? `[${gold[0]},${gold[1]}]` : null;
