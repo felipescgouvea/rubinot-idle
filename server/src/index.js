@@ -561,7 +561,24 @@ const server = http.createServer(async (req, res) => {
       // uma mana desatualizada e o flush seguinte devolveria o valor antigo.
       const sessaoAtiva = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       const live = sessaoAtiva ? getLiveSession(sessaoAtiva.id) : null;
-      const manaAtual = live ? live.mana : Number(stats.mana || 0);
+      // PARADO, player_stats.mana está sempre defasado: a regeneração ociosa
+      // roda no cliente e só é gravada no próximo /hunt/start ou /hunt/state.
+      // Sem aplicar a mesma conta aqui, o jogador via a barra de mana cheia e
+      // levava "mana insuficiente" na cara — e cada conjuração cobrava de um
+      // saldo velho que o cliente logo em seguida sobrescrevia pra cima.
+      // Mesma fórmula do /hunt/start (regen*90/min, dobrado se promovido).
+      const vocData = VOCATIONS[vocation];
+      let manaAtual;
+      if (live) manaAtual = live.mana;
+      else {
+        const maxManaAgora = computeMaxMana({ vocation, level: stats.level });
+        manaAtual = Math.min(maxManaAgora, Number(stats.mana || 0));
+        if (vocData && stats.updated_at) {
+          const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
+          const mult = stats.promoted ? PROMOTION.regenMult : 1;
+          manaAtual = Math.floor(Math.min(maxManaAgora, manaAtual + (vocData.manaRegen || 0) * 90 * idleMin * mult));
+        }
+      }
       if (manaAtual < spell.mana) return send(res, 400, { error: 'mana insuficiente' });
 
       const gasto = spendSoul(stats.soul, stats.soul_at ? Date.parse(stats.soul_at) : Date.now(), !!stats.promoted, spell.soul || 0);

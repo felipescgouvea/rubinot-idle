@@ -36,5 +36,8 @@ export async function conjureSpell(slot, spellId) {
   emit(EVENTS.NOTIFY, { msg: `${r.count}× ${nome}`, type: 'success' });
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.INVENTORY);
-  return { ok: true };
+  // Devolve a resposta do servidor inteira (mana/soul/quantidade) — é a única
+  // medida confiável do custo: parado, o cliente regenera mana sozinho a cada
+  // 2s e G.mana já não reflete a cobrança um instante depois.
+  return { ok: true, ...r };
 }
