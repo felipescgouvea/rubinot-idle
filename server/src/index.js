@@ -60,7 +60,7 @@ import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
-import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
+import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow } from './db.js';
 
 function todayStr() {
@@ -374,16 +374,34 @@ const server = http.createServer(async (req, res) => {
       // limite de conexões do navegador e a tela ficava SEGUNDOS atrás do
       // servidor (a queixa de "jogo travado" — medido em scripts/perf-hunt.mjs).
       // Em paralelo, o custo passa a ser o da leitura mais lenta, não a soma.
-      const [activeRow, stats, invRows, relicRows, skillsRow] = await Promise.all([
-        selectOne('hunt_sessions', { user_id: user.id, slot, active: true }),
-        selectOne('player_stats', { user_id: user.id, slot }),
-        selectMany('player_inventory', { user_id: user.id, slot }),
-        selectMany('player_relics', { user_id: user.id, slot }),
-        selectOne('player_skills', { user_id: user.id, slot }),
-      ]);
-      const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
-      const inventory = {};
-      invRows.forEach(r => { inventory[r.item_id] = Number(r.qty); });
+      // CAÇANDO, o servidor já É o dono da verdade: inventário, relíquias,
+      // skills, hp/mana e a sala vivem na memória da sessão (ver huntEngine).
+      // Consultar o banco pra descobrir isso era pedir ao Supabase algo que o
+      // próprio processo sabia — e esta rota é chamada ~1,7x por segundo POR
+      // JOGADOR, então era ela, e não o combate, que definia o teto de escala:
+      // 5 consultas x 1,7/s = 8,3 consultas por segundo por jogador.
+      //
+      // player_stats continua vindo do banco de propósito: gold e XP têm vários
+      // escritores FORA da caçada (loja, mercado, bênçãos, recompensa diária).
+      // Espelhar dinheiro em memória sem cobrir todos eles é como se perde
+      // saldo de jogador — não vale o risco pelo 1 query que sobra.
+      const liveSession = getLiveSessionBySlot(user.id, slot);
+      const [activeRow, stats, invRows, relicRows, skillsRow] = liveSession
+        ? [
+            { id: liveSession.id, zone_id: liveSession.zoneId },
+            await selectOne('player_stats', { user_id: user.id, slot }),
+            null, null, null,   // servidos da memória logo abaixo
+          ]
+        : await Promise.all([
+            selectOne('hunt_sessions', { user_id: user.id, slot, active: true }),
+            selectOne('player_stats', { user_id: user.id, slot }),
+            selectMany('player_inventory', { user_id: user.id, slot }),
+            selectMany('player_relics', { user_id: user.id, slot }),
+            selectOne('player_skills', { user_id: user.id, slot }),
+          ]);
+      const inventory = liveSession
+        ? { ...(liveSession.inv || {}) }
+        : (invRows || []).reduce((acc, r) => { acc[r.item_id] = Number(r.qty); return acc; }, {});
       // Quando NÃO está caçando, player_stats.hp/mana ficam CONGELADOS (o tick
       // só roda na caçada). Sem regenerar aqui, um reconcile que rode parado
       // sobrescreve o hp/mana que o cliente regenerou LOCAL pelo valor velho —
@@ -442,13 +460,13 @@ const server = http.createServer(async (req, res) => {
         zoneId: activeRow ? activeRow.zone_id : null,
         stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX, last_death: null },
         inventory,
-        relics: relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
+        relics: liveSession ? (liveSession.relics || []) : relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
         // Skills treinadas (Marco 4) — o motor de combate treina server-side
         // (huntEngine.js: trainSkill), mas nada devolvia esse progresso real pro
         // cliente: G.sk ficava travado no valor local antigo (do save), nunca
         // corrigido, mesmo o servidor já tendo uma verdade diferente (ver
         // huntUseCases.js: reconcileWithServer).
-        skills: skillsRow ? skillsRow.skills : null,
+        skills: liveSession ? liveSession.skills : (skillsRow ? skillsRow.skills : null),
         // A sala REAL de monstros (uid + defKey + name + hp/maxHp) — antes só
         // existia um `currentMonster` singular que NUNCA era populado (dead
         // code: session.currentMonster nunca era atribuído em huntEngine.js).

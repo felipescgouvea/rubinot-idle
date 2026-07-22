@@ -35,6 +35,17 @@ import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, 
 // sessionId -> objeto de sessão (ver startSession) — tudo em memória; só
 // existe enquanto ESTE processo está de pé (ver reapStaleSessionsOnBoot).
 const live = new Map();
+// Índice por personagem (userId:slot). Sem ele, descobrir se um jogador tem
+// caçada viva exigia consultar hunt_sessions — uma ida ao banco em TODO poll
+// de /hunt/state, que é a rota mais chamada do jogo. Varrer o `live` inteiro
+// também não serve: com milhares de sessões seria O(n) por requisição.
+const porPersonagem = new Map();
+const chaveSlot = (userId, slot) => userId + ':' + slot;
+
+export function getLiveSessionBySlot(userId, slot) {
+  const s = porPersonagem.get(chaveSlot(userId, slot));
+  return s && !s.stopped ? s : null;
+}
 
 const ATTACK_GROUP_CD_MS = 2000;
 const POTION_CD_MS = 1000;
@@ -156,12 +167,10 @@ export async function changeSessionInv(session, itemId, delta) {
 // houver uma caçada viva do mesmo personagem, o cache dela precisa saber —
 // senão o jogador compra poção caçando e o RTC continua achando que não tem.
 function espelharNoLive(userId, slot, itemId, novaQty) {
-  for (const sess of live.values()) {
-    if (sess.userId === userId && sess.slot === slot) {
-      if (!sess.inv) sess.inv = {};
-      sess.inv[itemId] = novaQty;
-    }
-  }
+  const sess = porPersonagem.get(chaveSlot(userId, slot));
+  if (!sess) return;
+  if (!sess.inv) sess.inv = {};
+  sess.inv[itemId] = novaQty;
 }
 
 export async function incrementInventory(userId, slot, itemId, delta) {
@@ -811,6 +820,7 @@ export function startSession(session) {
   session.nextTickAt = Date.now() + TICK_MS;
   session.nextFlushAt = Date.now() + FLUSH_MS;
   live.set(session.id, session);
+  porPersonagem.set(chaveSlot(session.userId, session.slot), session);
   garantirScheduler();
 }
 
@@ -830,6 +840,10 @@ export function stopSession(sessionId) {
   // andamento, parado num await, de aplicar dano depois do stop.
   flushVitals(s).catch(() => {});
   live.delete(sessionId);
+  // Só remove do índice se ainda apontar pra ESTA sessão: uma troca rápida de
+  // zona (stop + start) já pode ter registrado a nova, e apagar aqui deixaria
+  // o personagem sem índice mesmo tendo caçada viva.
+  if (porPersonagem.get(chaveSlot(s.userId, s.slot)) === s) porPersonagem.delete(chaveSlot(s.userId, s.slot));
 }
 
 export function getLiveSession(sessionId) {
