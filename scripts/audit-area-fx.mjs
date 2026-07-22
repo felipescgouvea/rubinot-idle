@@ -32,13 +32,25 @@ const medir = (shape) => page.evaluate(async (forma) => {
 
   document.querySelectorAll('.combat-area-tile').forEach(e => e.remove());
   bus.emit(bus.EVENTS.COMBAT_FX, { effect: 'fire', shape: forma, targetUid: criaturas[0].uid });
-  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  // A sprite entra com combat-area-pop, que começa em scale(0.6) e só chega a
+  // scale(1) aos 25% dos 0,72s. Medir antes disso lê uma caixa MENOR que a
+  // real e acusa cobertura baixa — foi o que aconteceu na primeira execução
+  // (53% em três formas), e eu quase "consertei" o jogo por causa do relógio
+  // do teste. Espera o pop assentar e mede o que o jogador de fato vê.
+  await new Promise(r => setTimeout(r, 260));
 
   const efeitos = [...document.querySelectorAll('.combat-area-tile')].map(e => {
     const r = e.getBoundingClientRect();
     return { x: r.left, y: r.top, w: r.width, h: r.height };
   });
-  return { criaturas, efeitos };
+  // Relê as criaturas AGORA: entre o disparo e a medição o combate segue, e
+  // comparar posição nova de efeito com posição velha de criatura mediria a
+  // passagem do tempo, não o alinhamento.
+  const criaturasAgora = cont ? [...cont.children].map(e => {
+    const r = e.getBoundingClientRect();
+    return { uid: e.dataset.uid, x: r.left, y: r.top, w: r.width, h: r.height };
+  }) : [];
+  return { criaturas: criaturasAgora.length ? criaturasAgora : criaturas, efeitos, alvoUid: criaturas[0].uid };
 }, shape);
 
 // Fração da criatura coberta por ALGUM sprite de efeito.
@@ -69,12 +81,28 @@ try {
     return c && c.children.length > 0;
   }, null, { timeout: 40000 }).catch(() => {});
 
+  // Espera o palco ASSENTAR antes de medir. As criaturas entram animando de
+  // baixo pra cima (ver huntPanel: renderStagePack); medir nesse meio-tempo
+  // compara efeito fixado na posição do disparo com criatura que ainda estava
+  // andando — foi assim que "single", a primeira forma medida, deu 19% num
+  // efeito que está correto. A espera é uma PRÉ-CONDIÇÃO do teste, não uma
+  // folga no critério: o limiar segue em 60%.
+  const assentou = await page.waitForFunction(() => {
+    const c = document.getElementById('stage-pack');
+    if (!c || !c.children.length) return false;
+    const agora = [...c.children].map(e => { const r = e.getBoundingClientRect(); return Math.round(r.left) + ',' + Math.round(r.top); }).join('|');
+    const igual = window.__posAnterior === agora;
+    window.__posAnterior = agora;
+    return igual;
+  }, null, { timeout: 20000, polling: 400 }).then(() => true).catch(() => false);
+  if (!assentou) inconclusivos.push('o palco não parou de se mexer em 20s — medições podem estar pegando criatura em movimento');
+
   for (const forma of ['single', 'wave', 'ball', 'square', 'beam', 'explosion']) {
-    const { criaturas, efeitos } = await medir(forma);
+    const { criaturas, efeitos, alvoUid } = await medir(forma);
     if (!criaturas.length) { inconclusivos.push(`forma "${forma}": nenhuma criatura no palco na hora da medição`); continue; }
     if (!efeitos.length) { problemas.push(`forma "${forma}": NENHUM sprite de efeito foi criado`); continue; }
 
-    const alvo = criaturas[0];
+    const alvo = criaturas.find(c => c.uid === alvoUid) || criaturas[0];
     const cobAlvo = cobertura(alvo, efeitos);
     // 60% é folgado de propósito: a sprite é quadrada e a criatura nem sempre,
     // então cobertura total não é atingível. O que se rejeita é o efeito
