@@ -39,12 +39,12 @@ export const SPELLS = {
   // (Groundshaker cobre até 36 sqm, bem mais que o 3x3 do Berserk); o resto é
   // alvo único, exceto Front Sweep (cone à frente).
   exura_ico:        { name: 'Wound Cleansing', words: 'exura ico', icon: '🩹', voc: ['knight'], level: 8, mana: 40,  type: 'heal',   power: [4, 25, 8, 50], cd: 1 },
-  exori:            { name: 'Berserk', words: 'exori', icon: '💢', voc: ['knight'], level: 35, mana: 115, type: 'attack', power: [0.03, 7, 0.05, 11], scale: 'melee', element: 'physical', area: 'square', cd: 4 },
+  exori:            { name: 'Berserk', words: 'exori', icon: '💢', voc: ['knight'], level: 35, mana: 125, type: 'attack', power: [0.03, 7, 0.05, 11], scale: 'melee', element: 'physical', area: 'square', cd: 4 },
   exori_ico:        { name: 'Brutal Strike', words: 'exori ico', icon: '🗡️', voc: ['knight'], level: 16, mana: 30, type: 'attack', power: [0.02, 4, 0.04, 9], scale: 'melee', element: 'physical', area: 'single', cd: 6 },
   exori_hur:        { name: 'Whirlwind Throw', words: 'exori hur', icon: '🪓', voc: ['knight'], level: 28, mana: 40, type: 'attack', power: [0.01, 1, 0.03, 6], scale: 'melee', element: 'physical', area: 'single', cd: 6 },
-  exori_mas:        { name: 'Groundshaker', words: 'exori mas', icon: '🌋', voc: ['knight'], level: 33, mana: 160, type: 'attack', power: [0.02, 4, 0.03, 6], scale: 'melee', element: 'physical', area: 'ball', cd: 8 },
+  exori_mas:        { name: 'Groundshaker', words: 'exori mas', icon: '🌋', voc: ['knight'], level: 33, mana: 200, type: 'attack', power: [0.02, 4, 0.03, 6], scale: 'melee', element: 'physical', area: 'ball', cd: 8 },
   exori_min:        { name: 'Front Sweep', words: 'exori min', icon: '⚔️', voc: ['knight'], level: 70, mana: 200, type: 'attack', power: [0.04, 11, 0.08, 21], scale: 'melee', element: 'physical', area: 'wave', cd: 6 },
-  exori_gran:       { name: 'Fierce Berserk', words: 'exori gran', icon: '💥', voc: ['knight'], level: 90, mana: 340, type: 'attack', power: [0.06, 13, 0.11, 27], scale: 'melee', element: 'physical', area: 'square', cd: 6 },
+  exori_gran:       { name: 'Fierce Berserk', words: 'exori gran', icon: '💥', voc: ['knight'], level: 90, mana: 360, type: 'attack', power: [0.06, 13, 0.11, 27], scale: 'melee', element: 'physical', area: 'square', cd: 6 },
   exori_gran_ico:   { name: 'Annihilation', words: 'exori gran ico', icon: '☠️', voc: ['knight'], level: 110, mana: 300, type: 'attack', power: [0.06, 13, 0.14, 34], scale: 'melee', element: 'physical', area: 'single', cd: 30 },
 
   // --- Paladin — flecha/missile/spear são alvo único; Divine Caldera é a
@@ -70,9 +70,9 @@ export const SPELLS = {
   // --- Strikes básicos (fire/energy/ice/earth): desde a atualização de
   // magias do Tibia, sorcerer E druid têm acesso aos 4, alvo único. Death
   // Strike é exclusivo do sorcerer (não existe versão druida).
-  exori_flam:       { name: 'Flame Strike', words: 'exori flam', icon: '🔥', voc: ['sorcerer','druid'], level: 14, mana: 20, type: 'attack', power: [1.4, 8, 2.2, 14], element: 'fire', area: 'single', cd: 2 },
+  exori_flam:       { name: 'Flame Strike', words: 'exori flam', icon: '🔥', voc: ['sorcerer','druid'], level: 8, mana: 20, type: 'attack', power: [1.4, 8, 2.2, 14], element: 'fire', area: 'single', cd: 2 },
   exori_vis:        { name: 'Energy Strike', words: 'exori vis', icon: '⚡', voc: ['sorcerer','druid'], level: 12, mana: 20,  type: 'attack', power: [1.4, 8, 2.2, 14], element: 'energy', area: 'single', cd: 2 },
-  exori_frigo:      { name: 'Ice Strike', words: 'exori frigo', icon: '❄️', voc: ['sorcerer','druid'], level: 15, mana: 20, type: 'attack', power: [1.4, 8, 2.2, 14], element: 'ice', area: 'single', cd: 2 },
+  exori_frigo:      { name: 'Ice Strike', words: 'exori frigo', icon: '❄️', voc: ['sorcerer','druid'], level: 8, mana: 20, type: 'attack', power: [1.4, 8, 2.2, 14], element: 'ice', area: 'single', cd: 2 },
   exori_tera:       { name: 'Terra Strike', words: 'exori tera', icon: '🍃', voc: ['sorcerer','druid'], level: 13, mana: 20, type: 'attack', power: [1.4, 8, 2.2, 14], element: 'earth', area: 'single', cd: 2 },
   exori_mort:       { name: 'Death Strike', words: 'exori mort', icon: '💀', voc: ['sorcerer'], level: 16, mana: 20, type: 'attack', power: [1.4, 8, 2.2, 14], element: 'death', area: 'single', cd: 2 },
 
@@ -99,7 +99,7 @@ export const SPELLS = {
   exevo_gran_frigo_hur:{ name: 'Strong Ice Wave', words: 'exevo gran frigo hur', icon: '🧊', voc: ['druid'], level: 40, mana: 170, type: 'attack', power: [4.5, 20, 7.6, 48], element: 'ice', area: 'wave', cd: 8 },
   exori_gran_frigo: { name: 'Strong Ice Strike', words: 'exori gran frigo', icon: '🧊', voc: ['druid'], level: 80, mana: 60, type: 'attack', power: [2.8, 16, 4.4, 28], element: 'ice', area: 'single', cd: 8 },
   exori_max_frigo:  { name: 'Ultimate Ice Strike', words: 'exori max frigo', icon: '❄️', voc: ['druid'], level: 100, mana: 100, type: 'attack', power: [4.5, 35, 7.3, 55], element: 'ice', area: 'single', cd: 30 },
-  exevo_tera_hur:   { name: 'Terra Wave', words: 'exevo tera hur', icon: '🍃', voc: ['druid'], level: 38, mana: 210, type: 'attack', power: [3.25, 5, 6.75, 30], element: 'earth', area: 'wave', cd: 4 },
+  exevo_tera_hur:   { name: 'Terra Wave', words: 'exevo tera hur', icon: '🍃', voc: ['druid'], level: 38, mana: 170, type: 'attack', power: [3.25, 5, 6.75, 30], element: 'earth', area: 'wave', cd: 4 },
   exori_gran_tera:  { name: 'Strong Terra Strike', words: 'exori gran tera', icon: '🌿', voc: ['druid'], level: 70, mana: 60, type: 'attack', power: [2.8, 16, 4.4, 28], element: 'earth', area: 'single', cd: 8 },
   exori_max_tera:   { name: 'Ultimate Terra Strike', words: 'exori max tera', icon: '🌳', voc: ['druid'], level: 90, mana: 100, type: 'attack', power: [4.5, 35, 7.3, 55], element: 'earth', area: 'single', cd: 30 },
   exevo_gran_mas_frio:{ name: 'Eternal Winter', words: 'exevo gran mas frigo', icon: '🌨️', voc: ['druid'], level: 60, mana: 1050, type: 'attack', power: [5.5, 25, 11, 50], element: 'ice', area: 'ball', cd: 40 },
@@ -131,7 +131,7 @@ export const SPELLS = {
   // Apprentice's Strike é a única magia do jogo com dano FIXO no TFS
   // (retorna -10/-20 direto, sem olhar nível nem Magic Level).
   exori_amp_vis:    { name: 'Lightning', words: 'exori amp vis', icon: '🌩️', voc: ['sorcerer'], level: 55, mana: 60, type: 'attack', power: [2.2, 12, 3.4, 21], element: 'energy', area: 'single', cd: 2 },
-  exori_min_flam:   { name: "Apprentice's Strike", words: 'exori min flam', icon: '🔥', voc: ['sorcerer','druid'], level: 8, mana: 6, type: 'attack', power: [0, 10, 0, 20], element: 'fire', area: 'single', cd: 2 },
+  exori_min_flam:   { name: "Apprentice's Strike", words: 'exori min flam', icon: '🔥', voc: ['sorcerer','druid'], level: 6, mana: 6, type: 'attack', power: [0, 10, 0, 20], element: 'fire', area: 'single', cd: 2 },
 
   // ===================================================================
   // CURA que faltava. As "exana" curam CONDIÇÕES (veneno, fogo, sangramento):
@@ -144,7 +144,7 @@ export const SPELLS = {
   exura_gran_san:   { name: 'Salvation', words: 'exura gran san', icon: '🙌', voc: ['paladin'], level: 60, mana: 210, type: 'heal', power: [12, 75, 20, 125], cd: 1 },
   exura_gran_ico:   { name: 'Intense Wound Cleansing', words: 'exura gran ico', icon: '💗', voc: ['knight'], level: 80, mana: 200, type: 'heal', power: [70, 438, 92, 544], cd: 1 },
   exura_gran_mas_res:{ name: 'Mass Healing', words: 'exura gran mas res', icon: '🫧', voc: ['druid'], level: 36, mana: 150, type: 'heal', power: [4.6, 100, 9.6, 125], cd: 1 },
-  exura_sio:        { name: 'Heal Friend', words: 'exura sio', icon: '🤝', voc: ['druid'], level: 18, mana: 140, type: 'heal', power: [6.3, 45, 14.4, 90], cd: 1 },
+  exura_sio:        { name: 'Heal Friend', words: 'exura sio', icon: '🤝', voc: ['druid'], level: 18, mana: 120, type: 'heal', power: [6.3, 45, 14.4, 90], cd: 1 },
 
   exana_pox:        { name: 'Cure Poison', words: 'exana pox', icon: '🧪', voc: ['sorcerer','druid','paladin','knight'], level: 10, mana: 30, type: 'utility', cd: 6 },
   exana_vis:        { name: 'Cure Electrification', words: 'exana vis', icon: '🧪', voc: ['druid'], level: 22, mana: 30, type: 'utility', cd: 6 },
@@ -171,8 +171,8 @@ export const SPELLS = {
   utani_hur:        { name: 'Haste', words: 'utani hur', icon: '💨', voc: ['sorcerer','druid','paladin','knight'], level: 14, mana: 60, type: 'support', cd: 2, buff: { hastePct: 30, ms: 33000 } },
   utani_gran_hur:   { name: 'Strong Haste', words: 'utani gran hur', icon: '🌬️', voc: ['sorcerer','druid'], level: 20, mana: 100, type: 'support', cd: 2, buff: { hastePct: 70, ms: 22000 } },
   utani_tempo_hur:  { name: 'Charge', words: 'utani tempo hur', icon: '🐎', voc: ['knight'], level: 25, mana: 100, type: 'support', cd: 2, buff: { hastePct: 70, ms: 30000 } },
-  exeta_res:        { name: 'Challenge', words: 'exeta res', icon: '📢', voc: ['sorcerer','druid','paladin','knight'], level: 20, mana: 30, type: 'support', cd: 2, buff: { taunt: true, ms: 6000 } },
-  exeta_vis:        { name: 'Enchant Staff', words: 'exeta vis', icon: '🪄', voc: ['sorcerer','druid','paladin','knight'], level: 41, mana: 80, type: 'utility', cd: 2 },
+  exeta_res:        { name: 'Challenge', words: 'exeta res', icon: '📢', voc: ['knight'], level: 20, mana: 40, type: 'support', cd: 2, buff: { taunt: true, ms: 6000 } },
+  exeta_vis:        { name: 'Enchant Staff', words: 'exeta vis', icon: '🪄', voc: ['sorcerer'], level: 41, mana: 80, type: 'utility', cd: 2 },
 
   utevo_lux:        { name: 'Light', words: 'utevo lux', icon: '🕯️', voc: ['sorcerer','druid','paladin','knight'], level: 8, mana: 20, type: 'utility', cd: 2 },
   utevo_gran_lux:   { name: 'Great Light', words: 'utevo gran lux', icon: '🔦', voc: ['sorcerer','druid','paladin','knight'], level: 13, mana: 60, type: 'utility', cd: 2 },
@@ -196,7 +196,7 @@ export const SPELLS = {
   // sai e quantas cargas — números tirados da chamada conjureItem(reagente,
   // item, quantidade) de cada data/spells/scripts/conjuring/*.lua do TFS.
   // ===================================================================
-  exevo_infir_con:  { name: 'Arrow Call', words: 'exevo infir con', icon: '🏹', voc: ['paladin'], level: 1, mana: 10, soul: 1, type: 'conjure', conjures: { item: 'simple_arrow', count: 3 }, cd: 2 },
+  exevo_infir_con:  { name: 'Arrow Call', words: 'exevo infir con', icon: '🏹', voc: ['paladin'], level: 1, mana: 30, soul: 1, type: 'conjure', conjures: { item: 'simple_arrow', count: 3 }, cd: 2 },
   exevo_con:        { name: 'Conjure Arrow', words: 'exevo con', icon: '🏹', voc: ['paladin'], level: 13, mana: 100, soul: 1, type: 'conjure', conjures: { item: 'arrow', count: 10 }, cd: 2 },
   exevo_con_pox:    { name: 'Conjure Poisoned Arrow', words: 'exevo con pox', icon: '🏹', voc: ['paladin'], level: 16, mana: 130, soul: 2, type: 'conjure', conjures: { item: 'poison_arrow', count: 7 }, cd: 2 },
   exevo_con_mort:   { name: 'Conjure Bolt', words: 'exevo con mort', icon: '🏹', voc: ['paladin'], level: 17, mana: 140, soul: 2, type: 'conjure', conjures: { item: 'bolt', count: 5 }, cd: 2 },
@@ -204,7 +204,7 @@ export const SPELLS = {
   exevo_con_flam:   { name: 'Conjure Explosive Arrow', words: 'exevo con flam', icon: '🏹', voc: ['paladin'], level: 25, mana: 290, soul: 3, type: 'conjure', conjures: { item: 'burst_arrow', count: 8 }, cd: 2 },
   exevo_con_grav:   { name: 'Conjure Piercing Bolt', words: 'exevo con grav', icon: '🏹', voc: ['paladin'], level: 33, mana: 180, soul: 3, type: 'conjure', conjures: { item: 'piercing_bolt', count: 5 }, cd: 2 },
   exeta_con:        { name: 'Enchant Spear', words: 'exeta con', icon: '🔱', voc: ['paladin'], level: 45, mana: 350, soul: 3, type: 'conjure', reagent: { item: 'spear', count: 1 }, conjures: { item: 'enchanted_spear', count: 1 }, cd: 2 },
-  exevo_con_vis:    { name: 'Conjure Power Bolt', words: 'exevo con vis', icon: '🏹', voc: ['sorcerer','druid','paladin','knight'], level: 59, mana: 700, soul: 4, type: 'conjure', conjures: { item: 'power_bolt', count: 10 }, cd: 2 },
+  exevo_con_vis:    { name: 'Conjure Power Bolt', words: 'exevo con vis', icon: '🏹', voc: ['paladin'], level: 59, mana: 700, soul: 4, type: 'conjure', conjures: { item: 'power_bolt', count: 10 }, cd: 2 },
 
   adori_blank:      { name: 'Blank Rune', words: 'adori blank', icon: '📜', voc: ['sorcerer','druid','paladin'], level: 20, mana: 50, soul: 1, type: 'conjure', conjures: { item: 'blank_rune', count: 1 }, cd: 2 },
   adori_infir_vis:  { name: 'Lightest Missile Rune', words: 'adori infir vis', icon: '📜', voc: ['sorcerer','druid','paladin'], level: 1, mana: 6, soul: 0, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'lightest_missile_rune', count: 10 }, cd: 2 },
