@@ -91,10 +91,20 @@ try {
         item: window.__G.inventory[s.conjures.item] || 0,
         reagente: s.reagent ? (window.__G.inventory[s.reagent.item] || 0) : null,
       };
+      const ch = await window.__liveImport('character.js');
+      const stMod = await window.__liveImport('stats.js');
+      const t0 = Date.now();
       const res = await su.conjureSpell(window.__ACC.activeSlot, id);
       const r2 = await au.conjureOnServer(window.__ACC.activeSlot, id, window.__G.vocation);
+      const dtMs = Date.now() - t0;
       await new Promise(x => setTimeout(x, 800));
-      return { nome: s.name, custo: { mana: s.mana, soul: s.soul || 0 },
+      // Entre as duas chamadas o servidor TAMBÉM regenera mana (mesma fórmula
+      // do /hunt/start: regen*90 por minuto). Num knight de nível baixo isso é
+      // ~1,8 de mana por segundo — mais que o custo da magia. Sem descontar,
+      // o teste acusa "não cobrou" numa cobrança correta.
+      const voc = ch.VOCATIONS[window.__G.vocation];
+      const regenNoIntervalo = (voc.manaRegen || 0) * 90 * (dtMs / 60000) * (window.__G.promoted ? 2 : 1);
+      return { dtMs, regenNoIntervalo, maxMana: stMod.getMaxMana(), nome: s.name, custo: { mana: s.mana, soul: s.soul || 0 },
                esperado: s.conjures.count, reagente: s.reagent, ok: res && res.ok, antes,
                servidor: { mana1: res && res.mana, mana2: r2 && r2.mana, soul1: res && res.soul, soul2: r2 && r2.soul },
                // conjureOnServer (a 2a chamada) não mexe no G — só a 1a conta aqui.
@@ -103,10 +113,18 @@ try {
     }, alvo.id);
 
     const ganhou = r.depois.item - r.antes.item;
-    const gastouMana = r.servidor.mana1 - r.servidor.mana2;
     const gastouSoul = r.servidor.soul1 - r.servidor.soul2;
+    // mana esperada na 2a resposta = a da 1a, menos o custo, mais o que
+    // regenerou no intervalo (e nunca acima do teto, que a 1a resposta já
+    // revela quando o personagem está cheio).
+    // A mana regenera ATE O TETO entre as duas chamadas, e so entao a 2a
+    // cobranca acontece. Sem o clamp no teto o teste esperava 86 num
+    // personagem cujo maximo e 75 — e acusava bug num numero certo.
+    const manaEsperada = Math.min(r.maxMana, r.servidor.mana1 + r.regenNoIntervalo) - r.custo.mana;
+    const erroMana = Math.abs(r.servidor.mana2 - manaEsperada);
     console.log(`conjurou "${r.nome}": ok=${r.ok} | item +${ganhou} (esperado ${r.esperado})`
-      + ` | mana ${r.servidor.mana1}->${r.servidor.mana2} = -${gastouMana} (esperado ${r.custo.mana})`
+      + ` | mana ${r.servidor.mana1}->${r.servidor.mana2}, esperado ~${manaEsperada.toFixed(1)}`
+      + ` (custo ${r.custo.mana}, regen ${r.regenNoIntervalo.toFixed(1)} em ${r.dtMs}ms)`
       + ` | soul ${r.servidor.soul1}->${r.servidor.soul2} = -${gastouSoul} (esperado ${r.custo.soul})`
       + (r.reagente ? ` | reagente ${r.antes.reagente} -> ${r.depois.reagente}` : ''));
 
@@ -114,7 +132,8 @@ try {
     else {
       if (ganhou !== r.esperado) falhas.push(`"${r.nome}": deveria fabricar ${r.esperado} e fabricou ${ganhou}`);
       else ok.push('conjurar fabrica o item');
-      if (gastouMana !== r.custo.mana) falhas.push(`"${r.nome}": cobrou ${gastouMana} de mana, deveria cobrar ${r.custo.mana}`);
+      // tolerância de 2: a regeneração é fracionária e o servidor arredonda.
+      if (erroMana > 2) falhas.push(`"${r.nome}": a mana ficou em ${r.servidor.mana2}, esperado ~${manaEsperada.toFixed(1)} (custo ${r.custo.mana} + regen ${r.regenNoIntervalo.toFixed(1)})`);
       else ok.push('cobrança de mana');
       if (r.custo.soul > 0 && gastouSoul !== r.custo.soul) {
         falhas.push(`"${r.nome}": cobrou ${gastouSoul} soul, deveria cobrar ${r.custo.soul}`);
@@ -140,9 +159,12 @@ try {
       return { conjuradas: ganhosSeguidos / s.conjures.count, porCast: s.conjures.count, custoSoul: s.soul || 0 };
     }, alvo.id);
     console.log(`teste de fraude: 12 tentativas mentindo soul=999 -> ${fraude.conjuradas} conjuraram de fato`);
-    if (fraude.custoSoul > 0 && fraude.conjuradas >= 12) {
-      falhas.push(`o servidor aceitou 12 conjurações seguidas mentindo o soul do cliente — a cobrança não está no servidor`);
-    } else ok.push('servidor recusa conjuração sem recurso');
+    if (!fraude.custoSoul) {
+      // Magia que não custa soul não prova nada aqui: aceitar as 12 é o certo.
+      console.log('fraude: INCONCLUSIVO — a magia testada não custa soul, não dá pra provar a cobrança por ela');
+    } else if (fraude.conjuradas >= 12) {
+      falhas.push('o servidor aceitou 12 conjurações seguidas mentindo o soul do cliente — a cobrança não está no servidor');
+    } else ok.push('servidor recusa conjuração sem soul');
   }
 } catch (e) {
   falhas.push('EXCEÇÃO ' + e.message.slice(0, 250));
