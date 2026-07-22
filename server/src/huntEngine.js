@@ -885,7 +885,23 @@ export function startSession(session) {
   session.killsAbs = 0; session.bossPointsAbs = 0; session.bossMaxTier = {};
   selectOne('player_stats', { user_id: session.userId, slot: session.slot })
     .then(row => {
-      if (!row) return;
+      // SESSÃO ÓRFÃ: o personagem sumiu do banco enquanto esta caçada rodava.
+      // Acontece num reset de contas — o processo do servidor guarda a sessão
+      // em MEMÓRIA, então apagar as tabelas não a mata: ela seguia lutando com
+      // os valores do personagem ANTIGO (nível, skills, equipamento).
+      //
+      // O sintoma que isso produziu: um sorcerer nível 1 recém-criado lançando
+      // Flame Strike, que exige nível 8. A validação do servidor estava certa;
+      // o `session.level` é que era do personagem que não existe mais. E como
+      // não havia linha em player_stats, nada do que ele ganhava era gravado.
+      //
+      // Encerrar é a única saída correta: sem linha no banco não há onde
+      // gravar o progresso, e continuar só produz combate fantasma.
+      if (!row) {
+        console.warn('sessão órfã (player_stats sumiu) — encerrando', session.id);
+        session.active = false;
+        return;
+      }
       session.xpAbs = Number(row.xp) || 0;
       session.goldAbs = Number(row.gold) || 0;
       session.goldEarnedAbs = Number(row.total_gold_earned) || 0;
