@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { login } from './probe-lib.mjs';
 
 const acct = JSON.parse(readFileSync('.test-account.json', 'utf8'));
-const problemas = [], ok = [];
+const problemas = [], ok = [], inconclusivos = [];
 const browser = await chromium.launch({ headless: true });
 const ctx0 = await browser.newContext({ viewport: { width: 1280, height: 860 } });
 const page = await ctx0.newPage();
@@ -67,8 +67,21 @@ try {
   console.log('navegador novo:', JSON.stringify(novo));
   if (!novo.epoch) problemas.push('navegador novo não gravou o marco — vai "resetar" de novo em toda visita');
   else ok.push('navegador novo grava o marco');
-  if (novo.vocacao === null || novo.vocacao === undefined) {
-    problemas.push('navegador NOVO entrou sem personagem mesmo havendo save na nuvem — o marco está apagando save de quem troca de dispositivo');
+  // PRÉ-CONDIÇÃO: só dá pra afirmar que o marco preservou o save da nuvem se
+  // existir save na nuvem. Logo depois de um reset não existe, e sem esta
+  // checagem o probe acusa "o marco apagou o personagem" quando na verdade não
+  // havia personagem nenhum — falso positivo que apareceu no reset #2.
+  const temNaNuvem = await pNovo.evaluate(async () => {
+    const ac = await window.__liveImport('authClient.js');
+    const r = await ac.loadCloudSave().catch(() => null);
+    const s0 = r && r.data && r.data.slots && r.data.slots[0];
+    return !!(s0 && s0.vocation);
+  }).catch(() => false);
+
+  if (!temNaNuvem) {
+    inconclusivos.push('não há personagem na nuvem (banco recém-resetado) — o cenário "navegador novo preserva o save" não pôde ser exercitado');
+  } else if (!novo.vocacao) {
+    problemas.push('navegador NOVO entrou sem personagem mesmo HAVENDO save na nuvem — o marco está apagando save de quem troca de dispositivo');
   } else ok.push(`navegador novo carregou o personagem da nuvem (${novo.vocacao})`);
   await ctxNovo.close();
 
@@ -82,8 +95,15 @@ console.log('\n' + '='.repeat(64));
 console.log('AUDITORIA DO MARCO DE RESET');
 console.log('='.repeat(64));
 ok.forEach(o => console.log('  ✓ ' + o));
+if (inconclusivos.length) {
+  console.log('\n⚠  INCONCLUSIVO:');
+  inconclusivos.forEach(i => console.log('  - ' + i));
+}
 if (problemas.length) {
   console.log(`\nRESULTADO: FALHOU — ${problemas.length} problema(s)`);
   problemas.forEach(p => console.log('  ✗ ' + p));
   process.exitCode = 1;
+} else if (inconclusivos.length) {
+  console.log('\nRESULTADO: INCONCLUSIVO — nada quebrado, mas nem tudo foi exercitado');
+  process.exitCode = 2;
 } else console.log('\nRESULTADO: PASSOU — save local antigo é descartado no reset');

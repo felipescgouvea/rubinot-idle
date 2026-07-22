@@ -3,9 +3,9 @@
 // módulo "persistence" mais encorpado (load/offline/reset) precisa chamar
 // gainXp/checkBpTier de outras camadas — se saveGame morasse junto, isso
 // criaria import circular entre metade dos casos de uso do jogo.
-import { G, ACCOUNT } from './gameStore.js?v=221';
-import { saveState } from '../infrastructure/storage.js?v=217';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=226';
+import { G, ACCOUNT } from './gameStore.js?v=222';
+import { saveState } from '../infrastructure/storage.js?v=218';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=227';
 
 // saveGame roda muito (a cada morte/ação), então o local é imediato mas o push
 // pra nuvem é "debounced": só sobe ~8s depois da última alteração, evitando uma
@@ -13,6 +13,21 @@ import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=226
 // Salva sempre a CONTA inteira (os até 2 slots), não só o personagem ativo —
 // senão o outro personagem nunca seria persistido de novo depois de criado.
 let cloudTimer = null;
+
+// TRAVA CONTRA APAGAR SAVE NA NUVEM COM ESTADO VAZIO.
+//
+// Uma conta sem NENHUM personagem é indistinguível, no payload, de um estado
+// que ainda não carregou. Subir isso por cima da nuvem apaga o progresso de
+// quem já tinha personagem — e não é hipótese: o marco de reset descarta o
+// save da nuvem na sessão, e o autosave em seguida gravava o vazio por cima.
+// Foi assim que o personagem da conta de teste sumiu duas vezes.
+//
+// O jogador que REALMENTE quer zerar usa o reset explícito (confirmReset), que
+// grava direto; este caminho é só o autosave, e autosave nunca deve destruir.
+function contaTemPersonagem(acc) {
+  return !!(acc && Array.isArray(acc.slots) && acc.slots.some(s => s && s.vocation));
+}
+
 
 // Campos de economia REAL (Marco 6b): desde que o servidor de caçada virou a
 // única fonte de verdade pra eles (ver huntUseCases.js: reconcileWithServer),
@@ -47,12 +62,15 @@ export function saveGame() {
   saveState(ACCOUNT);
   if (isLoggedIn()) {
     clearTimeout(cloudTimer);
-    cloudTimer = setTimeout(() => { saveCloudSave(stripEconomyFieldsForCloud(ACCOUNT)); }, 8000);
+    cloudTimer = setTimeout(() => {
+      if (!contaTemPersonagem(ACCOUNT)) return;   // nunca sobe vazio por cima da nuvem
+      saveCloudSave(stripEconomyFieldsForCloud(ACCOUNT));
+    }, 8000);
   }
 }
 
 export function flushCloudSave() {
   clearTimeout(cloudTimer);
-  if (isLoggedIn()) return saveCloudSave(stripEconomyFieldsForCloud(ACCOUNT));
+  if (isLoggedIn() && contaTemPersonagem(ACCOUNT)) return saveCloudSave(stripEconomyFieldsForCloud(ACCOUNT));
   return Promise.resolve();
 }
