@@ -21,3 +21,22 @@ export function loadRawState() {
 export function clearState() {
   localStorage.removeItem(STORAGE_KEY);
 }
+
+// MARCO DE RESET (save epoch). O save do jogo vive em DOIS lugares:
+// localStorage e Supabase. Apagar só o lado do servidor não reseta ninguém —
+// o navegador restaura o personagem do save local no próximo F5 e ainda
+// reescreve tudo na nuvem, desfazendo o reset um cliente por vez. Aconteceu:
+// zerei o banco e o personagem voltou inteiro num F5.
+//
+// Aqui fica o último marco que ESTE navegador já aplicou. O servidor publica o
+// marco atual em game_config; quando os dois diferem, o save local é apagado
+// antes de qualquer leitura (ver main.js: startAuthedSession).
+const EPOCH_KEY = 'rubinot_save_epoch';
+
+export function loadSaveEpoch() {
+  try { return localStorage.getItem(EPOCH_KEY); } catch { return null; }
+}
+
+export function saveSaveEpoch(epoch) {
+  try { localStorage.setItem(EPOCH_KEY, String(epoch)); } catch { /* modo privado */ }
+}

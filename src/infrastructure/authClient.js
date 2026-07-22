@@ -503,3 +503,18 @@ export function fetchDailyRewardState(slot) {
 export function claimDailyRewardOnServer(slot) {
   return huntFetch('/daily-reward/claim', { method: 'POST', body: { slot } });
 }
+
+// Marco de reset publicado pelo servidor (public.game_config.config.saveEpoch).
+// Lido CRU de propósito, sem passar por sanitizeAdminConfig — o sanitizador só
+// conhece as chaves de taxas/spawn e descartaria este campo silenciosamente.
+export async function fetchSaveEpoch() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/game_config?id=eq.1&select=config`, {
+      headers: { apikey: SUPABASE_ANON_KEY },
+    });
+    if (!res.ok) return null;
+    const rows = await res.json().catch(() => null);
+    const cfg = rows && rows.length ? rows[0].config : null;
+    return cfg && cfg.saveEpoch != null ? String(cfg.saveEpoch) : null;
+  } catch { return null; }
+}
