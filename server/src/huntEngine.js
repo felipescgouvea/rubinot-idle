@@ -21,7 +21,7 @@ import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveE
 import { SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=127';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../../src/domain/rtcConfig.js?v=159';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId, pickHealTier, pickTarget, orderByPackSize } from '../../src/domain/rtcConfig.js?v=159';
 import { elementMod } from '../../src/domain/elements.js?v=125';
 import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/blessings.js?v=125';
 import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
@@ -214,9 +214,13 @@ function trainSkill(session, skillId, amount, cfg) {
 // src/application/huntUseCases.js, mas só o essencial (sem log/eventos).
 async function applyRtcHealing(session, cfg) {
   const rtc = session.rtc || {};
-  const { id: healSpellId, spell: healSpell } = resolveHealSpell(rtc.healSpell, session.vocation, session.level);
   const hpPct = (session.hp / session.maxHp) * 100;
-  if (healSpell && session.hp > 0 && hpPct < (rtc.healSpellThreshold || 0) && session.mana >= healSpell.mana && isSpellReady(session, healSpellId)) {
+  // Degrau de cura: com 70/45/25 configurados e HP em 20%, casta o de 25% (a
+  // cura mais forte). Um gatilho só desperdiçava mana curando arranhão ou
+  // deixava morrer num pico de dano — ver domain/rtcConfig.js: pickHealTier.
+  const degrau = pickHealTier(rtc, hpPct);
+  const { id: healSpellId, spell: healSpell } = resolveHealSpell(degrau ? degrau.spell : null, session.vocation, session.level);
+  if (healSpell && degrau && session.hp > 0 && session.mana >= healSpell.mana && isSpellReady(session, healSpellId)) {
     const heal = Math.min(session.maxHp - session.hp, spellHealAmount({ spell: healSpell, level: session.level, magicLevel: (session.skills.magic && session.skills.magic.lv) || 0 }));
     session.hp = Math.min(session.maxHp, session.hp + heal);
     session.mana -= healSpell.mana;
@@ -393,7 +397,11 @@ async function resolveTick(session) {
   // do jogador não mudava nada no combate real — só o destaque visual (M2). A
   // ORDEM da sala não muda (o Felipe já reclamou de reordenar): só troca QUEM
   // leva o golpe. O contra-ataque abaixo continua vindo da frente da sala.
-  const primary = (session.targetUid != null && pack.find(m => String(m.uid) === String(session.targetUid) && m.hp > 0)) || pack.find(m => m.hp > 0) || pack[0];
+  // Clique do jogador na Battle List manda acima de tudo; sem clique, vale a
+  // PRIORIDADE DE ALVO configurada no RTC (menor vida, mais forte, etc.).
+  const primary = (session.targetUid != null && pack.find(m => String(m.uid) === String(session.targetUid) && m.hp > 0))
+    || pickTarget(pack, (session.rtc || {}).targetPriority)
+    || pack[0];
 
   // (1) golpe básico — só o alvo da frente (o básico nunca tem área, só magia/
   // runa podem ter). Dano FIEL ao TFS: rola normal_random sobre a fórmula de
@@ -453,9 +461,17 @@ async function resolveTick(session) {
       return ok ? { kind: 'spell', id: entry, s } : null;
     }).filter(Boolean);
 
+    // Área ou alvo único conforme QUANTOS bichos estão vivos na sala: gastar
+    // Avalanche num bicho só é jogar carga fora, e bater single target numa
+    // sala cheia é perder dano. Reordena sem descartar — se não houver
+    // candidato do tipo preferido, o outro continua valendo.
+    const vivos = pack.filter(m => m.hp > 0).length;
+    const ehArea = c => isAreaAttack(c.kind === 'rune' ? (c.rune.area || 'single') : (c.s.area || 'single'));
+    const ordenados = orderByPackSize(ready, vivos, (rtc.areaMinTargets != null ? rtc.areaMinTargets : 2), ehArea);
+
     // Runa: precisa ESTAR no inventário de verdade (checagem live).
     let pick = null;
-    for (const cand of ready) {
+    for (const cand of ordenados) {
       if (cand.kind === 'spell') { pick = cand; break; }
       const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: cand.id });
       if (row && Number(row.qty) > 0) { pick = cand; break; }

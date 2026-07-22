@@ -8,7 +8,7 @@
 // Knight fica de fora de todas: sem investimento em magia, runa de ataque
 // não rende dano nenhum (igual ao Tibia real, onde o dano da runa escala
 // com Magic Level).
-import { ITEMS } from './items.js?v=204';
+import { ITEMS } from './items.js?v=205';
 
 // Exceções por runa. No TFS a maioria das runas de ataque não tem restrição de
 // vocação nenhuma; as que têm estão aqui (Holy Missile é marcada
@@ -70,12 +70,97 @@ export function normalizeAttackSpells(rtc) {
   return [];
 }
 
+// --- NÍVEIS DE CURA -------------------------------------------------------
+// Um gatilho só não dá conta: com "exura vita abaixo de 40%" o personagem
+// desperdiça mana curando arranhão, e com "exura abaixo de 40%" ele morre num
+// pico de dano. O RTCaster real deixa escalonar, então aqui também: uma lista
+// de degraus { spell, pct }, e o motor usa o degrau MAIS GRAVE que o HP
+// cruzou — HP em 25% com degraus 70/45/25 casta o de 25%, a cura mais forte.
+export const HEAL_TIER_COUNT = 3;
+
+// Migra a configuração antiga (healSpell + healSpellThreshold, um só) pra
+// lista de degraus. Saves antigos continuam valendo sem migração no banco.
+export function normalizeHealTiers(rtc) {
+  if (!rtc) return [];
+  if (Array.isArray(rtc.healTiers) && rtc.healTiers.some(t => t && t.spell)) {
+    return rtc.healTiers.filter(t => t && t.spell)
+      .map(t => ({ spell: t.spell, pct: Math.max(1, Math.min(99, Math.round(Number(t.pct)) || 0)) }))
+      // do MAIS GRAVE pro menos grave: o motor pega o primeiro que casar
+      .sort((a, b) => a.pct - b.pct);
+  }
+  if (rtc.healSpell) return [{ spell: rtc.healSpell, pct: rtc.healSpellThreshold || 40 }];
+  return [];
+}
+
+// Escolhe o degrau a usar pro HP% atual (null quando nenhum foi cruzado).
+//
+// Sem NENHUM degrau configurado, cai no comportamento de sempre: a cura padrão
+// da vocação (spell null → resolveHealSpell escolhe) no limiar antigo. Sem esta
+// volta, quem nunca abriu o painel de RTC simplesmente pararia de se curar ao
+// subir a versão — regressão silenciosa e fatal.
+export function pickHealTier(rtc, hpPct) {
+  const degraus = normalizeHealTiers(rtc);
+  if (!degraus.length) {
+    const pct = (rtc && rtc.healSpellThreshold) || 40;
+    return hpPct < pct ? { spell: null, pct } : null;
+  }
+  return degraus.find(t => hpPct < t.pct) || null;
+}
+
+// --- PRIORIDADE DE ALVO ---------------------------------------------------
+// Em quem bater primeiro quando a sala tem mais de uma criatura. `first` é o
+// comportamento antigo (o da frente da fila).
+export const TARGET_PRIORITIES = {
+  first:     { name: 'rtc.targetFirst' },      // o da frente, como sempre foi
+  lowestHp:  { name: 'rtc.targetLowestHp' },   // finaliza quem está quase morto
+  highestHp: { name: 'rtc.targetHighestHp' },  // derruba o mais durão primeiro
+  weakest:   { name: 'rtc.targetWeakest' },    // limpa os fracos (menos XP) antes
+  strongest: { name: 'rtc.targetStrongest' },  // encara o mais perigoso primeiro
+};
+
+// Aplica a prioridade sobre a sala VIVA. Puro: recebe e devolve criatura.
+export function pickTarget(pack, prioridade) {
+  const vivos = pack.filter(m => m.hp > 0);
+  if (!vivos.length) return null;
+  switch (prioridade) {
+    case 'lowestHp':  return vivos.reduce((a, b) => (b.hp < a.hp ? b : a));
+    case 'highestHp': return vivos.reduce((a, b) => (b.hp > a.hp ? b : a));
+    case 'weakest':   return vivos.reduce((a, b) => ((b.xp || 0) < (a.xp || 0) ? b : a));
+    case 'strongest': return vivos.reduce((a, b) => ((b.xp || 0) > (a.xp || 0) ? b : a));
+    default:          return vivos[0];
+  }
+}
+
+// --- ÁREA vs ALVO ÚNICO ---------------------------------------------------
+// Gastar Avalanche num bicho só é jogar mana e carga fora; e bater single
+// target numa sala cheia é perder dano. `areaMinTargets` é a partir de quantas
+// criaturas VIVAS o RTC prefere a magia/runa de área. 0 desliga a regra (usa
+// sempre a ordem de prioridade crua, como era antes).
+export const AREA_MIN_TARGETS_DEFAULT = 2;
+
+// Reordena os candidatos PRONTOS conforme o tamanho da sala, sem descartar
+// nenhum: se não houver candidato do tipo preferido, o outro tipo continua
+// valendo — melhor atacar de forma subótima do que não atacar.
+export function orderByPackSize(candidatos, vivos, areaMinTargets, ehArea) {
+  const min = Number(areaMinTargets);
+  if (!min || min <= 0) return candidatos;
+  const preferirArea = vivos >= min;
+  const preferidos = candidatos.filter(c => ehArea(c) === preferirArea);
+  const resto = candidatos.filter(c => ehArea(c) !== preferirArea);
+  return preferidos.concat(resto);
+}
+
 export function createDefaultRtc() {
   return {
     attackSpells: [],        // ids das magias/runas de ataque, em ordem de prioridade
     smartElement: false,     // casta a magia/runa forte contra a fraqueza da criatura
-    healSpell: null,         // null = usa exura (cura básica) como padrão
-    healSpellThreshold: 40,  // % de HP pra castar a spell de cura
+    // Degraus de cura (ver normalizeHealTiers). healSpell/healSpellThreshold
+    // continuam existindo só pra saves antigos serem lidos sem migração.
+    healTiers: [],
+    healSpell: null,         // legado: null = usa exura (cura básica) como padrão
+    healSpellThreshold: 40,  // legado: % de HP pra castar a spell de cura
+    targetPriority: 'first',     // em quem bater primeiro (ver TARGET_PRIORITIES)
+    areaMinTargets: AREA_MIN_TARGETS_DEFAULT, // a partir de quantos bichos prefere área
     healPotion: null,
     healPotionThreshold: 25, // % de HP pra beber a poção (mais tardia, de emergência)
     manaPotion: null,

@@ -2,14 +2,14 @@
 // de prioridade que mistura magias E runas livremente — ver domain/rtcConfig.js
 // sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
 // limiar de % de HP) — a UI mora em rtcPanel.js.
-import { G, ACCOUNT } from './gameStore.js?v=193';
-import { isSpellAvailable } from '../domain/spells.js?v=191';
-import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=223';
-import { getMagic } from './stats.js?v=190';
-import { emit, EVENTS } from '../shared/eventBus.js?v=191';
-import { saveGame } from './saveGameUseCase.js?v=193';
-import { updateHuntRtc } from '../infrastructure/authClient.js?v=198';
-import { t } from '../i18n/i18n.js?v=207';
+import { G, ACCOUNT } from './gameStore.js?v=194';
+import { isSpellAvailable } from '../domain/spells.js?v=192';
+import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT, HEAL_TIER_COUNT, TARGET_PRIORITIES } from '../domain/rtcConfig.js?v=224';
+import { getMagic } from './stats.js?v=191';
+import { emit, EVENTS } from '../shared/eventBus.js?v=192';
+import { saveGame } from './saveGameUseCase.js?v=194';
+import { updateHuntRtc } from '../infrastructure/authClient.js?v=199';
+import { t } from '../i18n/i18n.js?v=208';
 
 // Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar
 // prioridade de ataque/cura no meio da luta só valia a partir da PRÓXIMA
@@ -94,4 +94,54 @@ export function setRtcThreshold(field, value) {
   emit(EVENTS.RTC_PANEL);
   saveGame();
   syncRtcToServer();
+}
+
+// --- Degraus de cura (ver domain/rtcConfig.js: normalizeHealTiers) ---------
+// Guardamos SEMPRE os HEAL_TIER_COUNT degraus (com buracos), porque a UI é de
+// posições fixas; a normalização filtra os vazios e ordena por gravidade.
+function ensureTiers() {
+  const arr = Array.isArray(G.rtc.healTiers) ? G.rtc.healTiers.slice() : [];
+  const padrao = [70, 45, 25];
+  while (arr.length < HEAL_TIER_COUNT) arr.push({ spell: null, pct: padrao[arr.length] || 40 });
+  return arr;
+}
+
+export function setRtcHealTierSpell(idx, spellId) {
+  if (!isSpellAvailable(spellId, G.vocation, G.level)) return;
+  const arr = ensureTiers();
+  arr[idx] = { spell: spellId, pct: (arr[idx] && arr[idx].pct) || 40 };
+  G.rtc.healTiers = arr;
+  refresh(t('rtc.healSpellConfigured'));
+}
+
+export function setRtcHealTierPct(idx, valor) {
+  const arr = ensureTiers();
+  arr[idx] = { spell: arr[idx] && arr[idx].spell, pct: Math.max(1, Math.min(99, Math.round(Number(valor)) || 0)) };
+  G.rtc.healTiers = arr;
+  emit(EVENTS.RTC_PANEL);
+  saveGame();
+  syncRtcToServer();
+}
+
+export function clearRtcHealTier(idx) {
+  const arr = ensureTiers();
+  arr[idx] = { spell: null, pct: (arr[idx] && arr[idx].pct) || 40 };
+  G.rtc.healTiers = arr;
+  refresh(t('rtc.healSpellRemoved'));
+}
+
+// Em quem o RTC bate primeiro quando a sala tem mais de um bicho.
+export function setRtcTargetPriority(id) {
+  if (!TARGET_PRIORITIES[id]) return;
+  G.rtc.targetPriority = id;
+  refresh(t('rtc.targetPriorityChanged', { nome: t(TARGET_PRIORITIES[id].name) }));
+}
+
+// A partir de quantas criaturas vivas o RTC prefere magia/runa de área.
+// 0 desliga a regra e volta à ordem de prioridade crua.
+export function setRtcAreaMinTargets(valor) {
+  G.rtc.areaMinTargets = Math.max(0, Math.min(8, Math.round(Number(valor)) || 0));
+  refresh(G.rtc.areaMinTargets
+    ? t('rtc.areaRuleOn', { n: G.rtc.areaMinTargets })
+    : t('rtc.areaRuleOff'));
 }

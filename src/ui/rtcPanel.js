@@ -4,19 +4,19 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=193';
-import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=191';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=204';
-import { VOCATIONS } from '../domain/character.js?v=220';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=189';
-import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAttackRune, isRuneEntry, runeEntryId, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=223';
-import { getMagic } from '../application/stats.js?v=190';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=189';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=189';
-import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=225';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=191';
-import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=196';
-import { t } from '../i18n/i18n.js?v=207';
+import { G } from '../application/gameStore.js?v=194';
+import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=192';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=205';
+import { VOCATIONS } from '../domain/character.js?v=221';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=190';
+import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAttackRune, isRuneEntry, runeEntryId, ATTACK_SLOT_COUNT } from '../domain/rtcConfig.js?v=224';
+import { getMagic } from '../application/stats.js?v=191';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=190';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=190';
+import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot } from '../application/rtcUseCases.js?v=226';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=192';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=197';
+import { t } from '../i18n/i18n.js?v=208';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -77,6 +77,7 @@ export function openRtcAttackSpellPicker(idx) {
   const attackSpells = Object.entries(SPELLS).filter(([, s]) => s.type === 'attack' && s.voc.includes(voc));
   const attackRunes = ALL_ATTACK_RUNES.filter(([id]) => isRuneAvailableToVocation(id, voc));
   const prioSpells = normalizeAttackSpells(G.rtc);
+  const tiers = normalizeHealTiers(G.rtc);
   const currentEntry = prioSpells[idx];
   const spellRows = attackSpells.map(([id, s]) => {
     const unlocked = G.level >= s.level;
@@ -116,6 +117,55 @@ export function openRtcAttackSpellPicker(idx) {
       ${currentEntry ? `<div class="rtc-potion-picker-actions"><button class="btn-small danger" onclick="clearRtcAttackSpellSlot(${idx}); closeModal();">${t('rtc.remove')}</button></div>` : ''}
     </div>
   `);
+}
+
+// Um degrau de cura: "abaixo de X% casta a magia Y". Vazio mostra a posição,
+// preenchido mostra a magia (tocar troca). O degrau mais grave (menor %) é o
+// que o motor usa — ver domain/rtcConfig.js: pickHealTier.
+function healTierRow(idx, tier, voc) {
+  const s = tier && tier.spell ? SPELLS[tier.spell] : null;
+  const destravada = s && isSpellAvailable(tier.spell, voc, G.level);
+  const pct = tier ? tier.pct : [70, 45, 25][idx];
+  return `<div class="rtc-heal-tier">
+    <span class="rtc-tier-no">${idx + 1}</span>
+    <label class="rtc-inline-field">${t('rtc.below')}
+      <input type="number" min="1" max="99" value="${pct}" class="rtc-threshold-input"
+             onchange="setRtcHealTierPct(${idx}, this.value)" />%</label>
+    <button class="rtc-tier-spell ${s ? 'filled' : 'empty'}" onclick="openRtcHealTierPicker(${idx})">
+      ${s ? `${spellIconImg(s.name, s.icon, 'item-icon')} "${s.words}"${destravada ? '' : ' 🔒'}` : t('rtc.chooseHealSpell')}
+    </button>
+    ${s ? `<button class="rtc-tier-clear" onclick="clearRtcHealTier(${idx})" title="${t('rtc.remove')}">✕</button>` : ''}
+  </div>`;
+}
+
+// Modal de escolha da magia de cura de um degrau.
+export function openRtcHealTierPicker(idx) {
+  const voc = G.vocation;
+  const curas = Object.entries(SPELLS).filter(([, s]) => s.type === 'heal' && s.voc.includes(voc));
+  const atual = normalizeHealTiers(G.rtc)[idx];
+  openModal(`
+    <div class="rtc-potion-picker">
+      <h3>💚 ${t('rtc.healTierPickerTitle', { n: idx + 1 })}</h3>
+      <div class="rtc-rows">${curas.map(([id, s]) => {
+        const unlocked = G.level >= s.level;
+        const sel = atual && atual.spell === id;
+        return `<div class="rtc-row ${sel ? 'selected' : ''} ${unlocked ? '' : 'locked'}">
+          <span class="rtc-row-icon">${spellIconImg(s.name, s.icon, 'rtc-row-icon-img')}</span>
+          <div class="rtc-row-info">
+            <div class="rtc-row-name">${s.name} <span class="muted">"${s.words}"</span></div>
+            <div class="rtc-row-desc">💧 ${s.mana} mana · ${t('rtc.lockedLevel', { level: s.level })}</div>
+          </div>
+          <button class="rtc-row-btn" onclick="pickRtcHealTier(${idx}, '${id}')" ${unlocked ? '' : 'disabled'}>
+            ${unlocked ? (sel ? `✅ ${t('rtc.active')}` : t('rtc.use')) : `🔒`}
+          </button>
+        </div>`;
+      }).join('')}</div>
+    </div>`);
+}
+
+export function pickRtcHealTier(idx, spellId) {
+  setRtcHealTierSpell(idx, spellId);
+  closeModal();
 }
 
 // Aplica a escolha do modal e fecha a janelinha. kind = 'spell' | 'rune'.
@@ -246,11 +296,23 @@ export function renderRtcPanel() {
         <div class="rtc-slots-grid">
           ${Array.from({ length: ATTACK_SLOT_COUNT }, (_, idx) => attackSpellSlot(idx, prioSpells[idx])).join('')}
         </div>
+        <h5>🎯 ${t('rtc.targetPriorityTitle')}</h5>
+        <p class="muted">${t('rtc.targetPriorityHint')}</p>
+        <select class="rtc-select" onchange="setRtcTargetPriority(this.value)">
+          ${Object.entries(TARGET_PRIORITIES).map(([id, d]) =>
+            `<option value="${id}" ${(G.rtc.targetPriority || 'first') === id ? 'selected' : ''}>${t(d.name)}</option>`).join('')}
+        </select>
+        <h5>💥 ${t('rtc.areaRuleTitle')}</h5>
+        <p class="muted">${t('rtc.areaRuleHint')}</p>
+        <label class="rtc-inline-field">${t('rtc.areaFrom')}
+          <input type="number" min="0" max="8" value="${G.rtc.areaMinTargets != null ? G.rtc.areaMinTargets : 2}"
+                 onchange="setRtcAreaMinTargets(this.value)" class="rtc-threshold-input" />
+          ${t('rtc.areaCreatures')}</label>
         ` : `
-        <h5>${t('rtc.healSpellTitle')} <span class="muted">${t('rtc.castBelow')}</span>
-          <input type="number" min="5" max="95" value="${G.rtc.healSpellThreshold}" onchange="setRtcThreshold('healSpellThreshold', this.value)" class="rtc-threshold-input" />${t('rtc.ofHp')}</h5>
-        <div class="rtc-rows">
-          ${healSpells.map(([id, s]) => spellRow(id, s, (G.rtc.healSpell || defaultHealSpellId(voc, G.level)) === id, 'setRtcHealSpell')).join('')}
+        <h5>${t('rtc.healTiersTitle')}</h5>
+        <p class="muted">${t('rtc.healTiersHint')}</p>
+        <div class="rtc-heal-tiers">
+          ${Array.from({ length: HEAL_TIER_COUNT }, (_, i) => healTierRow(i, tiers[i], voc)).join('')}
         </div>
         <button class="btn-small" style="margin:2px 0 4px" onclick="toggleBackpack()">🎒 ${t('rtc.openBag')}</button>
         <h5>${t('rtc.healPotionTitle')} <span class="muted">${t('rtc.drinksBelow')}</span>

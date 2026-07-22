@@ -2644,3 +2644,43 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 .num-stepper-btn:hover { filter: brightness(0.94); }
 .num-stepper-btn:active { filter: brightness(0.86); transform: translateY(1px); }
 .num-stepper-btn:disabled { opacity: .4; cursor: default; transform: none; filter: none; }
+
+/* ---- RTC: degraus de cura, prioridade de alvo e regra de área ----
+   Um degrau é "abaixo de X% casta a magia Y". A numeração à esquerda deixa
+   claro que é uma escada (do gatilho mais alto pro mais baixo), e o degrau
+   preenchido ganha borda de destaque como os slots de prioridade de ataque. */
+.rtc-heal-tiers { display: flex; flex-direction: column; gap: 6px; margin: 4px 0 8px; }
+.rtc-heal-tier {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 6px 8px; border: 1px solid var(--border, #2c2c34);
+  border-radius: 6px; background: rgba(255, 255, 255, .02);
+}
+.rtc-tier-no {
+  flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; font-size: .72rem; font-weight: 700;
+  background: rgba(255, 255, 255, .08); color: var(--muted, #9a9aa5);
+}
+.rtc-tier-spell {
+  flex: 1 1 160px; min-width: 0; text-align: left; cursor: pointer;
+  padding: 5px 8px; border-radius: 5px; font: inherit; font-size: .82rem;
+  border: 1px dashed var(--border, #2c2c34); background: transparent;
+  color: var(--muted, #9a9aa5);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rtc-tier-spell.filled {
+  border-style: solid; border-color: #4a7c4a;
+  background: rgba(74, 124, 74, .12); color: var(--text, #e6e6ec);
+}
+.rtc-tier-spell:hover { border-color: #6a9c6a; }
+.rtc-tier-clear {
+  flex: 0 0 auto; cursor: pointer; border: none; background: transparent;
+  color: var(--muted, #9a9aa5); font-size: .9rem; padding: 2px 5px;
+}
+.rtc-tier-clear:hover { color: #d46a6a; }
+.rtc-inline-field { display: inline-flex; align-items: center; gap: 5px; font-size: .82rem; }
+.rtc-select {
+  width: 100%; max-width: 420px; padding: 6px 8px; border-radius: 5px;
+  font: inherit; font-size: .84rem;
+  border: 1px solid var(--border, #2c2c34);
+  background: var(--panel, #16161c); color: var(--text, #e6e6ec);
+}
