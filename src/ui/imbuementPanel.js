@@ -1,11 +1,11 @@
 // Modal de Imbuements — escolhe um aprimoramento pra arma equipada, mostra
 // custo (gold + materiais) e o imbuement ativo com tempo restante. O efeito é
 // resolvido no combate pelo servidor (ver huntEngine.js).
-import { G } from '../application/gameStore.js?v=199';
-import { IMBUEMENTS, isImbuementActive } from '../domain/imbuements.js?v=195';
-import { ITEMS } from '../domain/items.js?v=210';
-import { canImbue } from '../application/imbuementUseCases.js?v=195';
-import { openModal } from './shared.js?v=202';
+import { G } from '../application/gameStore.js?v=200';
+import { IMBUEMENTS, isImbuementActive } from '../domain/imbuements.js?v=196';
+import { ITEMS } from '../domain/items.js?v=211';
+import { canImbue } from '../application/imbuementUseCases.js?v=196';
+import { openModal } from './shared.js?v=203';
 
 function fmtRemaining(expiresAt) {
   const ms = new Date(expiresAt).getTime() - Date.now();
@@ -46,7 +46,7 @@ export function openImbueModal() {
 // Chamado pelo botão Aplicar — importa dinamicamente pra não acoplar a UI ao
 // use case de forma circular; re-renderiza o modal após aplicar.
 export async function applyImbuementClick(id) {
-  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=195');
+  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=196');
   await applyImbuement(id);
   openModal(imbueHtml());
 }

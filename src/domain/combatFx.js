@@ -105,21 +105,16 @@ export function runeEffectName(runeId) {
 // (mago) disparam; corpo-a-corpo (cavaleiro) não tem projétil (retorna null).
 //  - distance: a própria munição equipada (flecha/virote); sem munição, flecha.
 //  - magic: o "raio" elemental da wand/rod (energia/fogo/gelo/terra/morte).
-const AMMO_MISSILE = {
-  // Munição física comum (sem elemento próprio) — sprite genérico.
-  arrow: 'arrow', sniper_arrow: 'arrow', simple_arrow: 'arrow',
-  diamond_arrow: 'arrow', crystalline_arrow: 'arrow', burst_arrow: 'arrow',
-  bolt: 'bolt', power_bolt: 'bolt', piercing_bolt: 'bolt',
-  drill_bolt: 'bolt', crystal_bolt: 'bolt', tarsal_arrow: 'arrow',
-  // Elementais (o dano é do elemento, ver domain/items.js).
-  flaming_arrow: 'fire', firestorm_arrow: 'fire', infernal_bolt: 'fire',
-  froststorm_arrow: 'ice', shiver_arrow: 'ice',
-  flash_arrow: 'energy', thunderstorm_arrow: 'energy', vortex_bolt: 'energy',
-  // "Terra" no Tibia cobre veneno/terra (sem categoria própria em elements.js).
-  earth_arrow: 'earth', envenomed_arrow: 'earth', poison_arrow: 'earth',
-  terrastorm_arrow: 'earth', shatterstorm_arrow: 'earth', prismatic_bolt: 'earth',
-  onyx_arrow: 'death', spectral_bolt: 'death',
-};
+// Cada munição tem projétil PRÓPRIO no Tibia — o items.xml do Canary dá o
+// shootType de cada uma (arrow, burstarrow, onyxarrow, spectralbolt...), 21
+// distintos. Os sprites vêm do TibiaWiki (<Nome>_Missile.gif) via
+// scripts/fetch-missiles.mjs e ficam em assets/sprites/missiles/<id do item>.
+// Por isso não há tabela aqui: o id da munição JÁ é o nome do arquivo.
+//
+// A única exceção é a Crystal Bolt, que não tem sprite de projétil no wiki —
+// cai no genérico, e isso está registrado no relatório do script em vez de ser
+// mascarado por um sprite parecido.
+const AMMO_SEM_SPRITE = { crystal_bolt: 'bolt' };
 const WAND_MISSILE = {
   wand_of_vortex: 'energy', wand_of_cosmic_energy: 'energy',
   wand_of_starstorm: 'energy', tempest_rod: 'energy', energized_limb: 'energy',
@@ -176,7 +171,7 @@ const WAND_MISSILE = {
   plain_remedy_wand: 'holy', valuable_remedy_wand: 'holy', ornate_remedy_wand: 'holy',
 };
 export function basicAttackMissile({ attackSkill, weaponId, ammoId } = {}) {
-  if (attackSkill === 'distance') return AMMO_MISSILE[ammoId] || 'arrow';
+  if (attackSkill === 'distance') return AMMO_SEM_SPRITE[ammoId] || ammoId || 'arrow';
   if (attackSkill === 'magic') return WAND_MISSILE[weaponId] || 'energy';
   return null; // corpo-a-corpo não dispara projétil
 }

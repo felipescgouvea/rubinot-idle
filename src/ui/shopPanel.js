@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=199';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=198';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=210';
-import { on, EVENTS } from '../shared/eventBus.js?v=197';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=202';
-import { buyShopItem } from '../application/shopUseCases.js?v=203';
-import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=200';
-import { t } from '../i18n/i18n.js?v=213';
+import { G } from '../application/gameStore.js?v=200';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=199';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=211';
+import { on, EVENTS } from '../shared/eventBus.js?v=198';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=203';
+import { buyShopItem } from '../application/shopUseCases.js?v=204';
+import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=201';
+import { t } from '../i18n/i18n.js?v=214';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
