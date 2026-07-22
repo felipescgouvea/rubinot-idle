@@ -2,15 +2,15 @@
 // monstros por hunt e os drops (relíquias + itens normais), em 3 sub-abas pra
 // não virar uma tela só gigante. Lê/escreve via application/adminUseCases.js;
 // as mudanças aplicam na hora e são salvas.
-import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, zoneSpawnPercents } from '../domain/adminConfig.js?v=187';
-import { RARITY_TIERS } from '../domain/rarity.js?v=185';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=206';
-import { ITEMS } from '../domain/items.js?v=199';
-import { on, EVENTS } from '../shared/eventBus.js?v=186';
-import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=189';
-import { itemIconImg } from './shared.js?v=191';
-import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=205';
-import { t } from '../i18n/i18n.js?v=202';
+import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, zoneSpawnPercents } from '../domain/adminConfig.js?v=188';
+import { RARITY_TIERS } from '../domain/rarity.js?v=186';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=207';
+import { ITEMS } from '../domain/items.js?v=200';
+import { on, EVENTS } from '../shared/eventBus.js?v=187';
+import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=190';
+import { itemIconImg } from './shared.js?v=192';
+import { zoneIconImg, monsterSpriteImg } from './huntPanel.js?v=206';
+import { t } from '../i18n/i18n.js?v=203';
 
 // Sub-aba ativa do Painel Admin (estado só de UI, preservado entre re-renders
 // — mesmo padrão do RTC, ver ui/rtcPanel.js: activeRtcTab).

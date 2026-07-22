@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=184" />
-  <link rel="stylesheet" href="style.css?v=203" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=185" />
+  <link rel="stylesheet" href="style.css?v=204" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -49,6 +49,7 @@
     <nav id="tabs">
       <button class="tab active" data-tab="hunt" data-icon="hunt"><span data-i18n="shell.tabHunt">Hunt</span></button>
       <button class="tab" data-tab="rtc" data-icon="rtc">RTC</button>
+      <button class="tab" data-tab="spells" data-icon="rtc">Spells</button>
       <button class="tab" data-tab="tasks" data-icon="tasks"><span data-i18n="shell.tabTasks">Tasks</span></button>
       <button class="tab" data-tab="skills" data-icon="skills">Skills</button>
       <button class="tab" data-tab="training" data-icon="training"><span data-i18n="shell.tabTraining">Training</span></button>
@@ -176,6 +177,24 @@
           <div id="rtc-settings"></div>
         </div>
       </section>
+
+      <!-- MAGIAS -->
+
+      <section id="tab-spells" class="panel">
+
+        <div class="card full-card">
+
+          <h3 data-icon="rtc" data-icon-class="hdr-icon">Livro de Magias</h3>
+
+          <p class="muted">Todas as magias da sua voca&ccedil;&atilde;o. As de conjura&ccedil;&atilde;o voc&ecirc; lan&ccedil;a aqui; ataque e cura quem dispara &eacute; o RTC.</p>
+
+          <div id="spells-book"></div>
+
+        </div>
+
+      </section>
+
+      
 
       <!-- TASKS -->
       <section id="tab-tasks" class="panel">
@@ -419,6 +438,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=273"></script>
+  <script type="module" src="src/main.js?v=274"></script>
 </body>
 </html>

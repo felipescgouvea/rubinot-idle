@@ -58,6 +58,8 @@ function resetBpIfNewSeason(bp) {
 }
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
+import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
+import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
 import { startSession, stopSession, getLiveSession, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow } from './db.js';
 
@@ -390,6 +392,13 @@ const server = http.createServer(async (req, res) => {
         stats.hp = liveSession.hp;
         stats.mana = liveSession.mana;
       }
+      // Soul points: o banco guarda o valor gravado + quando; o valor de AGORA
+      // é sempre recalculado pelo relógio (ver src/domain/soul.js), então quem
+      // ficou com a aba fechada recupera igual a quem ficou online.
+      if (stats) {
+        stats.soul = currentSoul(stats.soul, stats.soul_at ? Date.parse(stats.soul_at) : Date.now(), !!stats.promoted);
+        stats.soul_max = maxSoul(!!stats.promoted);
+      }
       return send(res, 200, {
         ok: true,
         hunting: !!activeRow,
@@ -520,6 +529,65 @@ const server = http.createServer(async (req, res) => {
       if (gold < cost) return send(res, 400, { error: 'gold insuficiente' });
       await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - cost, blessings: blessings + 1, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, gold: gold - cost, blessings: blessings + 1 });
+    }
+
+    // Conjurar (as magias que FABRICAM item: munição do paladino, runas dos
+    // magos, comida do druida). Autoritativo do começo ao fim — nível,
+    // vocação, mana, soul points e a Blank Rune de reagente são conferidos
+    // aqui. Se o cliente pudesse declarar "conjurei", runa vira item
+    // infinito e o mercado inteiro do jogo perde o sentido.
+    if (url.pathname === '/conjure' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const spell = SPELLS[body.spellId];
+      if (!spell || spell.type !== 'conjure') return send(res, 400, { error: 'magia de conjuração inválida' });
+
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      if (!stats) return send(res, 400, { error: 'personagem sem stats' });
+      // Vocação: não existe tabela de personagem no servidor — a verdade mais
+      // próxima é a última caçada deste slot (mesma fonte que o highscore usa).
+      // Só cai no valor informado pelo cliente se o slot nunca caçou.
+      const ultimaSessao = await selectLatest('hunt_sessions', { user_id: user.id, slot }, 'started_at');
+      const vocation = (ultimaSessao && ultimaSessao.vocation) || (VOCATIONS[body.vocation] ? body.vocation : null);
+      if (!isSpellAvailable(body.spellId, vocation, stats.level)) {
+        return send(res, 400, { error: 'vocação ou nível insuficiente pra esta magia' });
+      }
+
+      // Mana vem da sessão viva quando existe (é ela que manda durante a
+      // caçada); parado, do player_stats. Sem isso, conjurar caçando gastaria
+      // uma mana desatualizada e o flush seguinte devolveria o valor antigo.
+      const sessaoAtiva = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
+      const live = sessaoAtiva ? getLiveSession(sessaoAtiva.id) : null;
+      const manaAtual = live ? live.mana : Number(stats.mana || 0);
+      if (manaAtual < spell.mana) return send(res, 400, { error: 'mana insuficiente' });
+
+      const gasto = spendSoul(stats.soul, stats.soul_at ? Date.parse(stats.soul_at) : Date.now(), !!stats.promoted, spell.soul || 0);
+      if (!gasto) return send(res, 400, { error: 'soul points insuficientes' });
+
+      if (spell.reagent) {
+        const row = await selectOne('player_inventory', { user_id: user.id, slot, item_id: spell.reagent.item });
+        if (!row || Number(row.qty) < spell.reagent.count) {
+          return send(res, 400, { error: `faltou ${ITEMS[spell.reagent.item].name}` });
+        }
+        await incrementInventory(user.id, slot, spell.reagent.item, -spell.reagent.count);
+      }
+      const qtd = await incrementInventory(user.id, slot, spell.conjures.item, spell.conjures.count);
+
+      const manaNova = manaAtual - spell.mana;
+      if (live) live.mana = manaNova;
+      await upsertRow('player_stats', {
+        user_id: user.id, slot, mana: Math.floor(manaNova),
+        soul: gasto.soul, soul_at: new Date(gasto.lastAt).toISOString(),
+        updated_at: new Date().toISOString(),
+      }, 'user_id,slot');
+
+      return send(res, 200, {
+        ok: true, mana: Math.floor(manaNova), soul: gasto.soul, soulAt: gasto.lastAt,
+        item: spell.conjures.item, count: spell.conjures.count, qty: qtd,
+      });
     }
 
     // Promover vocação (Elite Knight / Royal Paladin / etc.) — valida nível e

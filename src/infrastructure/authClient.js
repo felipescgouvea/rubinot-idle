@@ -343,6 +343,13 @@ export function promoteOnServer(slot) {
   return huntFetch('/promote', { method: 'POST', body: { slot } });
 }
 
+// Conjurar (magia que fabrica item: munição, runa, comida). Tudo conferido no
+// servidor — nível, vocação, mana, soul e a Blank Rune de reagente (ver
+// server/src/index.js: /conjure). Retorna { ok, mana, soul, item, count, qty }.
+export function conjureOnServer(slot, spellId, vocation) {
+  return huntFetch('/conjure', { method: 'POST', body: { slot, spellId, vocation } });
+}
+
 // Battle Pass: resgate de recompensa validado no servidor (grant real de gold/
 // item/rubini + anti double-claim — ver /bp/claim). Retorna { ok, gold, rubini,
 // itemId }. `xp` é o bpXp local (só pra checar o tier alcançado).

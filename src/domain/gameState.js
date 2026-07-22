@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=215';
-import { createDefaultRtc } from './rtcConfig.js?v=218';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=184';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=187';
+import { createDefaultSkills } from './character.js?v=216';
+import { createDefaultRtc } from './rtcConfig.js?v=219';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=185';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=188';
 
 export function createDefaultState() {
   return {
@@ -80,6 +80,13 @@ export function createDefaultState() {
     // Bênçãos ativas (0..5) — reduzem a perda de XP na morte e melhoram o
     // revive; consumidas ao morrer (ver domain/blessings.js).
     blessings: 0,
+
+    // Soul points — a segunda moeda das magias de conjuracao (ver domain/soul.js).
+    // soulAt e QUANDO o valor foi visto pela ultima vez: a regeneracao e contada
+    // pelo relogio a partir dai, nao por tick.
+    soul: 100,
+    soulMax: 100,
+    soulAt: 0,
     taskKills: {},
     activeTask: null,
     taskCompletion: {},
