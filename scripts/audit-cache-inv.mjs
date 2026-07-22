@@ -36,11 +36,13 @@ try {
     await hu.startHunt();
     await new Promise(x => setTimeout(x, 70000));
     const depois = { ...window.__G.inventory };
-    // O /hunt/state monta o inventário LENDO player_inventory — é a verdade do
-    // banco, independente do cache em memória do motor.
-    const estado = await au.getHuntState(window.__ACC.activeSlot);
+    // ORDEM IMPORTA. Com a caçada VIVA, o /hunt/state passou a responder da
+    // memória da sessão — comparar com ele nesse momento é circular: memória
+    // batendo com ela mesma. É preciso PARAR a caçada primeiro; sem sessão
+    // viva a rota volta a ler player_inventory, e aí a comparação vale.
     if (window.__G.hunting) window.toggleHunt();
-    await new Promise(x => setTimeout(x, 1500));
+    await new Promise(x => setTimeout(x, 4000));
+    const estado = await au.getHuntState(window.__ACC.activeSlot);
     return { antes, depois, doBanco: (estado && estado.inventory) || {}, kills: window.__G.totalKills };
   }, ZONA);
 
