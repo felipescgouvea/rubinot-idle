@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=189';
+import { primaryStatKeyForItem } from './rarity.js?v=190';
 
 // A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
 // Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
@@ -62,10 +62,11 @@ export const ITEMS = {
   nzoth_tentacle: { name: 'Tentacle of N\'Zoth', icon: '🦑', type: 'misc', sell: 40000, rare: true },
   // --- Munição (equipada no slot Munição; define o ataque do paladino junto
   // com a skill Distance). Ataques reais do Tibia. Não é consumida (idle). ---
-  arrow:          { name: 'Arrow', icon: '🏹', type: 'ammo', atk: 13, sell: 0 },
-  bolt:           { name: 'Bolt', icon: '🏹', type: 'ammo', atk: 27, sell: 0 },
-  sniper_arrow:   { name: 'Sniper Arrow', icon: '🏹', type: 'ammo', atk: 20, sell: 0 },
-  power_bolt:     { name: 'Power Bolt', icon: '🏹', type: 'ammo', atk: 33, sell: 0 },
+  arrow:          { name: 'Arrow', icon: '🏹', type: 'ammo', reqLevel: 0, atk: 25, sell: 0 },
+  bolt:           { name: 'Bolt', icon: '🏹', type: 'ammo', reqLevel: 0, atk: 30, sell: 0 },
+  crystal_bolt:    { name: 'Crystal Bolt', icon: '🏹', type: 'ammo', atk: 36, reqLevel: 0, sell: 0 },
+  sniper_arrow:   { name: 'Sniper Arrow', icon: '🏹', type: 'ammo', reqLevel: 20, atk: 28, sell: 0 },
+  power_bolt:     { name: 'Power Bolt', icon: '🏹', type: 'ammo', reqLevel: 55, atk: 40, sell: 0 },
   gold_coin:      { name: 'Gold Coin', icon: '🪙', type: 'currency', sell: 1 },
   dragon_scale:   { name: 'Dragon Scale', icon: '🐉', type: 'misc', sell: 200 },
   dragon_ham:     { name: 'Dragon Ham', icon: '🍖', type: 'food', heal: 120, sell: 0 },
@@ -2084,47 +2085,35 @@ export const ITEMS = {
   supreme_health_potion: { name: 'Supreme Health Potion', icon: '🧪', type: 'potion', heal: 300, sell: 60 },
   ultimate_mana_potion: { name: 'Ultimate Mana Potion', icon: '🔵', type: 'potion', mana: 100, sell: 0 },
   ultimate_spirit_potion: { name: 'Ultimate Spirit Potion', icon: '🧪', type: 'potion', heal: 260, sell: 52 },
-  arrow_weak:      { name: 'Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 10, sell: 1 },
-  bolt_weak:       { name: 'Bolt (Weak)', icon: '🏹', type: 'ammo', atk: 42, sell: 3 },
-  burst_arrow_weak: { name: 'Burst Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 46, sell: 4 },
-  burst_arrow:     { name: 'Burst Arrow', icon: '🏹', type: 'ammo', atk: 34, sell: 0 },
-  crystalline_arrow_earth: { name: 'Crystalline Arrow Earth', icon: '🏹', type: 'ammo', atk: 38, sell: 3 },
-  crystalline_arrow_energy: { name: 'Crystalline Arrow Energy', icon: '🏹', type: 'ammo', atk: 46, sell: 4 },
-  crystalline_arrow_fire: { name: 'Crystalline Arrow Fire', icon: '🏹', type: 'ammo', atk: 22, sell: 2 },
-  crystalline_arrow_ice: { name: 'Crystalline Arrow Ice', icon: '🏹', type: 'ammo', atk: 18, sell: 1 },
-  crystalline_arrow: { name: 'Crystalline Arrow', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
-  diamond_arrow:   { name: 'Diamond Arrow', icon: '🏹', type: 'ammo', atk: 10, sell: 1 },
-  drill_bolt:      { name: 'Drill Bolt', icon: '🏹', type: 'ammo', atk: 46, sell: 0 },
-  earth_arrow:     { name: 'Earth Arrow', icon: '🏹', type: 'ammo', atk: 26, sell: 0 },
-  envenomed_arrow: { name: 'Envenomed Arrow', icon: '🏹', type: 'ammo', atk: 22, sell: 0 },
-  firestorm_arrow: { name: 'Firestorm Arrow', icon: '🏹', type: 'ammo', atk: 22, sell: 2 },
-  flaming_arrow:   { name: 'Flaming Arrow', icon: '🏹', type: 'ammo', atk: 10, sell: 1 },
-  flash_arrow:     { name: 'Flash Arrow', icon: '🏹', type: 'ammo', atk: 10, sell: 0 },
-  froststorm_arrow: { name: 'Froststorm Arrow', icon: '🏹', type: 'ammo', atk: 22, sell: 2 },
-  infernal_bolt:   { name: 'Infernal Bolt', icon: '🏹', type: 'ammo', atk: 38, sell: 3 },
-  onyx_arrow:      { name: 'Onyx Arrow', icon: '🏹', type: 'ammo', atk: 18, sell: 0 },
-  piercing_bolt_weak: { name: 'Piercing Bolt (Weak)', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
-  piercing_bolt:   { name: 'Piercing Bolt', icon: '🏹', type: 'ammo', atk: 46, sell: 0 },
-  poison_arrow:    { name: 'Poison Arrow', icon: '🏹', type: 'ammo', atk: 18, sell: 0 },
-  power_arrow:     { name: 'Power Arrow', icon: '🏹', type: 'ammo', atk: 14, sell: 1 },
-  power_bolt_weak: { name: 'Power Bolt (Weak)', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
-  prismatic_bolt:  { name: 'Prismatic Bolt', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
-  shatterstorm_arrow: { name: 'Shatterstorm Arrow', icon: '🏹', type: 'ammo', atk: 34, sell: 3 },
-  shiver_arrow:    { name: 'Shiver Arrow', icon: '🏹', type: 'ammo', atk: 46, sell: 4 },
+  burst_arrow:     { name: 'Burst Arrow', icon: '🏹', type: 'ammo', area: 'square', reqLevel: 0, atk: 27, sell: 0 },
+  crystalline_arrow: { name: 'Crystalline Arrow', icon: '🏹', type: 'ammo', reqLevel: 90, atk: 65, sell: 3 },
+  diamond_arrow:   { name: 'Diamond Arrow', icon: '🏹', type: 'ammo', reqLevel: 150, atk: 37, sell: 1 },
+  drill_bolt:      { name: 'Drill Bolt', icon: '🏹', type: 'ammo', reqLevel: 70, atk: 56, sell: 0 },
+  earth_arrow:     { name: 'Earth Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 20, atk: 14, sell: 0 },
+  envenomed_arrow: { name: 'Envenomed Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 70, atk: 27, sell: 0 },
+  firestorm_arrow: { name: 'Firestorm Arrow', icon: '🏹', type: 'ammo', element: 'fire', reqLevel: 125, atk: 0, sell: 2 },
+  flaming_arrow:   { name: 'Flaming Arrow', icon: '🏹', type: 'ammo', element: 'fire', reqLevel: 20, atk: 14, sell: 1 },
+  flash_arrow:     { name: 'Flash Arrow', icon: '🏹', type: 'ammo', element: 'energy', reqLevel: 20, atk: 14, sell: 0 },
+  froststorm_arrow: { name: 'Froststorm Arrow', icon: '🏹', type: 'ammo', element: 'ice', reqLevel: 125, atk: 0, sell: 2 },
+  infernal_bolt:   { name: 'Infernal Bolt', icon: '🏹', type: 'ammo', reqLevel: 110, atk: 72, sell: 3 },
+  onyx_arrow:      { name: 'Onyx Arrow', icon: '🏹', type: 'ammo', reqLevel: 40, atk: 38, sell: 0 },
+  piercing_bolt:   { name: 'Piercing Bolt', icon: '🏹', type: 'ammo', reqLevel: 30, atk: 33, sell: 0 },
+  poison_arrow:    { name: 'Poison Arrow', icon: '🏹', type: 'ammo', reqLevel: 0, atk: 23, sell: 0 },
+  prismatic_bolt:  { name: 'Prismatic Bolt', icon: '🏹', type: 'ammo', reqLevel: 90, atk: 66, sell: 3 },
+  shatterstorm_arrow: { name: 'Shatterstorm Arrow', icon: '🏹', type: 'ammo', reqLevel: 50, atk: 27, sell: 3 },
+  shiver_arrow:    { name: 'Shiver Arrow', icon: '🏹', type: 'ammo', element: 'ice', reqLevel: 20, atk: 14, sell: 4 },
   // Corrigido (era atk 46/42, herdado por engano do lote de bolts/arrows de
   // alto tier vizinho no catálogo importado) — no Tibia real a Simple Arrow
   // (atk 20) é ligeiramente MAIS FRACA que a Arrow comum (atk 25, ver acima
   // `arrow`), não mais forte. Fiel a essa proporção (~0.8x da Arrow deste
   // jogo, atk 13): é a munição real dada ao Paladino no Dawnport (ver
   // STARTER_KITS abaixo), não a Arrow comum.
-  simple_arrow_weak: { name: 'Simple Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 7, sell: 4 },
-  simple_arrow:    { name: 'Simple Arrow', icon: '🏹', type: 'ammo', atk: 10, sell: 0 },
-  sniper_arrow_weak: { name: 'Sniper Arrow (Weak)', icon: '🏹', type: 'ammo', atk: 10, sell: 1 },
-  spectral_bolt:   { name: 'Spectral Bolt', icon: '🏹', type: 'ammo', atk: 42, sell: 3 },
-  tarsal_arrow:    { name: 'Tarsal Arrow', icon: '🏹', type: 'ammo', atk: 22, sell: 2 },
-  terrastorm_arrow: { name: 'Terrastorm Arrow', icon: '🏹', type: 'ammo', atk: 14, sell: 1 },
-  thunderstorm_arrow: { name: 'Thunderstorm Arrow', icon: '🏹', type: 'ammo', atk: 38, sell: 3 },
-  vortex_bolt:     { name: 'Vortex Bolt', icon: '🏹', type: 'ammo', atk: 26, sell: 2 },
+  simple_arrow:    { name: 'Simple Arrow', icon: '🏹', type: 'ammo', reqLevel: 1, atk: 10, sell: 0 },
+  spectral_bolt:   { name: 'Spectral Bolt', icon: '🏹', type: 'ammo', reqLevel: 150, atk: 78, sell: 3 },
+  tarsal_arrow:    { name: 'Tarsal Arrow', icon: '🏹', type: 'ammo', reqLevel: 30, atk: 33, sell: 2 },
+  terrastorm_arrow: { name: 'Terrastorm Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 125, atk: 0, sell: 1 },
+  thunderstorm_arrow: { name: 'Thunderstorm Arrow', icon: '🏹', type: 'ammo', element: 'energy', reqLevel: 125, atk: 0, sell: 3 },
+  vortex_bolt:     { name: 'Vortex Bolt', icon: '🏹', type: 'ammo', reqLevel: 40, atk: 36, sell: 2 },
 
   // ---- Fase 5 do catálogo completo do Tibia (decoração, quest items,
   // documentos/scrolls, utensílios domésticos, fontes de luz, ferramentas,
@@ -9869,13 +9858,13 @@ export const ITEMS = {
 // EMPILHÁVEL e consumível (mesmo com consumeAmmo desligado por padrão, ver
 // adminConfig), entregar 1 só é o mesmo que "sem flecha" na prática — o
 // paladino recém-criado começa com uma pilha de verdade da flecha mais fraca
-// (simple_arrow_weak), como no Dawnport real. Usado no cliente (selectVocation)
+// (simple_arrow), como no Dawnport real. Usado no cliente (selectVocation)
 // e no servidor (grant do kit) pra ficarem idênticos.
 export const STARTER_AMMO_QTY = 100;
 
 export const STARTER_KITS = {
   knight:   { weapon: 'dagger',        armor: 'leather_armor', shield: 'wooden_shield', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
-  paladin:  { weapon: 'bow', ammo: 'simple_arrow_weak', armor: 'leather_armor',          helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
+  paladin:  { weapon: 'bow', ammo: 'simple_arrow', armor: 'leather_armor',          helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   sorcerer: { weapon: 'the_scorcher', armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
   druid:    { weapon: 'the_chiller',  armor: 'leather_armor', shield: 'spellbook_of_the_novice', helmet: 'leather_helmet', legs: 'leather_legs', boots: 'leather_boots' },
 };
@@ -9928,7 +9917,14 @@ export function canVocationEquip(item, vocation) {
 // Motivo do bloqueio (pra mensagem), ou null se pode equipar. `t` é o
 // tradutor (ver i18n/i18n.js) injetado por quem chama — este arquivo é dado
 // puro (sem DOM/localStorage), então não importa i18n.js diretamente.
-export function equipBlockReason(item, vocation, t) {
+// `level` e opcional so por compatibilidade com chamadas antigas; sempre que
+// existir, o requisito de nivel do item e cobrado. No Tibia a municao tem nivel
+// minimo (Power Bolt 55, Infernal Bolt 110, Spectral Bolt 150...) e aqui nao
+// era cobrado em lugar nenhum: dava pra equipar Spectral Bolt no nivel 1.
+export function equipBlockReason(item, vocation, t, level = null) {
+  if (level != null && item.reqLevel && level < item.reqLevel) {
+    return t('items.reqLevel', { level: item.reqLevel });
+  }
   if (canVocationEquip(item, vocation)) return null;
   if (item.type === 'weapon') return t('items.blockWrongWeapon');
   if (item.type === 'ammo') return t('items.blockAmmoOnly');

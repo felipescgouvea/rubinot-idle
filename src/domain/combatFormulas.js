@@ -4,9 +4,9 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=219';
-import { resolveEquippedItem } from './items.js?v=203';
-import { pickWeightedMonster } from './adminConfig.js?v=191';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=220';
+import { resolveEquippedItem } from './items.js?v=204';
+import { pickWeightedMonster } from './adminConfig.js?v=192';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -272,14 +272,33 @@ export function rollPlayerAttack({ vocation, level, skills, equipment, relics, f
     // WeaponDistance: attackValue = ataque da MUNIÇÃO + ataque do arco (o arco
     // SOMA no ataque, não na skill). distanceBonus histórico do jogo é tratado
     // como ataque extra do arco. min vs monstro = ceil(level*0.2).
-    const ammo = resolveEquippedItem(equipment.ammo, relics);
-    const ammoAtk = (ammo && ammo.type === 'ammo' && ammo.atk) || 0;
+    // Munição abaixo do nível mínimo não atira (no Tibia o disparo é recusado).
+    // Aqui ela simplesmente não soma ataque nenhum — o personagem fica com o
+    // arco pelado em vez de ganhar de graça o dano de uma Spectral Bolt de
+    // nível 150 no nível 8. A trava de equipar (domain/items.js:
+    // equipBlockReason) impede o caso normal; isto cobre save antigo e
+    // qualquer caminho que escape dela.
+    const ammoRaw = resolveEquippedItem(equipment.ammo, relics);
+    const ammoUsavel = ammoRaw && ammoRaw.type === 'ammo' && level >= (ammoRaw.reqLevel || 0);
+    const ammo = ammoUsavel ? ammoRaw : null;
+    const ammoAtk = (ammo && ammo.atk) || 0;
     const bowAtk = (weapon && weapon.weaponType === 'distance') ? ((weapon.atk || 0) + (weapon.distanceBonus || 0)) : 0;
     const attackValue = ammoAtk + bowAtk;
     const skill = (skills.distance && skills.distance.lv) || 0;
     const max = getMaxWeaponDamage(level, skill, attackValue, af);
     const min = Math.ceil(level * 0.2);
-    return { damage: normalRandom(min, max), element: 'physical', physical: true };
+    // A munição carrega a FORMA do golpe e o elemento: Burst Arrow explode em
+    // 3x3 (data/weapons/scripts/burst_arrow.lua do TFS) e as flechas elementais
+    // (Flaming/Shiver/Flash/Earth/Envenomed) causam dano do elemento, não
+    // físico. Antes tudo isso era jogado fora: toda flecha batia igual, em
+    // alvo único — o Felipe reparou que a Burst Arrow era single target.
+    const ammoElement = (ammo && ammo.element) || null;
+    return {
+      damage: normalRandom(min, max),
+      element: ammoElement || 'physical',
+      physical: !ammoElement,
+      area: (ammo && ammo.area) || 'single',
+    };
   }
 
   // Melee (knight): a arma REALMENTE equipada decide skill+ataque; sem arma de

@@ -409,6 +409,16 @@ async function resolveTick(session) {
   const dealt = Math.max(1, Math.floor(basicDmg));
   primary.hp -= dealt;
   pushCombat(session, { kind: 'basic', amount: dealt, target: primary.name });
+  // Respingo do golpe BÁSICO — só existe quando a munição tem área (Burst
+  // Arrow). O golpe corpo a corpo e a flecha comum continuam alvo único.
+  if (isAreaAttack(atkRoll.area) && pack.length > 1) {
+    const outros = pack.filter(m => m !== primary && m.hp > 0).slice(0, areaMaxTargets(atkRoll.area) - 1);
+    for (const alvo of outros) {
+      let d = atkRoll.damage * elementMod(alvo.defKey, atkRoll.element);
+      if (atkRoll.physical) d = reducePhysical(d, alvo.def, 0);
+      alvo.hp -= Math.max(1, Math.floor(d));
+    }
+  }
   // Imbuement da ARMA (Tibia): Vampirism (life leech), Void (mana leech) e
   // Scorch (dano elemental extra) — aplicados sobre o dano do ataque básico se
   // o imbuement ainda vale (ver domain/imbuements.js: expiresAt). Efeito

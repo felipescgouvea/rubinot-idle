@@ -145,8 +145,6 @@ export const SPELLS = {
   exura_gran_ico:   { name: 'Intense Wound Cleansing', words: 'exura gran ico', icon: '💗', voc: ['knight'], level: 80, mana: 200, type: 'heal', power: [70, 438, 92, 544], cd: 1 },
   exura_gran_mas_res:{ name: 'Mass Healing', words: 'exura gran mas res', icon: '🫧', voc: ['druid'], level: 36, mana: 150, type: 'heal', power: [4.6, 100, 9.6, 125], cd: 1 },
   exura_sio:        { name: 'Heal Friend', words: 'exura sio', icon: '🤝', voc: ['druid'], level: 18, mana: 140, type: 'heal', power: [6.3, 45, 14.4, 90], cd: 1 },
-  exura_dis:        { name: 'Practice Healing', words: 'exura dis', icon: '🩹', voc: ['sorcerer','druid','paladin','knight'], level: 1, mana: 5, type: 'heal', power: [0, 1, 0, 2], cd: 1 },
-  exevo_dis_flam_hur:{ name: 'Practice Fire Wave', words: 'exevo dis flam hur', icon: '🔥', voc: ['sorcerer','druid','paladin','knight'], level: 1, mana: 5, type: 'attack', power: [0, 1, 0, 2], element: 'fire', area: 'wave', cd: 4 },
 
   exana_pox:        { name: 'Cure Poison', words: 'exana pox', icon: '🧪', voc: ['sorcerer','druid','paladin','knight'], level: 10, mana: 30, type: 'utility', cd: 6 },
   exana_vis:        { name: 'Cure Electrification', words: 'exana vis', icon: '🧪', voc: ['druid'], level: 22, mana: 30, type: 'utility', cd: 6 },
@@ -211,7 +209,6 @@ export const SPELLS = {
   adori_blank:      { name: 'Blank Rune', words: 'adori blank', icon: '📜', voc: ['sorcerer','druid','paladin'], level: 20, mana: 50, soul: 1, type: 'conjure', conjures: { item: 'blank_rune', count: 1 }, cd: 2 },
   adori_infir_vis:  { name: 'Lightest Missile Rune', words: 'adori infir vis', icon: '📜', voc: ['sorcerer','druid','paladin'], level: 1, mana: 6, soul: 0, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'lightest_missile_rune', count: 10 }, cd: 2 },
   adori_infir_mas_tera:{ name: 'Light Stone Shower Rune', words: 'adori infir mas tera', icon: '📜', voc: ['sorcerer','druid','paladin'], level: 1, mana: 6, soul: 3, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'light_stone_shower_rune', count: 4 }, cd: 2 },
-  adori_dis_min_vis:{ name: 'Practice Magic Missile Rune', words: 'adori dis min vis', icon: '📜', voc: ['sorcerer','druid','paladin','knight'], level: 1, mana: 5, soul: 0, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'light_magic_missile_rune', count: 1 }, cd: 2 },
   adori_min_vis:    { name: 'Light Magic Missile Rune', words: 'adori min vis', icon: '📜', voc: ['sorcerer','druid'], level: 15, mana: 120, soul: 1, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'light_magic_missile_rune', count: 10 }, cd: 2 },
   adori_vis:        { name: 'Heavy Magic Missile Rune', words: 'adori vis', icon: '📜', voc: ['sorcerer','druid'], level: 25, mana: 350, soul: 2, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'heavy_magic_missile_rune', count: 10 }, cd: 2 },
   adori_tera:       { name: 'Stalagmite Rune', words: 'adori tera', icon: '📜', voc: ['sorcerer','druid'], level: 24, mana: 350, soul: 2, type: 'conjure', reagent: { item: 'blank_rune', count: 1 }, conjures: { item: 'stalagmite_rune', count: 10 }, cd: 2 },
