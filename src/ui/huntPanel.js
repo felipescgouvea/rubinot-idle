@@ -1,21 +1,21 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=216';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=234';
-import { MONSTERS } from '../domain/bestiary.js?v=234';
-import { cityName } from '../domain/cities.js?v=219';
-import { ITEMS } from '../domain/items.js?v=227';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=217';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=212';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=214';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=219';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=217';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=280';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=212';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=217';
-import { t } from '../i18n/i18n.js?v=230';
-import { setStageWalking } from './stageWalk.js?v=53';
+import { G } from '../application/gameStore.js?v=217';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=235';
+import { MONSTERS } from '../domain/bestiary.js?v=235';
+import { cityName } from '../domain/cities.js?v=220';
+import { ITEMS } from '../domain/items.js?v=228';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=218';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=213';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=215';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=220';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=218';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=281';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=213';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=218';
+import { t } from '../i18n/i18n.js?v=231';
+import { setStageWalking } from './stageWalk.js?v=54';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -44,9 +44,39 @@ function flashSpellEffect(wrap, spellElement) {
   wrap.classList.add(`spell-${spellElement}`);
 }
 
-// (areaOffsets/TILE_PX foram removidos: desenhavam um tabuleiro de tiles ao
-// redor do boneco, que não corresponde a este palco — as criaturas ficam numa
-// fileira no alto e o boneco embaixo. Ver playAreaEffect abaixo.)
+// Tiles cobertos pela forma da área da magia, em offsets (dx, dy) relativos ao
+// tile do personagem — replica o padrão real do Tibia (ver domain/attackAreas.js
+// e .spec/15-areas-de-ataque.md):
+//  - ball: losango GIGANTE ao redor do caster (Groundshaker, Divine Caldera,
+//    Hell's Core, Eternal Winter, Rage of the Skies, Wrath of Nature, Avalanche/GFB)
+//  - square: 3x3 completo ao redor do caster (Berserk, Fierce Berserk)
+//  - explosion: cruz compacta ao redor do alvo (Explosion Rune)
+//  - wave: cone que abre à frente (pra cima)
+//  - beam: linha reta à frente (pra cima)
+//  - single: um tile à frente
+const TILE_PX = 28;
+function areaOffsets(shape) {
+  const out = [];
+  if (shape === 'ball') {
+    for (let dx = -3; dx <= 3; dx++) for (let dy = -3; dy <= 3; dy++) if (Math.abs(dx) + Math.abs(dy) <= 3) out.push([dx, dy]);
+  } else if (shape === 'square') {
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) out.push([dx, dy]);
+  } else if (shape === 'explosion') {
+    out.push([0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]); // cruz: centro + 4 vizinhos ortogonais
+  } else if (shape === 'beam') {
+    // feixe reto que sai PRA CIMA, largura 1 — o boneco fica embaixo encarando
+    // os monstros (que ficam no topo), então o feixe (Ethereal Spear, Energy
+    // Beam) sai reto na direção do inimigo, sem abrir como a onda.
+    for (let r = 1; r <= 5; r++) out.push([0, -r]);
+  } else if (shape === 'wave') {
+    // cone que abre PRA CIMA — a onda de mago (Fire/Energy/Ice/Terra Wave)
+    // sai pra cima, na direção do inimigo, alargando conforme avança.
+    for (let r = 1; r <= 4; r++) { const w = Math.min(r - 1, 2); for (let dx = -w; dx <= w; dx++) out.push([dx, -r]); }
+  } else {
+    out.push([0, -1]); // single: um tile À FRENTE (pra cima, direção do inimigo)
+  }
+  return out;
+}
 
 // Toca o efeito REAL da magia/runa (fogo/gelo/groundshaker/…) sobre as
 // criaturas atingidas. Ver o comentário dentro da função para o porquê de
@@ -58,45 +88,11 @@ export function playAreaEffect({ effect, shape, targetUid } = {}) {
   if (!file || !stage || !playerWrap) return;
   const sr = stage.getBoundingClientRect();
   const url = spriteUrl(file);
-
-  // O efeito é desenhado EM CIMA DE QUEM APANHA, não num grid abstrato.
-  //
-  // Antes, magia de área pintava um bloco fixo de tiles ao redor do BONECO
-  // (offsets × TILE_PX). Mas o palco não é um tabuleiro de Tibia: as criaturas
-  // ficam numa fileira no alto (ver .stage-pack) e o boneco embaixo. O
-  // resultado era um quadrado de fogo no meio do vazio, com o monstro que
-  // realmente tomou dano intocado a vários tiles de distância — o jogador via
-  // a magia "errar" toda vez.
-  //
-  // Quem é atingido não é chute: o servidor pega o alvo primário e os
-  // primeiros do pack até areaMaxTargets (ver server/src/huntEngine.js). Aqui
-  // reproduzimos o MESMO conjunto, e cada sprite é dimensionada pela caixa da
-  // criatura, então o efeito cobre exatamente o bicho que apanhou.
   const cont = document.getElementById('stage-pack');
-  const naTela = cont ? [...cont.children] : [];
-  const alvo = targetUid && cont
-    ? cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`)
-    : null;
 
-  const limite = (shape && shape !== 'single') ? areaMaxTargets(shape) : 1;
-  const atingidos = [];
-  if (alvo) atingidos.push(alvo);
-  for (const el of naTela) {
-    if (atingidos.length >= limite) break;
-    if (el !== alvo) atingidos.push(el);
-  }
-  // Sem criatura na tela (a sala esvaziou entre o cast e o render), o efeito
-  // sai sobre o próprio boneco em vez de sumir sem explicação.
-  if (!atingidos.length) atingidos.push(playerWrap);
-
-  // Ancora no SPRITE da criatura, não no elemento inteiro: cada `.stage-monster`
-  // é sprite + barra de vida empilhados, então o centro da caixa toda cai ENTRE
-  // os dois e o efeito aparecia visivelmente abaixo do bicho.
-  const caixaSprite = el => (el.querySelector('.monster-sprite-wrap') || el).getBoundingClientRect();
-
-  const solta = (x, y, lado, classe) => {
+  const solta = (x, y, lado) => {
     const img = document.createElement('img');
-    img.className = classe;
+    img.className = 'combat-area-tile';
     img.src = url;
     img.alt = '';
     img.style.width = lado + 'px';
@@ -109,51 +105,46 @@ export function playAreaEffect({ effect, shape, targetUid } = {}) {
     setTimeout(() => img.remove(), 720);
   };
 
-  // ---- RASTRO: a forma da magia, do boneco até a fileira de criaturas ----
-  // Só desenhar em cima de quem apanha resolvia a colisão mas apagava a
-  // IDENTIDADE de cada magia: onda, feixe e bola viravam a mesma bola por bicho
-  // (reclamação do Felipe: "você estragou a wave"). O rastro devolve a forma —
-  // um cone que abre, um feixe reto — ocupando o vão entre o conjurador e os
-  // alvos, que antes ficava vazio. Ele NÃO substitui o impacto: é o caminho,
-  // não o acerto.
-  const pr = playerWrap.getBoundingClientRect();
-  const px = pr.left - sr.left + pr.width / 2;
-  const py = pr.top - sr.top + pr.height / 2;
-  const caixas = atingidos.map(caixaSprite).filter(r => r.width && r.height);
-  if (caixas.length && (shape === 'wave' || shape === 'beam')) {
-    // Altura do vão e largura ocupada pelos alvos, pra escalar a forma ao palco
-    // em vez de usar um tamanho de tile fixo (que não conhece este layout).
-    const alvoY = Math.min(...caixas.map(r => r.top - sr.top + r.height / 2));
-    const esq = Math.min(...caixas.map(r => r.left - sr.left));
-    const dir = Math.max(...caixas.map(r => r.right - sr.left));
-    const vao = py - alvoY;
-    if (vao > 30) {
-      const passos = 4;
-      const ladoRastro = Math.max(22, Math.min(34, vao / passos * 0.9));
-      for (let i = 1; i <= passos; i++) {
-        const t = i / (passos + 1);            // 0 = boneco, 1 = alvos
-        const y = py - vao * t;
-        if (shape === 'beam') {
-          solta(px, y, ladoRastro, 'combat-area-trail');
-        } else {
-          // Cone: abre conforme avança, até a largura ocupada pelos alvos.
-          const meia = ((dir - esq) / 2) * t;
-          const n = Math.max(1, Math.round(meia / ladoRastro));
-          for (let k = -n; k <= n; k++) solta(px + (meia / Math.max(1, n)) * k, y, ladoRastro, 'combat-area-trail');
-        }
-      }
-    }
+  // Alvo único: o efeito vai EM CIMA da criatura, ancorado no SPRITE dela.
+  // `.stage-monster` é sprite + barra de vida empilhados, então centralizar na
+  // caixa inteira jogava o efeito pra baixo, entre os dois.
+  if (shape === 'single' || !shape) {
+    const alvoEl = (targetUid && cont && cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`)) || (cont && cont.firstElementChild);
+    const base = alvoEl ? (alvoEl.querySelector('.monster-sprite-wrap') || alvoEl) : playerWrap;
+    const r = base.getBoundingClientRect();
+    solta(r.left - sr.left + r.width / 2, r.top - sr.top + r.height / 2, Math.max(34, Math.max(r.width, r.height) * 1.15));
+    return;
   }
 
-  // ---- IMPACTO: em cima de cada criatura atingida ----
-  for (const el of atingidos) {
-    const r = caixaSprite(el);
-    if (!r.width || !r.height) continue;
-    // Cobre a criatura inteira com uma folga, com piso pra que bicho pequeno
-    // não receba um efeito quase invisível.
-    const lado = Math.max(34, Math.max(r.width, r.height) * 1.15);
-    solta(r.left - sr.left + r.width / 2, r.top - sr.top + r.height / 2, lado, 'combat-area-tile');
+  // ÁREA: a MESMA forma de sempre (areaOffsets), só que ESCALADA ao palco.
+  //
+  // A estrutura não muda — continua a forma real do Tibia desenhada em tiles ao
+  // redor do conjurador. O que estava errado era só o TAMANHO: com tile fixo de
+  // 28px o desenho terminava no vazio, muito antes da fileira de criaturas, e a
+  // magia parecia errar.
+  //
+  // O tile passa a ser calculado pra que o ALCANCE da forma (o tile mais
+  // distante à frente) caia sobre as criaturas. Todos os offsets usam o MESMO
+  // tile, então a escala é proporcional: cone segue cone, feixe segue feixe.
+  const pr = playerWrap.getBoundingClientRect();
+  const cx = pr.left - sr.left + pr.width / 2;
+  const cy = pr.top - sr.top + pr.height / 2;
+
+  const offsets = areaOffsets(shape);
+  const alcance = Math.max(1, ...offsets.map(([, dy]) => Math.abs(dy)));
+
+  let vao = 0;
+  if (cont && cont.children.length) {
+    const alvos = [...cont.children].map(el => (el.querySelector('.monster-sprite-wrap') || el).getBoundingClientRect());
+    vao = cy - Math.min(...alvos.map(r => r.top - sr.top + r.height / 2));
   }
+  // Sem criatura na tela, mantém o tamanho histórico em vez de sumir.
+  const tile = vao > 30 ? vao / alcance : TILE_PX;
+  // Teto pra forma de alcance curto (square tem alcance 1) não virar um tile do
+  // tamanho do palco inteiro.
+  const lado = Math.min(tile * 1.15, 72);
+
+  offsets.forEach(([dx, dy]) => solta(cx + dx * tile, cy + dy * tile, lado));
 }
 
 export function renderMonsterDisplay(hit = false, killed = null, spellElement = null, bossAura = null) {
