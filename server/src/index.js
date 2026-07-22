@@ -62,6 +62,7 @@ import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
 import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow } from './db.js';
+import { iniciarRealtime } from './realtime.js';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -1320,8 +1321,13 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// Canal de tempo real no MESMO servidor HTTP (o Railway expõe uma porta só).
+// Reaproveita verifySupabaseToken, então o handshake do socket passa pelo mesmo
+// cache de token de 60s das rotas REST.
+iniciarRealtime(server, verifySupabaseToken);
+
 reapStaleSessionsOnBoot().finally(() => {
   server.listen(PORT, () => {
-    console.log(`rubinot-idle-hunt-server (marco 6) ouvindo na porta ${PORT}`);
+    console.log(`rubinot-idle-hunt-server (marco 6 + tempo real) ouvindo na porta ${PORT}`);
   });
 });

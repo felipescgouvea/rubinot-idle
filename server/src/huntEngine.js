@@ -31,6 +31,7 @@ import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows } from './db.js';
+import { temOuvinte, empurrar } from './realtime.js';
 
 // sessionId -> objeto de sessão (ver startSession) — tudo em memória; só
 // existe enquanto ESTE processo está de pé (ver reapStaleSessionsOnBoot).
@@ -717,7 +718,36 @@ function garantirScheduler() {
 function doTick(session) {
   if (session.busy || session.stopped) return;
   session.busy = true;
-  tick(session).catch(err => console.error('tick falhou', session.id, err.message)).finally(() => { session.busy = false; });
+  tick(session)
+    .catch(err => console.error('tick falhou', session.id, err.message))
+    .finally(() => {
+      session.busy = false;
+      // Empurra o resultado do tick pra quem estiver ouvindo. O push é o ÚLTIMO
+      // passo e está fora do caminho de decisão: se falhar, o combate já
+      // aconteceu e o poll do cliente pega o estado do mesmo jeito.
+      try { empurrarEstado(session); } catch {}
+    });
+}
+
+// Payload do push: só o que MUDA a cada tick e é dono da sessão. Gold e XP não
+// vêm por aqui de propósito — têm escritores fora da caçada (loja, mercado,
+// bênçãos), e o cliente já os credita pelos killEvents. O poll lento continua
+// existindo pra reconciliar esses.
+function empurrarEstado(session) {
+  if (session.stopped || !temOuvinte(session.userId, session.slot)) return;
+  empurrar(session.userId, session.slot, {
+    tipo: 'tick',
+    sessionId: session.id,
+    zoneId: session.zoneId,
+    hp: session.hp,
+    mana: session.mana,
+    skills: session.skills,
+    pack: (session.currentPack || []).filter(m => m.hp > 0)
+      .map(m => ({ uid: m.uid, defKey: m.defKey, name: m.name, hp: Math.max(0, m.hp), maxHp: m.maxHp })),
+    combatEvents: session.combatEvents || [],
+    killEvents: session.killEvents || [],
+    inventory: { ...(session.inv || {}) },
+  });
 }
 
 // Regeneração natural de HP/mana. Roda a CADA tick (2s), inclusive no meio da
