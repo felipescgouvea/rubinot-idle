@@ -151,6 +151,24 @@ try {
     }
   }
 
+  // Print da onda pra conferência visual — o problema aqui é de aparência, e
+  // número nenhum substitui olhar.
+  // Pega o elemento ANTES de disparar: obter o handle e capturar leva tempo, e
+  // o efeito dura 0,72s — na primeira tentativa o print saiu vazio porque a
+  // captura só aconteceu depois de tudo ter sumido.
+  const palco = await page.$('#dungeon-stage');
+  await page.evaluate(async () => {
+    const bus = await window.__liveImport('eventBus.js');
+    const c = document.getElementById('stage-pack');
+    document.querySelectorAll('.combat-area-tile, .combat-area-trail').forEach(e => e.remove());
+    bus.emit(bus.EVENTS.COMBAT_FX, { effect: 'fire', shape: 'wave', targetUid: c.children[0].dataset.uid });
+  });
+  await page.waitForTimeout(200);
+  // SEM animations:'disabled' — essa flag avança a animação pro estado FINAL, e
+  // o keyframe final do efeito é opacity:0 (ele some). O print saía vazio com o
+  // efeito funcionando perfeitamente na tela.
+  if (palco) await palco.screenshot({ path: 'scripts/shot-wave.png' });
+
   await page.evaluate(() => { if (window.__G.hunting) window.toggleHunt(); });
 
 } catch (e) {
