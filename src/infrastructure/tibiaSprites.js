@@ -213,7 +213,26 @@ export function effectSpriteFile(name) {
 // Felipe). Substituídos por um frame ÚNICO estático (o frame 0, recortado
 // sem a margem transparente) — sempre a mesma imagem de "1 flecha" em
 // qualquer ataque.
-const MISSILE_NAMES = new Set(['arrow', 'bolt', 'spear', 'energy', 'fire', 'ice', 'earth', 'death', 'holy']);
+// Os 9 genéricos (elemento da wand/rod, magia, runa) MAIS uma entrada por
+// munição, porque cada munição do Tibia tem projétil próprio.
+//
+// Esta lista precisa espelhar assets/sprites/missiles/ arquivo a arquivo. Ela
+// já ficou pra trás uma vez: baixei as 25 sprites de munição e esqueci de
+// estendê-la, então missileSpriteFile('burst_arrow') devolvia null e
+// playProjectile saía sem desenhar — TODA munição que não fosse flecha/virote
+// básico disparava NADA, em silêncio, sem erro no console. Pior que o bug
+// original (Burst Arrow saindo como flecha comum), e invisível pra qualquer
+// teste que só olhasse se a tela quebrou.
+// scripts/audit-projeteis.mjs falha se esta lista divergir da pasta.
+const MISSILE_NAMES = new Set([
+  'arrow', 'bolt', 'burst_arrow', 'crystalline_arrow', 'death', 'diamond_arrow',
+  'drill_bolt', 'earth', 'earth_arrow', 'energy', 'envenomed_arrow', 'fire',
+  'firestorm_arrow', 'flaming_arrow', 'flash_arrow', 'froststorm_arrow', 'holy', 'ice',
+  'infernal_bolt', 'onyx_arrow', 'piercing_bolt', 'poison_arrow', 'power_bolt',
+  'prismatic_bolt', 'shatterstorm_arrow', 'shiver_arrow', 'simple_arrow', 'sniper_arrow',
+  'spear', 'spectral_bolt', 'tarsal_arrow', 'terrastorm_arrow', 'thunderstorm_arrow',
+  'vortex_bolt',
+]);
 const MISSILE_SPRITE_VER = 2;
 export function missileSpriteFile(name) {
   return name && MISSILE_NAMES.has(name) ? 'missiles/' + name + '.webp?mv=' + MISSILE_SPRITE_VER : null;

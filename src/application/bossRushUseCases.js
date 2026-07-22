@@ -5,11 +5,11 @@
 // Isso evita duplicar o loop de combate inteiro; o preço é ter que cuidar
 // explicitamente pra não deixar a caçada normal do jogador "vazada" quando
 // ele entra/sai do Boss Rush — ver startBossRush()/stopBossRush() abaixo.
-import { G } from './gameStore.js?v=206';
-import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=224';
-import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=270';
-import { emit, EVENTS } from '../shared/eventBus.js?v=204';
-import { t } from '../i18n/i18n.js?v=220';
+import { G } from './gameStore.js?v=207';
+import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=225';
+import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=271';
+import { emit, EVENTS } from '../shared/eventBus.js?v=205';
+import { t } from '../i18n/i18n.js?v=221';
 
 // Zona/estado de caçada "de fora" do Boss Rush — guardados só pra restaurar a
 // escolha normal do jogador (aba Caçada) quando ele sai do Boss Rush, em vez
