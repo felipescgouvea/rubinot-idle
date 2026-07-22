@@ -868,6 +868,7 @@ export default {
   'hunt.starterSetHint': 'Escolha o set com que quer começar. Você pode trocar de vocação no nível 8, ao partir para o mainland.',
   'hunt.createTitle': 'Crie seu personagem',
   'character.graduated': 'Graduação concluída! Você é {vocation} e recebeu o Graduate Set.',
+  'character.graduateFailed': 'Não foi possível concluir a graduação. Verifique sua conexão e tente de novo.',
   'character.graduatedSwitched': 'Você trocou para {vocation}! Graduate Set recebido.',
   'graduation.title': 'Saindo da Ilha Inicial',
   'graduation.intro': 'Você chegou ao nível {level}. É hora de deixar a ilha inicial rumo ao mainland — confirme sua vocação e leve seu equipamento para a jornada.',

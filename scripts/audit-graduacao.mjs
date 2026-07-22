@@ -127,13 +127,23 @@ try {
     else ok.push(`Graduate Set inteiro no inventário (${doKit.length} itens)`);
 
     // ---------- 5. O SERVIDOR CONCORDA ----------
-    const sv = await page.evaluate(async () => {
+    // Relê com tentativas: a rota de graduação escreve inventário, equipamento
+    // e SÓ ENTÃO o stats.graduated. Uma leitura única logo depois pode cair no
+    // meio da rota e ver o kit já gravado com o flag ainda false — foi
+    // exatamente o falso positivo que este probe deu na primeira execução.
+    let sv = null;
+    for (let tentativa = 0; tentativa < 6; tentativa++) {
+      sv = await lerServidor();
+      if (sv && sv.stats && sv.stats.graduated) break;
+      await page.waitForTimeout(1200);
+    }
+    async function lerServidor() { return page.evaluate(async () => {
       const ac = await window.__liveImport('authClient.js');
       const gs = await window.__liveImport('gameStore.js');
       const r = await ac.getHuntState(gs.ACCOUNT.activeSlot);
       return { stats: r && r.stats ? { graduated: r.stats.graduated, level: r.stats.level } : null,
                inv: (r && r.inventory) || {} };
-    }).catch(() => null);
+    }).catch(() => null); }
     if (!sv || !sv.stats) {
       inconclusivos.push('não consegui ler o estado do servidor — a persistência da graduação não foi conferida');
     } else {

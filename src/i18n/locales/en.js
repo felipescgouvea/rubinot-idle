@@ -867,6 +867,7 @@ export default {
   'hunt.starterSetHint': 'Pick the set you want to start with. You can change vocation at level 8, when you leave for the mainland.',
   'hunt.createTitle': 'Create your character',
   'character.graduated': 'Graduation complete! You are a {vocation} and received the Graduate Set.',
+  'character.graduateFailed': 'Could not complete graduation. Check your connection and try again.',
   'character.graduatedSwitched': 'You switched to {vocation}! Graduate Set received.',
   'graduation.title': 'Leaving the Starter Island',
   'graduation.intro': 'You reached level {level}. Time to leave the starter island for the mainland — confirm your vocation and take your equipment for the journey.',

@@ -16,7 +16,10 @@ const slots = await p.evaluate(() => ({ ativo: window.__ACC.activeSlot, vazios: 
 console.log('slots:', JSON.stringify(slots));
 const alvo = slots.vazios.findIndex(Boolean);
 if (alvo < 0) { console.log('INCONCLUSIVO: nenhum slot vazio pra exercitar a criação'); await b.close(); process.exit(2); }
-await p.evaluate(async s => { const a = await window.__liveImport('accountUseCases.js'); a.switchCharacterSlot(s); }, alvo);
+// confirmSwitchCharacterSlot usa confirm() nativo — no Playwright o diálogo
+// fica pendente e nada acontece se ninguém responder.
+p.on('dialog', d => d.accept());
+await p.evaluate(async s => { const a = await window.__liveImport('accountUseCases.js'); a.confirmSwitchCharacterSlot(s); }, alvo);
 await esperarReload(p);
 await p.waitForTimeout(2500);
 const estado = await p.evaluate(() => {

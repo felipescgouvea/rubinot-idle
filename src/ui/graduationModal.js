@@ -11,13 +11,13 @@
 // os outros modais fazem — deixaria o jogador sem escolher e sem o kit, e a
 // tela só voltaria no próximo carregamento (ver characterUseCases:
 // checkGraduation).
-import { G } from '../application/gameStore.js?v=210';
-import { VOCATIONS } from '../domain/character.js?v=237';
-import { GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../domain/items.js?v=221';
-import { graduate } from '../application/characterUseCases.js?v=211';
-import { on, EVENTS, emit } from '../shared/eventBus.js?v=208';
-import { itemIconImg } from './shared.js?v=213';
-import { t } from '../i18n/i18n.js?v=224';
+import { G } from '../application/gameStore.js?v=211';
+import { VOCATIONS } from '../domain/character.js?v=238';
+import { GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../domain/items.js?v=222';
+import { graduate } from '../application/characterUseCases.js?v=212';
+import { on, EVENTS, emit } from '../shared/eventBus.js?v=209';
+import { itemIconImg } from './shared.js?v=214';
+import { t } from '../i18n/i18n.js?v=225';
 
 const ORDEM = ['knight', 'paladin', 'sorcerer', 'druid'];
 
@@ -76,8 +76,15 @@ export function pickGraduationVocation(voc) {
   render();
 }
 
-export function confirmGraduation() {
-  if (!graduate(escolhida)) return;   // servidor/domínio recusaram (nível ou já graduou)
+export async function confirmGraduation() {
+  const btn = document.getElementById('graduation-confirm');
+  // Trava o botão durante a ida ao servidor: sem isso, dois cliques rápidos
+  // disparam duas graduações e a segunda volta recusada, mostrando um erro
+  // gratuito pra quem só clicou com pressa.
+  if (btn) { btn.disabled = true; btn.style.opacity = '.6'; }
+  const ok = await graduate(escolhida);
+  if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+  if (!ok) return;                    // servidor recusou (nível, repetição, rede)
   closeGraduationModal();
   emit(EVENTS.CHAR_PANEL);
   emit(EVENTS.ZONE_PICKER);           // o mainland abre junto com a graduação

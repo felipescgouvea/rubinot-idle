@@ -80,7 +80,40 @@ for (const caminho of arquivos) {
   }
 }
 
-const unicos = [...new Set(achados)];
+// ---------------------------------------------------------------------------
+// CHECAGEM 2 — o INVERSO da de cima: import de export que NÃO EXISTE.
+//
+// Derrubou o jogo inteiro uma vez: graduationModal.js importava itemIconImg de
+// application/logIcons.js, onde essa função nunca existiu (ela mora em
+// ui/shared.js). Import de export inexistente aborta o módulo, e como main.js
+// está no topo do grafo, o app TODO parava de iniciar — nem a tela de login
+// aparecia. `node --check` passa, porque sintaticamente está correto, e a
+// checagem de cima não vê nada, porque a função ESTÁ importada.
+//
+// Só confere imports RELATIVOS do próprio projeto: pacote externo não dá pra
+// resolver por leitura de arquivo.
+const semExport = [];
+for (const caminho of arquivos) {
+  const src = readFileSync(caminho, 'utf8');
+  for (const m of src.matchAll(/import\s*\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g)) {
+    const alvo = m[2].split('?')[0];
+    if (!alvo.startsWith('.')) continue;
+    const arquivoAlvo = alvo.split('/').pop();
+    const exportados = exportsPorArquivo.get(arquivoAlvo);
+    // Módulo fora das PASTAS varridas (ex.: shared/eventBus.js) não tem mapa —
+    // não dá pra afirmar nada, então não inventa erro.
+    if (!exportados) continue;
+    for (const parte of m[1].split(',')) {
+      const nome = parte.trim().split(/\s+as\s+/)[0].trim();
+      if (!nome) continue;
+      if (!exportados.has(nome)) {
+        semExport.push(`${caminho}: importa ${nome} de ${arquivoAlvo}, que NÃO exporta esse nome`);
+      }
+    }
+  }
+}
+
+const unicos = [...new Set([...achados, ...semExport])];
 console.log(`arquivos analisados: ${arquivos.length}`);
 if (!unicos.length) console.log('\nRESULTADO: PASSOU — nenhuma função usada sem import');
 else {

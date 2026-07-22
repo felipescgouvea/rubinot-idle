@@ -1,14 +1,14 @@
-import { G, ACCOUNT } from './gameStore.js?v=210';
-import { VOCATIONS } from '../domain/character.js?v=237';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=221';
-import { canGraduate } from '../domain/cities.js?v=221';
-import { getMaxHp, getMaxMana } from './stats.js?v=221';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=208';
-import { addItemToInventory } from './inventoryCore.js?v=208';
-import { startRegen } from './huntUseCases.js?v=274';
-import { saveGame } from './saveGameUseCase.js?v=210';
-import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=215';
-import { t } from '../i18n/i18n.js?v=224';
+import { G, ACCOUNT } from './gameStore.js?v=211';
+import { VOCATIONS } from '../domain/character.js?v=238';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=222';
+import { canGraduate } from '../domain/cities.js?v=222';
+import { getMaxHp, getMaxMana } from './stats.js?v=222';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=209';
+import { addItemToInventory } from './inventoryCore.js?v=209';
+import { startRegen } from './huntUseCases.js?v=275';
+import { saveGame } from './saveGameUseCase.js?v=211';
+import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=216';
+import { t } from '../i18n/i18n.js?v=225';
 
 // Abre a tela de graduação se o personagem já pode graduar e ainda não graduou.
 //
@@ -33,9 +33,23 @@ export function checkGraduation() {
 // getMaxMana derivam de vocação+nível (ver application/stats.js), então o teto
 // muda sozinho. Só o valor ATUAL precisa ser aparado, senão um knight que vira
 // mago fica com hp acima do próprio máximo.
-export function graduate(voc) {
+// Assíncrona e SERVIDOR PRIMEIRO, de propósito. Antes eu aplicava tudo local e
+// mandava o grant com `.catch(() => {})`: se o servidor recusasse (nível,
+// graduação repetida, rede caindo), o cliente já tinha trocado a vocação e
+// marcado graduated, e os dois ficavam permanentemente em desacordo — o jogador
+// veria "sou paladino" enquanto o combate, que roda no servidor, seguiria
+// calculando com o equipamento e a vocação de knight. Quem decide é o servidor;
+// o local só reflete o que ele confirmou.
+export async function graduate(voc) {
   if (!canGraduate(G.level, G.graduated)) return false;
   if (!VOCATIONS[voc]) return false;
+
+  const resp = await grantGraduateKit(ACCOUNT.activeSlot, voc).catch(e => ({ error: e.message || String(e) }));
+  if (!resp || resp.error || !resp.ok) {
+    emit(EVENTS.NOTIFY, { msg: t('character.graduateFailed'), type: 'error' });
+    return false;
+  }
+
   const vocAnterior = G.vocation;
   const trocou = vocAnterior !== voc;
   G.vocation = voc;
@@ -65,9 +79,6 @@ export function graduate(voc) {
   emit(EVENTS.EQUIPMENT_SLOTS);
   emit(EVENTS.INVENTORY);
   saveGame();
-  // Espelha no SERVIDOR, mesma razão do kit inicial: sem isto o hunt-start lê
-  // player_equipment antigo e calcula o combate com o equipamento velho.
-  grantGraduateKit(ACCOUNT.activeSlot, voc).catch(() => {});
   emit(EVENTS.NOTIFY, {
     msg: t(trocou ? 'character.graduatedSwitched' : 'character.graduated', { vocation: VOCATIONS[voc].name }),
     type: 'success',
