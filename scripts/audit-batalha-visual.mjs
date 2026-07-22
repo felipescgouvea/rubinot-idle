@@ -168,8 +168,13 @@ try {
 
     // -- 3. fluidez: intervalo real entre quadros. Não é FPS médio (que esconde
     // travada curta) — guardamos a série pra olhar o percentil 95 e o pior.
+    S.maxPack = 0;
     let ult = performance.now();
-    const tick = (t) => { S.quadros.push(t - ult); ult = t; S.amostraGeo(); requestAnimationFrame(tick); };
+    const tick = (t) => {
+      S.quadros.push(t - ult); ult = t; S.amostraGeo();
+      S.maxPack = Math.max(S.maxPack, document.querySelectorAll('.stage-monster:not(.leaving)').length);
+      requestAnimationFrame(tick);
+    };
     requestAnimationFrame(tick);
     // O boneco é amostrado por FORA do laço de quadros: getImageData de propósito
     // não entra no rAF, senão o próprio sensor criaria a travada que ele mede.
@@ -236,13 +241,17 @@ try {
   if (!pre.voc) { inconclusivos.push('a conta de teste está SEM PERSONAGEM — rode scripts/criar-char-teste.mjs antes'); throw new Error('sem caçada'); }
   if (pre.hp <= 0) { inconclusivos.push(`personagem com ${pre.hp} de vida (morto) — não dá pra caçar`); throw new Error('sem caçada'); }
 
-  const iniciou = await page.evaluate(async (zona) => {
-    window.__H.selectZone(zona);
+  const iniciou = await page.evaluate(async (cfg) => {
+    // Densidade "pack" enche o palco (até 8 criaturas). Com uma criatura por vez
+    // metade do que esta auditoria existe pra ver nem acontece: fileira lado a
+    // lado, sobreposição, magia de área e o custo de desenhar tudo junto.
+    window.__G.density = cfg.densidade;
+    window.__H.selectZone(cfg.zona);
     await new Promise(r => setTimeout(r, 800));
     await window.__H.startHunt();
     await new Promise(r => setTimeout(r, 1500));
     return !!window.__G.hunting;
-  }, ZONA);
+  }, { zona: ZONA, densidade: arg('densidade', 'pack') });
   if (!iniciou) { inconclusivos.push(`a caçada não começou em "${ZONA}" — nada foi medido`); throw new Error('sem caçada'); }
 
   await page.waitForTimeout(SEG * 1000);
@@ -255,6 +264,7 @@ try {
       falhouSprite: [...new Set(S.falhouSprite)],
       bonecoPixels: S.bonecoPixels,
       conflitosCss: S.conflitosCss(),
+      maxPack: S.maxPack,
       emojiFallback: document.querySelectorAll('#dungeon-stage span:not([class*="hp"]), #battle-list span.monster-sprite').length,
     };
   });
@@ -265,7 +275,9 @@ try {
   // ---------------------------------------------------------------- 1. SPRITE
   const quebradas = d.imgs.filter(i => i.ok === false);
   const falhas = [...new Set([...d.falhouSprite, ...quebradas.map(q => q.src)])];
-  console.log(`\nimagens vistas: ${d.imgs.length} · falhas de sprite: ${falhas.length} · fallback emoji na tela: ${d.emojiFallback}`);
+  console.log(`\nimagens vistas: ${d.imgs.length} · falhas de sprite: ${falhas.length} · fallback emoji na tela: ${d.emojiFallback} · palco mais cheio: ${d.maxPack} criatura(s)`);
+  // Sem palco cheio, boa parte do que esta auditoria mede não chegou a existir.
+  if (d.maxPack < 2) inconclusivos.push(`o palco nunca teve mais de ${d.maxPack} criatura — fileira lado a lado e magia de área não foram exercitadas`);
   if (!d.imgs.length) inconclusivos.push('nenhuma imagem apareceu no palco — nada a conferir');
   else if (falhas.length) {
     mutou.sprite = true;
