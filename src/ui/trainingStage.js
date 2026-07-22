@@ -15,13 +15,13 @@
 // trazidas pro projeto (assets/outfits-dir/, ver
 // scripts/fetch_outfit_directions.py), então aqui ele usa LESTE quando bate no
 // dummy à direita e SUL quando é o mago lançando magia de frente.
-import { G } from '../application/gameStore.js?v=202';
-import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=198';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=198';
-import { VOCATIONS } from '../domain/character.js?v=229';
-import { ITEMS } from '../domain/items.js?v=213';
-import { SPELLS } from '../domain/spells.js?v=200';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=203';
+import { G } from '../application/gameStore.js?v=203';
+import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=199';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=199';
+import { VOCATIONS } from '../domain/character.js?v=230';
+import { ITEMS } from '../domain/items.js?v=214';
+import { SPELLS } from '../domain/spells.js?v=201';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=204';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
@@ -61,6 +61,10 @@ export function trainingStageHtml(skillId, spell) {
       <img src="${spriteUrl(TRAINING_DUMMY_FILE)}" alt="" aria-hidden="true" />
     </div>`;
   const projetil = missileFile ? `<img class="tstage-missile" src="${spriteUrl(missileFile)}" alt="" aria-hidden="true" />` : '';
+  // Nasce escondido: quem acende é o pulso no ritmo do COOLDOWN da magia (ver
+  // pulsarCast). Antes a animação era um laço infinito de 1,6s fixo, então o
+  // efeito ficava aceso quase o tempo todo e não tinha relação nenhuma com o
+  // cast — parecia uma magia grudada no personagem.
   const magia = efeito ? `<img class="tstage-cast" src="${spriteUrl(efeito)}" alt="" aria-hidden="true" />` : '';
 
   return `
@@ -76,6 +80,32 @@ export function trainingStageHtml(skillId, spell) {
 
 // Desenha o boneco recolorido no palco (o HTML acima só reserva o lugar, com um
 // emoji de fallback pra quem não tem outfit ou se o atlas falhar).
+// Acende o efeito por um instante a CADA cast, no ritmo do cooldown da magia
+// — o mesmo `cd` que limita quantas vezes ela pode ser lançada por minuto (ver
+// domain/training.js: manaSpentPerMinute). Assim o que se vê na tela é o que
+// está de fato acontecendo na conta do Magic Level.
+let pulsoId = null;
+
+export function pararPulsoCast() {
+  if (pulsoId) { clearInterval(pulsoId); pulsoId = null; }
+}
+
+export function iniciarPulsoCast(spell) {
+  pararPulsoCast();
+  const alvo = document.querySelector('.training-stage .tstage-cast');
+  if (!alvo || !spell) return;
+  const periodoMs = Math.max(1, spell.cd || 2) * 1000;
+  const acender = () => {
+    // remove + reflow + adiciona: sem isso a classe já presente não reinicia a
+    // animação e o segundo cast em diante não apareceria.
+    alvo.classList.remove('casting');
+    void alvo.offsetWidth;
+    alvo.classList.add('casting');
+  };
+  acender();
+  pulsoId = setInterval(acender, periodoMs);
+}
+
 export function mountTrainingStagePlayer(skillId) {
   const wrap = document.querySelector('.training-stage .tstage-player');
   if (!wrap) return;

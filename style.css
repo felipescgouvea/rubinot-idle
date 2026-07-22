@@ -2580,12 +2580,16 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 
 /* Mago: sem dummy — fica centralizado, soltando a magia escolhida. */
 .tstage-mage .tstage-player { left: 50%; transform: translate(-50%, -50%); }
+/* Escondido por padrão: o efeito só aparece NO CAST, quando ui/trainingStage.js
+   põe .casting no ritmo do cooldown da magia. Antes era um laço infinito de
+   1,6s e a magia ficava grudada no personagem o tempo todo. */
 .tstage-cast {
   position: absolute; left: 50%; top: 50%;
   width: 46px; height: 46px; margin: -23px 0 0 -23px;
   image-rendering: pixelated; pointer-events: none; z-index: 3;
-  animation: tstage-cast 1.6s ease-out infinite;
+  opacity: 0;
 }
+.tstage-cast.casting { animation: tstage-cast 700ms ease-out; }
 @keyframes tstage-cast {
   0%   { opacity: 0; transform: scale(.5); }
   20%  { opacity: 1; transform: scale(1); }

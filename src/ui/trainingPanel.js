@@ -1,15 +1,15 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=202';
-import { TIBIA_SKILLS, VOCATIONS } from '../domain/character.js?v=229';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=200';
-import { SPELLS } from '../domain/spells.js?v=200';
-import { on, EVENTS } from '../shared/eventBus.js?v=200';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=205';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=206';
-import { t } from '../i18n/i18n.js?v=216';
-import { trainingStageHtml, mountTrainingStagePlayer } from './trainingStage.js?v=33';
+import { G } from '../application/gameStore.js?v=203';
+import { TIBIA_SKILLS, VOCATIONS } from '../domain/character.js?v=230';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=201';
+import { SPELLS } from '../domain/spells.js?v=201';
+import { on, EVENTS } from '../shared/eventBus.js?v=201';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=206';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=207';
+import { t } from '../i18n/i18n.js?v=217';
+import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=34';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
@@ -52,11 +52,18 @@ function activeTrainingCard(mode) {
 function renderOnlineTrainingSection() {
   const el = document.getElementById('online-training-body');
   if (!el) return;
+  // Qualquer estado que não seja "treino online de magia" não tem pulso: sem
+  // isto o intervalo continuava vivo depois de encerrar o treino, acendendo um
+  // efeito num palco que nem existe mais.
+  pararPulsoCast();
   if (!G.vocation) { el.innerHTML = `<p class="muted">${t('training.chooseVocation')}</p>`; return; }
 
   if (G.trainingSkill && G.trainingMode === 'online') {
     el.innerHTML = activeTrainingCard('online');
     mountTrainingStagePlayer(G.trainingSkill);   // desenha o boneco recolorido
+    // Só o mago tem efeito de magia no palco; quem treina arma usa o projétil.
+    if (G.trainingSkill === 'magic') iniciarPulsoCast(SPELLS[G.trainingSpell] || null);
+    else pararPulsoCast();
     return;
   }
   if (G.trainingSkill && G.trainingMode !== 'online') {
