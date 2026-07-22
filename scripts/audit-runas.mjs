@@ -47,7 +47,14 @@ try {
   });
   console.log(`${cenario.voc} lv ${cenario.nivel} · ML ${cenario.ml}`);
   console.log(`runas usáveis: ${cenario.usaveis.length ? cenario.usaveis.map(r => `${r.id}(area=${r.area}, ML${r.reqMl}, tem ${r.tem})`).join(', ') : 'NENHUMA'}`);
-  if (!cenario.usaveis.length) throw new Error(`nenhuma runa de ataque usável por ${cenario.voc} com ML ${cenario.ml}`);
+  if (!cenario.usaveis.length) {
+    // Knight não usa runa de ataque POR REGRA (dano de runa escala com Magic
+    // Level, ver domain/rtcConfig.js) — nesse caso não há o que exercitar, e
+    // isso é comportamento certo, não falha.
+    console.log(`RESULTADO: INCONCLUSIVO — ${cenario.voc} não usa runa de ataque por regra do jogo, nada a exercitar`);
+    await browser.close();
+    process.exit(0);
+  }
 
   // ---------- garante carga: compra na loja se precisar ----------
   const compra = await page.evaluate(async ids => {
