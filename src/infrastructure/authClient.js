@@ -339,6 +339,14 @@ export function buyBlessingOnServer(slot) {
 
 // Promoção de vocação validada no servidor (nível e gold conferidos lá — ver
 // server/src/index.js: /promote). Retorna { ok, gold, promoted }.
+// Token de acesso cru — usado só pelo canal de tempo real: o navegador não
+// deixa mandar header no handshake de WebSocket, então o token vai na query.
+// É o MESMO token do Bearer das rotas REST.
+export function getAccessToken() {
+  const s = getSession();
+  return s ? s.access_token : null;
+}
+
 export function promoteOnServer(slot) {
   return huntFetch('/promote', { method: 'POST', body: { slot } });
 }

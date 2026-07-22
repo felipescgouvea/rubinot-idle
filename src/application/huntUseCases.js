@@ -3,26 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=196';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=201';
-import { ZONES } from '../domain/bestiary.js?v=214';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=223';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=194';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=226';
-import { monsterAttack } from '../domain/combatFormulas.js?v=225';
-import { elementMod } from '../domain/elements.js?v=192';
-import { STAMINA_MAX } from '../domain/stamina.js?v=192';
-import { ITEMS } from '../domain/items.js?v=207';
-import { MONSTERS } from '../domain/bestiary.js?v=214';
-import { RARITY_TIERS } from '../domain/rarity.js?v=193';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=194';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=194';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=193';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=193';
-import { saveGame } from './saveGameUseCase.js?v=196';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=197';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=195';
-import { t } from '../i18n/i18n.js?v=210';
+import { G, ACCOUNT } from './gameStore.js?v=197';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=202';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=202';
+import { ZONES } from '../domain/bestiary.js?v=215';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=224';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=195';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=227';
+import { monsterAttack } from '../domain/combatFormulas.js?v=226';
+import { elementMod } from '../domain/elements.js?v=193';
+import { STAMINA_MAX } from '../domain/stamina.js?v=193';
+import { ITEMS } from '../domain/items.js?v=208';
+import { MONSTERS } from '../domain/bestiary.js?v=215';
+import { RARITY_TIERS } from '../domain/rarity.js?v=194';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=195';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=195';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=194';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=194';
+import { saveGame } from './saveGameUseCase.js?v=197';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=198';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=196';
+import { t } from '../i18n/i18n.js?v=211';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -184,6 +185,9 @@ const RECONCILE_MS = 600;
 // requisições voltam a empilhar exatamente como antes — o intervalo sozinho
 // não garante nada, só o guard garante.
 let reconcileEmVoo = false;
+// Cadência do poll quando o canal de tempo real está de pé.
+const POLL_COM_SOCKET_MS = 5000;
+let ultimoPollLento = 0;
 // Sobe a cada início/fim de caçada (ver beginLocalLoop/stopHuntLocalOnly).
 // Cada reconcileWithServer() guarda o epoch de quando FOI DISPARADO e, ao
 // receber a resposta (fetch pode demorar mais que RECONCILE_MS por latência
@@ -361,6 +365,14 @@ async function reconcileWithServer() {
   // requisições não traz o estado mais rápido — só enche a fila de conexões do
   // navegador e ATRASA todas elas (ver o comentário de RECONCILE_MS).
   if (reconcileEmVoo) return;
+  // Com o socket entregando, o poll vira só rede de segurança: 1x a cada 5s em
+  // vez de ~1,7x por segundo. É aqui que o volume de requisições cai de fato —
+  // o socket sozinho só melhoraria a latência. O poll não é DESLIGADO porque é
+  // ele que traz gold/XP (que não vêm no push) e que reconcilia se o socket
+  // silenciar sem fechar.
+  const agora = Date.now();
+  if (realtimeAtivo() && agora - ultimoPollLento < POLL_COM_SOCKET_MS) return;
+  ultimoPollLento = agora;
   reconcileEmVoo = true;
   const myEpoch = reconcileEpoch;
   let res;
@@ -369,20 +381,33 @@ async function reconcileWithServer() {
   // Descarta resposta atrasada de um poll disparado numa caçada que já foi
   // parada/reiniciada nesse meio-tempo (ver comentário de reconcileEpoch).
   if (myEpoch !== reconcileEpoch) return;
+  aplicarEstadoDoServidor(res, myEpoch);
+}
+
+// Aplica um estado vindo do servidor. Chamado pelos DOIS caminhos: o poll
+// (reconcileWithServer) e o push do WebSocket. Ter uma função só é o que
+// impede os dois divergirem — duas cópias desta lógica seria garantia de que
+// o jogo se comportaria diferente conforme o socket estivesse de pé ou não.
+// `res` pode ser COMPLETO (resposta do /hunt/state) ou PARCIAL (push do
+// WebSocket, que traz só o que muda a cada tick — hp, mana, sala, eventos).
+// Por isso toda atribuição abaixo checa presença antes de escrever: sem isso,
+// um push sem gold zeraria o gold do jogador na tela.
+function aplicarEstadoDoServidor(res, myEpoch) {
+  if (myEpoch !== reconcileEpoch) return;
   if (!res.ok || !res.stats) return;
   const s = res.stats;
-  const leveledUp = s.level > G.level;
+  const leveledUp = s.level != null && s.level > G.level;
   // HP de ANTES desta reconciliação — comparado com s.hp depois de aplicado,
   // é o que decide se o monstro real da frente acabou de bater no jogador
   // (ver applyServerPack mais abaixo). Preview local não inventa mais esse
   // número: ou vem de um contra-ataque de verdade já refletido em s.hp, ou
   // não é logado.
   const prevPlayerHp = G.hp;
-  G.gold = s.gold;
-  G.xp = s.xp;
-  G.level = s.level;
-  G.totalGoldEarned = s.total_gold_earned;
-  G.totalKills = s.total_kills;
+  if (s.gold != null) G.gold = s.gold;
+  if (s.xp != null) G.xp = s.xp;
+  if (s.level != null) G.level = s.level;
+  if (s.total_gold_earned != null) G.totalGoldEarned = s.total_gold_earned;
+  if (s.total_kills != null) G.totalKills = s.total_kills;
   if (leveledUp) {
     G.hp = getMaxHp();
     G.mana = getMaxMana();
@@ -687,6 +712,10 @@ function beginLocalLoop() {
   huntInterval = setInterval(doCosmeticTick, Math.max(400, 2400 / getSpd()));
   if (reconcileInterval) clearInterval(reconcileInterval);
   reconcileInterval = setInterval(reconcileWithServer, RECONCILE_MS);
+  // Canal de tempo real: entrega o tick no instante em que ele acontece. O
+  // poll acima CONTINUA rodando — é ele que garante o estado se o socket cair,
+  // e é ele que traz gold/XP, que não vêm no push.
+  conectarRealtime(ACCOUNT.activeSlot, getAccessToken, res => aplicarEstadoDoServidor(res, reconcileEpoch));
 }
 
 export function startHunt() {
@@ -813,6 +842,7 @@ function stopHuntLocalOnly() {
   starting = false;
   if (huntInterval) { clearInterval(huntInterval); huntInterval = null; }
   if (reconcileInterval) { clearInterval(reconcileInterval); reconcileInterval = null; }
+  desconectarRealtime();
   currentMonster = null;
   currentPack = [];
   prevPackByUid = new Map();
