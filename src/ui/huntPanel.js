@@ -1,21 +1,21 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=228';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=246';
-import { MONSTERS } from '../domain/bestiary.js?v=246';
-import { cityName } from '../domain/cities.js?v=231';
-import { ITEMS } from '../domain/items.js?v=239';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=229';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=224';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=226';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=231';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=229';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=292';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=224';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=229';
-import { t } from '../i18n/i18n.js?v=242';
-import { setStageWalking } from './stageWalk.js?v=65';
+import { G } from '../application/gameStore.js?v=229';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=247';
+import { MONSTERS } from '../domain/bestiary.js?v=247';
+import { cityName } from '../domain/cities.js?v=232';
+import { ITEMS } from '../domain/items.js?v=240';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=230';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=225';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=227';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=232';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=230';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=293';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=225';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=230';
+import { t } from '../i18n/i18n.js?v=243';
+import { setStageWalking } from './stageWalk.js?v=66';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -477,6 +477,27 @@ function renderStagePack(stage) {
       const pct = Math.max(0, Math.round((m.hp / m.maxHp) * 100));
       fill.style.width = pct + '%';
       applyHpState(fill, pct);
+    }
+    // Tremida vermelha ao apanhar. A animação (monster-hit) e o dado (_hitAt)
+    // já existiam, mas só o #monster-display — o card de UMA criatura que o
+    // palco substituiu — chegava a ligar os dois. No palco, a criatura perdia
+    // vida sem reagir: quem olha pro palco (e não pra Battle List, a única que
+    // piscava) via o número mudar sem golpe nenhum.
+    //
+    // Re-disparo pelo mesmo caminho do #monster-display: tirar a classe, forçar
+    // reflow e recolocar. Sem o reflow, dois golpes seguidos não reiniciam a
+    // animação e o segundo passa despercebido.
+    const wrap = el.querySelector('.monster-sprite-wrap');
+    if (wrap) {
+      const bateuAgora = (Date.now() - (m._hitAt || 0)) < 350;
+      if (bateuAgora && wrap.dataset.hitAt !== String(m._hitAt)) {
+        wrap.dataset.hitAt = String(m._hitAt);
+        wrap.classList.remove('hit');
+        void wrap.offsetWidth;
+        wrap.classList.add('hit');
+      } else if (!bateuAgora && wrap.classList.contains('hit')) {
+        wrap.classList.remove('hit');
+      }
     }
     el.classList.toggle('is-target', m.uid === targetUid);
     const livingSiblings = [...box.children].filter(c => c !== el && !c.classList.contains('leaving'));

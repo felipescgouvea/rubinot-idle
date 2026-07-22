@@ -11,13 +11,13 @@
 // os outros modais fazem — deixaria o jogador sem escolher e sem o kit, e a
 // tela só voltaria no próximo carregamento (ver characterUseCases:
 // checkGraduation).
-import { G } from '../application/gameStore.js?v=228';
-import { VOCATIONS } from '../domain/character.js?v=255';
-import { GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../domain/items.js?v=239';
-import { graduate } from '../application/characterUseCases.js?v=229';
-import { on, EVENTS, emit } from '../shared/eventBus.js?v=226';
-import { itemIconImg } from './shared.js?v=231';
-import { t } from '../i18n/i18n.js?v=242';
+import { G } from '../application/gameStore.js?v=229';
+import { VOCATIONS } from '../domain/character.js?v=256';
+import { GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../domain/items.js?v=240';
+import { graduate } from '../application/characterUseCases.js?v=230';
+import { on, EVENTS, emit } from '../shared/eventBus.js?v=227';
+import { itemIconImg } from './shared.js?v=232';
+import { t } from '../i18n/i18n.js?v=243';
 
 const ORDEM = ['knight', 'paladin', 'sorcerer', 'druid'];
 

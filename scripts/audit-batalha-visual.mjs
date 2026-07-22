@@ -23,7 +23,7 @@
 // Uso: node scripts/audit-batalha-visual.mjs [--zona=troll_cave] [--seg=45] [--mutar=...]
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
-import { instalarLiveImport, login } from './probe-lib.mjs';
+import { instalarLiveImport, login, esperarReload } from './probe-lib.mjs';
 
 const arg = (n, d) => (process.argv.find(a => a.startsWith('--' + n + '=')) || '').split('=')[1] || d;
 const ZONA = arg('zona', 'troll_cave');
@@ -33,6 +33,7 @@ const MUTAR = arg('mutar', '');
 const acct = JSON.parse(readFileSync('.test-account.json', 'utf8'));
 const problemas = [], ok = [], inconclusivos = [];
 const mutou = { sprite: false, fluidez: false, atraso: false, geometria: false };
+let vocacao = '?';
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
@@ -41,6 +42,31 @@ try {
   await page.goto(acct.site + '?cb=' + Date.now(), { waitUntil: 'domcontentloaded', timeout: 60000 });
   await login(page, acct);
   await instalarLiveImport(page);
+
+  // --slot troca de personagem antes de medir. Cada vocação percorre um caminho
+  // diferente do combate (knight não dispara projétil nenhum), então auditar
+  // sempre o mesmo slot cobre um quarto do que o jogador vê.
+  const SLOT = arg('slot', '');
+  if (SLOT !== '') {
+    const alvo = Number(SLOT);
+    const ativo = await page.evaluate(async () => (await window.__liveImport('gameStore.js')).ACCOUNT.activeSlot);
+    if (ativo !== alvo) {
+      page.on('dialog', d => d.accept());
+      await page.evaluate(async (s) => (await window.__liveImport('accountUseCases.js')).confirmSwitchCharacterSlot(s), alvo);
+      await esperarReload(page);
+      await instalarLiveImport(page);
+    }
+    const agora = await page.evaluate(async () => {
+      const gs = await window.__liveImport('gameStore.js');
+      return { slot: gs.ACCOUNT.activeSlot, voc: gs.G.vocation };
+    });
+    if (agora.slot !== alvo || !agora.voc) {
+      inconclusivos.push(`não consegui entrar no slot ${alvo} com personagem (ficou slot ${agora.slot}, vocação ${agora.voc || 'nenhuma'})`);
+      throw new Error('sem caçada');
+    }
+    console.log(`slot ${agora.slot} · vocação ${agora.voc}`);
+  }
+
   await page.evaluate(() => window.openBattleModal && window.openBattleModal());
 
   // ---------------------------------------------------------------- sensores
@@ -53,6 +79,7 @@ try {
       voos: [],             // {dur, esperado}
       pousos: [],           // instante de COMBAT_PROJECTILE_LANDED
       hps: [],              // instante de mudança de largura de barra
+      danos: [],            // idem, só quando a barra ENCOLHE (golpe de verdade)
       geo: [],              // violações de geometria
       erros: [],            // erros de página
       mutado: mutar,
@@ -189,10 +216,52 @@ try {
       for (const m of muts) {
         if (m.target.classList && m.target.classList.contains('stage-monster-hp-fill')) {
           const w = m.target.style.width;
-          if (w !== m.target.dataset.ultW) { m.target.dataset.ultW = w; S.hps.push(performance.now()); }
+          if (w !== m.target.dataset.ultW) {
+            // Só QUEDA conta como dano — a barra também muda quando uma criatura
+            // nova entra (0% -> 100%), e contar isso como golpe inflaria a
+            // comparação com o retorno visual logo abaixo.
+            const antes = parseFloat(m.target.dataset.ultW || '100');
+            const agora = parseFloat(w);
+            m.target.dataset.ultW = w;
+            S.hps.push(performance.now());
+            if (agora < antes) S.danos.push(performance.now());
+          }
         }
       }
     }).observe(document.body, { attributes: true, attributeFilter: ['style'], subtree: true });
+
+    // -- 4b. RETORNO VISUAL DO GOLPE CORPO A CORPO. O knight não dispara nada,
+    // então o pareamento projétil→vida não existe pra ele e a vocação inteira
+    // ficava sem auditoria de sincronia. O equivalente é o tremor/flash de dano:
+    // se a vida cai e NADA pisca, o jogador vê número mudando sem golpe.
+    S.flashes = [];
+    S.flashPalco = 0; S.flashLista = 0;
+    const ehFlash = (el) => {
+      const c = el.classList;
+      if (!c) return null;
+      if (c.contains('monster-sprite-wrap') && c.contains('hit')) return 'palco';
+      if (c.contains('battle-list-entry') && c.contains('hit-flash')) return 'lista';
+      return null;
+    };
+    const contaFlash = (onde) => {
+      S.flashes.push(performance.now());
+      if (onde === 'palco') S.flashPalco++; else S.flashLista++;
+    };
+    // DUAS formas de um flash aparecer, e observar só a primeira dava zero:
+    //  - classe ADICIONADA a um elemento que já estava na tela (palco);
+    //  - elemento NASCENDO já com a classe. A Battle List é reconstruída por
+    //    innerHTML a cada render, então o "hit" vem dentro do HTML e nenhuma
+    //    mutação de atributo acontece.
+    new MutationObserver(muts => {
+      for (const m of muts) {
+        if (m.type === 'attributes') { const o = ehFlash(m.target); if (o) contaFlash(o); continue; }
+        for (const n of m.addedNodes) {
+          if (n.nodeType !== 1) continue;
+          const o = ehFlash(n); if (o) contaFlash(o);
+          n.querySelectorAll && n.querySelectorAll('.monster-sprite-wrap.hit, .battle-list-entry.hit-flash').forEach(el => contaFlash(ehFlash(el)));
+        }
+      }
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
 
     // -- voo do projétil: duração medida ponta a ponta.
     const stage = document.getElementById('dungeon-stage');
@@ -265,11 +334,14 @@ try {
       bonecoPixels: S.bonecoPixels,
       conflitosCss: S.conflitosCss(),
       maxPack: S.maxPack,
+      voc: window.__G.vocation,
+      danos: S.danos, flashes: S.flashes, flashPalco: S.flashPalco, flashLista: S.flashLista,
       emojiFallback: document.querySelectorAll('#dungeon-stage span:not([class*="hp"]), #battle-list span.monster-sprite').length,
     };
   });
   await page.evaluate(() => { if (window.__G.hunting) window.toggleHunt(); });
 
+  vocacao = d.voc || '?';
   const pct = (a, p) => a.length ? [...a].sort((x, y) => x - y)[Math.min(a.length - 1, Math.floor(a.length * p))] : null;
 
   // ---------------------------------------------------------------- 1. SPRITE
@@ -335,6 +407,24 @@ try {
     else ok.push(`voo do projétil bate com a duração configurada (${md.toFixed(0)}ms)`);
   } else inconclusivos.push('nenhum projétil voou — vocação corpo a corpo ou sem munição; atraso pouso→dano não medido');
 
+  // -------------------------------------------- 4b. retorno visual do golpe
+  // Vale pra TODA vocação, mas é a única sincronia que dá pra medir no corpo a
+  // corpo. Comparação por proporção, não 1:1: vários golpes podem cair no mesmo
+  // quadro e virar um flash só.
+  console.log(`quedas de vida: ${d.danos.length} · flashes: ${d.flashes.length} (palco ${d.flashPalco} · battle list ${d.flashLista})`);
+  // Distinguir ONDE piscou importa: se só a Battle List reage, a criatura no
+  // palco — pra onde o jogador está olhando — apanha sem dar sinal.
+  if (d.danos.length >= 5 && d.flashes.length && !d.flashPalco) {
+    problemas.push(`a criatura no PALCO nunca piscou ao apanhar (${d.flashLista} flashes, todos só na Battle List) — o golpe não tem retorno onde o jogador está olhando`);
+  }
+  if (d.danos.length < 5) inconclusivos.push(`só ${d.danos.length} queda(s) de vida — retorno visual do golpe não medido`);
+  else if (!d.flashes.length) problemas.push(`a vida caiu ${d.danos.length}x e NADA piscou na tela — golpe sem retorno visual nenhum`);
+  else {
+    const razao = d.flashes.length / d.danos.length;
+    if (razao < 0.3) problemas.push(`só ${(razao * 100).toFixed(0)}% das quedas de vida tiveram flash de dano (${d.flashes.length} de ${d.danos.length}) — golpe quase sempre invisível`);
+    else ok.push(`golpe tem retorno visual (${d.flashes.length} flashes para ${d.danos.length} quedas de vida)`);
+  }
+
   if (d.pousos.length < 3) inconclusivos.push(`só ${d.pousos.length} pouso(s) de projétil — atraso pouso→dano não medido`);
   else {
     const atrasos = [];
@@ -359,7 +449,7 @@ try {
 }
 
 console.log('\n' + '='.repeat(66));
-console.log('AUDITORIA VISUAL DA BATALHA' + (MUTAR ? `  [autoteste: mutando "${MUTAR}"]` : ''));
+console.log(`AUDITORIA VISUAL DA BATALHA — ${vocacao}` + (MUTAR ? `  [autoteste: mutando "${MUTAR}"]` : ''));
 console.log('='.repeat(66));
 ok.forEach(o => console.log('  ✓ ' + o));
 if (inconclusivos.length) { console.log('\n⚠  INCONCLUSIVO:'); inconclusivos.forEach(i => console.log('  - ' + i)); }

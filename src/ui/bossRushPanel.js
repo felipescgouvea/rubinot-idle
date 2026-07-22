@@ -3,13 +3,13 @@
 // ui/zonePicker.js: zoneCard) pro visual, e o mesmo modal de batalha da
 // caçada normal pra mostrar o combate (ver ui/battleModal.js) — é o mesmo
 // motor por baixo (ver application/bossRushUseCases.js).
-import { G } from '../application/gameStore.js?v=228';
-import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=246';
-import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=229';
-import { on, EVENTS } from '../shared/eventBus.js?v=226';
-import { monsterSpriteImg } from './huntPanel.js?v=245';
-import { openBattleModal } from './battleModal.js?v=224';
-import { t, getLocale } from '../i18n/i18n.js?v=242';
+import { G } from '../application/gameStore.js?v=229';
+import { MONSTERS, bossTierMultiplier, bossAuraClass } from '../domain/bestiary.js?v=247';
+import { unlockedBossZones, startBossRush, stopBossRush, isBossRushActive } from '../application/bossRushUseCases.js?v=230';
+import { on, EVENTS } from '../shared/eventBus.js?v=227';
+import { monsterSpriteImg } from './huntPanel.js?v=246';
+import { openBattleModal } from './battleModal.js?v=225';
+import { t, getLocale } from '../i18n/i18n.js?v=243';
 
 function bossCard(zoneId, zone) {
   const boss = MONSTERS[zone.boss];
