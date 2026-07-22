@@ -2726,3 +2726,13 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 @media (prefers-reduced-motion: reduce) {
   .cast-pulse, .potion-sip { animation-duration: 1ms; opacity: 0; }
 }
+
+/* Pulso de CURA no palco de treino. Não é sprite do Tibia: o efeito real da
+   cura é CONST_ME_MAGIC_BLUE (faíscas azuis), que não está no nosso acervo.
+   Em vez de reaproveitar o dourado de 'holy' — que não bate com a magia — usa
+   a mesma linguagem de pulso do gesto de conjurar no combate. */
+.tstage-cast-heal {
+  border-radius: 50%;
+  background: radial-gradient(circle, #6fe39a 0%, rgba(111,227,154,.35) 45%, transparent 72%);
+  box-shadow: 0 0 12px 4px rgba(111,227,154,.55);
+}

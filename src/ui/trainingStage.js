@@ -15,13 +15,13 @@
 // trazidas pro projeto (assets/outfits-dir/, ver
 // scripts/fetch_outfit_directions.py), então aqui ele usa LESTE quando bate no
 // dummy à direita e SUL quando é o mago lançando magia de frente.
-import { G } from '../application/gameStore.js?v=205';
-import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=201';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=201';
-import { VOCATIONS } from '../domain/character.js?v=232';
-import { ITEMS } from '../domain/items.js?v=216';
-import { SPELLS } from '../domain/spells.js?v=203';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=206';
+import { G } from '../application/gameStore.js?v=206';
+import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=202';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=202';
+import { VOCATIONS } from '../domain/character.js?v=233';
+import { ITEMS } from '../domain/items.js?v=217';
+import { SPELLS } from '../domain/spells.js?v=204';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=207';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
@@ -54,7 +54,14 @@ export function trainingStageHtml(skillId, spell) {
   // ui/trainingPanel.js), então cai no brilho 'holy', que é o mais próximo do
   // efeito de cura do Tibia. Sem isso o palco do mago ficava sem animação
   // nenhuma quando a magia escolhida era de cura.
-  const efeito = semDummy && spell ? effectSpriteFile(spell.element || 'holy') : null;
+  // Magia de CURA não tem sprite de efeito aqui: no Tibia ela usa
+  // CONST_ME_MAGIC_BLUE (faíscas azuis), que não existe no nosso acervo e não
+  // achei no TibiaWiki. Em vez de fingir com o dourado de 'holy' — que era o
+  // que aparecia, e o Felipe reparou que não batia com a magia — a cura cai no
+  // pulso verde de UI (mesma linguagem do gesto de conjurar no combate, ver
+  // ui/characterPanel.js). É honesto: não afirma ser um efeito do Tibia.
+  const efeito = semDummy && spell && spell.element ? effectSpriteFile(spell.element) : null;
+  const pulsoCura = semDummy && spell && !spell.element;
 
   const dummy = semDummy ? '' : `
     <div class="tstage-dummy">
@@ -65,7 +72,9 @@ export function trainingStageHtml(skillId, spell) {
   // pulsarCast). Antes a animação era um laço infinito de 1,6s fixo, então o
   // efeito ficava aceso quase o tempo todo e não tinha relação nenhuma com o
   // cast — parecia uma magia grudada no personagem.
-  const magia = efeito ? `<img class="tstage-cast" src="${spriteUrl(efeito)}" alt="" aria-hidden="true" />` : '';
+  const magia = efeito
+    ? `<img class="tstage-cast" src="${spriteUrl(efeito)}" alt="" aria-hidden="true" />`
+    : (pulsoCura ? '<span class="tstage-cast tstage-cast-heal" aria-hidden="true"></span>' : '');
 
   return `
     <div class="training-stage ${semDummy ? 'tstage-mage' : 'tstage-melee'}" data-tskill="${skillId}">

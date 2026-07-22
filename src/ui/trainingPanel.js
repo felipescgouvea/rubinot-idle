@@ -1,15 +1,15 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=205';
-import { TIBIA_SKILLS, VOCATIONS } from '../domain/character.js?v=232';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=203';
-import { SPELLS } from '../domain/spells.js?v=203';
-import { on, EVENTS } from '../shared/eventBus.js?v=203';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=208';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=209';
-import { t } from '../i18n/i18n.js?v=219';
-import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=36';
+import { G } from '../application/gameStore.js?v=206';
+import { TIBIA_SKILLS, VOCATIONS } from '../domain/character.js?v=233';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=204';
+import { SPELLS } from '../domain/spells.js?v=204';
+import { on, EVENTS } from '../shared/eventBus.js?v=204';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=209';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=210';
+import { t } from '../i18n/i18n.js?v=220';
+import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=37';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
@@ -41,7 +41,7 @@ function activeTrainingCard(mode) {
         <div>
           <div class="training-active-title">${mode === 'online' ? '⚔️' : '🏋️'} ${t('training.trainingSkill', { skill: s.name })}</div>
           ${spell ? `<div class="muted">${t('training.usingSpell', { spell: spell.name })}</div>` : ''}
-          <div class="muted">${t(mode === 'online' ? 'training.rateInfoOnline' : 'training.rateInfo', { rate })}</div>
+          <div class="muted">${t(mode === 'online' ? (ehMagia ? 'training.rateInfoOnlineMagic' : 'training.rateInfoOnline') : (ehMagia ? 'training.rateInfoMagic' : 'training.rateInfo'), { rate })}</div>
           ${mode === 'online' ? `<div class="muted training-online-hint">${t('training.onlineMustStayOpen')}</div>` : ''}
         </div>
       </div>
