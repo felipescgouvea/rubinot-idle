@@ -3,31 +3,27 @@
 // Dividida em 2 subtabs: Atributos (ATK/DEF/SPD/MGC, antes fixos na barra
 // de status — pedido do Felipe pra tirar da tela principal) e Skills
 // (treino de cada skill, conteúdo que já existia aqui).
-import { G } from '../application/gameStore.js?v=201';
-import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=228';
-import { resolveEquippedItem } from '../domain/items.js?v=212';
-import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=198';
-import { skillIconImg } from './shared.js?v=204';
-import { t } from '../i18n/i18n.js?v=215';
+import { G } from '../application/gameStore.js?v=202';
+import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=229';
+import { resolveEquippedItem } from '../domain/items.js?v=213';
+import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=199';
+import { skillIconImg } from './shared.js?v=205';
+import { t } from '../i18n/i18n.js?v=216';
 
-let activeSkillsSubtab = 'attributes';
-export function setSkillsSubtab(tab) {
-  if (tab !== 'attributes' && tab !== 'upgrades') return;
-  activeSkillsSubtab = tab;
-  renderSkillsPanel();
-}
+// A aba Skills mostra SÓ as skills. Os atributos derivados (ATK/DEF/SPD/MGC)
+// saíram: eles já aparecem no cabeçalho do personagem, e a subaba obrigava um
+// clique a mais pra chegar no que o jogador realmente vem ver aqui.
+// setSkillsSubtab continua exportada porque o onclick inline do HTML e o
+// main.js ainda a referenciam — virou no-op em vez de sumir e quebrar o boot.
+export function setSkillsSubtab() { /* subabas removidas — só Skills */ }
 
 function renderSkillsSubtabs() {
   const el = document.getElementById('skills-subtabs');
-  if (!el) return;
-  el.innerHTML = `
-    <button class="admin-subtab-btn ${activeSkillsSubtab === 'attributes' ? 'active' : ''}" onclick="setSkillsSubtab('attributes')">📊 ${t('skills.subtabAttributes')}</button>
-    <button class="admin-subtab-btn ${activeSkillsSubtab === 'upgrades' ? 'active' : ''}" onclick="setSkillsSubtab('upgrades')">⚡ ${t('skills.subtabTraining')}</button>
-  `;
+  if (el) el.innerHTML = '';
   const attrEl = document.getElementById('skills-subtab-attributes');
   const upgEl = document.getElementById('skills-subtab-upgrades');
-  if (attrEl) attrEl.style.display = activeSkillsSubtab === 'attributes' ? 'block' : 'none';
-  if (upgEl) upgEl.style.display = activeSkillsSubtab === 'upgrades' ? 'block' : 'none';
+  if (attrEl) attrEl.style.display = 'none';
+  if (upgEl) upgEl.style.display = 'block';
 }
 
 function renderAttributesSubtab() {

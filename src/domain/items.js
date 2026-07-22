@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=198';
+import { primaryStatKeyForItem } from './rarity.js?v=199';
 
 // A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
 // Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
