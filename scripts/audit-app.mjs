@@ -15,7 +15,11 @@ import { readFileSync, mkdirSync } from 'node:fs';
 import { instalarLiveImport, login } from './probe-lib.mjs';
 
 const acct = JSON.parse(readFileSync('.test-account.json', 'utf8'));
-const ABAS = ['hunt', 'rtc', 'tasks', 'training', 'bestiary', 'arena', 'bossrush',
+// Esta lista é escrita à mão de propósito, mas fica desatualizada em silêncio
+// quando uma aba nova entra no jogo — foi o que aconteceu com 'spells', que
+// nasceu sem cobertura nenhuma. A conferência contra o HTML, logo abaixo,
+// existe pra isso não se repetir.
+const ABAS = ['hunt', 'rtc', 'spells', 'tasks', 'training', 'bestiary', 'arena', 'bossrush',
   'battlepass', 'shop', 'market', 'skills', 'worlds', 'highscores', 'admin'];
 
 mkdirSync('scripts/audit', { recursive: true });
@@ -45,6 +49,15 @@ try {
     await page.waitForFunction(() => window.__G.vocation, null, { timeout: 25000 }).catch(() => {});
   }
   console.log('personagem:', await page.evaluate(() => window.__G.vocation), 'lv', await page.evaluate(() => window.__G.level));
+
+  // Guarda contra esta suíte envelhecer sozinha: se o jogo ganhar uma aba que
+  // não está em ABAS, ela roda "verde" sem nunca ter aberto a aba nova.
+  const abasNoJogo = await page.evaluate(() =>
+    [...document.querySelectorAll('.tab')].map(b => b.dataset.tab));
+  const semCobertura = abasNoJogo.filter(a => !ABAS.includes(a));
+  if (semCobertura.length) {
+    add('suíte', 'cobertura', `abas no jogo que esta auditoria não conhece: ${semCobertura.join(', ')} — adicione em ABAS`);
+  }
 
   for (const aba of ABAS) {
     abaAtual = aba;

@@ -168,7 +168,14 @@ export const TRAINING_DUMMY_FILE = 'skills/Training_Dummy.gif';
 
 // Ícone de magia: cada spell tem sua própria sprite no TibiaWiki, nomeada
 // pelo nome em inglês da magia (ex.: "Light Healing" -> Light_Healing.gif).
+// Magias de tutorial do Dawnport: não existe ícone delas no TibiaWiki, então
+// pedir a sprite é um 404 garantido. Devolver null aqui manda direto pro emoji
+// — sem requisição, sem erro no console (ver scripts/fetch-spell-icons.mjs,
+// que baixa todas as outras e reporta as que ficam de fora).
+const MAGIAS_SEM_SPRITE = new Set(['Practice Healing', 'Practice Fire Wave', 'Practice Magic Missile Rune']);
+
 export function spellIconFile(spellName) {
+  if (MAGIAS_SEM_SPRITE.has(spellName)) return null;
   return 'spells/' + localName(spellName.replace(/ /g, '_') + '.gif');
 }
 
