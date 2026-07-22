@@ -36,10 +36,15 @@ const m = await page.evaluate(() => {
     grupos[g].ms += e.duration;
   }
   const nav = performance.getEntriesByType('navigation')[0] || {};
-  return { grupos, total: r.length, domContentLoaded: Math.round(nav.domContentLoadedEventEnd || 0) };
+  // Metrica que importa de verdade: QUANDO o ultimo modulo JS terminou de
+  // chegar. "Jogavel" media tambem o login no Supabase e a espera fixa do
+  // probe, entao escondia o efeito do carregamento.
+  const js = r.filter(e => new URL(e.name).pathname.includes('/src/') && new URL(e.name).pathname.endsWith('.js'));
+  const codigoPronto = js.length ? Math.round(Math.max(...js.map(e => e.responseEnd))) : 0;
+  return { grupos, total: r.length, codigoPronto, domContentLoaded: Math.round(nav.domContentLoadedEventEnd || 0) };
 });
 
-console.log(`DOM pronto em ${tDom}ms · logado e jogável em ${tLogin}ms`);
+console.log(`DOM pronto em ${m.domContentLoaded}ms · TODO o código JS carregado em ${m.codigoPronto}ms`);
 console.log(`\n${m.total} requisições no carregamento:`);
 const linhas = Object.entries(m.grupos).sort((a, b) => b[1].n - a[1].n);
 for (const [g, d] of linhas) {
