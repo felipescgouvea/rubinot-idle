@@ -1,14 +1,14 @@
-import { G, ACCOUNT } from './gameStore.js?v=217';
-import { VOCATIONS } from '../domain/character.js?v=244';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=228';
-import { canGraduate } from '../domain/cities.js?v=228';
-import { getMaxHp, getMaxMana } from './stats.js?v=228';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=215';
-import { addItemToInventory } from './inventoryCore.js?v=215';
-import { startRegen } from './huntUseCases.js?v=281';
-import { saveGame } from './saveGameUseCase.js?v=217';
-import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=222';
-import { t } from '../i18n/i18n.js?v=231';
+import { G, ACCOUNT } from './gameStore.js?v=218';
+import { VOCATIONS } from '../domain/character.js?v=245';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=229';
+import { canGraduate } from '../domain/cities.js?v=229';
+import { getMaxHp, getMaxMana } from './stats.js?v=229';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=216';
+import { addItemToInventory } from './inventoryCore.js?v=216';
+import { startRegen } from './huntUseCases.js?v=282';
+import { saveGame } from './saveGameUseCase.js?v=218';
+import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=223';
+import { t } from '../i18n/i18n.js?v=232';
 
 // Abre a tela de graduação se o personagem já pode graduar e ainda não graduou.
 //

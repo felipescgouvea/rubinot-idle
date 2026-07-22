@@ -97,6 +97,18 @@ try {
   }, null, { timeout: 20000, polling: 400 }).then(() => true).catch(() => false);
   if (!assentou) inconclusivos.push('o palco não parou de se mexer em 20s — medições podem estar pegando criatura em movimento');
 
+  // Silencia as magias do PRÓPRIO jogo antes de medir. O personagem continua
+  // caçando (é o que mantém as criaturas no palco), e cada magia que ele lança
+  // cria os mesmos .combat-area-tile que eu injeto — misturando as duas coisas.
+  // Foi isso que produziu números impossíveis: "beam com 224px de largura"
+  // quando todos os tiles do feixe estão na mesma coluna, e contagens que não
+  // batiam com a forma. Eu quase reportei bug no renderizador por causa disso.
+  await page.evaluate(async () => {
+    const rtc = await window.__liveImport('rtcUseCases.js');
+    for (let i = 0; i < 4; i++) rtc.clearRtcAttackSpellSlot(i);
+  });
+  await page.waitForTimeout(1200);
+
   for (const forma of ['single', 'wave', 'ball', 'square', 'beam', 'explosion']) {
     const { criaturas, efeitos, jogadorY, alvoUid } = await medir(forma);
     if (!criaturas.length) { inconclusivos.push(`forma "${forma}": nenhuma criatura no palco na hora da medição`); continue; }

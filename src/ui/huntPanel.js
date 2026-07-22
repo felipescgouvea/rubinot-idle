@@ -1,21 +1,21 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=217';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=235';
-import { MONSTERS } from '../domain/bestiary.js?v=235';
-import { cityName } from '../domain/cities.js?v=220';
-import { ITEMS } from '../domain/items.js?v=228';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=218';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=213';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=215';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=220';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=218';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=281';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=213';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=218';
-import { t } from '../i18n/i18n.js?v=231';
-import { setStageWalking } from './stageWalk.js?v=54';
+import { G } from '../application/gameStore.js?v=218';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=236';
+import { MONSTERS } from '../domain/bestiary.js?v=236';
+import { cityName } from '../domain/cities.js?v=221';
+import { ITEMS } from '../domain/items.js?v=229';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=219';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=214';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=216';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=221';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=219';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=282';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=214';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=219';
+import { t } from '../i18n/i18n.js?v=232';
+import { setStageWalking } from './stageWalk.js?v=55';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -140,9 +140,14 @@ export function playAreaEffect({ effect, shape, targetUid } = {}) {
   }
   // Sem criatura na tela, mantém o tamanho histórico em vez de sumir.
   const tile = vao > 30 ? vao / alcance : TILE_PX;
-  // Teto pra forma de alcance curto (square tem alcance 1) não virar um tile do
-  // tamanho do palco inteiro.
-  const lado = Math.min(tile * 1.15, 72);
+  // A SPRITE é desenhada MAIOR que o espaçamento (1,6x) de propósito. Com
+  // lado ≈ espaçamento os tiles só se encostam, e criatura que cai ENTRE duas
+  // colunas ficava metade de fora — medido: 27% a 59% de cobertura mesmo com o
+  // desenho chegando na fileira certa. Com a sobreposição, a faixa fica
+  // contínua e o bicho é coberto de fato, que era o pedido original ("sprite
+  // redimensionada para o tamanho onde os bichos realmente sejam atingidos").
+  // Só o TAMANHO muda; as posições dos tiles seguem as de areaOffsets.
+  const lado = Math.min(tile * 1.6, 96);
 
   offsets.forEach(([dx, dy]) => solta(cx + dx * tile, cy + dy * tile, lado));
 }
