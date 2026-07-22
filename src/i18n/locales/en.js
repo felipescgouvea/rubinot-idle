@@ -98,13 +98,13 @@ export default {
 
   // ---- multiple characters (up to 2 per account) ----
   'account.title': 'Characters',
-  'account.hint': 'Your account can have up to 2 characters. Only one is active at a time — switching saves the current one before loading the other.',
+  'account.hint': 'Your account can have up to {max} characters. Only one is active at a time — switching saves the current one before loading the other.',
   'account.emptySlot': 'Empty',
   'account.createHere': 'Create here',
   'account.slotLevel': 'level {level}',
   'account.activeSlot': 'active',
   'account.playThis': 'Play',
-  'account.confirmCreateSlot': 'Create a 2nd character on this account? The current character is saved before switching.',
+  'account.confirmCreateSlot': 'Create a new character on this account? The current character is saved before switching.',
   'account.confirmSwitchSlot': 'Switch to {name}? The current character is saved before switching.',
   'account.switching': '🔄 Switching character...',
 

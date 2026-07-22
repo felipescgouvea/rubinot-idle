@@ -99,13 +99,13 @@ export default {
 
   // ---- múltiplos personagens (até 2 por conta) ----
   'account.title': 'Personagens',
-  'account.hint': 'Sua conta pode ter até 2 personagens. Só um fica ativo por vez — trocar salva o atual antes de carregar o outro.',
+  'account.hint': 'Sua conta pode ter até {max} personagens. Só um fica ativo por vez — trocar salva o atual antes de carregar o outro.',
   'account.emptySlot': 'Vazio',
   'account.createHere': 'Criar aqui',
   'account.slotLevel': 'nível {level}',
   'account.activeSlot': 'ativo',
   'account.playThis': 'Jogar',
-  'account.confirmCreateSlot': 'Criar um 2º personagem nesta conta? O personagem atual é salvo antes de trocar.',
+  'account.confirmCreateSlot': 'Criar um personagem novo nesta conta? O personagem atual é salvo antes de trocar.',
   'account.confirmSwitchSlot': 'Trocar para {name}? O personagem atual é salvo antes de trocar.',
   'account.switching': '🔄 Trocando de personagem...',
 

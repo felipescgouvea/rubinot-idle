@@ -12,6 +12,7 @@
 // Nenhuma decisão de jogo depende do socket — ele só transporta o que o motor
 // já calculou.
 import { WebSocketServer } from 'ws';
+import { validSlot } from './slots.js';
 
 // userId:slot -> Set de sockets (o mesmo personagem pode estar aberto em duas
 // abas; as duas devem ver o combate).
@@ -34,8 +35,8 @@ export function iniciarRealtime(httpServer, verificarToken) {
     // handshake de WebSocket. É o mesmo token Bearer das rotas REST, e a
     // verificação passa pelo mesmo cache de 60s.
     const user = await verificarToken(url.searchParams.get('token'));
-    const slot = Number(url.searchParams.get('slot'));
-    if (!user || !(slot === 0 || slot === 1)) return socket.destroy();
+    const slot = validSlot(Number(url.searchParams.get('slot')));
+    if (!user || slot === null) return socket.destroy();
 
     wss.handleUpgrade(req, socket, head, ws => {
       const k = chave(user.id, slot);

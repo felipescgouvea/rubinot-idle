@@ -3,10 +3,16 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=254';
-import { createDefaultRtc } from './rtcConfig.js?v=257';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=223';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=226';
+import { createDefaultSkills } from './character.js?v=255';
+import { createDefaultRtc } from './rtcConfig.js?v=258';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=224';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=227';
+
+// Quantos personagens cabem numa conta. Mora no domínio porque é regra de
+// negócio, não detalhe de tela: o servidor recusa slot fora dessa faixa e cada
+// tabela por personagem tem o mesmo limite num CHECK no banco. Mudar aqui sem
+// mudar os outros dois deixa o jogador criar um personagem que não salva.
+export const MAX_CHARACTER_SLOTS = 4;
 
 export function createDefaultState() {
   return {

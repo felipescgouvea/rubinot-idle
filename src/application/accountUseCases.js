@@ -1,5 +1,5 @@
-// Até 2 personagens por conta (slots 0 e 1) — ver .spec/17-contas-e-login.md,
-// Regra 7. Trocar de slot (ou criar o 2º personagem, que é só trocar pro slot
+// Vários personagens por conta (ver MAX_CHARACTER_SLOTS em domain/gameState.js).
+// Trocar de slot (ou criar mais um personagem, que é só trocar pro slot
 // vazio) salva o personagem ativo e RECARREGA A PÁGINA: o boot normal do jogo
 // (main.js: loadGame → applyOfflineProgress → bootGame) já sabe calcular
 // progresso offline e religar tudo certinho pro personagem carregado — cada
@@ -7,14 +7,13 @@
 // dois independentemente de quando cada um foi jogado por último. Evita
 // duplicar toda a lógica de start/stop de intervalos (caçada/treino/regen)
 // que só faz sentido rodar uma vez, no boot.
-import { G, ACCOUNT } from './gameStore.js?v=227';
-import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=227';
-import { saveState } from '../infrastructure/storage.js?v=223';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=232';
-import { emit, EVENTS } from '../shared/eventBus.js?v=225';
-import { t } from '../i18n/i18n.js?v=241';
-
-const MAX_CHARACTER_SLOTS = 2;
+import { G, ACCOUNT } from './gameStore.js?v=228';
+import { saveGame, flushCloudSave } from './saveGameUseCase.js?v=228';
+import { saveState } from '../infrastructure/storage.js?v=224';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=233';
+import { emit, EVENTS } from '../shared/eventBus.js?v=226';
+import { t } from '../i18n/i18n.js?v=242';
+import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=228';
 
 // Resumo de cada slot pra UI (Configurações) — nunca o blob inteiro do
 // personagem, só o suficiente pra identificar/escolher.
@@ -26,7 +25,7 @@ export function getCharacterSlots() {
 
 // Troca o personagem ativo: salva o atual (local + nuvem, sem esperar o
 // debounce de 8s) no próprio slot, marca o novo slot como ativo e recarrega —
-// o slot novo pode estar vazio (2º personagem ainda não criado), nesse caso o
+// o slot novo pode estar vazio (personagem ainda não criado), nesse caso o
 // boot cai direto na tela de escolha de vocação, igual ao 1º personagem.
 async function switchCharacterSlot(slot) {
   if (slot < 0 || slot >= MAX_CHARACTER_SLOTS || slot === ACCOUNT.activeSlot) return;

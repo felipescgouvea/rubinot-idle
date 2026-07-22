@@ -1,21 +1,21 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState, replaceAccount } from './gameStore.js?v=227';
-import { createDefaultState } from '../domain/gameState.js?v=227';
-import { createDefaultSkills } from '../domain/character.js?v=254';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=257';
-import { isSpellAvailable } from '../domain/spells.js?v=225';
-import { findOutfit } from '../domain/outfits.js?v=223';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=223';
-import { ZONES } from '../domain/bestiary.js?v=245';
-import { isRelicId, STARTER_KITS } from '../domain/items.js?v=238';
-import { addItemToInventory } from './inventoryCore.js?v=225';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=224';
-import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=226';
-import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=223';
-import { t } from '../i18n/i18n.js?v=241';
-import { getMaxHp, getMaxMana } from './stats.js?v=224';
-import { STAMINA_MAX } from '../domain/stamina.js?v=223';
+import { G, replaceState, replaceAccount } from './gameStore.js?v=228';
+import { createDefaultState, MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=228';
+import { createDefaultSkills } from '../domain/character.js?v=255';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=258';
+import { isSpellAvailable } from '../domain/spells.js?v=226';
+import { findOutfit } from '../domain/outfits.js?v=224';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=224';
+import { ZONES } from '../domain/bestiary.js?v=246';
+import { isRelicId, STARTER_KITS } from '../domain/items.js?v=239';
+import { addItemToInventory } from './inventoryCore.js?v=226';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=225';
+import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=227';
+import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=224';
+import { t } from '../i18n/i18n.js?v=242';
+import { getMaxHp, getMaxMana } from './stats.js?v=225';
+import { STAMINA_MAX } from '../domain/stamina.js?v=224';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
 // nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não
@@ -34,21 +34,29 @@ export function applyCloudSave(cloudData) {
 }
 
 // Normaliza o que veio do storage (local ou nuvem) pro formato de CONTA
-// { activeSlot, slots: [slot0, slot1] }. Saves de antes do multi-personagem
-// eram o personagem inteiro, direto na raiz (sem `slots`) — vira o slot 0,
-// sem perder nada, e o slot 1 começa vazio.
+// { activeSlot, slots: [...] }. Dois formatos antigos passam por aqui e nenhum
+// pode perder personagem:
+//  - pré multi-personagem: o personagem inteiro na raiz (sem `slots`) — vira o
+//    slot 0 e os demais começam vazios;
+//  - conta de 2 slots: o array vem com 2 posições e é COMPLETADO até
+//    MAX_CHARACTER_SLOTS. Ler por índice (em vez de copiar o array recebido)
+//    é o que garante tanto o crescimento quanto o descarte de lixo além do
+//    limite, caso um save venha maior do que o jogo aceita hoje.
 function normalizeAccountData(parsed) {
   if (parsed && Array.isArray(parsed.slots)) {
-    const slots = [parsed.slots[0] || null, parsed.slots[1] || null];
+    const slots = Array.from({ length: MAX_CHARACTER_SLOTS }, (_, i) => parsed.slots[i] || null);
     // NÃO exigir que o slot já tenha dado (`slots[activeSlot]` truthy) aqui —
-    // o slot ativo pode estar legitimamente vazio bem no momento de criar o
-    // 2º personagem (troca pro slot vazio, recarrega, cai na tela de escolha
+    // o slot ativo pode estar legitimamente vazio bem no momento de criar um
+    // personagem novo (troca pro slot vazio, recarrega, cai na tela de escolha
     // de vocação). Exigir dado prévio travava esse fluxo permanentemente de
     // volta pro slot 0.
-    const activeSlot = parsed.activeSlot === 1 ? 1 : 0;
+    const bruto = Number(parsed.activeSlot);
+    const activeSlot = Number.isInteger(bruto) && bruto >= 0 && bruto < MAX_CHARACTER_SLOTS ? bruto : 0;
     return { activeSlot, slots };
   }
-  return { activeSlot: 0, slots: [parsed, null] }; // formato antigo (pré multi-personagem)
+  const slots = Array(MAX_CHARACTER_SLOTS).fill(null);
+  slots[0] = parsed;
+  return { activeSlot: 0, slots }; // formato antigo (pré multi-personagem)
 }
 
 export function loadGame() {

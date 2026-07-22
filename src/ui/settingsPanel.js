@@ -4,12 +4,13 @@
 // da Bag). Não introduz estado novo: reaproveita G.autoSell e setAutoSell/
 // setAutoSellMax (mesmas funções da Bag, ver ui/inventoryAndEquipmentPanel.js)
 // e G.lastSave (gravado em cada saveGame, ver application/saveGameUseCase.js).
-import { G } from '../application/gameStore.js?v=227';
-import { currentUser } from '../infrastructure/authClient.js?v=232';
-import { getCharacterSlots } from '../application/accountUseCases.js?v=225';
-import { VOCATIONS } from '../domain/character.js?v=254';
-import { goldIconImg, openModal } from './shared.js?v=230';
-import { t, getLocale, LOCALE_NAMES } from '../i18n/i18n.js?v=241';
+import { G } from '../application/gameStore.js?v=228';
+import { currentUser } from '../infrastructure/authClient.js?v=233';
+import { getCharacterSlots } from '../application/accountUseCases.js?v=226';
+import { VOCATIONS } from '../domain/character.js?v=255';
+import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=228';
+import { goldIconImg, openModal } from './shared.js?v=231';
+import { t, getLocale, LOCALE_NAMES } from '../i18n/i18n.js?v=242';
 
 function fmtLastSave() {
   if (!G.lastSave) return t('settings.neverSavedThisSession');
@@ -63,7 +64,7 @@ export function openSettingsPanel() {
     <div class="settings-section">
       <h4>${t('account.title')}</h4>
       <div class="settings-slot-list">${slotRows}</div>
-      <p class="muted settings-hint">${t('account.hint')}</p>
+      <p class="muted settings-hint">${t('account.hint', { max: MAX_CHARACTER_SLOTS })}</p>
     </div>
 
     <div class="settings-section">

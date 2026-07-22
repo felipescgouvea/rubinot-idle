@@ -65,6 +65,7 @@ import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125'
 import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow } from './db.js';
 import { iniciarRealtime } from './realtime.js';
+import { validSlot } from './slots.js';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -191,9 +192,6 @@ async function requireUser(req, res) {
   return user;
 }
 
-function validSlot(v) {
-  return v === 0 || v === 1 ? v : null;
-}
 
 const server = http.createServer(async (req, res) => {
   try {
