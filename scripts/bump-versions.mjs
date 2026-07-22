@@ -25,3 +25,10 @@ for (const f of files) {
   if (n > 0) { writeFileSync(f, out); total += n; touched++; }
 }
 console.log(`bump: ${total} ocorrências em ${touched} arquivos`);
+
+
+// As tags <link rel="modulepreload"> do index.html carregam a URL COM ?v=;
+// se ficassem pra tras depois de um bump, o navegador baixaria cada modulo DUAS
+// vezes (a versao velha do preload e a nova do import). Regenerar aqui e o que
+// mantem as duas listas em sincronia.
+await import('./gen-modulepreload.mjs');
