@@ -4,23 +4,23 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=191';
-import { MONSTERS } from '../domain/bestiary.js?v=209';
+import { G } from '../application/gameStore.js?v=192';
+import { MONSTERS } from '../domain/bestiary.js?v=210';
 import {
-  PREY_SLOTS, PREY_BONUS_TYPES, PREY_REROLL_COST, PREY_DURATION_MS, isPreyActive,
-} from '../domain/prey.js?v=187';
+  PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
+} from '../domain/prey.js?v=188';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=188';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=187';
-import { on, EVENTS } from '../shared/eventBus.js?v=189';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=194';
-import { monsterSpriteImg } from './huntPanel.js?v=208';
-import { uiIcon } from './uiIcons.js?v=192';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=189';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=189';
-import { t } from '../i18n/i18n.js?v=205';
+} from '../domain/charms.js?v=189';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=188';
+import { on, EVENTS } from '../shared/eventBus.js?v=190';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=195';
+import { monsterSpriteImg } from './huntPanel.js?v=209';
+import { uiIcon } from './uiIcons.js?v=193';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=190';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=190';
+import { t } from '../i18n/i18n.js?v=206';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -49,8 +49,11 @@ function renderPreySection() {
       const bt = PREY_BONUS_TYPES[slot.bonusType];
       const remain = slot.expires - now;
       const timePct = Math.max(0, Math.min(100, (remain / PREY_DURATION_MS) * 100));
-      const stars = Array.from({ length: 5 }, (_, s) =>
-        `<span class="prey-star ${s < slot.stars ? 'on' : ''}">★</span>`).join('');
+      // A barra de raridade do Tibia vai ate 10, nao 5. Saves antigos guardavam
+      // `stars` (1..5); ler os dois mantem a presa ja travada mostrando certo.
+      const rarity = slot.rarity != null ? slot.rarity : (slot.stars || 0);
+      const stars = Array.from({ length: PREY_MAX_RARITY }, (_, s) =>
+        `<span class="prey-star ${s < rarity ? 'on' : ''}">★</span>`).join('');
       return `<div class="prey-card active bonus-${slot.bonusType}">
         <div class="prey-card-top">
           <span class="prey-slot-no">${i + 1}</span>
@@ -65,7 +68,7 @@ function renderPreySection() {
         <div class="prey-stars" title="Prey value">${stars}</div>
         <div class="prey-timer-track"><div class="prey-timer-fill" style="width:${timePct}%"></div><span class="prey-timer-label">${fmtRemaining(remain)}</span></div>
         <div class="prey-card-actions">
-          <button class="prey-btn reroll" onclick="rerollPrey(${i})" title="${t('bestiary.rerollTooltip', { cost: PREY_REROLL_COST.toLocaleString() })}">🎲 ${t('bestiary.reroll')}</button>
+          <button class="prey-btn reroll" onclick="rerollPrey(${i})" title="${t('bestiary.rerollTooltip', { cost: preyRerollCost(G.level).toLocaleString() })}">🎲 ${t('bestiary.reroll')}</button>
           <button class="prey-btn cancel" onclick="clearPrey(${i})" title="${t('bestiary.unequip')}">✕</button>
         </div>
       </div>`;

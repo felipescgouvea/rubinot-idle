@@ -310,6 +310,10 @@ const server = http.createServer(async (req, res) => {
         promoted: !!(stats && stats.promoted), // promoção acelera a regeneração passiva
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
         density: body.density, // 'solo'|'normal'|'pack' — undefined = tamanho natural
+        // Presas ativas. A FORÇA do bônus não é aceita como veio: huntEngine
+        // recalcula pela raridade (ver preyBonus lá) — o cliente só informa
+        // qual criatura, que tipo de bônus e até quando vale.
+        prey: Array.isArray(body.prey) ? body.prey : [],
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }

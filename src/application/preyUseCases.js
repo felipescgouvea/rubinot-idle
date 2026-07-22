@@ -1,30 +1,34 @@
 // Casos de uso das Presas (Prey): travar uma criatura num slot, rerolar o
 // bônus e ativar. Ver domain/prey.js pra as regras puras.
-import { G } from './gameStore.js?v=191';
-import { MONSTERS } from '../domain/bestiary.js?v=209';
+import { G } from './gameStore.js?v=192';
+import { MONSTERS } from '../domain/bestiary.js?v=210';
 import {
-  PREY_SLOTS, PREY_DURATION_MS, PREY_REROLL_COST, PREY_BONUS_TYPES, PREY_STAR_PCT,
-  rollPreyStars, rollPreyBonusType,
-} from '../domain/prey.js?v=187';
-import { emit, EVENTS } from '../shared/eventBus.js?v=189';
-import { saveGame } from './saveGameUseCase.js?v=191';
-import { t } from '../i18n/i18n.js?v=205';
+  PREY_SLOTS, PREY_DURATION_MS, PREY_BONUS_TYPES, PREY_MAX_RARITY,
+  preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType,
+} from '../domain/prey.js?v=188';
+import { emit, EVENTS } from '../shared/eventBus.js?v=190';
+import { saveGame } from './saveGameUseCase.js?v=192';
+import { t } from '../i18n/i18n.js?v=206';
 
-const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
+const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', defense: 'bestiary.bonusDefense', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
 
 function ensurePreyArray() {
   if (!Array.isArray(G.prey)) G.prey = [];
   while (G.prey.length < PREY_SLOTS) G.prey.push(null);
 }
 
-function makePrey(monsterId) {
-  const stars = rollPreyStars();
-  const bonusType = rollPreyBonusType();
+// `anterior` e o slot que ja estava ali (null quando e uma presa nova). E dele
+// que sai a raridade atual — o reroll do Tibia parte da raridade que voce ja
+// tem e SOBE, entao rerolar nunca piora. Presa nova comeca do zero.
+function makePrey(monsterId, anterior = null) {
+  const rarityBase = anterior ? (anterior.rarity || 0) : 0;
+  const rarity = rollPreyRarity(rarityBase);
+  const bonusType = rollPreyBonusType(anterior && anterior.bonusType, rarity);
   return {
     monster: monsterId,
     bonusType,
-    stars,
-    bonusPct: PREY_STAR_PCT[stars],
+    rarity,
+    bonusPct: preyBonusPct(bonusType, rarity),
     expires: Date.now() + PREY_DURATION_MS,
   };
 }
@@ -43,7 +47,7 @@ export function activatePrey(slotIndex, monsterId) {
       icon: bt.icon,
       pct: Math.round(p.bonusPct * 100),
       bonus: t(PREY_BONUS_NAME_KEY[p.bonusType]),
-      stars: p.stars,
+      stars: p.rarity,
     }),
     type: 'success',
   });
@@ -59,15 +63,18 @@ export function rerollPrey(slotIndex) {
   if (!slot || !slot.monster) return;
   // Carta de presa (prêmio de Arena/Battle Pass) paga o reroll no lugar do
   // gold — sempre gasta a carta primeiro, que é o recurso mais escasso.
+  // Preco do reroll escala com o nivel (200 x nivel, como no Tibia) em vez de
+  // um valor fixo — 5000 fixo era proibitivo cedo e irrisorio depois.
+  const custo = preyRerollCost(G.level);
   if (G.preyCards > 0) {
     G.preyCards--;
-  } else if (G.gold >= PREY_REROLL_COST) {
-    G.gold -= PREY_REROLL_COST;
+  } else if (G.gold >= custo) {
+    G.gold -= custo;
   } else {
-    emit(EVENTS.NOTIFY, { msg: t('bestiary.preyGoldInsufficient', { cost: PREY_REROLL_COST.toLocaleString() }), type: 'error' });
+    emit(EVENTS.NOTIFY, { msg: t('bestiary.preyGoldInsufficient', { cost: custo.toLocaleString() }), type: 'error' });
     return;
   }
-  G.prey[slotIndex] = makePrey(slot.monster);
+  G.prey[slotIndex] = makePrey(slot.monster, slot);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.PREY_PANEL);
   emit(EVENTS.NOTIFY, { msg: t('bestiary.preyRerolled'), type: 'success' });

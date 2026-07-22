@@ -6,7 +6,7 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=192';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=193';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
@@ -67,6 +67,11 @@ export const UI_ICONS = {
   charm_vampiric:  { file: 'ui/charm-vampiric.png',           emoji: '🧛' },
   // bônus de prey — ícones autênticos do Prey do client
   prey_damage:     { file: 'ui/prey-damage.png',              emoji: '⚔️' },
+  // Defesa é o 4º bônus de prey do Tibia (ver domain/prey.js). Não temos a
+  // sprite própria dele; reusa o escudo da postura defensiva, que é o mesmo
+  // ícone de "defesa" do cliente — melhor que apontar pra um arquivo que não
+  // existe e tomar 404 a cada render.
+  prey_defense:    { file: 'ui/fight-defensive.png',          emoji: '🛡️' },
   prey_xp:         { file: 'ui/prey-xp.png',                  emoji: '⭐' },
   prey_loot:       { file: 'ui/prey-loot.png',                emoji: '🍀' },
 

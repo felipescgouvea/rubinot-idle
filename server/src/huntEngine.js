@@ -26,6 +26,7 @@ import { elementMod } from '../../src/domain/elements.js?v=125';
 import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/blessings.js?v=125';
 import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
 import { buildDotSchedule } from '../../src/domain/dotDamage.js?v=125';
+import { preyBonusPct, PREY_MAX_RARITY } from '../../src/domain/prey.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
 import { getGameConfig } from './gameConfig.js';
@@ -175,6 +176,29 @@ function applyDueDots(session, pack) {
   }
 }
 
+// --- PRESAS (Prey) ------------------------------------------------------
+// O bônus de presa vive no save (que é do cliente), então chega aqui pelo
+// snapshot da caçada. Nada do que o cliente diz sobre a FORÇA do bônus é
+// aceito: só lemos criatura, tipo, raridade e validade, e recalculamos a
+// porcentagem pela regra do domínio. Um save adulterado com "+900% XP" vale
+// exatamente o que a raridade dele permitir.
+//
+// Antes disto o prey era puramente decorativo: o jogador travava a criatura,
+// via "+40% XP" na tela, e não recebia nada — o servidor nunca sequer ficava
+// sabendo que existia uma presa (a caçada inteira é resolvida aqui).
+function preyBonus(session, defKey, tipo) {
+  const slots = Array.isArray(session.prey) ? session.prey : [];
+  const agora = Date.now();
+  let melhor = 0;
+  for (const s of slots) {
+    if (!s || s.monster !== defKey || !(s.expires > agora)) continue;
+    if (s.bonusType !== tipo) continue;
+    const rarity = Math.max(1, Math.min(PREY_MAX_RARITY, Math.floor(s.rarity) || 1));
+    melhor = Math.max(melhor, preyBonusPct(tipo, rarity));
+  }
+  return melhor;
+}
+
 function isSpellReady(session, id) { return (session.spellCdUntil[id] || 0) <= Date.now(); }
 function startSpellCd(session, id, seconds) { if (seconds > 0) session.spellCdUntil[id] = Date.now() + seconds * 1000; }
 function isAttackGroupReady(session) { return session.attackGroupCdUntil <= Date.now(); }
@@ -260,7 +284,8 @@ async function settleKill(session, mon, cfg) {
   const creatureBoostMult = isBoostedCreature ? 2 : 1;
   const staminaMult = cfg.staminaEnabled ? staminaXpMult(session.stamina) : 1;
   const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(session.world) * boostedMult * cfg.goldRate);
-  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * creatureBoostMult * cfg.xpRate * staminaMult);
+  const preyXpMult = 1 + preyBonus(session, mon.defKey, 'xp');
+  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * creatureBoostMult * cfg.xpRate * staminaMult * preyXpMult);
 
   const row = await selectOne('player_stats', { user_id: session.userId, slot: session.slot });
   const gold = (row ? Number(row.gold) : 0) + goldGained;
@@ -303,9 +328,12 @@ async function settleKill(session, mon, cfg) {
 
   const lootTable = resolveMonsterLoot(cfg, mon.defKey, mon.loot);
   const lootGained = [];
+  // Presa de LOOT: no Tibia o bônus entra como acréscimo à chance de CADA
+  // drop, não como multiplicador do total.
+  const preyLoot = preyBonus(session, mon.defKey, 'loot');
   for (const [itemId, chance] of lootTable) {
     // Boosted creature/boss dobra a chance de loot (cap em 1 = drop garantido).
-    if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult)) {
+    if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult * (1 + preyLoot))) {
       const captured = await incrementInventory(session.userId, session.slot, itemId, 1);
       if (captured) lootGained.push(itemId);
     }
@@ -376,6 +404,8 @@ async function resolveTick(session) {
   const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
   let basicDmg = atkRoll.damage * elementMod(primary.defKey, atkRoll.element);
   if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
+  // Presa de DANO: só vale contra a criatura travada no slot.
+  basicDmg *= 1 + preyBonus(session, primary.defKey, 'damage');
   const dealt = Math.max(1, Math.floor(basicDmg));
   primary.hp -= dealt;
   pushCombat(session, { kind: 'basic', amount: dealt, target: primary.name });
@@ -512,7 +542,9 @@ async function resolveTick(session) {
     const pDef = getPlayerDefense(session);
     const pAbsorb = getPlayerAbsorb(session);
     // (a) melee do monstro — sempre, físico.
-    const meleeDmg = Math.floor(reducePhysical(rollMonsterMelee(newPrimary), pArmor, pDef));
+    // Presa de DEFESA: reduz o dano recebido daquela criatura.
+    const preyDef = 1 - preyBonus(session, newPrimary.defKey, 'defense');
+    const meleeDmg = Math.floor(reducePhysical(rollMonsterMelee(newPrimary), pArmor, pDef) * preyDef);
     session.hp = Math.max(0, session.hp - meleeDmg);
     let monsterDealt = meleeDmg, monsterElement = 'physical';
     // (b) magia do monstro — com chance, independente do melee. Físico reduz por
@@ -523,7 +555,7 @@ async function resolveTick(session) {
         let sdmg = sp.damage;
         if (sp.physical) sdmg = reducePhysical(sdmg, pArmor, pDef);
         else sdmg = reduceElemental(sdmg, sp.element, pAbsorb);
-        sdmg = Math.floor(sdmg);
+        sdmg = Math.floor(sdmg * preyDef);
         session.hp = Math.max(0, session.hp - sdmg);
         monsterDealt += sdmg;
         if (sdmg > 0 && !sp.physical) monsterElement = sp.element;

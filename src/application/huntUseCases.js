@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=191';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=196';
-import { ZONES } from '../domain/bestiary.js?v=209';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=218';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=189';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=221';
-import { monsterAttack } from '../domain/combatFormulas.js?v=220';
-import { elementMod } from '../domain/elements.js?v=187';
-import { STAMINA_MAX } from '../domain/stamina.js?v=187';
-import { ITEMS } from '../domain/items.js?v=202';
-import { MONSTERS } from '../domain/bestiary.js?v=209';
-import { RARITY_TIERS } from '../domain/rarity.js?v=188';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=189';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=189';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=188';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=188';
-import { saveGame } from './saveGameUseCase.js?v=191';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=192';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=190';
-import { t } from '../i18n/i18n.js?v=205';
+import { G, ACCOUNT } from './gameStore.js?v=192';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=197';
+import { ZONES } from '../domain/bestiary.js?v=210';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=219';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=190';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=222';
+import { monsterAttack } from '../domain/combatFormulas.js?v=221';
+import { elementMod } from '../domain/elements.js?v=188';
+import { STAMINA_MAX } from '../domain/stamina.js?v=188';
+import { ITEMS } from '../domain/items.js?v=203';
+import { MONSTERS } from '../domain/bestiary.js?v=210';
+import { RARITY_TIERS } from '../domain/rarity.js?v=189';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=190';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=190';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=189';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=189';
+import { saveGame } from './saveGameUseCase.js?v=192';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=193';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=191';
+import { t } from '../i18n/i18n.js?v=206';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -271,7 +271,11 @@ function buildHuntSnapshot() {
   // risco de forjar valor, o servidor sempre valida mana/cooldown/posse do
   // item na hora de usar (ver server/src/huntEngine.js). Travado pra sessão
   // inteira: mudar o RTC no meio da caçada só vale a partir da próxima.
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1 };
+  // prey vai junto porque a caçada inteira é resolvida no servidor: sem isto
+  // o bônus de presa não existia de fato (o jogador via o "+40% XP" na tela e
+  // não recebia nada). O servidor não confia na FORÇA declarada — recalcula a
+  // porcentagem pela raridade (ver huntEngine.js: preyBonus).
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, prey: G.prey || [], fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1 };
 }
 
 // Estilo de Luta (Fight Mode do TFS, ver domain/combatFormulas: FIGHT_MODES) —

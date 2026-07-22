@@ -822,6 +822,7 @@ export default {
   // ---- prey use-cases (application/preyUseCases.js) ----
   'bestiary.preyLocked': '🐾 Presa: {monster} — {icon} +{pct}% {bonus} ({stars}★)',
   'bestiary.bonusDamage': 'Dano',
+  'bestiary.bonusDefense': 'Defesa',
   'bestiary.bonusXp': 'Experiência',
   'bestiary.bonusLoot': 'Loot',
   'bestiary.preyGoldInsufficient': 'Gold insuficiente (precisa de {cost}).',
