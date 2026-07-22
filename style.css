@@ -675,10 +675,10 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .zone-card .zone-boosted-badge { margin-bottom: 6px; }
 #zone-current-name .zone-boosted-badge { margin-left: 6px; vertical-align: middle; }
 .zone-card-icon { font-size: 2.2rem; filter: drop-shadow(0 2px 3px #00000033); }
-.zone-card-icon-img { width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #00000033); }
+.zone-card-icon-img { image-rendering: pixelated; filter: drop-shadow(0 2px 3px #00000033); }
 .zone-card-name { font-family: var(--serif); font-size: 13px; line-height: 1.3; color: var(--navy-2); font-weight: 700; margin-top: 8px; min-height: 34px; overflow-wrap: break-word; word-break: break-word; width: 100%; }
 .zone-card-monster-row { display: grid; grid-template-columns: repeat(4, 1fr); justify-items: center; gap: 4px; margin: 6px 0; }
-.zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
+.zone-card-monster-icon { image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
 .zone-card-req { font-size: 11.5px; color: var(--red-hot); font-weight: 700; padding: 8px 0; }
 .zone-card .skill-upgrade-btn { font-size: 11.5px; padding: 8px 6px; width: 100%; }
 
@@ -1062,6 +1062,22 @@ img.tibia-icon {
   filter: drop-shadow(0 1px 1px #00000033);
 }
 
+img.zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; }
+img.task-card-monster-icon { width: 34px; height: 34px; object-fit: contain; }
+img.reward-icon { width: 1.1em; height: 1.1em; }
+img.hs-category-icon-img { width: 14px; height: 14px; object-fit: contain; }
+img.potion-sip-img { width: 18px; height: 18px; }
+img.grad-kit-icon { width: 32px; height: 32px; }
+
+/* Mesma armadilha de especificidade das de cima, achadas pelo guarda
+   estatico (scripts/check-css-icone-atropelado.mjs) em vez de uma por vez
+   conforme o painel dono da classe aparecia na tela. */
+img.zone-card-icon-img { width: 56px; height: 56px; object-fit: contain; }
+img.rtc-row-icon-img { width: 26px; height: 26px; object-fit: contain; }
+img.prey-portrait-img { width: 62px; height: 62px; object-fit: contain; }
+img.prey-monster-icon { width: 32px; height: 32px; }
+img.admin-loot-icon { width: 18px; height: 18px; object-fit: contain; }
+
 /* Tamanho PADRONIZADO do monstro no palco: caixa fixa 52x52 + object-fit
    contain, pra todo bicho aparecer no mesmo tamanho (independente do sprite
    nativo) e não dominar/encostar no boneco.
@@ -1227,13 +1243,13 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .task-card-first { color: #6a9a52; font-weight: 600; }
 .task-card-monsters { display: flex; flex-wrap: wrap; gap: 8px; }
 .task-card-monster-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 44px; }
-.task-card-monster-icon { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
+.task-card-monster-icon { image-rendering: pixelated; filter: drop-shadow(0 1px 2px #00000033); }
 .task-card-monster-name { font-size: 8.5px; color: var(--ink-faint); text-align: center; line-height: 1.15; }
 .task-card-bar { margin: 0; height: 9px; }
 .task-card-kills { font-size: 9.5px; color: var(--ink-faint); text-align: right; margin-top: -4px; }
 .task-rewards-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 9.5px; }
 .reward-chip { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
-.reward-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; margin-right: 1px; }
+.reward-icon { vertical-align: -0.15em; margin-right: 1px; }
 /* Cores fiéis ao Tibia real das duas linhas de recompensa de task: verde para
    a recompensa exclusiva da 1ª conclusão, vermelho para a recompensa que
    repete a cada conclusão (mesma paleta usada no cliente oficial). */
@@ -1359,7 +1375,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .rtc-row.selected { border-color: var(--gold-bright); background: linear-gradient(180deg, #3a3420, #2b2712); }
 .rtc-row.locked { opacity: 0.5; }
 .rtc-row-icon { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
-.rtc-row-icon-img { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; }
+.rtc-row-icon-img { image-rendering: pixelated; }
 /* tamanho em img.inline-icon, lá embaixo — ver img.monster-sprite */
 .inline-icon { vertical-align: -0.15em; image-rendering: pixelated; }
 .rtc-row-info { flex: 1; min-width: 0; }
@@ -1729,7 +1745,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   transition: filter 0.15s;
 }
 .hs-category-btn:hover { filter: brightness(0.97); }
-.hs-category-icon-img { width: 14px; height: 14px; object-fit: contain; image-rendering: pixelated; vertical-align: -2px; }
+.hs-category-icon-img { image-rendering: pixelated; vertical-align: -2px; }
 .hs-category-btn.active { background: linear-gradient(180deg, #ffe9a3, var(--gold-bright)); border-color: var(--gold); color: #4a3300; }
 
 /* ============ MODAL ============ */
@@ -2103,7 +2119,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   background: radial-gradient(circle at 50% 32%, #4a3d2a, #221a10);
   border: 2px solid #6d5836; box-shadow: inset 0 2px 7px #000000aa, inset 0 0 0 1px #00000055;
 }
-.prey-portrait-img { width: 62px; height: 62px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 2px #000000aa); }
+.prey-portrait-img { image-rendering: pixelated; filter: drop-shadow(0 2px 2px #000000aa); }
 .prey-portrait.empty { border-style: dashed; border-color: #8a6f4d; background: #241c1288; }
 .prey-portrait-q { font-family: var(--serif); font-size: 32px; color: #8a6f4d; }
 .prey-creature-name { font-family: var(--serif); font-weight: 700; font-size: 13px; color: var(--navy-2); text-align: center; line-height: 1.2; }
@@ -2144,7 +2160,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   background: var(--cream); color: var(--ink); font-size: 12px; font-weight: 600;
 }
 .prey-pick:hover { border-color: var(--gold); background: #fff; }
-.prey-monster-icon { width: 32px; height: 32px; image-rendering: pixelated; vertical-align: middle; }
+.prey-monster-icon { image-rendering: pixelated; vertical-align: middle; }
 
 /* ---- Charms — no estilo da lista de Charms do Cyclopedia do Tibia ---- */
 .charm-points-row { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
@@ -2498,7 +2514,7 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 .admin-loot-monster-name { font-size: 12px; font-weight: 800; color: var(--ink); border-bottom: 1px solid var(--line-soft); padding-bottom: 3px; }
 .admin-loot-row { display: grid; grid-template-columns: 1fr 80px 20px 22px; align-items: center; gap: 8px; }
 .admin-loot-item { font-size: 12px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.admin-loot-icon { width: 18px; height: 18px; object-fit: contain; flex: 0 0 auto; }
+.admin-loot-icon { flex: 0 0 auto; }
 .admin-loot-row input { width: 100%; padding: 5px 8px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
 .admin-loot-reset { background: none; border: none; color: var(--ink-soft); font-size: 14px; cursor: pointer; padding: 0; line-height: 1; }
 .admin-loot-reset:hover { color: var(--ink); }
@@ -2532,7 +2548,9 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 
 /* Cabeçalho da sub-seção de Magic Level (Paladino treina arma E magia) */
 .training-subhead { display: flex; align-items: center; gap: 6px; margin: 14px 0 4px !important; font-size: 14px; }
-.training-subhead-icon { width: 18px; height: 18px; image-rendering: pixelated; }
+/* `img.` obrigatório — sem ele img.tibia-icon (0-1-1) ganha. Ver img.monster-sprite. */
+.training-subhead-icon { image-rendering: pixelated; }
+img.training-subhead-icon { width: 18px; height: 18px; }
 
 
 
@@ -2747,7 +2765,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   pointer-events: none; z-index: 4; line-height: 0;
   animation: potion-sip 900ms ease-out forwards;
 }
-.potion-sip-img { width: 18px; height: 18px; image-rendering: pixelated; }
+.potion-sip-img { image-rendering: pixelated; }
 .potion-sip.vida  { filter: drop-shadow(0 0 4px #ff6b6b); }
 .potion-sip.mana  { filter: drop-shadow(0 0 4px #5b9dff); }
 @keyframes potion-sip {
@@ -2815,7 +2833,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   padding: 8px 4px; background: #1e1810; border: 1px solid #4a3a1e; border-radius: 6px;
   text-align: center;
 }
-.grad-kit-icon { width: 32px; height: 32px; image-rendering: pixelated; }
+.grad-kit-icon { image-rendering: pixelated; }
 .grad-kit-name { font-size: .72rem; color: #c8bda4; line-height: 1.2; }
 .grad-kit-qty { font-size: .72rem; color: #ffc14d; font-weight: 600; }
 

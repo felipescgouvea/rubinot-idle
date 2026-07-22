@@ -34,6 +34,9 @@ const acct = JSON.parse(readFileSync('.test-account.json', 'utf8'));
 const problemas = [], ok = [], inconclusivos = [];
 const mutou = { sprite: false, fluidez: false, atraso: false, geometria: false };
 let vocacao = '?';
+// Vocações que batem no corpo a corpo — nenhum projétil sai delas, por regra do
+// jogo e não por defeito.
+const CORPO_A_CORPO = ['knight'];
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
@@ -405,7 +408,12 @@ try {
     console.log(`voos de projétil: ${d.voos.length} · duração média ${md.toFixed(0)}ms · esperado ${d.voos[0].esperado || '?'}ms`);
     if (desvios.length > d.voos.length / 2) problemas.push(`projétil voa em ${md.toFixed(0)}ms, mas a animação pede ${d.voos[0].esperado}ms`);
     else ok.push(`voo do projétil bate com a duração configurada (${md.toFixed(0)}ms)`);
-  } else inconclusivos.push('nenhum projétil voou — vocação corpo a corpo ou sem munição; atraso pouso→dano não medido');
+  } else if (CORPO_A_CORPO.includes(d.voc)) {
+    // Knight não atira nada: cobrar projétil dele deixaria a vocação em
+    // INCONCLUSIVO pra sempre, e veredito que nunca fica verde ninguém lê. A
+    // sincronia dele é medida pelo retorno visual do golpe, logo abaixo.
+    ok.push(`${d.voc} é corpo a corpo — projétil não se aplica`);
+  } else inconclusivos.push('nenhum projétil voou (sem munição?) — atraso pouso→dano não medido');
 
   // -------------------------------------------- 4b. retorno visual do golpe
   // Vale pra TODA vocação, mas é a única sincronia que dá pra medir no corpo a
@@ -425,7 +433,8 @@ try {
     else ok.push(`golpe tem retorno visual (${d.flashes.length} flashes para ${d.danos.length} quedas de vida)`);
   }
 
-  if (d.pousos.length < 3) inconclusivos.push(`só ${d.pousos.length} pouso(s) de projétil — atraso pouso→dano não medido`);
+  if (d.pousos.length < 3 && CORPO_A_CORPO.includes(d.voc)) { /* já explicado acima */ }
+  else if (d.pousos.length < 3) inconclusivos.push(`só ${d.pousos.length} pouso(s) de projétil — atraso pouso→dano não medido`);
   else {
     const atrasos = [];
     for (const t of d.pousos) { const p = d.hps.find(h => h >= t); if (p != null && p - t < 4000) atrasos.push(p - t); }
