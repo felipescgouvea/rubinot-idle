@@ -55,12 +55,20 @@ const secao = (t, arr) => {
 console.log(`\nmonstros: ${alvos.length} · conferidos: ${conferidos}`);
 secao('HP divergente', div.hp);
 secao('XP divergente', div.xp);
-secao('ATAQUE divergente (nosso atk vs dano máximo do wiki)', div.atk);
-secao('DEFESA divergente (nosso def vs armor do wiki)', div.def);
+secao('ATAQUE — INFORMATIVO, não reprova (régua diferente, ver comentário)', div.atk);
+secao('DEFESA — INFORMATIVO, não reprova (mesmo perfil do ataque)', div.def);
 secao('SEM PÁGINA de criatura no wiki', semPagina);
 
 writeFileSync('scripts/stats-auditoria.json', JSON.stringify({ ...div, semPagina, conferidos }, null, 1));
-const total = div.hp.length + div.xp.length + div.atk.length + div.def.length;
+// ATK e DEF ficam INFORMATIVOS, não reprovam.
+//
+// As 152 divergências de atk são todas pra baixo e com proporção parecida; as
+// de def, 75 de 84 pra cima com razão mediana 1,61. Erro com direção única é
+// sinal de ESCALA diferente, não de erro: nosso `atk` alimenta a fórmula de
+// combate e não é o "dano máximo" do wiki. Deixá-los reprovando faria o teste
+// gritar 236 falsos positivos pra sempre — e teste que grita sempre ninguém lê.
+// Decisão do Felipe: manter os valores.
+const total = div.hp.length + div.xp.length;
 console.log(`\nrelatório em scripts/stats-auditoria.json`);
 console.log(total ? `\nRESULTADO: FALHOU — ${total} divergência(s)` : '\nRESULTADO: PASSOU');
 if (total) process.exitCode = 1;
