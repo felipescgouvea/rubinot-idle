@@ -124,7 +124,9 @@ try {
         }
       }
       const achados = [];
-      document.querySelectorAll('#dungeon-stage img, #battle-list img').forEach(img => {
+      // Varre o documento inteiro, não só o palco: a armadilha é do CSS, não do
+      // combate, e um ícone atropelado na aba ao lado é o mesmo defeito.
+      document.querySelectorAll('img').forEach(img => {
         const casam = regras.filter(r => { try { return img.matches(r.sel); } catch (e) { return false; } });
         const generica = casam.filter(r => /tibia-icon/.test(r.sel));
         const proprias = casam.filter(r => !/tibia-icon/.test(r.sel));
@@ -351,7 +353,12 @@ if (problemas.length) { console.log(`\n${problemas.length} problema(s):`); probl
 // Em modo autoteste o veredito é sobre O PROBE, não sobre o jogo: a seção
 // sabotada TEM que reprovar. Se ela passar, o "PASSOU" normal não vale nada.
 if (MUTAR) {
-  if (mutou[MUTAR]) { console.log(`\nRESULTADO: PROBE CONFIÁVEL — a seção "${MUTAR}" reprovou quando sabotada`); }
+  // Rodada que morreu no meio (rede caiu, deploy em curso) não diz NADA sobre o
+  // probe. Chamar isso de "furado" seria inverter o diagnóstico — foi o que
+  // aconteceu num ERR_CONNECTION_RESET durante o deploy.
+  const abortou = problemas.some(p => /^EXCEÇÃO/.test(p)) || inconclusivos.some(i => /SEM PERSONAGEM|não começou|morto/.test(i));
+  if (abortou) { console.log('\nRESULTADO: INCONCLUSIVO — a rodada não chegou ao fim; o autoteste não pôde julgar o probe'); process.exitCode = 2; }
+  else if (mutou[MUTAR]) { console.log(`\nRESULTADO: PROBE CONFIÁVEL — a seção "${MUTAR}" reprovou quando sabotada`); }
   else { console.log(`\nRESULTADO: PROBE FURADO — sabotei "${MUTAR}" e a seção não reclamou; o verde dela é vazio`); process.exitCode = 3; }
 } else if (problemas.length) { console.log(`\nRESULTADO: FALHOU — ${problemas.length} problema(s)`); process.exitCode = 1; }
 else if (inconclusivos.length) { console.log('\nRESULTADO: INCONCLUSIVO — nada quebrado, mas nem tudo foi exercitado'); process.exitCode = 2; }

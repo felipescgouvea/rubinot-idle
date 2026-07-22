@@ -2276,7 +2276,13 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
    Estático de propósito (sem bob/respiração via CSS) — quem "anda" é o
    próprio WebP animado (frames reais de caminhada do Tibia), não um efeito
    sintético por cima; ver infrastructure/tibiaSprites.js. */
-.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; font-size: 26px; line-height: 1; text-align: center; }
+/* Mesmo caso do .monster-sprite: o TAMANHO precisa de `img.` pra não perder pro
+   `img.tibia-icon`. Aqui o estrago era discreto (33,8px em vez de 34px, porque
+   1,3em do font-size local dá quase isso) e por isso passou despercebido — mas
+   `width: auto` continuava valendo, então a largura vinha do sprite e só depois
+   que ele decodificava. Ver o comentário longo em img.monster-sprite. */
+.battle-list-sprite { image-rendering: pixelated; font-size: 26px; line-height: 1; text-align: center; }
+img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 .battle-list-info { flex: 1; min-width: 0; }
 .battle-list-name { font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* Barra de vida da Battle List — mesmo estilo da que ficava na cena (16px,
