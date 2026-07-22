@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=197';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=225';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=194';
-import { skillIconImg } from './shared.js?v=200';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=193';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=193';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=193';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=193';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=194';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=195';
-import { formatNum, applyHpState } from './shared.js?v=200';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=214';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=261';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=198';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=193';
-import { selectVocation } from '../application/characterUseCases.js?v=198';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=197';
-import { t } from '../i18n/i18n.js?v=211';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=34';
+import { G } from '../application/gameStore.js?v=198';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=226';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=195';
+import { skillIconImg, itemIconImg } from './shared.js?v=201';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=194';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=194';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=194';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=194';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=195';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=196';
+import { formatNum, applyHpState } from './shared.js?v=201';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=215';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=262';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=199';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=194';
+import { selectVocation } from '../application/characterUseCases.js?v=199';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=198';
+import { t } from '../i18n/i18n.js?v=212';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=35';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -335,6 +335,41 @@ function renderHeaderStats() {
 // Espelha o lado do monstro (huntPanel.renderMonsterDisplay): mesmo tratamento
 // de troca de sprite só quando muda, hit-flash e estado "morto" — sem recriar
 // a <img> a cada tick (senão o sprite nunca termina de carregar).
+// GESTO DE CONJURAR — um pulso de luz da cor do elemento em volta do boneco,
+// no instante do cast. Antes o jogador só via o número no log: a magia
+// acontecia sem nada acontecer NELE, o que fazia o combate parecer um extrato
+// bancário em vez de uma luta.
+const COR_ELEMENTO = {
+  heal: '#4ade80', fire: '#ff7a3d', ice: '#5fc8ff', energy: '#c78bff',
+  earth: '#8fbf5f', death: '#9b7fb5', holy: '#ffe08a', physical: '#d8d8e0',
+};
+
+function mostrarGesto(elemento, rotulo) {
+  const wrap = document.getElementById('player-sprite-wrap');
+  if (!wrap) return;
+  const cor = COR_ELEMENTO[elemento] || COR_ELEMENTO.energy;
+  const g = document.createElement('span');
+  g.className = 'cast-pulse';
+  g.style.setProperty('--cast-cor', cor);
+  if (rotulo) g.title = rotulo;
+  wrap.appendChild(g);
+  // Remove no fim da animação em vez de por setTimeout: se a aba estiver em
+  // segundo plano a animação não roda e o elemento ficaria pendurado pra sempre.
+  g.addEventListener('animationend', () => g.remove(), { once: true });
+}
+
+// BEBER POÇÃO — a sprite real da poção sobe e some sobre o personagem. Usa a
+// mesma sprite do item, então o jogador reconhece qual poção foi bebida.
+function mostrarPocao(itemId, vital) {
+  const wrap = document.getElementById('player-sprite-wrap');
+  if (!wrap) return;
+  const bolha = document.createElement('span');
+  bolha.className = 'potion-sip ' + (vital === 'mana' ? 'mana' : 'vida');
+  bolha.innerHTML = itemIconImg(itemId, 'potion-sip-img');
+  wrap.appendChild(bolha);
+  bolha.addEventListener('animationend', () => bolha.remove(), { once: true });
+}
+
 export function renderPlayerBattleSide(hit = false, attacking = false, healing = false) {
   const wrap = document.getElementById('player-sprite-wrap');
   if (!wrap) return;
@@ -383,5 +418,9 @@ export function wireCharacterPanelEvents() {
   on(EVENTS.CHAR_INFO, renderCharInfo);
   on(EVENTS.BARS, renderBars);
   on(EVENTS.HEADER_STATS, renderHeaderStats);
-  on(EVENTS.PLAYER_BATTLE_SIDE, ({ hit, attacking, healing } = {}) => renderPlayerBattleSide(hit, attacking, healing));
+  on(EVENTS.PLAYER_BATTLE_SIDE, (d = {}) => {
+    renderPlayerBattleSide(d.hit, d.attacking, d.healing);
+    if (d.cast) mostrarGesto(d.cast.kind === 'heal' ? 'heal' : (d.cast.element || 'energy'), d.cast.label);
+    if (d.potion) mostrarPocao(d.potion, d.vital);
+  });
 }

@@ -281,9 +281,14 @@ async function applyRtcHealing(session, cfg) {
     const item = ITEMS[rtc.healPotion];
     if (item && canUsePotion(item, session.vocation, session.level)) {
       if (sessionQty(session, rtc.healPotion) > 0) {
+        const antes = session.hp;
         session.hp = Math.min(session.maxHp, session.hp + potionRestore(item.heal));
         session.potionCdUntil = Date.now() + POTION_CD_MS;
         await changeSessionInv(session, rtc.healPotion, -1);
+        // O cliente não tinha como saber que uma poção foi bebida — o servidor
+        // consome, e nenhum evento saía. Sem isto não dá pra mostrar o gesto
+        // nem preencher a janela de suprimentos.
+        pushCombat(session, { kind: 'potion', item: rtc.healPotion, vital: 'hp', amount: session.hp - antes });
       }
     }
   }
@@ -292,9 +297,11 @@ async function applyRtcHealing(session, cfg) {
     const item = ITEMS[rtc.manaPotion];
     if (item && canUsePotion(item, session.vocation, session.level)) {
       if (sessionQty(session, rtc.manaPotion) > 0) {
+        const antes = session.mana;
         session.mana = Math.min(session.maxMana, session.mana + potionRestore(item.mana));
         session.potionCdUntil = Date.now() + POTION_CD_MS;
         await changeSessionInv(session, rtc.manaPotion, -1);
+        pushCombat(session, { kind: 'potion', item: rtc.manaPotion, vital: 'mana', amount: session.mana - antes });
       }
     }
   }

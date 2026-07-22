@@ -2684,3 +2684,41 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   border: 1px solid var(--border, #2c2c34);
   background: var(--panel, #16161c); color: var(--text, #e6e6ec);
 }
+
+/* ---- Gesto de conjurar e beber poção (ver ui/characterPanel.js) ----
+   O jogador só via número no log: a magia acontecia sem nada acontecer NELE.
+   O pulso sai de dentro do boneco na cor do elemento; a poção sobe com a
+   sprite real do item, pra dar pra reconhecer qual foi bebida. */
+#player-sprite-wrap { position: relative; }
+
+.cast-pulse {
+  position: absolute; left: 50%; top: 50%; width: 12px; height: 12px;
+  margin: -6px 0 0 -6px; border-radius: 50%; pointer-events: none; z-index: 3;
+  background: radial-gradient(circle, var(--cast-cor) 0%, transparent 70%);
+  box-shadow: 0 0 10px 3px var(--cast-cor);
+  animation: cast-pulse 620ms ease-out forwards;
+}
+@keyframes cast-pulse {
+  0%   { transform: scale(.3); opacity: 0; }
+  25%  { opacity: .95; }
+  100% { transform: scale(4.2); opacity: 0; }
+}
+
+.potion-sip {
+  position: absolute; left: 50%; bottom: 58%; margin-left: -9px;
+  pointer-events: none; z-index: 4; line-height: 0;
+  animation: potion-sip 900ms ease-out forwards;
+}
+.potion-sip-img { width: 18px; height: 18px; image-rendering: pixelated; }
+.potion-sip.vida  { filter: drop-shadow(0 0 4px #ff6b6b); }
+.potion-sip.mana  { filter: drop-shadow(0 0 4px #5b9dff); }
+@keyframes potion-sip {
+  0%   { transform: translateY(6px) scale(.7); opacity: 0; }
+  20%  { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-26px) scale(1); opacity: 0; }
+}
+
+/* Quem pediu pra não animar não deve levar pulso nenhum piscando na tela. */
+@media (prefers-reduced-motion: reduce) {
+  .cast-pulse, .potion-sip { animation-duration: 1ms; opacity: 0; }
+}

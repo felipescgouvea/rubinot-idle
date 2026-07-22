@@ -30,10 +30,16 @@ const SPELL_EFFECT_OVERRIDE = {
 
 const RUNE_EFFECT = {
   sudden_death_rune: 'death',
-  explosion_rune: 'physical',
-  avalanche_rune: 'ice',
-  fireball_rune: 'fire',
-  great_fireball_rune: 'fire',
+  explosion_rune: 'physical', desintegrate_rune: 'physical',
+  avalanche_rune: 'ice', icicle_rune: 'ice',
+  fireball_rune: 'fire', great_fireball_rune: 'fire', soulfire_rune: 'fire',
+  fire_bomb_rune: 'fire', fire_field_rune: 'fire', fire_wall_rune: 'fire',
+  light_magic_missile_rune: 'energy', heavy_magic_missile_rune: 'energy',
+  lightest_missile_rune: 'energy', thunderstorm_rune: 'energy',
+  energy_bomb_rune: 'energy', energy_field_rune: 'energy', energy_wall_rune: 'energy',
+  stalagmite_rune: 'earth', stone_shower_rune: 'earth', light_stone_shower_rune: 'earth',
+  poison_bomb_rune: 'earth', poison_field_rune: 'earth', poison_wall_rune: 'earth',
+  holy_missile_rune: 'holy',
 };
 
 // Magias que no Tibia real VOAM do personagem até o alvo (um projétil físico
@@ -44,9 +50,44 @@ const RUNE_EFFECT = {
 // "estouro físico" parado no monstro, nunca uma lança voando (bug reportado
 // pelo Felipe: "magias de paladin estao com projetil errado").
 const SPELL_MISSILE = {
-  exori_con: 'spear',       // Ethereal Spear
-  exori_gran_con: 'spear',  // Strong Ethereal Spear
+  // Fogo
+  exori_flam: 'fire', exori_gran_flam: 'fire', exori_max_flam: 'fire',
+  exori_min_flam: 'fire', utori_flam: 'fire',
+  // Energia
+  exori_vis: 'energy', exori_gran_vis: 'energy', exori_max_vis: 'energy',
+  exevo_vis_hur: 'energy', exori_amp_vis: 'energy', utori_vis: 'energy', buzz: 'energy',
+  // Gelo (CONST_ANI_SMALLICE)
+  exori_frigo: 'ice', exori_gran_frigo: 'ice', exori_max_frigo: 'ice',
+  // Terra (CONST_ANI_SMALLEARTH)
+  exori_tera: 'earth', exori_gran_tera: 'earth', exori_max_tera: 'earth',
+  mud_attack: 'earth', utori_pox: 'earth',
+  // Morte
+  exori_mort: 'death', utori_mort: 'death',
+  // Sagrado (CONST_ANI_SMALLHOLY)
+  exori_san: 'holy', utori_san: 'holy',
+  // Lança de verdade (CONST_ANI_ETHEREALSPEAR)
+  exori_con: 'spear', exori_gran_con: 'spear',
 };
+
+// Runas que VOAM do personagem até o alvo, com o sprite de cada uma. Mesma
+// fonte: o CONST_ANI_* de data/spells/scripts/attack/*_rune.lua no TFS.
+const RUNE_MISSILE = {
+  sudden_death_rune: 'death',
+  avalanche_rune: 'ice', icicle_rune: 'ice',
+  fireball_rune: 'fire', great_fireball_rune: 'fire', soulfire_rune: 'fire',
+  fire_bomb_rune: 'fire', fire_field_rune: 'fire', fire_wall_rune: 'fire',
+  light_magic_missile_rune: 'energy', heavy_magic_missile_rune: 'energy',
+  lightest_missile_rune: 'energy', thunderstorm_rune: 'energy',
+  energy_bomb_rune: 'energy', energy_field_rune: 'energy', energy_wall_rune: 'energy',
+  poison_bomb_rune: 'energy', poison_field_rune: 'energy', poison_wall_rune: 'energy',
+  magic_wall_rune: 'energy', wild_growth_rune: 'energy',
+  stalagmite_rune: 'earth', stone_shower_rune: 'earth', light_stone_shower_rune: 'earth',
+  holy_missile_rune: 'holy',
+};
+
+export function runeMissileName(runeId) {
+  return RUNE_MISSILE[runeId] || null;
+}
 
 export function spellMissileName(spellId) {
   return SPELL_MISSILE[spellId] || null;
@@ -65,22 +106,18 @@ export function runeEffectName(runeId) {
 //  - distance: a própria munição equipada (flecha/virote); sem munição, flecha.
 //  - magic: o "raio" elemental da wand/rod (energia/fogo/gelo/terra/morte).
 const AMMO_MISSILE = {
-  // Munição física comum (sem elemento próprio) — usa o sprite genérico.
-  arrow: 'arrow', arrow_weak: 'arrow', sniper_arrow: 'arrow', sniper_arrow_weak: 'arrow',
-  simple_arrow: 'arrow', simple_arrow_weak: 'arrow', power_arrow: 'arrow',
-  diamond_arrow: 'arrow', crystalline_arrow: 'arrow',
-  bolt: 'bolt', bolt_weak: 'bolt', power_bolt: 'bolt', power_bolt_weak: 'bolt',
-  piercing_bolt: 'bolt', piercing_bolt_weak: 'bolt', drill_bolt: 'bolt',
-  // Elementais explícitas (nome já entrega o elemento real do Tibia).
-  crystalline_arrow_fire: 'fire', flaming_arrow: 'fire', firestorm_arrow: 'fire',
-  burst_arrow: 'fire', burst_arrow_weak: 'fire', infernal_bolt: 'fire',
-  crystalline_arrow_ice: 'ice', froststorm_arrow: 'ice', shiver_arrow: 'ice',
-  crystalline_arrow_energy: 'energy', flash_arrow: 'energy', thunderstorm_arrow: 'energy',
-  vortex_bolt: 'energy',
+  // Munição física comum (sem elemento próprio) — sprite genérico.
+  arrow: 'arrow', sniper_arrow: 'arrow', simple_arrow: 'arrow',
+  diamond_arrow: 'arrow', crystalline_arrow: 'arrow', burst_arrow: 'arrow',
+  bolt: 'bolt', power_bolt: 'bolt', piercing_bolt: 'bolt',
+  drill_bolt: 'bolt', crystal_bolt: 'bolt', tarsal_arrow: 'arrow',
+  // Elementais (o dano é do elemento, ver domain/items.js).
+  flaming_arrow: 'fire', firestorm_arrow: 'fire', infernal_bolt: 'fire',
+  froststorm_arrow: 'ice', shiver_arrow: 'ice',
+  flash_arrow: 'energy', thunderstorm_arrow: 'energy', vortex_bolt: 'energy',
   // "Terra" no Tibia cobre veneno/terra (sem categoria própria em elements.js).
-  crystalline_arrow_earth: 'earth', earth_arrow: 'earth', envenomed_arrow: 'earth',
-  poison_arrow: 'earth', tarsal_arrow: 'earth', terrastorm_arrow: 'earth',
-  shatterstorm_arrow: 'earth', prismatic_bolt: 'earth',
+  earth_arrow: 'earth', envenomed_arrow: 'earth', poison_arrow: 'earth',
+  terrastorm_arrow: 'earth', shatterstorm_arrow: 'earth', prismatic_bolt: 'earth',
   onyx_arrow: 'death', spectral_bolt: 'death',
 };
 const WAND_MISSILE = {

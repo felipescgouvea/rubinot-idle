@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=197';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=202';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=202';
-import { ZONES } from '../domain/bestiary.js?v=215';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=224';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=195';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=227';
-import { monsterAttack } from '../domain/combatFormulas.js?v=226';
-import { elementMod } from '../domain/elements.js?v=193';
-import { STAMINA_MAX } from '../domain/stamina.js?v=193';
-import { ITEMS } from '../domain/items.js?v=208';
-import { MONSTERS } from '../domain/bestiary.js?v=215';
-import { RARITY_TIERS } from '../domain/rarity.js?v=194';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=195';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=195';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=194';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=194';
-import { saveGame } from './saveGameUseCase.js?v=197';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=198';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=196';
-import { t } from '../i18n/i18n.js?v=211';
+import { G, ACCOUNT } from './gameStore.js?v=198';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=203';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=203';
+import { ZONES } from '../domain/bestiary.js?v=216';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=225';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=196';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=228';
+import { monsterAttack } from '../domain/combatFormulas.js?v=227';
+import { elementMod } from '../domain/elements.js?v=194';
+import { STAMINA_MAX } from '../domain/stamina.js?v=194';
+import { ITEMS } from '../domain/items.js?v=209';
+import { MONSTERS } from '../domain/bestiary.js?v=216';
+import { RARITY_TIERS } from '../domain/rarity.js?v=195';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=196';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=196';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=195';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=195';
+import { saveGame } from './saveGameUseCase.js?v=198';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=199';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=197';
+import { t } from '../i18n/i18n.js?v=212';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -343,6 +343,7 @@ function renderCombatEvents(events) {
     } else if (ev.kind === 'spell') {
       // magia + dano na MESMA linha (reusa o formato de log.basicAttack com um rótulo de magia).
       emit(EVENTS.LOG, { html: t('log.basicAttack', { label: `🗣️ "${ev.label}"`, dmg: ev.amount, name: ev.target }), cat: 'magia' });
+      emit(EVENTS.PLAYER_BATTLE_SIDE, { cast: { kind: 'attack', element: ev.element, label: ev.label } });
     } else if (ev.kind === 'dotcast') {
       // Magia de dano contínuo: a linha do CAST anuncia o total que a criatura
       // ainda vai tomar; os pedaços caem depois, um por linha ('dot').
@@ -351,6 +352,15 @@ function renderCombatEvents(events) {
       emit(EVENTS.LOG, { html: `🩸 ${ev.target}: ${ev.amount}`, cat: 'magia' });
     } else if (ev.kind === 'heal') {
       emit(EVENTS.LOG, { html: `💚 "${ev.label}" +${ev.amount}`, cat: 'magia' });
+      // Gesto de conjurar cura no boneco (ver ui/characterPanel.js).
+      emit(EVENTS.PLAYER_BATTLE_SIDE, { cast: { kind: 'heal', label: ev.label } });
+    } else if (ev.kind === 'potion') {
+      // Suprimentos: a janela ficava vazia porque o servidor consumia a poção
+      // sem avisar ninguém (queixa do Felipe: "janela de suprimentos não é
+      // preenchida com as poções usadas no combate").
+      const nome = ITEMS[ev.item] ? ITEMS[ev.item].name : ev.item;
+      emit(EVENTS.LOG, { html: `🧪 ${nome} +${ev.amount} ${ev.vital === 'mana' ? 'mana' : 'HP'}`, cat: 'suprimento' });
+      emit(EVENTS.PLAYER_BATTLE_SIDE, { potion: ev.item, vital: ev.vital });
     } else if (ev.kind === 'monsterhit') {
       const elKey = MONSTER_ELEMENT_KEYS[ev.element];
       const spellTag = (ev.element && ev.element !== 'physical') ? t('hunt.logElementTag', { element: elKey ? t(elKey) : ev.element }) : '';
@@ -1004,7 +1014,12 @@ export function doCosmeticTick() {
       const rune = pick.rune;
       const areaId = rune.area || 'single';
       startAttackGroupCd();
-      // Log (com dano) vem dos combatEvents server-truth; aqui só o efeito visual.
+      // Log (com dano) vem dos combatEvents server-truth; aqui só o visual.
+      // No Tibia a runa VOA do conjurador até o alvo antes de estourar (o
+      // CONST_ANI_* de cada script) — antes só aparecia o estouro parado em
+      // cima do monstro, e runa nenhuma tinha projétil.
+      const runeMissile = runeMissileName(pick.id);
+      if (runeMissile) emit(EVENTS.COMBAT_PROJECTILE, { missile: runeMissile, targetUid: String(primary.uid || primary.defKey) });
       emit(EVENTS.COMBAT_FX, { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid });
     } else if (pick && pick.kind === 'spell') {
       const atkSpellId = pick.id, atkSpell = pick.s;
