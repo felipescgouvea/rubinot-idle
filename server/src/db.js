@@ -85,3 +85,15 @@ export async function deleteRows(table, filters) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs(filters)}`, { method: 'DELETE', headers: headers() });
   if (!res.ok) throw new Error(`delete ${table} falhou: ${res.status} ${await res.text()}`);
 }
+
+// Chama uma função SQL (PostgREST expõe em /rpc/<nome>). Usado pelo flush de
+// progresso da caçada, que precisa SOMAR gold/XP em vez de sobrescrever — ver
+// public.apply_hunt_progress e o comentário em huntEngine.js: flushProgresso.
+export async function callRpc(fn, args) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST', headers: headers(), body: JSON.stringify(args),
+  });
+  if (!res.ok) throw new Error(`rpc ${fn} falhou: ${res.status} ${await res.text()}`);
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+}

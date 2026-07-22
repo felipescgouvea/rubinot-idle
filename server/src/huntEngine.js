@@ -30,7 +30,7 @@ import { preyBonusPct, PREY_MAX_RARITY } from '../../src/domain/prey.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
 import { getGameConfig } from './gameConfig.js';
-import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows } from './db.js';
+import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows, callRpc } from './db.js';
 import { temOuvinte, empurrar } from './realtime.js';
 
 // sessionId -> objeto de sessão (ver startSession) — tudo em memória; só
@@ -303,11 +303,51 @@ async function applyRtcHealing(session, cfg) {
 // Persiste hp/mana/skills/stamina desta sessão — a cada kill e periodicamente
 // (ver startSession: flushTimer), pra não perder mais que alguns segundos de
 // estado se o processo cair no meio de uma luta sem matar nada.
+// Grava o progresso ACUMULADO desde o último flush, numa chamada só.
+//
+// Por que DELTA e não valor absoluto: gold e XP têm escritores fora da caçada
+// (loja, mercado, bênçãos, recompensa diária). Se gravássemos o valor absoluto
+// que temos em memória, uma compra feita entre dois flushes seria SOBRESCRITA
+// — o jogador perderia item e dinheiro. Com `gold = gold + delta` (ver a
+// função apply_hunt_progress no banco) as duas escritas somam, em qualquer
+// ordem, sem perder nenhuma. É o banco resolvendo a concorrência, que é onde
+// ela deve ser resolvida.
+//
+// hp/mana/stamina/skills vão como valor absoluto porque a sessão é a única
+// dona deles enquanto a caçada existe.
 async function flushVitals(session) {
+  // Zera os deltas ANTES de enviar: uma morte que aconteça durante o await
+  // acumula no contador novo e será gravada no flush seguinte. Se somássemos
+  // depois, ela entraria duas vezes.
+  const d = session.prog || (session.prog = novoProg());
+  session.prog = novoProg();
+  const tinhaTier = session.bossTierSujo;
+  session.bossTierSujo = false;
   try {
-    await updateRows('player_stats', { user_id: session.userId, slot: session.slot }, { hp: vitalInt(session.hp), mana: vitalInt(session.mana), stamina: session.stamina });
-    await upsertRow('player_skills', { user_id: session.userId, slot: session.slot, skills: session.skills, updated_at: new Date().toISOString() }, 'user_id,slot');
-  } catch (e) { console.error('flushVitals falhou', session.id, e.message); }
+    await callRpc('apply_hunt_progress', {
+      p_user: session.userId, p_slot: session.slot,
+      d_gold: d.gold, d_xp: d.xp, d_gold_earned: d.goldEarned,
+      d_kills: d.kills, d_boss_points: d.bossPoints,
+      p_level: session.level,
+      p_hp: vitalInt(session.hp), p_mana: vitalInt(session.mana), p_stamina: session.stamina,
+      p_skills: session.skills,
+      p_boss_max_tier: tinhaTier ? (session.bossMaxTier || {}) : null,
+    });
+  } catch (e) {
+    // Devolve o que não foi gravado pro próximo flush — perder XP/gold por um
+    // blip de rede seria bem pior que gravar 5s depois.
+    session.prog.gold += d.gold;
+    session.prog.xp += d.xp;
+    session.prog.goldEarned += d.goldEarned;
+    session.prog.kills += d.kills;
+    session.prog.bossPoints += d.bossPoints;
+    if (tinhaTier) session.bossTierSujo = true;
+    console.error('flush de progresso falhou', session.id, e.message);
+  }
+}
+
+function novoProg() {
+  return { gold: 0, xp: 0, goldEarned: 0, kills: 0, bossPoints: 0 };
 }
 
 // Stamina cai com o tempo REAL de caçada decorrido (não por tick nominal —
@@ -336,18 +376,32 @@ async function settleKill(session, mon, cfg) {
   const preyXpMult = 1 + preyBonus(session, mon.defKey, 'xp');
   const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * creatureBoostMult * cfg.xpRate * staminaMult * preyXpMult);
 
-  const row = await selectOne('player_stats', { user_id: session.userId, slot: session.slot });
-  const gold = (row ? Number(row.gold) : 0) + goldGained;
-  const totalGoldEarned = (row ? Number(row.total_gold_earned) : 0) + goldGained;
-  const totalKills = (row ? Number(row.total_kills) : 0) + 1;
-  let xp = (row ? Number(row.xp) : 0) + xpGained;
-  let level = row ? row.level : session.level;
-  while (level < 100 && xp >= XP_TABLE[level - 1]) {
-    xp -= XP_TABLE[level - 1];
+  // Progresso vai pra MEMÓRIA, não pro banco. Antes cada morte fazia 1 leitura
+  // + 3 escritas no Supabase; com 10 mil jogadores isso é dezenas de milhares
+  // de operações por segundo. Agora acumula em session.prog e o flush grava
+  // tudo de uma vez (ver flushProgresso).
+  const xpAntes = session.xpAbs;
+  session.xpAbs += xpGained;
+  let level = session.level;
+  while (level < 100 && session.xpAbs >= XP_TABLE[level - 1]) {
+    session.xpAbs -= XP_TABLE[level - 1];
     level++;
   }
   const leveledUp = level > session.level;
   session.level = level;
+  const gold = session.goldAbs + goldGained;
+  session.goldAbs = gold;
+  const totalGoldEarned = session.goldEarnedAbs + goldGained;
+  session.goldEarnedAbs = totalGoldEarned;
+  const totalKills = session.killsAbs + 1;
+  session.killsAbs = totalKills;
+  const xp = session.xpAbs;
+  // O delta de XP pode ser NEGATIVO quando sobe de nível (o laço acima
+  // subtrai) — por isso guardamos a diferença real, não o xpGained.
+  session.prog.xp += session.xpAbs - xpAntes;
+  session.prog.gold += goldGained;
+  session.prog.goldEarned += goldGained;
+  session.prog.kills += 1;
   if (leveledUp) {
     session.maxHp = computeMaxHp({ vocation: session.vocation, level, equipment: session.equipment, relics: session.relics });
     session.maxMana = computeMaxMana({ vocation: session.vocation, level });
@@ -358,22 +412,16 @@ async function settleKill(session, mon, cfg) {
   // Boss Zone meta: vencer o BOSS da zona numa sessão bossOnly concede boss
   // points (prestígio, escala com o tier) e registra o tier MÁXIMO por zona
   // (base do ranking de boss). Só o boss conta — não os monstros normais.
-  let bossPoints = row ? Number(row.boss_points) || 0 : 0;
-  const bossMaxTier = (row && row.boss_max_tier && typeof row.boss_max_tier === 'object') ? row.boss_max_tier : {};
+  const bossMaxTier = session.bossMaxTier || (session.bossMaxTier = {});
   if (session.bossOnly && BOSS_MONSTER_IDS.has(mon.defKey)) {
     const tier = session.bossTier || 1;
-    bossPoints += 5 * tier;
-    if ((bossMaxTier[session.zoneId] || 0) < tier) bossMaxTier[session.zoneId] = tier;
+    session.bossPointsAbs += 5 * tier;
+    session.prog.bossPoints += 5 * tier;
+    if ((bossMaxTier[session.zoneId] || 0) < tier) { bossMaxTier[session.zoneId] = tier; session.bossTierSujo = true; }
   }
+  const bossPoints = session.bossPointsAbs;
 
-  await upsertRow('player_stats', {
-    user_id: session.userId, slot: session.slot, gold, xp, level,
-    total_gold_earned: totalGoldEarned, total_kills: totalKills,
-    hp: vitalInt(session.hp), mana: vitalInt(session.mana), stamina: session.stamina,
-    boss_points: bossPoints, boss_max_tier: bossMaxTier, updated_at: new Date().toISOString(),
-  }, 'user_id,slot');
-  await updateRows('hunt_sessions', { id: session.id }, { last_settled_at: new Date().toISOString() });
-  await upsertRow('player_skills', { user_id: session.userId, slot: session.slot, skills: session.skills, updated_at: new Date().toISOString() }, 'user_id,slot');
+  // (sem escrita aqui: o flush a cada 5s grava o acumulado numa chamada só)
 
   const lootTable = resolveMonsterLoot(cfg, mon.defKey, mon.loot);
   const lootGained = [];
@@ -823,6 +871,27 @@ export function startSession(session) {
   // forma assíncrona: até chegar, o RTC só deixa de usar poção/runa por alguns
   // instantes — nunca usa o que não tem, porque o cache vazio significa 0.
   session.inv = session.inv || {};
+  // Absolutos carregados UMA vez: o motor passa a ser o dono deles enquanto a
+  // caçada existe, e o que vai pro banco é a diferença (ver flushVitals).
+  session.prog = novoProg();
+  session.xpAbs = 0; session.goldAbs = 0; session.goldEarnedAbs = 0;
+  session.killsAbs = 0; session.bossPointsAbs = 0; session.bossMaxTier = {};
+  selectOne('player_stats', { user_id: session.userId, slot: session.slot })
+    .then(row => {
+      if (!row) return;
+      session.xpAbs = Number(row.xp) || 0;
+      session.goldAbs = Number(row.gold) || 0;
+      session.goldEarnedAbs = Number(row.total_gold_earned) || 0;
+      session.killsAbs = Number(row.total_kills) || 0;
+      session.bossPointsAbs = Number(row.boss_points) || 0;
+      if (row.boss_max_tier && typeof row.boss_max_tier === 'object') session.bossMaxTier = row.boss_max_tier;
+      if (row.level) session.level = Math.max(session.level || 1, row.level);
+    })
+    .catch(e => console.error('falha ao carregar stats da sessão', session.id, e.message))
+    // Só DEPOIS de ter os absolutos o combate pode rodar. Sem esta trava, uma
+    // morte que caísse antes da carga calcularia o level-up sobre XP zero — e a
+    // carga chegando depois sobrescreveria o progresso dessa morte.
+    .finally(() => { session.nextTickAt = Date.now(); });
   selectMany('player_inventory', { user_id: session.userId, slot: session.slot })
     .then(linhas => {
       const inv = {};
@@ -847,7 +916,8 @@ export function startSession(session) {
   session.targetUid = null;   // alvo escolhido pelo jogador (clique → /hunt/target); null = ataca a frente
   // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
   // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
-  session.nextTickAt = Date.now() + TICK_MS;
+  // Infinity até os absolutos chegarem (ver o .finally da carga acima).
+  session.nextTickAt = Infinity;
   session.nextFlushAt = Date.now() + FLUSH_MS;
   live.set(session.id, session);
   porPersonagem.set(chaveSlot(session.userId, session.slot), session);
