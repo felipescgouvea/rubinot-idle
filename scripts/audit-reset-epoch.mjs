@@ -10,7 +10,8 @@ import { login } from './probe-lib.mjs';
 const acct = JSON.parse(readFileSync('.test-account.json', 'utf8'));
 const problemas = [], ok = [];
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+const ctx0 = await browser.newContext({ viewport: { width: 1280, height: 860 } });
+const page = await ctx0.newPage();
 
 try {
   await page.goto(acct.site + '?cb=' + Date.now(), { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -47,6 +48,29 @@ try {
 
   if (!depois.criacaoVisivel) problemas.push('a tela de criação NÃO apareceu depois do reset — o jogador caiu em algum estado antigo');
   else ok.push('caiu na criação de personagem, como esperado após o reset');
+
+  // ---- CASO 2: navegador NOVO, com personagem na nuvem ----
+  // Sem marco guardado não dá pra distinguir "jogador de antes do reset" de
+  // "primeiro acesso neste navegador". Tratar os dois igual apagava o
+  // personagem de quem só abriu o jogo em outro dispositivo — bug que eu mesmo
+  // introduzi no conserto do reset e que só apareceu porque um probe entrou
+  // com localStorage limpo e viu "conta sem personagem".
+  const ctxNovo = await browser.newContext();
+  const pNovo = await ctxNovo.newPage();
+  await pNovo.goto(acct.site + '?cb=' + Date.now(), { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await login(pNovo, acct);
+  await pNovo.waitForTimeout(7000);
+  const novo = await pNovo.evaluate(() => ({
+    vocacao: window.__G ? window.__G.vocation : undefined,
+    epoch: localStorage.getItem('rubinot_save_epoch'),
+  }));
+  console.log('navegador novo:', JSON.stringify(novo));
+  if (!novo.epoch) problemas.push('navegador novo não gravou o marco — vai "resetar" de novo em toda visita');
+  else ok.push('navegador novo grava o marco');
+  if (novo.vocacao === null || novo.vocacao === undefined) {
+    problemas.push('navegador NOVO entrou sem personagem mesmo havendo save na nuvem — o marco está apagando save de quem troca de dispositivo');
+  } else ok.push(`navegador novo carregou o personagem da nuvem (${novo.vocacao})`);
+  await ctxNovo.close();
 
 } catch (e) {
   problemas.push('EXCEÇÃO: ' + (e.message || String(e)));
