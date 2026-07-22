@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rubinot Idle</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=204" />
-  <link rel="stylesheet" href="style.css?v=223" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=205" />
+  <link rel="stylesheet" href="style.css?v=224" />
   <style>
     /* Estilo de Luta (Fight Mode) — botões na janela de batalha */
     .fight-mode-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
@@ -16,107 +16,107 @@
     .fight-mode-btn.active { opacity: 1; border-color: #f0c14b; background: rgba(240,193,75,.18); box-shadow: 0 0 6px rgba(240,193,75,.4); }
   </style>
   <!-- modulepreload:inicio -->
-    <link rel="modulepreload" href="src/application/accountUseCases.js?v=206">
-    <link rel="modulepreload" href="src/application/adminUseCases.js?v=209">
-    <link rel="modulepreload" href="src/application/arenaUseCases.js?v=206">
-    <link rel="modulepreload" href="src/application/battlePassUseCases.js?v=205">
-    <link rel="modulepreload" href="src/application/bestiaryUseCases.js?v=206">
-    <link rel="modulepreload" href="src/application/blessingUseCases.js?v=206">
-    <link rel="modulepreload" href="src/application/bossRushUseCases.js?v=209">
-    <link rel="modulepreload" href="src/application/characterUseCases.js?v=209">
-    <link rel="modulepreload" href="src/application/dailyRewardUseCases.js?v=206">
-    <link rel="modulepreload" href="src/application/gameStore.js?v=208">
-    <link rel="modulepreload" href="src/application/highscoresUseCases.js?v=208">
-    <link rel="modulepreload" href="src/application/huntUseCases.js?v=272">
-    <link rel="modulepreload" href="src/application/imbuementUseCases.js?v=204">
-    <link rel="modulepreload" href="src/application/inventoryCore.js?v=206">
-    <link rel="modulepreload" href="src/application/inventoryUseCases.js?v=216">
-    <link rel="modulepreload" href="src/application/logIcons.js?v=207">
-    <link rel="modulepreload" href="src/application/marketUseCases.js?v=208">
-    <link rel="modulepreload" href="src/application/outfitUseCases.js?v=205">
-    <link rel="modulepreload" href="src/application/persistenceUseCases.js?v=247">
-    <link rel="modulepreload" href="src/application/preyUseCases.js?v=206">
-    <link rel="modulepreload" href="src/application/promotionUseCases.js?v=204">
-    <link rel="modulepreload" href="src/application/rewardGrants.js?v=45">
-    <link rel="modulepreload" href="src/application/rtcUseCases.js?v=240">
-    <link rel="modulepreload" href="src/application/saveGameUseCase.js?v=208">
-    <link rel="modulepreload" href="src/application/shopUseCases.js?v=212">
-    <link rel="modulepreload" href="src/application/spellUseCases.js?v=120">
-    <link rel="modulepreload" href="src/application/stats.js?v=205">
-    <link rel="modulepreload" href="src/application/taskUseCases.js?v=210">
-    <link rel="modulepreload" href="src/application/trainingUseCases.js?v=212">
-    <link rel="modulepreload" href="src/application/worldUseCases.js?v=210">
-    <link rel="modulepreload" href="src/domain/achievements.js?v=204">
-    <link rel="modulepreload" href="src/domain/adminConfig.js?v=207">
-    <link rel="modulepreload" href="src/domain/attackAreas.js?v=204">
-    <link rel="modulepreload" href="src/domain/bestiary.js?v=226">
-    <link rel="modulepreload" href="src/domain/blessings.js?v=204">
-    <link rel="modulepreload" href="src/domain/character.js?v=235">
-    <link rel="modulepreload" href="src/domain/charms.js?v=205">
-    <link rel="modulepreload" href="src/domain/cities.js?v=219">
-    <link rel="modulepreload" href="src/domain/combatFormulas.js?v=237">
-    <link rel="modulepreload" href="src/domain/combatFx.js?v=206">
-    <link rel="modulepreload" href="src/domain/dailyReward.js?v=205">
-    <link rel="modulepreload" href="src/domain/elements.js?v=204">
-    <link rel="modulepreload" href="src/domain/gameState.js?v=208">
-    <link rel="modulepreload" href="src/domain/highscoreCategories.js?v=205">
-    <link rel="modulepreload" href="src/domain/imbuements.js?v=204">
-    <link rel="modulepreload" href="src/domain/items.js?v=219">
-    <link rel="modulepreload" href="src/domain/outfitColors.js?v=204">
-    <link rel="modulepreload" href="src/domain/outfits.js?v=204">
-    <link rel="modulepreload" href="src/domain/prey.js?v=204">
-    <link rel="modulepreload" href="src/domain/progression.js?v=207">
-    <link rel="modulepreload" href="src/domain/rarity.js?v=205">
-    <link rel="modulepreload" href="src/domain/rtcConfig.js?v=238">
-    <link rel="modulepreload" href="src/domain/shopCatalog.js?v=207">
-    <link rel="modulepreload" href="src/domain/soul.js?v=146">
-    <link rel="modulepreload" href="src/domain/spells.js?v=206">
-    <link rel="modulepreload" href="src/domain/stamina.js?v=204">
-    <link rel="modulepreload" href="src/domain/training.js?v=206">
-    <link rel="modulepreload" href="src/i18n/i18n.js?v=222">
-    <link rel="modulepreload" href="src/i18n/locales/en.js?v=222">
-    <link rel="modulepreload" href="src/i18n/locales/pt.js?v=222">
-    <link rel="modulepreload" href="src/infrastructure/authClient.js?v=213">
-    <link rel="modulepreload" href="src/infrastructure/outfitAssets.js?v=204">
-    <link rel="modulepreload" href="src/infrastructure/outfitRenderer.js?v=204">
-    <link rel="modulepreload" href="src/infrastructure/outfitWalkRenderer.js?v=204">
-    <link rel="modulepreload" href="src/infrastructure/realtimeClient.js?v=213">
-    <link rel="modulepreload" href="src/infrastructure/storage.js?v=204">
-    <link rel="modulepreload" href="src/infrastructure/supabaseClient.js?v=205">
-    <link rel="modulepreload" href="src/infrastructure/tibiaSprites.js?v=209">
-    <link rel="modulepreload" href="src/shared/eventBus.js?v=206">
-    <link rel="modulepreload" href="src/ui/achievementsPanel.js?v=204">
-    <link rel="modulepreload" href="src/ui/adminPanel.js?v=215">
-    <link rel="modulepreload" href="src/ui/arenaPanel.js?v=206">
-    <link rel="modulepreload" href="src/ui/authPanel.js?v=205">
-    <link rel="modulepreload" href="src/ui/battleModal.js?v=204">
-    <link rel="modulepreload" href="src/ui/battlePassPanel.js?v=207">
-    <link rel="modulepreload" href="src/ui/bestiaryPanel.js?v=211">
-    <link rel="modulepreload" href="src/ui/boostedPanel.js?v=211">
-    <link rel="modulepreload" href="src/ui/bossRushPanel.js?v=211">
-    <link rel="modulepreload" href="src/ui/characterPanel.js?v=216">
-    <link rel="modulepreload" href="src/ui/dailyRewardPanel.js?v=207">
-    <link rel="modulepreload" href="src/ui/graduationModal.js?v=208">
-    <link rel="modulepreload" href="src/ui/highscoresPanel.js?v=210">
-    <link rel="modulepreload" href="src/ui/huntPanel.js?v=225">
-    <link rel="modulepreload" href="src/ui/imbuementPanel.js?v=204">
-    <link rel="modulepreload" href="src/ui/inventoryAndEquipmentPanel.js?v=209">
-    <link rel="modulepreload" href="src/ui/marketPanel.js?v=209">
-    <link rel="modulepreload" href="src/ui/outfitPicker.js?v=205">
-    <link rel="modulepreload" href="src/ui/rtcPanel.js?v=240">
-    <link rel="modulepreload" href="src/ui/settingsPanel.js?v=208">
-    <link rel="modulepreload" href="src/ui/shared.js?v=211">
-    <link rel="modulepreload" href="src/ui/shopPanel.js?v=213">
-    <link rel="modulepreload" href="src/ui/skillsPanel.js?v=207">
-    <link rel="modulepreload" href="src/ui/spellsPanel.js?v=120">
-    <link rel="modulepreload" href="src/ui/stageWalk.js?v=45">
-    <link rel="modulepreload" href="src/ui/tabs.js?v=222">
-    <link rel="modulepreload" href="src/ui/tasksPanel.js?v=213">
-    <link rel="modulepreload" href="src/ui/trainingPanel.js?v=214">
-    <link rel="modulepreload" href="src/ui/trainingStage.js?v=39">
-    <link rel="modulepreload" href="src/ui/uiIcons.js?v=209">
-    <link rel="modulepreload" href="src/ui/worldsPanel.js?v=205">
-    <link rel="modulepreload" href="src/ui/zonePicker.js?v=216">
+    <link rel="modulepreload" href="src/application/accountUseCases.js?v=207">
+    <link rel="modulepreload" href="src/application/adminUseCases.js?v=210">
+    <link rel="modulepreload" href="src/application/arenaUseCases.js?v=207">
+    <link rel="modulepreload" href="src/application/battlePassUseCases.js?v=206">
+    <link rel="modulepreload" href="src/application/bestiaryUseCases.js?v=207">
+    <link rel="modulepreload" href="src/application/blessingUseCases.js?v=207">
+    <link rel="modulepreload" href="src/application/bossRushUseCases.js?v=210">
+    <link rel="modulepreload" href="src/application/characterUseCases.js?v=210">
+    <link rel="modulepreload" href="src/application/dailyRewardUseCases.js?v=207">
+    <link rel="modulepreload" href="src/application/gameStore.js?v=209">
+    <link rel="modulepreload" href="src/application/highscoresUseCases.js?v=209">
+    <link rel="modulepreload" href="src/application/huntUseCases.js?v=273">
+    <link rel="modulepreload" href="src/application/imbuementUseCases.js?v=205">
+    <link rel="modulepreload" href="src/application/inventoryCore.js?v=207">
+    <link rel="modulepreload" href="src/application/inventoryUseCases.js?v=217">
+    <link rel="modulepreload" href="src/application/logIcons.js?v=208">
+    <link rel="modulepreload" href="src/application/marketUseCases.js?v=209">
+    <link rel="modulepreload" href="src/application/outfitUseCases.js?v=206">
+    <link rel="modulepreload" href="src/application/persistenceUseCases.js?v=248">
+    <link rel="modulepreload" href="src/application/preyUseCases.js?v=207">
+    <link rel="modulepreload" href="src/application/promotionUseCases.js?v=205">
+    <link rel="modulepreload" href="src/application/rewardGrants.js?v=46">
+    <link rel="modulepreload" href="src/application/rtcUseCases.js?v=241">
+    <link rel="modulepreload" href="src/application/saveGameUseCase.js?v=209">
+    <link rel="modulepreload" href="src/application/shopUseCases.js?v=213">
+    <link rel="modulepreload" href="src/application/spellUseCases.js?v=121">
+    <link rel="modulepreload" href="src/application/stats.js?v=206">
+    <link rel="modulepreload" href="src/application/taskUseCases.js?v=211">
+    <link rel="modulepreload" href="src/application/trainingUseCases.js?v=213">
+    <link rel="modulepreload" href="src/application/worldUseCases.js?v=211">
+    <link rel="modulepreload" href="src/domain/achievements.js?v=205">
+    <link rel="modulepreload" href="src/domain/adminConfig.js?v=208">
+    <link rel="modulepreload" href="src/domain/attackAreas.js?v=205">
+    <link rel="modulepreload" href="src/domain/bestiary.js?v=227">
+    <link rel="modulepreload" href="src/domain/blessings.js?v=205">
+    <link rel="modulepreload" href="src/domain/character.js?v=236">
+    <link rel="modulepreload" href="src/domain/charms.js?v=206">
+    <link rel="modulepreload" href="src/domain/cities.js?v=220">
+    <link rel="modulepreload" href="src/domain/combatFormulas.js?v=238">
+    <link rel="modulepreload" href="src/domain/combatFx.js?v=207">
+    <link rel="modulepreload" href="src/domain/dailyReward.js?v=206">
+    <link rel="modulepreload" href="src/domain/elements.js?v=205">
+    <link rel="modulepreload" href="src/domain/gameState.js?v=209">
+    <link rel="modulepreload" href="src/domain/highscoreCategories.js?v=206">
+    <link rel="modulepreload" href="src/domain/imbuements.js?v=205">
+    <link rel="modulepreload" href="src/domain/items.js?v=220">
+    <link rel="modulepreload" href="src/domain/outfitColors.js?v=205">
+    <link rel="modulepreload" href="src/domain/outfits.js?v=205">
+    <link rel="modulepreload" href="src/domain/prey.js?v=205">
+    <link rel="modulepreload" href="src/domain/progression.js?v=208">
+    <link rel="modulepreload" href="src/domain/rarity.js?v=206">
+    <link rel="modulepreload" href="src/domain/rtcConfig.js?v=239">
+    <link rel="modulepreload" href="src/domain/shopCatalog.js?v=208">
+    <link rel="modulepreload" href="src/domain/soul.js?v=147">
+    <link rel="modulepreload" href="src/domain/spells.js?v=207">
+    <link rel="modulepreload" href="src/domain/stamina.js?v=205">
+    <link rel="modulepreload" href="src/domain/training.js?v=207">
+    <link rel="modulepreload" href="src/i18n/i18n.js?v=223">
+    <link rel="modulepreload" href="src/i18n/locales/en.js?v=223">
+    <link rel="modulepreload" href="src/i18n/locales/pt.js?v=223">
+    <link rel="modulepreload" href="src/infrastructure/authClient.js?v=214">
+    <link rel="modulepreload" href="src/infrastructure/outfitAssets.js?v=205">
+    <link rel="modulepreload" href="src/infrastructure/outfitRenderer.js?v=205">
+    <link rel="modulepreload" href="src/infrastructure/outfitWalkRenderer.js?v=205">
+    <link rel="modulepreload" href="src/infrastructure/realtimeClient.js?v=214">
+    <link rel="modulepreload" href="src/infrastructure/storage.js?v=205">
+    <link rel="modulepreload" href="src/infrastructure/supabaseClient.js?v=206">
+    <link rel="modulepreload" href="src/infrastructure/tibiaSprites.js?v=210">
+    <link rel="modulepreload" href="src/shared/eventBus.js?v=207">
+    <link rel="modulepreload" href="src/ui/achievementsPanel.js?v=205">
+    <link rel="modulepreload" href="src/ui/adminPanel.js?v=216">
+    <link rel="modulepreload" href="src/ui/arenaPanel.js?v=207">
+    <link rel="modulepreload" href="src/ui/authPanel.js?v=206">
+    <link rel="modulepreload" href="src/ui/battleModal.js?v=205">
+    <link rel="modulepreload" href="src/ui/battlePassPanel.js?v=208">
+    <link rel="modulepreload" href="src/ui/bestiaryPanel.js?v=212">
+    <link rel="modulepreload" href="src/ui/boostedPanel.js?v=212">
+    <link rel="modulepreload" href="src/ui/bossRushPanel.js?v=212">
+    <link rel="modulepreload" href="src/ui/characterPanel.js?v=217">
+    <link rel="modulepreload" href="src/ui/dailyRewardPanel.js?v=208">
+    <link rel="modulepreload" href="src/ui/graduationModal.js?v=209">
+    <link rel="modulepreload" href="src/ui/highscoresPanel.js?v=211">
+    <link rel="modulepreload" href="src/ui/huntPanel.js?v=226">
+    <link rel="modulepreload" href="src/ui/imbuementPanel.js?v=205">
+    <link rel="modulepreload" href="src/ui/inventoryAndEquipmentPanel.js?v=210">
+    <link rel="modulepreload" href="src/ui/marketPanel.js?v=210">
+    <link rel="modulepreload" href="src/ui/outfitPicker.js?v=206">
+    <link rel="modulepreload" href="src/ui/rtcPanel.js?v=241">
+    <link rel="modulepreload" href="src/ui/settingsPanel.js?v=209">
+    <link rel="modulepreload" href="src/ui/shared.js?v=212">
+    <link rel="modulepreload" href="src/ui/shopPanel.js?v=214">
+    <link rel="modulepreload" href="src/ui/skillsPanel.js?v=208">
+    <link rel="modulepreload" href="src/ui/spellsPanel.js?v=121">
+    <link rel="modulepreload" href="src/ui/stageWalk.js?v=46">
+    <link rel="modulepreload" href="src/ui/tabs.js?v=223">
+    <link rel="modulepreload" href="src/ui/tasksPanel.js?v=214">
+    <link rel="modulepreload" href="src/ui/trainingPanel.js?v=215">
+    <link rel="modulepreload" href="src/ui/trainingStage.js?v=40">
+    <link rel="modulepreload" href="src/ui/uiIcons.js?v=210">
+    <link rel="modulepreload" href="src/ui/worldsPanel.js?v=206">
+    <link rel="modulepreload" href="src/ui/zonePicker.js?v=217">
     <!-- modulepreload:fim -->
 </head>
 <body>
@@ -240,39 +240,6 @@
           <div class="card" id="equip-card">
             <h3 data-icon="equipment" data-icon-class="hdr-icon"><span data-i18n="hunt.equipment">Equipment</span></h3>
             <div class="equipment-slots"></div>
-          </div>
-          <div class="card" id="char-card">
-            <div id="char-name-field">
-              <label for="char-name-input" data-i18n="hunt.characterName">Character name</label>
-              <input type="text" id="char-name-input" maxlength="20" placeholder="e.g. Gandalf" autocomplete="off" data-i18n-attr="placeholder:hunt.characterNamePlaceholder" />
-            </div>
-            <!-- Escolha do SET inicial, não da vocação definitiva: até o nível
-                 8 a vocação é provisória e pode ser trocada na graduação (ver
-                 ui/graduationModal.js). É o Dawnport real, onde o jogador
-                 experimenta as vocações antes de decidir. -->
-            <p id="starter-set-hint" data-i18n="hunt.starterSetHint">Pick the set you want to start with. You can change vocation at level 8, when you leave for the mainland.</p>
-            <div id="vocation-select" class="vocation-grid">
-              <div class="voc-btn" data-voc="knight" onclick="createCharacter('knight')">
-                <div class="voc-icon" data-icon="voc_knight" data-icon-class="voc-icon-img"></div>
-                <div class="voc-name">Knight</div>
-                <div class="voc-desc" data-i18n="hunt.vocKnight">Melee tank. High HP, steady damage.</div>
-              </div>
-              <div class="voc-btn" data-voc="paladin" onclick="createCharacter('paladin')">
-                <div class="voc-icon" data-icon="voc_paladin" data-icon-class="voc-icon-img"></div>
-                <div class="voc-name">Paladin</div>
-                <div class="voc-desc" data-i18n="hunt.vocPaladin">Balanced ranged fighter. Even mana and HP.</div>
-              </div>
-              <div class="voc-btn" data-voc="sorcerer" onclick="createCharacter('sorcerer')">
-                <div class="voc-icon" data-icon="voc_sorcerer" data-icon-class="voc-icon-img"></div>
-                <div class="voc-name">Sorcerer</div>
-                <div class="voc-desc" data-i18n="hunt.vocSorcerer">Offensive mage. High damage, fragile. Uses mana.</div>
-              </div>
-              <div class="voc-btn" data-voc="druid" onclick="createCharacter('druid')">
-                <div class="voc-icon" data-icon="voc_druid" data-icon-class="voc-icon-img"></div>
-                <div class="voc-name">Druid</div>
-                <div class="voc-desc" data-i18n="hunt.vocDruid">Healing mage. Support plus elemental damage.</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -459,6 +426,53 @@
       </div>
     </div>
 
+    <!-- CRIAÇÃO DE PERSONAGEM — modal em cima da tela desfocada.
+         Ficava como um cartão solto no meio da aba Hunt, competindo com
+         Equipment/Hunt Analyzer, e o jogador novo caía num painel cheio sem
+         saber que a primeira coisa a fazer era ali embaixo. Como modal, é a
+         única coisa acionável na tela: nome e set, nessa ordem.
+         Sem clique-fora pra fechar — não há jogo até existir personagem. -->
+    <div id="char-create-overlay" style="display:none">
+      <div id="char-create-box">
+        <div class="char-create-header">
+          <h3 data-i18n="hunt.createTitle">Create your character</h3>
+        </div>
+        <div class="card" id="char-card">
+          <div id="char-name-field">
+            <label for="char-name-input" data-i18n="hunt.characterName">Character name</label>
+            <input type="text" id="char-name-input" maxlength="20" placeholder="e.g. Gandalf" autocomplete="off" data-i18n-attr="placeholder:hunt.characterNamePlaceholder" />
+          </div>
+          <!-- Escolha do SET inicial, não da vocação definitiva: até o nível
+               8 a vocação é provisória e pode ser trocada na graduação (ver
+               ui/graduationModal.js). É o Dawnport real, onde o jogador
+               experimenta as vocações antes de decidir. -->
+          <p id="starter-set-hint" data-i18n="hunt.starterSetHint">Pick the set you want to start with. You can change vocation at level 8, when you leave for the mainland.</p>
+          <div id="vocation-select" class="vocation-grid">
+            <div class="voc-btn" data-voc="knight" onclick="createCharacter('knight')">
+              <div class="voc-icon" data-icon="voc_knight" data-icon-class="voc-icon-img"></div>
+              <div class="voc-name">Knight</div>
+              <div class="voc-desc" data-i18n="hunt.vocKnight">Melee tank. High HP, steady damage.</div>
+            </div>
+            <div class="voc-btn" data-voc="paladin" onclick="createCharacter('paladin')">
+              <div class="voc-icon" data-icon="voc_paladin" data-icon-class="voc-icon-img"></div>
+              <div class="voc-name">Paladin</div>
+              <div class="voc-desc" data-i18n="hunt.vocPaladin">Balanced ranged fighter. Even mana and HP.</div>
+            </div>
+            <div class="voc-btn" data-voc="sorcerer" onclick="createCharacter('sorcerer')">
+              <div class="voc-icon" data-icon="voc_sorcerer" data-icon-class="voc-icon-img"></div>
+              <div class="voc-name">Sorcerer</div>
+              <div class="voc-desc" data-i18n="hunt.vocSorcerer">Offensive mage. High damage, fragile. Uses mana.</div>
+            </div>
+            <div class="voc-btn" data-voc="druid" onclick="createCharacter('druid')">
+              <div class="voc-icon" data-icon="voc_druid" data-icon-class="voc-icon-img"></div>
+              <div class="voc-name">Druid</div>
+              <div class="voc-desc" data-i18n="hunt.vocDruid">Healing mage. Support plus elemental damage.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- TELA DE GRADUAÇÃO (nível 8) — confirma/troca a vocação definitiva e
          entrega o Graduate Set pro mainland. SEM onclick de fechar no overlay:
          a graduação decide a vocação do personagem e entrega equipamento, então
@@ -559,6 +573,6 @@
   <!-- GATE DE LOGIN (cobre a tela até haver sessão; conteúdo renderizado por ui/authPanel.js) -->
   <div id="auth-gate" style="display:none"></div>
 
-  <script type="module" src="src/main.js?v=293"></script>
+  <script type="module" src="src/main.js?v=294"></script>
 </body>
 </html>

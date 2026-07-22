@@ -866,6 +866,7 @@ export default {
   // ---- character use-cases (application/characterUseCases.js) ----
   'character.vocationChosen': 'Vocação {vocation} escolhida! Kit inicial equipado.',
   'hunt.starterSetHint': 'Escolha o set com que quer começar. Você pode trocar de vocação no nível 8, ao partir para o mainland.',
+  'hunt.createTitle': 'Crie seu personagem',
   'character.graduated': 'Graduação concluída! Você é {vocation} e recebeu o Graduate Set.',
   'character.graduatedSwitched': 'Você trocou para {vocation}! Graduate Set recebido.',
   'graduation.title': 'Saindo da Ilha Inicial',

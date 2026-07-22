@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=208';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=236';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=205';
-import { skillIconImg, itemIconImg } from './shared.js?v=211';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=204';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=204';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=204';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=204';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=205';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=206';
-import { formatNum, applyHpState } from './shared.js?v=211';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=225';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=272';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=209';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=204';
-import { selectVocation } from '../application/characterUseCases.js?v=209';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=208';
-import { t } from '../i18n/i18n.js?v=222';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=45';
+import { G } from '../application/gameStore.js?v=209';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=237';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=206';
+import { skillIconImg, itemIconImg } from './shared.js?v=212';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=205';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=205';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=205';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=205';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=206';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=207';
+import { formatNum, applyHpState } from './shared.js?v=212';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=226';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=273';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=210';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=205';
+import { selectVocation } from '../application/characterUseCases.js?v=210';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=209';
+import { t } from '../i18n/i18n.js?v=223';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=46';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -205,15 +205,24 @@ export function renderCharPanel() {
   const vocSel = document.getElementById('vocation-select');
   const charCard = document.getElementById('char-card');
   const charInfo = document.getElementById('char-info');
+  // A criação vive num MODAL sobre a tela desfocada (ver index.html:
+  // #char-create-overlay). Quem manda na visibilidade é o overlay; o cartão
+  // dentro dele fica sempre visível. Antes o cartão era um painel solto no meio
+  // da aba Hunt e o jogador novo não sabia por onde começar.
+  const overlay = document.getElementById('char-create-overlay');
   if (G.vocation) {
-    charCard.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
     charInfo.style.display = 'flex';
     renderCharInfo();
     renderZonePicker();
   } else {
-    charCard.style.display = 'block';
+    if (overlay) overlay.style.display = 'flex';
+    if (charCard) charCard.style.display = 'block';
     vocSel.style.display = 'grid';
     charInfo.style.display = 'none';
+    // Foco no nome: é o primeiro passo, e sem isto o jogador clica num set
+    // antes de digitar e leva um erro de validação sem entender por quê.
+    document.getElementById('char-name-input')?.focus();
   }
 }
 
