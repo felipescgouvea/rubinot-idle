@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=214';
-import { createDefaultRtc } from './rtcConfig.js?v=217';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=183';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=186';
+import { createDefaultSkills } from './character.js?v=215';
+import { createDefaultRtc } from './rtcConfig.js?v=218';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=184';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=187';
 
 export function createDefaultState() {
   return {

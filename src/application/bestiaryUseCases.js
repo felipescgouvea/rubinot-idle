@@ -2,12 +2,12 @@
 // criatura cruza etapas do bestiário, desbloquear charms e equipá-los.
 // Escuta MONSTER_KILLED (como taskUseCases) — a caçada não precisa saber que
 // bestiário existe, só anuncia a morte.
-import { G } from './gameStore.js?v=187';
-import { MONSTERS } from '../domain/bestiary.js?v=205';
-import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=184';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=185';
-import { saveGame } from './saveGameUseCase.js?v=187';
-import { t } from '../i18n/i18n.js?v=201';
+import { G } from './gameStore.js?v=188';
+import { MONSTERS } from '../domain/bestiary.js?v=206';
+import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=185';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=186';
+import { saveGame } from './saveGameUseCase.js?v=188';
+import { t } from '../i18n/i18n.js?v=202';
 
 // Credita a DIFERENÇA de Charm Points de uma criatura: total que ela já vale
 // (pelas mortes acumuladas) menos o que já foi creditado dela antes. Assim uma

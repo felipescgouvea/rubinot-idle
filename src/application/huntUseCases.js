@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=187';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=192';
-import { ZONES } from '../domain/bestiary.js?v=205';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=214';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=185';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=217';
-import { monsterAttack } from '../domain/combatFormulas.js?v=216';
-import { elementMod } from '../domain/elements.js?v=183';
-import { STAMINA_MAX } from '../domain/stamina.js?v=183';
-import { ITEMS } from '../domain/items.js?v=198';
-import { MONSTERS } from '../domain/bestiary.js?v=205';
-import { RARITY_TIERS } from '../domain/rarity.js?v=184';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=185';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=185';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=184';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=184';
-import { saveGame } from './saveGameUseCase.js?v=187';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=188';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=186';
-import { t } from '../i18n/i18n.js?v=201';
+import { G, ACCOUNT } from './gameStore.js?v=188';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=193';
+import { ZONES } from '../domain/bestiary.js?v=206';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=215';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=186';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=218';
+import { monsterAttack } from '../domain/combatFormulas.js?v=217';
+import { elementMod } from '../domain/elements.js?v=184';
+import { STAMINA_MAX } from '../domain/stamina.js?v=184';
+import { ITEMS } from '../domain/items.js?v=199';
+import { MONSTERS } from '../domain/bestiary.js?v=206';
+import { RARITY_TIERS } from '../domain/rarity.js?v=185';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=186';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=186';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=185';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=185';
+import { saveGame } from './saveGameUseCase.js?v=188';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=189';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=187';
+import { t } from '../i18n/i18n.js?v=202';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -324,6 +324,12 @@ function renderCombatEvents(events) {
     } else if (ev.kind === 'spell') {
       // magia + dano na MESMA linha (reusa o formato de log.basicAttack com um rótulo de magia).
       emit(EVENTS.LOG, { html: t('log.basicAttack', { label: `🗣️ "${ev.label}"`, dmg: ev.amount, name: ev.target }), cat: 'magia' });
+    } else if (ev.kind === 'dotcast') {
+      // Magia de dano contínuo: a linha do CAST anuncia o total que a criatura
+      // ainda vai tomar; os pedaços caem depois, um por linha ('dot').
+      emit(EVENTS.LOG, { html: `🗣️ "${ev.label}" → ${ev.target} (${ev.amount} ao longo do tempo)`, cat: 'magia' });
+    } else if (ev.kind === 'dot') {
+      emit(EVENTS.LOG, { html: `🩸 ${ev.target}: ${ev.amount}`, cat: 'magia' });
     } else if (ev.kind === 'heal') {
       emit(EVENTS.LOG, { html: `💚 "${ev.label}" +${ev.amount}`, cat: 'magia' });
     } else if (ev.kind === 'monsterhit') {

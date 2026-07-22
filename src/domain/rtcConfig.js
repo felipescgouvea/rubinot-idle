@@ -8,17 +8,22 @@
 // Knight fica de fora de todas: sem investimento em magia, runa de ataque
 // não rende dano nenhum (igual ao Tibia real, onde o dano da runa escala
 // com Magic Level).
-import { ITEMS } from './items.js?v=198';
+import { ITEMS } from './items.js?v=199';
 
+// Exceções por runa. No TFS a maioria das runas de ataque não tem restrição de
+// vocação nenhuma; as que têm estão aqui (Holy Missile é marcada
+// <vocation name="Paladin"> em data/spells/spells.xml).
 const ATTACK_RUNE_VOCATIONS = {
-  sudden_death_rune: ['paladin', 'sorcerer', 'druid'],
-  explosion_rune: ['paladin', 'sorcerer', 'druid'],
-  avalanche_rune: ['paladin', 'sorcerer', 'druid'],
-  fireball_rune: ['paladin', 'sorcerer', 'druid'],
-  great_fireball_rune: ['paladin', 'sorcerer', 'druid'],
+  holy_missile_rune: ['paladin'],
 };
 
+// Knight nunca usa runa de ataque: o dano de runa escala com Magic Level e o
+// knight não treina magia, então a runa sairia por 1 de dano — o jogador
+// gastaria carga achando que ataca. Antes essa regra só valia pras 5 runas
+// listadas à mão aqui, e um knight conseguia configurar as demais (Light Stone
+// Shower, Magic Missile...) — inconsistência achada na auditoria de runas.
 export function isRuneAvailableToVocation(itemId, vocation) {
+  if (vocation === 'knight') return false;
   const vocs = ATTACK_RUNE_VOCATIONS[itemId];
   return !vocs || vocs.includes(vocation);
 }

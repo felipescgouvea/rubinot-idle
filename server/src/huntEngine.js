@@ -25,6 +25,7 @@ import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } fro
 import { elementMod } from '../../src/domain/elements.js?v=125';
 import { deathXpLossPct, reviveHpPct, MAX_BLESSINGS } from '../../src/domain/blessings.js?v=125';
 import { areaMaxTargets, isAreaAttack } from '../../src/domain/attackAreas.js?v=125';
+import { buildDotSchedule } from '../../src/domain/dotDamage.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
 import { getGameConfig } from './gameConfig.js';
@@ -135,6 +136,43 @@ export async function incrementInventory(userId, slot, itemId, delta) {
   const newQty = Math.max(0, (existing ? Number(existing.qty) : 0) + delta);
   await upsertRow('player_inventory', { user_id: userId, slot, item_id: itemId, qty: newQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
   return newQty;
+}
+
+// --- DANO CONTÍNUO (magias "utori", ver domain/dotDamage.js) ---------------
+// A sequência de golpes é montada no CAST e guardada na própria criatura, com
+// horário absoluto de cada golpe. Isso tem duas consequências que são fiéis ao
+// Tibia e importam aqui: o veneno continue queimando enquanto o jogador bate
+// noutro alvo, e ele morra junto com a criatura (a lista vai embora com o
+// corpo, não "vaza" pro próximo monstro da sala).
+function attachDot(monster, spell, ctx) {
+  const agora = Date.now();
+  const golpes = buildDotSchedule(spell.dot, ctx);
+  if (!golpes.length) return 0;
+  monster.dots = (monster.dots || []).concat(
+    golpes.map(g => ({ at: agora + g.atMs, damage: g.damage, element: spell.element, label: spell.words }))
+  );
+  return golpes.reduce((s, g) => s + g.damage, 0);
+}
+
+// Cobra os golpes de dano contínuo que venceram desde o último tick. Roda ANTES
+// do golpe básico pra que uma criatura já morta pelo veneno não leve porrada
+// de graça — e pra que a morte por DoT caia no mesmo settleKill de sempre.
+function applyDueDots(session, pack) {
+  const agora = Date.now();
+  for (const mon of pack) {
+    if (!mon.dots || !mon.dots.length || mon.hp <= 0) continue;
+    let total = 0, label = null, element = null;
+    mon.dots = mon.dots.filter(d => {
+      if (d.at > agora) return true;
+      total += Math.max(1, Math.floor(d.damage * elementMod(mon.defKey, d.element)));
+      label = d.label; element = d.element;
+      return false;
+    });
+    if (total > 0) {
+      mon.hp -= total;
+      pushCombat(session, { kind: 'dot', label, element, amount: total, target: mon.name });
+    }
+  }
 }
 
 function isSpellReady(session, id) { return (session.spellCdUntil[id] || 0) <= Date.now(); }
@@ -312,16 +350,22 @@ async function resolveTick(session) {
   if (session.stopped) return;
   const voc = VOC_TRAINING[session.vocation];
   const pack = session.currentPack;
+  const now = Date.now();
+  decayStamina(session, cfg, now - (session.lastTickAt || now));
+  session.lastTickAt = now;
+
+  // (0) veneno/fogo/sangramento pendentes das magias de dano contínuo. Roda
+  // ANTES de escolher o alvo: se o veneno acabou de matar quem estava na mira,
+  // o golpe deste tick vai pro próximo da sala em vez de bater num cadáver.
+  applyDueDots(session, pack);
+
   // Alvo do jogador: a criatura que ele escolheu na Battle List/palco (clique →
   // /hunt/target seta session.targetUid), SE ainda estiver viva na sala; senão
   // cai no primeiro da fila. Antes o servidor SEMPRE batia no pack[0] e o clique
   // do jogador não mudava nada no combate real — só o destaque visual (M2). A
   // ORDEM da sala não muda (o Felipe já reclamou de reordenar): só troca QUEM
   // leva o golpe. O contra-ataque abaixo continua vindo da frente da sala.
-  const primary = (session.targetUid != null && pack.find(m => String(m.uid) === String(session.targetUid) && m.hp > 0)) || pack[0];
-  const now = Date.now();
-  decayStamina(session, cfg, now - (session.lastTickAt || now));
-  session.lastTickAt = now;
+  const primary = (session.targetUid != null && pack.find(m => String(m.uid) === String(session.targetUid) && m.hp > 0)) || pack.find(m => m.hp > 0) || pack[0];
 
   // (1) golpe básico — só o alvo da frente (o básico nunca tem área, só magia/
   // runa podem ter). Dano FIEL ao TFS: rola normal_random sobre a fórmula de
@@ -394,7 +438,17 @@ async function resolveTick(session) {
       const eqWeapon = resolveEquippedItem(session.equipment.weapon, session.relics);
       const weaponAtk = (eqWeapon && eqWeapon.atk) || 7;
       const distanceSkill = (session.skills.distance && session.skills.distance.lv) || 0;
-      hitFn = () => spellAttackDamage({ spell: atkSpell, level: session.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
+      // Magia de dano contínuo ("utori"): não tem `power` nem dano imediato —
+      // gruda a sequência de golpes no alvo e sai. Sem este caminho, spellAttackDamage
+      // recebia power undefined e o RTC quebrava ao configurar Ignite/Envenom/etc.
+      if (atkSpell.dot) {
+        const ctxDot = { level: session.level, magicLevel: magic, meleeSkill: Math.max(meleeSkill, distanceSkill) };
+        const alvos = isAreaAttack(atkSpell.area) ? pack.slice(0, areaMaxTargets(atkSpell.area)) : [primary];
+        const totalPrevisto = alvos.reduce((s, m) => s + attachDot(m, atkSpell, ctxDot), 0);
+        if (totalPrevisto > 0) pushCombat(session, { kind: 'dotcast', label: atkSpell.words, element: atkSpell.element, amount: totalPrevisto, target: primary.name });
+      } else {
+        hitFn = () => spellAttackDamage({ spell: atkSpell, level: session.level, magicLevel: magic, meleeSkill, weaponAtk, distanceSkill });
+      }
       session.mana -= atkSpell.mana;
       startSpellCd(session, pick.id, atkSpell.cd);
       startAttackGroupCd(session);

@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=184';
+import { primaryStatKeyForItem } from './rarity.js?v=185';
 
 // A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
 // Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
@@ -111,10 +111,15 @@ export const ITEMS = {
   // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
   intense_healing_rune: { name: 'Intense Healing Rune', icon: '📜', type: 'rune', heal: 150, sell: 70 },
-  // `area` = forma de área do Tibia (ver domain/attackAreas.js): SD e Fireball
-  // são de alvo único (fiel ao TFS — nenhuma das duas tem área); Explosion
-  // explode numa cruz compacta; Avalanche e Great Fireball cobrem a área
-  // gigante inteira (até 12 criaturas da sala).
+  // `area` = forma de área do Tibia (ver domain/attackAreas.js). Conferido
+  // linha a linha contra os scripts do TFS (data/spells/scripts/attack/*_rune.lua,
+  // chamada createCombatArea) — não é chute:
+  //   sem setArea  -> 'single'  (SD, Fireball, Icicle, Stalagmite, Soulfire,
+  //                              Magic Missile, Holy Missile)
+  //   AREA_CROSS1X1 -> 'explosion' (Explosion, Light Stone Shower)
+  //   AREA_SQUARE1X1-> 'square'    (as três bombas: Fire/Poison/Energy Bomb)
+  //   AREA_CIRCLE3X3-> 'ball'      (Avalanche, Great Fireball, Stone Shower,
+  //                                 Thunderstorm)
   // `power` = base power REAL do Tibia/TFS [aMin, baseMin, aMax, baseMax]; o dano é
   // aleatório entre min/max, min = nível/5 + aMin·ML + baseMin (idem max) — mesma
   // fórmula das magias (ver domain/combatFormulas.js: runeDamage). `dmg` é só um
@@ -134,24 +139,28 @@ export const ITEMS = {
   // magos/paladino (ver STARTER_SUPPLIES abaixo), mais fracas que qualquer rune do
   // catálogo normal (level 1, reqMl 0, sem equivalente de dano forte no jogo atual).
   lightest_missile_rune: { name: 'Lightest Missile Rune', icon: '📜', type: 'rune', dmg: 8, power: [0.2, 1, 0.3, 3], area: 'single', element: 'energy', reqMl: 0, sell: 5 },
-  light_stone_shower_rune: { name: 'Light Stone Shower Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.3, 2, 0.5, 4], area: 'ball', element: 'earth', reqMl: 0, sell: 8 },
+  light_stone_shower_rune: { name: 'Light Stone Shower Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.3, 2, 0.5, 4], area: 'explosion', element: 'earth', reqMl: 0, sell: 8 },
   heavy_magic_missile_rune:  { name: 'Heavy Magic Missile Rune', icon: '📜', type: 'rune', dmg: 35, power: [1.0, 6, 2.0, 12], area: 'single', element: 'energy', reqMl: 5, sell: 20 },
   fire_field_rune:      { name: 'Fire Field Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.6, 3, 1.2, 7], area: 'single', element: 'fire', reqMl: 2, sell: 10 },
   fire_wall_rune:        { name: 'Fire Wall Rune', icon: '📜', type: 'rune', dmg: 20, power: [0.6, 3, 1.2, 7], area: 'single', element: 'fire', reqMl: 2, sell: 10 },
-  fire_bomb_rune:        { name: 'Fire Bomb Rune', icon: '📜', type: 'rune', dmg: 140, power: [1.3, 8, 2.6, 16], area: 'ball', element: 'fire', reqMl: 8, sell: 120 },
+  fire_bomb_rune:        { name: 'Fire Bomb Rune', icon: '📜', type: 'rune', dmg: 140, power: [1.3, 8, 2.6, 16], area: 'square', element: 'fire', reqMl: 8, sell: 120 },
   poison_field_rune:     { name: 'Poison Field Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'earth', reqMl: 1, sell: 8 },
   poison_wall_rune:      { name: 'Poison Wall Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'earth', reqMl: 1, sell: 8 },
-  poison_bomb_rune:      { name: 'Poison Bomb Rune', icon: '📜', type: 'rune', dmg: 100, power: [1.1, 6, 2.2, 13], area: 'ball', element: 'earth', reqMl: 9, sell: 140 },
+  poison_bomb_rune:      { name: 'Poison Bomb Rune', icon: '📜', type: 'rune', dmg: 100, power: [1.1, 6, 2.2, 13], area: 'square', element: 'earth', reqMl: 9, sell: 140 },
   energy_field_rune:     { name: 'Energy Field Rune', icon: '📜', type: 'rune', dmg: 30, power: [0.8, 4, 1.6, 9], area: 'single', element: 'energy', reqMl: 5, sell: 25 },
   energy_wall_rune:      { name: 'Energy Wall Rune', icon: '📜', type: 'rune', dmg: 30, power: [0.8, 4, 1.6, 9], area: 'single', element: 'energy', reqMl: 5, sell: 25 },
-  energy_bomb_rune:      { name: 'Energy Bomb Rune', icon: '📜', type: 'rune', dmg: 200, power: [1.6, 10, 3.2, 20], area: 'ball', element: 'energy', reqMl: 11, sell: 350, rare: true },
+  energy_bomb_rune:      { name: 'Energy Bomb Rune', icon: '📜', type: 'rune', dmg: 200, power: [1.6, 10, 3.2, 20], area: 'square', element: 'energy', reqMl: 11, sell: 350, rare: true },
   icicle_rune:           { name: 'Icicle Rune', icon: '📜', type: 'rune', dmg: 55, power: [1.2, 7, 2.4, 14], area: 'single', element: 'ice', reqMl: 6, sell: 30 },
   stalagmite_rune:       { name: 'Stalagmite Rune', icon: '📜', type: 'rune', dmg: 45, power: [1.0, 6, 2.0, 12], area: 'single', element: 'earth', reqMl: 4, sell: 25 },
   stone_shower_rune:     { name: 'Stone Shower Rune', icon: '📜', type: 'rune', dmg: 80, power: [1.2, 7, 2.4, 14], area: 'ball', element: 'earth', reqMl: 6, sell: 60 },
   thunderstorm_rune:     { name: 'Thunderstorm Rune', icon: '📜', type: 'rune', dmg: 130, power: [1.3, 8, 2.6, 16], area: 'ball', element: 'energy', reqMl: 9, sell: 150 },
   soulfire_rune:         { name: 'Soulfire Rune', icon: '📜', type: 'rune', dmg: 170, power: [1.7, 11, 3.4, 22], area: 'single', element: 'fire', reqMl: 13, sell: 220 },
   desintegrate_rune:     { name: 'Desintegrate Rune', icon: '📜', type: 'rune', dmg: 115, power: [1.4, 8, 2.8, 17], area: 'single', element: 'physical', reqMl: 6, sell: 50 },
+  // Runa exclusiva do paladino (TFS a marca com <vocation name="Paladin">) —
+  // faltava no catálogo, era a única runa de ataque do jogo sem representação.
+  holy_missile_rune:     { name: 'Holy Missile Rune', icon: '📜', type: 'rune', dmg: 90, power: [1.8, 11, 3.8, 23], area: 'single', element: 'holy', reqMl: 7, sell: 40 },
   cure_poison_rune:      { name: 'Cure Poison Rune', icon: '📜', type: 'rune', sell: 15 },
+  destroy_field_rune:    { name: 'Destroy Field Rune', icon: '📜', type: 'rune', sell: 15 },
   create_food_rune:      { name: 'Create Food Rune', icon: '📜', type: 'rune', sell: 20 },
   chameleon_rune:        { name: 'Chameleon Rune', icon: '📜', type: 'rune', sell: 200 },
   convince_creature_rune:{ name: 'Convince Creature Rune', icon: '📜', type: 'rune', sell: 250 },

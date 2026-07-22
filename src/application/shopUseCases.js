@@ -1,10 +1,10 @@
-import { G, ACCOUNT } from './gameStore.js?v=187';
-import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=186';
-import { ITEMS } from '../domain/items.js?v=198';
-import { emit, EVENTS } from '../shared/eventBus.js?v=185';
-import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=192';
-import { saveGame } from './saveGameUseCase.js?v=187';
-import { t } from '../i18n/i18n.js?v=201';
+import { G, ACCOUNT } from './gameStore.js?v=188';
+import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=187';
+import { ITEMS } from '../domain/items.js?v=199';
+import { emit, EVENTS } from '../shared/eventBus.js?v=186';
+import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=193';
+import { saveGame } from './saveGameUseCase.js?v=188';
+import { t } from '../i18n/i18n.js?v=202';
 
 export async function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);
