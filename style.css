@@ -467,7 +467,8 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
   padding: 2px 5px 3px;
 }
 .char-skill-chip.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dim) inset; }
-.char-skill-icon-img { width: 14px; height: 14px; image-rendering: pixelated; vertical-align: middle; }
+/* tamanho em img.char-skill-icon-img, lá embaixo — ver img.monster-sprite */
+.char-skill-icon-img { image-rendering: pixelated; vertical-align: middle; }
 .char-skill-chip > .char-skill-icon { font-size: 12px; line-height: 1; }
 .char-skill-lv { font-family: var(--serif); font-weight: 700; font-size: 12px; color: var(--navy-1); }
 .char-skill-track { display: block; width: 22px; height: 4px; background: #00000022; border-radius: 3px; overflow: hidden; }
@@ -551,7 +552,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   font-family: var(--body);
 }
 #zone-current-icon { font-size: 15px; }
-.zone-current-icon-img { height: 20px; width: auto; vertical-align: -0.3em; image-rendering: pixelated; }
+/* tamanho em img.zone-current-icon-img, lá embaixo — ver img.monster-sprite */
+.zone-current-icon-img { vertical-align: -0.3em; image-rendering: pixelated; }
 #zone-current-name { flex: 1; font-weight: 600; }
 
 /* ---- galeria de zonas (dentro do modal) — grade horizontal 8x2 ---- */
@@ -1077,6 +1079,16 @@ img.monster-sprite {
   filter: drop-shadow(0 3px 5px #00000044);
 }
 
+/* Mesma armadilha, mesmos sintomas: estas classes declaram tamanho e são usadas
+   em ícones que também levam `tibia-icon`. Como `img.tibia-icon` é 0-1-1 e uma
+   classe sozinha é 0-1-0, o tamanho declarado por elas nunca valia — e a regra
+   original mora ANTES desta, então nem trocar por `img.` no lugar resolveria
+   (empate de especificidade decide pela ordem). O que não é tamanho continua na
+   classe original, pra seguir valendo no <span> do fallback de emoji. */
+img.char-skill-icon-img  { width: 14px; height: 14px; }   /* saía 15,6px */
+img.zone-current-icon-img { height: 20px; width: auto; }  /* saía 16,9px */
+img.inline-icon          { height: 12px; width: auto; }   /* saía 14,3px */
+
 /* Ícones das abas de navegação: sprite pixel-art real do TibiaWiki no lugar do
    emoji do SO (ver ui/uiIcons.js). Regra depois de img.tibia-icon de propósito —
    mesma especificidade, então esta vence o height/width em "em" herdado. */
@@ -1348,7 +1360,8 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .rtc-row.locked { opacity: 0.5; }
 .rtc-row-icon { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
 .rtc-row-icon-img { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; }
-.inline-icon { height: 12px; width: auto; vertical-align: -0.15em; image-rendering: pixelated; }
+/* tamanho em img.inline-icon, lá embaixo — ver img.monster-sprite */
+.inline-icon { vertical-align: -0.15em; image-rendering: pixelated; }
 .rtc-row-info { flex: 1; min-width: 0; }
 .rtc-row-name { color: #eef1f4; font-family: var(--serif); font-size: 12px; font-weight: 700; }
 .rtc-row-name em { color: #9aa3ad; font-style: normal; font-size: 10.5px; margin-left: 6px; }
@@ -2195,13 +2208,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* Boneco de treino real (Training Dummy) + selo pequeno da skill no canto,
    pra distinguir qual skill cada estátua treina — ver ui/trainingPanel.js. */
 .training-dummy-wrap { position: relative; display: inline-flex; }
-.training-dummy-icon { width: 40px; height: 40px; image-rendering: pixelated; }
+/* `img.` obrigatório: sem ele quem manda é img.tibia-icon (0-1-1) e a estátua
+   saía com 15,6px em vez de 40px. Ver img.monster-sprite. */
+img.training-dummy-icon { width: 40px; height: 40px; image-rendering: pixelated; }
+/* A posição e a moldura ficam na classe SEM `img.` porque valem também pro
+   <span> de emoji do fallback; só o TAMANHO precisa de `img.` pra ganhar. */
 .training-dummy-badge {
   position: absolute; bottom: -3px; right: -5px;
-  width: 16px; height: 16px; image-rendering: pixelated;
+  image-rendering: pixelated;
   background: var(--parch-1); border: 1px solid var(--gold); border-radius: 50%;
   padding: 1px;
 }
+img.training-dummy-badge { width: 16px; height: 16px; }
 .training-skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
 .training-skill-btn {
   display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 6px;

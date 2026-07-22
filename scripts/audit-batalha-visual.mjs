@@ -132,9 +132,12 @@ try {
         const proprias = casam.filter(r => !/tibia-icon/.test(r.sel));
         if (!generica.length || !proprias.length) return;
         const cs = getComputedStyle(img);
+        // `auto` SEMPRE difere do valor computado em px — comparar os dois
+        // acusava de atropelada uma regra que estava vencendo (img.dens-icon).
+        const bate = (declarado, computado) => !declarado || declarado === 'auto' || declarado === computado;
         proprias.forEach(r => {
-          if (r.h && r.h !== cs.height) achados.push(`"${r.sel}" pede height ${r.h}, mas o que vale é ${cs.height} (venceu "${generica[0].sel}")`);
-          if (r.w && r.w !== cs.width) achados.push(`"${r.sel}" pede width ${r.w}, mas o que vale é ${cs.width} (venceu "${generica[0].sel}")`);
+          if (!bate(r.h, cs.height)) achados.push(`"${r.sel}" pede height ${r.h}, mas o que vale é ${cs.height} (venceu "${generica[0].sel}")`);
+          if (!bate(r.w, cs.width)) achados.push(`"${r.sel}" pede width ${r.w}, mas o que vale é ${cs.width} (venceu "${generica[0].sel}")`);
         });
       });
       return [...new Set(achados)];
