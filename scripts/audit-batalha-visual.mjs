@@ -37,6 +37,7 @@ let vocacao = '?';
 // Vocações que batem no corpo a corpo — nenhum projétil sai delas, por regra do
 // jogo e não por defeito.
 const CORPO_A_CORPO = ['knight'];
+let AREA_ARMADA = null;
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
@@ -266,6 +267,24 @@ try {
       }
     }).observe(document.body, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
 
+    // -- efeito de ÁREA: cada tile da sprite espalhada. Além de contar, confere
+    // se o desenho caiu DENTRO do palco — magia que estoura a moldura foi
+    // problema real antes (o tile fixo de 28px terminava no vazio).
+    S.areaTiles = 0; S.areaFora = [];
+    const palco = document.getElementById('dungeon-stage');
+    if (palco) new MutationObserver(muts => {
+      for (const m of muts) for (const n of m.addedNodes) {
+        if (n.classList && n.classList.contains('combat-area-tile')) {
+          S.areaTiles++;
+          const sr = palco.getBoundingClientRect();
+          const r = n.getBoundingClientRect();
+          if (r.width < 4 || r.height < 4) S.areaFora.push(`tile de área com ${Math.round(r.width)}x${Math.round(r.height)}px`);
+          else if (r.right < sr.left || r.left > sr.right || r.bottom < sr.top || r.top > sr.bottom)
+            S.areaFora.push('tile de área desenhado inteiramente fora do palco');
+        }
+      }
+    }).observe(palco, { childList: true });
+
     // -- voo do projétil: duração medida ponta a ponta.
     const stage = document.getElementById('dungeon-stage');
     if (stage) new MutationObserver(muts => {
@@ -313,6 +332,31 @@ try {
   if (!pre.voc) { inconclusivos.push('a conta de teste está SEM PERSONAGEM — rode scripts/criar-char-teste.mjs antes'); throw new Error('sem caçada'); }
   if (pre.hp <= 0) { inconclusivos.push(`personagem com ${pre.hp} de vida (morto) — não dá pra caçar`); throw new Error('sem caçada'); }
 
+  // Arma a MAIOR magia de área disponível pra vocação/nível. Sem isto, um
+  // boneco nível 100 briga igual a um nível 1: só o golpe básico, e toda a
+  // parte visual da magia de área (a sprite espalhada em tiles) fica sem ser
+  // exercitada — que era justamente o buraco da rodada anterior.
+  const armada = await page.evaluate(async () => {
+    const { SPELLS } = await window.__liveImport('spells.js');
+    const rtc = await window.__liveImport('rtcUseCases.js');
+    const G = window.__G;
+    const candidatas = Object.entries(SPELLS).filter(([, s]) =>
+      s.voc && s.voc.includes(G.vocation) && s.level <= G.level && s.type === 'attack');
+    // Escolhe pela FREQUÊNCIA, não pela força. A versão anterior pegava a de
+    // maior nível e caía nas de recarga 40s (exevo gran mas flam): num teste de
+    // 50s ela dispara no máximo uma vez, e "efeito de área não apareceu" ficava
+    // indistinguível de bug. Recarga curta = muitas amostras do efeito.
+    // Desempate pelo maior nível, pra não pegar a magia de aprendiz.
+    const area = candidatas.filter(([, s]) => s.area && s.area !== 'single');
+    const escolha = (area.length ? area : candidatas)
+      .sort((a, b) => (a[1].cd - b[1].cd) || (b[1].level - a[1].level))[0];
+    if (!escolha) return null;
+    rtc.setRtcAttackSpellSlot(0, escolha[0], 'spell');
+    return { id: escolha[0], area: escolha[1].area || 'single', level: escolha[1].level };
+  }).catch(e => ({ erro: String(e.message || e) }));
+  console.log('magia armada:', JSON.stringify(armada));
+  AREA_ARMADA = armada && armada.area && armada.area !== 'single' ? armada.id : null;
+
   const iniciou = await page.evaluate(async (cfg) => {
     // Densidade "pack" enche o palco (até 8 criaturas). Com uma criatura por vez
     // metade do que esta auditoria existe pra ver nem acontece: fileira lado a
@@ -326,7 +370,16 @@ try {
   }, { zona: ZONA, densidade: arg('densidade', 'pack') });
   if (!iniciou) { inconclusivos.push(`a caçada não começou em "${ZONA}" — nada foi medido`); throw new Error('sem caçada'); }
 
+  // Mana sempre disponível DURANTE a medição. Esta é uma auditoria VISUAL: quer
+  // ver o efeito da magia de área desenhado, não testar economia de mana. Um
+  // boneco nível 100 SEM equipamento tem a mana base da fórmula (knight 555) e
+  // seca depois de 4 exori (125 cada) — aí não lança, e "não lançou logo não
+  // desenha" é CORRETO, não bug. Sem isto o teste reprovava o jogo por uma
+  // limitação do próprio boneco de teste. Mesma ideia do density=pack: montar a
+  // condição pra que o que está sendo auditado possa acontecer.
+  await page.evaluate(() => { window.__manaTop = setInterval(() => { if (window.__G) window.__G.mana = Math.max(window.__G.mana, 5000); }, 300); });
   await page.waitForTimeout(SEG * 1000);
+  await page.evaluate(() => clearInterval(window.__manaTop));
   const d = await page.evaluate(() => {
     const S = window.__vis;
     return {
@@ -339,6 +392,7 @@ try {
       maxPack: S.maxPack,
       voc: window.__G.vocation,
       danos: S.danos, flashes: S.flashes, flashPalco: S.flashPalco, flashLista: S.flashLista,
+      areaTiles: S.areaTiles, areaFora: [...new Set(S.areaFora)],
       emojiFallback: document.querySelectorAll('#dungeon-stage span:not([class*="hp"]), #battle-list span.monster-sprite').length,
     };
   });
@@ -414,6 +468,18 @@ try {
     // sincronia dele é medida pelo retorno visual do golpe, logo abaixo.
     ok.push(`${d.voc} é corpo a corpo — projétil não se aplica`);
   } else inconclusivos.push('nenhum projétil voou (sem munição?) — atraso pouso→dano não medido');
+
+  // ------------------------------------------------- 4c. magia de área
+  console.log(`tiles de efeito de área: ${d.areaTiles}`);
+  if (d.areaFora.length) {
+    mutou.geometria = true;
+    d.areaFora.slice(0, 4).forEach(f => problemas.push('área: ' + f));
+  } else if (!d.areaTiles) {
+    // Não é falha automática: knight não tem magia de área, e nem toda vocação
+    // arma uma. Só vira problema quando UMA FOI ARMADA e mesmo assim nada saiu.
+    if (AREA_ARMADA) problemas.push(`a magia de área "${AREA_ARMADA}" foi armada e NENHUM efeito apareceu na tela`);
+    else inconclusivos.push('nenhuma magia de área foi lançada — efeito de área não exercitado');
+  } else ok.push(`efeito de área desenhado dentro do palco (${d.areaTiles} tiles)`);
 
   // -------------------------------------------- 4b. retorno visual do golpe
   // Vale pra TODA vocação, mas é a única sincronia que dá pra medir no corpo a

@@ -1,21 +1,21 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=230';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=248';
-import { MONSTERS } from '../domain/bestiary.js?v=248';
-import { cityName } from '../domain/cities.js?v=233';
-import { ITEMS } from '../domain/items.js?v=241';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=231';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=226';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=228';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=233';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=231';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=294';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=226';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=231';
-import { t } from '../i18n/i18n.js?v=244';
-import { setStageWalking } from './stageWalk.js?v=67';
+import { G } from '../application/gameStore.js?v=231';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=249';
+import { MONSTERS } from '../domain/bestiary.js?v=249';
+import { cityName } from '../domain/cities.js?v=234';
+import { ITEMS } from '../domain/items.js?v=242';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=232';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=227';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=229';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=234';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=232';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=295';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=227';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=232';
+import { t } from '../i18n/i18n.js?v=245';
+import { setStageWalking } from './stageWalk.js?v=68';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -116,30 +116,47 @@ export function playAreaEffect({ effect, shape, targetUid } = {}) {
     return;
   }
 
-  // ÁREA: a MESMA forma de sempre (areaOffsets), só que ESCALADA ao palco.
+  // ÁREA: a MESMA forma de sempre (areaOffsets), desenhada em tiles ao redor do
+  // conjurador. Duas FAMÍLIAS de forma, escaladas de jeitos diferentes:
   //
-  // A estrutura não muda — continua a forma real do Tibia desenhada em tiles ao
-  // redor do conjurador. O que estava errado era só o TAMANHO: com tile fixo de
-  // 28px o desenho terminava no vazio, muito antes da fileira de criaturas, e a
-  // magia parecia errar.
+  //  - DIRECIONAL (wave, beam): sai do boneco PRA FRENTE (só dy<0) rumo à
+  //    fileira de criaturas. O tile é escalado pra que a PONTA da forma (o tile
+  //    mais distante à frente) caia sobre as criaturas — é o que faz a onda
+  //    "chegar" no inimigo. Sem isto o desenho terminava no vazio. Esta é a
+  //    wave que já estava certa; nada aqui muda pra ela.
   //
-  // O tile passa a ser calculado pra que o ALCANCE da forma (o tile mais
-  // distante à frente) caia sobre as criaturas. Todos os offsets usam o MESMO
-  // tile, então a escala é proporcional: cone segue cone, feixe segue feixe.
+  //  - CENTRADA (ball, square, explosion): o efeito se espalha em TODAS as
+  //    direções ao redor do conjurador. Escalar pela "ponta da frente" era o
+  //    erro: como a frente é só 1 tile (square) o tile virava a DISTÂNCIA
+  //    INTEIRA até as criaturas (~234px), e a forma toda estourava o palco — a
+  //    fileira de trás caía embaixo do boneco, fora da tela (medido no exori do
+  //    knight e no divine caldera do paladin, nível 100). Aqui o tile é do
+  //    tamanho de UMA CRIATURA: um aglomerado justo ao redor do boneco, como no
+  //    Tibia, que cabe no palco em vez de vazar.
   const pr = playerWrap.getBoundingClientRect();
   const cx = pr.left - sr.left + pr.width / 2;
   const cy = pr.top - sr.top + pr.height / 2;
 
   const offsets = areaOffsets(shape);
-  const alcance = Math.max(1, ...offsets.map(([, dy]) => Math.abs(dy)));
+  const direcional = shape === 'wave' || shape === 'beam';
 
-  let vao = 0;
-  if (cont && cont.children.length) {
-    const alvos = [...cont.children].map(el => (el.querySelector('.monster-sprite-wrap') || el).getBoundingClientRect());
-    vao = cy - Math.min(...alvos.map(r => r.top - sr.top + r.height / 2));
+  let tile;
+  if (direcional) {
+    const alcance = Math.max(1, ...offsets.map(([, dy]) => Math.abs(dy)));
+    let vao = 0;
+    if (cont && cont.children.length) {
+      const alvos = [...cont.children].map(el => (el.querySelector('.monster-sprite-wrap') || el).getBoundingClientRect());
+      vao = cy - Math.min(...alvos.map(r => r.top - sr.top + r.height / 2));
+    }
+    // Sem criatura na tela, mantém o tamanho histórico em vez de sumir.
+    tile = vao > 30 ? vao / alcance : TILE_PX;
+  } else {
+    // Tamanho de uma criatura no palco (as sprites são padronizadas em 52px);
+    // fallback pro histórico se não houver nenhuma na tela.
+    const amostra = cont && cont.querySelector('.monster-sprite-wrap');
+    const r = amostra && amostra.getBoundingClientRect();
+    tile = r && r.width ? Math.max(r.width, r.height) : TILE_PX * 1.85;
   }
-  // Sem criatura na tela, mantém o tamanho histórico em vez de sumir.
-  const tile = vao > 30 ? vao / alcance : TILE_PX;
   // A SPRITE é desenhada MAIOR que o espaçamento (1,6x) de propósito. Com
   // lado ≈ espaçamento os tiles só se encostam, e criatura que cai ENTRE duas
   // colunas ficava metade de fora — medido: 27% a 59% de cobertura mesmo com o

@@ -1,16 +1,16 @@
 // Linked Tasks: iniciar, progredir e cancelar. Escuta MONSTER_KILLED (emitido
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
-import { G } from './gameStore.js?v=230';
-import { MONSTERS } from '../domain/bestiary.js?v=248';
-import { ITEMS } from '../domain/items.js?v=241';
-import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=229';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=228';
-import { gainXp } from './huntUseCases.js?v=294';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=227';
-import { addItemToInventory } from './inventoryCore.js?v=228';
-import { saveGame } from './saveGameUseCase.js?v=230';
-import { t } from '../i18n/i18n.js?v=244';
+import { G } from './gameStore.js?v=231';
+import { MONSTERS } from '../domain/bestiary.js?v=249';
+import { ITEMS } from '../domain/items.js?v=242';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=230';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=229';
+import { gainXp } from './huntUseCases.js?v=295';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=228';
+import { addItemToInventory } from './inventoryCore.js?v=229';
+import { saveGame } from './saveGameUseCase.js?v=231';
+import { t } from '../i18n/i18n.js?v=245';
 
 function findTask(roomId, taskIndex) {
   const room = TASK_ROOMS.find(r => r.id === roomId);
