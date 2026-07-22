@@ -128,6 +128,42 @@ function resolveHealSpell(healSpellId, vocation, level) {
 // devolver item ao inventário do vendedor/comprador) — mesmo padrão de
 // read-then-write já usado por toda mutação de player_inventory neste
 // arquivo.
+// --- INVENTÁRIO EM MEMÓRIA (só durante a caçada) -------------------------
+// O tick lia o banco 3x por batida só pra saber quantas poções/runas o jogador
+// tem — e o tick roda a cada 2s, por jogador. Com 100 caçando isso é ~150
+// leituras por segundo no Supabase, cada uma um HTTP do Railway: é o teto de
+// escala do jogo hoje, muito antes da CPU.
+//
+// A sessão passa a carregar o inventário uma vez e manter em memória. Toda
+// mutação continua indo pro banco na hora (nada de lote — loot perdido num
+// crash seria pior que a latência), mas agora sem o read-antes-do-write: como
+// já sabemos a quantidade atual, o upsert vai direto.
+export function sessionQty(session, itemId) {
+  return (session.inv && session.inv[itemId]) || 0;
+}
+
+// Mutação DENTRO da caçada: mexe na memória e escreve, em 1 ida em vez de 2.
+export async function changeSessionInv(session, itemId, delta) {
+  const atual = sessionQty(session, itemId);
+  const novo = Math.max(0, atual + delta);
+  if (!session.inv) session.inv = {};
+  session.inv[itemId] = novo;
+  await upsertRow('player_inventory', { user_id: session.userId, slot: session.slot, item_id: itemId, qty: novo, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+  return novo;
+}
+
+// Compra/venda/mercado acontecem FORA do tick e escrevem direto no banco. Se
+// houver uma caçada viva do mesmo personagem, o cache dela precisa saber —
+// senão o jogador compra poção caçando e o RTC continua achando que não tem.
+function espelharNoLive(userId, slot, itemId, novaQty) {
+  for (const sess of live.values()) {
+    if (sess.userId === userId && sess.slot === slot) {
+      if (!sess.inv) sess.inv = {};
+      sess.inv[itemId] = novaQty;
+    }
+  }
+}
+
 export async function incrementInventory(userId, slot, itemId, delta) {
   const existing = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
   // A bag NÃO tem teto de tipos — mesma regra do cliente (ver domain/items.js).
@@ -136,6 +172,7 @@ export async function incrementInventory(userId, slot, itemId, delta) {
   // "bag cheia" e todo loot de item inédito era descartado em silêncio.
   const newQty = Math.max(0, (existing ? Number(existing.qty) : 0) + delta);
   await upsertRow('player_inventory', { user_id: userId, slot, item_id: itemId, qty: newQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+  espelharNoLive(userId, slot, itemId, newQty);
   return newQty;
 }
 
@@ -233,11 +270,10 @@ async function applyRtcHealing(session, cfg) {
   if (potionReady && rtc.healPotion && session.hp > 0 && ((session.hp / session.maxHp) * 100) < (rtc.healPotionThreshold || 0)) {
     const item = ITEMS[rtc.healPotion];
     if (item && canUsePotion(item, session.vocation, session.level)) {
-      const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: rtc.healPotion });
-      if (row && Number(row.qty) > 0) {
+      if (sessionQty(session, rtc.healPotion) > 0) {
         session.hp = Math.min(session.maxHp, session.hp + potionRestore(item.heal));
         session.potionCdUntil = Date.now() + POTION_CD_MS;
-        await incrementInventory(session.userId, session.slot, rtc.healPotion, -1);
+        await changeSessionInv(session, rtc.healPotion, -1);
       }
     }
   }
@@ -245,11 +281,10 @@ async function applyRtcHealing(session, cfg) {
   if (Date.now() >= session.potionCdUntil && rtc.manaPotion && session.mana < session.maxMana && ((session.mana / session.maxMana) * 100) < (rtc.manaPotionThreshold || 0)) {
     const item = ITEMS[rtc.manaPotion];
     if (item && canUsePotion(item, session.vocation, session.level)) {
-      const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: rtc.manaPotion });
-      if (row && Number(row.qty) > 0) {
+      if (sessionQty(session, rtc.manaPotion) > 0) {
         session.mana = Math.min(session.maxMana, session.mana + potionRestore(item.mana));
         session.potionCdUntil = Date.now() + POTION_CD_MS;
-        await incrementInventory(session.userId, session.slot, rtc.manaPotion, -1);
+        await changeSessionInv(session, rtc.manaPotion, -1);
       }
     }
   }
@@ -338,7 +373,7 @@ async function settleKill(session, mon, cfg) {
   for (const [itemId, chance] of lootTable) {
     // Boosted creature/boss dobra a chance de loot (cap em 1 = drop garantido).
     if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult * (1 + preyLoot))) {
-      const captured = await incrementInventory(session.userId, session.slot, itemId, 1);
+      const captured = await changeSessionInv(session, itemId, 1);
       if (captured) lootGained.push(itemId);
     }
   }
@@ -473,8 +508,7 @@ async function resolveTick(session) {
     let pick = null;
     for (const cand of ordenados) {
       if (cand.kind === 'spell') { pick = cand; break; }
-      const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: cand.id });
-      if (row && Number(row.qty) > 0) { pick = cand; break; }
+      if (sessionQty(session, cand.id) > 0) { pick = cand; break; }
     }
 
     let areaId = 'single', element = null, hitFn = null;
@@ -483,7 +517,7 @@ async function resolveTick(session) {
       areaId = rune.area || 'single';
       element = rune.element || 'physical';
       hitFn = () => runeDamage({ rune, level: session.level, magicLevel: magic });
-      await incrementInventory(session.userId, session.slot, pick.id, -1);
+      await changeSessionInv(session, pick.id, -1);
       startAttackGroupCd(session);
     } else if (pick && pick.kind === 'spell') {
       const atkSpell = pick.s;
@@ -704,6 +738,20 @@ async function tick(session) {
 }
 
 export function startSession(session) {
+  // Inventário carregado UMA vez e mantido em memória durante a caçada (ver
+  // sessionQty/changeSessionInv). Começa vazio e é preenchido logo abaixo, de
+  // forma assíncrona: até chegar, o RTC só deixa de usar poção/runa por alguns
+  // instantes — nunca usa o que não tem, porque o cache vazio significa 0.
+  session.inv = session.inv || {};
+  selectMany('player_inventory', { user_id: session.userId, slot: session.slot })
+    .then(linhas => {
+      const inv = {};
+      for (const l of linhas) inv[l.item_id] = Number(l.qty);
+      // Mescla em vez de substituir: entre o disparo e a resposta, um kill pode
+      // ter creditado loot no cache — substituir apagaria esse crédito.
+      session.inv = Object.assign(inv, session.inv);
+    })
+    .catch(e => console.error('falha ao carregar inventário da sessão', session.id, e.message));
   session.currentPack = [];
   session.stopped = false;
   session.spawnSeq = 0;
@@ -902,15 +950,15 @@ export async function useItemInSession(session, itemId) {
   if (session.busy) return { error: 'ocupado, tente de novo' };
   session.busy = true;
   try {
-  const row = await selectOne('player_inventory', { user_id: session.userId, slot: session.slot, item_id: itemId });
-  if (!row || Number(row.qty) <= 0) return { error: 'item não pertence a esta conta/personagem' };
+  const temNaBag = sessionQty(session, itemId);
+  if (temNaBag <= 0) return { error: 'item não pertence a esta conta/personagem' };
 
   if (isPotion) {
     if (!canUsePotion(item, session.vocation, session.level)) return { error: 'vocação/nível insuficiente pra esta poção' };
     const beforeHp = session.hp, beforeMana = session.mana;
     if (item.heal) session.hp = Math.min(session.maxHp, session.hp + potionRestore(item.heal));
     if (item.mana) session.mana = Math.min(session.maxMana, session.mana + potionRestore(item.mana));
-    await incrementInventory(session.userId, session.slot, itemId, -1);
+    await changeSessionInv(session, itemId, -1);
     await flushVitals(session);
     return { ok: true, hp: session.hp, mana: session.mana, healedHp: session.hp - beforeHp, healedMana: session.mana - beforeMana };
   }
@@ -933,7 +981,7 @@ export async function useItemInSession(session, itemId) {
     mon.hp -= dmg;
     if (i === 0) primaryDmg = dmg;
   });
-  await incrementInventory(session.userId, session.slot, itemId, -1);
+  await changeSessionInv(session, itemId, -1);
 
   const deaths = pack.filter(m => m.hp <= 0);
   // Remove antes de creditar (mesma blindagem do resolveTick): um settleKill que
