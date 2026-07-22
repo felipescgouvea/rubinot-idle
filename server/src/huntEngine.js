@@ -253,7 +253,10 @@ function startAttackGroupCd(session) { session.attackGroupCdUntil = Date.now() +
 
 function trainSkill(session, skillId, amount, cfg) {
   if (!session.skills[skillId]) return;
-  const { sk } = applySkillGain(session.skills, skillId, amount * cfg.skillRate, session.vocation);
+  // Em Rook (vocação provisória, ainda não graduou) treina no ritmo neutro —
+  // ver domain/character.js: sem isto, farmar ML como sorcerer e graduar paladin
+  // levava o Magic Level alto de brinde.
+  const { sk } = applySkillGain(session.skills, skillId, amount * cfg.skillRate, session.vocation, !session.graduated);
   session.skills = sk;
 }
 

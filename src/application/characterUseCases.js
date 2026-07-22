@@ -1,14 +1,15 @@
-import { G, ACCOUNT } from './gameStore.js?v=231';
-import { VOCATIONS } from '../domain/character.js?v=258';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=242';
-import { canGraduate } from '../domain/cities.js?v=242';
-import { getMaxHp, getMaxMana } from './stats.js?v=242';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=229';
-import { addItemToInventory } from './inventoryCore.js?v=229';
-import { startRegen } from './huntUseCases.js?v=295';
-import { saveGame } from './saveGameUseCase.js?v=231';
-import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=236';
-import { t } from '../i18n/i18n.js?v=245';
+import { G, ACCOUNT } from './gameStore.js?v=232';
+import { VOCATIONS } from '../domain/character.js?v=259';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=243';
+import { canGraduate } from '../domain/cities.js?v=243';
+import { getMaxHp, getMaxMana } from './stats.js?v=243';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=230';
+import { addItemToInventory } from './inventoryCore.js?v=230';
+import { startRegen } from './huntUseCases.js?v=296';
+import { saveGame } from './saveGameUseCase.js?v=232';
+import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=237';
+import { pruneRtcForVocation } from './rtcUseCases.js?v=258';
+import { t } from '../i18n/i18n.js?v=246';
 
 // Abre a tela de graduação se o personagem já pode graduar e ainda não graduou.
 //
@@ -54,6 +55,17 @@ export async function graduate(voc) {
   const trocou = vocAnterior !== voc;
   G.vocation = voc;
   G.graduated = true;
+
+  // Troca de vocação joga fora as magias/runas armadas que a nova vocação não
+  // pode lançar. A graduação NÃO recarrega a página, então o filtro que roda no
+  // load não pega esse caso — sem isto o paladino recém-graduado continuava
+  // lançando a magia de sorcerer que estava no RTC (bug do Felipe). Se estiver
+  // caçando, empurra o RTC limpo pra sessão viva no servidor na hora, senão a
+  // próxima startHunt() já manda o certo.
+  if (trocou) {
+    pruneRtcForVocation();
+    if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc, G.fightMode, G.density || 'normal');
+  }
 
   const kit = GRADUATE_KITS[voc] || {};
   // Kit inicial da vocação que ele VINHA jogando, não da nova: numa troca de

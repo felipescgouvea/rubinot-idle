@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=231';
-import { MONSTERS } from '../domain/bestiary.js?v=249';
-import { ITEMS } from '../domain/items.js?v=242';
-import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=230';
-import { on, EVENTS } from '../shared/eventBus.js?v=229';
-import { monsterSpriteImg } from './huntPanel.js?v=248';
-import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=234';
-import { t } from '../i18n/i18n.js?v=245';
+import { G } from '../application/gameStore.js?v=232';
+import { MONSTERS } from '../domain/bestiary.js?v=250';
+import { ITEMS } from '../domain/items.js?v=243';
+import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=231';
+import { on, EVENTS } from '../shared/eventBus.js?v=230';
+import { monsterSpriteImg } from './huntPanel.js?v=249';
+import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=235';
+import { t } from '../i18n/i18n.js?v=246';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
 // tem sprite real via SPRITE_OVERRIDE em tibiaSprites.js) — só "corrupted" (id

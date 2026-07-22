@@ -106,18 +106,31 @@ export function createDefaultSkills() {
   return sk;
 }
 
+// Multiplicadores de "sem vocação committed" (mais lentos). São os mesmos que a
+// fórmula já usava como fallback pra personagem sem vocação — agora nomeados,
+// porque também regem o treino ENQUANTO a vocação é provisória (ver abaixo).
+const NEUTRAL_MANA_MULT = 3.0;   // igual ao knight: Magic Level sobe devagar
+const NEUTRAL_SKILL_MULT = 2.0;  // melee/shielding neutro
+
 // Tentativas necessárias pra passar do nível `lv` pro `lv+1` — fórmula REAL do
 // Tibia global (TFS: Vocation::getReqSkillTries / getReqMana):
 //   melee/shielding: skillBase[skill] · multiplicador[voc][skill] ^ (lv − 10)
 //   magic level:      1600 · manaMultiplier[voc] ^ lv
-// Sem vocação (personagem ainda não criado), cai no multiplicador mais lento
-// (2.0/3.0) só pra nunca dividir por algo indefinido.
-export function triesForNext(vocation, skillId, lv) {
+//
+// `provisional`: enquanto o personagem está em Rook (antes de graduar no nível
+// 8), a vocação é só o SET escolhido na criação — trocável na graduação. Treinar
+// pelo multiplicador dessa vocação provisória deixava o jogador farmar Magic
+// Level barato como sorcerer/druid (manaMult 1.1) e depois graduar paladin,
+// levando o ML alto de brinde (bug do Felipe). Provisório = treina no ritmo
+// NEUTRO (o mais lento), então a escolha do set não dá vantagem de skill; a
+// vantagem da vocação só vale depois de você se comprometer com ela ao graduar.
+export function triesForNext(vocation, skillId, lv, provisional = false) {
   if (skillId === 'magic') {
-    const manaMult = MANA_MULTIPLIER[vocation] || 3.0;
+    const manaMult = provisional ? NEUTRAL_MANA_MULT : (MANA_MULTIPLIER[vocation] || NEUTRAL_MANA_MULT);
     return Math.floor(1600 * Math.pow(manaMult, lv));
   }
-  const mult = (SKILL_MULTIPLIERS[vocation] && SKILL_MULTIPLIERS[vocation][skillId]) || 2.0;
+  const mult = provisional ? NEUTRAL_SKILL_MULT
+    : ((SKILL_MULTIPLIERS[vocation] && SKILL_MULTIPLIERS[vocation][skillId]) || NEUTRAL_SKILL_MULT);
   return Math.floor(SKILL_BASE[skillId] * Math.pow(mult, lv - MINIMUM_SKILL_LEVEL));
 }
 
@@ -126,17 +139,17 @@ export function triesForNext(vocation, skillId, lv) {
 // que fazer com o resultado (log, notificação, etc.). Sobe MAIS de um nível
 // de uma vez se o ganho for grande o bastante (fiel ao Tibia: addSkillAdvance
 // usa um while, não um if — um cast caro pode virar 2+ níveis de Magic de uma vez).
-export function applySkillGain(skillState, skillId, amount, vocation) {
+export function applySkillGain(skillState, skillId, amount, vocation, provisional = false) {
   const sk = skillState[skillId];
   if (!sk) return { sk: skillState, leveledUp: false };
   const next = { ...sk, tries: sk.tries + amount };
   let leveledUp = false;
-  let needed = triesForNext(vocation, skillId, next.lv);
+  let needed = triesForNext(vocation, skillId, next.lv, provisional);
   while (next.tries >= needed) {
     next.tries -= needed;
     next.lv += 1;
     leveledUp = true;
-    needed = triesForNext(vocation, skillId, next.lv);
+    needed = triesForNext(vocation, skillId, next.lv, provisional);
   }
   return { sk: { ...skillState, [skillId]: next }, leveledUp, newLevel: next.lv };
 }

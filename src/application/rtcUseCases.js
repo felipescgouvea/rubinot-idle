@@ -2,14 +2,14 @@
 // de prioridade que mistura magias E runas livremente — ver domain/rtcConfig.js
 // sobre o prefixo "rune:") e cura automática (spell E poção, cada uma com seu
 // limiar de % de HP) — a UI mora em rtcPanel.js.
-import { G, ACCOUNT } from './gameStore.js?v=231';
-import { isSpellAvailable } from '../domain/spells.js?v=229';
-import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT, HEAL_TIER_COUNT, TARGET_PRIORITIES } from '../domain/rtcConfig.js?v=261';
-import { getMagic } from './stats.js?v=228';
-import { emit, EVENTS } from '../shared/eventBus.js?v=229';
-import { saveGame } from './saveGameUseCase.js?v=231';
-import { updateHuntRtc } from '../infrastructure/authClient.js?v=236';
-import { t } from '../i18n/i18n.js?v=245';
+import { G, ACCOUNT } from './gameStore.js?v=232';
+import { isSpellAvailable } from '../domain/spells.js?v=230';
+import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT, HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeAttackSpells, normalizeHealTiers, isRuneEntry, runeEntryId, isRuneAvailableToVocation } from '../domain/rtcConfig.js?v=262';
+import { getMagic } from './stats.js?v=229';
+import { emit, EVENTS } from '../shared/eventBus.js?v=230';
+import { saveGame } from './saveGameUseCase.js?v=232';
+import { updateHuntRtc } from '../infrastructure/authClient.js?v=237';
+import { t } from '../i18n/i18n.js?v=246';
 
 // Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar
 // prioridade de ataque/cura no meio da luta só valia a partir da PRÓXIMA
@@ -27,6 +27,26 @@ function refresh(msg) {
   emit(EVENTS.NOTIFY, { msg, type: 'info' });
   saveGame();
   syncRtcToServer();
+}
+
+// Tira do RTC toda magia/runa que a vocação/nível ATUAL não pode mais usar —
+// ataque, degraus de cura e a spell de cura legada. Usado em DOIS momentos:
+//  - no load do save (persistenceUseCases), pra um save antigo não trazer magia
+//    inválida;
+//  - na GRADUAÇÃO com troca de vocação (characterUseCases: graduate), que muda
+//    G.vocation SEM recarregar a página — sem isto o paladino recém-graduado
+//    seguia lançando as magias de sorcerer que estavam armadas (bug do Felipe:
+//    "mudei de sorcerer pra paladin e continuo soltando magia de sorcerer").
+// Só filtra o que existe; não injeta nada. Retorna quantos itens caíram.
+export function pruneRtcForVocation() {
+  const antesAtk = normalizeAttackSpells(G.rtc);
+  G.rtc.attackSpells = antesAtk.filter(entry => isRuneEntry(entry)
+    ? isRuneAvailableToVocation(runeEntryId(entry), G.vocation)
+    : isSpellAvailable(entry, G.vocation, G.level));
+  const antesHeal = normalizeHealTiers(G.rtc);
+  G.rtc.healTiers = antesHeal.filter(d => d && d.spell && isSpellAvailable(d.spell, G.vocation, G.level));
+  if (G.rtc.healSpell && !isSpellAvailable(G.rtc.healSpell, G.vocation, G.level)) G.rtc.healSpell = null;
+  return (antesAtk.length - G.rtc.attackSpells.length) + (antesHeal.length - G.rtc.healTiers.length);
 }
 
 // Define a magia OU runa de uma caixinha de prioridade específica

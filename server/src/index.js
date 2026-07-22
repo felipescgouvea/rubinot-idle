@@ -132,7 +132,8 @@ async function creditTraining(userId, slot, stats, vocation) {
   const skillsRow = await selectOne('player_skills', { user_id: userId, slot });
   const skills = (skillsRow && skillsRow.skills) || defaultSkills();
   if (tries <= 0) return { skills, tries: 0 };
-  const { sk } = applySkillGain(skills, skillId, tries, vocation);
+  // Provisório em Rook (ainda não graduou): ritmo neutro — ver domain/character.js.
+  const { sk } = applySkillGain(skills, skillId, tries, vocation, !(stats && stats.graduated));
   await upsertRow('player_skills', { user_id: userId, slot, skills: sk, updated_at: new Date().toISOString() }, 'user_id,slot');
   return { skills: sk, tries };
 }
@@ -314,6 +315,9 @@ const server = http.createServer(async (req, res) => {
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
         bossTier: Math.max(1, Math.floor(Number(body.bossTier) || 1)), // Boss Zone: tier desafiado (escala dificuldade + prestígio)
         vocation: body.vocation, level, skills, equipment, relics, imbuements,
+        // Provisório enquanto não graduou (Rook): rege o RITMO DE TREINO — a
+        // vocação do set não pode dar vantagem de skill/ML (ver domain/character.js).
+        graduated: !!(stats && stats.graduated),
         spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
         promoted: !!(stats && stats.promoted), // promoção acelera a regeneração passiva
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
