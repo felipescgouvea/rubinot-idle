@@ -126,15 +126,34 @@ async function creditTraining(userId, slot, stats, vocation) {
   return { skills: sk, tries };
 }
 
+// Cache de token -> usuário. TODA rota começa validando o token, e validar é
+// uma ida ao Supabase (~300ms). Com o cliente pedindo /hunt/state várias vezes
+// por segundo, era ~300ms de latência somados a cada requisição só pra
+// reconfirmar um token que não mudou. 60s é curto o bastante pra um token
+// revogado parar de valer quase na hora, e longo o bastante pra tirar essa ida
+// de praticamente todas as requisições da caçada.
+const TOKEN_TTL_MS = 60000;
+const tokenCache = new Map();
+
 async function verifySupabaseToken(token) {
   if (!token) return null;
+  const agora = Date.now();
+  const hit = tokenCache.get(token);
+  if (hit && hit.expira > agora) return hit.user;
   try {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` },
     });
-    if (!res.ok) return null;
+    if (!res.ok) { tokenCache.delete(token); return null; }
     const user = await res.json().catch(() => null);
-    return user && user.id ? user : null;
+    if (!user || !user.id) { tokenCache.delete(token); return null; }
+    // Poda preguiçosa: sem isto o Map cresceria pra sempre num processo que
+    // fica semanas de pé (cada login novo é uma chave nova).
+    if (tokenCache.size > 500) {
+      for (const [k, v] of tokenCache) if (v.expira <= agora) tokenCache.delete(k);
+    }
+    tokenCache.set(token, { user, expira: agora + TOKEN_TTL_MS });
+    return user;
   } catch {
     return null;
   }
@@ -345,11 +364,19 @@ const server = http.createServer(async (req, res) => {
       if (!user) return;
       const slot = validSlot(Number(url.searchParams.get('slot')));
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
-      const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
-      const stats = await selectOne('player_stats', { user_id: user.id, slot });
-      const invRows = await selectMany('player_inventory', { user_id: user.id, slot });
-      const relicRows = await selectMany('player_relics', { user_id: user.id, slot });
-      const skillsRow = await selectOne('player_skills', { user_id: user.id, slot });
+      // As cinco leituras são INDEPENDENTES entre si — nenhuma usa o resultado
+      // da outra. Em série eram 5 idas ao Supabase somando ~1,5s, e o cliente
+      // pede esta rota várias vezes por segundo: as respostas empilhavam no
+      // limite de conexões do navegador e a tela ficava SEGUNDOS atrás do
+      // servidor (a queixa de "jogo travado" — medido em scripts/perf-hunt.mjs).
+      // Em paralelo, o custo passa a ser o da leitura mais lenta, não a soma.
+      const [activeRow, stats, invRows, relicRows, skillsRow] = await Promise.all([
+        selectOne('hunt_sessions', { user_id: user.id, slot, active: true }),
+        selectOne('player_stats', { user_id: user.id, slot }),
+        selectMany('player_inventory', { user_id: user.id, slot }),
+        selectMany('player_relics', { user_id: user.id, slot }),
+        selectOne('player_skills', { user_id: user.id, slot }),
+      ]);
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
       const inventory = {};
       invRows.forEach(r => { inventory[r.item_id] = Number(r.qty); });

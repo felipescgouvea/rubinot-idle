@@ -3,26 +3,26 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=190';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=195';
-import { ZONES } from '../domain/bestiary.js?v=208';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=217';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=188';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=220';
-import { monsterAttack } from '../domain/combatFormulas.js?v=219';
-import { elementMod } from '../domain/elements.js?v=186';
-import { STAMINA_MAX } from '../domain/stamina.js?v=186';
-import { ITEMS } from '../domain/items.js?v=201';
-import { MONSTERS } from '../domain/bestiary.js?v=208';
-import { RARITY_TIERS } from '../domain/rarity.js?v=187';
-import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=188';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=188';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=187';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=187';
-import { saveGame } from './saveGameUseCase.js?v=190';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=191';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=189';
-import { t } from '../i18n/i18n.js?v=204';
+import { G, ACCOUNT } from './gameStore.js?v=191';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc } from '../infrastructure/authClient.js?v=196';
+import { ZONES } from '../domain/bestiary.js?v=209';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=218';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=189';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=221';
+import { monsterAttack } from '../domain/combatFormulas.js?v=220';
+import { elementMod } from '../domain/elements.js?v=187';
+import { STAMINA_MAX } from '../domain/stamina.js?v=187';
+import { ITEMS } from '../domain/items.js?v=202';
+import { MONSTERS } from '../domain/bestiary.js?v=209';
+import { RARITY_TIERS } from '../domain/rarity.js?v=188';
+import { spellEffectName, spellMissileName, runeEffectName, basicAttackMissile } from '../domain/combatFx.js?v=189';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=189';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=188';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=188';
+import { saveGame } from './saveGameUseCase.js?v=191';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=192';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=190';
+import { t } from '../i18n/i18n.js?v=205';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -165,14 +165,25 @@ export function toggleHunt() {
 // combate rico que a UI mostra localmente (aceito conscientemente até o
 // Marco 4 trazer paridade de combate no servidor).
 let reconcileInterval = null;
-// Reduzido de 5000 pra 1500, depois 750, depois 375, agora 250 (auditoria do
-// combate: o poll deixou de ser só uma "rede de segurança" atrás de uma
-// simulação local cosmética — desde que currentPack/currentMonster passaram a
-// vir DIRETO do servidor (ver applyServerPack), o poll é a ÚNICA fonte da
-// cadência visual de combate, então precisa ser mais rápido que antes pra não
-// parecer travado). Ainda é só um GET /hunt/state leve; abaixo disso o ganho
-// de "tempo real" deixa de compensar o volume de requisições.
-const RECONCILE_MS = 250;
+// Foi caindo de 5000 -> 1500 -> 750 -> 375 -> 250, cada vez pra "não parecer
+// travado". A medição (scripts/perf-hunt.mjs) mostrou que a partir de certo
+// ponto isso PIOROU o problema em vez de resolver: uma resposta de /hunt/state
+// levava ~1,9s, então pedir a cada 250ms deixava ~8 requisições em voo ao mesmo
+// tempo. O navegador só abre 6 conexões por host, o resto entra na fila, e a
+// tela passava a mostrar um estado de vários SEGUNDOS atrás — exatamente a
+// sensação de travado que se queria evitar.
+//
+// A resposta certa não era pedir mais vezes, era a resposta chegar rápido (ver
+// server/src/index.js: as leituras do /hunt/state agora vão em paralelo e o
+// token fica em cache). Com ~350ms de resposta, 600ms de intervalo dá folga
+// pra nunca empilhar — e o servidor só muda de estado a cada 2s (TICK_MS),
+// então pedir mais que isso não revela nada de novo.
+const RECONCILE_MS = 600;
+// Trava de "uma de cada vez": mesmo com o intervalo folgado, um blip de rede
+// pode fazer uma resposta demorar mais que RECONCILE_MS. Sem esta trava as
+// requisições voltam a empilhar exatamente como antes — o intervalo sozinho
+// não garante nada, só o guard garante.
+let reconcileEmVoo = false;
 // Sobe a cada início/fim de caçada (ver beginLocalLoop/stopHuntLocalOnly).
 // Cada reconcileWithServer() guarda o epoch de quando FOI DISPARADO e, ao
 // receber a resposta (fetch pode demorar mais que RECONCILE_MS por latência
@@ -342,8 +353,15 @@ function renderCombatEvents(events) {
 }
 
 async function reconcileWithServer() {
+  // Já tem um poll esperando resposta: sair sem disparar outro. Empilhar
+  // requisições não traz o estado mais rápido — só enche a fila de conexões do
+  // navegador e ATRASA todas elas (ver o comentário de RECONCILE_MS).
+  if (reconcileEmVoo) return;
+  reconcileEmVoo = true;
   const myEpoch = reconcileEpoch;
-  const res = await getHuntState(ACCOUNT.activeSlot);
+  let res;
+  try { res = await getHuntState(ACCOUNT.activeSlot); }
+  finally { reconcileEmVoo = false; }
   // Descarta resposta atrasada de um poll disparado numa caçada que já foi
   // parada/reiniciada nesse meio-tempo (ver comentário de reconcileEpoch).
   if (myEpoch !== reconcileEpoch) return;
