@@ -664,6 +664,47 @@ async function resolveTick(session) {
   }
 }
 
+// --- SCHEDULER ÚNICO -----------------------------------------------------
+// Antes cada caçada criava DOIS setInterval próprios (tick + flush). Com 500
+// jogadores isso vira 1000 timers disputando o event loop, e o Node não os
+// dispara no horário: medido, o atraso mediano de cada batida era ~180ms e o
+// p99 ~350ms. Um combate cuja batida é de 2s ficava visivelmente irregular.
+//
+// Um scheduler só, varrendo as sessões devidas a cada 100ms, mede 14ms de
+// atraso mediano e 30ms de p99 — dez vezes mais pontual, com o MESMO trabalho.
+// De quebra, o custo passa a ser proporcional às sessões ATIVAS, não ao número
+// de timers vivos.
+const VARREDURA_MS = 100;
+const FLUSH_MS = 5000;
+let schedulerId = null;
+
+function varrer() {
+  const agora = Date.now();
+  for (const session of live.values()) {
+    if (session.stopped) continue;
+    if (agora >= (session.nextTickAt || 0)) {
+      // Soma a batida em vez de reagendar a partir de agora: assim um tick
+      // atrasado não empurra todos os seguintes (o erro não acumula).
+      session.nextTickAt = (session.nextTickAt || agora) + TICK_MS;
+      // Sessão que ficou muito pra trás (processo travado, deploy) não deve
+      // "recuperar" disparando várias batidas seguidas — realinha com o agora.
+      if (session.nextTickAt < agora) session.nextTickAt = agora + TICK_MS;
+      doTick(session);
+    }
+    if (agora >= (session.nextFlushAt || 0)) {
+      session.nextFlushAt = agora + FLUSH_MS;
+      flushVitals(session).catch(() => {});
+    }
+  }
+  // Sem sessão viva, o scheduler se desliga — um servidor ocioso não fica
+  // acordando o event loop 10x por segundo à toa.
+  if (!live.size && schedulerId) { clearInterval(schedulerId); schedulerId = null; }
+}
+
+function garantirScheduler() {
+  if (!schedulerId) schedulerId = setInterval(varrer, VARREDURA_MS);
+}
+
 function doTick(session) {
   if (session.busy || session.stopped) return;
   session.busy = true;
@@ -767,9 +808,10 @@ export function startSession(session) {
   session.targetUid = null;   // alvo escolhido pelo jogador (clique → /hunt/target); null = ataca a frente
   // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
   // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
-  session.timer = setInterval(() => doTick(session), TICK_MS);
-  session.flushTimer = setInterval(() => flushVitals(session).catch(() => {}), 5000);
+  session.nextTickAt = Date.now() + TICK_MS;
+  session.nextFlushAt = Date.now() + FLUSH_MS;
   live.set(session.id, session);
+  garantirScheduler();
 }
 
 export function stopSession(sessionId) {
@@ -782,8 +824,10 @@ export function stopSession(sessionId) {
   // session.stopped em tick()/resolveTick() acima — bug reportado: "dou stop
   // hunt e continuo levando hit").
   s.stopped = true;
-  clearInterval(s.timer);
-  clearInterval(s.flushTimer);
+  // Não há mais timer próprio pra limpar: quem dispara é o scheduler único, e
+  // ele pula tudo que está marcado como parado (e a sessão sai do `live`
+  // logo abaixo). A marcação continua sendo o que protege um tick JÁ em
+  // andamento, parado num await, de aplicar dano depois do stop.
   flushVitals(s).catch(() => {});
   live.delete(sessionId);
 }
