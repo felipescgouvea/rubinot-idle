@@ -1,6 +1,769 @@
 {
  "divergentes": [
   {
+   "id": "bowl_of_glooth_soup",
+   "nome": "Bowl of Glooth Soup",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "amphora",
+   "nome": "Amphora",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "skull_item",
+   "nome": "Skull (Item)",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "book_grey",
+   "nome": "Book (Grey)",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "bug_meat",
+   "nome": "Bug Meat",
+   "nosso": 4,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "onion",
+   "nome": "Onion",
+   "nosso": 7,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "war_drum",
+   "nome": "War Drum",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "heavily_rusted_armor",
+   "nome": "Heavily Rusted Armor",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "wooden_trash",
+   "nome": "Wooden Trash",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "letter",
+   "nome": "Letter",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "pear",
+   "nome": "Pear",
+   "nosso": 4,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "sweet_smelling_bait",
+   "nome": "Sweet Smelling Bait",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "bamboo_leaves",
+   "nome": "Bamboo Leaves",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "harness",
+   "nome": "Harness",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "broken_dream",
+   "nome": "Broken Dream",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "sun_fruit",
+   "nome": "Sun Fruit",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "banana_skin",
+   "nome": "Banana Skin",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "fishbone",
+   "nome": "Fishbone",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "remains_of_a_fish",
+   "nome": "Remains of a Fish",
+   "nosso": 243,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "crystal_rubbish",
+   "nome": "Crystal Rubbish",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "dragolisk_soul_core",
+   "nome": "Dragolisk Soul Core",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "bulltaur_forgepriest_soul_core",
+   "nome": "Bulltaur Forgepriest Soul Core",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "green_ectoplasm",
+   "nome": "Green Ectoplasm",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "blue_ectoplasm",
+   "nome": "Blue Ectoplasm",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "golden_idol_of_tukh",
+   "nome": "Golden Idol of Tukh",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "red_ectoplasm",
+   "nome": "Red Ectoplasm",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "demonic_core_essence",
+   "nome": "Demonic Core Essence",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "demonic_matter",
+   "nome": "Demonic Matter",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "mummified_demon_finger",
+   "nome": "Mummified Demon Finger",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "burnt_scroll",
+   "nome": "Burnt Scroll",
+   "nosso": 108,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "energy_bar",
+   "nome": "Energy Bar",
+   "nosso": 7,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "energy_drink",
+   "nome": "Energy Drink",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "lavafungus_soul_core",
+   "nome": "Lavafungus Soul Core",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "cape",
+   "nome": "Cape",
+   "nosso": 3690,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "mini_mummy",
+   "nome": "Mini Mummy",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "rotten_meat",
+   "nome": "Rotten Meat",
+   "nosso": 243,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "potato",
+   "nome": "Potato",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "strawberry",
+   "nome": "Strawberry",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "piece_of_marble_rock",
+   "nome": "Piece of Marble Rock",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "crystalline_arrow",
+   "nome": "Crystalline Arrow",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "suspicious_device",
+   "nome": "Suspicious Device",
+   "nosso": 930,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "mushroom_backpack",
+   "nome": "Mushroom Backpack",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "slightly_rusted_shield",
+   "nome": "Slightly Rusted Shield",
+   "nosso": 27,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "slightly_rusted_helmet",
+   "nome": "Slightly Rusted Helmet",
+   "nosso": 243,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "heavy_crystal_fragment",
+   "nome": "Heavy Crystal Fragment",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "silver_token",
+   "nome": "Silver Token",
+   "nosso": 200,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gold_token",
+   "nome": "Gold Token",
+   "nosso": 500,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gnome_sword",
+   "nome": "Gnome Sword",
+   "nosso": 120,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gnome_shield",
+   "nome": "Gnome Shield",
+   "nosso": 3045,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gnome_armor",
+   "nome": "Gnome Armor",
+   "nosso": 1885,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "plan_for_a_makeshift_armour",
+   "nome": "Plan for a Makeshift Armour",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "mallet_head",
+   "nome": "Mallet Head",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "candle_stump",
+   "nome": "Candle Stump",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gnomish_footwraps",
+   "nome": "Gnomish Footwraps",
+   "nosso": 255,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "fireproof_horn",
+   "nome": "Fireproof Horn",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "raspberry",
+   "nome": "Raspberry",
+   "nosso": 7,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "shrimp",
+   "nome": "Shrimp",
+   "nosso": 8,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "carrot_on_a_stick",
+   "nome": "Carrot on a Stick",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "golden_can_of_oil",
+   "nome": "Golden Can of Oil",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "dark_chocolate_coin",
+   "nome": "Dark Chocolate Coin",
+   "nosso": 108,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "milk_chocolate_coin",
+   "nome": "Milk Chocolate Coin",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "candy_necklace",
+   "nome": "Candy Necklace",
+   "nosso": 30,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "ring_of_temptation",
+   "nome": "Ring of Temptation",
+   "nosso": 560,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "candycoated_quiver",
+   "nome": "Candy-Coated Quiver",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "biscuit_barrier",
+   "nome": "Biscuit Barrier",
+   "nosso": 270,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "creamy_grimoire",
+   "nome": "Creamy Grimoire",
+   "nosso": 522,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "cocoa_grimoire",
+   "nome": "Cocoa Grimoire",
+   "nosso": 298,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "peppermint_backpack",
+   "nome": "Peppermint Backpack",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gummy_rotworm",
+   "nome": "Gummy Rotworm",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "egg",
+   "nome": "Egg",
+   "nosso": 7,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "flour",
+   "nome": "Flour",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "cream_cake",
+   "nome": "Cream Cake",
+   "nosso": 8,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "fresh_fruit",
+   "nome": "Fresh Fruit",
+   "nosso": 8,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "die",
+   "nome": "Die",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "cave_turnip",
+   "nome": "Cave Turnip",
+   "nosso": 4,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "tarsal_arrow",
+   "nome": "Tarsal Arrow",
+   "nosso": 2,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "buggy_backpack",
+   "nome": "Buggy Backpack",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "dung_ball_quest",
+   "nome": "Dung Ball (Quest)",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "gooey_mass",
+   "nome": "Gooey Mass",
+   "nosso": 3,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "yetislippers",
+   "nome": "Yetislippers",
+   "nosso": 90,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "broken_bell",
+   "nome": "Broken Bell",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "fireworks_capsule",
+   "nome": "Fireworks Capsule",
+   "nosso": 243,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "grainy_fireworks_powder",
+   "nome": "Grainy Fireworks Powder",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "percht_horns",
+   "nome": "Percht Horns",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "versicolour_fireworks_powder",
+   "nome": "Versicolour Fireworks Powder",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "red_fireworks_powder",
+   "nome": "Red Fireworks Powder",
+   "nosso": 27,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "yellow_fireworks_powder",
+   "nome": "Yellow Fireworks Powder",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "green_fireworks_powder",
+   "nome": "Green Fireworks Powder",
+   "nosso": 147,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "blue_fireworks_powder",
+   "nome": "Blue Fireworks Powder",
+   "nosso": 108,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "orange_fireworks_powder",
+   "nome": "Orange Fireworks Powder",
+   "nosso": 12,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "purple_fireworks_powder",
+   "nome": "Purple Fireworks Powder",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "turquoise_fireworks_powder",
+   "nome": "Turquoise Fireworks Powder",
+   "nosso": 75,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "flask_of_rust_remover",
+   "nome": "Flask of Rust Remover",
+   "nosso": 5,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "deepling_filet",
+   "nome": "Deepling Filet",
+   "nosso": 5,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "vortex_bolt",
+   "nome": "Vortex Bolt",
+   "nosso": 2,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "deepling_backpack",
+   "nome": "Deepling Backpack",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "foxtail",
+   "nome": "Foxtail",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "crystalline_sword",
+   "nome": "Crystalline Sword",
+   "nosso": 120,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "bag_you_desire",
+   "nome": "Bag You Desire",
+   "nosso": 80000,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "twigs",
+   "nome": "Twigs",
+   "nosso": 243,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "foam_stalker_spume",
+   "nome": "Foam Stalker Spume",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "lichen_gobbler",
+   "nome": "Lichen Gobbler",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "organic_acid",
+   "nome": "Organic Acid",
+   "nosso": 108,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "crimson_sword",
+   "nome": "Crimson Sword",
+   "nosso": 2850,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "darklight_obsidian_axe",
+   "nome": "Darklight Obsidian Axe",
+   "nosso": 300,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "yellow_darklight_matter",
+   "nome": "Yellow Darklight Matter",
+   "nosso": 48,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "unstable_darklight_matter",
+   "nome": "Unstable Darklight Matter",
+   "nosso": 192,
+   "real": 0,
+   "razao": null
+  },
+  {
+   "id": "throwing_knife",
+   "nome": "Throwing Knife",
+   "nosso": 1638,
+   "real": 2,
+   "razao": 819
+  },
+  {
+   "id": "staff",
+   "nome": "Staff",
+   "nosso": 780,
+   "real": 1,
+   "razao": 780
+  },
+  {
    "id": "swampling_club",
    "nome": "Swampling Club",
    "nosso": 7626,
@@ -15,14 +778,2580 @@
    "razao": 90
   },
   {
+   "id": "legion_helmet",
+   "nome": "Legion Helmet",
+   "nosso": 1450,
+   "real": 22,
+   "razao": 65.9090909090909
+  },
+  {
+   "id": "katana",
+   "nome": "Katana",
+   "nosso": 2016,
+   "real": 35,
+   "razao": 57.6
+  },
+  {
+   "id": "dwarven_shield",
+   "nome": "Dwarven Shield",
+   "nosso": 3960,
+   "real": 100,
+   "razao": 39.6
+  },
+  {
+   "id": "sickle",
+   "nome": "Sickle",
+   "nosso": 108,
+   "real": 3,
+   "razao": 36
+  },
+  {
+   "id": "clerical_mace",
+   "nome": "Clerical Mace",
+   "nosso": 3828,
+   "real": 170,
+   "razao": 22.51764705882353
+  },
+  {
+   "id": "soldier_helmet",
+   "nome": "Soldier Helmet",
+   "nosso": 325,
+   "real": 16,
+   "razao": 20.3125
+  },
+  {
+   "id": "strange_talisman",
+   "nome": "Strange Talisman",
+   "nosso": 430,
+   "real": 30,
+   "razao": 14.333333333333334
+  },
+  {
+   "id": "viking_helmet",
+   "nome": "Viking Helmet",
+   "nosso": 840,
+   "real": 66,
+   "razao": 12.727272727272727
+  },
+  {
    "id": "ancient_shield",
    "nome": "Ancient Shield",
    "nosso": 11000,
    "real": 900,
    "razao": 12.222222222222221
+  },
+  {
+   "id": "piece_of_archer_armor",
+   "nome": "Piece of Archer Armor",
+   "nosso": 243,
+   "real": 20,
+   "razao": 12.15
+  },
+  {
+   "id": "nettle_spit",
+   "nome": "Nettle Spit",
+   "nosso": 300,
+   "real": 25,
+   "razao": 12
+  },
+  {
+   "id": "poison_spider_shell",
+   "nome": "Poison Spider Shell",
+   "nosso": 108,
+   "real": 10,
+   "razao": 10.8
+  },
+  {
+   "id": "swampling_moss",
+   "nome": "Swampling Moss",
+   "nosso": 192,
+   "real": 20,
+   "razao": 9.6
+  },
+  {
+   "id": "mammoth_whopper",
+   "nome": "Mammoth Whopper",
+   "nosso": 2850,
+   "real": 300,
+   "razao": 9.5
+  },
+  {
+   "id": "centipede_leg",
+   "nome": "Centipede Leg",
+   "nosso": 243,
+   "real": 28,
+   "razao": 8.678571428571429
+  },
+  {
+   "id": "fir_cone",
+   "nome": "Fir Cone",
+   "nosso": 192,
+   "real": 25,
+   "razao": 7.68
+  },
+  {
+   "id": "golden_sickle",
+   "nome": "Golden Sickle",
+   "nosso": 7626,
+   "real": 1000,
+   "razao": 7.626
+  },
+  {
+   "id": "bone_shield",
+   "nome": "Bone Shield",
+   "nosso": 585,
+   "real": 80,
+   "razao": 7.3125
+  },
+  {
+   "id": "bunch_of_troll_hair",
+   "nome": "Bunch of Troll Hair",
+   "nosso": 192,
+   "real": 30,
+   "razao": 6.4
+  },
+  {
+   "id": "scarab_amulet",
+   "nome": "Scarab Amulet",
+   "nosso": 1255,
+   "real": 200,
+   "razao": 6.275
+  },
+  {
+   "id": "flower_wreath",
+   "nome": "Flower Wreath",
+   "nosso": 3075,
+   "real": 500,
+   "razao": 6.15
+  },
+  {
+   "id": "honeycomb",
+   "nome": "Honeycomb",
+   "nosso": 243,
+   "real": 40,
+   "razao": 6.075
+  },
+  {
+   "id": "striped_fur",
+   "nome": "Striped Fur",
+   "nosso": 300,
+   "real": 50,
+   "razao": 6
+  },
+  {
+   "id": "scorpion_tail",
+   "nome": "Scorpion Tail",
+   "nosso": 147,
+   "real": 25,
+   "razao": 5.88
+  },
+  {
+   "id": "broken_helmet",
+   "nome": "Broken Helmet",
+   "nosso": 108,
+   "real": 20,
+   "razao": 5.4
+  },
+  {
+   "id": "miraculum",
+   "nome": "Miraculum",
+   "nosso": 300,
+   "real": 60,
+   "razao": 5
+  },
+  {
+   "id": "red_tome",
+   "nome": "Red Tome",
+   "nosso": 10000,
+   "real": 2000,
+   "razao": 5
+  },
+  {
+   "id": "star_herb",
+   "nome": "Star Herb",
+   "nosso": 75,
+   "real": 15,
+   "razao": 5
+  },
+  {
+   "id": "poisonous_slime",
+   "nome": "Poisonous Slime",
+   "nosso": 243,
+   "real": 50,
+   "razao": 4.86
+  },
+  {
+   "id": "carniphila_seeds",
+   "nome": "Carniphila Seeds",
+   "nosso": 243,
+   "real": 50,
+   "razao": 4.86
+  },
+  {
+   "id": "shamanic_hood",
+   "nome": "Shamanic Hood",
+   "nosso": 192,
+   "real": 45,
+   "razao": 4.266666666666667
+  },
+  {
+   "id": "piece_of_warrior_armor",
+   "nome": "Piece of Warrior Armor",
+   "nosso": 192,
+   "real": 50,
+   "razao": 3.84
+  },
+  {
+   "id": "demonic_skeletal_hand",
+   "nome": "Demonic Skeletal Hand",
+   "nosso": 300,
+   "real": 80,
+   "razao": 3.75
+  },
+  {
+   "id": "gauze_bandage",
+   "nome": "Gauze Bandage",
+   "nosso": 300,
+   "real": 90,
+   "razao": 3.3333333333333335
+  },
+  {
+   "id": "broken_shamanic_staff",
+   "nome": "Broken Shamanic Staff",
+   "nosso": 108,
+   "real": 35,
+   "razao": 3.085714285714286
+  },
+  {
+   "id": "crab_pincers",
+   "nome": "Crab Pincers",
+   "nosso": 108,
+   "real": 35,
+   "razao": 3.085714285714286
+  },
+  {
+   "id": "kongras_shoulderpad",
+   "nome": "Kongra's Shoulderpad",
+   "nosso": 300,
+   "real": 100,
+   "razao": 3
+  },
+  {
+   "id": "bear_paw",
+   "nome": "Bear Paw",
+   "nosso": 300,
+   "real": 100,
+   "razao": 3
+  },
+  {
+   "id": "mysterious_fetish",
+   "nome": "Mysterious Fetish",
+   "nosso": 147,
+   "real": 50,
+   "razao": 2.94
+  },
+  {
+   "id": "leaf_legs",
+   "nome": "Leaf Legs",
+   "nosso": 1305,
+   "real": 500,
+   "razao": 2.61
+  },
+  {
+   "id": "broken_crossbow",
+   "nome": "Broken Crossbow",
+   "nosso": 75,
+   "real": 30,
+   "razao": 2.5
+  },
+  {
+   "id": "geomancers_staff",
+   "nome": "Geomancer's Staff",
+   "nosso": 300,
+   "real": 120,
+   "razao": 2.5
+  },
+  {
+   "id": "polar_bear_paw",
+   "nome": "Polar Bear Paw",
+   "nosso": 75,
+   "real": 30,
+   "razao": 2.5
+  },
+  {
+   "id": "wild_flowers",
+   "nome": "Wild Flowers",
+   "nosso": 300,
+   "real": 120,
+   "razao": 2.5
+  },
+  {
+   "id": "bloody_pincers",
+   "nome": "Bloody Pincers",
+   "nosso": 243,
+   "real": 100,
+   "razao": 2.43
+  },
+  {
+   "id": "bonelord_eye",
+   "nome": "Bonelord Eye",
+   "nosso": 192,
+   "real": 80,
+   "razao": 2.4
+  },
+  {
+   "id": "trollroot",
+   "nome": "Trollroot",
+   "nosso": 108,
+   "real": 50,
+   "razao": 2.16
+  },
+  {
+   "id": "bat_wing",
+   "nome": "Bat Wing",
+   "nosso": 108,
+   "real": 50,
+   "razao": 2.16
+  },
+  {
+   "id": "daramian_waraxe",
+   "nome": "Daramian Waraxe",
+   "nosso": 2016,
+   "real": 1000,
+   "razao": 2.016
+  },
+  {
+   "id": "mutated_rat_tail",
+   "nome": "Mutated Rat Tail",
+   "nosso": 300,
+   "real": 150,
+   "razao": 2
+  },
+  {
+   "id": "halfdigested_piece_of_meat",
+   "nome": "Half-Digested Piece of Meat",
+   "nosso": 108,
+   "real": 55,
+   "razao": 1.9636363636363636
+  },
+  {
+   "id": "closed_trap",
+   "nome": "Closed Trap",
+   "nosso": 147,
+   "real": 75,
+   "razao": 1.96
+  },
+  {
+   "id": "glob_of_glooth",
+   "nome": "Glob of Glooth",
+   "nosso": 243,
+   "real": 125,
+   "razao": 1.944
+  },
+  {
+   "id": "stonerefiners_skull",
+   "nome": "Stonerefiner's Skull",
+   "nosso": 192,
+   "real": 100,
+   "razao": 1.92
+  },
+  {
+   "id": "pair_of_iron_fists",
+   "nome": "Pair of Iron Fists",
+   "nosso": 7626,
+   "real": 4000,
+   "razao": 1.9065
+  },
+  {
+   "id": "tarantula_egg",
+   "nome": "Tarantula Egg",
+   "nosso": 147,
+   "real": 80,
+   "razao": 1.8375
+  },
+  {
+   "id": "mad_froth",
+   "nome": "Mad Froth",
+   "nosso": 147,
+   "real": 80,
+   "razao": 1.8375
+  },
+  {
+   "id": "bone_toothpick",
+   "nome": "Bone Toothpick",
+   "nosso": 243,
+   "real": 150,
+   "razao": 1.62
+  },
+  {
+   "id": "fish_fin",
+   "nome": "Fish Fin",
+   "nosso": 243,
+   "real": 150,
+   "razao": 1.62
+  },
+  {
+   "id": "bone_fetish",
+   "nome": "Bone Fetish",
+   "nosso": 243,
+   "real": 150,
+   "razao": 1.62
+  },
+  {
+   "id": "piece_of_swampling_wood",
+   "nome": "Piece of Swampling Wood",
+   "nosso": 48,
+   "real": 30,
+   "razao": 1.6
+  },
+  {
+   "id": "flask_of_embalming_fluid",
+   "nome": "Flask of Embalming Fluid",
+   "nosso": 48,
+   "real": 30,
+   "razao": 1.6
+  },
+  {
+   "id": "chasm_spawn_tail",
+   "nome": "Chasm Spawn Tail",
+   "nosso": 192,
+   "real": 120,
+   "razao": 1.6
+  },
+  {
+   "id": "ripper_lance",
+   "nome": "Ripper Lance",
+   "nosso": 780,
+   "real": 500,
+   "razao": 1.56
+  },
+  {
+   "id": "glooth_whip",
+   "nome": "Glooth Whip",
+   "nosso": 3828,
+   "real": 2500,
+   "razao": 1.5312
+  },
+  {
+   "id": "elven_scouting_glass",
+   "nome": "Elven Scouting Glass",
+   "nosso": 75,
+   "real": 50,
+   "razao": 1.5
+  },
+  {
+   "id": "green_piece_of_cloth",
+   "nome": "Green Piece of Cloth",
+   "nosso": 300,
+   "real": 200,
+   "razao": 1.5
+  },
+  {
+   "id": "norse_shield",
+   "nome": "Norse Shield",
+   "nosso": 2250,
+   "real": 1500,
+   "razao": 1.5
+  },
+  {
+   "id": "sulphurous_stone",
+   "nome": "Sulphurous Stone",
+   "nosso": 147,
+   "real": 100,
+   "razao": 1.47
+  },
+  {
+   "id": "slime_mould",
+   "nome": "Slime Mould",
+   "nosso": 243,
+   "real": 175,
+   "razao": 1.3885714285714286
+  },
+  {
+   "id": "bloody_dwarven_beard",
+   "nome": "Bloody Dwarven Beard",
+   "nosso": 147,
+   "real": 110,
+   "razao": 1.3363636363636364
+  },
+  {
+   "id": "ancient_amulet",
+   "nome": "Ancient Amulet",
+   "nosso": 255,
+   "real": 200,
+   "razao": 1.275
+  },
+  {
+   "id": "gear_crystal",
+   "nome": "Gear Crystal",
+   "nosso": 243,
+   "real": 200,
+   "razao": 1.215
+  },
+  {
+   "id": "elven_astral_observer",
+   "nome": "Elven Astral Observer",
+   "nosso": 108,
+   "real": 90,
+   "razao": 1.2
+  },
+  {
+   "id": "halfdigested_stones",
+   "nome": "Half-Digested Stones",
+   "nosso": 48,
+   "real": 40,
+   "razao": 1.2
+  },
+  {
+   "id": "basalt_figurine",
+   "nome": "Basalt Figurine",
+   "nosso": 192,
+   "real": 160,
+   "razao": 1.2
+  },
+  {
+   "id": "tusk_shield",
+   "nome": "Tusk Shield",
+   "nosso": 1020,
+   "real": 850,
+   "razao": 1.2
+  },
+  {
+   "id": "dung_ball",
+   "nome": "Dung Ball",
+   "nosso": 147,
+   "real": 130,
+   "razao": 1.1307692307692307
+  },
+  {
+   "id": "diremaw_legs",
+   "nome": "Diremaw Legs",
+   "nosso": 300,
+   "real": 270,
+   "razao": 1.1111111111111112
+  },
+  {
+   "id": "naga_archer_scales",
+   "nome": "Naga Archer Scales",
+   "nosso": 300,
+   "real": 340,
+   "razao": 0.8823529411764706
+  },
+  {
+   "id": "broken_throwing_axe",
+   "nome": "Broken Throwing Axe",
+   "nosso": 192,
+   "real": 230,
+   "razao": 0.8347826086956521
+  },
+  {
+   "id": "ice_cube",
+   "nome": "Ice Cube",
+   "nosso": 192,
+   "real": 250,
+   "razao": 0.768
+  },
+  {
+   "id": "shard",
+   "nome": "Shard",
+   "nosso": 1500,
+   "real": 2000,
+   "razao": 0.75
+  },
+  {
+   "id": "dream_essence_egg",
+   "nome": "Dream Essence Egg",
+   "nosso": 147,
+   "real": 205,
+   "razao": 0.7170731707317073
+  },
+  {
+   "id": "deepling_staff",
+   "nome": "Deepling Staff",
+   "nosso": 2850,
+   "real": 4000,
+   "razao": 0.7125
+  },
+  {
+   "id": "glacial_rod",
+   "nome": "Glacial Rod",
+   "nosso": 4551,
+   "real": 6500,
+   "razao": 0.7001538461538461
+  },
+  {
+   "id": "powder_herb",
+   "nome": "Powder Herb",
+   "nosso": 7,
+   "real": 10,
+   "razao": 0.7
+  },
+  {
+   "id": "guardian_axe",
+   "nome": "Guardian Axe",
+   "nosso": 6216,
+   "real": 9000,
+   "razao": 0.6906666666666667
+  },
+  {
+   "id": "mantassin_tail",
+   "nome": "Mantassin Tail",
+   "nosso": 192,
+   "real": 280,
+   "razao": 0.6857142857142857
+  },
+  {
+   "id": "warriors_shield",
+   "nome": "Warrior's Shield",
+   "nosso": 6150,
+   "real": 9000,
+   "razao": 0.6833333333333333
+  },
+  {
+   "id": "slime_heart",
+   "nome": "Slime Heart",
+   "nosso": 108,
+   "real": 160,
+   "razao": 0.675
+  },
+  {
+   "id": "dead_weight",
+   "nome": "Dead Weight",
+   "nosso": 300,
+   "real": 450,
+   "razao": 0.6666666666666666
+  },
+  {
+   "id": "haunted_piece_of_wood",
+   "nome": "Haunted Piece of Wood",
+   "nosso": 75,
+   "real": 115,
+   "razao": 0.6521739130434783
+  },
+  {
+   "id": "naga_earring",
+   "nome": "Naga Earring",
+   "nosso": 243,
+   "real": 380,
+   "razao": 0.6394736842105263
+  },
+  {
+   "id": "hibiscus_dress",
+   "nome": "Hibiscus Dress",
+   "nosso": 1885,
+   "real": 3000,
+   "razao": 0.6283333333333333
+  },
+  {
+   "id": "bulltaur_armor_scrap",
+   "nome": "Bulltaur Armor Scrap",
+   "nosso": 300,
+   "real": 480,
+   "razao": 0.625
+  },
+  {
+   "id": "streaked_devourer_eyes",
+   "nome": "Streaked Devourer Eyes",
+   "nosso": 300,
+   "real": 500,
+   "razao": 0.6
+  },
+  {
+   "id": "stone_herb",
+   "nome": "Stone Herb",
+   "nosso": 12,
+   "real": 20,
+   "razao": 0.6
+  },
+  {
+   "id": "feather_headdress",
+   "nome": "Feather Headdress",
+   "nosso": 510,
+   "real": 850,
+   "razao": 0.6
+  },
+  {
+   "id": "waspoid_claw",
+   "nome": "Waspoid Claw",
+   "nosso": 192,
+   "real": 320,
+   "razao": 0.6
+  },
+  {
+   "id": "wand_of_dementia",
+   "nome": "Wand of Defiance",
+   "nosso": 3800,
+   "real": 6500,
+   "razao": 0.5846153846153846
+  },
+  {
+   "id": "broken_longbow",
+   "nome": "Broken Longbow",
+   "nosso": 75,
+   "real": 130,
+   "razao": 0.5769230769230769
+  },
+  {
+   "id": "deepling_claw",
+   "nome": "Deepling Claw",
+   "nosso": 243,
+   "real": 430,
+   "razao": 0.5651162790697675
+  },
+  {
+   "id": "warriors_axe",
+   "nome": "Warrior's Axe",
+   "nosso": 6216,
+   "real": 11000,
+   "razao": 0.5650909090909091
+  },
+  {
+   "id": "crystalline_spikes",
+   "nome": "Crystalline Spikes",
+   "nosso": 243,
+   "real": 440,
+   "razao": 0.5522727272727272
+  },
+  {
+   "id": "hair_of_a_banshee",
+   "nome": "Hair of a Banshee",
+   "nosso": 192,
+   "real": 350,
+   "razao": 0.5485714285714286
+  },
+  {
+   "id": "leviathans_amulet",
+   "nome": "Leviathan's Amulet",
+   "nosso": 1630,
+   "real": 3000,
+   "razao": 0.5433333333333333
+  },
+  {
+   "id": "frosty_heart",
+   "nome": "Frosty Heart",
+   "nosso": 147,
+   "real": 280,
+   "razao": 0.525
+  },
+  {
+   "id": "ice_flower_item",
+   "nome": "Ice Flower (Item)",
+   "nosso": 192,
+   "real": 370,
+   "razao": 0.518918918918919
+  },
+  {
+   "id": "terrorbird_beak",
+   "nome": "Terrorbird Beak",
+   "nosso": 48,
+   "real": 95,
+   "razao": 0.5052631578947369
+  },
+  {
+   "id": "lavafungus_ring",
+   "nome": "Lavafungus Ring",
+   "nosso": 192,
+   "real": 390,
+   "razao": 0.49230769230769234
+  },
+  {
+   "id": "werehyaena_nose",
+   "nome": "Werehyaena Nose",
+   "nosso": 108,
+   "real": 220,
+   "razao": 0.4909090909090909
+  },
+  {
+   "id": "butterfly_ring",
+   "nome": "Butterfly Ring",
+   "nosso": 980,
+   "real": 2000,
+   "razao": 0.49
+  },
+  {
+   "id": "gland",
+   "nome": "Gland",
+   "nosso": 243,
+   "real": 500,
+   "razao": 0.486
+  },
+  {
+   "id": "glob_of_acid_slime",
+   "nome": "Glob of Acid Slime",
+   "nosso": 12,
+   "real": 25,
+   "razao": 0.48
+  },
+  {
+   "id": "amber_staff",
+   "nome": "Amber Staff",
+   "nosso": 3828,
+   "real": 8000,
+   "razao": 0.4785
+  },
+  {
+   "id": "deepling_guard_belt_buckle",
+   "nome": "Deepling Guard Belt Buckle",
+   "nosso": 108,
+   "real": 230,
+   "razao": 0.46956521739130436
+  },
+  {
+   "id": "odd_organ",
+   "nome": "Odd Organ",
+   "nosso": 192,
+   "real": 410,
+   "razao": 0.4682926829268293
+  },
+  {
+   "id": "goosebump_leather",
+   "nome": "Goosebump Leather",
+   "nosso": 300,
+   "real": 650,
+   "razao": 0.46153846153846156
+  },
+  {
+   "id": "colourful_feather",
+   "nome": "Colourful Feather",
+   "nosso": 48,
+   "real": 110,
+   "razao": 0.43636363636363634
+  },
+  {
+   "id": "perfect_behemoth_fang",
+   "nome": "Perfect Behemoth Fang",
+   "nosso": 108,
+   "real": 250,
+   "razao": 0.432
+  },
+  {
+   "id": "weavers_wandtip",
+   "nome": "Weaver's Wandtip",
+   "nosso": 108,
+   "real": 250,
+   "razao": 0.432
+  },
+  {
+   "id": "mystical_hourglass",
+   "nome": "Mystical Hourglass",
+   "nosso": 300,
+   "real": 700,
+   "razao": 0.42857142857142855
+  },
+  {
+   "id": "frazzle_tongue",
+   "nome": "Frazzle Tongue",
+   "nosso": 300,
+   "real": 700,
+   "razao": 0.42857142857142855
+  },
+  {
+   "id": "necklace_of_the_deep",
+   "nome": "Necklace of the Deep",
+   "nosso": 1255,
+   "real": 3000,
+   "razao": 0.41833333333333333
+  },
+  {
+   "id": "deepling_warts",
+   "nome": "Deepling Warts",
+   "nosso": 75,
+   "real": 180,
+   "razao": 0.4166666666666667
+  },
+  {
+   "id": "deepling_ridge",
+   "nome": "Deepling Ridge",
+   "nosso": 147,
+   "real": 360,
+   "razao": 0.4083333333333333
+  },
+  {
+   "id": "streaked_devourer_legs",
+   "nome": "Streaked Devourer Legs",
+   "nosso": 243,
+   "real": 600,
+   "razao": 0.405
+  },
+  {
+   "id": "damaged_armor_plates",
+   "nome": "Damaged Armor Plates",
+   "nosso": 108,
+   "real": 280,
+   "razao": 0.38571428571428573
+  },
+  {
+   "id": "scarab_pincers",
+   "nome": "Scarab Pincers",
+   "nosso": 108,
+   "real": 280,
+   "razao": 0.38571428571428573
+  },
+  {
+   "id": "bonebreaker",
+   "nome": "Bonebreaker",
+   "nosso": 3828,
+   "real": 10000,
+   "razao": 0.3828
+  },
+  {
+   "id": "beetle_carapace",
+   "nome": "Beetle Carapace",
+   "nosso": 75,
+   "real": 200,
+   "razao": 0.375
+  },
+  {
+   "id": "boggy_dreads",
+   "nome": "Boggy Dreads",
+   "nosso": 75,
+   "real": 200,
+   "razao": 0.375
+  },
+  {
+   "id": "ancient_stone",
+   "nome": "Ancient Stone",
+   "nosso": 75,
+   "real": 200,
+   "razao": 0.375
+  },
+  {
+   "id": "lump_of_earth",
+   "nome": "Lump of Earth",
+   "nosso": 48,
+   "real": 130,
+   "razao": 0.36923076923076925
+  },
+  {
+   "id": "nimmersatts_seal",
+   "nome": "Nimmersatt's Seal",
+   "nosso": 192,
+   "real": 520,
+   "razao": 0.36923076923076925
+  },
+  {
+   "id": "piece_of_dead_brain",
+   "nome": "Piece of Dead Brain",
+   "nosso": 147,
+   "real": 420,
+   "razao": 0.35
+  },
+  {
+   "id": "fern",
+   "nome": "Fern",
+   "nosso": 7,
+   "real": 20,
+   "razao": 0.35
+  },
+  {
+   "id": "carrion_worm_fang",
+   "nome": "Carrion Worm Fang",
+   "nosso": 12,
+   "real": 35,
+   "razao": 0.34285714285714286
+  },
+  {
+   "id": "wardragon_tooth",
+   "nome": "Wardragon Tooth",
+   "nosso": 243,
+   "real": 730,
+   "razao": 0.33287671232876714
+  },
+  {
+   "id": "troll_green",
+   "nome": "Troll Green",
+   "nosso": 8,
+   "real": 25,
+   "razao": 0.32
+  },
+  {
+   "id": "book_gemmed",
+   "nome": "Book (Gemmed)",
+   "nosso": 48,
+   "real": 150,
+   "razao": 0.32
+  },
+  {
+   "id": "silencer_resonating_chamber",
+   "nome": "Silencer Resonating Chamber",
+   "nosso": 192,
+   "real": 600,
+   "razao": 0.32
+  },
+  {
+   "id": "spitter_nose",
+   "nome": "Spitter Nose",
+   "nosso": 108,
+   "real": 340,
+   "razao": 0.3176470588235294
+  },
+  {
+   "id": "heat_core",
+   "nome": "Heat Core",
+   "nosso": 3145,
+   "real": 10000,
+   "razao": 0.3145
+  },
+  {
+   "id": "shadow_herb",
+   "nome": "Shadow Herb",
+   "nosso": 6,
+   "real": 20,
+   "razao": 0.3
+  },
+  {
+   "id": "ghostly_tissue",
+   "nome": "Ghostly Tissue",
+   "nosso": 27,
+   "real": 90,
+   "razao": 0.3
+  },
+  {
+   "id": "lost_hushers_staff",
+   "nome": "Lost Husher's Staff",
+   "nosso": 75,
+   "real": 250,
+   "razao": 0.3
+  },
+  {
+   "id": "red_hair_dye",
+   "nome": "Red Hair Dye",
+   "nosso": 12,
+   "real": 40,
+   "razao": 0.3
+  },
+  {
+   "id": "torn_shirt",
+   "nome": "Torn Shirt",
+   "nosso": 75,
+   "real": 250,
+   "razao": 0.3
+  },
+  {
+   "id": "scarab_shield",
+   "nome": "Scarab Shield",
+   "nosso": 585,
+   "real": 2000,
+   "razao": 0.2925
+  },
+  {
+   "id": "beetle_necklace",
+   "nome": "Beetle Necklace",
+   "nosso": 430,
+   "real": 1500,
+   "razao": 0.2866666666666667
+  },
+  {
+   "id": "bulltaur_horn",
+   "nome": "Bulltaur Horn",
+   "nosso": 108,
+   "real": 385,
+   "razao": 0.2805194805194805
+  },
+  {
+   "id": "mega_dragon_heart",
+   "nome": "Mega Dragon Heart",
+   "nosso": 300,
+   "real": 1100,
+   "razao": 0.2727272727272727
+  },
+  {
+   "id": "pulverized_ore",
+   "nome": "Pulverized Ore",
+   "nosso": 108,
+   "real": 400,
+   "razao": 0.27
+  },
+  {
+   "id": "lost_bashers_spike",
+   "nome": "Lost Basher's Spike",
+   "nosso": 75,
+   "real": 280,
+   "razao": 0.26785714285714285
+  },
+  {
+   "id": "piece_of_hellfire_armor",
+   "nome": "Piece of Hellfire Armor",
+   "nosso": 147,
+   "real": 550,
+   "razao": 0.2672727272727273
+  },
+  {
+   "id": "old_girtablilu_carapace",
+   "nome": "Old Girtablilu Carapace",
+   "nosso": 147,
+   "real": 570,
+   "razao": 0.2578947368421053
+  },
+  {
+   "id": "dreaded_cleaver",
+   "nome": "Dreaded Cleaver",
+   "nosso": 3828,
+   "real": 15000,
+   "razao": 0.2552
+  },
+  {
+   "id": "some_grimeleech_wings",
+   "nome": "Some Grimeleech Wings",
+   "nosso": 300,
+   "real": 1200,
+   "razao": 0.25
+  },
+  {
+   "id": "lavaworm_spike_roots",
+   "nome": "Lavaworm Spike Roots",
+   "nosso": 147,
+   "real": 600,
+   "razao": 0.245
+  },
+  {
+   "id": "warmasters_wristguards",
+   "nome": "Warmaster's Wristguards",
+   "nosso": 48,
+   "real": 200,
+   "razao": 0.24
+  },
+  {
+   "id": "deepworm_spikes",
+   "nome": "Deepworm Spikes",
+   "nosso": 192,
+   "real": 800,
+   "razao": 0.24
+  },
+  {
+   "id": "fig_leaf",
+   "nome": "Fig Leaf",
+   "nosso": 48,
+   "real": 200,
+   "razao": 0.24
+  },
+  {
+   "id": "silken_bookmark",
+   "nome": "Silken Bookmark",
+   "nosso": 300,
+   "real": 1300,
+   "razao": 0.23076923076923078
+  },
+  {
+   "id": "pool_of_chitinous_glue",
+   "nome": "Pool of Chitinous Glue",
+   "nosso": 108,
+   "real": 480,
+   "razao": 0.225
+  },
+  {
+   "id": "wimp_tooth_chain",
+   "nome": "Wimp Tooth Chain",
+   "nosso": 27,
+   "real": 120,
+   "razao": 0.225
+  },
+  {
+   "id": "bonelord_shield",
+   "nome": "Bonelord Shield",
+   "nosso": 270,
+   "real": 1200,
+   "razao": 0.225
+  },
+  {
+   "id": "deepworm_jaws",
+   "nome": "Deepworm Jaws",
+   "nosso": 108,
+   "real": 500,
+   "razao": 0.216
+  },
+  {
+   "id": "crystal_pedestal_cyan",
+   "nome": "Crystal Pedestal (Cyan)",
+   "nosso": 108,
+   "real": 500,
+   "razao": 0.216
+  },
+  {
+   "id": "lavafungus_head",
+   "nome": "Lavafungus Head",
+   "nosso": 192,
+   "real": 900,
+   "razao": 0.21333333333333335
+  },
+  {
+   "id": "coral_branch",
+   "nome": "Coral Branch",
+   "nosso": 75,
+   "real": 360,
+   "razao": 0.20833333333333334
+  },
+  {
+   "id": "girtablilu_warrior_carapace",
+   "nome": "Girtablilu Warrior Carapace",
+   "nosso": 108,
+   "real": 520,
+   "razao": 0.2076923076923077
+  },
+  {
+   "id": "inkwell_black",
+   "nome": "Inkwell (Black)",
+   "nosso": 147,
+   "real": 720,
+   "razao": 0.20416666666666666
+  },
+  {
+   "id": "magma_monocle",
+   "nome": "Magma Monocle",
+   "nosso": 510,
+   "real": 2500,
+   "razao": 0.204
+  },
+  {
+   "id": "infernal_robe",
+   "nome": "Infernal Robe",
+   "nosso": 243,
+   "real": 1200,
+   "razao": 0.2025
+  },
+  {
+   "id": "sling_herb",
+   "nome": "Sling Herb",
+   "nosso": 2,
+   "real": 10,
+   "razao": 0.2
+  },
+  {
+   "id": "grave_flower",
+   "nome": "Grave Flower",
+   "nosso": 5,
+   "real": 25,
+   "razao": 0.2
+  },
+  {
+   "id": "iron_helmet",
+   "nome": "Iron Helmet",
+   "nosso": 30,
+   "real": 150,
+   "razao": 0.2
+  },
+  {
+   "id": "chasm_spawn_abdomen",
+   "nome": "Chasm Spawn Abdomen",
+   "nosso": 48,
+   "real": 240,
+   "razao": 0.2
+  },
+  {
+   "id": "cobra_tongue",
+   "nome": "Cobra Tongue",
+   "nosso": 3,
+   "real": 15,
+   "razao": 0.2
+  },
+  {
+   "id": "wardragon_claw",
+   "nome": "Wardragon Claw",
+   "nosso": 108,
+   "real": 550,
+   "razao": 0.19636363636363635
+  },
+  {
+   "id": "seeds",
+   "nome": "Seeds",
+   "nosso": 27,
+   "real": 150,
+   "razao": 0.18
+  },
+  {
+   "id": "shimmering_beetles",
+   "nome": "Shimmering Beetles",
+   "nosso": 27,
+   "real": 150,
+   "razao": 0.18
+  },
+  {
+   "id": "molten_dragon_essence",
+   "nome": "Molten Dragon Essence",
+   "nosso": 147,
+   "real": 840,
+   "razao": 0.175
+  },
+  {
+   "id": "deeptags",
+   "nome": "Deeptags",
+   "nosso": 48,
+   "real": 290,
+   "razao": 0.16551724137931034
+  },
+  {
+   "id": "calopteryx_cape",
+   "nome": "Calopteryx Cape",
+   "nosso": 2475,
+   "real": 15000,
+   "razao": 0.165
+  },
+  {
+   "id": "lime_tart",
+   "nome": "Lime Tart",
+   "nosso": 300,
+   "real": 1870,
+   "razao": 0.16042780748663102
+  },
+  {
+   "id": "roots",
+   "nome": "Roots",
+   "nosso": 192,
+   "real": 1200,
+   "razao": 0.16
+  },
+  {
+   "id": "skull_shatterer",
+   "nome": "Skull Shatterer",
+   "nosso": 27,
+   "real": 170,
+   "razao": 0.1588235294117647
+  },
+  {
+   "id": "carapace_shield",
+   "nome": "Carapace Shield",
+   "nosso": 4995,
+   "real": 32000,
+   "razao": 0.15609375
+  },
+  {
+   "id": "rare_earth",
+   "nome": "Rare Earth",
+   "nosso": 12,
+   "real": 80,
+   "razao": 0.15
+  },
+  {
+   "id": "geomancers_robe",
+   "nome": "Geomancer's Robe",
+   "nosso": 12,
+   "real": 80,
+   "razao": 0.15
+  },
+  {
+   "id": "summer_dress",
+   "nome": "Summer Dress",
+   "nosso": 225,
+   "real": 1500,
+   "razao": 0.15
+  },
+  {
+   "id": "key_to_the_drowned_library",
+   "nome": "Key to the Drowned Library",
+   "nosso": 48,
+   "real": 330,
+   "razao": 0.14545454545454545
+  },
+  {
+   "id": "sineater_wing",
+   "nome": "Sineater Wing",
+   "nosso": 300,
+   "real": 2100,
+   "razao": 0.14285714285714285
+  },
+  {
+   "id": "distorted_heart",
+   "nome": "Distorted Heart",
+   "nosso": 300,
+   "real": 2100,
+   "razao": 0.14285714285714285
+  },
+  {
+   "id": "bonecarving_knife",
+   "nome": "Bonecarving Knife",
+   "nosso": 27,
+   "real": 190,
+   "razao": 0.14210526315789473
+  },
+  {
+   "id": "halfeaten_brain",
+   "nome": "Half-Eaten Brain",
+   "nosso": 12,
+   "real": 85,
+   "razao": 0.1411764705882353
+  },
+  {
+   "id": "bulltaur_hoof",
+   "nome": "Bulltaur Hoof",
+   "nosso": 75,
+   "real": 540,
+   "razao": 0.1388888888888889
+  },
+  {
+   "id": "werehyaena_talisman",
+   "nome": "Werehyaena Talisman",
+   "nosso": 48,
+   "real": 350,
+   "razao": 0.13714285714285715
+  },
+  {
+   "id": "tiger_eye",
+   "nome": "Tiger Eye",
+   "nosso": 48,
+   "real": 350,
+   "razao": 0.13714285714285715
+  },
+  {
+   "id": "twiceslicer",
+   "nome": "Twiceslicer",
+   "nosso": 3828,
+   "real": 28000,
+   "razao": 0.1367142857142857
+  },
+  {
+   "id": "mycological_bow",
+   "nome": "Mycological Bow",
+   "nosso": 4662,
+   "real": 35000,
+   "razao": 0.1332
+  },
+  {
+   "id": "small_flask_of_eyedrops",
+   "nome": "Small Flask of Eyedrops",
+   "nosso": 12,
+   "real": 95,
+   "razao": 0.12631578947368421
+  },
+  {
+   "id": "rift_shield",
+   "nome": "Rift Shield",
+   "nosso": 6150,
+   "real": 50000,
+   "razao": 0.123
+  },
+  {
+   "id": "mould_robe",
+   "nome": "Mould Robe",
+   "nosso": 147,
+   "real": 1200,
+   "razao": 0.1225
+  },
+  {
+   "id": "quara_pincers",
+   "nome": "Quara Pincers",
+   "nosso": 48,
+   "real": 410,
+   "razao": 0.11707317073170732
+  },
+  {
+   "id": "infernal_heart",
+   "nome": "Infernal Heart",
+   "nosso": 243,
+   "real": 2100,
+   "razao": 0.11571428571428571
+  },
+  {
+   "id": "mutated_bat_ear",
+   "nome": "Mutated Bat Ear",
+   "nosso": 48,
+   "real": 420,
+   "razao": 0.11428571428571428
+  },
+  {
+   "id": "jade_hammer",
+   "nome": "Jade Hammer",
+   "nosso": 2850,
+   "real": 25000,
+   "razao": 0.114
+  },
+  {
+   "id": "petrified_scream",
+   "nome": "Petrified Scream",
+   "nosso": 27,
+   "real": 250,
+   "razao": 0.108
+  },
+  {
+   "id": "orc_tusk",
+   "nome": "Orc Tusk",
+   "nosso": 75,
+   "real": 700,
+   "razao": 0.10714285714285714
+  },
+  {
+   "id": "spidris_mandible",
+   "nome": "Spidris Mandible",
+   "nosso": 48,
+   "real": 450,
+   "razao": 0.10666666666666667
+  },
+  {
+   "id": "batwing_hat",
+   "nome": "Batwing Hat",
+   "nosso": 840,
+   "real": 8000,
+   "razao": 0.105
+  },
+  {
+   "id": "wand_of_everblazing",
+   "nome": "Wand of Everblazing",
+   "nosso": 624,
+   "real": 6000,
+   "razao": 0.104
+  },
+  {
+   "id": "rift_bow",
+   "nome": "Rift Bow",
+   "nosso": 4662,
+   "real": 45000,
+   "razao": 0.1036
+  },
+  {
+   "id": "small_notebook",
+   "nome": "Small Notebook",
+   "nosso": 48,
+   "real": 480,
+   "razao": 0.1
+  },
+  {
+   "id": "worm_dirt",
+   "nome": "Lump of Dirt",
+   "nosso": 1,
+   "real": 10,
+   "razao": 0.1
+  },
+  {
+   "id": "glob_of_tar",
+   "nome": "Glob of Tar",
+   "nosso": 3,
+   "real": 30,
+   "razao": 0.1
+  },
+  {
+   "id": "stone_wing",
+   "nome": "Stone Wing",
+   "nosso": 12,
+   "real": 120,
+   "razao": 0.1
+  },
+  {
+   "id": "pelvis_bone",
+   "nome": "Pelvis Bone",
+   "nosso": 3,
+   "real": 30,
+   "razao": 0.1
+  },
+  {
+   "id": "gear_wheel",
+   "nome": "Gear Wheel",
+   "nosso": 48,
+   "real": 500,
+   "razao": 0.096
+  },
+  {
+   "id": "bed_of_nails",
+   "nome": "Bed of Nails",
+   "nosso": 48,
+   "real": 500,
+   "razao": 0.096
+  },
+  {
+   "id": "rift_lance",
+   "nome": "Rift Lance",
+   "nosso": 2850,
+   "real": 30000,
+   "razao": 0.095
+  },
+  {
+   "id": "battle_stone",
+   "nome": "Battle Stone",
+   "nosso": 27,
+   "real": 290,
+   "razao": 0.09310344827586207
+  },
+  {
+   "id": "swarmer_antenna",
+   "nome": "Swarmer Antenna",
+   "nosso": 12,
+   "real": 130,
+   "razao": 0.09230769230769231
+  },
+  {
+   "id": "vibrant_heart",
+   "nome": "Vibrant Heart",
+   "nosso": 192,
+   "real": 2100,
+   "razao": 0.09142857142857143
+  },
+  {
+   "id": "capricious_heart",
+   "nome": "Capricious Heart",
+   "nosso": 192,
+   "real": 2100,
+   "razao": 0.09142857142857143
+  },
+  {
+   "id": "vibrant_robe",
+   "nome": "Vibrant Robe",
+   "nosso": 108,
+   "real": 1200,
+   "razao": 0.09
+  },
+  {
+   "id": "rod_creature_product",
+   "nome": "Rod (Creature Product)",
+   "nosso": 192,
+   "real": 2200,
+   "razao": 0.08727272727272728
+  },
+  {
+   "id": "dowser",
+   "nome": "Dowser",
+   "nosso": 3,
+   "real": 35,
+   "razao": 0.08571428571428572
+  },
+  {
+   "id": "gemmed_figurine",
+   "nome": "Gemmed Figurine",
+   "nosso": 300,
+   "real": 3500,
+   "razao": 0.08571428571428572
+  },
+  {
+   "id": "lost_bracers",
+   "nome": "Lost Bracers",
+   "nosso": 12,
+   "real": 140,
+   "razao": 0.08571428571428572
+  },
+  {
+   "id": "slimy_leaf_tentacle",
+   "nome": "Slimy Leaf Tentacle",
+   "nosso": 27,
+   "real": 320,
+   "razao": 0.084375
+  },
+  {
+   "id": "flotsam",
+   "nome": "Flotsam",
+   "nosso": 27,
+   "real": 330,
+   "razao": 0.08181818181818182
+  },
+  {
+   "id": "crystal_of_power",
+   "nome": "Crystal of Power",
+   "nosso": 243,
+   "real": 3000,
+   "razao": 0.081
+  },
+  {
+   "id": "rainbow_trout",
+   "nome": "Rainbow Trout",
+   "nosso": 8,
+   "real": 100,
+   "razao": 0.08
+  },
+  {
+   "id": "hive_scythe",
+   "nome": "Hive Scythe",
+   "nosso": 1326,
+   "real": 17000,
+   "razao": 0.078
+  },
+  {
+   "id": "quara_eye",
+   "nome": "Quara Eye",
+   "nosso": 27,
+   "real": 350,
+   "razao": 0.07714285714285714
+  },
+  {
+   "id": "ancient_coin",
+   "nome": "Ancient Coin",
+   "nosso": 27,
+   "real": 350,
+   "razao": 0.07714285714285714
+  },
+  {
+   "id": "holy_ash",
+   "nome": "Holy Ash",
+   "nosso": 12,
+   "real": 160,
+   "razao": 0.075
+  },
+  {
+   "id": "spellbook_of_enlightenment",
+   "nome": "Spellbook of Enlightenment",
+   "nosso": 298,
+   "real": 4000,
+   "razao": 0.0745
+  },
+  {
+   "id": "cobra_crest",
+   "nome": "Cobra Crest",
+   "nosso": 48,
+   "real": 650,
+   "razao": 0.07384615384615385
+  },
+  {
+   "id": "guardian_halberd",
+   "nome": "Guardian Halberd",
+   "nosso": 800,
+   "real": 11000,
+   "razao": 0.07272727272727272
+  },
+  {
+   "id": "naga_armring",
+   "nome": "Naga Armring",
+   "nosso": 27,
+   "real": 390,
+   "razao": 0.06923076923076923
+  },
+  {
+   "id": "wood_mushroom",
+   "nome": "Wood Mushroom",
+   "nosso": 1,
+   "real": 15,
+   "razao": 0.06666666666666667
+  },
+  {
+   "id": "rift_crossbow",
+   "nome": "Rift Crossbow",
+   "nosso": 2958,
+   "real": 45000,
+   "razao": 0.06573333333333334
+  },
+  {
+   "id": "spellbook_of_warding",
+   "nome": "Spellbook of Warding",
+   "nosso": 522,
+   "real": 8000,
+   "razao": 0.06525
+  },
+  {
+   "id": "giant_shimmering_pearl_brown",
+   "nome": "Giant Shimmering Pearl (Brown)",
+   "nosso": 192,
+   "real": 3000,
+   "razao": 0.064
+  },
+  {
+   "id": "lavaworm_spikes",
+   "nome": "Lavaworm Spikes",
+   "nosso": 48,
+   "real": 750,
+   "razao": 0.064
+  },
+  {
+   "id": "ruthless_axe",
+   "nome": "Ruthless Axe",
+   "nosso": 2850,
+   "real": 45000,
+   "razao": 0.06333333333333334
+  },
+  {
+   "id": "waspoid_wing",
+   "nome": "Waspoid Wing",
+   "nosso": 12,
+   "real": 190,
+   "razao": 0.06315789473684211
+  },
+  {
+   "id": "wafer_paper_flower",
+   "nome": "Wafer Paper Flower",
+   "nosso": 147,
+   "real": 2350,
+   "razao": 0.0625531914893617
+  },
+  {
+   "id": "spiritualist_gem",
+   "nome": "Spiritualist Gem",
+   "nosso": 300,
+   "real": 5000,
+   "razao": 0.06
+  },
+  {
+   "id": "northern_pike",
+   "nome": "Northern Pike",
+   "nosso": 6,
+   "real": 100,
+   "razao": 0.06
+  },
+  {
+   "id": "heavy_trident",
+   "nome": "Heavy Trident",
+   "nosso": 120,
+   "real": 2000,
+   "razao": 0.06
+  },
+  {
+   "id": "strange_substance",
+   "nome": "Strange Substance",
+   "nosso": 48,
+   "real": 810,
+   "razao": 0.05925925925925926
+  },
+  {
+   "id": "worm_sponge",
+   "nome": "Worm Sponge",
+   "nosso": 243,
+   "real": 4200,
+   "razao": 0.05785714285714286
+  },
+  {
+   "id": "apron",
+   "nome": "Apron",
+   "nosso": 75,
+   "real": 1300,
+   "razao": 0.057692307692307696
+  },
+  {
+   "id": "bony_tail",
+   "nome": "Bony Tail",
+   "nosso": 12,
+   "real": 210,
+   "razao": 0.05714285714285714
+  },
+  {
+   "id": "basalt_fetish",
+   "nome": "Basalt Fetish",
+   "nosso": 12,
+   "real": 210,
+   "razao": 0.05714285714285714
+  },
+  {
+   "id": "dragolisk_poison_gland",
+   "nome": "Dragolisk Poison Gland",
+   "nosso": 27,
+   "real": 475,
+   "razao": 0.056842105263157895
+  },
+  {
+   "id": "chasm_spawn_head",
+   "nome": "Chasm Spawn Head",
+   "nosso": 48,
+   "real": 850,
+   "razao": 0.05647058823529412
+  },
+  {
+   "id": "dark_obsidian_splinter",
+   "nome": "Dark Obsidian Splinter",
+   "nosso": 243,
+   "real": 4400,
+   "razao": 0.05522727272727273
+  },
+  {
+   "id": "churro_heart",
+   "nome": "Churro Heart",
+   "nosso": 147,
+   "real": 2680,
+   "razao": 0.054850746268656714
+  },
+  {
+   "id": "crystal_of_focus",
+   "nome": "Crystal of Focus",
+   "nosso": 108,
+   "real": 2000,
+   "razao": 0.054
+  },
+  {
+   "id": "deepling_squelcher",
+   "nome": "Deepling Squelcher",
+   "nosso": 378,
+   "real": 7000,
+   "razao": 0.054
+  },
+  {
+   "id": "beijinho",
+   "nome": "Beijinho",
+   "nosso": 147,
+   "real": 2780,
+   "razao": 0.05287769784172662
+  },
+  {
+   "id": "broodrider_saddle",
+   "nome": "Broodrider Saddle",
+   "nosso": 147,
+   "real": 2800,
+   "razao": 0.0525
+  },
+  {
+   "id": "basalt_core",
+   "nome": "Basalt Core",
+   "nosso": 300,
+   "real": 5800,
+   "razao": 0.05172413793103448
+  },
+  {
+   "id": "book_orange",
+   "nome": "Book (Orange)",
+   "nosso": 3,
+   "real": 60,
+   "razao": 0.05
+  },
+  {
+   "id": "jaws",
+   "nome": "Jaws",
+   "nosso": 192,
+   "real": 3900,
+   "razao": 0.04923076923076923
+  },
+  {
+   "id": "hazardous_robe",
+   "nome": "Hazardous Robe",
+   "nosso": 147,
+   "real": 3000,
+   "razao": 0.049
+  },
+  {
+   "id": "alloy_legs",
+   "nome": "Alloy Legs",
+   "nosso": 510,
+   "real": 11000,
+   "razao": 0.046363636363636364
+  },
+  {
+   "id": "metal_spats",
+   "nome": "Metal Spats",
+   "nosso": 90,
+   "real": 2000,
+   "razao": 0.045
+  },
+  {
+   "id": "frozen_lightning",
+   "nome": "Frozen Lightning",
+   "nosso": 12,
+   "real": 270,
+   "razao": 0.044444444444444446
+  },
+  {
+   "id": "bloody_edge",
+   "nome": "Bloody Edge",
+   "nosso": 1326,
+   "real": 30000,
+   "razao": 0.0442
+  },
+  {
+   "id": "lavaworm_jaws",
+   "nome": "Lavaworm Jaws",
+   "nosso": 48,
+   "real": 1100,
+   "razao": 0.04363636363636364
+  },
+  {
+   "id": "encrypted_notes",
+   "nome": "Encrypted Notes",
+   "nosso": 27,
+   "real": 620,
+   "razao": 0.043548387096774194
+  },
+  {
+   "id": "spellsingers_seal",
+   "nome": "Spellsinger's Seal",
+   "nosso": 12,
+   "real": 280,
+   "razao": 0.04285714285714286
+  },
+  {
+   "id": "chaos_mace",
+   "nome": "Chaos Mace",
+   "nosso": 378,
+   "real": 9000,
+   "razao": 0.042
+  },
+  {
+   "id": "metal_bat",
+   "nome": "Metal Bat",
+   "nosso": 378,
+   "real": 9000,
+   "razao": 0.042
+  },
+  {
+   "id": "spellbook_of_mind_control",
+   "nome": "Spellbook of Mind Control",
+   "nosso": 522,
+   "real": 13000,
+   "razao": 0.04015384615384615
+  },
+  {
+   "id": "hive_bow",
+   "nome": "Hive Bow",
+   "nosso": 1122,
+   "real": 28000,
+   "razao": 0.04007142857142857
+  },
+  {
+   "id": "nettle_blossom",
+   "nome": "Nettle Blossom",
+   "nosso": 3,
+   "real": 75,
+   "razao": 0.04
+  },
+  {
+   "id": "pastry_dragon",
+   "nome": "Pastry Dragon",
+   "nosso": 300,
+   "real": 7500,
+   "razao": 0.04
+  },
+  {
+   "id": "distorted_robe",
+   "nome": "Distorted Robe",
+   "nosso": 48,
+   "real": 1200,
+   "razao": 0.04
+  },
+  {
+   "id": "capricious_robe",
+   "nome": "Capricious Robe",
+   "nosso": 48,
+   "real": 1200,
+   "razao": 0.04
+  },
+  {
+   "id": "magic_sulphur",
+   "nome": "Magic Sulphur",
+   "nosso": 300,
+   "real": 8000,
+   "razao": 0.0375
+  },
+  {
+   "id": "vein_of_ore",
+   "nome": "Vein of Ore",
+   "nosso": 12,
+   "real": 330,
+   "razao": 0.03636363636363636
+  },
+  {
+   "id": "orcish_gear",
+   "nome": "Orcish Gear",
+   "nosso": 3,
+   "real": 85,
+   "razao": 0.03529411764705882
+  },
+  {
+   "id": "diremaw_brainpan",
+   "nome": "Diremaw Brainpan",
+   "nosso": 12,
+   "real": 350,
+   "razao": 0.03428571428571429
+  },
+  {
+   "id": "makara_fin",
+   "nome": "Makara Fin",
+   "nosso": 12,
+   "real": 350,
+   "razao": 0.03428571428571429
+  },
+  {
+   "id": "gorger_antlers",
+   "nome": "Gorger Antlers",
+   "nosso": 75,
+   "real": 2250,
+   "razao": 0.03333333333333333
+  },
+  {
+   "id": "deepling_breaktime_snack",
+   "nome": "Deepling Breaktime Snack",
+   "nosso": 3,
+   "real": 90,
+   "razao": 0.03333333333333333
+  },
+  {
+   "id": "green_perch",
+   "nome": "Green Perch",
+   "nosso": 3,
+   "real": 100,
+   "razao": 0.03
+  },
+  {
+   "id": "dream_blossom_staff",
+   "nome": "Dream Blossom Staff",
+   "nosso": 150,
+   "real": 5000,
+   "razao": 0.03
+  },
+  {
+   "id": "hazardous_heart",
+   "nome": "Hazardous Heart",
+   "nosso": 147,
+   "real": 5000,
+   "razao": 0.0294
+  },
+  {
+   "id": "kollos_shell",
+   "nome": "Kollos Shell",
+   "nosso": 12,
+   "real": 420,
+   "razao": 0.02857142857142857
+  },
+  {
+   "id": "idol_of_the_forge",
+   "nome": "Idol of the Forge",
+   "nosso": 27,
+   "real": 950,
+   "razao": 0.028421052631578948
+  },
+  {
+   "id": "skull_helmet",
+   "nome": "Skull Helmet",
+   "nosso": 1125,
+   "real": 40000,
+   "razao": 0.028125
+  },
+  {
+   "id": "blue_rose",
+   "nome": "Blue Rose",
+   "nosso": 7,
+   "real": 250,
+   "razao": 0.028
+  },
+  {
+   "id": "luminous_orb",
+   "nome": "Luminous Orb",
+   "nosso": 27,
+   "real": 1000,
+   "razao": 0.027
+  },
+  {
+   "id": "hellspawn_tail",
+   "nome": "Hellspawn Tail",
+   "nosso": 12,
+   "real": 475,
+   "razao": 0.02526315789473684
+  },
+  {
+   "id": "giant_shimmering_pearl_green",
+   "nome": "Giant Shimmering Pearl (Green)",
+   "nosso": 75,
+   "real": 3000,
+   "razao": 0.025
+  },
+  {
+   "id": "helmet_of_the_lost",
+   "nome": "Helmet of the Lost",
+   "nosso": 50,
+   "real": 2000,
+   "razao": 0.025
+  },
+  {
+   "id": "slimy_leg",
+   "nome": "Slimy Leg",
+   "nosso": 108,
+   "real": 4500,
+   "razao": 0.024
+  },
+  {
+   "id": "staff_piece",
+   "nome": "Staff Piece",
+   "nosso": 12,
+   "real": 560,
+   "razao": 0.02142857142857143
+  },
+  {
+   "id": "magma_clump",
+   "nome": "Magma Clump",
+   "nosso": 12,
+   "real": 570,
+   "razao": 0.021052631578947368
+  },
+  {
+   "id": "crawlers_essence",
+   "nome": "Crawler's Essence",
+   "nosso": 75,
+   "real": 3700,
+   "razao": 0.02027027027027027
+  },
+  {
+   "id": "goat_grass",
+   "nome": "Goat Grass",
+   "nosso": 1,
+   "real": 50,
+   "razao": 0.02
+  },
+  {
+   "id": "eye_of_a_deepling",
+   "nome": "Eye of a Deepling",
+   "nosso": 3,
+   "real": 150,
+   "razao": 0.02
+  },
+  {
+   "id": "rotten_roots",
+   "nome": "Rotten Roots",
+   "nosso": 75,
+   "real": 3800,
+   "razao": 0.019736842105263157
+  },
+  {
+   "id": "darklight_basalt_chunk",
+   "nome": "Darklight Basalt Chunk",
+   "nosso": 75,
+   "real": 3800,
+   "razao": 0.019736842105263157
+  },
+  {
+   "id": "abyss_hammer",
+   "nome": "Abyss Hammer",
+   "nosso": 378,
+   "real": 20000,
+   "razao": 0.0189
+  },
+  {
+   "id": "frost_giant_pelt",
+   "nome": "Frost Giant Pelt",
+   "nosso": 3,
+   "real": 160,
+   "razao": 0.01875
+  },
+  {
+   "id": "darklight_core_object",
+   "nome": "Darklight Core (Object)",
+   "nosso": 75,
+   "real": 4100,
+   "razao": 0.018292682926829267
+  },
+  {
+   "id": "grasshopper_legs",
+   "nome": "Grasshopper Legs",
+   "nosso": 260,
+   "real": 15000,
+   "razao": 0.017333333333333333
+  },
+  {
+   "id": "deer_trophy",
+   "nome": "Deer Trophy",
+   "nosso": 48,
+   "real": 3000,
+   "razao": 0.016
+  },
+  {
+   "id": "lion_cloak_patch",
+   "nome": "Lion Cloak Patch",
+   "nosso": 3,
+   "real": 190,
+   "razao": 0.015789473684210527
+  },
+  {
+   "id": "dracoyle_statue",
+   "nome": "Dracoyle Statue",
+   "nosso": 75,
+   "real": 5000,
+   "razao": 0.015
+  },
+  {
+   "id": "fairy_wings",
+   "nome": "Fairy Wings",
+   "nosso": 3,
+   "real": 200,
+   "razao": 0.015
+  },
+  {
+   "id": "bright_bell",
+   "nome": "Bright Bell",
+   "nosso": 3,
+   "real": 220,
+   "razao": 0.013636363636363636
+  },
+  {
+   "id": "darklight_matter_object",
+   "nome": "Darklight Matter (Object)",
+   "nosso": 75,
+   "real": 5500,
+   "razao": 0.013636363636363636
+  },
+  {
+   "id": "orange_mushroom",
+   "nome": "Orange Mushroom",
+   "nosso": 2,
+   "real": 150,
+   "razao": 0.013333333333333334
+  },
+  {
+   "id": "badger_boots",
+   "nome": "Badger Boots",
+   "nosso": 90,
+   "real": 7500,
+   "razao": 0.012
+  },
+  {
+   "id": "dark_bell",
+   "nome": "Dark Bell",
+   "nosso": 3,
+   "real": 250,
+   "razao": 0.012
+  },
+  {
+   "id": "quill",
+   "nome": "Quill",
+   "nosso": 12,
+   "real": 1100,
+   "razao": 0.01090909090909091
+  },
+  {
+   "id": "buckle",
+   "nome": "Buckle",
+   "nosso": 75,
+   "real": 7000,
+   "razao": 0.010714285714285714
+  },
+  {
+   "id": "brigadeiro",
+   "nome": "Brigadeiro",
+   "nosso": 27,
+   "real": 2640,
+   "razao": 0.010227272727272727
+  },
+  {
+   "id": "energy_ball",
+   "nome": "Energy Ball",
+   "nosso": 3,
+   "real": 300,
+   "razao": 0.01
+  },
+  {
+   "id": "makara_tongue",
+   "nome": "Makara Tongue",
+   "nosso": 3,
+   "real": 320,
+   "razao": 0.009375
+  },
+  {
+   "id": "collar_of_orange_plasma",
+   "nome": "Collar of Orange Plasma",
+   "nosso": 55,
+   "real": 6000,
+   "razao": 0.009166666666666667
+  },
+  {
+   "id": "glowing_rune",
+   "nome": "Glowing Rune",
+   "nosso": 3,
+   "real": 350,
+   "razao": 0.008571428571428572
+  },
+  {
+   "id": "essence_of_a_bad_dream",
+   "nome": "Essence of a Bad Dream",
+   "nosso": 3,
+   "real": 360,
+   "razao": 0.008333333333333333
+  },
+  {
+   "id": "hand",
+   "nome": "Hand",
+   "nosso": 12,
+   "real": 1450,
+   "razao": 0.008275862068965517
+  },
+  {
+   "id": "silencer_claws",
+   "nome": "Silencer Claws",
+   "nosso": 3,
+   "real": 390,
+   "razao": 0.007692307692307693
+  },
+  {
+   "id": "frazzle_skin",
+   "nome": "Frazzle Skin",
+   "nosso": 3,
+   "real": 400,
+   "razao": 0.0075
+  },
+  {
+   "id": "streaked_devourer_maw",
+   "nome": "Streaked Devourer Maw",
+   "nosso": 3,
+   "real": 400,
+   "razao": 0.0075
+  },
+  {
+   "id": "piece_of_hell_steel",
+   "nome": "Piece of Hell Steel",
+   "nosso": 3,
+   "real": 500,
+   "razao": 0.006
+  },
+  {
+   "id": "mastermind_potion",
+   "nome": "Mastermind Potion",
+   "nosso": 3,
+   "real": 500,
+   "razao": 0.006
+  },
+  {
+   "id": "diabolic_skull",
+   "nome": "Diabolic Skull",
+   "nosso": 108,
+   "real": 19000,
+   "razao": 0.00568421052631579
+  },
+  {
+   "id": "deepworm_spike_roots",
+   "nome": "Deepworm Spike Roots",
+   "nosso": 3,
+   "real": 650,
+   "razao": 0.004615384615384616
+  },
+  {
+   "id": "dragolisk_eye",
+   "nome": "Dragolisk Eye",
+   "nosso": 3,
+   "real": 690,
+   "razao": 0.004347826086956522
+  },
+  {
+   "id": "head_many_faces",
+   "nome": "Head (Many Faces)",
+   "nosso": 12,
+   "real": 3200,
+   "razao": 0.00375
+  },
+  {
+   "id": "black_skull_item",
+   "nome": "Black Skull (Item)",
+   "nosso": 12,
+   "real": 4000,
+   "razao": 0.003
+  },
+  {
+   "id": "zaoan_helmet",
+   "nome": "Zaoan Helmet",
+   "nosso": 135,
+   "real": 45000,
+   "razao": 0.003
+  },
+  {
+   "id": "ring_of_orange_plasma",
+   "nome": "Ring of Orange Plasma",
+   "nosso": 20,
+   "real": 8000,
+   "razao": 0.0025
+  },
+  {
+   "id": "huge_shell",
+   "nome": "Huge Shell",
+   "nosso": 27,
+   "real": 15000,
+   "razao": 0.0018
+  },
+  {
+   "id": "cats_paw",
+   "nome": "Cat's Paw",
+   "nosso": 3,
+   "real": 2000,
+   "razao": 0.0015
+  },
+  {
+   "id": "longing_eyes",
+   "nome": "Longing Eyes",
+   "nosso": 12,
+   "real": 8000,
+   "razao": 0.0015
+  },
+  {
+   "id": "mould_heart",
+   "nome": "Mould Heart",
+   "nosso": 3,
+   "real": 2100,
+   "razao": 0.0014285714285714286
+  },
+  {
+   "id": "wad_of_fairy_floss",
+   "nome": "Wad of Fairy Floss",
+   "nosso": 3,
+   "real": 2910,
+   "razao": 0.0010309278350515464
+  },
+  {
+   "id": "piece_of_draconian_steel",
+   "nome": "Piece of Draconian Steel",
+   "nosso": 3,
+   "real": 3000,
+   "razao": 0.001
+  },
+  {
+   "id": "basalt_crumbs",
+   "nome": "Basalt Crumbs",
+   "nosso": 3,
+   "real": 3000,
+   "razao": 0.001
+  },
+  {
+   "id": "head_brachiodemon",
+   "nome": "Head (Brachiodemon)",
+   "nosso": 3,
+   "real": 3500,
+   "razao": 0.0008571428571428571
+  },
+  {
+   "id": "gruesome_fan",
+   "nome": "Gruesome Fan",
+   "nosso": 12,
+   "real": 15000,
+   "razao": 0.0008
+  },
+  {
+   "id": "demon_trophy",
+   "nome": "Demon Trophy",
+   "nosso": 27,
+   "real": 40000,
+   "razao": 0.000675
+  },
+  {
+   "id": "decayed_finger_bone",
+   "nome": "Decayed Finger Bone",
+   "nosso": 3,
+   "real": 5100,
+   "razao": 0.000588235294117647
+  },
+  {
+   "id": "bonebeast_trophy",
+   "nome": "Bonebeast Trophy",
+   "nosso": 3,
+   "real": 6000,
+   "razao": 0.0005
+  },
+  {
+   "id": "mandrake",
+   "nome": "Mandrake",
+   "nosso": 2,
+   "real": 5000,
+   "razao": 0.0004
+  },
+  {
+   "id": "piece_of_royal_steel",
+   "nome": "Piece of Royal Steel",
+   "nosso": 3,
+   "real": 10000,
+   "razao": 0.0003
+  },
+  {
+   "id": "chitinous_mouth_baron_from_below",
+   "nome": "Chitinous Mouth (Baron from Below)",
+   "nosso": 3,
+   "real": 10000,
+   "razao": 0.0003
+  },
+  {
+   "id": "sea_horse_figurine",
+   "nome": "Sea Horse Figurine",
+   "nosso": 12,
+   "real": 42000,
+   "razao": 0.00028571428571428574
+  },
+  {
+   "id": "goblet_of_gloom",
+   "nome": "Goblet of Gloom",
+   "nosso": 3,
+   "real": 12000,
+   "razao": 0.00025
+  },
+  {
+   "id": "huge_chunk_of_crude_iron",
+   "nome": "Huge Chunk of Crude Iron",
+   "nosso": 3,
+   "real": 15000,
+   "razao": 0.0002
   }
  ],
- "semValor": [],
- "semPagina": [],
- "conferidos": 4
+ "semValor": [
+  "sai (\"Sai\") — wiki sem npcvalue"
+ ],
+ "semPagina": [
+  "cluster_of_solace (\"Cluster Of Solace\")"
+ ],
+ "conferidos": 862
 }
