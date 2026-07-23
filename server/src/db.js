@@ -43,6 +43,27 @@ export async function selectLatest(table, filters, orderCol) {
   return rows.length ? rows[0] : null;
 }
 
+// SELECT com uma query PostgREST JÁ MONTADA (filtros com operador — gte, lt —,
+// order, limit, select). Os outros helpers só fazem igualdade (eq); este cobre
+// o resto sem ter que generalizar o qs(). Ex.: contar quem está online por
+// `updated_at=gte.<iso>`.
+export async function selectRaw(table, rawQuery) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${rawQuery}`, { headers: headers() });
+  if (!res.ok) throw new Error(`selectRaw ${table} falhou: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+// Conta linhas por uma query PostgREST montada, SEM baixar as linhas (HEAD +
+// Prefer: count=exact devolve o total no header Content-Range: "0-0/NN"). Usado
+// pro contador de "online" — número puro, não a lista.
+export async function countWhere(table, rawFilter) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${rawFilter}&select=user_id`,
+    { method: 'HEAD', headers: headers({ Prefer: 'count=exact', Range: '0-0' }) });
+  if (!res.ok && res.status !== 206) throw new Error(`countWhere ${table} falhou: ${res.status}`);
+  const total = (res.headers.get('content-range') || '').split('/')[1];
+  return total && total !== '*' ? Number(total) : 0;
+}
+
 // SELECT com ORDER BY/LIMIT (listings do Market, highscores) — mesmos
 // filtros de igualdade dos outros helpers, mais `order`/`limit` na query
 // string. `filters` pode ser {} (sem filtro nenhum, ex.: highscores globais).

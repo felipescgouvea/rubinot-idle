@@ -63,7 +63,7 @@ import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
 import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
-import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow } from './db.js';
+import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow, selectRaw, countWhere } from './db.js';
 import { iniciarRealtime } from './realtime.js';
 import { validSlot } from './slots.js';
 
@@ -209,6 +209,27 @@ const server = http.createServer(async (req, res) => {
 
     if (url.pathname === '/health') {
       return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-6' });
+    }
+
+    // Prova social ao vivo: quantos jogadores estão online agora + o topo do
+    // ranking, num payload leve pro cabeçalho (e, no futuro, pra landing).
+    // SEM auth de propósito — só expõe agregado e nomes que já são públicos no
+    // highscore. "Online" = personagem cujo score foi atualizado nos últimos 3
+    // min: o cliente reenvia o score a cada 90s enquanto o jogo está aberto
+    // (ver highscoresUseCases: setInterval), então essa janela cobre 2 envios.
+    if (url.pathname === '/online' && req.method === 'GET') {
+      try {
+        const desde = new Date(Date.now() - 3 * 60 * 1000).toISOString();
+        const filtro = `updated_at=gte.${encodeURIComponent(desde)}`;
+        const [online, top] = await Promise.all([
+          countWhere('rubinot_idle_scores', filtro),
+          selectRaw('rubinot_idle_scores', 'select=name,level,vocation&order=level.desc,xp.desc&limit=5'),
+        ]);
+        return send(res, 200, { ok: true, online, top: top.filter(t => t.name) });
+      } catch (e) {
+        // Nunca derruba o cabeçalho por causa disto — devolve 0/vazio.
+        return send(res, 200, { ok: true, online: 0, top: [] });
+      }
     }
 
     if (url.pathname === '/whoami') {
