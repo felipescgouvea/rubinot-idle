@@ -1,12 +1,20 @@
 // Vocações, skills e a curva de experiência: regras de personagem puras,
 // sem qualquer acesso a DOM, storage ou rede.
 
+// Regeneração de HP/mana FIEL ao Crystal Server (vocations.xml:
+// gain{hp,mana}{ticks,amount}), em pontos por MINUTO. É bem mais lenta que a
+// versão idle antiga (knight 270/min -> 10/min) — deixou de ser um "desvio de
+// idle pacing" e passou a ser o número real do Tibia (pedido do Felipe).
+//   knight:   hp 1/6s -> 10/min · mana 2/6s -> 20/min
+//   paladin:  hp 1/8s -> 7.5/min · mana 2/4s -> 30/min
+//   sorcerer: hp 1/12s -> 5/min · mana 2/3s -> 40/min
+//   druid:    igual sorcerer
 export const VOCATIONS = {
   knight: {
     name: 'Knight', icon: '🛡️',
     baseHp: 200, baseMana: 60, baseAtk: 18, baseDef: 12, baseMgc: 0, baseSpd: 1.2,
     hpPerLevel: 15, manaPerLevel: 5, atkPerLevel: 3, defPerLevel: 2,
-    hpRegen: 3, manaRegen: 3,
+    hpPerMin: 10, manaPerMin: 20,
     style: 'melee',
     color: '#e74c3c',
   },
@@ -14,7 +22,7 @@ export const VOCATIONS = {
     name: 'Paladin', icon: '🏹',
     baseHp: 150, baseMana: 120, baseAtk: 15, baseDef: 8, baseMgc: 8, baseSpd: 1.4,
     hpPerLevel: 10, manaPerLevel: 15, atkPerLevel: 2, defPerLevel: 1,
-    hpRegen: 2, manaRegen: 4,
+    hpPerMin: 7.5, manaPerMin: 30,
     style: 'range',
     color: '#3a7bd5',
   },
@@ -22,14 +30,14 @@ export const VOCATIONS = {
     name: 'Sorcerer', icon: '🔮',
     baseHp: 80, baseMana: 250, baseAtk: 8, baseDef: 3, baseMgc: 22, baseSpd: 1.1,
     hpPerLevel: 5, manaPerLevel: 30, atkPerLevel: 1, defPerLevel: 0.5,
-    hpRegen: 1, manaRegen: 6,
+    hpPerMin: 5, manaPerMin: 40,
     style: 'magic',
     color: '#9b59b6',
   },
   druid: {
     name: 'Druid', icon: '🌿',
     baseHp: 100, baseMana: 200, baseAtk: 6, baseDef: 4, baseMgc: 18, baseSpd: 1.0,
-    hpRegen: 1, manaRegen: 6,
+    hpPerMin: 5, manaPerMin: 40,
     hpPerLevel: 5, manaPerLevel: 30, atkPerLevel: 1, defPerLevel: 1,
     style: 'magic',
     color: '#2ecc71',

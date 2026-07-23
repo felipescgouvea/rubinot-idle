@@ -712,12 +712,30 @@ async function resolveTick(session) {
     // na morte (não recuperam sozinhas — precisa comprar de novo).
     const row = await selectOne('player_stats', { user_id: session.userId, slot: session.slot });
     const blessings = row ? Math.min(MAX_BLESSINGS, Number(row.blessings) || 0) : 0;
-    const curXp = row ? Number(row.xp) : 0;
-    const xpLost = Math.floor(curXp * deathXpLossPct(blessings));
+
+    // Perda FIEL ao Crystal Server: incide sobre a XP TOTAL acumulada e pode
+    // DE-LEVELAR (não mais só o XP do nível atual). session.xpAbs é o progresso
+    // no nível corrente; a total soma os níveis anteriores da XP_TABLE.
+    const level = session.level;
+    const curLevelXp = session.xpAbs;
+    const xpAntesDoNivel = XP_TABLE.slice(0, level - 1).reduce((a, b) => a + b, 0);
+    const totalExp = xpAntesDoNivel + curLevelXp;
+    const levelPercent = level < 100 && XP_TABLE[level - 1] ? (curLevelXp / XP_TABLE[level - 1]) * 100 : 0;
+    const xpLost = Math.floor(totalExp * deathXpLossPct(level, blessings, session.promoted, levelPercent, totalExp));
+    const novaTotal = Math.max(0, totalExp - xpLost);
+    // recompõe nível + XP do nível a partir da total (de-levela se preciso)
+    let novoNivel = 1, resto = novaTotal;
+    while (novoNivel < 100 && resto >= XP_TABLE[novoNivel - 1]) { resto -= XP_TABLE[novoNivel - 1]; novoNivel++; }
+    session.level = novoNivel;
+    session.xpAbs = resto;
+    session.maxHp = computeMaxHp({ vocation: session.vocation, level: novoNivel, equipment: session.equipment, relics: session.relics });
+    session.maxMana = computeMaxMana({ vocation: session.vocation, level: novoNivel });
+
     session.hp = Math.floor(session.maxHp * reviveHpPct(blessings));
-    const lastDeath = { sessionId: session.id, monster: newPrimary.name, xpLost, blessingsUsed: blessings, at: Date.now() };
+    session.mana = Math.min(session.mana, session.maxMana);
+    const lastDeath = { sessionId: session.id, monster: newPrimary.name, xpLost, blessingsUsed: blessings, deleveled: novoNivel < level, at: Date.now() };
     await upsertRow('player_stats', {
-      user_id: session.userId, slot: session.slot, xp: Math.max(0, curXp - xpLost),
+      user_id: session.userId, slot: session.slot, level: novoNivel, xp: resto,
       hp: vitalInt(session.hp), mana: vitalInt(session.mana), stamina: session.stamina, blessings: 0,
       last_death: lastDeath, updated_at: new Date().toISOString(),
     }, 'user_id,slot');
@@ -822,8 +840,15 @@ function regenVitals(session) {
   const voc = VOCATIONS[session.vocation];
   if (!voc) return;
   const mult = session.promoted ? PROMOTION.regenMult : 1;
-  session.hp = Math.min(session.maxHp, session.hp + (voc.hpRegen || 0) * 3 * mult);
-  session.mana = Math.min(session.maxMana, session.mana + (voc.manaRegen || 0) * 3 * mult);
+  // Taxa/min do Crystal Server convertida pro tick (TICK_MS). hp/mana são
+  // INTEGER no banco (ver vitalInt), então acumula a fração e só soma o inteiro
+  // — senão a regen lenta (knight 10/min = 0,33/tick) truncaria pra ZERO.
+  const porTick = TICK_MS / 60000;
+  session.hpAcc = (session.hpAcc || 0) + (voc.hpPerMin || 0) * mult * porTick;
+  session.manaAcc = (session.manaAcc || 0) + (voc.manaPerMin || 0) * mult * porTick;
+  const dhp = Math.floor(session.hpAcc), dmana = Math.floor(session.manaAcc);
+  if (dhp > 0) { session.hp = Math.min(session.maxHp, session.hp + dhp); session.hpAcc -= dhp; }
+  if (dmana > 0) { session.mana = Math.min(session.maxMana, session.mana + dmana); session.manaAcc -= dmana; }
 }
 
 async function tick(session) {

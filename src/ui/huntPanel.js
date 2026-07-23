@@ -1,21 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=237';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=255';
-import { MONSTERS } from '../domain/bestiary.js?v=255';
-import { cityName } from '../domain/cities.js?v=240';
-import { ITEMS } from '../domain/items.js?v=248';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=238';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=233';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=235';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=240';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=238';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=301';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=233';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=238';
-import { t } from '../i18n/i18n.js?v=251';
-import { setStageWalking } from './stageWalk.js?v=74';
+import { G } from '../application/gameStore.js?v=238';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=256';
+import { MONSTERS } from '../domain/bestiary.js?v=256';
+import { XP_TABLE } from '../domain/character.js?v=265';
+import { cityName } from '../domain/cities.js?v=241';
+import { ITEMS } from '../domain/items.js?v=249';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=239';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=234';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=236';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=241';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=239';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=302';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=234';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=239';
+import { t } from '../i18n/i18n.js?v=252';
+import { setStageWalking } from './stageWalk.js?v=75';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -346,7 +347,12 @@ function renderBlessings() {
   if (!el) return;
   const b = G.blessings || 0;
   const cost = blessingCost(G.level);
-  const lossPct = Math.round(deathXpLossPct(b) * 1000) / 10;
+  // perda de XP na morte: fórmula real do CS (escala com nível + total de XP)
+  const nivel = G.level || 1;
+  const curXp = G.xp || 0;
+  const totalXp = curXp + XP_TABLE.slice(0, nivel - 1).reduce((a, c) => a + c, 0);
+  const levelPct = nivel < 100 && XP_TABLE[nivel - 1] ? (curXp / XP_TABLE[nivel - 1]) * 100 : 0;
+  const lossPct = Math.round(deathXpLossPct(nivel, b, G.promoted, levelPct, totalXp) * 1000) / 10;
   const hpPct = Math.round(reviveHpPct(b) * 100);
   const full = b >= MAX_BLESSINGS;
   const pips = Array.from({ length: MAX_BLESSINGS }, (_, i) => `<span class="bless-pip ${i < b ? 'on' : ''}">🛡️</span>`).join('');

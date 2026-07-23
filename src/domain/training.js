@@ -32,13 +32,14 @@ export function triesPerMinuteFor(skillId) {
 //
 // Antes havia um MAGIC_TRIES_PER_MINUTE = 3 fixo, que não vinha de lugar
 // nenhum: ignorava a magia escolhida, a vocação e a própria mana.
-export function manaSpentPerMinute(spell, manaRegen) {
+export function manaSpentPerMinute(spell, manaPerMin) {
   if (!spell || !spell.mana) return 0;
   const castsPorMinuto = 60 / Math.max(1, spell.cd || 1);
   const gastoPossivel = castsPorMinuto * spell.mana;
-  // regen*90/min é a mesma taxa usada na caçada e no ocioso (ver o regen do
-  // servidor em /hunt/start e huntEngine: regenVitals).
-  const manaPorMinuto = (manaRegen || 0) * 90;
+  // manaPerMin é a taxa/min da vocação (Crystal Server) — a MESMA usada na
+  // caçada e no ocioso (ver huntEngine: regenVitals). O treino de ML é limitado
+  // pela mana que a vocação regenera: não dá pra gastar mais do que recupera.
+  const manaPorMinuto = manaPerMin || 0;
   return Math.floor(Math.min(gastoPossivel, manaPorMinuto));
 }
 

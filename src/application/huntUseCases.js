@@ -3,33 +3,35 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=237';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=242';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=242';
-import { ZONES } from '../domain/bestiary.js?v=255';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE } from '../domain/character.js?v=264';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=235';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=267';
-import { monsterAttack } from '../domain/combatFormulas.js?v=266';
-import { elementMod } from '../domain/elements.js?v=233';
-import { STAMINA_MAX } from '../domain/stamina.js?v=233';
-import { ITEMS } from '../domain/items.js?v=248';
-import { MONSTERS } from '../domain/bestiary.js?v=255';
-import { RARITY_TIERS } from '../domain/rarity.js?v=234';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=235';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=235';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=234';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=234';
-import { saveGame } from './saveGameUseCase.js?v=237';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=238';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=236';
-import { t } from '../i18n/i18n.js?v=251';
+import { G, ACCOUNT } from './gameStore.js?v=238';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=243';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=243';
+import { ZONES } from '../domain/bestiary.js?v=256';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=265';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=236';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=268';
+import { monsterAttack } from '../domain/combatFormulas.js?v=267';
+import { elementMod } from '../domain/elements.js?v=234';
+import { STAMINA_MAX } from '../domain/stamina.js?v=234';
+import { ITEMS } from '../domain/items.js?v=249';
+import { MONSTERS } from '../domain/bestiary.js?v=256';
+import { RARITY_TIERS } from '../domain/rarity.js?v=235';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=236';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=236';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=235';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=235';
+import { saveGame } from './saveGameUseCase.js?v=238';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=239';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=237';
+import { t } from '../i18n/i18n.js?v=252';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
 
 let huntInterval = null;
 let regenInterval = null;
+// acumuladores de fração da regen ociosa (hp/mana são inteiros; ver regenVitals)
+let _hpAcc = 0, _manaAcc = 0;
 let rtcHealInterval = null;
 let idleHealInterval = null;
 let idleHealBusy = false;
@@ -1084,8 +1086,16 @@ export function startRegen() {
     // que vem no reconcile (a cada 250ms). Somar aqui também faria o HP/mana
     // TREMEREM pra cima e caírem a cada poll (M5).
     if (!G.hunting) {
-      G.hp = Math.min(getMaxHp(), G.hp + v.hpRegen * 3);
-      G.mana = Math.min(getMaxMana(), G.mana + v.manaRegen * 3);
+      // Taxa/min do Crystal Server (v.hpPerMin) convertida pro laço de 2s, com
+      // acumulador de fração — a regen agora é lenta (knight 10/min) e truncar
+      // pra inteiro a cada tick daria ZERO. Espelha o regenVitals do servidor.
+      const mult = G.promoted ? PROMOTION.regenMult : 1;
+      const porTick = 2000 / 60000;
+      _hpAcc += (v.hpPerMin || 0) * mult * porTick;
+      _manaAcc += (v.manaPerMin || 0) * mult * porTick;
+      const dhp = Math.floor(_hpAcc), dmana = Math.floor(_manaAcc);
+      if (dhp > 0) { G.hp = Math.min(getMaxHp(), G.hp + dhp); _hpAcc -= dhp; }
+      if (dmana > 0) { G.mana = Math.min(getMaxMana(), G.mana + dmana); _manaAcc -= dmana; }
     }
     // Stamina (se ligada no Admin): cai 1min/min caçando; regenera ~1/3 disso
     // descansando. O tick roda a cada 2s → 2/60 min por tick.

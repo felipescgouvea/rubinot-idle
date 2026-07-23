@@ -125,7 +125,7 @@ async function creditTraining(userId, slot, stats, vocation) {
   // domain/training.js: manaSpentPerMinute). Sem magia registrada, o treino de
   // ML não rende — em vez de render um número inventado.
   const ctx = skillId === 'magic'
-    ? { spell: SPELLS_TREINO[stats.training_spell] || null, manaRegen: (VOCATIONS[vocation] || {}).manaRegen || 0 }
+    ? { spell: SPELLS_TREINO[stats.training_spell] || null, manaRegen: (VOCATIONS[vocation] || {}).manaPerMin || 0 }
     : null;
   const tries = triesForTraining(skillId, elapsed - boostedSec, base, ctx)
               + triesForTraining(skillId, boostedSec, base * TRAINING_WAND_MULT, ctx);
@@ -295,8 +295,8 @@ const server = http.createServer(async (req, res) => {
           // devolvia 400 ("invalid input syntax for type integer") e derrubava
           // settleKill ANTES do pushKill: a criatura morria sem creditar XP,
           // gold nem loot, e sem linha no log (bug: "goblins não dão XP").
-          hp = Math.floor(Math.min(maxHp, hp + (voc.hpRegen || 0) * 90 * idleMin * regenMult));
-          mana = Math.floor(Math.min(maxMana, mana + (voc.manaRegen || 0) * 90 * idleMin * regenMult));
+          hp = Math.floor(Math.min(maxHp, hp + (voc.hpPerMin || 0) * idleMin * regenMult));
+          mana = Math.floor(Math.min(maxMana, mana + (voc.manaPerMin || 0) * idleMin * regenMult));
         }
       }
       // Stamina regenera (1/3 da taxa de queda) pelo tempo REAL que passou
@@ -457,8 +457,8 @@ const server = http.createServer(async (req, res) => {
           const regenMult = stats.promoted ? PROMOTION.regenMult : 1; // promoção dobra o regen ocioso
           // floor pelo mesmo motivo do /hunt/start: idleMin é fracionário e as
           // colunas hp/mana são INTEGER (ver comentário lá).
-          stats.hp = Math.floor(Math.min(maxHp, Number(stats.hp) + (voc.hpRegen || 0) * 90 * idleMin * regenMult));
-          stats.mana = Math.floor(Math.min(maxMana, Number(stats.mana) + (voc.manaRegen || 0) * 90 * idleMin * regenMult));
+          stats.hp = Math.floor(Math.min(maxHp, Number(stats.hp) + (voc.hpPerMin || 0) * idleMin * regenMult));
+          stats.mana = Math.floor(Math.min(maxMana, Number(stats.mana) + (voc.manaPerMin || 0) * idleMin * regenMult));
         }
       }
       // Com sessão VIVA, o hp/mana autoritativos são os DELA (tempo real, todo
@@ -706,7 +706,7 @@ const server = http.createServer(async (req, res) => {
         if (vocData && stats.updated_at) {
           const idleMin = Math.max(0, (Date.now() - new Date(stats.updated_at).getTime()) / 60000);
           const mult = stats.promoted ? PROMOTION.regenMult : 1;
-          manaAtual = Math.floor(Math.min(maxManaAgora, manaAtual + (vocData.manaRegen || 0) * 90 * idleMin * mult));
+          manaAtual = Math.floor(Math.min(maxManaAgora, manaAtual + (vocData.manaPerMin || 0) * idleMin * mult));
         }
       }
       if (manaAtual < spell.mana) return send(res, 400, { error: 'mana insuficiente' });
