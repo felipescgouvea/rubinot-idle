@@ -480,7 +480,10 @@ try {
     // RTC chegar a lançar (lv100 one-shotando rato) nunca dispara o efeito — isso
     // é comportamento correto, não bug. Só vira problema de verdade num CASTER
     // (magia é o ataque principal); no corpo a corpo fica inconclusivo.
-    const ehCaster = ['sorcerer', 'druid', 'paladin'].includes(d.voc);
+    // Só sorcerer/druid têm a MAGIA como ataque principal — pra eles a área
+    // deve mesmo sair. Paladino (distância) e knight (melee) matam no ataque
+    // básico antes do RTC lançar a área, então "não saiu" é esperado, não bug.
+    const ehCaster = ['sorcerer', 'druid'].includes(d.voc);
     if (AREA_ARMADA && ehCaster) problemas.push(`a magia de área "${AREA_ARMADA}" foi armada e NENHUM efeito apareceu na tela`);
     else if (AREA_ARMADA) inconclusivos.push(`magia de área "${AREA_ARMADA}" armada mas o ${d.voc} matou no melee antes de lançar — efeito não exercitado`);
     else inconclusivos.push('nenhuma magia de área foi lançada — efeito de área não exercitado');
