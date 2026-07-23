@@ -3,9 +3,9 @@
 // módulo "persistence" mais encorpado (load/offline/reset) precisa chamar
 // gainXp/checkBpTier de outras camadas — se saveGame morasse junto, isso
 // criaria import circular entre metade dos casos de uso do jogo.
-import { G, ACCOUNT } from './gameStore.js?v=233';
-import { saveState } from '../infrastructure/storage.js?v=229';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=238';
+import { G, ACCOUNT } from './gameStore.js?v=234';
+import { saveState } from '../infrastructure/storage.js?v=230';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=239';
 
 // saveGame roda muito (a cada morte/ação), então o local é imediato mas o push
 // pra nuvem é "debounced": só sobe ~8s depois da última alteração, evitando uma

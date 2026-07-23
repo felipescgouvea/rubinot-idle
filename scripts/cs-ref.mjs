@@ -115,7 +115,16 @@ function parseLoot(blocoTxt) {
     const resolved = nome || (id ? itemNomePorId(id) : null);
     if (resolved) out.push({ nome: resolved.toLowerCase(), chancePct: chance / 100000, maxCount, idBruto: id ? Number(id) : null });
   }
-  return out;
+  // O source às vezes lista o MESMO item duas vezes (dois slots de roll — ex.:
+  // spectre com silver brooch 850 e 110). Consolida numa entrada só, ficando com
+  // a MAIOR chance (aproxima o efeito combinado das duas rolagens). Sem isso, o
+  // fixer gravava a 1ª e a auditoria comparava com a 2ª — "divergência" fantasma.
+  const porNome = new Map();
+  for (const l of out) {
+    const ex = porNome.get(l.nome);
+    if (!ex || l.chancePct > ex.chancePct) porNome.set(l.nome, l);
+  }
+  return [...porNome.values()];
 }
 
 // Retorna a referência de um monstro pelo NOME (como está no nosso bestiário),
@@ -127,7 +136,12 @@ export function monstroRef(nome) {
   const txt = readFileSync(p, 'utf8');
   const lootBloco = bloco(txt, 'loot');
   const loot = parseLoot(lootBloco);
-  const gold = loot.find(l => /gold coin/i.test(l.nome));
+  // Ouro real = soma de TODAS as moedas, não só "gold coin": monstro de alto
+  // nível dropa platinum (×100) e crystal (×10000). Contar só gold coin fazia o
+  // cobra/werelion parecerem "sem ouro" na auditoria.
+  const DENOM = { 'gold coin': 1, 'platinum coin': 100, 'crystal coin': 10000 };
+  let goldMax = 0;
+  for (const l of loot) { const d = DENOM[l.nome]; if (d) goldMax += l.maxCount * d; }
   const atkBloco = bloco(txt, 'attacks') || '';
   // maior maxDamage de melee (vem negativo no source)
   let meleeMax = null;
@@ -142,10 +156,10 @@ export function monstroRef(nome) {
     hp: num(txt, 'health') ?? num(txt, 'maxHealth'),
     xp: num(txt, 'experience'),
     speed: num(txt, 'speed'),
-    goldMax: gold ? gold.maxCount : 0,
+    goldMax,
     armor, defesa, meleeMax,
-    // loot sem o gold (gold é tratado à parte, vira o campo gold:[min,max])
-    loot: loot.filter(l => !/gold coin/i.test(l.nome)),
+    // loot sem NENHUMA moeda (o ouro vira o campo gold:[min,max] à parte)
+    loot: loot.filter(l => !/(gold|platinum|crystal) coin/i.test(l.nome)),
   };
 }
 
