@@ -1,15 +1,15 @@
-import { G, ACCOUNT } from './gameStore.js?v=240';
-import { VOCATIONS } from '../domain/character.js?v=267';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=251';
-import { canGraduate } from '../domain/cities.js?v=251';
-import { getMaxHp, getMaxMana } from './stats.js?v=251';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=238';
-import { addItemToInventory } from './inventoryCore.js?v=238';
-import { startRegen } from './huntUseCases.js?v=304';
-import { saveGame } from './saveGameUseCase.js?v=240';
-import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=245';
-import { pruneRtcForVocation } from './rtcUseCases.js?v=266';
-import { t } from '../i18n/i18n.js?v=254';
+import { G, ACCOUNT } from './gameStore.js?v=241';
+import { VOCATIONS } from '../domain/character.js?v=268';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=252';
+import { canGraduate } from '../domain/cities.js?v=252';
+import { getMaxHp, getMaxMana } from './stats.js?v=252';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=239';
+import { addItemToInventory } from './inventoryCore.js?v=239';
+import { startRegen } from './huntUseCases.js?v=305';
+import { saveGame } from './saveGameUseCase.js?v=241';
+import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=246';
+import { pruneRtcForVocation } from './rtcUseCases.js?v=267';
+import { t } from '../i18n/i18n.js?v=255';
 
 // Abre a tela de graduação se o personagem já pode graduar e ainda não graduou.
 //
@@ -46,6 +46,18 @@ export async function graduate(voc) {
   if (!VOCATIONS[voc]) return false;
 
   const resp = await grantGraduateKit(ACCOUNT.activeSlot, voc).catch(e => ({ error: e.message || String(e) }));
+  // Recuperação de estado dessincronizado: o servidor diz que o personagem JÁ
+  // graduou (409) mas o cliente ainda mostra o modal (G.graduated=false). A
+  // graduação já aconteceu lá — só sincroniza a flag e deixa o modal FECHAR
+  // (retorna true). Sem isto o jogador fica PRESO: o modal reabre e cada
+  // "Confirmar" toma 409, sem nunca sair da tela. Não re-concede kit nem troca
+  // vocação (já foi feito na graduação real).
+  if (resp && !resp.ok && /graduou|already graduated/i.test(resp.error || '')) {
+    G.graduated = true;
+    saveGame();
+    emit(EVENTS.CHAR_PANEL);
+    return true;
+  }
   if (!resp || resp.error || !resp.ok) {
     emit(EVENTS.NOTIFY, { msg: t('character.graduateFailed'), type: 'error' });
     return false;
