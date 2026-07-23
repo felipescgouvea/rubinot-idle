@@ -1000,7 +1000,7 @@ export function startSession(session) {
   garantirScheduler();
 }
 
-export function stopSession(sessionId) {
+export async function stopSession(sessionId) {
   const s = live.get(sessionId);
   if (!s) return;
   // Marca ANTES de clearInterval — clearInterval só impede o PRÓXIMO tick
@@ -1014,7 +1014,12 @@ export function stopSession(sessionId) {
   // ele pula tudo que está marcado como parado (e a sessão sai do `live`
   // logo abaixo). A marcação continua sendo o que protege um tick JÁ em
   // andamento, parado num await, de aplicar dano depois do stop.
-  flushVitals(s).catch(() => {});
+  // AGUARDA o flush aterrissar (era fire-and-forget): numa troca rápida de zona,
+  // o /hunt/start relia player_stats ANTES do flush da sessão antiga gravar, então
+  // um level-up nos últimos segundos não-flushados sumia e a sessão nova recarregava
+  // o nível velho, gravando-o absoluto depois = DE-LEVEL (bug de corrida). Quem
+  // chama no /hunt/start agora dá await em stopSession antes de reler os stats.
+  await flushVitals(s).catch(() => {});
   live.delete(sessionId);
   // Só remove do índice se ainda apontar pra ESTA sessão: uma troca rápida de
   // zona (stop + start) já pode ter registrado a nova, e apagar aqui deixaria

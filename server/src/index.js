@@ -306,7 +306,7 @@ const server = http.createServer(async (req, res) => {
 
       // Fecha qualquer sessão anterior deste slot (troca de zona = nova sessão).
       const prevRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
-      if (prevRow) { stopSession(prevRow.id); await updateRows('hunt_sessions', { id: prevRow.id }, { active: false }); }
+      if (prevRow) { await stopSession(prevRow.id); await updateRows('hunt_sessions', { id: prevRow.id }, { active: false }); }
 
       // Nível vem de player_stats (já autoritativo desde o Marco 2) — nunca
       // mais do cliente. Equipamento/skills vêm de player_equipment/
@@ -385,7 +385,7 @@ const server = http.createServer(async (req, res) => {
         } catch (e) {
           if (!/23505/.test(e.message) || attempt >= 4) throw e;
           const raceRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
-          if (raceRow) { stopSession(raceRow.id); await updateRows('hunt_sessions', { id: raceRow.id }, { active: false }); }
+          if (raceRow) { await stopSession(raceRow.id); await updateRows('hunt_sessions', { id: raceRow.id }, { active: false }); }
         }
       }
 
@@ -433,7 +433,7 @@ const server = http.createServer(async (req, res) => {
       const slot = validSlot(body.slot);
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
-      if (activeRow) { stopSession(activeRow.id); await updateRows('hunt_sessions', { id: activeRow.id }, { active: false }); }
+      if (activeRow) { await stopSession(activeRow.id); await updateRows('hunt_sessions', { id: activeRow.id }, { active: false }); }
       return send(res, 200, { ok: true });
     }
 
