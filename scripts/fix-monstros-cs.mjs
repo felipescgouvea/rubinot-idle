@@ -25,7 +25,12 @@ if (!REF_OK) { console.error('reference/crystalserver ausente'); process.exit(2)
 const APLICAR = process.argv.includes('--aplicar');
 const SO = (process.argv.find(a => a.startsWith('--so=')) || '').split('=')[1];
 
-const norm = s => String(s).toLowerCase().replace(/\s*\([^)]*\)/g, '').replace(/[^a-z0-9]/g, '');
+// Casa nome de item entre catálogos. Tira SÓ o sufixo de DESAMBIGUAÇÃO da wiki
+// ("(Item)"/"(Creature)", ex.: "Skull (Item)" == "skull") — NÃO tira sufixo de
+// VARIANTE ("(Orcsoberfest)", "(Immobile)", "(Object)", "(Brown)"), que marca um
+// item DIFERENTE. Tirar tudo fazia CS "bone" casar com "Bone (Orcsoberfest)"
+// (evento, 243 gold) e inflar a economia — colisão real (26 itens).
+const norm = s => String(s).toLowerCase().replace(/\s*\((item|creature)\)\s*/gi, ' ').replace(/[^a-z0-9]/g, '');
 const idPorNome = new Map();
 for (const [id, it] of Object.entries(ITEMS)) { const k = norm(it.name); if (!idPorNome.has(k)) idPorNome.set(k, id); }
 

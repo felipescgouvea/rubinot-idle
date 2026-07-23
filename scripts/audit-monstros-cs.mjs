@@ -27,7 +27,9 @@ const alvos = SO ? SO.split(',').filter(id => MONSTERS[id]) : [...emHunt].filter
 // parênteses ANTES de remover não-alfanuméricos: o nosso catálogo desambigua com
 // sufixos ("Skull (Item)" porque Skull também é efeito) que a fonte não usa —
 // sem isso, "skull (item)" nunca casava com "skull" e inflava alucinado/faltando.
-const norm = s => String(s).toLowerCase().replace(/\s*\([^)]*\)/g, '').replace(/[^a-z0-9]/g, '');
+// Mesmo casamento do fixer: tira só desambiguação "(Item)/(Creature)", não
+// variante — senão "bone" casa com "Bone (Orcsoberfest)" (colisão real).
+const norm = s => String(s).toLowerCase().replace(/\s*\((item|creature)\)\s*/gi, ' ').replace(/[^a-z0-9]/g, '');
 // nome do nosso item -> forma normalizada, pra casar com o nome do source
 const nossoItemNome = new Map();
 for (const [id, it] of Object.entries(ITEMS)) nossoItemNome.set(id, norm(it.name));
