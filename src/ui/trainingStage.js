@@ -15,13 +15,13 @@
 // trazidas pro projeto (assets/outfits-dir/, ver
 // scripts/fetch_outfit_directions.py), então aqui ele usa LESTE quando bate no
 // dummy à direita e SUL quando é o mago lançando magia de frente.
-import { G } from '../application/gameStore.js?v=245';
-import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=241';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=241';
-import { VOCATIONS } from '../domain/character.js?v=272';
-import { ITEMS } from '../domain/items.js?v=256';
-import { SPELLS } from '../domain/spells.js?v=243';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=246';
+import { G } from '../application/gameStore.js?v=246';
+import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=242';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=242';
+import { VOCATIONS } from '../domain/character.js?v=273';
+import { ITEMS } from '../domain/items.js?v=257';
+import { SPELLS } from '../domain/spells.js?v=244';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=247';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
