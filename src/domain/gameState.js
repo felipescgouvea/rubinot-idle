@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=271';
-import { createDefaultRtc } from './rtcConfig.js?v=274';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=240';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=243';
+import { createDefaultSkills } from './character.js?v=272';
+import { createDefaultRtc } from './rtcConfig.js?v=275';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=241';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=244';
 
 // Quantos personagens cabem numa conta. Mora no domínio porque é regra de
 // negócio, não detalhe de tela: o servidor recusa slot fora dessa faixa e cada
@@ -22,6 +22,11 @@ export function createDefaultState() {
     // trocada ao graduar, como nos portões do Dawnport real. Depois de graduar
     // ela é definitiva e o jogador recebe o Graduate Set pro mainland.
     graduated: false,
+    // vocação cujo kit inicial ainda NÃO confirmou no servidor (o grant falhou —
+    // rede/cold start do Railway). Fica pendente e é re-tentado no boot e antes de
+    // caçar, senão o servidor lia player_equipment vazio e computava o combate
+    // desarmado mesmo o cliente mostrando o kit. null = tudo certo.
+    starterKitPending: null,
     level: 1,
     xp: 0,
     gold: 0,

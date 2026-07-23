@@ -1,15 +1,15 @@
-import { G, ACCOUNT } from './gameStore.js?v=244';
-import { VOCATIONS } from '../domain/character.js?v=271';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=255';
-import { canGraduate } from '../domain/cities.js?v=255';
-import { getMaxHp, getMaxMana } from './stats.js?v=255';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=242';
-import { addItemToInventory } from './inventoryCore.js?v=242';
-import { startRegen } from './huntUseCases.js?v=308';
-import { saveGame } from './saveGameUseCase.js?v=244';
-import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=249';
-import { pruneRtcForVocation } from './rtcUseCases.js?v=270';
-import { t } from '../i18n/i18n.js?v=258';
+import { G, ACCOUNT } from './gameStore.js?v=245';
+import { VOCATIONS } from '../domain/character.js?v=272';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=256';
+import { canGraduate } from '../domain/cities.js?v=256';
+import { getMaxHp, getMaxMana } from './stats.js?v=256';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=243';
+import { addItemToInventory } from './inventoryCore.js?v=243';
+import { startRegen } from './huntUseCases.js?v=309';
+import { saveGame } from './saveGameUseCase.js?v=245';
+import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=250';
+import { pruneRtcForVocation } from './rtcUseCases.js?v=271';
+import { t } from '../i18n/i18n.js?v=259';
 
 // Abre a tela de graduação se o personagem já pode graduar e ainda não graduou.
 //
@@ -150,7 +150,31 @@ export function selectVocation(voc) {
   // Concede o kit no SERVIDOR também (ver server/src/index.js:
   // /character/starter-kit) — sem isso o hunt-start lia player_equipment
   // vazio e computava o combate real como se o personagem estivesse
-  // desarmado, mesmo mostrando o kit equipado aqui no cliente.
-  grantStarterKit(ACCOUNT.activeSlot, voc).catch(() => {});
+  // desarmado, mesmo mostrando o kit equipado aqui no cliente. Com RETRY: era
+  // fire-and-forget e uma falha (cold start do Railway) deixava o char desarmado
+  // no servidor pra sempre.
+  ensureStarterKit(voc);
   emit(EVENTS.NOTIFY, { msg: t('character.vocationChosen', { vocation: v.name }), type: 'success' });
+}
+
+// Garante o kit inicial NO SERVIDOR, com retry. 409 "já foi concedido" conta como
+// sucesso (o kit já está lá). Se falhar as 3 tentativas, marca G.starterKitPending
+// pra re-tentar no próximo boot (ver ensureStarterKitPending, chamado em main.js).
+export async function ensureStarterKit(voc) {
+  for (let i = 0; i < 3; i++) {
+    const r = await grantStarterKit(ACCOUNT.activeSlot, voc).catch(() => null);
+    if (r && (r.ok || /já foi concedido|already/i.test(r.error || ''))) {
+      if (G.starterKitPending) { G.starterKitPending = null; saveGame(); }
+      return true;
+    }
+    await new Promise(res => setTimeout(res, 1200 * (i + 1)));
+  }
+  if (G.starterKitPending !== voc) { G.starterKitPending = voc; saveGame(); }
+  return false;
+}
+
+// Re-tenta um kit inicial que ficou pendente (grant falhou na criação). Chamado
+// no boot — barato quando não há nada pendente (o caso normal).
+export function ensureStarterKitPending() {
+  if (G.starterKitPending) ensureStarterKit(G.starterKitPending);
 }

@@ -3,9 +3,9 @@
 // módulo "persistence" mais encorpado (load/offline/reset) precisa chamar
 // gainXp/checkBpTier de outras camadas — se saveGame morasse junto, isso
 // criaria import circular entre metade dos casos de uso do jogo.
-import { G, ACCOUNT } from './gameStore.js?v=244';
-import { saveState } from '../infrastructure/storage.js?v=240';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=249';
+import { G, ACCOUNT } from './gameStore.js?v=245';
+import { saveState } from '../infrastructure/storage.js?v=241';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=250';
 
 // saveGame roda muito (a cada morte/ação), então o local é imediato mas o push
 // pra nuvem é "debounced": só sobe ~8s depois da última alteração, evitando uma
@@ -43,7 +43,7 @@ function contaTemPersonagem(acc) {
 // sendo jogado no momento (bug reportado pelo Felipe).
 const ECONOMY_FIELDS = ['gold', 'xp', 'hp', 'mana', 'sk', 'inventory', 'inventoryOrder', 'relics', 'relicSeq', 'blessings', 'stamina', 'totalGoldEarned', 'totalKills'];
 
-function stripEconomyFieldsForCloud(account) {
+export function stripEconomyFieldsForCloud(account) {
   return {
     activeSlot: account.activeSlot,
     slots: account.slots.map(slot => {

@@ -8,7 +8,7 @@
 // Knight fica de fora de todas: sem investimento em magia, runa de ataque
 // não rende dano nenhum (igual ao Tibia real, onde o dano da runa escala
 // com Magic Level).
-import { ITEMS } from './items.js?v=255';
+import { ITEMS } from './items.js?v=256';
 
 // Exceções por runa. No Crystal Server a maioria das runas de ataque não tem restrição de
 // vocação nenhuma; as que têm estão aqui (Holy Missile é marcada
