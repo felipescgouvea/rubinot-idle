@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=269';
-import { createDefaultRtc } from './rtcConfig.js?v=272';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=238';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=241';
+import { createDefaultSkills } from './character.js?v=270';
+import { createDefaultRtc } from './rtcConfig.js?v=273';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=239';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=242';
 
 // Quantos personagens cabem numa conta. Mora no domínio porque é regra de
 // negócio, não detalhe de tela: o servidor recusa slot fora dessa faixa e cada
@@ -124,6 +124,10 @@ export function createDefaultState() {
     totalKills: 0,
     totalGoldEarned: 0,
     killCounters: {},
+    // Cursor de kills creditados { sessionId, seq } — persistido pra que reabrir
+    // o jogo NÃO recredite as mortes que o servidor ainda tem no buffer killEvents
+    // e que já foram contadas (senão bestiário/BP/tasks inflavam a cada reload).
+    lastKillCursor: null,
     // Presas (Prey): 3 slots, cada um null ou { monster, bonusType, stars,
     // bonusPct, expires } — ver domain/prey.js e application/preyUseCases.js.
     prey: [null, null, null],
