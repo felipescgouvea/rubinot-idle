@@ -1122,11 +1122,21 @@ const server = http.createServer(async (req, res) => {
       const active = [];
       for (const r of rows) {
         if (r.expires_at && new Date(r.expires_at).getTime() < now) {
-          await updateRows('market_listings', { id: r.id }, { status: 'expired', closed_at: new Date().toISOString() });
-          // sell: devolve o item ao vendedor; buy: devolve o gold reservado à
-          // carteira do comprador (escrow diferente por tipo de oferta).
-          if (r.kind === 'buy') await refundBuyOfferGold(r);
-          else await incrementInventory(r.seller_user_id, r.seller_slot, r.item_id, Number(r.qty));
+          // Expiração IDEMPOTENTE: dois polls concorrentes de /market/listings
+          // liam a MESMA oferta vencida como 'active' e ambos devolviam o
+          // item/gold = dupe. Serializa por listing e RE-CONFIRMA o status sob o
+          // lock — só o primeiro que "reivindicar" a expiração devolve o escrow.
+          const rel = await acquireUserLock('listing:' + r.id);
+          try {
+            const fresh = await selectOne('market_listings', { id: r.id });
+            if (fresh && fresh.status === 'active') {
+              await updateRows('market_listings', { id: r.id }, { status: 'expired', closed_at: new Date().toISOString() });
+              // sell: devolve o item ao vendedor; buy: devolve o gold reservado
+              // à carteira do comprador (escrow diferente por tipo de oferta).
+              if (r.kind === 'buy') await refundBuyOfferGold(r);
+              else await incrementInventory(r.seller_user_id, r.seller_slot, r.item_id, Number(r.qty));
+            }
+          } finally { rel(); }
         } else active.push(r);
       }
       return send(res, 200, {
@@ -1176,6 +1186,12 @@ const server = http.createServer(async (req, res) => {
       const slot = validSlot(body.slot);
       const listingId = typeof body.listingId === 'string' ? body.listingId : null;
       if (slot === null || !listingId) return send(res, 400, { error: 'slot ou listingId inválido' });
+      // Lock por listing: sem ele, um /market/buy concorrente na mesma oferta
+      // (outro jogador) podia entregar o item ao comprador AO MESMO TEMPO que o
+      // cancelamento devolvia o item ao vendedor = dupe.
+      { let relL = await acquireUserLock('listing:' + listingId);
+        const soltaL = () => { if (relL) { relL(); relL = null; } };
+        res.on('finish', soltaL); res.on('close', soltaL); }
       const listing = await selectOne('market_listings', { id: listingId });
       if (!listing || listing.status !== 'active') return send(res, 400, { error: 'anúncio não encontrado ou já encerrado' });
       if (listing.seller_user_id !== user.id || listing.seller_slot !== slot) return send(res, 403, { error: 'este anúncio não é seu' });
@@ -1225,6 +1241,11 @@ const server = http.createServer(async (req, res) => {
       const listingId = typeof body.listingId === 'string' ? body.listingId : null;
       const qtyToFill = Math.floor(Number(body.qty));
       if (slot === null || !listingId || !qtyToFill || qtyToFill <= 0) return send(res, 400, { error: 'parâmetros inválidos' });
+      // Mesmo dupe cruzado do /market/buy: dois vendedores preenchendo a MESMA
+      // ordem de compra em paralelo. Serializa por id da ordem.
+      { let relL = await acquireUserLock('listing:' + listingId);
+        const soltaL = () => { if (relL) { relL(); relL = null; } };
+        res.on('finish', soltaL); res.on('close', soltaL); }
       const listing = await selectOne('market_listings', { id: listingId });
       if (!listing || listing.status !== 'active' || listing.kind !== 'buy') return send(res, 400, { error: 'ordem de compra não encontrada' });
       if (listing.seller_user_id === user.id && listing.seller_slot === slot) return send(res, 400, { error: 'você não pode preencher sua própria ordem' });
@@ -1256,6 +1277,14 @@ const server = http.createServer(async (req, res) => {
       const listingId = typeof body.listingId === 'string' ? body.listingId : null;
       const qtyToBuy = Math.floor(Number(body.qty));
       if (slot === null || !listingId || !qtyToBuy || qtyToBuy <= 0) return send(res, 400, { error: 'parâmetros inválidos' });
+      // Lock por LISTING (não só por usuário): o mutex do ECON_PATHS serializa o
+      // MESMO usuário, mas dois COMPRADORES diferentes da MESMA oferta pegam locks
+      // de usuário distintos e corriam em paralelo — ambos liam qty disponível,
+      // ambos passavam, ambos creditavam o item = dupe. Serializar por id da
+      // oferta fecha isso (servidor é processo único). Solto no fim da resposta.
+      { let relL = await acquireUserLock('listing:' + listingId);
+        const soltaL = () => { if (relL) { relL(); relL = null; } };
+        res.on('finish', soltaL); res.on('close', soltaL); }
       const listing = await selectOne('market_listings', { id: listingId });
       if (!listing || listing.status !== 'active' || listing.kind === 'buy') return send(res, 400, { error: 'anúncio não encontrado ou já encerrado' });
       if (listing.seller_user_id === user.id && listing.seller_slot === slot) return send(res, 400, { error: 'você não pode comprar do seu próprio anúncio' });
