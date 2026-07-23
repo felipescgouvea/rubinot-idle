@@ -52,10 +52,15 @@ export const DEFAULT_ADMIN_CONFIG = {
   consumeAmmo: false,
   // Duração (em MILISSEGUNDOS) do voo do projétil cosmético (flecha/virote/
   // raio de wand-rod) do boneco até o alvo — ver ui/huntPanel.js:
-  // playProjectile. A queda de vida na barra é sincronizada com esse mesmo
-  // tempo (ver application/huntUseCases.js: pendingHits), então mudar isto
-  // também muda quando o dano "chega" visualmente.
-  projectileSpeedMs: 260,
+  // playProjectile. A queda de vida na barra, o efeito da magia e o log de
+  // dano são sincronizados com esse mesmo tempo (ver application/huntUseCases.js:
+  // pendingHits / pendingSpellFx), então este valor É, na prática, o ATRASO
+  // visível entre o golpe acontecer (tick de 2s no servidor) e a mágica/vida
+  // aparecerem. Mantido BAIXO de propósito: 150ms lê como um risco rápido do
+  // projétil sem segurar o feedback (500ms deixava paladino/mago com ~½s de
+  // atraso a cada golpe — queixa do Felipe de "combate não fluido"). Melee não
+  // usa projétil, então cai na hora independente disto.
+  projectileSpeedMs: 150,
 };
 
 // Campos de taxa simples (numéricos) exibidos no painel, na ordem.
