@@ -4,7 +4,7 @@
 // da região marcada é multiplicado pela cor escolhida naquele canal (ver
 // domain/outfitColors.js pra paleta). Addons são sobrepostos (compositados)
 // antes da coloração, exatamente como no jogo real.
-import { outfitAssetPath, outfitTemplatePath , outfitDirPath, outfitDirTemplatePath } from './outfitAssets.js?v=239';
+import { outfitAssetPath, outfitTemplatePath , outfitDirPath, outfitDirTemplatePath } from './outfitAssets.js?v=240';
 
 const SIZE = 64;
 const imageCache = new Map();
@@ -17,6 +17,11 @@ function loadImage(src) {
     img.onerror = () => reject(new Error(`falha ao carregar ${src}`));
     img.src = src;
   });
+  // Evita ENVENENAR o cache com uma falha transitória: guardar a promise
+  // rejeitada fazia UMA falha de rede num sprite de outfit derrubar o boneco pro
+  // emoji pelo RESTO da sessão (todo render seguinte rejeitava na hora). Ao
+  // rejeitar, remove do cache pra permitir nova tentativa no próximo render.
+  promise.catch(() => { if (imageCache.get(src) === promise) imageCache.delete(src); });
   imageCache.set(src, promise);
   return promise;
 }

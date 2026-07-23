@@ -1002,6 +1002,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .monster-sprite-wrap.spell-fire::after     { background: radial-gradient(circle, #ff8c1eaa 0%, #e74c3c66 50%, transparent 75%); }
 .monster-sprite-wrap.spell-energy::after   { background: radial-gradient(circle, #d0a6ffcc 0%, #8e44ad77 50%, transparent 75%); }
 .monster-sprite-wrap.spell-ice::after      { background: radial-gradient(circle, #d6f7ffee 0%, #4ec9e055 50%, transparent 75%); }
+.monster-sprite-wrap.spell-earth::after    { background: radial-gradient(circle, #b7e57caa 0%, #4e8b2e66 50%, transparent 75%); }
+.monster-sprite-wrap.spell-death::after    { background: radial-gradient(circle, #b06adfcc 0%, #4a2a5f88 50%, transparent 75%); }
 .monster-sprite-wrap.spell-holy::after     { background: radial-gradient(circle, #fff6cfee 0%, #f1c40f77 50%, transparent 75%); }
 .monster-sprite-wrap.spell-physical::after,
 .monster-sprite-wrap.spell-arcane::after   { background: radial-gradient(circle, #ffffffcc 0%, #b8a67f66 50%, transparent 75%); }
