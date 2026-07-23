@@ -5,3 +5,5 @@ node_modules/
 .test-account.json
 scripts/.wiki-cache/
 reference/
+
+scripts/*-cs-auditoria.json
