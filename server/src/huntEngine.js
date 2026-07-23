@@ -612,7 +612,7 @@ async function resolveTick(session) {
       // recebia power undefined e o RTC quebrava ao configurar Ignite/Envenom/etc.
       if (atkSpell.dot) {
         const ctxDot = { level: session.level, magicLevel: magic, meleeSkill: Math.max(meleeSkill, distanceSkill) };
-        const alvos = isAreaAttack(atkSpell.area) ? pack.slice(0, areaMaxTargets(atkSpell.area)) : [primary];
+        const alvos = isAreaAttack(atkSpell.area) ? pack.filter(m => m.hp > 0).slice(0, areaMaxTargets(atkSpell.area)) : [primary];
         const totalPrevisto = alvos.reduce((s, m) => s + attachDot(m, atkSpell, ctxDot), 0);
         if (totalPrevisto > 0) pushCombat(session, { kind: 'dotcast', label: atkSpell.words, element: atkSpell.element, amount: totalPrevisto, target: primary.name });
       } else {
@@ -638,7 +638,12 @@ async function resolveTick(session) {
         // levou o golpe cheio acima) — antes era pack.slice(1,...), que assumia
         // primary = pack[0]; agora que o alvo pode ser outro (ver session.targetUid)
         // filtra pelo próprio primary pra não bater duas vezes nele nem pular um.
-        pack.filter(m => m !== primary).slice(0, maxTargets - 1).forEach(tgt => {
+        // FILTRA VIVOS: diferente do respingo do golpe básico, este não filtrava
+        // m.hp > 0. Um DoT ou o respingo básico deste mesmo tick pode ter matado
+        // alguém antes; sem o filtro, um slot de respingo era gasto num CADÁVER e
+        // um monstro VIVO do fundo ficava sem levar — a magia de área rendia
+        // menos justamente na sala cheia pra que ela existe.
+        pack.filter(m => m !== primary && m.hp > 0).slice(0, maxTargets - 1).forEach(tgt => {
           tgt.hp -= Math.max(1, Math.floor(hitFn() * elementMod(tgt.defKey, element)));
         });
       }
@@ -751,6 +756,15 @@ async function resolveTick(session) {
       last_death: lastDeath, updated_at: new Date().toISOString(),
     }, 'user_id,slot');
     session.currentPack = [];
+    // O upsert acima gravou o XP pós-penalidade como ABSOLUTO. O stopSession
+    // logo abaixo dispara flushVitals, que soma session.prog.xp como DELTA — e
+    // esse delta (kills desde o último flush) JÁ estava embutido no xpAbs sobre
+    // o qual a penalidade foi calculada. Sem zerar aqui, o flush devolvia a XP
+    // recente por cima do absoluto e ANULAVA parte da penalidade de morte
+    // (morrer perto do fim de um ciclo de flush chegava a netar ganho). Zera só
+    // o xp do prog; gold/kills/skills seguem flushando normal (não são gravados
+    // no upsert de morte).
+    if (session.prog) session.prog.xp = 0;
     // Encerra a sessão de verdade (não é só "sala vazia esperando spawn") —
     // reportado pelo Felipe: o personagem morrendo recuperava vida sozinho e
     // seguia caçando sem nada avisar. stopSession limpa os timers deste

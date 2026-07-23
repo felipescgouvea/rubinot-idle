@@ -1,15 +1,15 @@
-import { G, ACCOUNT } from './gameStore.js?v=241';
-import { VOCATIONS } from '../domain/character.js?v=268';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=252';
-import { canGraduate } from '../domain/cities.js?v=252';
-import { getMaxHp, getMaxMana } from './stats.js?v=252';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=239';
-import { addItemToInventory } from './inventoryCore.js?v=239';
-import { startRegen } from './huntUseCases.js?v=305';
-import { saveGame } from './saveGameUseCase.js?v=241';
-import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=246';
-import { pruneRtcForVocation } from './rtcUseCases.js?v=267';
-import { t } from '../i18n/i18n.js?v=255';
+import { G, ACCOUNT } from './gameStore.js?v=242';
+import { VOCATIONS } from '../domain/character.js?v=269';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY } from '../domain/items.js?v=253';
+import { canGraduate } from '../domain/cities.js?v=253';
+import { getMaxHp, getMaxMana } from './stats.js?v=253';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=240';
+import { addItemToInventory } from './inventoryCore.js?v=240';
+import { startRegen } from './huntUseCases.js?v=306';
+import { saveGame } from './saveGameUseCase.js?v=242';
+import { grantStarterKit, grantGraduateKit, updateHuntRtc } from '../infrastructure/authClient.js?v=247';
+import { pruneRtcForVocation } from './rtcUseCases.js?v=268';
+import { t } from '../i18n/i18n.js?v=256';
 
 // Abre a tela de graduação se o personagem já pode graduar e ainda não graduou.
 //
@@ -54,6 +54,18 @@ export async function graduate(voc) {
   // vocação (já foi feito na graduação real).
   if (resp && !resp.ok && /graduou|already graduated/i.test(resp.error || '')) {
     G.graduated = true;
+    // Alinha a vocação à que o jogador está confirmando AGORA (voc): no caso
+    // comum ele reescolhe a mesma vocação que já graduou, então isto bate com o
+    // servidor. Sem isto, uma tentativa anterior cuja resposta se perdeu deixava
+    // G.vocation na vocação pré-graduação, e cliente/servidor discordavam pra
+    // sempre. Se estiver caçando, empurra o RTC limpo da nova vocação.
+    if (G.vocation !== voc && VOCATIONS[voc]) {
+      G.vocation = voc;
+      pruneRtcForVocation();
+      if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc, G.fightMode, G.density || 'normal');
+    }
+    G.hp = Math.min(G.hp, getMaxHp());
+    G.mana = Math.min(G.mana, getMaxMana());
     saveGame();
     emit(EVENTS.CHAR_PANEL);
     return true;

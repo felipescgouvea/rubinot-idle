@@ -224,6 +224,7 @@ const ECON_PATHS = new Set([
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
   '/conjure', '/imbue', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
+  '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
 ]);
 const userLocks = new Map();   // userId -> cauda da fila de promessas
 async function acquireUserLock(userId) {
@@ -1308,8 +1309,11 @@ const server = http.createServer(async (req, res) => {
       const slot = validSlot(body.slot);
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       let playerName = typeof body.playerName === 'string' ? body.playerName.trim() : null;
-      if (playerName != null && (playerName.length < 3 || playerName.length > 20)) {
-        return send(res, 400, { error: 'nome precisa ter entre 3 e 20 caracteres' });
+      // Charset seguro no SERVIDOR também (o cliente pode ser adulterado): o nome
+      // é renderizado no ranking/log de Arena de outros jogadores via innerHTML.
+      // Sem isto, um POST direto com nome contendo HTML vira XSS armazenado.
+      if (playerName != null && (playerName.length < 3 || playerName.length > 20 || !/^[A-Za-zÀ-ÿ0-9 ]+$/.test(playerName))) {
+        return send(res, 400, { error: 'nome inválido (só letras, números e espaço, 3-20)' });
       }
 
       const stats = await selectOne('player_stats', { user_id: user.id, slot });

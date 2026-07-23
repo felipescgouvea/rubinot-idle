@@ -2,12 +2,12 @@
 // servidor (Railway) lê level/xp/kills/skills reais de player_stats/
 // player_skills — o cliente só reporta o que ainda não é autoritativo
 // (arena/tasks/bestiário, ver server/src/index.js: /highscores/submit).
-import { G, ACCOUNT } from './gameStore.js?v=241';
-import { MONSTERS } from '../domain/bestiary.js?v=259';
-import { emit, EVENTS } from '../shared/eventBus.js?v=239';
+import { G, ACCOUNT } from './gameStore.js?v=242';
+import { MONSTERS } from '../domain/bestiary.js?v=260';
+import { emit, EVENTS } from '../shared/eventBus.js?v=240';
 import { submitHighscoreOnServer, fetchHighscoresOnServer } from '../infrastructure/authClient.js';
-import { saveGame } from './saveGameUseCase.js?v=241';
-import { t } from '../i18n/i18n.js?v=255';
+import { saveGame } from './saveGameUseCase.js?v=242';
+import { t } from '../i18n/i18n.js?v=256';
 
 let lastSubmitAt = 0;
 // Cache por CATEGORIA (level/skill/bestiário pedem ordenações diferentes do
@@ -49,7 +49,11 @@ export async function submitScore(force = false) {
 
 export async function registerPlayerName(name) {
   name = (name || '').trim();
-  if (name.length < 3 || name.length > 20) {
+  // Charset seguro (letras, dígitos, espaço) — bloqueia < > " ' & etc. na FONTE.
+  // O nome vai pro ranking global e é renderizado no log da Arena de OUTROS
+  // jogadores via innerHTML; sem esta restrição, um nome com HTML injetava
+  // script na sessão de quem enfrentasse esse oponente (XSS armazenado).
+  if (name.length < 3 || name.length > 20 || !/^[A-Za-zÀ-ÿ0-9 ]+$/.test(name)) {
     emit(EVENTS.NOTIFY, { msg: t('highscores.nameLength'), type: 'error' });
     return false;
   }

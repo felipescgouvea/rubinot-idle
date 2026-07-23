@@ -4,21 +4,21 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=241';
-import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=239';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=252';
-import { VOCATIONS } from '../domain/character.js?v=268';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=237';
+import { G } from '../application/gameStore.js?v=242';
+import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=240';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=253';
+import { VOCATIONS } from '../domain/character.js?v=269';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=238';
 import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAttackRune, isRuneEntry, runeEntryId, ATTACK_SLOT_COUNT,
-  HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeHealTiers } from '../domain/rtcConfig.js?v=271';
-import { getMagic } from '../application/stats.js?v=238';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=237';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=237';
+  HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeHealTiers } from '../domain/rtcConfig.js?v=272';
+import { getMagic } from '../application/stats.js?v=239';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=238';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=238';
 import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot,
-  setRtcHealTierSpell } from '../application/rtcUseCases.js?v=273';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=239';
-import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=244';
-import { t } from '../i18n/i18n.js?v=255';
+  setRtcHealTierSpell } from '../application/rtcUseCases.js?v=274';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=240';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=245';
+import { t } from '../i18n/i18n.js?v=256';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
@@ -259,16 +259,25 @@ export function renderRtcPanel() {
   const mySpells = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
   const healSpells = mySpells.filter(([, s]) => s.type === 'heal');
 
-  const healSpellId = G.rtc.healSpell || defaultHealSpellId(voc, G.level);
+  // Um id salvo (magia/poção) pode ter sido REMOVIDO/renomeado numa versão nova.
+  // Sem esse fallback, SPELLS[idVelho].words / ITEMS[idVelho].name jogam TypeError
+  // e quebram o render da aba RTC inteira pra quem tem a config antiga no save.
+  let healSpellId = G.rtc.healSpell || defaultHealSpellId(voc, G.level);
+  if (!SPELLS[healSpellId]) healSpellId = defaultHealSpellId(voc, G.level);
+  const healSpell = SPELLS[healSpellId] || {};
   const prioSpells = normalizeAttackSpells(G.rtc);
   const tiers = normalizeHealTiers(G.rtc);
   const atkSummary = prioSpells.length
-    ? prioSpells.map((entry, i) => `${i + 1}. "${isRuneEntry(entry) ? ITEMS[runeEntryId(entry)].name : SPELLS[entry].words}"`).join(' → ')
+    ? prioSpells.map((entry, i) => {
+        const rid = runeEntryId(entry);
+        const rotulo = isRuneEntry(entry) ? (ITEMS[rid]?.name || rid) : (SPELLS[entry]?.words || entry);
+        return `${i + 1}. "${rotulo}"`;
+      }).join(' → ')
     : t('rtc.noAttackConfigured');
   const healSpellUnlocked = isSpellAvailable(healSpellId, voc, G.level);
-  const healSpellName = `"${SPELLS[healSpellId].words}"${G.rtc.healSpell ? '' : t('rtc.defaultSuffix')}${healSpellUnlocked ? '' : ` 🔒 ${t('rtc.lockedLevel', { level: SPELLS[healSpellId].level })}`}`;
-  const healPotionName = G.rtc.healPotion ? ITEMS[G.rtc.healPotion].name : t('rtc.none');
-  const manaPotionName = G.rtc.manaPotion ? ITEMS[G.rtc.manaPotion].name : t('rtc.none');
+  const healSpellName = `"${healSpell.words || healSpellId}"${G.rtc.healSpell ? '' : t('rtc.defaultSuffix')}${healSpellUnlocked ? '' : ` 🔒 ${t('rtc.lockedLevel', { level: healSpell.level || 0 })}`}`;
+  const healPotionName = G.rtc.healPotion ? (ITEMS[G.rtc.healPotion]?.name || G.rtc.healPotion) : t('rtc.none');
+  const manaPotionName = G.rtc.manaPotion ? (ITEMS[G.rtc.manaPotion]?.name || G.rtc.manaPotion) : t('rtc.none');
 
   el.innerHTML = `
     <div class="rtc-console">
