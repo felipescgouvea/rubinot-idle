@@ -191,7 +191,23 @@ body {
 .stamina-pill.tier-mid { color: #ffcf7a; border-color: #d98a1f66; }
 .stamina-pill.tier-low { color: #ff9a8a; border-color: #e05a5a66; }
 
-#header-btns { display: flex; gap: 7px; }
+#header-btns { display: flex; gap: 7px; align-items: center; }
+
+/* Prova social ao vivo: "🟢 N online" no cabeçalho. Verde discreto pra ler como
+   "gente jogando agora" sem competir com o dourado do resto. Clicável → ranking. */
+.online-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #2ecc7118; border: 1px solid #2ecc7155; border-radius: 4px;
+  padding: 3px 10px; font-size: 11.5px; font-weight: 700; white-space: nowrap;
+  color: #6bf0a0; cursor: pointer; transition: filter .12s;
+}
+.online-pill:hover { filter: brightness(1.15); }
+.online-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #2ecc71;
+  box-shadow: 0 0 5px #2ecc71; animation: online-pulse 2s ease-in-out infinite;
+}
+@keyframes online-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .online-dot { animation: none; } }
 
 .btn-small {
   background: linear-gradient(180deg, var(--brown-btn), #6e5a42);

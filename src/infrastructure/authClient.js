@@ -495,6 +495,13 @@ export function fetchHighscoresOnServer(category) {
   return huntFetch(`/highscores?category=${encodeURIComponent(category)}`);
 }
 
+// Prova social ao vivo: quantos jogadores online agora + topo do ranking. O
+// endpoint é público (não exige auth), mas passar pelo huntFetch não atrapalha
+// — o servidor ignora o token nesta rota.
+export function fetchOnline() {
+  return huntFetch('/online');
+}
+
 // ---- Daily Reward (piloto) — ver server/src/index.js ----
 export function fetchDailyRewardState(slot) {
   return huntFetch(`/daily-reward/state?slot=${slot}`);

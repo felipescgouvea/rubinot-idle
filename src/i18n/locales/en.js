@@ -4,6 +4,8 @@ export default {
   // ---- shell (header, tabs, barra de status do personagem) ----
   'shell.config': 'Settings',
   'shell.daily': 'Daily',
+  'shell.online': 'online',
+  'shell.onlineTitle': '{n} players online now — click to see the ranking',
   'shell.tabHunt': 'Hunt',
   'shell.tabTasks': 'Tasks',
   'shell.tabTraining': 'Training',
