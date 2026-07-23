@@ -476,8 +476,13 @@ try {
     d.areaFora.slice(0, 4).forEach(f => problemas.push('área: ' + f));
   } else if (!d.areaTiles) {
     // Não é falha automática: knight não tem magia de área, e nem toda vocação
-    // arma uma. Só vira problema quando UMA FOI ARMADA e mesmo assim nada saiu.
-    if (AREA_ARMADA) problemas.push(`a magia de área "${AREA_ARMADA}" foi armada e NENHUM efeito apareceu na tela`);
+    // arma uma. E mesmo com uma armada, um personagem que MATA NO MELEE antes do
+    // RTC chegar a lançar (lv100 one-shotando rato) nunca dispara o efeito — isso
+    // é comportamento correto, não bug. Só vira problema de verdade num CASTER
+    // (magia é o ataque principal); no corpo a corpo fica inconclusivo.
+    const ehCaster = ['sorcerer', 'druid', 'paladin'].includes(d.voc);
+    if (AREA_ARMADA && ehCaster) problemas.push(`a magia de área "${AREA_ARMADA}" foi armada e NENHUM efeito apareceu na tela`);
+    else if (AREA_ARMADA) inconclusivos.push(`magia de área "${AREA_ARMADA}" armada mas o ${d.voc} matou no melee antes de lançar — efeito não exercitado`);
     else inconclusivos.push('nenhuma magia de área foi lançada — efeito de área não exercitado');
   } else ok.push(`efeito de área desenhado dentro do palco (${d.areaTiles} tiles)`);
 
