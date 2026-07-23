@@ -4,7 +4,7 @@
 // custa mana E soul. É o que impede o jogador de virar uma fábrica infinita de
 // runas: mana volta rápido, soul não. Ver domain/spells.js (campo `soul`).
 //
-// Os números são os do TFS (data/XML/vocations.xml), iguais pras quatro
+// Os números são os do Crystal Server (data/XML/vocations.xml), iguais pras quatro
 // vocações — o que muda é a promoção:
 //   soulmax        100  ->  200 promovido
 //   gainsoulticks  120s ->   15s promovido   (1 ponto por intervalo)

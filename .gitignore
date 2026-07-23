@@ -4,3 +4,4 @@ node_modules/
 # (repo é público / serve o GitHub Pages). Ver scripts/audit-browser.
 .test-account.json
 scripts/.wiki-cache/
+reference/

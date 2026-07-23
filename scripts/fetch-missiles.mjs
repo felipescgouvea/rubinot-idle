@@ -1,6 +1,6 @@
 // Baixa os sprites REAIS de projétil (distance effect) do TibiaWiki.
 //
-// Cada munição do Tibia tem seu PRÓPRIO projétil — o items.xml do Canary dá o
+// Cada munição do Tibia tem seu PRÓPRIO projétil — o items.xml do Crystal Server dá o
 // `shootType` de cada uma (arrow, burstarrow, onyxarrow, spectralbolt...), 21
 // distintos. Aqui só existiam 9 sprites genéricos por elemento, então a Burst
 // Arrow saía como flecha comum e a maioria das munições voava errada.

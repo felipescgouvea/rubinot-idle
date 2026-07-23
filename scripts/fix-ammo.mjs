@@ -1,8 +1,8 @@
 // Corrige o catálogo de MUNIÇÃO contra o Tibia atual.
 //
-// Referência: opentibiabr/canary (data/items/items.xml) pro ataque e o
+// Referência: zimbadev/crystalserver (data/items/items.xml) pro ataque e o
 // elemento — é o servidor que acompanha o Tibia 13/14. O nível mínimo vem de
-// otland/forgottenserver 1.4 (data/weapons/weapons.xml), que é onde essa trava
+// zimbadev/crystalserver 1.4 (data/weapons/weapons.xml), que é onde essa trava
 // está escrita, complementado pelo TibiaWiki pras munições criadas depois.
 //
 // O que faz:
@@ -32,7 +32,7 @@ const REAIS = {
   arrow:              { atk: 25, reqLevel: 0 },
   bolt:               { atk: 30, reqLevel: 0 },
   poison_arrow:       { atk: 23, reqLevel: 0 },
-  // Burst Arrow explode: createCombatArea 3x3 em data/weapons/scripts/burst_arrow.lua.
+  // Burst Arrow explode: createCombatArea 3x3 em data/scripts/weapons/scripts/burst_arrow.lua.
   burst_arrow:        { atk: 27, reqLevel: 0, area: 'square' },
   simple_arrow:       { atk: 10, reqLevel: 1 },
   sniper_arrow:       { atk: 28, reqLevel: 20 },

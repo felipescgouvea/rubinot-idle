@@ -1,9 +1,9 @@
 // AUDITORIA DE VOCAÇÃO DAS MAGIAS — contra o TibiaWiki.
 //
-// Por que não basta o TFS: o spells.xml só traz <vocation> em ALGUMAS magias.
+// Por que não basta o Crystal Server: o spells.xml só traz <vocation> em ALGUMAS magias.
 // Quando a tag falta, meu diff anterior leu como "liberada pras quatro
 // vocações" — e foi assim que Enchant Staff, que é de mago, apareceu como
-// magia de knight e paladino. A ausência da tag no TFS não é permissão; é
+// magia de knight e paladino. A ausência da tag no Crystal Server não é permissão; é
 // só a tag faltando.
 //
 // O TibiaWiki tem o campo `vocation` de cada magia, que é a lista real do jogo.

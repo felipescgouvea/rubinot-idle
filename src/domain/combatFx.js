@@ -70,7 +70,7 @@ const SPELL_MISSILE = {
 };
 
 // Runas que VOAM do personagem até o alvo, com o sprite de cada uma. Mesma
-// fonte: o CONST_ANI_* de data/spells/scripts/attack/*_rune.lua no TFS.
+// fonte: o CONST_ANI_* de data/scripts/spells/attack/*_rune.lua no Crystal Server.
 const RUNE_MISSILE = {
   sudden_death_rune: 'death',
   avalanche_rune: 'ice', icicle_rune: 'ice',
@@ -105,7 +105,7 @@ export function runeEffectName(runeId) {
 // (mago) disparam; corpo-a-corpo (cavaleiro) não tem projétil (retorna null).
 //  - distance: a própria munição equipada (flecha/virote); sem munição, flecha.
 //  - magic: o "raio" elemental da wand/rod (energia/fogo/gelo/terra/morte).
-// Cada munição tem projétil PRÓPRIO no Tibia — o items.xml do Canary dá o
+// Cada munição tem projétil PRÓPRIO no Tibia — o items.xml do Crystal Server dá o
 // shootType de cada uma (arrow, burstarrow, onyxarrow, spectralbolt...), 21
 // distintos. Os sprites vêm do TibiaWiki (<Nome>_Missile.gif) via
 // scripts/fetch-missiles.mjs e ficam em assets/sprites/missiles/<id do item>.

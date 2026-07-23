@@ -1,5 +1,5 @@
 // Sistema de Presas (Prey). Regras FIÉIS ao Tibia — conferidas no source do
-// OTServBR/Canary (src/io/ioprey.cpp: PreySlot::reloadBonusValue e
+// Crystal Server (src/io/ioprey.cpp: PreySlot::reloadBonusValue e
 // reloadBonusType, mais os valores de config.lua.dist). Regras puras: nada aqui
 // toca DOM, storage ou G.
 //

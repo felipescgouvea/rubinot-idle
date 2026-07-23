@@ -282,7 +282,7 @@ function buildHuntSnapshot() {
   return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, prey: G.prey || [], fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1 };
 }
 
-// Estilo de Luta (Fight Mode do TFS, ver domain/combatFormulas: FIGHT_MODES) —
+// Estilo de Luta (Fight Mode do Crystal Server, ver domain/combatFormulas: FIGHT_MODES) —
 // Ofensivo / Equilibrado / Defensivo. Botões na janela de batalha (index.html).
 // Persiste no save; caçando, reinicia a sessão pra o servidor aplicar o novo
 // modo (via buildHuntSnapshot). Sem modo escolhido = 'balanced'.

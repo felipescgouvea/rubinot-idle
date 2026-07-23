@@ -19,7 +19,7 @@ export function triesPerMinuteFor(skillId) {
   return TRIES_PER_MINUTE;
 }
 
-// MAGIC LEVEL não ganha "tentativas": ele sobe por MANA GASTA (TFS,
+// MAGIC LEVEL não ganha "tentativas": ele sobe por MANA GASTA (Crystal Server,
 // Player::addManaSpent — a cada nível são 1600 · manaMultiplier^lv de mana).
 // Treinar ML é castar a mesma magia repetidamente, então o ganho por minuto é
 // simplesmente a mana que o personagem consegue gastar nesse minuto.

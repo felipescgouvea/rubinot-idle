@@ -56,7 +56,7 @@ export function computeMaxMana({ vocation, level }) {
 //    ao Tibia real — magic level NÃO escala o autoataque de wand, só as magias.
 // O "atk" de outros equipamentos NÃO entra aqui de propósito (no Tibia
 // elmo/armadura/anel não aumentam o ataque) — só a arma/munição/wand conta.
-// ATK exibido = dano MÁXIMO de arma do jogador, pela fórmula real do TFS
+// ATK exibido = dano MÁXIMO de arma do jogador, pela fórmula real do Crystal Server
 // (getMaxWeaponDamage / rollPlayerAttack). É só o número do painel; o dano real
 // do combate é rolado com normal_random(0, este valor) no servidor.
 export function computeAtk({ vocation, level, skills, equipment, relics }) {
@@ -89,7 +89,7 @@ export function computeAtk({ vocation, level, skills, equipment, relics }) {
 
 // DEF exibido = armadura (peças de corpo, Player::getArmor) + defesa de escudo
 // (Player::getDefense) — as duas fontes que reduzem dano físico no combate real
-// (ver reducePhysical). Fiel ao TFS, substitui o antigo shielding*1.2 + soma de def.
+// (ver reducePhysical). Fiel ao Crystal Server, substitui o antigo shielding*1.2 + soma de def.
 export function computeDef({ skills, equipment, relics }) {
   return computePlayerArmor(equipment, relics) + computePlayerDefense({ skills, equipment, relics });
 }
@@ -105,21 +105,21 @@ export function computeSpd({ vocation, equipment, relics }) {
 }
 
 // ===========================================================================
-// FÓRMULAS FIÉIS AO THE FORGOTTEN SERVER (otland/forgottenserver) — extraídas
-// verbatim do source (src/weapons.cpp, src/creature.cpp, src/tools.cpp). É o
+// FÓRMULAS FIÉIS AO Crystal Server (zimbadev/crystalserver) — extraídas
+// verbatim do source (src/items/weapons/weapons.cpp, src/creatures/creature.cpp, src/utils/tools.cpp). É o
 // caminho de dano REAL do combate (servidor-autoritativo, ver
 // server/src/huntEngine.js). Substituem o antigo calcDamage/monsterAttack
 // caseiros (mantidos abaixo só pro preview cosmético do cliente).
 // ===========================================================================
 
-// uniform_random (src/tools.cpp): inteiro uniforme em [min,max].
+// uniform_random (src/utils/tools.cpp): inteiro uniforme em [min,max].
 export function uniformRandom(minNumber, maxNumber) {
   const a = Math.min(minNumber, maxNumber);
   const b = Math.max(minNumber, maxNumber);
   return a + Math.floor(Math.random() * (b - a + 1));
 }
 
-// normal_random (src/tools.cpp): normal_distribution<float>(0.5, 0.25)
+// normal_random (src/utils/tools.cpp): normal_distribution<float>(0.5, 0.25)
 // reamostrada até cair em [0,1], mapeada linearmente pra [min,max]. O efeito é
 // que o dano tende ao MEIO da faixa (o dano "médio" é o mais comum, os extremos
 // raros) — diferente do uniforme chapado do antigo calcDamage. Gauss padrão via
@@ -142,7 +142,7 @@ export function normalRandom(minNumber, maxNumber) {
   return a + Math.round(x * (b - a));
 }
 
-// Weapons::getMaxWeaponDamage (src/weapons.cpp) — dano MÁXIMO de arma do jogador:
+// Weapons::getMaxWeaponDamage (src/items/weapons/weapons.cpp) — dano MÁXIMO de arma do jogador:
 //   round( level/5 + (((skill/4 + 1) * (atk/3)) * 1.03) / attackFactor )
 // level/5 é divisão INTEIRA no C++. attackFactor: modo ofensivo = 1.0 (o único
 // do jogo — não há modo balanceado/defensivo). O dano real é normal_random(0, max).
@@ -150,14 +150,14 @@ export function getMaxWeaponDamage(level, attackSkill, attackValue, attackFactor
   return Math.round(Math.floor(level / 5) + ((((attackSkill / 4) + 1) * (attackValue / 3)) * 1.03) / attackFactor);
 }
 
-// Weapons::getMaxMeleeDamage (src/weapons.cpp) — dano MÁXIMO de melee de MONSTRO:
+// Weapons::getMaxMeleeDamage (src/items/weapons/weapons.cpp) — dano MÁXIMO de melee de MONSTRO:
 //   ceil( skill*(atk*0.05) + atk*0.5 ). Usada quando o monstro define melee por
 // skill+attack (aqui tratamos monster.atk direto como o max, ver rollMonsterAttack).
 export function getMaxMeleeDamage(attackSkill, attackValue) {
   return Math.ceil((attackSkill * (attackValue * 0.05)) + (attackValue * 0.5));
 }
 
-// Creature::blockHit (src/creature.cpp) — redução de dano FÍSICO no ALVO:
+// Creature::blockHit (src/creatures/creature.cpp) — redução de dano FÍSICO no ALVO:
 //   defesa (bloqueio de escudo): dano -= uniform_random(def/2, def)
 //   armadura > 3:                dano -= uniform_random(arm/2, arm-(arm%2+1))
 //   armadura 1..3:               dano -= 1
@@ -177,7 +177,7 @@ export function reducePhysical(damage, armor, defense) {
   return Math.max(0, d);
 }
 
-// Player::getArmor (src/player.cpp) — soma o `def` das peças de CORPO
+// Player::getArmor (src/creatures/players/player.cpp) — soma o `def` das peças de CORPO
 // (elmo/armadura/pernas/botas/anel). NÃO inclui o escudo (isso é defesa, ver
 // computePlayerDefense) nem a arma.
 const ARMOR_SLOTS = ['helmet', 'armor', 'legs', 'boots', 'ring'];
@@ -190,8 +190,8 @@ export function computePlayerArmor(equipment, relics) {
   return armor;
 }
 
-// ---- Resistência elemental do jogador (Tibia/TFS: Item::getAbsorbPercent) ----
-// No TFS, dano elemental (fogo/energia/gelo/terra/morte/sagrado) NÃO reduz por
+// ---- Resistência elemental do jogador (Tibia/Crystal Server: Item::getAbsorbPercent) ----
+// No Crystal Server, dano elemental (fogo/energia/gelo/terra/morte/sagrado) NÃO reduz por
 // armadura/defesa — só pela RESISTÊNCIA do alvo, uma % de absorção por elemento
 // que vem das peças de equipamento (`absorbPercent[COMBAT_*]`). Sem isso, no
 // endgame o dano elemental dos monstros passava 100% direto e magos/paladinos
@@ -223,11 +223,11 @@ export function reduceElemental(damage, element, absorb) {
   return Math.max(0, damage * (1 - pct / 100));
 }
 
-// Estilo de luta (Fight Mode do Tibia/TFS). attackFactor DIVIDE o dano do
+// Estilo de luta (Fight Mode do Tibia/Crystal Server). attackFactor DIVIDE o dano do
 // jogador (fator maior = menos dano); defenseFactor MULTIPLICA a defesa de
-// escudo (maior = mais bloqueio). Valores REAIS do TFS (Player::getAttackFactor
+// escudo (maior = mais bloqueio). Valores REAIS do Crystal Server (Player::getAttackFactor
 // / getDefenseFactor). Só afeta dano FÍSICO e o auto-ataque de arma + o bloqueio
-// de escudo — magia e dano elemental NÃO mudam com o modo (fiel ao TFS).
+// de escudo — magia e dano elemental NÃO mudam com o modo (fiel ao Crystal Server).
 // fightMode omitido/desconhecido = 1.0/1.0 (comportamento antigo preservado).
 export const FIGHT_MODES = {
   attack:   { attackFactor: 1.0, defenseFactor: 0.5 },  // Ofensivo: dano máx, defesa reduzida
@@ -237,7 +237,7 @@ export const FIGHT_MODES = {
 function attackFactorOf(mode) { return (FIGHT_MODES[mode] && FIGHT_MODES[mode].attackFactor) || 1.0; }
 function defenseFactorOf(mode) { return (FIGHT_MODES[mode] && FIGHT_MODES[mode].defenseFactor) || 1.0; }
 
-// Player::getDefense (src/player.cpp), só a parte de ESCUDO (nossas armas não
+// Player::getDefense (src/creatures/players/player.cpp), só a parte de ESCUDO (nossas armas não
 // têm defense): (shielding/4 + 2.23) * defEscudo * 0.15 * defenseFactor. Sem
 // escudo equipado não há bloqueio de defesa (fist defense é desprezível).
 export function computePlayerDefense({ skills, equipment, relics, fightMode }) {
@@ -247,7 +247,7 @@ export function computePlayerDefense({ skills, equipment, relics, fightMode }) {
   return Math.floor((shielding / 4 + 2.23) * shield.def * 0.15 * defenseFactorOf(fightMode));
 }
 
-// Golpe básico do jogador ANTES da redução do alvo, fiel ao TFS (WeaponMelee/
+// Golpe básico do jogador ANTES da redução do alvo, fiel ao Crystal Server (WeaponMelee/
 // WeaponDistance/WeaponWand::getWeaponDamage). Retorna { damage, element,
 // physical }: `physical` diz se o alvo reduz por armadura (melee/distância) ou
 // não (wand elemental).
@@ -288,7 +288,7 @@ export function rollPlayerAttack({ vocation, level, skills, equipment, relics, f
     const max = getMaxWeaponDamage(level, skill, attackValue, af);
     const min = Math.ceil(level * 0.2);
     // A munição carrega a FORMA do golpe e o elemento: Burst Arrow explode em
-    // 3x3 (data/weapons/scripts/burst_arrow.lua do TFS) e as flechas elementais
+    // 3x3 (data/scripts/weapons/scripts/burst_arrow.lua do Crystal Server) e as flechas elementais
     // (Flaming/Shiver/Flash/Earth/Envenomed) causam dano do elemento, não
     // físico. Antes tudo isso era jogado fora: toda flecha batia igual, em
     // alvo único — o Felipe reparou que a Burst Arrow era single target.
@@ -311,8 +311,8 @@ export function rollPlayerAttack({ vocation, level, skills, equipment, relics, f
   return { damage: normalRandom(0, max), element: 'physical', physical: true };
 }
 
-// Ataque do MONSTRO contra o jogador ANTES da redução, fiel ao TFS. `monster.atk`
-// do bestiário é tratado como o dano MÁXIMO de melee (equivale a um monstro TFS
+// Ataque do MONSTRO contra o jogador ANTES da redução, fiel ao Crystal Server. `monster.atk`
+// do bestiário é tratado como o dano MÁXIMO de melee (equivale a um monstro Crystal Server
 // com melee `min=0 max=-atk`) — melee = normal_random(0, atk), físico. Se tem
 // magias, 50% de chance de castar uma (mantém a cadência de UM ataque por tick,
 // só corrige a matemática): normal_random(min,max) do elemento. `physical` diz se
@@ -332,7 +332,7 @@ export function rollMonsterAttack(monster) {
   return { damage: normalRandom(0, Math.max(0, monster.atk || 0)), element: 'physical', kind: 'melee', physical: true };
 }
 
-// Cadência FIEL ao TFS: melee e magia do monstro disparam INDEPENDENTES (cada um
+// Cadência FIEL ao Crystal Server: melee e magia do monstro disparam INDEPENDENTES (cada um
 // no seu intervalo), não "um ou outro". Estas duas funções separam os dois golpes
 // pro tick do servidor agendar cada um por conta própria (ver huntEngine.js).
 
@@ -361,7 +361,7 @@ export function calcDamage(atk, def) {
 }
 
 // Ação de ataque do monstro contra o jogador neste golpe. Se o monstro tem
-// magias (spells do TFS — elemento + dano), tem chance de castar uma (dano
+// magias (spells do Crystal Server — elemento + dano), tem chance de castar uma (dano
 // ELEMENTAL, que ignora a armadura física, como no Tibia); senão dá o golpe
 // melee físico (reduzido pela DEF). Casters ficam perigosos mesmo com melee
 // fraco. Retorna { dmg, element, kind: 'melee' | 'spell' }.
@@ -377,20 +377,20 @@ export function monsterAttack(monster, playerDef) {
   return { dmg: calcDamage(monster.atk, playerDef), element: 'physical', kind: 'melee' };
 }
 
-// FÓRMULA REAL DO TIBIA (TFS) pra dano/cura de magias e runas. O valor é um
+// FÓRMULA REAL DO TIBIA (Crystal Server) pra dano/cura de magias e runas. O valor é um
 // número aleatório uniforme entre min e max, onde:
 //   min = nível/5 + aMin·X + baseMin ;  max = nível/5 + aMax·X + baseMax
 // e X é a variável de escala: Magic Level (padrão), skill·ataque (magias físicas
 // de melee: Berserk/Groundshaker/Fierce Berserk) ou skill de distância (Ethereal
 // Spear). Os 4 coeficientes [aMin, baseMin, aMax, baseMax] são o "base power" de
 // cada magia/runa (ver domain/spells.js e domain/items.js) — extraídos dos
-// scripts oficiais do TFS (otland/forgottenserver: data/scripts/spells).
+// scripts oficiais do Crystal Server (zimbadev/crystalserver: data/scripts/spells).
 export function levelMagicRoll(level, x, power) {
   const [aMin, bMin, aMax, bMax] = power;
   const base = level / 5;
   const min = base + x * aMin + bMin;
   const max = base + x * aMax + bMax;
-  // TFS rola o valor entre min e max com normal_random (o engine trunca pra int:
+  // Crystal Server rola o valor entre min e max com normal_random (o engine trunca pra int:
   // normal_random((int)mina, (int)maxa)), não uniforme — dano tende ao meio da
   // faixa. Mesma média de antes; só a distribuição fica fiel.
   return Math.max(1, normalRandom(Math.floor(min), Math.floor(max)));
@@ -451,7 +451,7 @@ export function spawnMonsterInstance(zone, monsterCatalog, playerLevel, bossMult
     xp: Math.floor(def.xp * mult),
     gold: def.gold.map(g => Math.floor(g * mult)),
     loot: def.loot,
-    // Magias/ataques à distância do monstro (elemento + dano), do TFS — o
+    // Magias/ataques à distância do monstro (elemento + dano), do Crystal Server — o
     // monstro pode castá-las contra o jogador (ver application/huntUseCases.js).
     spells: def.spells || null,
     spellMult: mult, // pra escalar o dano das magias no Boss Rush

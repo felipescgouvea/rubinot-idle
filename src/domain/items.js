@@ -96,8 +96,8 @@ export const ITEMS = {
   // --- Poções (curam HP/mana ao usar — não ocupam slot de equipamento) ---
   // heal/mana = o PONTO MÉDIO da faixa real do Tibia (ver
   // domain/combatFormulas.js: potionRestore, que sorteia ±15% em cima disso —
-  // ex.: Health Potion 150±15% ≈ 127-172, contra o 125-175 real do TFS).
-  // reqLevel/reqVoc fiéis ao TFS (data/actions/scripts/others/potions.lua):
+  // ex.: Health Potion 150±15% ≈ 127-172, contra o 125-175 real do Crystal Server).
+  // reqLevel/reqVoc fiéis ao Crystal Server (data/scripts/actions/items/potions.lua):
   // Great Health Potion é EXCLUSIVA de Knight (paladin usa Great Spirit, que
   // já cura E repõe mana); as poções de mana Strong/Great valem pra quem tem
   // mana pra gastar (paladin incluso na Great, todo mundo na Strong).
@@ -113,7 +113,7 @@ export const ITEMS = {
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 180 },
   intense_healing_rune: { name: 'Intense Healing Rune', icon: '📜', type: 'rune', heal: 150, sell: 70 },
   // `area` = forma de área do Tibia (ver domain/attackAreas.js). Conferido
-  // linha a linha contra os scripts do TFS (data/spells/scripts/attack/*_rune.lua,
+  // linha a linha contra os scripts do Crystal Server (data/scripts/spells/attack/*_rune.lua,
   // chamada createCombatArea) — não é chute:
   //   sem setArea  -> 'single'  (SD, Fireball, Icicle, Stalagmite, Soulfire,
   //                              Magic Missile, Holy Missile)
@@ -121,7 +121,7 @@ export const ITEMS = {
   //   AREA_SQUARE1X1-> 'square'    (as três bombas: Fire/Poison/Energy Bomb)
   //   AREA_CIRCLE3X3-> 'ball'      (Avalanche, Great Fireball, Stone Shower,
   //                                 Thunderstorm)
-  // `power` = base power REAL do Tibia/TFS [aMin, baseMin, aMax, baseMax]; o dano é
+  // `power` = base power REAL do Tibia/Crystal Server [aMin, baseMin, aMax, baseMax]; o dano é
   // aleatório entre min/max, min = nível/5 + aMin·ML + baseMin (idem max) — mesma
   // fórmula das magias (ver domain/combatFormulas.js: runeDamage). `dmg` é só um
   // valor de referência pra listagem/ordenação (não entra no cálculo).
@@ -132,7 +132,7 @@ export const ITEMS = {
   great_fireball_rune:  { name: 'Great Fireball Rune', icon: '📜', type: 'rune', dmg: 90, power: [1.2, 7, 2.85, 16], area: 'ball', element: 'fire', reqMl: 7, sell: 45 },
   // --- Demais runas reais de Tibia, completando o catálogo de Artigos
   // Mágicos (auditoria 2026-07-14). Runas de dano seguem o mesmo `power`
-  // (base power real do TFS) usado acima; as runas utilitárias (sem dano —
+  // (base power real do Crystal Server) usado acima; as runas utilitárias (sem dano —
   // ex.: Convince Creature, Create Food) não participam de combate, então
   // ficam só com `sell`/ícone pra serem colecionáveis/comerciáveis. ---
   light_magic_missile_rune:  { name: 'Light Magic Missile Rune', icon: '📜', type: 'rune', dmg: 15, power: [0.4, 3, 0.8, 6], area: 'single', element: 'energy', reqMl: 0, sell: 6 },
@@ -157,7 +157,7 @@ export const ITEMS = {
   thunderstorm_rune:     { name: 'Thunderstorm Rune', icon: '📜', type: 'rune', dmg: 130, power: [1.3, 8, 2.6, 16], area: 'ball', element: 'energy', reqMl: 9, sell: 150 },
   soulfire_rune:         { name: 'Soulfire Rune', icon: '📜', type: 'rune', dmg: 170, power: [1.7, 11, 3.4, 22], area: 'single', element: 'fire', reqMl: 13, sell: 220 },
   desintegrate_rune:     { name: 'Desintegrate Rune', icon: '📜', type: 'rune', dmg: 115, power: [1.4, 8, 2.8, 17], area: 'single', element: 'physical', reqMl: 6, sell: 50 },
-  // Runa exclusiva do paladino (TFS a marca com <vocation name="Paladin">) —
+  // Runa exclusiva do paladino (Crystal Server a marca com <vocation name="Paladin">) —
   // faltava no catálogo, era a única runa de ataque do jogo sem representação.
   holy_missile_rune:     { name: 'Holy Missile Rune', icon: '📜', type: 'rune', dmg: 90, power: [1.8, 11, 3.8, 23], area: 'single', element: 'holy', reqMl: 7, sell: 40 },
   cure_poison_rune:      { name: 'Cure Poison Rune', icon: '📜', type: 'rune', sell: 15 },

@@ -2,7 +2,7 @@
 // Usa as funções REAIS do jogo (domain/combatFormulas.js), não uma reimplementação
 // — se a fórmula mudar, esta simulação muda junto.
 //
-// Fórmula (idêntica ao TFS, src/weapons.cpp: Weapons::getMaxWeaponDamage):
+// Fórmula (idêntica ao Crystal Server, src/weapons.cpp: Weapons::getMaxWeaponDamage):
 //   max = round( floor(level/5) + ((skill/4 + 1) * (atk/3) * 1.03) / fatorDeAtaque )
 // e o dano do golpe é sorteado com normal_random (tende ao MEIO da faixa):
 //   melee (knight)     -> normal_random(0, max)
@@ -78,5 +78,5 @@ for (const sk of [10, 30, 50, 70, 90, 110]) {
     + `${(((p.media / k.media) - 1) * 100).toFixed(0).padStart(6)}%`);
 }
 console.log('\nObs.: o knight sorteia de 0 até o máximo; o paladino sorteia de');
-console.log(`ceil(nível*0.2)=${Math.ceil(LEVEL * 0.2)} até o máximo (é assim no TFS, contra monstro).`);
+console.log(`ceil(nível*0.2)=${Math.ceil(LEVEL * 0.2)} até o máximo (é assim no Crystal Server, contra monstro).`);
 console.log('Por isso, com o MESMO ataque efetivo, o paladino tem a média um pouco maior.');

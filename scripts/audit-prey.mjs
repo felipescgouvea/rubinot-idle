@@ -33,7 +33,7 @@ try {
   // ---------- 1. as REGRAS ----------
   const regras = await page.evaluate(async () => {
     const pr = await window.__liveImport('prey.js');
-    // fórmulas do Canary: dano 2r+5, defesa 2r+10, xp/loot 3r+10
+    // fórmulas do Crystal Server: dano 2r+5, defesa 2r+10, xp/loot 3r+10
     const esperado = { damage: r => 2 * r + 5, defense: r => 2 * r + 10, xp: r => 3 * r + 10, loot: r => 3 * r + 10 };
     const erradas = [];
     for (const tipo of Object.keys(esperado)) {

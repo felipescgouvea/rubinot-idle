@@ -10,7 +10,7 @@
 // com Magic Level).
 import { ITEMS } from './items.js?v=244';
 
-// Exceções por runa. No TFS a maioria das runas de ataque não tem restrição de
+// Exceções por runa. No Crystal Server a maioria das runas de ataque não tem restrição de
 // vocação nenhuma; as que têm estão aqui (Holy Missile é marcada
 // <vocation name="Paladin"> em data/spells/spells.xml).
 const ATTACK_RUNE_VOCATIONS = {

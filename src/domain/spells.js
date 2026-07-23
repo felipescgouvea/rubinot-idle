@@ -14,13 +14,13 @@
 // Enquanto a magia está em cooldown, o RTC não a casta de novo — o personagem
 // faz o golpe básico nesse meio-tempo (ver application/huntUseCases.js).
 //
-// `power` = BASE POWER da magia: os 4 coeficientes REAIS do Tibia/TFS
+// `power` = BASE POWER da magia: os 4 coeficientes REAIS do Tibia/Crystal Server
 // [aMin, baseMin, aMax, baseMax]. O dano/cura é um valor aleatório uniforme entre
 // min e max, onde (ver domain/combatFormulas.js):
 //   min = nível/5 + aMin·X + baseMin ;  max = nível/5 + aMax·X + baseMax
 // X = Magic Level (padrão), ou, nas magias físicas de knight: skill·ataque
 // (`scale:'melee'`) ou skill de distância do paladino (`scale:'distance'`).
-// Valores extraídos dos scripts oficiais do TFS (otland/forgottenserver).
+// Valores extraídos dos scripts oficiais do Crystal Server (zimbadev/crystalserver).
 export const SPELLS = {
   // --- Cura de nível 1, do Dawnport (TibiaWiki: Dawnport) — sem elas, um personagem
   // recém-criado ficava sem NENHUMA spell de cura disponível até nível 8 (só sobrava
@@ -110,7 +110,7 @@ export const SPELLS = {
   // dano na hora: grudam uma condição no monstro que sangra por vários
   // segundos. Por isso não têm `power` — têm `dot` (ver a explicação do
   // campo lá em cima, e domain/dotDamage.js pra conta de cada golpe).
-  // Números conferidos em data/spells/scripts/attack/*.lua do TFS.
+  // Números conferidos em data/scripts/spells/attack/*.lua do Crystal Server.
   // ===================================================================
   utori_flam:       { name: 'Ignite', words: 'utori flam', icon: '🔥', voc: ['sorcerer'], level: 26, mana: 30, type: 'attack', element: 'fire', area: 'single', cd: 2,
                       dot: { list: 'varying', rounds: [0.3, 2, 0.6, 4], damage: 10, everyMs: [8000, 10000] } },
@@ -123,12 +123,12 @@ export const SPELLS = {
   utori_pox:        { name: 'Envenom', words: 'utori pox', icon: '🤢', voc: ['druid'], level: 50, mana: 30, type: 'attack', element: 'earth', area: 'single', cd: 2,
                       dot: { list: 'logarithmic', damage: [0.55, 6, 0.75, 7], everyMs: [4000, 4000] } },
   // Única "utori" do knight: escala com a MELHOR skill de arma corpo a corpo
-  // (o TFS varre club/sword/axe e pega a maior), não com Magic Level.
+  // (o Crystal Server varre club/sword/axe e pega a maior), não com Magic Level.
   utori_kor:        { name: 'Inflict Wound', words: 'utori kor', icon: '🩸', voc: ['knight'], level: 40, mana: 30, type: 'attack', element: 'physical', area: 'single', cd: 2,
                       dot: { list: 'logarithmic', scale: 'melee', damage: [0.2, 2, 0.4, 2], everyMs: [4000, 4000] } },
 
   // Lightning e Apprentice's Strike — dano imediato normal, só faltavam.
-  // Apprentice's Strike é a única magia do jogo com dano FIXO no TFS
+  // Apprentice's Strike é a única magia do jogo com dano FIXO no Crystal Server
   // (retorna -10/-20 direto, sem olhar nível nem Magic Level).
   exori_amp_vis:    { name: 'Lightning', words: 'exori amp vis', icon: '🌩️', voc: ['sorcerer'], level: 55, mana: 60, type: 'attack', power: [2.2, 12, 3.4, 21], element: 'energy', area: 'single', cd: 2 },
   exori_min_flam:   { name: "Apprentice's Strike", words: 'exori min flam', icon: '🔥', voc: ['sorcerer','druid'], level: 6, mana: 6, type: 'attack', power: [0, 10, 0, 20], element: 'fire', area: 'single', cd: 2 },
@@ -154,7 +154,7 @@ export const SPELLS = {
 
   // ===================================================================
   // SUPORTE. `buff` = o que a magia muda enquanto dura (ms). Os percentuais
-  // vêm dos CONDITION_PARAM_SKILL_*PERCENT do TFS: 135 significa "skill vale
+  // vêm dos CONDITION_PARAM_SKILL_*PERCENT do Crystal Server: 135 significa "skill vale
   // 135% do normal". `defenseOff` é o CONDITION_PARAM_DISABLE_DEFENSE —
   // Blood Rage e Sharpshooter batem mais forte e defendem zero.
   // As de utilidade fora de combate (luz, corda, procurar pessoa, invocar,
@@ -194,7 +194,7 @@ export const SPELLS = {
   // dos magos). Custam mana E soul points (ver domain/soul.js); as runas ainda
   // consomem uma Blank Rune de reagente, igual ao Tibia. `conjures` diz o que
   // sai e quantas cargas — números tirados da chamada conjureItem(reagente,
-  // item, quantidade) de cada data/spells/scripts/conjuring/*.lua do TFS.
+  // item, quantidade) de cada data/scripts/spells/conjuring/*.lua do Crystal Server.
   // ===================================================================
   exevo_infir_con:  { name: 'Arrow Call', words: 'exevo infir con', icon: '🏹', voc: ['paladin'], level: 1, mana: 30, soul: 1, type: 'conjure', conjures: { item: 'simple_arrow', count: 3 }, cd: 2 },
   exevo_con:        { name: 'Conjure Arrow', words: 'exevo con', icon: '🏹', voc: ['paladin'], level: 13, mana: 100, soul: 1, type: 'conjure', conjures: { item: 'arrow', count: 10 }, cd: 2 },

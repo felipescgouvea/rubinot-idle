@@ -7,7 +7,7 @@
 // não muda mais, mesmo que o conjurador morra.
 //
 // A montagem aqui é a tradução direta de Creature:addDamageCondition
-// (data/lib/core/creature.lua do TFS), incluindo as quatro formas de lista:
+// (data/lib/core/creature.lua do Crystal Server), incluindo as quatro formas de lista:
 //
 //   varying      N rodadas de dano fixo, cada uma com intervalo sorteado
 //   constant     N rodadas de dano fixo, intervalo igual em todas
@@ -21,7 +21,7 @@
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rndInt = (a, b) => Math.floor(rnd(a, b + 1));
 
-// min/max da fórmula do TFS: nível/80 + X·coef + base, onde X é Magic Level
+// min/max da fórmula do Crystal Server: nível/80 + X·coef + base, onde X é Magic Level
 // (padrão) ou a melhor skill corpo a corpo (Inflict Wound, scale:'melee').
 function faixa(dot, campo, { level, magicLevel, meleeSkill }) {
   const [aMin, bMin, aMax, bMax] = dot[campo];

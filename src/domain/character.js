@@ -76,7 +76,7 @@ export const VOC_TRAINING = {
 };
 
 // Multiplicadores REAIS de skill do Tibia global, por vocação — fonte:
-// forgottenserver (TFS), data/XML/vocations.xml, tag <skill id multiplier>.
+// Crystal Server (zimbadev/crystalserver), data/XML/vocations.xml, tag <skill id multiplier>.
 // É isso (não um único "multiplicador de treino" genérico) que faz o Knight
 // treinar Sword/Axe/Club rápido (1.1) mas Distance devagar (1.4), o Paladin o
 // oposto (1.2 melee, 1.1 distance), e mago treinar QUALQUER combate devagar
@@ -91,7 +91,7 @@ const SKILL_MULTIPLIERS = {
 // Level: mago sobe rápido (1.1), knight quase não sobe (3.0), paladin no meio (1.4).
 export const MANA_MULTIPLIER = { knight: 3.0, paladin: 1.4, sorcerer: 1.1, druid: 1.1 };
 
-// skillBase do Tibia (TFS: Vocation::skillBase) — o "custo inicial" de cada
+// skillBase do Tibia (Crystal Server: Vocation::skillBase) — o "custo inicial" de cada
 // skill antes do multiplicador de vocação entrar na conta. Shielding é o mais
 // caro (100); Distance o mais barato (30); os 4 melee ficam no meio (50).
 const SKILL_BASE = { fist: 50, club: 50, sword: 50, axe: 50, distance: 30, shielding: 100 };
@@ -113,7 +113,7 @@ const NEUTRAL_MANA_MULT = 3.0;   // igual ao knight: Magic Level sobe devagar
 const NEUTRAL_SKILL_MULT = 2.0;  // melee/shielding neutro
 
 // Tentativas necessárias pra passar do nível `lv` pro `lv+1` — fórmula REAL do
-// Tibia global (TFS: Vocation::getReqSkillTries / getReqMana):
+// Tibia global (Crystal Server: Vocation::getReqSkillTries / getReqMana):
 //   melee/shielding: skillBase[skill] · multiplicador[voc][skill] ^ (lv − 10)
 //   magic level:      1600 · manaMultiplier[voc] ^ lv
 //

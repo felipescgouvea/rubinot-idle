@@ -1,5 +1,5 @@
 // Simulação de PROGRESSÃO das 4 vocações — roda o loop de combate REAL (fórmulas
-// TFS-fiéis de combatFormulas.js, dados reais do bestiário) headless e mais
+// Crystal Server-fiéis de combatFormulas.js, dados reais do bestiário) headless e mais
 // rápido que o tempo real, pra ver o balanço: DPS, dano sofrido, sobrevivência,
 // XP/h e sustentabilidade de mana/suprimento por vocação em vários níveis.
 // Fiel ao servidor (huntEngine.resolveTick): SEM regen passivo em caçada — cura
@@ -135,7 +135,7 @@ function simulate(voc, lvl, minutes, mode = 'attack', absorbOverride = null) {
       const mr = rollMonsterAttack(mon);
       let d = mr.damage;
       if (mr.physical) d = reducePhysical(d, armor, defense);
-      else d = reduceElemental(d, mr.element, absorb); // resistência elemental do equipamento (fiel ao TFS)
+      else d = reduceElemental(d, mr.element, absorb); // resistência elemental do equipamento (fiel ao Crystal Server)
       d = Math.floor(d); state.hp -= d; state.dmgTaken += d;
     }
     // morte
@@ -155,7 +155,7 @@ function simulate(voc, lvl, minutes, mode = 'attack', absorbOverride = null) {
   };
 }
 
-console.log('=== SIMULAÇÃO DE PROGRESSÃO — 4 VOCAÇÕES (fórmulas TFS-fiéis, 30 min/checkpoint) ===');
+console.log('=== SIMULAÇÃO DE PROGRESSÃO — 4 VOCAÇÕES (fórmulas Crystal Server-fiéis, 30 min/checkpoint) ===');
 console.log('(fiel ao servidor: sem regen passivo em caçada; cura via spell/poção; cap do jogo = level 100)\n');
 const LEVELS = [8, 25, 50, 75, 100];
 for (const voc of ['knight', 'paladin', 'sorcerer', 'druid']) {

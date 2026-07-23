@@ -358,7 +358,7 @@ export const MONSTERS = {
 
   // --- Criaturas exclusivas de Dawnport (ilha inicial removida do Tibia
   // global, patch 15.12 — ver domain/cities.js: city 'dawnport'). Não estão
-  // no forgottenserver (engine genérica, sem o mapa de Dawnport), então hp/
+  // no crystalserver (engine genérica, sem o mapa de Dawnport), então hp/
   // exp/armor vêm do TibiaWiki (Infobox Creature de cada uma); atk é o teto
   // do dano de melee documentado (campo `abilities`, ex. {{Melee|0-12}}). ---
   badger:              { name: 'Badger', icon: '🦡', hp: 23, atk: 12, def: 1, xp: 5, gold: [0,3], loot: [['badger_fur',0.4]] },

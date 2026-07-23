@@ -1,23 +1,23 @@
 # Fórmulas de combate (referência técnica)
 
-Todo o dano de combate segue **à risca o source do The Forgotten Server**
-(otland/forgottenserver). As funções puras vivem em
+Todo o dano de combate segue **à risca o source do Crystal Server**
+(zimbadev/crystalserver). As funções puras vivem em
 `src/domain/combatFormulas.js`; o combate real (servidor-autoritativo) roda em
 `server/src/huntEngine.js` (`resolveTick`). Cada fórmula abaixo cita o arquivo
 C++ de origem.
 
-## Primitivas de aleatoriedade (`src/tools.cpp`)
+## Primitivas de aleatoriedade (`src/utils/tools.cpp`)
 
 - **`uniformRandom(min,max)`** — inteiro uniforme em `[min,max]`.
 - **`normalRandom(min,max)`** — `normal_distribution<float>(0.5, 0.25)` reamostrada
   até cair em `[0,1]`, mapeada linearmente pra `[min,max]`. O dano tende ao
   **meio** da faixa (média comum, extremos raros). É a distribuição usada em
-  **todo** rolo de dano no TFS (arma, melee de monstro, magia, runa).
+  **todo** rolo de dano no Crystal Server (arma, melee de monstro, magia, runa).
 
 ## Golpe básico do jogador (`WeaponMelee/Distance/Wand::getWeaponDamage`)
 
 O dano final é `normalRandom(0, max)` (melee) — o `max` vem de
-`Weapons::getMaxWeaponDamage` (`src/weapons.cpp`):
+`Weapons::getMaxWeaponDamage` (`src/items/weapons/weapons.cpp`):
 
 ```
 max = round( nível/5 + (((skill/4 + 1) · (ataque/3)) · 1.03) / attackFactor )
@@ -35,7 +35,7 @@ jogo). Por vocação:
 Só a **arma/munição/wand** conta pro ataque — elmo/armadura/anel não somam
 (fiel ao Tibia).
 
-## Redução de dano no alvo (`Creature::blockHit`, `src/creature.cpp`)
+## Redução de dano no alvo (`Creature::blockHit`, `src/creatures/creature.cpp`)
 
 Aplicada só a dano **FÍSICO** (melee/distância). Elemental (fogo/energia/gelo/
 terra/morte/sagrado) **ignora** armadura — só resistência do alvo reduz
@@ -58,7 +58,7 @@ armadura 1..3:               dano -= 1
 ## Ataque do monstro (`rollMonsterAttack`)
 
 `monster.atk` do bestiário é o dano **MÁXIMO de melee** (equivale a um monstro
-TFS com melee `min=0 max=-atk`):
+Crystal Server com melee `min=0 max=-atk`):
 
 - **Melee** (físico): `normalRandom(0, atk)`, reduzido por armadura+defesa do
   jogador.
@@ -75,7 +75,7 @@ TFS com melee `min=0 max=-atk`):
 
 ## Magias e runas (`levelMagicRoll` / `spellAttackDamage` / `runeDamage`)
 
-Fórmula real do TFS (scripts Lua de `data/scripts/spells`), com o `power` de
+Fórmula real do Crystal Server (scripts Lua de `data/scripts/spells`), com o `power` de
 cada magia/runa `[aMin, baseMin, aMax, baseMax]`:
 
 ```

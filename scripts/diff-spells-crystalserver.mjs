@@ -1,23 +1,23 @@
-// Diff do nosso catálogo de magias contra o do TFS (otland/forgottenserver).
+// Diff do nosso catálogo de magias contra o do Crystal Server (zimbadev/crystalserver).
 //
-// Regra do projeto: fórmula/valores de combate seguem o source do TFS, nunca
-// memória. Este script baixa data/spells/spells.xml do TFS e compara, magia a
+// Regra do projeto: fórmula/valores de combate seguem o source do Crystal Server, nunca
+// memória. Este script baixa data/spells/spells.xml do Crystal Server e compara, magia a
 // magia, três coisas objetivas: nível mínimo, custo de mana e vocações.
 // Também lista o que existe lá e não existe aqui (o "o que está faltando").
 //
-// Uso: node scripts/diff-spells-tfs.mjs
+// Uso: node scripts/diff-spells-crystal.mjs
 import { SPELLS } from '../src/domain/spells.js?v=0';
 
 const RAMO = process.env.TFS_REF || '1.4';   // master já migrou pra Lua e o XML ficou vazio
-const URL = `https://raw.githubusercontent.com/otland/forgottenserver/${RAMO}/data/spells/spells.xml`;
+const URL = `https://raw.githubusercontent.com/zimbadev/crystalserver/${RAMO}/data/spells/spells.xml`;
 const VOCS = ['sorcerer', 'druid', 'paladin', 'knight'];
 
 const xml = await fetch(URL).then(r => r.text());
-if (!xml.includes('<instant')) throw new Error(`spells.xml vazio em ${RAMO} — o TFS moveu as magias pra Lua nesse ramo`);
+if (!xml.includes('<instant')) throw new Error(`spells.xml vazio em ${RAMO} — o Crystal Server moveu as magias pra Lua nesse ramo`);
 
 // Só o que um JOGADOR conjura: as entradas sem grupo são magias de monstro
 // (words "###1") e de casa (aleta grav), não entram na comparação.
-const tfs = [];
+const crystal = [];
 for (const m of xml.matchAll(/<(instant|rune)\b([^>]*?)(\/>|>([\s\S]*?)<\/\1>)/g)) {
   const [, tag, attrs, , inner = ''] = m;
   const at = k => (attrs.match(new RegExp(`${k}="([^"]*)"`)) || [, ''])[1];
@@ -25,7 +25,7 @@ for (const m of xml.matchAll(/<(instant|rune)\b([^>]*?)(\/>|>([\s\S]*?)<\/\1>)/g
   if (!grupo || !at('name')) continue;
   const vocs = [...new Set([...inner.matchAll(/<vocation name="([^"]+)"/g)]
     .map(v => v[1].toLowerCase()).filter(v => VOCS.includes(v)))];
-  tfs.push({
+  crystal.push({
     tag, grupo, nome: at('name'), words: at('words'),
     level: Number(at('lvl') || at('level') || 0), mana: Number(at('mana') || 0),
     soul: Number(at('soul') || 0),
@@ -41,7 +41,7 @@ const nossasPorWords = new Map(Object.entries(SPELLS).map(([id, s]) => [s.words,
 const divergencias = [];
 const faltando = { attack: [], healing: [], support: [], conjure: [] };
 
-for (const t of tfs) {
+for (const t of crystal) {
   if (!t.words) continue;                      // runa lançada como item, não como magia
   const nossa = nossasPorWords.get(t.words);
   if (!nossa) {
@@ -49,20 +49,20 @@ for (const t of tfs) {
     continue;
   }
   const d = [];
-  if (nossa.level !== t.level) d.push(`nível ${nossa.level} != TFS ${t.level}`);
-  if (nossa.mana !== t.mana && t.mana > 0) d.push(`mana ${nossa.mana} != TFS ${t.mana}`);
+  if (nossa.level !== t.level) d.push(`nível ${nossa.level} != Crystal Server ${t.level}`);
+  if (nossa.mana !== t.mana && t.mana > 0) d.push(`mana ${nossa.mana} != Crystal Server ${t.mana}`);
   const nv = [...nossa.voc].sort().join(',');
   const tv = t.vocs.join(',');
-  if (nv !== tv) d.push(`vocações ${nv} != TFS ${tv}`);
+  if (nv !== tv) d.push(`vocações ${nv} != Crystal Server ${tv}`);
   if (d.length) divergencias.push(`${t.nome} ("${t.words}"): ${d.join(' · ')}`);
 }
 
 const soNossas = Object.entries(SPELLS)
-  .filter(([, s]) => !tfs.some(t => t.words === s.words))
+  .filter(([, s]) => !crystal.some(t => t.words === s.words))
   .map(([id, s]) => `${s.name} ("${s.words}") [${id}]`);
 
 const cab = s => `\n${'='.repeat(70)}\n${s}\n${'='.repeat(70)}`;
-console.log(`TFS ${RAMO}: ${tfs.length} magias de jogador · nosso catálogo: ${Object.keys(SPELLS).length}`);
+console.log(`Crystal Server ${RAMO}: ${crystal.length} magias de jogador · nosso catálogo: ${Object.keys(SPELLS).length}`);
 
 for (const [grupo, lista] of Object.entries(faltando)) {
   if (!lista.length) continue;
@@ -76,5 +76,5 @@ for (const [grupo, lista] of Object.entries(faltando)) {
 console.log(cab(`DIVERGÊNCIAS de nível/mana/vocação (${divergencias.length})`));
 divergencias.forEach(d => console.log('  ' + d));
 
-console.log(cab(`SÓ NOSSAS — não existem no TFS ${RAMO} (${soNossas.length})`));
+console.log(cab(`SÓ NOSSAS — não existem no Crystal Server ${RAMO} (${soNossas.length})`));
 soNossas.forEach(s => console.log('  ' + s));

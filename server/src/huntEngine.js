@@ -50,12 +50,12 @@ export function getLiveSessionBySlot(userId, slot) {
 
 const ATTACK_GROUP_CD_MS = 2000;
 const POTION_CD_MS = 1000;
-// Cadência de ataque FIEL ao TFS: o tick roda numa batida fixa de 2s (a
+// Cadência de ataque FIEL ao Crystal Server: o tick roda numa batida fixa de 2s (a
 // velocidade de ataque de arma padrão do Tibia, ~2000ms — NÃO escala com
 // spd/haste, que no Tibia é só movimento). A cada tick o jogador dá um golpe,
-// o monstro dá um melee, e — independente do melee, como no TFS — tenta uma
+// o monstro dá um melee, e — independente do melee, como no Crystal Server — tenta uma
 // magia com MONSTER_SPELL_CHANCE. Antes o tick escalava por spd e o monstro
-// fazia "50% melee OU 50% magia" (um ou outro), o que não é o TFS.
+// fazia "50% melee OU 50% magia" (um ou outro), o que não é o Crystal Server.
 const TICK_MS = 2000;
 const MONSTER_SPELL_CHANCE = 0.5;
 // Folga entre um monstro spawnar e poder contra-atacar — dá tempo do cliente
@@ -76,7 +76,7 @@ function getDef(session) {
   return computeDef({ skills: session.skills, equipment: session.equipment, relics: session.relics });
 }
 // Armadura (peças de corpo) e defesa (escudo) do jogador — separadas, fiéis ao
-// TFS (Player::getArmor / Player::getDefense), usadas na redução de dano físico
+// Crystal Server (Player::getArmor / Player::getDefense), usadas na redução de dano físico
 // que o jogador SOFRE (Creature::blockHit, ver rollMonsterAttack + reducePhysical).
 function getPlayerArmor(session) {
   return computePlayerArmor(session.equipment, session.relics);
@@ -85,7 +85,7 @@ function getPlayerDefense(session) {
   return computePlayerDefense({ skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
 }
 // Resistência elemental do jogador (% de absorção por elemento, das peças
-// equipadas) — fiel ao TFS (Item::getAbsorbPercent). Reduz o dano elemental
+// equipadas) — fiel ao Crystal Server (Item::getAbsorbPercent). Reduz o dano elemental
 // que o jogador SOFRE das magias do monstro (ver reduceElemental no contra-
 // ataque). Lida fresca a cada tick pra respeitar troca de equipamento na caçada.
 function getPlayerAbsorb(session) {
@@ -507,7 +507,7 @@ async function resolveTick(session) {
     || pack[0];
 
   // (1) golpe básico — só o alvo da frente (o básico nunca tem área, só magia/
-  // runa podem ter). Dano FIEL ao TFS: rola normal_random sobre a fórmula de
+  // runa podem ter). Dano FIEL ao Crystal Server: rola normal_random sobre a fórmula de
   // arma (WeaponMelee/Distance/Wand::getWeaponDamage) e, se físico (melee/
   // distância), o monstro reduz pela sua armadura (monster.def) via
   // reducePhysical (Creature::blockHit). Wand é elemental: não reduz por
@@ -662,7 +662,7 @@ async function resolveTick(session) {
   // "RTC não cura, não usa poção".
   const newPrimary = session.currentPack[0] || null;
   if (newPrimary && !primaryDied && Date.now() - (session.packSpawnedAt || 0) >= SPAWN_GRACE_MS) {
-    // Contra-ataque FIEL ao TFS: melee e magia disparam INDEPENDENTES no mesmo
+    // Contra-ataque FIEL ao Crystal Server: melee e magia disparam INDEPENDENTES no mesmo
     // tick (2s), não "um ou outro". Físico reduz por armadura + defesa de escudo
     // (Creature::blockHit); elemental (fogo/energia/...) passa direto (jogador
     // sem resistência modelada). Reusa a armadura/defesa calculada uma vez.
@@ -676,7 +676,7 @@ async function resolveTick(session) {
     session.hp = Math.max(0, session.hp - meleeDmg);
     let monsterDealt = meleeDmg, monsterElement = 'physical';
     // (b) magia do monstro — com chance, independente do melee. Físico reduz por
-    // armadura/defesa; elemental reduz pela RESISTÊNCIA do jogador (fiel ao TFS).
+    // armadura/defesa; elemental reduz pela RESISTÊNCIA do jogador (fiel ao Crystal Server).
     if (session.hp > 0 && newPrimary.spells && newPrimary.spells.length && Math.random() < MONSTER_SPELL_CHANCE) {
       const sp = rollMonsterSpell(newPrimary);
       if (sp) {
@@ -940,7 +940,7 @@ export function startSession(session) {
   session.killSeq = 0;        // sequência das mortes (crédito de kill server-truth)
   session.killEvents = [];    // fila das últimas mortes (ver pushKill) — cobre multi-kill de área
   session.targetUid = null;   // alvo escolhido pelo jogador (clique → /hunt/target); null = ataca a frente
-  // Batida de ataque FIXA (~2s = velocidade de arma do TFS), não mais escalada
+  // Batida de ataque FIXA (~2s = velocidade de arma do Crystal Server), não mais escalada
   // por spd (que no Tibia é movimento, não velocidade de ataque). Ver TICK_MS.
   // Infinity até os absolutos chegarem (ver o .finally da carga acima).
   session.nextTickAt = Infinity;

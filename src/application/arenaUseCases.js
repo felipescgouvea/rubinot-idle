@@ -74,7 +74,7 @@ export async function startArenaBattle() {
     enemyLevel = G.level + Math.floor(Math.random() * 5) - 2;
     enemyPts = Math.max(0, G.arenaPoints + Math.floor(Math.random() * 30) - 15);
   }
-  // Combate FIEL ao TFS (mesma maquinaria da caçada: rollPlayerAttack +
+  // Combate FIEL ao Crystal Server (mesma maquinaria da caçada: rollPlayerAttack +
   // reducePhysical). O oponente é um fantasma escalado pelo level dele — dano
   // máximo, armadura e defesa derivam do que o JOGADOR tem, ajustados pelo
   // levelRatio (um "espelho" de força equivalente ao nível do rival).
