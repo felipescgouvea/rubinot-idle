@@ -45,7 +45,7 @@ for (const id of alcancaveis) {
   if (!ref) { semItem.push(`${id} ("${it.name}")`); continue; }
   conferidos++;
 
-  if (it.type === 'weapon' && it.atk != null) {
+  if ((it.type === 'weapon' || it.type === 'ammo') && it.atk != null) {
     if (fora(it.atk, ref.attack)) div.atk.push({ id, nome: it.name, nosso: it.atk, real: ref.attack });
   } else if (it.type === 'shield' && it.def != null) {
     if (fora(it.def, ref.defense)) div.def.push({ id, nome: it.name, tipo: 'escudo', nosso: it.def, real: ref.defense });
