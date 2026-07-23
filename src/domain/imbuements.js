@@ -8,7 +8,7 @@ export const IMBUEMENTS = {
     effect: { type: 'lifeleech', pct: 0.05 }, desc: 'Cura 5% do dano causado',
     cost: { gold: 5000, materials: [['vampire_dust', 25], ['blood_preservation', 5]] } },
   mana_leech: { name: 'Void', icon: '💧', slot: 'weapon', durationH: 12,
-    effect: { type: 'manaleech', pct: 0.04 }, desc: 'Recupera 4% do dano causado como mana',
+    effect: { type: 'manaleech', pct: 0.03 }, desc: 'Recupera 3% do dano causado como mana',
     cost: { gold: 5000, materials: [['demon_dust', 25], ['rope_belt', 5]] } },
   scorch: { name: 'Scorch', icon: '🔥', slot: 'weapon', durationH: 12,
     effect: { type: 'elemental', element: 'fire', pct: 0.10 }, desc: '+10% de dano de fogo no ataque',

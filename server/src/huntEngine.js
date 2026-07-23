@@ -512,17 +512,28 @@ async function resolveTick(session) {
   // distância), o monstro reduz pela sua armadura (monster.def) via
   // reducePhysical (Creature::blockHit). Wand é elemental: não reduz por
   // armadura, só pelo modificador elemental do alvo.
+  // Consumo de munição — só vocação de DISTÂNCIA e só se o Admin ligou
+  // "consumeAmmo" (default é munição infinita, conveniência de idle). Arco sem
+  // flecha no inventário NÃO dispara o golpe básico (fiel ao Tibia); a magia/runa
+  // logo abaixo ainda pode sair. Antes o toggle existia mas o servidor o ignorava.
+  let semMunicao = false;
+  if (cfg.consumeAmmo && voc && voc.attackSkill === 'distance' && session.equipment && session.equipment.ammo) {
+    if (sessionQty(session, session.equipment.ammo) > 0) await changeSessionInv(session, session.equipment.ammo, -1);
+    else semMunicao = true;
+  }
   const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
   let basicDmg = atkRoll.damage * elementMod(primary.defKey, atkRoll.element);
   if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
   // Presa de DANO: só vale contra a criatura travada no slot.
   basicDmg *= 1 + preyBonus(session, primary.defKey, 'damage');
-  const dealt = Math.max(1, Math.floor(basicDmg));
-  primary.hp -= dealt;
-  pushCombat(session, { kind: 'basic', amount: dealt, target: primary.name });
+  const dealt = semMunicao ? 0 : Math.max(1, Math.floor(basicDmg));
+  if (dealt > 0) {
+    primary.hp -= dealt;
+    pushCombat(session, { kind: 'basic', amount: dealt, target: primary.name });
+  }
   // Respingo do golpe BÁSICO — só existe quando a munição tem área (Burst
   // Arrow). O golpe corpo a corpo e a flecha comum continuam alvo único.
-  if (isAreaAttack(atkRoll.area) && pack.length > 1) {
+  if (dealt > 0 && isAreaAttack(atkRoll.area) && pack.length > 1) {
     const outros = pack.filter(m => m !== primary && m.hp > 0).slice(0, areaMaxTargets(atkRoll.area) - 1);
     for (const alvo of outros) {
       let d = atkRoll.damage * elementMod(alvo.defKey, atkRoll.element);
@@ -534,14 +545,14 @@ async function resolveTick(session) {
   // Scorch (dano elemental extra) — aplicados sobre o dano do ataque básico se
   // o imbuement ainda vale (ver domain/imbuements.js: expiresAt). Efeito
   // resolvido aqui, no servidor autoritativo.
-  const wImb = activeImbuementFor(session.imbuements, 'weapon', now);
+  const wImb = dealt > 0 ? activeImbuementFor(session.imbuements, 'weapon', now) : null;
   if (wImb) {
     const e = wImb.effect;
     if (e.type === 'lifeleech' && session.hp > 0) session.hp = Math.min(session.maxHp, session.hp + Math.max(1, Math.floor(dealt * e.pct)));
     else if (e.type === 'manaleech') session.mana = Math.min(session.maxMana, session.mana + Math.max(1, Math.floor(dealt * e.pct)));
     else if (e.type === 'elemental') primary.hp -= Math.max(1, Math.floor(dealt * e.pct * elementMod(primary.defKey, e.element)));
   }
-  if (voc.attackSkill !== 'magic') {
+  if (dealt > 0 && voc.attackSkill !== 'magic') {
     const meleeSkillId = equippedWeaponSkillId(session.equipment, session.relics);
     trainSkill(session, meleeSkillId, meleeSkillId === 'distance' ? 2 : 1, cfg);
   }
