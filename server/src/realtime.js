@@ -41,6 +41,10 @@ export function iniciarRealtime(httpServer, verificarToken) {
     wss.handleUpgrade(req, socket, head, ws => {
       const k = chave(user.id, slot);
       if (!conexoes.has(k)) conexoes.set(k, new Set());
+      // Teto de conexões por personagem — sem isso, uma conta abrindo milhares
+      // de sockets estoura a memória do processo (cada tick faz um send por
+      // socket). 6 cobre "várias abas" com folga; acima disso, derruba a nova.
+      if (conexoes.get(k).size >= 6) { try { ws.close(1013, 'too many connections'); } catch {} return; }
       conexoes.get(k).add(ws);
       ws.isAlive = true;
       ws.on('pong', () => { ws.isAlive = true; });

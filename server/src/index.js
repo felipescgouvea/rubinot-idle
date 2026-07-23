@@ -185,12 +185,55 @@ function readBody(req) {
   });
 }
 
+// Rate limit por usuário (token-bucket em memória). Sem isto, uma conta em loop
+// apertado esgota a quota do Supabase (ex.: /hunt/state ocioso faz até 7 leituras
+// por chamada). O poll legítimo é 1/250ms = 4/s POR ABA; capacidade 40 + recarga
+// 20/s cobre ~5 abas polando ao mesmo tempo + ações sem nunca barrar jogo real,
+// mas corta o flood malicioso (50-100/s). 429 pede pra esperar.
+const RL_CAP = 40, RL_REFILL_PER_MS = 20 / 1000;
+const rlBuckets = new Map();   // userId -> { tokens, last }
+function rateLimited(userId) {
+  const now = Date.now();
+  let b = rlBuckets.get(userId);
+  if (!b) { b = { tokens: RL_CAP, last: now }; rlBuckets.set(userId, b); }
+  b.tokens = Math.min(RL_CAP, b.tokens + (now - b.last) * RL_REFILL_PER_MS);
+  b.last = now;
+  if (b.tokens < 1) return true;
+  b.tokens -= 1;
+  return false;
+}
+
 async function requireUser(req, res) {
   const auth = req.headers['authorization'] || '';
   const token = auth.replace(/^Bearer\s+/i, '');
   const user = await verifySupabaseToken(token);
   if (!user) { send(res, 401, { error: 'token inválido ou ausente' }); return null; }
+  if (rateLimited(user.id)) { send(res, 429, { error: 'muitas requisições — aguarde' }); return null; }
   return user;
+}
+
+// Serialização por usuário (mutex assíncrono) contra DUPE por corrida: a economia
+// faz ler→decidir→gravar em chamadas REST separadas, sem transação. Dois requests
+// concorrentes do MESMO usuário liam o mesmo saldo antes de qualquer gravar (5x
+// /market/withdraw em paralelo sacavam 5x de um saldo de 1x). O servidor é um
+// processo único (sessões de caçada vivem na memória dele), então serializar as
+// operações econômicas do mesmo usuário aqui fecha a corrida sem precisar
+// reescrever cada operação em SQL atômico.
+const ECON_PATHS = new Set([
+  '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
+  '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
+  '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
+  '/conjure', '/imbue', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
+]);
+const userLocks = new Map();   // userId -> cauda da fila de promessas
+async function acquireUserLock(userId) {
+  const prev = userLocks.get(userId) || Promise.resolve();
+  let release;
+  const curr = new Promise(r => { release = r; });
+  const tail = prev.then(() => curr);
+  userLocks.set(userId, tail);
+  await prev.catch(() => {});
+  return () => { release(); if (userLocks.get(userId) === tail) userLocks.delete(userId); };
 }
 
 
@@ -206,6 +249,19 @@ const server = http.createServer(async (req, res) => {
     }
 
     const url = new URL(req.url, `http://${req.headers.host}`);
+
+    // Anti-dupe: nas rotas econômicas, segura um lock por usuário do início do
+    // request até a resposta terminar — assim duas operações de gold/inventário
+    // do mesmo jogador nunca rodam em paralelo. Liberado no 'finish'/'close' pra
+    // não precisar embrulhar a cadeia inteira de rotas em try/finally.
+    if (req.method === 'POST' && ECON_PATHS.has(url.pathname)) {
+      const u = await verifySupabaseToken((req.headers['authorization'] || '').replace(/^Bearer\s+/i, ''));
+      if (u) {
+        let release = await acquireUserLock(u.id);
+        const solta = () => { if (release) { release(); release = null; } };
+        res.on('finish', solta); res.on('close', solta);
+      }
+    }
 
     if (url.pathname === '/health') {
       return send(res, 200, { ok: true, service: 'rubinot-idle-hunt-server', stage: 'marco-6' });
@@ -1278,13 +1334,15 @@ const server = http.createServer(async (req, res) => {
         name: playerName || undefined,
         vocation: vocacao,
         level, xp: totalXp, total_kills: stats ? Number(stats.total_kills) : 0,
-        // TODO: migrar arena/tasks/bestiário pro servidor quando essas
-        // mecânicas virarem autoritativas — hoje ainda são calculadas e
-        // reportadas pelo cliente, não é uma regressão desta fase.
-        arena_points: Math.floor(Number(body.arenaPoints)) || 0,
-        tasks_done: Math.floor(Number(body.tasksDone)) || 0,
+        // arena/tasks/bestiário ainda vêm do cliente (não são server-autoritativos
+        // ainda), então são CLAMPADOS ao máximo real do domínio — sem isto um
+        // cliente adulterado mandava arenaPoints: 999999999 e liderava a
+        // categoria. O teto não impede valor legítimo (94 tasks, 2254 bestiário,
+        // arena limitada a 15 batalhas/dia), só barra o absurdo forjado.
+        arena_points: Math.min(100000, Math.max(0, Math.floor(Number(body.arenaPoints)) || 0)),
+        tasks_done: Math.min(94, Math.max(0, Math.floor(Number(body.tasksDone)) || 0)),
         world: typeof body.world === 'string' ? body.world : undefined,
-        bestiary_count: Math.floor(Number(body.bestiaryCount)) || 0,
+        bestiary_count: Math.min(2254, Math.max(0, Math.floor(Number(body.bestiaryCount)) || 0)),
         skill_magic: (sk.magic && sk.magic.lv) || 0,
         skill_fist: (sk.fist && sk.fist.lv) || 10,
         skill_club: (sk.club && sk.club.lv) || 10,
