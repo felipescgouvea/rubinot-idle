@@ -1,5 +1,5 @@
 // Catálogo de itens e os kits iniciais por vocação.
-import { primaryStatKeyForItem } from './rarity.js?v=265';
+import { primaryStatKeyForItem } from './rarity.js?v=266';
 
 // A bag NÃO tem limite: nem de quantidade por item, nem de tipos distintos.
 // Existia um teto de 20 tipos que fazia o loot ser recusado em silêncio com a
@@ -107,7 +107,7 @@ export const ITEMS = {
   ultimate_health_potion:{ name: 'Ultimate Health Potion', icon: '🧪', type: 'potion', heal: 750, sell: 0, reqLevel: 130, reqVoc: ['knight'] },
   mana_potion:          { name: 'Mana Potion', icon: '🔵', type: 'potion', mana: 100, sell: 0 },
   strong_mana_potion:   { name: 'Strong Mana Potion', icon: '🔵', type: 'potion', mana: 150, sell: 0, reqLevel: 50 },
-  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 200, sell: 0, reqLevel: 80, reqVoc: ['sorcerer','druid','paladin'] },
+  great_mana_potion:    { name: 'Great Mana Potion', icon: '🔵', type: 'potion', mana: 200, sell: 0, reqLevel: 80 }, // CS (id 238) NÃO restringe vocação — só level 80; antes bloqueava knight indevidamente
 
   // --- Runas (magia de uma carga só, consumida ao usar — como as runas reais de Tibia) ---
   ultimate_healing_rune:{ name: 'Ultimate Healing Rune', icon: '📜', type: 'rune', heal: 400, sell: 0 },
@@ -2087,20 +2087,20 @@ export const ITEMS = {
   ultimate_spirit_potion: { name: 'Ultimate Spirit Potion', icon: '🧪', type: 'potion', heal: 260, sell: 52 },
   burst_arrow:     { name: 'Burst Arrow', icon: '🏹', type: 'ammo', area: 'square', reqLevel: 0, atk: 27, sell: 0 },
   crystalline_arrow: { name: 'Crystalline Arrow', icon: '🏹', type: 'ammo', reqLevel: 90, atk: 65, sell: 3 },
-  diamond_arrow:   { name: 'Diamond Arrow', icon: '🏹', type: 'ammo', reqLevel: 150, atk: 37, sell: 1 },
+  diamond_arrow:   { name: 'Diamond Arrow', icon: '🏹', type: 'ammo', reqLevel: 0, atk: 37, sell: 1 },
   drill_bolt:      { name: 'Drill Bolt', icon: '🏹', type: 'ammo', reqLevel: 70, atk: 56, sell: 0 },
   earth_arrow:     { name: 'Earth Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 20, atk: 14, sell: 0 },
   envenomed_arrow: { name: 'Envenomed Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 70, atk: 27, sell: 0 },
-  firestorm_arrow: { name: 'Firestorm Arrow', icon: '🏹', type: 'ammo', element: 'fire', reqLevel: 125, atk: 21, sell: 2 },
+  firestorm_arrow: { name: 'Firestorm Arrow', icon: '🏹', type: 'ammo', element: 'fire', reqLevel: 0, atk: 21, sell: 2 },
   flaming_arrow:   { name: 'Flaming Arrow', icon: '🏹', type: 'ammo', element: 'fire', reqLevel: 20, atk: 14, sell: 1 },
   flash_arrow:     { name: 'Flash Arrow', icon: '🏹', type: 'ammo', element: 'energy', reqLevel: 20, atk: 14, sell: 0 },
-  froststorm_arrow: { name: 'Froststorm Arrow', icon: '🏹', type: 'ammo', element: 'ice', reqLevel: 125, atk: 21, sell: 2 },
+  froststorm_arrow: { name: 'Froststorm Arrow', icon: '🏹', type: 'ammo', element: 'ice', reqLevel: 0, atk: 21, sell: 2 },
   infernal_bolt:   { name: 'Infernal Bolt', icon: '🏹', type: 'ammo', reqLevel: 110, atk: 72, sell: 3 },
   onyx_arrow:      { name: 'Onyx Arrow', icon: '🏹', type: 'ammo', reqLevel: 40, atk: 38, sell: 0 },
   piercing_bolt:   { name: 'Piercing Bolt', icon: '🏹', type: 'ammo', reqLevel: 30, atk: 33, sell: 0 },
   poison_arrow:    { name: 'Poison Arrow', icon: '🏹', type: 'ammo', reqLevel: 0, atk: 23, sell: 0 },
   prismatic_bolt:  { name: 'Prismatic Bolt', icon: '🏹', type: 'ammo', reqLevel: 90, atk: 66, sell: 3 },
-  shatterstorm_arrow: { name: 'Shatterstorm Arrow', icon: '🏹', type: 'ammo', reqLevel: 50, atk: 27, sell: 3 },
+  shatterstorm_arrow: { name: 'Shatterstorm Arrow', icon: '🏹', type: 'ammo', reqLevel: 0, atk: 27, sell: 3 },
   shiver_arrow:    { name: 'Shiver Arrow', icon: '🏹', type: 'ammo', element: 'ice', reqLevel: 20, atk: 14, sell: 4 },
   // Corrigido (era atk 46/42, herdado por engano do lote de bolts/arrows de
   // alto tier vizinho no catálogo importado) — no Tibia real a Simple Arrow
@@ -2111,8 +2111,8 @@ export const ITEMS = {
   simple_arrow:    { name: 'Simple Arrow', icon: '🏹', type: 'ammo', reqLevel: 1, atk: 20, sell: 0 },
   spectral_bolt:   { name: 'Spectral Bolt', icon: '🏹', type: 'ammo', reqLevel: 150, atk: 78, sell: 3 },
   tarsal_arrow:    { name: 'Tarsal Arrow', icon: '🏹', type: 'ammo', reqLevel: 30, atk: 33, sell: 2 },
-  terrastorm_arrow: { name: 'Terrastorm Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 125, atk: 21, sell: 1 },
-  thunderstorm_arrow: { name: 'Thunderstorm Arrow', icon: '🏹', type: 'ammo', element: 'energy', reqLevel: 125, atk: 21, sell: 3 },
+  terrastorm_arrow: { name: 'Terrastorm Arrow', icon: '🏹', type: 'ammo', element: 'earth', reqLevel: 0, atk: 21, sell: 1 },
+  thunderstorm_arrow: { name: 'Thunderstorm Arrow', icon: '🏹', type: 'ammo', element: 'energy', reqLevel: 0, atk: 21, sell: 3 },
   vortex_bolt:     { name: 'Vortex Bolt', icon: '🏹', type: 'ammo', reqLevel: 40, atk: 36, sell: 2 },
 
   // ---- Fase 5 do catálogo completo do Tibia (decoração, quest items,

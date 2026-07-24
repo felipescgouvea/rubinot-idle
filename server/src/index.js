@@ -43,7 +43,7 @@ import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, TRA
 import { SPELLS as SPELLS_TREINO } from '../../src/domain/spells.js?v=127';
 import { STAMINA_MAX } from '../../src/domain/stamina.js?v=125';
 import { MAX_BLESSINGS, blessingCost } from '../../src/domain/blessings.js?v=125';
-import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../../src/domain/items.js?v=139';
+import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS, EQUIPPABLE_TYPES, canVocationEquip } from '../../src/domain/items.js?v=139';
 import { GRADUATION_LEVEL } from '../../src/domain/cities.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
@@ -710,6 +710,20 @@ const server = http.createServer(async (req, res) => {
         const relicRow = !invRow || Number(invRow.qty) <= 0 ? await selectOne('player_relics', { user_id: user.id, slot, id: itemId }) : null;
         const owned = (invRow && Number(invRow.qty) > 0) || relicRow;
         if (!owned) return send(res, 403, { error: 'item não pertence a esta conta/personagem' });
+        // VALIDAÇÃO SERVER-SIDE (antes só o cliente barrava, burlável por cliente
+        // adulterado): o item precisa ser equipável, o eqSlot TEM que ser o tipo
+        // do item (o cliente sempre manda item.type) — isso fecha "slot errado" E
+        // o exploit de cravar o MESMO item em vários slots (somava def/hp/spd) —
+        // e a vocação/nível são conferidos aqui também. Relíquia usa o item-base.
+        const eff = relicRow ? ITEMS[relicRow.item_id] : ITEMS[itemId];
+        if (!eff || !EQUIPPABLE_TYPES.includes(eff.type)) return send(res, 400, { error: 'item não equipável' });
+        if (eqSlot !== eff.type) return send(res, 400, { error: 'slot incompatível com o item' });
+        const eqStats = await selectOne('player_stats', { user_id: user.id, slot });
+        const eqLevel = eqStats ? Number(eqStats.level) || 1 : 1;
+        const eqSess = await selectLatest('hunt_sessions', { user_id: user.id, slot }, 'started_at');
+        const eqVoc = (eqSess && eqSess.vocation) || (typeof body.vocation === 'string' ? body.vocation : null);
+        if (!canVocationEquip(eff, eqVoc)) return send(res, 403, { error: 'sua vocação não pode equipar este item' });
+        if (eff.reqLevel && eqLevel < eff.reqLevel) return send(res, 403, { error: `requer nível ${eff.reqLevel}` });
         // imbuement: null ao trocar de item — o aprimoramento é do item que estava
         // equipado; trocar de arma perde o imbuement (evita imbuir arma barata e
         // migrar o efeito pra uma melhor).

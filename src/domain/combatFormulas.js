@@ -4,9 +4,9 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=295';
-import { resolveEquippedItem } from './items.js?v=279';
-import { pickWeightedMonster } from './adminConfig.js?v=267';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=296';
+import { resolveEquippedItem } from './items.js?v=280';
+import { pickWeightedMonster } from './adminConfig.js?v=268';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -95,7 +95,9 @@ export function computeDef({ skills, equipment, relics }) {
 }
 
 export function computeMagic({ skills }) {
-  return skills.magic.lv;
+  // guard como os demais lookups de skill (ex. computeAttack/computeDefense):
+  // save antigo/parcial sem sk.magic derrubava getMagic() com TypeError.
+  return (skills && skills.magic && skills.magic.lv) || 0;
 }
 
 export function computeSpd({ vocation, equipment, relics }) {
