@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=248';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=266';
-import { MONSTERS } from '../domain/bestiary.js?v=266';
-import { XP_TABLE } from '../domain/character.js?v=275';
-import { cityName } from '../domain/cities.js?v=251';
-import { ITEMS } from '../domain/items.js?v=259';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=249';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=244';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=246';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=251';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=249';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=312';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=244';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=249';
-import { t } from '../i18n/i18n.js?v=262';
-import { setStageWalking } from './stageWalk.js?v=85';
+import { G } from '../application/gameStore.js?v=249';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=267';
+import { MONSTERS } from '../domain/bestiary.js?v=267';
+import { XP_TABLE } from '../domain/character.js?v=276';
+import { cityName } from '../domain/cities.js?v=252';
+import { ITEMS } from '../domain/items.js?v=260';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=250';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=245';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=247';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=252';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=250';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=313';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=245';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=250';
+import { t } from '../i18n/i18n.js?v=263';
+import { setStageWalking } from './stageWalk.js?v=86';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -611,10 +611,37 @@ export function playProjectile({ missile, targetUid, hitId } = {}) {
   img.style.transform = `translate(-50%, -50%) translate(${x1 - x0}px, ${y1 - y0}px) rotate(${ang + 90}deg)`;
 }
 
+// Número de dano flutuante sobre a criatura atingida (ver COMBAT_DAMAGE em
+// application/huntUseCases.js: applyServerPack). Sobe e desvanece; a cor vem do
+// elemento do golpe e o tamanho escala (leve) com a magnitude do dano. É só
+// juice — pointer-events:none, nunca bloqueia o clique de alvo. Auto-remove no
+// fim da animação (com fallback por timeout se o animationend não disparar).
+function floatDamage({ uid, amount, element } = {}) {
+  if (amount == null || amount <= 0) return;
+  const cont = document.getElementById('stage-pack');
+  if (!cont) return;
+  const targetEl = (uid != null && cont.querySelector(`[data-uid="${CSS.escape(String(uid))}"]`))
+    || cont.querySelector('.stage-monster:not(.leaving)');
+  if (!targetEl) return;
+  const span = document.createElement('span');
+  span.className = 'dmg-float';
+  if (element && element !== 'physical') span.dataset.el = element;
+  // escala suave: golpe pequeno ~1.0, golpe grande até ~1.7 (satura pra não virar cartaz)
+  span.style.setProperty('--dmg-scale', String(Math.min(1.7, 1 + amount / 1400)));
+  // leve jitter horizontal pra dois números seguidos não saírem exatamente sobrepostos
+  span.style.left = `calc(50% + ${Math.round((Math.random() - 0.5) * 22)}px)`;
+  span.textContent = '−' + Math.round(amount).toLocaleString();
+  targetEl.appendChild(span);
+  const done = () => span.remove();
+  span.addEventListener('animationend', done, { once: true });
+  setTimeout(done, 1000);
+}
+
 export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
   on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
   on(EVENTS.COMBAT_PROJECTILE, (p) => playProjectile(p));
+  on(EVENTS.COMBAT_DAMAGE, (d) => floatDamage(d));
   on(EVENTS.HUNT_STATS, renderHuntAnalyzer);
   on(EVENTS.BLESSINGS, renderBlessings);
   on(EVENTS.HEADER_STATS, renderBlessings); // atualiza o botão quando o gold muda

@@ -911,7 +911,16 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   transform: rotate(90deg);
   filter: grayscale(1) opacity(0.55) drop-shadow(0 3px 5px #00000044);
 }
-.player-sprite-wrap.hit { animation: none; } /* estático: sem tremida ao ser atingido */
+/* Reação ao APANHAR: um flash vermelho curto no boneco (sem tremida/deslocamento
+   — o Felipe achou a tremida enjoativa). Disparado pelos golpes REAIS do monstro
+   (renderCombatEvents: monsterhit -> PLAYER_BATTLE_SIDE {hit}), então reage ao
+   dano de verdade, não ao relógio cosmético. */
+.player-sprite-wrap.hit { animation: player-hurt 0.32s ease-out; }
+@keyframes player-hurt {
+  0%, 100% { filter: none; }
+  30%      { filter: brightness(1.15) drop-shadow(0 0 7px #ff2e2ecc) sepia(0.5) hue-rotate(-35deg) saturate(3); }
+}
+@media (prefers-reduced-motion: reduce) { .player-sprite-wrap.hit { animation: none; } }
 .player-battle-name { font-family: var(--serif); font-size: 13px; color: #fff; text-shadow: 0 1px 3px #000000cc; letter-spacing: 1px; margin: 8px 0 4px; font-weight: 700; text-align: center; }
 .player-hp-track {
   height: 16px;
@@ -965,7 +974,55 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   40% { transform: scale(1.18) rotate(-10deg); opacity: 0.9; filter: brightness(2.2) drop-shadow(0 0 14px #ffffffcc); }
   100% { transform: scale(0.75) rotate(15deg) translateY(12px); opacity: 0.45; filter: grayscale(1) drop-shadow(0 3px 5px #00000044); }
 }
-.player-sprite-wrap.attacking { animation: none; } /* estático: sem lunge ao atacar */
+/* Lunge do golpe: o boneco dá um passo curto e rápido na direção dos monstros
+   (que ficam no topo do palco = pra cima), voltando em seguida. É disparado UMA
+   vez por golpe REAL (ver huntUseCases: applyServerPack), não no relógio cosmético
+   solto — por isso agora bate com o dano em vez de balançar à toa. Curto (240ms)
+   pra não competir com a marcha idle. respeita prefers-reduced-motion abaixo. */
+.player-sprite-wrap.attacking { animation: player-lunge 0.24s ease-out; }
+@keyframes player-lunge {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(-9px) scale(1.04); }
+  100% { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) { .player-sprite-wrap.attacking { animation: none; } }
+
+/* ---- Números de dano flutuantes sobre a criatura (juice de impacto) ----
+   Aparecem no instante em que a vida cai (COMBAT_DAMAGE). Sobem e desvanecem.
+   A cor vem do elemento do golpe (data-el); tamanho escala com o dano relativo
+   (--dmg-scale, setado inline). pointer-events:none pra nunca atrapalhar o
+   clique de alvo na criatura. */
+.dmg-float {
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  transform: translateX(-50%);
+  font-weight: 800;
+  font-size: calc(0.82rem * var(--dmg-scale, 1));
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 1px 0 #000, 0 0 4px #000, 0 0 7px #0009;
+  pointer-events: none;
+  z-index: 6;
+  white-space: nowrap;
+  animation: dmg-float-rise 0.85s ease-out forwards;
+}
+.dmg-float[data-el="fire"]     { color: #ff9838; }
+.dmg-float[data-el="ice"]      { color: #9fe9ff; }
+.dmg-float[data-el="energy"]   { color: #d3a6ff; }
+.dmg-float[data-el="earth"]    { color: #b7e57c; }
+.dmg-float[data-el="death"]    { color: #c58bff; }
+.dmg-float[data-el="holy"]     { color: #ffe98a; }
+.dmg-float.heal                { color: #7df0a2; }
+@keyframes dmg-float-rise {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.7); }
+  18%  { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1.12); }
+  40%  { transform: translateX(-50%) translateY(-10px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-34px) scale(0.96); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dmg-float { animation-duration: 0.4s; }
+}
 
 /* ---- efeito de cura (o "brilho verde" clássico do Tibia ao curar) ---- */
 .player-sprite-wrap.healing::after {

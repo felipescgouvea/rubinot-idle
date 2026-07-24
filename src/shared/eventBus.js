@@ -50,6 +50,11 @@ export const EVENTS = {
   COMBAT_FX: 'combatFx',
   COMBAT_PROJECTILE: 'combatProjectile',
   COMBAT_PROJECTILE_LANDED: 'combatProjectileLanded',
+  // Número de dano flutuante sobre a criatura, no instante em que a vida cai
+  // (ver application/huntUseCases.js: applyServerPack). Dá o feedback de impacto
+  // que só existia no log de texto — a cena do palco mostrava a barra cair sem
+  // número. { uid, amount, element, crit }
+  COMBAT_DAMAGE: 'combatDamage',
   HUNT_STATS: 'huntStats',
   BLESSINGS: 'blessings',
   HIGHSCORES_PANEL: 'highscoresPanel',

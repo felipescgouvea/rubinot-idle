@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=248';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=276';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=245';
-import { skillIconImg, itemIconImg } from './shared.js?v=251';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=244';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=244';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=244';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=244';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=245';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=246';
-import { formatNum, applyHpState } from './shared.js?v=251';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=265';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=312';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=249';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=244';
-import { selectVocation } from '../application/characterUseCases.js?v=249';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=248';
-import { t } from '../i18n/i18n.js?v=262';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=85';
+import { G } from '../application/gameStore.js?v=249';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=277';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=246';
+import { skillIconImg, itemIconImg } from './shared.js?v=252';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=245';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=245';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=245';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=245';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=246';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=247';
+import { formatNum, applyHpState } from './shared.js?v=252';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=266';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=313';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=250';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=245';
+import { selectVocation } from '../application/characterUseCases.js?v=250';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=249';
+import { t } from '../i18n/i18n.js?v=263';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=86';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
