@@ -88,7 +88,7 @@ export const SHOP_ITEMS = [
   // úteis pra QUALQUER vocação de armadura física (Knight/Paladin), não só o
   // Paladin. Preço = 4x sell, igual ao resto da lista.
   { id: 'buy_ancient_shield',   name: 'Ancient Shield',    icon: '🛡️', currency: 'gold', price: 5000,  type: 'item', itemId: 'ancient_shield', shop: 'equipment' },
-  { id: 'buy_might_ring',       name: 'Might Ring',        icon: '💍', currency: 'gold', price: 300,   type: 'item', itemId: 'might_ring', shop: 'equipment' },
+  { id: 'buy_might_ring',       name: 'Might Ring',        icon: '💍', currency: 'gold', price: 25000,   type: 'item', itemId: 'might_ring', shop: 'equipment' },
 
   // Loja de Artigos Mágicos (gold) — Supply Completo (restaura HP/mana na
   // hora), depois poções e runas, preço = 4x o valor de venda
@@ -105,10 +105,11 @@ export const SHOP_ITEMS = [
   { id: 'buy_explosion_rune',       name: 'Explosion Rune',         icon: '📜', currency: 'gold', price: 31,  type: 'item', itemId: 'explosion_rune', shop: 'magic' },
   { id: 'buy_avalanche_rune',       name: 'Avalanche Rune',         icon: '📜', currency: 'gold', price: 64,  type: 'item', itemId: 'avalanche_rune', shop: 'magic' },
   { id: 'buy_sudden_death_rune',    name: 'Sudden Death Rune',      icon: '📜', currency: 'gold', price: 162,  type: 'item', itemId: 'sudden_death_rune', shop: 'magic' },
-  { id: 'buy_fireball_rune',        name: 'Fireball Rune',          icon: '📜', currency: 'gold', price: 30,   type: 'item', itemId: 'fireball_rune', shop: 'magic' },
+  { id: 'buy_fireball_rune',        name: 'Fireball Rune',          icon: '📜', currency: 'gold', price: 65,   type: 'item', itemId: 'fireball_rune', shop: 'magic' },
   { id: 'buy_great_fireball_rune',  name: 'Great Fireball Rune',    icon: '📜', currency: 'gold', price: 64,  type: 'item', itemId: 'great_fireball_rune', shop: 'magic' },
   { id: 'buy_light_magic_missile_rune',  name: 'Light Magic Missile Rune',  icon: '📜', currency: 'gold', price: 4,   type: 'item', itemId: 'light_magic_missile_rune', shop: 'magic' },
-  { id: 'buy_heavy_magic_missile_rune',  name: 'Heavy Magic Missile Rune',  icon: '📜', currency: 'gold', price: 12,   type: 'item', itemId: 'heavy_magic_missile_rune', shop: 'magic' },
+  { id: 'buy_heavy_magic_missile_rune',  name: 'Heavy Magic Missile Rune',  icon: '📜', currency: 'gold', price: 65,   type: 'item', itemId: 'heavy_magic_missile_rune', shop: 'magic' },
+  { id: 'buy_holy_missile_rune',         name: 'Holy Missile Rune',         icon: '📜', currency: 'gold', price: 16,   type: 'item', itemId: 'holy_missile_rune', shop: 'magic' },
   { id: 'buy_fire_field_rune',           name: 'Fire Field Rune',           icon: '📜', currency: 'gold', price: 28,   type: 'item', itemId: 'fire_field_rune', shop: 'magic' },
   { id: 'buy_fire_wall_rune',            name: 'Fire Wall Rune',            icon: '📜', currency: 'gold', price: 61,   type: 'item', itemId: 'fire_wall_rune', shop: 'magic' },
   { id: 'buy_fire_bomb_rune',            name: 'Fire Bomb Rune',            icon: '📜', currency: 'gold', price: 147,  type: 'item', itemId: 'fire_bomb_rune', shop: 'magic' },
@@ -118,12 +119,12 @@ export const SHOP_ITEMS = [
   { id: 'buy_energy_field_rune',         name: 'Energy Field Rune',         icon: '📜', currency: 'gold', price: 38,  type: 'item', itemId: 'energy_field_rune', shop: 'magic' },
   { id: 'buy_energy_wall_rune',          name: 'Energy Wall Rune',          icon: '📜', currency: 'gold', price: 85,  type: 'item', itemId: 'energy_wall_rune', shop: 'magic' },
   { id: 'buy_energy_bomb_rune',          name: 'Energy Bomb Rune',          icon: '📜', currency: 'gold', price: 203, type: 'item', itemId: 'energy_bomb_rune', shop: 'magic' },
-  { id: 'buy_icicle_rune',               name: 'Icicle Rune',               icon: '📜', currency: 'gold', price: 30,  type: 'item', itemId: 'icicle_rune', shop: 'magic' },
-  { id: 'buy_stalagmite_rune',           name: 'Stalagmite Rune',           icon: '📜', currency: 'gold', price: 12,  type: 'item', itemId: 'stalagmite_rune', shop: 'magic' },
+  { id: 'buy_icicle_rune',               name: 'Icicle Rune',               icon: '📜', currency: 'gold', price: 65,  type: 'item', itemId: 'icicle_rune', shop: 'magic' },
+  { id: 'buy_stalagmite_rune',           name: 'Stalagmite Rune',           icon: '📜', currency: 'gold', price: 65,  type: 'item', itemId: 'stalagmite_rune', shop: 'magic' },
   { id: 'buy_stone_shower_rune',         name: 'Stone Shower Rune',         icon: '📜', currency: 'gold', price: 41,  type: 'item', itemId: 'stone_shower_rune', shop: 'magic' },
   { id: 'buy_thunderstorm_rune',         name: 'Thunderstorm Rune',         icon: '📜', currency: 'gold', price: 52,  type: 'item', itemId: 'thunderstorm_rune', shop: 'magic' },
   { id: 'buy_soulfire_rune',             name: 'Soulfire Rune',             icon: '📜', currency: 'gold', price: 46,  type: 'item', itemId: 'soulfire_rune', shop: 'magic' },
-  { id: 'buy_desintegrate_rune',         name: 'Desintegrate Rune',         icon: '📜', currency: 'gold', price: 200,  type: 'item', itemId: 'desintegrate_rune', shop: 'magic' },
+  { id: 'buy_desintegrate_rune',         name: 'Desintegrate Rune',         icon: '📜', currency: 'gold', price: 26,  type: 'item', itemId: 'desintegrate_rune', shop: 'magic' },
   { id: 'buy_cure_poison_rune',          name: 'Cure Poison Rune',          icon: '📜', currency: 'gold', price: 65,   type: 'item', itemId: 'cure_poison_rune', shop: 'magic' },
   { id: 'buy_chameleon_rune',            name: 'Chameleon Rune',            icon: '📜', currency: 'gold', price: 210,  type: 'item', itemId: 'chameleon_rune', shop: 'magic' },
   { id: 'buy_convince_creature_rune',    name: 'Convince Creature Rune',    icon: '📜', currency: 'gold', price: 80, type: 'item', itemId: 'convince_creature_rune', shop: 'magic' },

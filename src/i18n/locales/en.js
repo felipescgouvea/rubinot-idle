@@ -264,6 +264,7 @@ export default {
 
   // ---- character panel (ui/characterPanel.js) ----
   'character.nameRequired': 'Choose a character name (3 to 20 characters).',
+  'character.nameInvalid': 'Name: 3 to 20 letters, numbers and spaces only.',
   'character.hunting': 'Hunting',
   'character.stopped': 'Stopped',
   'character.staminaStatus': 'Stamina {stamina} · XP ×{mult}',

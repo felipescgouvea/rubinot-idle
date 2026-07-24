@@ -1813,6 +1813,10 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .hs-table tbody tr:hover { background: #fdf0d5; }
 .hs-table tr.hs-me { background: #fdf4d7 !important; outline: 2px solid var(--gold); outline-offset: -2px; }
 .hs-table .hs-highlight-col { font-weight: 800; color: var(--gold-dim); }
+/* Tabelas largas (Highscores 9 col, Mercado 6 col) rolam DENTRO da própria
+   área no mobile em vez de estourar o eixo horizontal da PÁGINA inteira
+   (achado da auditoria: a página ganhava scroll lateral no celular). */
+#hs-table-area, #market-content { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .hs-register { padding: 4px 0; }
 /* Seletor de categoria (Level/skills/Bestiário) — mesma ideia dos sub-tabs do
    RTC/Admin, só que numa linha que pode quebrar (9 categorias). */
@@ -2970,5 +2974,3 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 #char-create-box #char-name-field { margin: 0 0 10px !important; }
 /* A dica transbordava a caixa (largura fixa herdada do layout antigo). */
 #char-create-box #starter-set-hint { margin: 0 0 12px; max-width: 100%; }
-
-}

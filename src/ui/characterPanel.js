@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=252';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=280';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=249';
-import { skillIconImg, itemIconImg } from './shared.js?v=255';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=248';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=248';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=248';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=248';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=249';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=250';
-import { formatNum, applyHpState } from './shared.js?v=255';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=269';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=316';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=253';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=248';
-import { selectVocation } from '../application/characterUseCases.js?v=253';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=252';
-import { t } from '../i18n/i18n.js?v=266';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=89';
+import { G } from '../application/gameStore.js?v=253';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=281';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=250';
+import { skillIconImg, itemIconImg } from './shared.js?v=256';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=249';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=249';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=249';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=249';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=250';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=251';
+import { formatNum, applyHpState } from './shared.js?v=256';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=270';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=317';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=254';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=249';
+import { selectVocation } from '../application/characterUseCases.js?v=254';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=253';
+import { t } from '../i18n/i18n.js?v=267';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=90';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -35,8 +35,17 @@ export async function createCharacter(voc) {
   if (G.vocation) return;
   const input = document.getElementById('char-name-input');
   const name = (input?.value || '').trim();
+  // Valida COMPRIMENTO **e** charset ANTES de setar a vocação: selectVocation
+  // fecha o overlay de criação pra sempre, então se o nome fosse rejeitado só
+  // depois (registerPlayerName valida charset), o personagem ficava criado e
+  // SEM nome, sem como corrigir (bug da auditoria). Mesmo charset do ranking.
   if (name.length < 3 || name.length > 20) {
     emit(EVENTS.NOTIFY, { msg: t('character.nameRequired'), type: 'error' });
+    input?.focus();
+    return;
+  }
+  if (!/^[A-Za-zÀ-ÿ0-9 ]+$/.test(name)) {
+    emit(EVENTS.NOTIFY, { msg: t('character.nameInvalid'), type: 'error' });
     input?.focus();
     return;
   }

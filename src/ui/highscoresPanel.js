@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=252';
-import { MONSTERS } from '../domain/bestiary.js?v=270';
-import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=249';
-import { on, EVENTS } from '../shared/eventBus.js?v=250';
-import { escapeHtml, notify, skillIconImg } from './shared.js?v=255';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=252';
-import { t } from '../i18n/i18n.js?v=266';
+import { G } from '../application/gameStore.js?v=253';
+import { MONSTERS } from '../domain/bestiary.js?v=271';
+import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=250';
+import { on, EVENTS } from '../shared/eventBus.js?v=251';
+import { escapeHtml, notify, skillIconImg } from './shared.js?v=256';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=253';
+import { t } from '../i18n/i18n.js?v=267';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 const TOTAL_BESTIARY = Object.keys(MONSTERS).length;
@@ -65,7 +65,7 @@ function levelTable(rows) {
             <td>${Number(r.total_kills).toLocaleString()}</td>
             <td>${r.arena_points}</td>
             <td>${r.tasks_done}</td>
-            <td style="text-transform:capitalize">${r.world}</td>
+            <td style="text-transform:capitalize">${escapeHtml(r.world)}</td>
           </tr>`).join('')}
       </tbody>
     </table>`;
@@ -85,7 +85,7 @@ function skillOrBestiaryTable(category, rows) {
             <td>${VOC_LABEL[r.vocation] || r.vocation}</td>
             <td>${r.level}</td>
             <td class="hs-highlight-col">${categoryValue(category, r)}</td>
-            <td style="text-transform:capitalize">${r.world}</td>
+            <td style="text-transform:capitalize">${escapeHtml(r.world)}</td>
           </tr>`).join('')}
       </tbody>
     </table>`;
