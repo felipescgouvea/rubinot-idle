@@ -439,24 +439,29 @@ body {
 /* ============ PERSONAGEM — barra de status fina e horizontal, abaixo das
    abas, visível em qualquer aba assim que uma vocação é escolhida ============ */
 /* ===== CORPO: painéis (esquerda) + PAINEL LATERAL de status (direita) ===== */
-#app-body { display: flex; gap: 14px; align-items: flex-start; margin-top: 10px; }
+/* HEADER FININHO — só online + Config + Diário, alinhado à direita no topo. */
+#topbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 10px; }
+#topbar .auth-user { font-size: 11px; opacity: 0.82; overflow: hidden; text-overflow: ellipsis; max-width: 180px; white-space: nowrap; }
+#topbar .auth-user:empty { display: none; }
+
+#app-body { display: flex; gap: 14px; align-items: flex-start; }
 #panels { order: 1; flex: 1 1 auto; min-width: 0; }
-/* Rail de status: antes uma barra horizontal acima dos painéis; agora coluna à
-   direita, grudada no topo ao rolar. Mostra portrait/nome/Lv, barras HP/mana/XP,
-   gold/RC, status de caçada e stamina — o que vivia apertado no header. */
+/* COLUNA DIREITA: Boosted do Dia (topo) + rail de status (embaixo), grudada no
+   topo ao rolar. Assim a batalha à esquerda encosta no topo e some o vazio. */
+#app-aside {
+  order: 2; flex: 0 0 246px;
+  display: flex; flex-direction: column; gap: 12px;
+  position: sticky; top: 12px; align-self: flex-start;
+}
+#app-aside #boosted-strip { display: block; margin: 0; }
+#app-aside #boosted-card { width: 100%; margin: 0 !important; }
+/* empilha creature/boss na coluna estreita (especificidade > #boosted-card .boosted-body) */
+#app-aside #boosted-card .boosted-body { flex-direction: column; gap: 8px; }
+/* Rail de status dentro da coluna direita. */
 #char-info {
-  order: 2;
-  flex: 0 0 248px;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  margin: 0 14px 0 0;
-  padding: 12px 14px;
-  position: sticky;
-  top: 12px;
+  flex-direction: column; align-items: stretch; gap: 10px; margin: 0; padding: 12px 14px;
   background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
-  border: 2px solid var(--gold);
-  border-radius: 8px;
+  border: 2px solid var(--gold); border-radius: 8px;
   box-shadow: 0 2px 8px #00000033, inset 0 1px 0 #ffffff55;
 }
 #char-info .char-status-portrait { justify-content: center; }
@@ -475,14 +480,15 @@ body {
 .rail-status .stat-pill { justify-content: center; text-align: center; }
 .rail-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
 #char-info .char-skills { justify-content: center; flex: none; }
-/* cena de batalha ocupa a maior parte; Battle List + Log estreitos e fixos */
+/* cena de batalha ocupa a MAIOR parte; Battle List + Log estreitos e fixos */
 #battle-inline .battle-col-left { flex: 1; }
-#battle-inline .battle-col-right { flex: 0 0 316px; }
-/* empilha no mobile: o rail vira faixa horizontal no topo */
+#battle-inline .battle-col-right { flex: 0 0 268px; }
+/* empilha no mobile: a coluna direita (Boosted + rail) vira faixa no topo */
 @media (max-width: 900px) {
   #app-body { flex-direction: column; }
-  #char-info { order: -1; flex: none; width: auto; margin: 0 10px; position: static;
-    flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  #app-aside { order: -1; flex: none; width: auto; position: static; flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+  #app-aside #boosted-strip, #app-aside > #char-info { flex: 1 1 260px; }
+  #char-info { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
   #char-info .char-status-bars { width: auto; flex: 1; min-width: 160px; }
   #battle-inline .battle-col-right { flex: none; }
 }
