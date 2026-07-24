@@ -11,7 +11,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=277';
 import { PREY_SLOTS, PREY_BONUS_TYPES, preyRerollCost } from '../domain/prey.js?v=255';
 import { emit, EVENTS } from '../shared/eventBus.js?v=257';
 import { saveGame } from './saveGameUseCase.js?v=259';
-import { fetchPreyState, activatePreyOnServer, rerollPreyOnServer, clearPreyOnServer } from '../infrastructure/authClient.js?v=266';
+import { fetchPreyState, activatePreyOnServer, rerollPreyOnServer, clearPreyOnServer } from '../infrastructure/authClient.js?v=267';
 import { t } from '../i18n/i18n.js?v=275';
 
 const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', defense: 'bestiary.bonusDefense', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };

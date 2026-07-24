@@ -11,7 +11,7 @@ import { G, ACCOUNT } from './gameStore.js?v=259';
 import { CHARMS, CHARM_EQUIP_SLOTS } from '../domain/charms.js?v=256';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=257';
 import { saveGame } from './saveGameUseCase.js?v=259';
-import { fetchCharmState, unlockCharmOnServer } from '../infrastructure/authClient.js?v=266';
+import { fetchCharmState, unlockCharmOnServer } from '../infrastructure/authClient.js?v=267';
 import { t } from '../i18n/i18n.js?v=275';
 
 let lastSyncAt = 0;

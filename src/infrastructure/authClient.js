@@ -529,6 +529,18 @@ export function clearPreyOnServer(slot, slotIndex) {
   return huntFetch('/prey/clear', { method: 'POST', body: { slot, slotIndex } });
 }
 
+// ---- Linked Tasks: gate de desbloqueio AUTORITATIVO — ver server/src/index.js:
+// /task/state, /task/complete. G.taskCompletion não é mais confiável sozinho
+// (achado de auditoria: nunca era reconciliado, um cliente adulterado
+// desbloqueava as 5 salas pra sempre sem matar nada — ver application/
+// taskUseCases.js). ----
+export function fetchTaskState(slot) {
+  return huntFetch(`/task/state?slot=${slot}`);
+}
+export function completeTaskOnServer(slot, roomId, taskIndex) {
+  return huntFetch('/task/complete', { method: 'POST', body: { slot, roomId, taskIndex } });
+}
+
 // ---- Daily Reward (piloto) — ver server/src/index.js ----
 export function fetchDailyRewardState(slot) {
   return huntFetch(`/daily-reward/state?slot=${slot}`);

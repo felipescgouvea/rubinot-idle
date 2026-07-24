@@ -8,7 +8,7 @@ import { runeEntry, canUseAttackRune, runeMinMl, ATTACK_SLOT_COUNT, HEAL_TIER_CO
 import { getMagic } from './stats.js?v=256';
 import { emit, EVENTS } from '../shared/eventBus.js?v=257';
 import { saveGame } from './saveGameUseCase.js?v=259';
-import { updateHuntRtc } from '../infrastructure/authClient.js?v=266';
+import { updateHuntRtc } from '../infrastructure/authClient.js?v=267';
 import { t } from '../i18n/i18n.js?v=275';
 
 // Empurra a config atual pra caçada JÁ RODANDO no servidor (sem isso, mudar

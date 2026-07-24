@@ -6,7 +6,7 @@ import { G, ACCOUNT } from './gameStore.js?v=259';
 import { PROMOTION } from '../domain/character.js?v=287';
 import { emit, EVENTS } from '../shared/eventBus.js?v=257';
 import { saveGame } from './saveGameUseCase.js?v=259';
-import { promoteOnServer } from '../infrastructure/authClient.js?v=266';
+import { promoteOnServer } from '../infrastructure/authClient.js?v=267';
 
 export async function promoteVocation() {
   if (!G.vocation) return;

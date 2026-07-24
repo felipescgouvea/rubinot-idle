@@ -51,7 +51,7 @@ import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
 import { PREY_SLOTS, PREY_MAX_RARITY, preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType, isPreyActive } from '../../src/domain/prey.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason } from '../../src/domain/progression.js?v=130';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason, TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../../src/domain/progression.js?v=130';
 
 // Reseta o bp (resgates + premium) se a temporada virou desde o último — mês
 // calendário (ver currentBpSeason). Preguiçoso: aplicado no próximo /bp/*.
@@ -260,7 +260,7 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/equip', '/charm/unlock', '/prey/activate', '/prey/reroll', '/prey/clear',
+  '/conjure', '/imbue', '/equip', '/charm/unlock', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
   '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
   // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
@@ -1153,6 +1153,58 @@ const server = http.createServer(async (req, res) => {
       slots[slotIndex] = null;
       await savePreySlots(user.id, slot, slots);
       return send(res, 200, { ok: true, slots });
+    }
+
+    // Linked Tasks — GATE DE DESBLOQUEIO AUTORITATIVO (achado de auditoria:
+    // G.taskCompletion nunca era reconciliado com o servidor — não está em
+    // ECONOMY_FIELDS de saveGameUseCase.js, então sobrevivia intacto no save
+    // na nuvem. Um cliente adulterado setava taskCompletion de TODAS as 94
+    // tasks pra 1 e salvava, desbloqueando as 5 salas pra sempre sem nunca
+    // ter matado nada — diferente de gold/xp/inventário, que já eram
+    // sobrescritos a cada reconcile e por isso o exploit ali "evaporava"
+    // sozinho. A concessão da recompensa em si continua no cliente (já é
+    // auto-mitigada pelo reconcile de gold/xp/inventário), mas o AVANÇO da
+    // task só é aceito aqui, validado contra player_bestiary.state.kills
+    // (mortes reais por espécie, mesma fonte do fix de Charms) — nunca
+    // aceita a contagem que o cliente diz ter.
+    if (url.pathname === '/task/state' && req.method === 'GET') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const slot = validSlot(Number(url.searchParams.get('slot')));
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const row = await selectOne('player_tasks', { user_id: user.id, slot });
+      const completion = (row && row.state && row.state.completion) || {};
+      return send(res, 200, { ok: true, completion });
+    }
+
+    if (url.pathname === '/task/complete' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const room = TASK_ROOMS.find(r => r.id === body.roomId);
+      if (!room) return send(res, 400, { error: 'sala inválida' });
+      const roomIndex = TASK_ROOMS.indexOf(room);
+      const taskIndex = Number(body.taskIndex);
+      const task = room.tasks[taskIndex];
+      if (!task) return send(res, 400, { error: 'task inválida' });
+
+      const tasksRow = await selectOne('player_tasks', { user_id: user.id, slot });
+      const completion = (tasksRow && tasksRow.state && tasksRow.state.completion) || {};
+      if (!isRoomUnlocked(roomIndex, completion) || !isTaskUnlocked(room, taskIndex, completion)) {
+        return send(res, 403, { error: 'sala ou task ainda bloqueada' });
+      }
+
+      const bestiaryRow = await selectOne('player_bestiary', { user_id: user.id, slot });
+      const kills = (bestiaryRow && bestiaryRow.state && bestiaryRow.state.kills) || {};
+      const killsReais = task.m.reduce((sum, id) => sum + (Number(kills[id]) || 0), 0);
+      if (killsReais < task.n) return send(res, 400, { error: 'mortes insuficientes pra esta task' });
+
+      const key = taskKey(task);
+      const novaCompletion = { ...completion, [key]: (completion[key] || 0) + 1 };
+      await upsertRow('player_tasks', { user_id: user.id, slot, state: { completion: novaCompletion }, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, completion: novaCompletion });
     }
 
     // ---- Treino de dummy AUTORITATIVO (aba Training) ----

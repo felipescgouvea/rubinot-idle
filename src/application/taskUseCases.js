@@ -1,7 +1,16 @@
 // Linked Tasks: iniciar, progredir e cancelar. Escuta MONSTER_KILLED (emitido
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
-import { G } from './gameStore.js?v=259';
+//
+// O AVANÇO (taskCompletion, o que desbloqueia salas/tasks) é AUTORITATIVO NO
+// SERVIDOR (ver server/src/index.js: /task/state, /task/complete) — achado de
+// auditoria: G.taskCompletion nunca era reconciliado (não está em
+// ECONOMY_FIELDS de saveGameUseCase.js), então sobrevivia intacto num save
+// forjado e um cliente adulterado desbloqueava as 5 salas pra sempre sem
+// matar nada. A concessão da recompensa em si (grantRewards) continua local
+// — já é auto-mitigada pelo reconcile de gold/xp/inventário de qualquer
+// forma, então não precisa duplicar toda a lógica de reward no servidor.
+import { G, ACCOUNT } from './gameStore.js?v=259';
 import { MONSTERS } from '../domain/bestiary.js?v=277';
 import { ITEMS } from '../domain/items.js?v=270';
 import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=258';
@@ -10,7 +19,18 @@ import { gainXp } from './huntUseCases.js?v=323';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=256';
 import { addItemToInventory } from './inventoryCore.js?v=257';
 import { saveGame } from './saveGameUseCase.js?v=259';
+import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=267';
 import { t } from '../i18n/i18n.js?v=275';
+
+// Busca o mapa real de conclusões do servidor e espelha em G — chamado no
+// boot, pra nunca depender de um valor que só existia no save local/na nuvem
+// sem checagem nenhuma.
+export async function syncTaskState() {
+  const res = await fetchTaskState(ACCOUNT.activeSlot);
+  if (!res.ok) return;
+  G.taskCompletion = res.completion || {};
+  emit(EVENTS.TASKS_PANEL);
+}
 
 function findTask(roomId, taskIndex) {
   const room = TASK_ROOMS.find(r => r.id === roomId);
@@ -74,7 +94,7 @@ function grantRewards(rewards) {
   return parts.join(', ');
 }
 
-function checkTaskProgress() {
+async function checkTaskProgress() {
   if (!G.activeTask) return;
   const { roomId, taskIndex, key, required } = G.activeTask;
   const kills = G.taskKills[key] || 0;
@@ -83,7 +103,15 @@ function checkTaskProgress() {
     if (!found) { G.activeTask = null; return; }
     const { task } = found;
     const firstTime = (G.taskCompletion[key] || 0) === 0;
-    G.taskCompletion[key] = (G.taskCompletion[key] || 0) + 1;
+    // Servidor valida mortes reais (player_bestiary) e o gate de desbloqueio
+    // antes de aceitar o avanço — nunca aceita G.taskCompletion como veio.
+    const res = await completeTaskOnServer(ACCOUNT.activeSlot, roomId, taskIndex);
+    if (!res.ok) {
+      emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' });
+      emit(EVENTS.ACTIVE_TASK);
+      return;
+    }
+    G.taskCompletion = res.completion;
     // Recompensa exclusiva de 1ª vez (verde) É ADICIONAL à repetível (vermelha):
     // na 1ª conclusão o jogador recebe firstReward + repeatReward juntos; da 2ª
     // em diante só repeatReward — fiel ao padrão real do RubinOT (Linked Tasks).

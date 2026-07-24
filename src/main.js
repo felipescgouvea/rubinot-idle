@@ -13,12 +13,12 @@ import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=259';
 import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=298';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=257';
-import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect, fetchSaveEpoch } from './infrastructure/authClient.js?v=266';
+import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect, fetchSaveEpoch } from './infrastructure/authClient.js?v=267';
 import { clearState, loadSaveEpoch, saveSaveEpoch } from './infrastructure/storage.js?v=254';
 import { selectVocation, graduate, checkGraduation, ensureStarterKitPending } from './application/characterUseCases.js?v=260';
 import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession, setFightMode, renderFightModeButtons, setDensity, renderDensityButtons } from './application/huntUseCases.js?v=323';
 import { equipItem, unequipItem, sellItem, sellAllItem, useItem, equipRelic, sellRelic, setAutoSell, setAutoSellMax } from './application/inventoryUseCases.js?v=267';
-import { startTask, cancelTask } from './application/taskUseCases.js?v=261';
+import { startTask, cancelTask, syncTaskState } from './application/taskUseCases.js?v=262';
 import { selectWorld, checkWorldUnlocks } from './application/worldUseCases.js?v=261';
 import { claimBpReward, claimMissionReward, buyBpPremium, claimWeeklyMissionReward } from './application/battlePassUseCases.js?v=258';
 import { buyShopItem } from './application/shopUseCases.js?v=263';
@@ -193,7 +193,7 @@ async function bootGame() {
   // cliente (bug reportado: "logou em 2 dispositivos e a contagem era 1").
   // Fire-and-forget: não trava o boot por causa de uma chamada de rede.
   submitScore();
-  if (G.vocation) { syncCharmState(true); syncPreyState(); } // estado real de charms/prey (ver bestiaryUseCases.js/preyUseCases.js)
+  if (G.vocation) { syncCharmState(true); syncPreyState(); syncTaskState(); } // estado real de charms/prey/tasks (ver bestiaryUseCases.js/preyUseCases.js/taskUseCases.js)
   emit(EVENTS.LOG, '<span class="log-info">⚔️ Bem-vindo ao Rubinot Idle! Escolha sua vocação para começar.</span>');
 
   if (G.vocation) {

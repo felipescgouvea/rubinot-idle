@@ -9,7 +9,7 @@
 import { G } from './gameStore.js?v=259';
 import { SPELLS } from '../domain/spells.js?v=199';
 import { ITEMS } from '../domain/items.js?v=270';
-import { conjureOnServer } from '../infrastructure/authClient.js?v=266';
+import { conjureOnServer } from '../infrastructure/authClient.js?v=267';
 import { emit, EVENTS } from '../shared/eventBus.js?v=257';
 
 export async function conjureSpell(slot, spellId) {
