@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=267';
-import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=295';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=264';
-import { skillIconImg, itemIconImg } from './shared.js?v=270';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=263';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=263';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=263';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=263';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=264';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=265';
-import { formatNum, applyHpState } from './shared.js?v=270';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=284';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=331';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=268';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=263';
-import { selectVocation } from '../application/characterUseCases.js?v=268';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=268';
-import { t } from '../i18n/i18n.js?v=283';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=104';
+import { G } from '../application/gameStore.js?v=268';
+import { VOCATIONS, XP_TABLE, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=296';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=265';
+import { skillIconImg, itemIconImg } from './shared.js?v=271';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=264';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=264';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=264';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=264';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=265';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=266';
+import { formatNum, applyHpState } from './shared.js?v=271';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=285';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=332';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=269';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=264';
+import { selectVocation } from '../application/characterUseCases.js?v=269';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=269';
+import { t } from '../i18n/i18n.js?v=284';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=105';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -92,8 +92,32 @@ function mountPlayerPortrait(container, cls) {
   }).then(ok => {
     if (!ok && container.dataset.sprite === sig) {
       container.innerHTML = `<span class="${cls}">${icon}</span>`;
+    } else if (ok) {
+      centerSpriteInCanvas(canvas);
     }
   });
+}
+
+// O sprite do outfit não fica centrado no canvas 64x64 (cada outfit desenha o
+// boneco num canto diferente, com margem transparente), então o portrait do
+// rail parecia "descentralizado". Aqui medimos a caixa dos pixels visíveis e
+// deslocamos o canvas pra que o CENTRO do boneco caia no centro do tile —
+// funciona pra qualquer outfit, sem número mágico por sprite.
+function centerSpriteInCanvas(canvas) {
+  try {
+    const w = canvas.width, h = canvas.height;
+    const d = canvas.getContext('2d').getImageData(0, 0, w, h).data;
+    let minX = w, minY = h, maxX = 0, maxY = 0, any = false;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (d[(y * w + x) * 4 + 3] > 20) { any = true; if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
+      }
+    }
+    if (!any) return;
+    const dx = (w / 2 - (minX + maxX) / 2) / w * 100;
+    const dy = (h / 2 - (minY + maxY) / 2) / h * 100;
+    canvas.style.transform = `translate(${dx.toFixed(1)}%, ${dy.toFixed(1)}%)`;
+  } catch { /* canvas não legível: deixa como está */ }
 }
 
 // Anima a caminhada do boneco na cena de batalha COM as cores do jogador:
