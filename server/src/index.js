@@ -258,8 +258,12 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
+  '/conjure', '/imbue', '/equip', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
+  // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
+  // player_equipment em /imbue (pra achar o item equipado de verdade) podia
+  // ficar desatualizada no meio de uma troca de arma concorrente, perdendo o
+  // imbuement pago ou reequipando a arma antiga (achado da auditoria).
 ]);
 const userLocks = new Map();   // userId -> cauda da fila de promessas
 async function acquireUserLock(userId) {
@@ -963,7 +967,13 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const slot = validSlot(body.slot);
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
-      const def = IMBUEMENTS[body.imbuementId];
+      // hasOwnProperty explícito: IMBUEMENTS é um objeto literal comum, então
+      // um imbuementId tipo "constructor"/"toString"/"__proto__" retornaria um
+      // valor herdado (truthy) e passaria pelo `if (!def)` abaixo sem ser um
+      // imbuement de verdade (achado da auditoria) — não escalava pra dupe
+      // (a checagem seguinte de equipamento falha por eq_slot undefined), mas
+      // é validação frágil que vale fechar na fonte.
+      const def = Object.prototype.hasOwnProperty.call(IMBUEMENTS, body.imbuementId) ? IMBUEMENTS[body.imbuementId] : null;
       if (!def) return send(res, 400, { error: 'imbuement inválido' });
       const eqSlot = def.slot;
       const eqRow = await selectOne('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot });
