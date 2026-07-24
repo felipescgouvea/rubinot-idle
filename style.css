@@ -440,8 +440,13 @@ body {
    abas, visível em qualquer aba assim que uma vocação é escolhida ============ */
 /* ===== CORPO: painéis (esquerda) + PAINEL LATERAL de status (direita) ===== */
 /* HEADER FININHO — só online + Config + Diário, alinhado à direita no topo. */
-#topbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 10px; }
-#topbar .auth-user { font-size: 11px; opacity: 0.82; overflow: hidden; text-overflow: ellipsis; max-width: 180px; white-space: nowrap; }
+/* barra fina COM fundo (antes era transparente e "parecia que não tinha nada") */
+#topbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 10px;
+  padding: 5px 12px;
+  background: linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  border: 2px solid var(--gold); border-radius: 8px;
+  box-shadow: inset 0 1px 0 #ffffff2a, 0 2px 8px #00000055; }
+#topbar .auth-user { font-size: 11px; opacity: 0.82; color: var(--cream); overflow: hidden; text-overflow: ellipsis; max-width: 180px; white-space: nowrap; }
 #topbar .auth-user:empty { display: none; }
 
 #app-body { display: flex; gap: 14px; align-items: flex-start; }
@@ -482,7 +487,7 @@ body {
 #char-info .char-skills { justify-content: center; flex: none; }
 /* cena de batalha ocupa a MAIOR parte; Battle List + Log estreitos e fixos */
 #battle-inline .battle-col-left { flex: 1; }
-#battle-inline .battle-col-right { flex: 0 0 268px; }
+#battle-inline .battle-col-right { flex: 0 0 196px; }
 /* empilha no mobile: a coluna direita (Boosted + rail) vira faixa no topo */
 @media (max-width: 900px) {
   #app-body { flex-direction: column; }
@@ -2139,7 +2144,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 #tab-hunt.active { display: block; }
 #battle-inline {
   display: flex; flex-direction: column; gap: 12px;
-  height: min(660px, 74vh); padding: 12px 14px; min-height: 0;
+  padding: 12px 14px;
 }
 /* foco visual: a cena de batalha é o herói — borda/realce mais fortes que os
    cards secundários (hierarquia pedida na crítica de design). */
@@ -2147,16 +2152,21 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .battle-inline-top { display: flex; align-items: center; gap: 10px; flex: none; }
 .battle-inline-top #zone-current-bar { flex: 1; margin: 0; }
 .battle-inline-top #hunt-status-switch-btn { flex: none; width: auto; }
+/* Altura NATURAL agora (o log foi pro fim da coluna esquerda): a cena tem altura
+   FIXA e o resto empilha embaixo; a coluna direita (Battle List) estica pra
+   igualar a altura da esquerda. */
 #battle-inline #battle-modal-body {
-  flex: 1; min-height: 0; display: flex; flex-direction: row; gap: 14px; padding: 0; overflow: hidden;
+  display: flex; flex-direction: row; gap: 14px; padding: 0; align-items: stretch;
 }
-#battle-inline #battle-scene { margin: 0 !important; flex: 1; min-height: 0; }
-#battle-inline #dungeon-stage { flex: 1; height: auto; min-height: 240px; }
+#battle-inline #battle-scene { margin: 0 !important; flex: none; }
+#battle-inline #dungeon-stage { flex: none; height: 360px; min-height: 360px; }
 #battle-inline #hunt-toggle { margin: 0 !important; flex: none; }
 #battle-inline #battle-list-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 #battle-inline #battle-list { flex: 1; height: auto; max-height: none; overflow-y: auto; }
-#battle-inline #combat-log-card { margin: 0 !important; flex: 1.25; min-height: 0; display: flex; flex-direction: column; overflow: visible; }
-#battle-inline #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
+/* Log agora vive no fim da COLUNA ESQUERDA (abaixo da cena + botões): altura
+   fixa pra não brigar com a cena, que continua sendo quem cresce. */
+#battle-inline #combat-log-card { margin: 0 !important; flex: none; min-height: 0; display: flex; flex-direction: column; overflow: visible; }
+#battle-inline #combat-log { margin: 10px 12px !important; flex: none; height: 188px; min-height: 0; }
 
 /* extras (analyzer/loot/blessings + equipment) abaixo, com MENOS peso visual */
 #hunt-extras { display: flex; gap: 14px; margin-top: 14px; align-items: flex-start; }

@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=264';
-import { MONSTERS } from '../domain/bestiary.js?v=282';
-import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=261';
-import { on, EVENTS } from '../shared/eventBus.js?v=262';
-import { escapeHtml, notify, skillIconImg } from './shared.js?v=267';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=265';
-import { t } from '../i18n/i18n.js?v=280';
+import { G } from '../application/gameStore.js?v=265';
+import { MONSTERS } from '../domain/bestiary.js?v=283';
+import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=262';
+import { on, EVENTS } from '../shared/eventBus.js?v=263';
+import { escapeHtml, notify, skillIconImg } from './shared.js?v=268';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=266';
+import { t } from '../i18n/i18n.js?v=281';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 const TOTAL_BESTIARY = Object.keys(MONSTERS).length;
