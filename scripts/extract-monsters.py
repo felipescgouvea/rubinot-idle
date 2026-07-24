@@ -64,7 +64,12 @@ def render(lt, colors):
     for im in raw:
         crop = im.crop((x0, y0, x1, y1))
         nw, nh = max(1, round(bw * scale)), max(1, round(bh * scale))
-        crop = crop.resize((nw, nh), Image.NEAREST)
+        # LANCZOS (não NEAREST): o sprite nativo (32 ou 64px) é reescalado pra
+        # ~82% de 64px, um fator quase sempre não-inteiro. NEAREST nesse caso
+        # "mastiga" o pixel art (linhas/colunas somem irregularmente) e o Cyclops
+        # & cia saíam serrilhados na cena. LANCZOS reamostra suave; como o
+        # conteúdo fica ~52px e a cena mostra a 52px (≈1:1), sai limpo.
+        crop = crop.resize((nw, nh), Image.LANCZOS)
         canvas = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
         canvas.paste(crop, ((CANVAS - nw) // 2, (CANVAS - nh) // 2), crop)
         frames.append(canvas)
