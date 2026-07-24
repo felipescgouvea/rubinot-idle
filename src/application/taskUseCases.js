@@ -1,16 +1,16 @@
 // Linked Tasks: iniciar, progredir e cancelar. Escuta MONSTER_KILLED (emitido
 // pela caçada) em vez de a caçada chamar isto diretamente — a caçada não
 // precisa saber que tasks existem, só anuncia mortes.
-import { G } from './gameStore.js?v=257';
-import { MONSTERS } from '../domain/bestiary.js?v=275';
-import { ITEMS } from '../domain/items.js?v=268';
-import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=256';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=255';
-import { gainXp } from './huntUseCases.js?v=321';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=254';
-import { addItemToInventory } from './inventoryCore.js?v=255';
-import { saveGame } from './saveGameUseCase.js?v=257';
-import { t } from '../i18n/i18n.js?v=271';
+import { G } from './gameStore.js?v=258';
+import { MONSTERS } from '../domain/bestiary.js?v=276';
+import { ITEMS } from '../domain/items.js?v=269';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=257';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=256';
+import { gainXp } from './huntUseCases.js?v=322';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=255';
+import { addItemToInventory } from './inventoryCore.js?v=256';
+import { saveGame } from './saveGameUseCase.js?v=258';
+import { t } from '../i18n/i18n.js?v=272';
 
 function findTask(roomId, taskIndex) {
   const room = TASK_ROOMS.find(r => r.id === roomId);
@@ -102,6 +102,10 @@ function checkTaskProgress() {
 }
 
 export function cancelTask() {
+  // Zera o progresso ao cancelar — sem isto, G.taskKills[key] sobrevivia e o
+  // startTask (que faz `|| 0`) reaproveitava a contagem: matar 99/100, cancelar
+  // e reativar completava a task na 1ª morte da nova tentativa (banca de progresso).
+  if (G.activeTask) G.taskKills[G.activeTask.key] = 0;
   G.activeTask = null;
   emit(EVENTS.TASKS_PANEL);
   emit(EVENTS.NOTIFY, { msg: t('tasks.cancelled'), type: 'error' });

@@ -1192,8 +1192,11 @@ const server = http.createServer(async (req, res) => {
               await updateRows('market_listings', { id: r.id }, { status: 'expired', closed_at: new Date().toISOString() });
               // sell: devolve o item ao vendedor; buy: devolve o gold reservado
               // à carteira do comprador (escrow diferente por tipo de oferta).
-              if (r.kind === 'buy') await refundBuyOfferGold(r);
-              else await incrementInventory(r.seller_user_id, r.seller_slot, r.item_id, Number(r.qty));
+              // Usa `fresh` (relido sob o lock), NUNCA o `r` do snapshot pré-lock:
+              // se um /market/fill parcial baixou a qty na janela, `r.qty` está
+              // velho e devolveria escrow demais — gold/itens criados do nada.
+              if (fresh.kind === 'buy') await refundBuyOfferGold(fresh);
+              else await incrementInventory(fresh.seller_user_id, fresh.seller_slot, fresh.item_id, Number(fresh.qty));
             }
           } finally { rel(); }
         } else active.push(r);
