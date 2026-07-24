@@ -1,14 +1,14 @@
 // Casos de uso das Presas (Prey): travar uma criatura num slot, rerolar o
 // bônus e ativar. Ver domain/prey.js pra as regras puras.
-import { G } from './gameStore.js?v=254';
-import { MONSTERS } from '../domain/bestiary.js?v=272';
+import { G } from './gameStore.js?v=255';
+import { MONSTERS } from '../domain/bestiary.js?v=273';
 import {
   PREY_SLOTS, PREY_DURATION_MS, PREY_BONUS_TYPES, PREY_MAX_RARITY,
   preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType,
-} from '../domain/prey.js?v=250';
-import { emit, EVENTS } from '../shared/eventBus.js?v=252';
-import { saveGame } from './saveGameUseCase.js?v=254';
-import { t } from '../i18n/i18n.js?v=268';
+} from '../domain/prey.js?v=251';
+import { emit, EVENTS } from '../shared/eventBus.js?v=253';
+import { saveGame } from './saveGameUseCase.js?v=255';
+import { t } from '../i18n/i18n.js?v=269';
 
 const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', defense: 'bestiary.bonusDefense', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
 
@@ -21,8 +21,11 @@ function ensurePreyArray() {
 // que sai a raridade atual — o reroll do Tibia parte da raridade que voce ja
 // tem e SOBE, entao rerolar nunca piora. Presa nova comeca do zero.
 function makePrey(monsterId, anterior = null) {
-  const rarityBase = anterior ? (anterior.rarity || 0) : 0;
-  const rarity = rollPreyRarity(rarityBase);
+  // Presa NOVA começa na raridade 1 (a mais fraca) — subir só via reroll PAGO,
+  // fiel ao Tibia. Antes uma presa nova caía em rollPreyRarity(0), que sorteia
+  // 1-10 aleatório: cancelar e reativar de graça rolava raridade alta sem custo
+  // (exploit da auditoria). O reroll (anterior != null) continua escalando.
+  const rarity = anterior ? rollPreyRarity(anterior.rarity || 0) : 1;
   const bonusType = rollPreyBonusType(anterior && anterior.bonusType, rarity);
   return {
     monster: monsterId,

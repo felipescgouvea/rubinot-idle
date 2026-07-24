@@ -1,13 +1,13 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=254';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=265';
-import { RARITY_TIERS } from '../domain/rarity.js?v=251';
-import { on, EVENTS } from '../shared/eventBus.js?v=252';
-import { saveGame } from '../application/saveGameUseCase.js?v=254';
-import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=257';
-import { t } from '../i18n/i18n.js?v=268';
+import { G } from '../application/gameStore.js?v=255';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=266';
+import { RARITY_TIERS } from '../domain/rarity.js?v=252';
+import { on, EVENTS } from '../shared/eventBus.js?v=253';
+import { saveGame } from '../application/saveGameUseCase.js?v=255';
+import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=258';
+import { t } from '../i18n/i18n.js?v=269';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
