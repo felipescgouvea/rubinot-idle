@@ -4,7 +4,7 @@
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
 import { G, ACCOUNT } from './gameStore.js?v=258';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=264';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=265';
 import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=263';
 import { ZONES } from '../domain/bestiary.js?v=276';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=285';

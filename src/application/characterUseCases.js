@@ -7,7 +7,7 @@ import { emit, on, EVENTS } from '../shared/eventBus.js?v=256';
 import { addItemToInventory } from './inventoryCore.js?v=256';
 import { startRegen, resyncHuntSession } from './huntUseCases.js?v=322';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=264';
+import { grantStarterKit, grantGraduateKit } from '../infrastructure/authClient.js?v=265';
 import { pruneRtcForVocation } from './rtcUseCases.js?v=284';
 import { t } from '../i18n/i18n.js?v=274';
 

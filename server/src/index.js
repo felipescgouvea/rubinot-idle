@@ -36,7 +36,7 @@
 //     toda leitura precisa disso (Daily Reward, por ex., não tem delta
 //     pendente: o estado é sempre recomputado na hora a partir da data).
 import http from 'node:http';
-import { ZONES } from '../../src/domain/bestiary.js?v=147';
+import { ZONES, MONSTERS } from '../../src/domain/bestiary.js?v=147';
 import { computeAtk, computeDef, computeSpd, computeMaxHp, computeMaxMana } from '../../src/domain/combatFormulas.js?v=158';
 import { TIBIA_SKILLS, applySkillGain } from '../../src/domain/character.js?v=157';
 import { TRAINABLE_SKILLS, TRAINING_MAX_OFFLINE_SEC, ONLINE_RATE_MULTIPLIER, TRAINING_WAND_MULT, triesForTraining } from '../../src/domain/training.js?v=127';
@@ -49,6 +49,7 @@ import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
+import { PREY_SLOTS, PREY_MAX_RARITY, preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType, isPreyActive } from '../../src/domain/prey.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
 import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason } from '../../src/domain/progression.js?v=130';
 
@@ -259,7 +260,8 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/equip', '/charm/unlock', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
+  '/conjure', '/imbue', '/equip', '/charm/unlock', '/prey/activate', '/prey/reroll', '/prey/clear',
+  '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
   // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
   // player_equipment em /imbue (pra achar o item equipado de verdade) podia
@@ -451,6 +453,14 @@ const server = http.createServer(async (req, res) => {
       const requestedCharms = Array.isArray(body.charms) ? body.charms : [];
       const realCharms = requestedCharms.filter(id => ownedCharms.includes(id)).slice(0, 3);
 
+      // Presas REAIS (mesmo espírito dos charms acima, achado de auditoria —
+      // ver /prey/activate,reroll,clear mais abaixo): `body.prey` nunca é
+      // lido, os 3 slots vêm inteiros de player_prey. isPreyActive descarta
+      // slot vazio/expirado antes de entrar na sessão.
+      const preySlots = await loadPreySlots(user.id, slot);
+      const agoraPrey = Date.now();
+      const realPrey = preySlots.filter(s => isPreyActive(s, agoraPrey));
+
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
         // Instante em que a caçada COMEÇOU (default now() da coluna). Sem isto,
@@ -479,14 +489,12 @@ const server = http.createServer(async (req, res) => {
         // cliente). Sem isto, boost pago e charm desbloqueado não faziam nada.
         boosts: (body.boosts && typeof body.boosts === 'object') ? body.boosts : {},
         charms: realCharms,
-        // Presas ativas. A FORÇA do bônus não é aceita como veio: huntEngine
-        // recalcula pela raridade (ver preyBonus lá) — o cliente só informa
-        // qual criatura, que tipo de bônus e até quando vale.
-        // Teto de tamanho: sem isto o cliente podia mandar um array gigante que
-        // ficava na memória da sessão e era percorrido a cada kill (preyBonus).
-        // 8 cobre qualquer nº real de slots com folga. A FORÇA continua sendo
-        // recalculada pela raridade no huntEngine — o cliente nunca dita o valor.
-        prey: Array.isArray(body.prey) ? body.prey.slice(0, 8) : [],
+        // Presas ativas — vêm 100% de player_prey (achado de auditoria:
+        // `body.prey` era aceito do cliente inteiro, sem checar se a
+        // criatura/raridade/tipo eram reais; um cliente adulterado forjava
+        // raridade 10 em tudo, de graça — ver /prey/activate,reroll,clear
+        // acima). `body.prey` não é mais lido aqui, de propósito.
+        prey: realPrey,
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }
@@ -1049,6 +1057,102 @@ const server = http.createServer(async (req, res) => {
       const novoUnlocked = [...unlocked, body.charmId];
       await upsertRow('player_charms', { user_id: user.id, slot, state: { unlocked: novoUnlocked }, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, unlocked: novoUnlocked, points: points - charm.cost });
+    }
+
+    // Presas (Prey) AUTORITATIVAS (achado de auditoria: mesma classe do bug de
+    // charms, mais grave — /hunt/start aceitava `body.prey` inteiro do
+    // cliente, e huntEngine só recalculava a % pela raridade, nunca checava
+    // se a criatura/raridade/tipo de bônus eram reais. Um cliente adulterado
+    // forjava raridade 10 em TODOS os bônus (dano/defesa/xp/loot) em toda
+    // criatura da zona, de graça, sem nunca ter jogado o minigame. player_prey
+    // (existia no banco, nunca usada por código nenhum, igual player_charms/
+    // player_bestiary antes do fix) passa a ser a fonte real; /hunt/start
+    // ignora `body.prey` por completo e monta a sessão só com os 3 slots
+    // reais gravados aqui.
+    async function loadPreySlots(userId, slot) {
+      const row = await selectOne('player_prey', { user_id: userId, slot });
+      const slots = (row && row.state && Array.isArray(row.state.slots)) ? row.state.slots : [];
+      while (slots.length < PREY_SLOTS) slots.push(null);
+      return slots.slice(0, PREY_SLOTS);
+    }
+    async function savePreySlots(userId, slot, slots) {
+      await upsertRow('player_prey', { user_id: userId, slot, state: { slots }, updated_at: new Date().toISOString() }, 'user_id,slot');
+    }
+
+    if (url.pathname === '/prey/state' && req.method === 'GET') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const slot = validSlot(Number(url.searchParams.get('slot')));
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const slots = await loadPreySlots(user.id, slot);
+      return send(res, 200, { ok: true, slots });
+    }
+
+    if (url.pathname === '/prey/activate' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const slotIndex = Number(body.slotIndex);
+      if (!Number.isInteger(slotIndex) || slotIndex < 0 || slotIndex >= PREY_SLOTS) return send(res, 400, { error: 'slotIndex inválido' });
+      if (!MONSTERS[body.monsterId]) return send(res, 400, { error: 'criatura inválida' });
+      const slots = await loadPreySlots(user.id, slot);
+      // Presa NOVA sempre começa raridade 1 (a mais fraca) — subir só via
+      // reroll pago, mesma regra do domain/prey.js (fechado aqui pra nunca
+      // dar raridade alta de graça, mesmo pulando a UI).
+      const bonusType = rollPreyBonusType(null, 1);
+      slots[slotIndex] = { monster: body.monsterId, bonusType, rarity: 1, bonusPct: preyBonusPct(bonusType, 1), expires: Date.now() + 2 * 60 * 60 * 1000 };
+      await savePreySlots(user.id, slot, slots);
+      return send(res, 200, { ok: true, slots });
+    }
+
+    if (url.pathname === '/prey/reroll' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const slotIndex = Number(body.slotIndex);
+      if (!Number.isInteger(slotIndex) || slotIndex < 0 || slotIndex >= PREY_SLOTS) return send(res, 400, { error: 'slotIndex inválido' });
+      const slots = await loadPreySlots(user.id, slot);
+      const atual = slots[slotIndex];
+      if (!atual || !atual.monster) return send(res, 400, { error: 'slot vazio' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const level = stats ? stats.level : 1;
+      const gold = stats ? Number(stats.gold) : 0;
+      const custo = preyRerollCost(level);
+      // Carta de presa: MESMO limite de confiança já aceito hoje pros prêmios
+      // de Arena/Battle Pass (não-materiais, ver rewardGrants.js) — a
+      // contagem de cartas ainda não é autoritativa no servidor (exigiria
+      // Arena/BP virarem autoritativos primeiro, fora do escopo deste fix).
+      // O que importa pra fechar o exploit real é a RARIDADE/TIPO sorteados
+      // aqui no servidor, nunca aceitos do cliente — isso já fecha o ganho
+      // de stats de graça, custe gold ou carta.
+      const usaCarta = !!body.usePreyCard;
+      if (!usaCarta) {
+        if (gold < custo) return send(res, 400, { error: 'gold insuficiente' });
+        await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - custo, updated_at: new Date().toISOString() }, 'user_id,slot');
+      }
+      const novaRaridade = rollPreyRarity(atual.rarity || 0);
+      const novoTipo = rollPreyBonusType(atual.bonusType, novaRaridade);
+      slots[slotIndex] = { monster: atual.monster, bonusType: novoTipo, rarity: novaRaridade, bonusPct: preyBonusPct(novoTipo, novaRaridade), expires: Date.now() + 2 * 60 * 60 * 1000 };
+      await savePreySlots(user.id, slot, slots);
+      return send(res, 200, { ok: true, slots, gold: usaCarta ? gold : gold - custo });
+    }
+
+    if (url.pathname === '/prey/clear' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const slotIndex = Number(body.slotIndex);
+      if (!Number.isInteger(slotIndex) || slotIndex < 0 || slotIndex >= PREY_SLOTS) return send(res, 400, { error: 'slotIndex inválido' });
+      const slots = await loadPreySlots(user.id, slot);
+      slots[slotIndex] = null;
+      await savePreySlots(user.id, slot, slots);
+      return send(res, 200, { ok: true, slots });
     }
 
     // ---- Treino de dummy AUTORITATIVO (aba Training) ----

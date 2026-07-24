@@ -513,6 +513,22 @@ export function unlockCharmOnServer(slot, charmId) {
   return huntFetch('/charm/unlock', { method: 'POST', body: { slot, charmId } });
 }
 
+// ---- Presas (Prey) AUTORITATIVAS — ver server/src/index.js: /prey/*.
+// Substitui G.prey mutado só localmente (achado de auditoria: /hunt/start
+// aceitava qualquer raridade/tipo forjado — ver application/preyUseCases.js). ----
+export function fetchPreyState(slot) {
+  return huntFetch(`/prey/state?slot=${slot}`);
+}
+export function activatePreyOnServer(slot, slotIndex, monsterId) {
+  return huntFetch('/prey/activate', { method: 'POST', body: { slot, slotIndex, monsterId } });
+}
+export function rerollPreyOnServer(slot, slotIndex, usePreyCard) {
+  return huntFetch('/prey/reroll', { method: 'POST', body: { slot, slotIndex, usePreyCard } });
+}
+export function clearPreyOnServer(slot, slotIndex) {
+  return huntFetch('/prey/clear', { method: 'POST', body: { slot, slotIndex } });
+}
+
 // ---- Daily Reward (piloto) — ver server/src/index.js ----
 export function fetchDailyRewardState(slot) {
   return huntFetch(`/daily-reward/state?slot=${slot}`);
