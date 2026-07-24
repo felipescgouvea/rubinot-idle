@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=255';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=260';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=260';
-import { ZONES } from '../domain/bestiary.js?v=273';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=282';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=253';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=285';
-import { monsterAttack } from '../domain/combatFormulas.js?v=284';
-import { elementMod } from '../domain/elements.js?v=251';
-import { STAMINA_MAX } from '../domain/stamina.js?v=251';
-import { ITEMS } from '../domain/items.js?v=266';
-import { MONSTERS } from '../domain/bestiary.js?v=273';
-import { RARITY_TIERS } from '../domain/rarity.js?v=252';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=253';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=253';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=252';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=252';
-import { saveGame } from './saveGameUseCase.js?v=255';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=256';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=254';
-import { t } from '../i18n/i18n.js?v=269';
+import { G, ACCOUNT } from './gameStore.js?v=256';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=261';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=261';
+import { ZONES } from '../domain/bestiary.js?v=274';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=283';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=254';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=286';
+import { monsterAttack } from '../domain/combatFormulas.js?v=285';
+import { elementMod } from '../domain/elements.js?v=252';
+import { STAMINA_MAX } from '../domain/stamina.js?v=252';
+import { ITEMS } from '../domain/items.js?v=267';
+import { MONSTERS } from '../domain/bestiary.js?v=274';
+import { RARITY_TIERS } from '../domain/rarity.js?v=253';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=254';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=254';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=253';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=253';
+import { saveGame } from './saveGameUseCase.js?v=256';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=257';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=255';
+import { t } from '../i18n/i18n.js?v=270';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -696,31 +696,38 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
   // que abate o monstro num tiro só ficava SEM a seta/projétil (bug do Felipe:
   // "às vezes o projétil não sai"). O alvo ainda está no DOM neste instante
   // (o re-render só vem no emit MONSTER_DISPLAY abaixo), então a seta voa até ele.
+  // Alvo da frente que MORRE com projétil a caminho fica PENDENTE: ele não pode
+  // "morrer" no instante em que a seta sai (senão a seta voa até um cadáver — a
+  // dessincronia que o Felipe via, medida: morte em 106ms, seta pousa em 414ms).
+  // Fica VIVO e visível na frente do pack até o projétil pousar; showFatal (no
+  // pouso) tira ele do pack e dispara a morte de verdade, junto com o número.
+  let pendingFatalUid = null;
   if (killedFrontUid) {
     const voc = VOC_TRAINING[G.vocation];
     const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
-    // Dano do golpe FATAL: o monstro saiu do pack, então NÃO passou pelo applyHit
-    // acima e o número de dano nunca aparecia (queixa do Felipe: "golpes fatais
-    // não mostram dano"). Mostra o dano REAL do servidor no alvo da frente
-    // (frontDmg); se por acaso não veio evento, cai na vida que ele tinha.
-    // Sincronizado com o pouso do projétil, igual aos golpes normais; sem
-    // projétil (melee), na hora. Também dispara o lunge e a explosão de área da
-    // munição, pra o golpe que mata ficar igual a qualquer outro golpe.
     const prevKilled = prevPackByUid.get(killedFrontUid);
     const fatalDmg = frontDmg > 0 ? frontDmg : (prevKilled ? prevKilled.hp : 0);
     const fatalEl = frontDmg > 0 ? frontEl : 'physical';
+    const killedDef = killedFrontDefKey;
     lunge();
     const showFatal = () => {
       showBasicAmmoArea(killedFrontUid);
       if (fatalDmg > 0) emit(EVENTS.COMBAT_DAMAGE, { uid: killedFrontUid, amount: fatalDmg, element: fatalEl });
+      // AGORA (no pouso) tira o morto do pack e dispara a morte — arrow → dano → morte,
+      // na ordem certa. Idempotente: se o próximo tick já o removeu, o filter é no-op.
+      currentPack = currentPack.filter(cm => String(cm.uid) !== killedFrontUid);
+      currentMonster = (manualTargetUid && currentPack.find(m => String(m.uid) === manualTargetUid)) || currentPack[0] || null;
+      emit(EVENTS.MONSTER_DISPLAY, { killed: killedDef });
+      emit(EVENTS.BATTLE_LIST);
     };
     if (missile) {
+      pendingFatalUid = killedFrontUid;
       const hitId = String(++hitSeq);
       pendingHits.set(hitId, showFatal);
       emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid, hitId });
       setTimeout(() => { if (pendingHits.delete(hitId)) showFatal(); }, hitSyncFallbackMs());
     } else {
-      showFatal();
+      showFatal();   // melee: sem projétil, morre na hora (correto)
     }
   }
   // Reconstrói currentPack: quem já existia mantém o hp ANTIGO (o setTimeout
@@ -732,8 +739,16 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
     const old = oldByUid.get(String(m.uid));
     return old ? { ...m, hp: old.hp, _hitAt: old._hitAt } : { ...m };
   });
+  // Mantém o alvo fatal pendente VIVO na frente até o projétil pousar (ver acima).
+  if (pendingFatalUid) {
+    const morto = oldByUid.get(pendingFatalUid);
+    if (morto) currentPack.unshift(morto);
+  }
   currentMonster = (manualTargetUid && currentPack.find(m => String(m.uid) === manualTargetUid)) || currentPack[0] || null;
-  emit(EVENTS.MONSTER_DISPLAY, killedFrontDefKey ? { killed: killedFrontDefKey } : {});
+  // Com fatal pendente NÃO dispara a morte agora (o morto ainda está "vivo" no
+  // pack) — ela vem no showFatal, sincronizada com o pouso. Sem pendente, mantém
+  // o comportamento antigo (melee/área já morrem na hora).
+  emit(EVENTS.MONSTER_DISPLAY, (!pendingFatalUid && killedFrontDefKey) ? { killed: killedFrontDefKey } : {});
   emit(EVENTS.BATTLE_LIST);
 }
 
