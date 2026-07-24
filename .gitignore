@@ -8,3 +8,5 @@ reference/
 
 scripts/*-cs-auditoria.json
 __pycache__/
+scripts/_*
+scripts/*_preview.png
