@@ -267,6 +267,14 @@ const ECON_PATHS = new Set([
   // player_equipment em /imbue (pra achar o item equipado de verdade) podia
   // ficar desatualizada no meio de uma troca de arma concorrente, perdendo o
   // imbuement pago ou reequipando a arma antiga (achado da auditoria).
+  '/hunt/idle-heal',
+  // sem o lock: idleRtcHealStandalone -> incrementInventory é select-then-
+  // upsert (huntEngine.js), não SQL atômico. O cliente chama esta rota num
+  // timer curto enquanto ocioso (comentário original desta rota já dizia
+  // isso) — duas chamadas sobrepostas liam a mesma qty de poção, ambas
+  // passavam do gate qty>0 e curavam, mas só uma unidade líquida era
+  // debitada (last-write-wins no upsert): duplicava a cura sem gastar a
+  // poção correspondente (achado de auditoria).
 ]);
 const userLocks = new Map();   // userId -> cauda da fila de promessas
 async function acquireUserLock(userId) {
@@ -1522,7 +1530,12 @@ const server = http.createServer(async (req, res) => {
       const owned = invRow ? Number(invRow.qty) : 0;
       if (owned < qty) return send(res, 400, { error: 'você não tem essa quantidade do item' });
       await incrementInventory(user.id, slot, itemId, -qty);
-      const sellerName = String(body.sellerName || '').slice(0, 20) || 'Jogador';
+      // Mesmo charset seguro do highscores/submit (defesa em profundidade —
+      // hoje o render em marketPanel.js já escapa, mas um POST direto sem
+      // passar pela UI normal não devia conseguir gravar HTML/script no
+      // nome mostrado a outros jogadores navegando o mercado).
+      const sellerNameRaw = String(body.sellerName || '').slice(0, 20);
+      const sellerName = /^[A-Za-zÀ-ÿ0-9 ]+$/.test(sellerNameRaw) ? sellerNameRaw : 'Jogador';
       const expiresAt = new Date(Date.now() + MARKET_LISTING_DAYS * 86400 * 1000).toISOString();
       const inserted = await insertRow('market_listings', {
         seller_user_id: user.id, seller_slot: slot, seller_name: sellerName,
@@ -1574,7 +1587,9 @@ const server = http.createServer(async (req, res) => {
       const balance = wallet ? Number(wallet.balance) : 0;
       if (balance < total) return send(res, 400, { error: 'saldo insuficiente na carteira pra reservar a compra' });
       await upsertRow('market_wallet', { user_id: user.id, slot, balance: balance - total, updated_at: new Date().toISOString() }, 'user_id,slot');
-      const buyerName = String(body.sellerName || '').slice(0, 20) || 'Jogador';
+      // Mesmo charset seguro de /market/list acima (defesa em profundidade).
+      const buyerNameRaw = String(body.sellerName || '').slice(0, 20);
+      const buyerName = /^[A-Za-zÀ-ÿ0-9 ]+$/.test(buyerNameRaw) ? buyerNameRaw : 'Jogador';
       const expiresAt = new Date(Date.now() + MARKET_LISTING_DAYS * 86400 * 1000).toISOString();
       const inserted = await insertRow('market_listings', {
         seller_user_id: user.id, seller_slot: slot, seller_name: buyerName, kind: 'buy',
