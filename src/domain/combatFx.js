@@ -189,3 +189,17 @@ export function basicAttackMissile({ attackSkill, weaponId, ammoId } = {}) {
   if (attackSkill === 'magic') return WAND_MISSILE[weaponId] || 'energy';
   return null; // corpo-a-corpo não dispara projétil
 }
+
+// Swing de corpo-a-corpo: a animação de golpe direcional que o Tibia 15.x
+// introduziu (update 15.12) e que o cliente toca SOBRE o alvo a cada ataque
+// melee — CreatureMark "IsAttacked", efeitos 304-309 do cliente, um sprite por
+// tipo de arma. Fonte: extraído do próprio cliente oficial 15.x (appearances +
+// spritesheets), sprites reais em assets/sprites/effects/attack/attack-<x>.webp.
+// A entrada é o skill da arma REALMENTE equipada (ver combatFormulas.js:
+// equippedWeaponSkillId): espada/machado/maça, ou punho quando desarmado. Arco
+// e wand/rod (distance/magic) não têm swing — voam projétil, retornam null.
+// (Monk — cajado/adagas, efeitos 307/308 — entra quando a 5ª vocação for viva.)
+const MELEE_SWING = new Set(['sword', 'axe', 'club', 'fist']);
+export function meleeSwingName(weaponSkillId) {
+  return MELEE_SWING.has(weaponSkillId) ? weaponSkillId : null;
+}

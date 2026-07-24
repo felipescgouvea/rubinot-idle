@@ -623,6 +623,39 @@ export function playProjectile({ missile, targetUid, hitId } = {}) {
   img.style.transform = `translate(-50%, -50%) translate(${x1 - x0}px, ${y1 - y0}px) rotate(${ang + 90}deg)`;
 }
 
+// Swing de corpo-a-corpo do Tibia 15.x: a animação de golpe (por tipo de arma)
+// que o cliente toca SOBRE o alvo a cada ataque melee — CreatureMark
+// "IsAttacked", efeitos 304-309, extraídos do cliente oficial 15.x
+// (assets/sprites/effects/attack/attack-<arma>.webp). Voltada pra LESTE porque
+// na cena o boneco ataca da esquerda pra direita. Ancorada no sprite do alvo,
+// toca um ciclo (~450ms) e se remove — o próprio .webp anima o arco do golpe.
+const MELEE_SWING_VER = 1;
+export function playMeleeSwing({ swing, targetUid } = {}) {
+  if (!swing) return;
+  const stage = document.getElementById('dungeon-stage');
+  const cont = document.getElementById('stage-pack');
+  if (!stage || !cont) return;
+  const alvoEl = (targetUid && cont.querySelector(`[data-uid="${CSS.escape(String(targetUid))}"]`))
+    || cont.querySelector('.stage-monster:not(.leaving)');
+  if (!alvoEl) return;
+  const base = alvoEl.querySelector('.monster-sprite-wrap') || alvoEl;
+  const sr = stage.getBoundingClientRect();
+  const r = base.getBoundingClientRect();
+  const lado = Math.max(40, Math.max(r.width, r.height) * 1.3);
+  const img = document.createElement('img');
+  img.className = 'combat-melee-swing';
+  img.src = spriteUrl('effects/attack/attack-' + swing + '.webp') + '?ev=' + MELEE_SWING_VER;
+  img.alt = '';
+  img.style.width = lado + 'px';
+  img.style.height = lado + 'px';
+  img.style.left = (r.left - sr.left + r.width / 2) + 'px';
+  img.style.top = (r.top - sr.top + r.height / 2) + 'px';
+  img.style.marginLeft = (-lado / 2) + 'px';
+  img.style.marginTop = (-lado / 2) + 'px';
+  stage.appendChild(img);
+  setTimeout(() => img.remove(), 470);
+}
+
 // Número de dano flutuante sobre a criatura atingida (ver COMBAT_DAMAGE em
 // application/huntUseCases.js: applyServerPack). Sobe e desvanece; a cor vem do
 // elemento do golpe e o tamanho escala (leve) com a magnitude do dano. É só
@@ -655,6 +688,7 @@ export function wireHuntPanelEvents() {
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
   on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
   on(EVENTS.COMBAT_PROJECTILE, (p) => playProjectile(p));
+  on('combatMeleeSwing', (s) => playMeleeSwing(s));
   on(EVENTS.COMBAT_DAMAGE, (d) => floatDamage(d));
   on(EVENTS.HUNT_STATS, renderHuntAnalyzer);
   on(EVENTS.BLESSINGS, renderBlessings);

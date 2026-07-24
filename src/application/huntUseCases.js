@@ -10,13 +10,13 @@ import { ZONES } from '../domain/bestiary.js?v=280';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=289';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=260';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=292';
-import { monsterAttack } from '../domain/combatFormulas.js?v=291';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=291';
 import { elementMod } from '../domain/elements.js?v=258';
 import { STAMINA_MAX } from '../domain/stamina.js?v=258';
 import { ITEMS } from '../domain/items.js?v=273';
 import { MONSTERS } from '../domain/bestiary.js?v=280';
 import { RARITY_TIERS } from '../domain/rarity.js?v=259';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=260';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=261';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=260';
 import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=259';
 import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=259';
@@ -675,6 +675,10 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
         // ainda, aba trocada), não deixa o golpe pendente pra sempre.
         setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, hitSyncFallbackMs());
       } else {
+        // Corpo-a-corpo: sem projétil. Toca o SWING do Tibia 15.x sobre o alvo
+        // (animação de golpe por tipo de arma — ver domain/combatFx.js).
+        const swing = meleeSwingName(equippedWeaponSkillId(G.equipment, G.relics));
+        if (swing) emit('combatMeleeSwing', { swing, targetUid: uid });
         applyHit();
       }
     }
@@ -727,6 +731,9 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
       emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid, hitId });
       setTimeout(() => { if (pendingHits.delete(hitId)) showFatal(); }, hitSyncFallbackMs());
     } else {
+      // Golpe FATAL corpo-a-corpo: swing sobre o alvo antes de ele tombar.
+      const swing = meleeSwingName(equippedWeaponSkillId(G.equipment, G.relics));
+      if (swing) emit('combatMeleeSwing', { swing, targetUid: killedFrontUid });
       showFatal();   // melee: sem projétil, morre na hora (correto)
     }
   }

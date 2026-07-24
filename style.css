@@ -923,6 +923,23 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   80%  { opacity: 0.9; }
   100% { opacity: 0; transform: scale(1); }
 }
+/* swing de corpo-a-corpo (Tibia 15.x): a animação de golpe por tipo de arma que
+   o cliente toca SOBRE o alvo a cada ataque melee. O .webp já anima o arco do
+   golpe internamente (5 frames); aqui só ancoramos no centro do alvo e some no
+   fim de um ciclo (~450ms). Fica acima do sprite do monstro. */
+.combat-melee-swing {
+  position: absolute;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 1px 2px #0007);
+  animation: combat-swing-fade 0.47s ease-out forwards;
+}
+@keyframes combat-swing-fade {
+  0%, 78% { opacity: 1; }
+  100%    { opacity: 0; }
+}
 /* projétil (flecha/virote/raio da wand) voando do boneco até o alvo: o JS seta
    left/top no boneco e depois translada até o alvo; a transição faz o voo. */
 .combat-projectile {
