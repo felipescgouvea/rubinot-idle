@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=250';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=255';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=255';
-import { ZONES } from '../domain/bestiary.js?v=268';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=277';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=248';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=280';
-import { monsterAttack } from '../domain/combatFormulas.js?v=279';
-import { elementMod } from '../domain/elements.js?v=246';
-import { STAMINA_MAX } from '../domain/stamina.js?v=246';
-import { ITEMS } from '../domain/items.js?v=261';
-import { MONSTERS } from '../domain/bestiary.js?v=268';
-import { RARITY_TIERS } from '../domain/rarity.js?v=247';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=248';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=248';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=247';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=247';
-import { saveGame } from './saveGameUseCase.js?v=250';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=251';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=249';
-import { t } from '../i18n/i18n.js?v=264';
+import { G, ACCOUNT } from './gameStore.js?v=251';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=256';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=256';
+import { ZONES } from '../domain/bestiary.js?v=269';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=278';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=249';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=281';
+import { monsterAttack } from '../domain/combatFormulas.js?v=280';
+import { elementMod } from '../domain/elements.js?v=247';
+import { STAMINA_MAX } from '../domain/stamina.js?v=247';
+import { ITEMS } from '../domain/items.js?v=262';
+import { MONSTERS } from '../domain/bestiary.js?v=269';
+import { RARITY_TIERS } from '../domain/rarity.js?v=248';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=249';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=249';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=248';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=248';
+import { saveGame } from './saveGameUseCase.js?v=251';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=252';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=250';
+import { t } from '../i18n/i18n.js?v=265';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -593,7 +593,9 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
     const ammo = ITEMS[G.equipment.ammo];
     if (voc && voc.attackSkill === 'distance' && ammo && ammo.area) {
       basicAreaShown = true;
-      emit(EVENTS.COMBAT_FX, { effect: ammo.element || 'physical', shape: ammo.area, targetUid: String(uid) });
+      // onTarget: a explosão da munição acontece EM CIMA do alvo, não ao redor
+      // do boneco (ver ui/huntPanel.js: playAreaEffect).
+      emit(EVENTS.COMBAT_FX, { effect: ammo.element || 'physical', shape: ammo.area, targetUid: String(uid), onTarget: true });
     }
   };
   pack.forEach(m => {
