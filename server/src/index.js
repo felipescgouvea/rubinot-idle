@@ -926,12 +926,38 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, gold: gold - PROMOTION.cost, promoted: true });
     }
 
+    // Teto REAL de BP-xp (achado de auditoria): `/bp/claim` aceitava o `xp`
+    // que o cliente reportava sem checar contra NADA — bpXp/bpMissionProgress
+    // são estado do save fora de ECONOMY_FIELDS (nunca reconciliados), então
+    // um cliente adulterado setava G.bpXp=10000 (o teto de xp que já destrava
+    // TODOS os tiers, free+premium) e resgatava tudo — inclusive charm points
+    // e prey cards, as MESMAS moedas que os fixes de Charms/Prey desta sessão
+    // fecharam do lado do GASTO, mintadas de graça aqui pelo lado do GANHO.
+    // Sem reconstruir o sistema de missão dia-a-dia inteiro (rotação por data,
+    // 4 tracks incluindo Arena que ainda não é autoritativa — fora de escopo
+    // pontual), este teto usa só sinais REAIS já autoritativos (total_kills,
+    // total_gold_earned de player_stats; conclusões de player_tasks) numa
+    // fórmula generosa — não impede o valor legítimo de quem jogou o mês,
+    // só barra o absurdo forjado por uma conta nova/zerada (mesma filosofia já
+    // aceita pro clamp de arena_points).
+    async function bpXpCeiling(userId, slot, stats) {
+      const kills = stats ? Number(stats.total_kills) || 0 : 0;
+      const goldEarned = stats ? Number(stats.total_gold_earned) || 0 : 0;
+      const tasksRow = await selectOne('player_tasks', { user_id: userId, slot });
+      const completion = (tasksRow && tasksRow.state && tasksRow.state.completion) || {};
+      const tasksDone = Object.values(completion).reduce((sum, n) => sum + (Number(n) || 0), 0);
+      // Calibrado pra NUNCA barrar quem jogou de verdade (caçada idle gera
+      // centenas de kills/hora — um personagem de poucos dias já passa disso
+      // fácil) e só travar uma conta zerada/recém-criada tentando forjar
+      // xp=10000 (o teto que já destrava tudo) sem nunca ter caçado nada.
+      return Math.floor(kills / 3) + Math.floor(goldEarned / 200) + tasksDone * 300 + 300;
+    }
+
     // ---- Battle Pass: resgate de recompensa AUTORITATIVO ----
     // Antes o claim só fazia G.gold+=/addItem no cliente e o reconcile revertia
     // (gold/inventory são do servidor) — recompensa sumia. Agora o grant é aqui,
     // e o servidor rastreia os tiers já resgatados (bp em player_stats) pra
-    // impedir resgate duplo. `xp` é reportado pelo cliente só pra checar o tier
-    // alcançado (bpXp é estado do save, baixo risco — mesma confiança de hoje).
+    // impedir resgate duplo.
     if (url.pathname === '/bp/claim' && req.method === 'POST') {
       const user = await requireUser(req, res);
       if (!user) return;
@@ -948,7 +974,9 @@ const server = http.createServer(async (req, res) => {
       bp.claimedFree = bp.claimedFree || []; bp.claimedPremium = bp.claimedPremium || [];
       const claimed = kind === 'premium' ? bp.claimedPremium : bp.claimedFree;
       if (claimed.includes(tier)) return send(res, 400, { error: 'já resgatado' });
-      if (bpTierForXp(Math.max(0, Math.floor(Number(body.xp) || 0))) < tier) return send(res, 400, { error: 'tier não alcançado' });
+      const xpReportado = Math.max(0, Math.floor(Number(body.xp) || 0));
+      const xpReal = Math.min(xpReportado, await bpXpCeiling(user.id, slot, stats));
+      if (bpTierForXp(xpReal) < tier) return send(res, 400, { error: 'tier não alcançado' });
       if (kind === 'premium' && !bp.premium) return send(res, 400, { error: 'precisa da trilha premium' });
       let gold = stats ? Number(stats.gold) : 0;
       let rubini = stats ? Number(stats.rubini) || 0 : 0;
@@ -1676,18 +1704,24 @@ const server = http.createServer(async (req, res) => {
       const vocacaoInformada = VOCATIONS[body.vocation] ? body.vocation : undefined;
       const vocacao = (ultimaSessao && ultimaSessao.vocation) || vocacaoInformada;
 
+      // tasks_done agora vem de player_tasks (server-autoritativo desde o fix
+      // do gate de desbloqueio) em vez do body.tasksDone que o cliente dizia —
+      // conta quantas das 94 tasks já foram concluídas ao menos 1x.
+      const tasksRowHs = await selectOne('player_tasks', { user_id: user.id, slot });
+      const tasksDoneReal = Object.keys((tasksRowHs && tasksRowHs.state && tasksRowHs.state.completion) || {}).length;
+
       const row = {
         user_id: user.id, slot,
         name: playerName || undefined,
         vocation: vocacao,
         level, xp: totalXp, total_kills: stats ? Number(stats.total_kills) : 0,
-        // arena/tasks/bestiário ainda vêm do cliente (não são server-autoritativos
-        // ainda), então são CLAMPADOS ao máximo real do domínio — sem isto um
-        // cliente adulterado mandava arenaPoints: 999999999 e liderava a
-        // categoria. O teto não impede valor legítimo (94 tasks, 2254 bestiário,
-        // arena limitada a 15 batalhas/dia), só barra o absurdo forjado.
+        // arena ainda vem do cliente (não é server-autoritativa ainda), então
+        // segue CLAMPADA ao máximo real do domínio — sem isto um cliente
+        // adulterado mandava arenaPoints: 999999999 e liderava a categoria. O
+        // teto não impede valor legítimo (arena limitada a 15 batalhas/dia),
+        // só barra o absurdo forjado.
         arena_points: Math.min(100000, Math.max(0, Math.floor(Number(body.arenaPoints)) || 0)),
-        tasks_done: Math.min(94, Math.max(0, Math.floor(Number(body.tasksDone)) || 0)),
+        tasks_done: Math.min(94, tasksDoneReal),
         // world SANEADO na fonte (mesmo charset seguro de playerName/vocation):
         // sem isto um cliente mandava world com HTML/script, gravado e renderizado
         // no ranking de OUTROS jogadores (XSS armazenado → roubo de sessão). O
