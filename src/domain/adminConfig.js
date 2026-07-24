@@ -59,8 +59,12 @@ export const DEFAULT_ADMIN_CONFIG = {
   // aparecerem. Mantido BAIXO de propósito: 150ms lê como um risco rápido do
   // projétil sem segurar o feedback (500ms deixava paladino/mago com ~½s de
   // atraso a cada golpe — queixa do Felipe de "combate não fluido"). Melee não
-  // usa projétil, então cai na hora independente disto.
-  projectileSpeedMs: 150,
+  // usa projétil, então cai na hora independente disto. 150ms ficou RÁPIDO
+  // demais ("quase não dá pra ver" — Felipe); 300ms lê como um voo nítido e
+  // ainda é bem menos que os 500ms que pareciam atraso. Como o LUNGE do boneco
+  // dispara na hora do golpe, o feedback imediato não depende do projétil — o
+  // número só cai no impacto (causalidade certa: a flecha precisa chegar).
+  projectileSpeedMs: 300,
 };
 
 // Campos de taxa simples (numéricos) exibidos no painel, na ordem.

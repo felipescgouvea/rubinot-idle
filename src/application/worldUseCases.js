@@ -1,9 +1,9 @@
-import { G } from './gameStore.js?v=249';
-import { WORLDS } from '../domain/progression.js?v=248';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=247';
-import { stopHunt, setBossOnlyMode } from './huntUseCases.js?v=313';
-import { saveGame } from './saveGameUseCase.js?v=249';
-import { t } from '../i18n/i18n.js?v=263';
+import { G } from './gameStore.js?v=250';
+import { WORLDS } from '../domain/progression.js?v=249';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=248';
+import { stopHunt, setBossOnlyMode } from './huntUseCases.js?v=314';
+import { saveGame } from './saveGameUseCase.js?v=250';
+import { t } from '../i18n/i18n.js?v=264';
 
 export function selectWorld(worldId) {
   const world = WORLDS.find(w => w.id === worldId);

@@ -1,11 +1,11 @@
 // Painel de Achievements + seleção de Título. Modal aberto pelo botão 🏆 na
 // barra do personagem. As conquistas são recomputadas dos stats (autoritativos)
 // a cada abertura — nada persistido além do título escolhido (G.title).
-import { G } from '../application/gameStore.js?v=249';
-import { ACHIEVEMENTS, isAchievementUnlocked, availableTitles } from '../domain/achievements.js?v=245';
-import { openModal } from './shared.js?v=252';
-import { emit, EVENTS } from '../shared/eventBus.js?v=247';
-import { saveGame } from '../application/saveGameUseCase.js?v=249';
+import { G } from '../application/gameStore.js?v=250';
+import { ACHIEVEMENTS, isAchievementUnlocked, availableTitles } from '../domain/achievements.js?v=246';
+import { openModal } from './shared.js?v=253';
+import { emit, EVENTS } from '../shared/eventBus.js?v=248';
+import { saveGame } from '../application/saveGameUseCase.js?v=250';
 
 function achievementsHtml() {
   const unlocked = ACHIEVEMENTS.filter(a => isAchievementUnlocked(a, G));

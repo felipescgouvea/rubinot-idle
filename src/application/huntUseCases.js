@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=249';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=254';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=254';
-import { ZONES } from '../domain/bestiary.js?v=267';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=276';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=247';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=279';
-import { monsterAttack } from '../domain/combatFormulas.js?v=278';
-import { elementMod } from '../domain/elements.js?v=245';
-import { STAMINA_MAX } from '../domain/stamina.js?v=245';
-import { ITEMS } from '../domain/items.js?v=260';
-import { MONSTERS } from '../domain/bestiary.js?v=267';
-import { RARITY_TIERS } from '../domain/rarity.js?v=246';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=247';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=247';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=246';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=246';
-import { saveGame } from './saveGameUseCase.js?v=249';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=250';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=248';
-import { t } from '../i18n/i18n.js?v=263';
+import { G, ACCOUNT } from './gameStore.js?v=250';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=255';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=255';
+import { ZONES } from '../domain/bestiary.js?v=268';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=277';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=248';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=280';
+import { monsterAttack } from '../domain/combatFormulas.js?v=279';
+import { elementMod } from '../domain/elements.js?v=246';
+import { STAMINA_MAX } from '../domain/stamina.js?v=246';
+import { ITEMS } from '../domain/items.js?v=261';
+import { MONSTERS } from '../domain/bestiary.js?v=268';
+import { RARITY_TIERS } from '../domain/rarity.js?v=247';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=248';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=248';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=247';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=247';
+import { saveGame } from './saveGameUseCase.js?v=250';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=251';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=249';
+import { t } from '../i18n/i18n.js?v=264';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -499,7 +499,17 @@ function aplicarEstadoDoServidor(res, myEpoch) {
   // `pack`) — única fonte de verdade pra currentPack/currentMonster desde
   // esta auditoria. Atualiza ANTES do log de contra-ataque abaixo, pra usar o
   // nome do alvo já correto.
-  if (G.hunting && res.pack) applyServerPack(res.pack);
+  // Dano REAL do jogador no alvo da FRENTE neste tick (server-truth): o número
+  // flutuante mostra ISTO, não a vida removida — senão um lvl 100 dando one-shot
+  // num rato de 20 HP mostrava "−20" em vez do golpe real de centenas. Os eventos
+  // deste tick são os de seq ainda não processado (renderCombatEvents só avança
+  // lastCombatSeq DEPOIS, na linha abaixo). Só o alvo da frente tem valor exato
+  // (o servidor reporta dano por ação só no primary); os de área caem no HP-diff.
+  const novosEv = (res.combatEvents || []).filter(e => e && e.seq > lastCombatSeq && (e.kind === 'basic' || e.kind === 'spell'));
+  const frontDmg = novosEv.reduce((a, e) => a + (e.amount || 0), 0);
+  const evComElemento = novosEv.find(e => e.kind === 'spell' && e.element);
+  const frontEl = evComElemento ? evComElemento.element : 'physical';
+  if (G.hunting && res.pack) applyServerPack(res.pack, frontDmg, frontEl);
   // Log de combate SERVER-TRUTH: dano do golpe básico, dano da magia/runa (na
   // MESMA linha da magia), cura (na linha da magia de cura) e contra-ataque do
   // monstro — cada um com o VALOR REAL reportado pelo servidor (ver pushCombat).
@@ -539,7 +549,7 @@ function aplicarEstadoDoServidor(res, myEpoch) {
 // que sumiu). É isto que substitui o antigo doHuntTick spawnando/atacando seu
 // próprio monstro fake — currentPack/currentMonster passam a ser um espelho
 // exato de session.currentPack (ver server/src/huntEngine.js).
-function applyServerPack(pack) {
+function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
   // Blindagem: um monstro em hp<=0 já está morto — nunca deve entrar na sala
   // viva (o servidor já filtra em /hunt/state, isto é a rede de segurança).
   // Sem isto, um alvo em hp:0 (pego num estado intermediário do servidor)
@@ -570,6 +580,22 @@ function applyServerPack(pack) {
   // — isso fecha de vez a dessincronia (ver comentário em doCosmeticTick).
   // currentPack abaixo preserva o hp ANTIGO até o projétil chegar.
   let lunged = false;
+  const lunge = () => { if (!lunged) { lunged = true; emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true }); } };
+  // Efeito de ÁREA do golpe básico com munição de estouro (Burst Arrow = 3x3
+  // 'square', e afins) — o Tibia mostra a explosão no impacto, mas o caminho do
+  // golpe básico só disparava a flecha, sem o estouro (queixa do Felipe). Uma
+  // vez por tick, no tile do alvo; a cor do efeito segue o elemento da munição
+  // (Burst Arrow é físico). Só distância — melee/wand não têm munição de área.
+  let basicAreaShown = false;
+  const showBasicAmmoArea = (uid) => {
+    if (basicAreaShown) return;
+    const voc = VOC_TRAINING[G.vocation];
+    const ammo = ITEMS[G.equipment.ammo];
+    if (voc && voc.attackSkill === 'distance' && ammo && ammo.area) {
+      basicAreaShown = true;
+      emit(EVENTS.COMBAT_FX, { effect: ammo.element || 'physical', shape: ammo.area, targetUid: String(uid) });
+    }
+  };
   pack.forEach(m => {
     const uid = String(m.uid);
     const prev = prevPackByUid.get(uid);
@@ -579,7 +605,7 @@ function applyServerPack(pack) {
       // acerte vários monstros (área). Antes o "atacar" era emitido pelo
       // relógio cosmético solto (doCosmeticTick), balançando à toa sem relação
       // com o dano; agora casa com o instante em que a vida de fato cai.
-      if (!lunged) { lunged = true; emit(EVENTS.PLAYER_BATTLE_SIDE, { attacking: true }); }
+      lunge();
       const hitId = String(++hitSeq);
       const voc = VOC_TRAINING[G.vocation];
       const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
@@ -593,16 +619,23 @@ function applyServerPack(pack) {
         // A janela de 3s descarta efeito velho (o cast pode não ter causado
         // dano nenhum: errou, morreu antes, ou o alvo já estava morto).
         let dmgEl = 'physical';
+        let hadSpellFx = false;
         if (pendingSpellFx && Date.now() - pendingSpellFx.at < 3000) {
           const fx = pendingSpellFx;
           dmgEl = fx.element || 'physical';
           pendingSpellFx = null;
+          hadSpellFx = true;
           emit(EVENTS.COMBAT_FX, fx);
         }
+        // Sem magia neste golpe, mas munição de estouro equipada (Burst Arrow):
+        // mostra a explosão de área da própria flecha no impacto.
+        if (!hadSpellFx) showBasicAmmoArea(uid);
         // Número de dano flutuante sobre a criatura, no MESMO quadro em que a
-        // vida cai — o feedback de impacto que só existia no log de texto. Cor
-        // pelo elemento do golpe (branco = físico). Ver ui/huntPanel.js.
-        emit(EVENTS.COMBAT_DAMAGE, { uid, amount: dmg, element: dmgEl });
+        // vida cai — o feedback de impacto que só existia no log de texto. No
+        // alvo da FRENTE usa o dano REAL do servidor (frontDmg); nos de área usa
+        // o HP removido. Cor pelo elemento do golpe (branco = físico).
+        const ehFrente = uid === oldFrontUid && frontDmg > 0;
+        emit(EVENTS.COMBAT_DAMAGE, { uid, amount: ehFrente ? frontDmg : dmg, element: ehFrente ? frontEl : dmgEl });
         // O LOG do dano do jogador agora vem dos combatEvents server-truth
         // (renderCombatEvents), com o valor por AÇÃO (básico vs magia). Aqui só
         // a animação da barra/flash quando o projétil pousa.
@@ -640,7 +673,29 @@ function applyServerPack(pack) {
   if (killedFrontUid) {
     const voc = VOC_TRAINING[G.vocation];
     const missile = basicAttackMissile({ attackSkill: voc.attackSkill, weaponId: G.equipment.weapon, ammoId: G.equipment.ammo });
-    if (missile) emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid });
+    // Dano do golpe FATAL: o monstro saiu do pack, então NÃO passou pelo applyHit
+    // acima e o número de dano nunca aparecia (queixa do Felipe: "golpes fatais
+    // não mostram dano"). Mostra o dano REAL do servidor no alvo da frente
+    // (frontDmg); se por acaso não veio evento, cai na vida que ele tinha.
+    // Sincronizado com o pouso do projétil, igual aos golpes normais; sem
+    // projétil (melee), na hora. Também dispara o lunge e a explosão de área da
+    // munição, pra o golpe que mata ficar igual a qualquer outro golpe.
+    const prevKilled = prevPackByUid.get(killedFrontUid);
+    const fatalDmg = frontDmg > 0 ? frontDmg : (prevKilled ? prevKilled.hp : 0);
+    const fatalEl = frontDmg > 0 ? frontEl : 'physical';
+    lunge();
+    const showFatal = () => {
+      showBasicAmmoArea(killedFrontUid);
+      if (fatalDmg > 0) emit(EVENTS.COMBAT_DAMAGE, { uid: killedFrontUid, amount: fatalDmg, element: fatalEl });
+    };
+    if (missile) {
+      const hitId = String(++hitSeq);
+      pendingHits.set(hitId, showFatal);
+      emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid, hitId });
+      setTimeout(() => { if (pendingHits.delete(hitId)) showFatal(); }, hitSyncFallbackMs());
+    } else {
+      showFatal();
+    }
   }
   // Reconstrói currentPack: quem já existia mantém o hp ANTIGO (o setTimeout
   // acima corrige assim que o golpe "chega") — só quem acabou de aparecer
