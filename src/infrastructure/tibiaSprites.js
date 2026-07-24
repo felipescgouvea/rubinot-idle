@@ -45,7 +45,12 @@ export const SPRITE_OVERRIDE = {
 // borrado comparado ao WebP estático antigo (esse sim lossless/VP8L). Não dá
 // pra recuperar detalhe perdido na compressão, só reduzir a sensação de
 // borrão — reencodado como WebP lossless pra não perder mais nada por cima.
-const MONSTER_SPRITE_VER = 4;
+// v5: correção do loopCount — 263 sprites (120 de hunt) vinham do catálogo com
+// loopCount=1 no chunk ANIM, então o WebP tocava a caminhada UMA vez e congelava
+// no último frame (o bicho aparecia ESTÁTICO em batalha depois de ~0,6s —
+// reportado pelo Felipe). Corrigido via patch de 2 bytes (loop -> 0/infinito),
+// sem reencode/perda. Guarda: scripts/check-monster-sprite-loop.mjs.
+const MONSTER_SPRITE_VER = 5;
 export function monsterSpriteFile(monsterId, monster) {
   const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
   return 'monsters/' + localName(file) + '?sv=' + MONSTER_SPRITE_VER;
