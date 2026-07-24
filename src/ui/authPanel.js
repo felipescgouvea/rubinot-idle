@@ -2,8 +2,8 @@
 // de usuário logado no cabeçalho. Fala com o Supabase via infrastructure/
 // authClient.js. Enquanto não há sessão válida, o #auth-gate cobre a tela toda
 // e o jogo não inicia.
-import { signIn, signUp, signOut, currentUser, resendConfirmation } from '../infrastructure/authClient.js?v=270';
-import { t } from '../i18n/i18n.js?v=278';
+import { signIn, signUp, signOut, currentUser, resendConfirmation } from '../infrastructure/authClient.js?v=271';
+import { t } from '../i18n/i18n.js?v=279';
 
 // Callback disparado quando o login/cadastro dá certo (main.js liga o boot do
 // jogo aqui, depois de puxar o save da nuvem).
