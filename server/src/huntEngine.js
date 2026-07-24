@@ -438,12 +438,32 @@ async function settleKill(session, mon, cfg) {
   // Presa de LOOT: no Tibia o bônus entra como acréscimo à chance de CADA
   // drop, não como multiplicador do total.
   const preyLoot = preyBonus(session, mon.defKey, 'loot');
+  // Auto-vender lixo: 'misc' com valor de venda <= maxValue vira gold no ATO do
+  // drop, sem entrar no inventário (QoL de idle — ver domain/gameState: autoSell).
+  const autoSell = session.autoSell && session.autoSell.enabled ? session.autoSell : null;
+  let autoSellGold = 0;
   for (const [itemId, chance] of lootTable) {
     // Boosted creature/boss dobra a chance de loot (cap em 1 = drop garantido).
     if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult * (1 + preyLoot))) {
-      const captured = await changeSessionInv(session, itemId, 1);
-      if (captured) lootGained.push(itemId);
+      const it = ITEMS[itemId];
+      const sellVal = it && it.type === 'misc' ? (it.sell || 0) : -1;
+      if (autoSell && sellVal > 0 && sellVal <= autoSell.maxValue) {
+        // vendido na hora: soma no gold, NÃO entra no inventário nem em lootGained
+        // (senão o cliente contaria o valor DUAS vezes — como gold e como loot).
+        autoSellGold += sellVal;
+      } else {
+        const captured = await changeSessionInv(session, itemId, 1);
+        if (captured) lootGained.push(itemId);
+      }
     }
+  }
+  // Gold do auto-sell entra nos MESMOS acumuladores do gold da morte (já somados
+  // acima), pra ir pro flush e pro crédito do cliente na linha de loot.
+  if (autoSellGold > 0) {
+    session.goldAbs += autoSellGold;
+    session.goldEarnedAbs += autoSellGold;
+    session.prog.gold += autoSellGold;
+    session.prog.goldEarned += autoSellGold;
   }
 
   const relicsGained = [];
@@ -464,7 +484,7 @@ async function settleKill(session, mon, cfg) {
     }
   }
 
-  const kill = { monster: mon.name, defKey: mon.defKey, gold: goldGained, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
+  const kill = { monster: mon.name, defKey: mon.defKey, gold: goldGained + autoSellGold, xp: xpGained, loot: lootGained, relics: relicsGained, at: Date.now() };
   pushKill(session, kill);
   session.lastKill = kill; // mantido por compat; o crédito real do cliente vem da fila killEvents
 }
@@ -1038,10 +1058,15 @@ export function getLiveSession(sessionId) {
 // NENHUM efeito até parar e começar a caçar de novo (bug reportado pelo
 // Felipe: "rtc de cura nao esta funcionando"). Agora /hunt/rtc chama isto a
 // cada mudança na UI enquanto G.hunting.
-export function updateSessionRtc(sessionId, rtc, fightMode, density) {
+export function updateSessionRtc(sessionId, rtc, fightMode, density, autoSell) {
   const s = live.get(sessionId);
   if (!s) return false;
   s.rtc = rtc || {};
+  // Auto-vender ao vivo: ligar/desligar (ou mudar o teto) vale já no próximo
+  // drop, sem reiniciar a caçada. Só sobrescreve quando o cliente manda de fato.
+  if (autoSell && typeof autoSell === 'object') {
+    s.autoSell = { enabled: !!autoSell.enabled, maxValue: Math.max(0, Math.floor(Number(autoSell.maxValue) || 0)) };
+  }
   // Densidade ao vivo: vale a partir do PRÓXIMO grupo que nascer (ver o cálculo
   // de packSize no spawn). Antes o cliente parava e recomeçava a caçada só pra
   // mandar a densidade nova, o que interrompia a luta em andamento — não é o

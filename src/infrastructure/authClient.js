@@ -300,8 +300,8 @@ export function stopHuntSession(slot) {
 // (aplicado normalmente no próximo hunt-start via buildHuntSnapshot).
 // Atualiza AO VIVO as preferências da sessão: RTC, estilo de luta e densidade.
 // As três são preferência do jogador, não motivo pra interromper a caçada.
-export function updateHuntRtc(slot, rtc, fightMode, density) {
-  return huntFetch('/hunt/rtc', { method: 'POST', body: { slot, rtc, fightMode, density } });
+export function updateHuntRtc(slot, rtc, fightMode, density, autoSell) {
+  return huntFetch('/hunt/rtc', { method: 'POST', body: { slot, rtc, fightMode, density, autoSell } });
 }
 
 export function getHuntState(slot) {

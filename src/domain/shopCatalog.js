@@ -50,6 +50,7 @@ export const SHOP_ITEMS = [
   { id: 'buy_sniper_arrow',          name: 'Sniper Arrow',        icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'sniper_arrow', shop: 'equipment' },
   { id: 'buy_flash_arrow',           name: 'Flash Arrow',         icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'flash_arrow', shop: 'equipment' },
   { id: 'buy_shiver_arrow',          name: 'Shiver Arrow',        icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'shiver_arrow', shop: 'equipment' },
+  { id: 'buy_burst_arrow',           name: 'Burst Arrow',         icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'burst_arrow', shop: 'equipment' },
   { id: 'buy_flaming_arrow',         name: 'Flaming Arrow',       icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'flaming_arrow', shop: 'equipment' },
   { id: 'buy_earth_arrow',           name: 'Earth Arrow',         icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'earth_arrow', shop: 'equipment' },
   { id: 'buy_piercing_bolt',         name: 'Piercing Bolt',       icon: '🏹', currency: 'gold', price: 5,    type: 'item', itemId: 'piercing_bolt', shop: 'equipment' },
@@ -129,7 +130,7 @@ export const SHOP_ITEMS = [
   { id: 'buy_animate_dead_rune',         name: 'Animate Dead Rune',         icon: '📜', currency: 'gold', price: 375, type: 'item', itemId: 'animate_dead_rune', shop: 'magic' },
   { id: 'buy_magic_wall_rune',           name: 'Magic Wall Rune',           icon: '📜', currency: 'gold', price: 116,  type: 'item', itemId: 'magic_wall_rune', shop: 'magic' },
   { id: 'buy_wild_growth_rune',          name: 'Wild Growth Rune',          icon: '📜', currency: 'gold', price: 160,  type: 'item', itemId: 'wild_growth_rune', shop: 'magic' },
-  { id: 'buy_paralyze_rune',             name: 'Paralyze Rune',             icon: '📜', currency: 'gold', price: 1600, type: 'item', itemId: 'paralyze_rune', shop: 'magic' },
+  { id: 'buy_paralyze_rune',             name: 'Paralyze Rune',             icon: '📜', currency: 'gold', price: 700, type: 'item', itemId: 'paralyze_rune', shop: 'magic' },
   { id: 'buy_great_spirit_potion',  name: 'Great Spirit Potion',    icon: '🧪', currency: 'gold', price: 254, type: 'item', itemId: 'great_spirit_potion', shop: 'magic' },
 ];
 

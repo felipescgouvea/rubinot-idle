@@ -1,32 +1,39 @@
-import { G, ACCOUNT } from './gameStore.js?v=251';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer } from '../infrastructure/authClient.js?v=256';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=262';
-import { RARITY_TIERS } from '../domain/rarity.js?v=248';
-import { emit, EVENTS } from '../shared/eventBus.js?v=249';
-import { getMagic } from './stats.js?v=248';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=281';
-import { getCurrentMonster } from './huntUseCases.js?v=315';
-import { areaName } from '../domain/attackAreas.js?v=247';
-import { saveGame } from './saveGameUseCase.js?v=251';
-import { itemLogIcon } from './logIcons.js?v=250';
-import { t } from '../i18n/i18n.js?v=265';
+import { G, ACCOUNT } from './gameStore.js?v=252';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=257';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=263';
+import { RARITY_TIERS } from '../domain/rarity.js?v=249';
+import { emit, EVENTS } from '../shared/eventBus.js?v=250';
+import { getMagic } from './stats.js?v=249';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=282';
+import { getCurrentMonster } from './huntUseCases.js?v=316';
+import { areaName } from '../domain/attackAreas.js?v=248';
+import { saveGame } from './saveGameUseCase.js?v=252';
+import { itemLogIcon } from './logIcons.js?v=251';
+import { t } from '../i18n/i18n.js?v=266';
 
-export { addItemToInventory } from './inventoryCore.js?v=249';
+export { addItemToInventory } from './inventoryCore.js?v=250';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
+// Empurra o auto-sell pra sessão viva do servidor (o loot é resolvido lá) —
+// sem isto, ligar/mudar o teto no meio da caçada só valia no próximo hunt-start.
+function syncAutoSellToServer() {
+  if (G.hunting) updateHuntRtc(ACCOUNT.activeSlot, G.rtc, G.fightMode, G.density || 'normal', G.autoSell);
+}
 export function setAutoSell(enabled) {
   G.autoSell = G.autoSell || { enabled: false, maxValue: 50 };
   G.autoSell.enabled = !!enabled;
   emit(EVENTS.INVENTORY);
   emit(EVENTS.NOTIFY, { msg: G.autoSell.enabled ? t('inventory.autoSellOn') : t('inventory.autoSellOff') });
   saveGame();
+  syncAutoSellToServer();
 }
 export function setAutoSellMax(value) {
   G.autoSell = G.autoSell || { enabled: false, maxValue: 50 };
   G.autoSell.maxValue = Math.max(0, Math.floor(Number(value) || 0));
   emit(EVENTS.INVENTORY);
   saveGame();
+  syncAutoSellToServer();
 }
 
 export function equipItem(itemId) {

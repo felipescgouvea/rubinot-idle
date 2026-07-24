@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=251';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=256';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=256';
-import { ZONES } from '../domain/bestiary.js?v=269';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=278';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=249';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=281';
-import { monsterAttack } from '../domain/combatFormulas.js?v=280';
-import { elementMod } from '../domain/elements.js?v=247';
-import { STAMINA_MAX } from '../domain/stamina.js?v=247';
-import { ITEMS } from '../domain/items.js?v=262';
-import { MONSTERS } from '../domain/bestiary.js?v=269';
-import { RARITY_TIERS } from '../domain/rarity.js?v=248';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=249';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=249';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=248';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=248';
-import { saveGame } from './saveGameUseCase.js?v=251';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=252';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=250';
-import { t } from '../i18n/i18n.js?v=265';
+import { G, ACCOUNT } from './gameStore.js?v=252';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=257';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=257';
+import { ZONES } from '../domain/bestiary.js?v=270';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=279';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=250';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=282';
+import { monsterAttack } from '../domain/combatFormulas.js?v=281';
+import { elementMod } from '../domain/elements.js?v=248';
+import { STAMINA_MAX } from '../domain/stamina.js?v=248';
+import { ITEMS } from '../domain/items.js?v=263';
+import { MONSTERS } from '../domain/bestiary.js?v=270';
+import { RARITY_TIERS } from '../domain/rarity.js?v=249';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile } from '../domain/combatFx.js?v=250';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=250';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=249';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=249';
+import { saveGame } from './saveGameUseCase.js?v=252';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=253';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=251';
+import { t } from '../i18n/i18n.js?v=266';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -90,13 +90,23 @@ function newHuntSession() {
   return { start: Date.now(), kills: 0, xp: 0, gold: 0, loot: 0, supplies: 0 };
 }
 let huntSession = newHuntSession();
+// Instante REAL em que a caçada começou no servidor (started_at), restaurado a
+// cada /hunt/state (ver aplicarEstadoDoServidor). É o que o cronômetro "Caçando
+// · Xm Ys" mostra — assim reabrir o jogo (F5) NÃO zera o tempo (queixa do
+// Felipe: caçada "reseta" no F5). Fica separado de huntSession.start de
+// propósito: o Hunt Analyzer conta xp/gold/kills SÓ desde que a aba abriu, então
+// a taxa por hora tem que usar o tempo desde a abertura, não o da caçada inteira.
+let serverHuntStartedAt = null;
 export function getHuntStats() {
   const s = huntSession;
   const elapsedMs = Math.max(1000, Date.now() - s.start);
   const perHour = (v) => Math.round(v / (elapsedMs / 3600000));
   const profit = s.gold + s.loot - s.supplies;
+  // Duração da caçada pro cronômetro: o tempo real desde o started_at do servidor
+  // (sobrevive ao F5). Sem started_at ainda, cai no tempo desde a abertura.
+  const huntDurationMs = serverHuntStartedAt ? Math.max(1000, Date.now() - serverHuntStartedAt) : elapsedMs;
   return {
-    hunting: G.hunting, elapsedMs, kills: s.kills,
+    hunting: G.hunting, elapsedMs, huntDurationMs, kills: s.kills,
     xp: s.xp, xpH: perHour(s.xp),
     gold: s.gold, goldH: perHour(s.gold),
     loot: s.loot, supplies: s.supplies,
@@ -281,7 +291,11 @@ function buildHuntSnapshot() {
   // o bônus de presa não existia de fato (o jogador via o "+40% XP" na tela e
   // não recebia nada). O servidor não confia na FORÇA declarada — recalcula a
   // porcentagem pela raridade (ver huntEngine.js: preyBonus).
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, prey: G.prey || [], fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1 };
+  // autoSell vai no snapshot porque o LOOT é resolvido no servidor (settleKill):
+  // sem isso, o "auto-vender lixo" ligado na tela não fazia NADA (queixa do
+  // Felipe) — o item de valor baixo entrava no inventário do mesmo jeito. O
+  // servidor converte em gold na hora do drop (ver huntEngine.js).
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, prey: G.prey || [], fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1, autoSell: G.autoSell || { enabled: false, maxValue: 50 } };
 }
 
 // Estilo de Luta (Fight Mode do Crystal Server, ver domain/combatFormulas: FIGHT_MODES) —
@@ -413,6 +427,11 @@ async function reconcileWithServer() {
 function aplicarEstadoDoServidor(res, myEpoch) {
   if (myEpoch !== reconcileEpoch) return;
   if (!res.ok || !res.stats) return;
+  // Cronômetro REAL da caçada (sobrevive ao F5): o /hunt/state manda started_at;
+  // o push do socket é parcial e não manda, então só atualiza quando vier, e
+  // zera quando o servidor disser explicitamente que não está caçando.
+  if (res.startedAt) serverHuntStartedAt = Date.parse(res.startedAt);
+  else if (res.hunting === false) serverHuntStartedAt = null;
   const s = res.stats;
   const leveledUp = s.level != null && s.level > G.level;
   // HP de ANTES desta reconciliação — comparado com s.hp depois de aplicado,

@@ -391,6 +391,11 @@ const server = http.createServer(async (req, res) => {
 
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
+        // Instante em que a caçada COMEÇOU (default now() da coluna). Sem isto,
+        // reabrir o jogo (F5) fazia o cronômetro "Caçando · Xm" e o Hunt Analyzer
+        // voltarem a ZERO, parecendo que a caçada reiniciou (queixa do Felipe) —
+        // agora o cliente restaura o tempo real decorrido a partir daqui.
+        startedAt: inserted.started_at,
         bossTier: Math.max(1, Math.floor(Number(body.bossTier) || 1)), // Boss Zone: tier desafiado (escala dificuldade + prestígio)
         vocation: body.vocation, level, skills, equipment, relics, imbuements,
         // Provisório enquanto não graduou (Rook): rege o RITMO DE TREINO — a
@@ -400,6 +405,12 @@ const server = http.createServer(async (req, res) => {
         promoted: !!(stats && stats.promoted), // promoção acelera a regeneração passiva
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
         density: body.density, // 'solo'|'normal'|'pack' — undefined = tamanho natural
+        // Auto-vender lixo: item 'misc' com valor <= maxValue vira gold no drop,
+        // sem entrar no inventário (ver huntEngine.js: settleKill). O loot é
+        // server-authoritative, então isto PRECISA vir pro servidor pra funcionar.
+        autoSell: (body.autoSell && typeof body.autoSell === 'object')
+          ? { enabled: !!body.autoSell.enabled, maxValue: Math.max(0, Math.floor(Number(body.autoSell.maxValue) || 0)) }
+          : { enabled: false, maxValue: 0 },
         // Presas ativas. A FORÇA do bônus não é aceita como veio: huntEngine
         // recalcula pela raridade (ver preyBonus lá) — o cliente só informa
         // qual criatura, que tipo de bônus e até quando vale.
@@ -422,7 +433,7 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       const liveSession = activeRow ? getLiveSession(activeRow.id) : null;
-      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {}, body.fightMode, body.density);
+      if (liveSession) updateSessionRtc(liveSession.id, body.rtc || {}, body.fightMode, body.density, body.autoSell);
       return send(res, 200, { ok: true, applied: !!liveSession });
     }
 
@@ -478,7 +489,7 @@ const server = http.createServer(async (req, res) => {
       const liveSession = getLiveSessionBySlot(user.id, slot);
       const [activeRow, stats, invRows, relicRows, skillsRow] = liveSession
         ? [
-            { id: liveSession.id, zone_id: liveSession.zoneId },
+            { id: liveSession.id, zone_id: liveSession.zoneId, started_at: liveSession.startedAt },
             await selectOne('player_stats', { user_id: user.id, slot }),
             null, null, null,   // servidos da memória logo abaixo
           ]
@@ -548,6 +559,10 @@ const server = http.createServer(async (req, res) => {
         // da hunt ANTERIOR como se fosse da nova).
         sessionId: activeRow ? activeRow.id : null,
         zoneId: activeRow ? activeRow.zone_id : null,
+        // Início da caçada — o cliente restaura o cronômetro/Hunt Analyzer a partir
+        // disto no F5 (ver huntUseCases.js: checkAndResumeHuntSession) em vez de
+        // zerar. Só existe com caçada ativa.
+        startedAt: activeRow ? activeRow.started_at : null,
         stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX, last_death: null },
         inventory,
         relics: liveSession ? (liveSession.relics || []) : relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
