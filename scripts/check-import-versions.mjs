@@ -27,6 +27,7 @@ const COM_ESTADO = new Set([
   'tibiaSprites.js',     // cache de sprites que já falharam
   'adminUseCases.js',
   'saveGameUseCase.js',
+  'authClient.js',       // sessão viva (token/refresh) + trava de leitura da nuvem — duplicar desloga no meio e bloqueia save
 ]);
 
 const RE = /from '([^']*\/([\w.-]+\.js))\?v=(\d+)'/g;

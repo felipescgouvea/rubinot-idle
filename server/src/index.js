@@ -177,11 +177,25 @@ function send(res, status, body) {
   res.end(json);
 }
 
+// Teto de corpo: 5 MB é ~50x acima de qualquer save legítimo, mas corta o vetor
+// de DoS por memória — sem isto, uma requisição autenticada podia streamar
+// centenas de MB e `data += c` bufferava tudo antes do JSON.parse, estourando a
+// heap do processo ÚNICO e derrubando TODOS os jogadores. Ao estourar, mata a
+// conexão e resolve corpo vazio (a rota trata como inválido/no-op). O handler de
+// 'error' fecha a promessa se o socket cair no meio (antes ficava pendurada pra
+// sempre — vazamento silencioso).
+const MAX_BODY_BYTES = 5 * 1024 * 1024;
 function readBody(req) {
   return new Promise((resolve) => {
     let data = '';
-    req.on('data', (c) => { data += c; });
-    req.on('end', () => { try { resolve(data ? JSON.parse(data) : {}); } catch { resolve({}); } });
+    let estourou = false;
+    req.on('data', (c) => {
+      if (estourou) return;
+      data += c;
+      if (data.length > MAX_BODY_BYTES) { estourou = true; try { req.destroy(); } catch {} resolve({}); }
+    });
+    req.on('end', () => { if (estourou) return; try { resolve(data ? JSON.parse(data) : {}); } catch { resolve({}); } });
+    req.on('error', () => { if (!estourou) resolve({}); });
   });
 }
 
@@ -440,7 +454,11 @@ const server = http.createServer(async (req, res) => {
         // Presas ativas. A FORÇA do bônus não é aceita como veio: huntEngine
         // recalcula pela raridade (ver preyBonus lá) — o cliente só informa
         // qual criatura, que tipo de bônus e até quando vale.
-        prey: Array.isArray(body.prey) ? body.prey : [],
+        // Teto de tamanho: sem isto o cliente podia mandar um array gigante que
+        // ficava na memória da sessão e era percorrido a cada kill (preyBonus).
+        // 8 cobre qualquer nº real de slots com folga. A FORÇA continua sendo
+        // recalculada pela raridade no huntEngine — o cliente nunca dita o valor.
+        prey: Array.isArray(body.prey) ? body.prey.slice(0, 8) : [],
       });
       return send(res, 200, { ok: true, sessionId: inserted.id });
     }
