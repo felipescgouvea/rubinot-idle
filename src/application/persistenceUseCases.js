@@ -1,21 +1,21 @@
 // Carregar o personagem, aplicar progresso offline e resetar. (saveGame mora
 // em saveGameUseCase.js — ver o comentário lá para o motivo.)
-import { G, replaceState, replaceAccount } from './gameStore.js?v=271';
-import { createDefaultState, MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=271';
-import { createDefaultSkills } from '../domain/character.js?v=298';
-import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=301';
-import { isSpellAvailable } from '../domain/spells.js?v=269';
-import { findOutfit } from '../domain/outfits.js?v=267';
-import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=267';
-import { ZONES } from '../domain/bestiary.js?v=289';
-import { isRelicId, STARTER_KITS } from '../domain/items.js?v=282';
-import { addItemToInventory } from './inventoryCore.js?v=269';
-import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=268';
-import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=270';
-import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=267';
-import { t } from '../i18n/i18n.js?v=287';
-import { getMaxHp, getMaxMana } from './stats.js?v=268';
-import { STAMINA_MAX } from '../domain/stamina.js?v=267';
+import { G, replaceState, replaceAccount } from './gameStore.js?v=272';
+import { createDefaultState, MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=272';
+import { createDefaultSkills } from '../domain/character.js?v=299';
+import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=302';
+import { isSpellAvailable } from '../domain/spells.js?v=270';
+import { findOutfit } from '../domain/outfits.js?v=268';
+import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=268';
+import { ZONES } from '../domain/bestiary.js?v=290';
+import { isRelicId, STARTER_KITS } from '../domain/items.js?v=283';
+import { addItemToInventory } from './inventoryCore.js?v=270';
+import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=269';
+import { LEGACY_ARENA_DIVISION_MAP, TASK_ROOMS } from '../domain/progression.js?v=271';
+import { loadRawState, clearState, saveState } from '../infrastructure/storage.js?v=268';
+import { t } from '../i18n/i18n.js?v=288';
+import { getMaxHp, getMaxMana } from './stats.js?v=269';
+import { STAMINA_MAX } from '../domain/stamina.js?v=268';
 
 // Prepara o save da sessão do usuário logado ANTES do loadGame(): se há save na
 // nuvem, ele vira o save local (a nuvem é a fonte de verdade da conta); se não

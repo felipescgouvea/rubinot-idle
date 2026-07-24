@@ -2528,6 +2528,12 @@ img.training-dummy-icon { width: 40px; height: 40px; image-rendering: pixelated;
 }
 img.training-dummy-badge { width: 16px; height: 16px; }
 .training-skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+/* Projeção de ganho do treino: barra até o próximo nível + ETA/níveis-8h. */
+.skill-proj { margin-top: 6px; width: 100%; }
+.skill-proj-bar { height: 6px; background: #0d2f5418; border-radius: 4px; overflow: hidden; }
+.skill-proj-fill { height: 100%; background: linear-gradient(90deg, #f3b13a, #ffd977); border-radius: 4px; transition: width .3s ease; }
+.skill-proj-info { display: flex; justify-content: space-between; gap: 6px; font-size: 9px; color: var(--ink-soft); margin-top: 3px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.training-active .skill-proj { max-width: 260px; }
 .training-skill-btn {
   display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 6px;
   border: 1px solid var(--line-soft); border-radius: 8px; background: linear-gradient(180deg, var(--parch-1), var(--parch-3));

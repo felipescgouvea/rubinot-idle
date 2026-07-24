@@ -1,19 +1,54 @@
 // Seções de Treino — Online (dummy "ativo", exige o jogo aberto, rende mais
 // rápido) e Offline (Exercise clássico, roda até fechado) — renderizadas na
 // aba Training. Ver application/trainingUseCases.js pras regras.
-import { G } from '../application/gameStore.js?v=271';
-import { TIBIA_SKILLS, VOCATIONS } from '../domain/character.js?v=298';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=269';
-import { SPELLS } from '../domain/spells.js?v=269';
-import { on, EVENTS } from '../shared/eventBus.js?v=269';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=274';
-import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=275';
-import { t } from '../i18n/i18n.js?v=287';
-import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=102';
+import { G } from '../application/gameStore.js?v=272';
+import { TIBIA_SKILLS, VOCATIONS, triesForNext } from '../domain/character.js?v=299';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, onlineTrainableSkills, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=270';
+import { SPELLS } from '../domain/spells.js?v=270';
+import { on, EVENTS } from '../shared/eventBus.js?v=270';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=275';
+import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=276';
+import { t } from '../i18n/i18n.js?v=288';
+import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=103';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
 let pickedTrainingSpell = null;
+
+// Formata segundos -> "2d 4h" / "3h 20m" / "12m" pra a projeção de treino.
+function fmtEta(sec) {
+  if (!isFinite(sec) || sec <= 0) return '—';
+  const d = Math.floor(sec / 86400), h = Math.floor((sec % 86400) / 3600), m = Math.floor((sec % 3600) / 60);
+  if (d > 0) return `${d}d ${h}h`;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${Math.max(1, m)}m`;
+}
+
+// Projeção de ganho pra uma skill NO RITMO `perMin` (tentativas/min pra arma,
+// mana/min pra magic): % até o próximo nível, tempo pro próximo e níveis em 8h.
+// Dá ao jogador o "porquê" de escolher A vs B — antes o card só mostrava o nível.
+function skillProjection(skillId, perMin) {
+  const base = TIBIA_SKILLS[skillId] ? TIBIA_SKILLS[skillId].base : 10;
+  const sk = (G.sk && G.sk[skillId]) || { lv: base, tries: 0 };
+  const prov = !G.graduated; // em Rook treina no ritmo neutro (ver character.js)
+  const needed = triesForNext(G.vocation, skillId, sk.lv, prov);
+  const pct = needed > 0 ? Math.min(100, Math.round((sk.tries / needed) * 100)) : 0;
+  const eta = perMin > 0 ? Math.round((Math.max(0, needed - sk.tries) / perMin) * 60) : Infinity;
+  let lv = sk.lv, tr = sk.tries + perMin * 480; // 480 min = 8h
+  let lvls = 0, need = triesForNext(G.vocation, skillId, lv, prov);
+  while (tr >= need && lvls < 999) { tr -= need; lv++; lvls++; need = triesForNext(G.vocation, skillId, lv, prov); }
+  return { pct, eta, lvls };
+}
+
+// Barra de progresso + "próximo nível em X" + "+N níveis/8h" (reaproveitado nos
+// cards e na grade). perMin<=0 (ex.: magic sem magia escolhida) mostra só a barra.
+function projectionHtml(skillId, perMin) {
+  const p = skillProjection(skillId, perMin);
+  const info = perMin > 0
+    ? `<div class="skill-proj-info"><span title="próximo nível">⏭ ${fmtEta(p.eta)}</span><span title="níveis em 8h">+${p.lvls}/8h</span></div>`
+    : '';
+  return `<div class="skill-proj"><div class="skill-proj-bar"><div class="skill-proj-fill" style="width:${p.pct}%"></div></div>${info}</div>`;
+}
 
 function activeTrainingCard(mode) {
   const s = TIBIA_SKILLS[G.trainingSkill];
@@ -42,6 +77,7 @@ function activeTrainingCard(mode) {
           <div class="training-active-title">${mode === 'online' ? '⚔️' : '🏋️'} ${t('training.trainingSkill', { skill: s.name })}</div>
           ${spell ? `<div class="muted">${t('training.usingSpell', { spell: spell.name })}</div>` : ''}
           <div class="muted">${t(mode === 'online' ? (ehMagia ? 'training.rateInfoOnlineMagic' : 'training.rateInfoOnline') : (ehMagia ? 'training.rateInfoMagic' : 'training.rateInfo'), { rate })}</div>
+          ${projectionHtml(G.trainingSkill, rate)}
           ${mode === 'online' ? `<div class="muted training-online-hint">${t('training.onlineMustStayOpen')}</div>` : ''}
         </div>
       </div>
@@ -91,6 +127,7 @@ function renderOnlineTrainingSection() {
           </div>
           <span>${s.name}</span>
           <small>${t('training.level', { lvl: G.sk[id]?.lv ?? s.base })}</small>
+          ${projectionHtml(id, triesPerMinuteFor(id) * ONLINE_RATE_MULTIPLIER)}
         </button>`;
       }).join('')}
     </div>` : '';
@@ -179,6 +216,7 @@ export function renderTrainingSection() {
           </div>
           <span>${s.name}</span>
           <small>${t('training.level', { lvl: G.sk[id]?.lv ?? s.base })}</small>
+          ${projectionHtml(id, id === 'magic' ? 0 : triesPerMinuteFor(id))}
         </button>`;
       }).join('')}
     </div>`;
