@@ -519,7 +519,17 @@ async function settleKill(session, mon, cfg) {
   const relicsGained = [];
   if (session.bossOnly && BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < cfg.relicDropChance) {
     const equippablePool = mon.loot.map(([id]) => id).filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
-    const pool = equippablePool.length > 0 ? equippablePool : equippableFallbackPool(mon.xp);
+    // Teto do pool de fallback usa o xp BASE do catálogo (bestiário), não
+    // mon.xp — que já vem multiplicado pelo tier do Boss Rush
+    // (bossTierMultiplier cresce exponencial, 1.35^(tier-1)). Usar o valor
+    // inflado deixava o teto de preço subir junto com o tier escolhido pelo
+    // jogador, então um boss trivial (ex.: Wolf, xp base 18) em tier 2+ já
+    // liberava itens caros/fora de tema do fallback geral (relatado: Wolf
+    // tier 2 dropou "Siphoning Inferniarch Wand", um nome de set endgame,
+    // via 43 = 18*2.43 * 5 = 215 de teto). O tier escala a DIFICULDADE da
+    // luta (hp/atk/def reais), não deveria destravar tier de loot também.
+    const baseMon = MONSTERS[mon.defKey];
+    const pool = equippablePool.length > 0 ? equippablePool : equippableFallbackPool(baseMon ? baseMon.xp : mon.xp);
     if (pool.length > 0) {
       const hitTiers = rollIndependentRarityTiers(cfg.rarityWeights);
       for (const rarity of hitTiers) {
