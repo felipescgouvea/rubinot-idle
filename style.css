@@ -63,7 +63,7 @@ body {
   line-height: 1.6;
 }
 
-#app { max-width: 1240px; margin: 0 auto; padding-bottom: 40px; }
+#app { max-width: 1400px; margin: 0 auto; padding-bottom: 40px; }
 
 /* ============ BANNER NAVY + OURO (marca visual do site) ============ */
 .banner-navy {
@@ -402,15 +402,53 @@ body {
 
 /* ============ PERSONAGEM — barra de status fina e horizontal, abaixo das
    abas, visível em qualquer aba assim que uma vocação é escolhida ============ */
+/* ===== CORPO: painéis (esquerda) + PAINEL LATERAL de status (direita) ===== */
+#app-body { display: flex; gap: 14px; align-items: flex-start; margin-top: 10px; }
+#panels { order: 1; flex: 1 1 auto; min-width: 0; }
+/* Rail de status: antes uma barra horizontal acima dos painéis; agora coluna à
+   direita, grudada no topo ao rolar. Mostra portrait/nome/Lv, barras HP/mana/XP,
+   gold/RC, status de caçada e stamina — o que vivia apertado no header. */
 #char-info {
-  align-items: center;
-  gap: 16px;
-  margin: 10px 14px 0;
-  padding: 8px 16px;
+  order: 2;
+  flex: 0 0 248px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin: 0 14px 0 0;
+  padding: 12px 14px;
+  position: sticky;
+  top: 12px;
   background: linear-gradient(180deg, var(--parch-1), var(--parch-3));
   border: 2px solid var(--gold);
   border-radius: 8px;
   box-shadow: 0 2px 8px #00000033, inset 0 1px 0 #ffffff55;
+}
+#char-info .char-status-portrait { justify-content: center; }
+#char-info .char-status-name-block { min-width: 0; text-align: center; }
+#char-info .char-status-name-block .char-nick-line,
+#char-info .char-status-name-block .char-name-line,
+#char-info .char-status-name-block .char-level-line { white-space: normal; }
+#char-info .char-status-bars { flex: none; min-width: 0; max-width: none; width: 100%; gap: 5px; }
+#char-info .bar-row-mini span { width: auto; min-width: 56px; }
+.rail-resources { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.rail-res { display: inline-flex; align-items: center; gap: 5px; font-weight: 800; color: var(--navy-2);
+  background: #0d2f540f; border: 1px solid var(--line-soft); border-radius: 8px; padding: 4px 9px; font-size: 12px; }
+.rail-res img.tibia-icon { width: 15px; height: 15px; }
+.rail-status { display: flex; flex-direction: column; gap: 6px; }
+.rail-status:empty { display: none; }
+.rail-status .stat-pill { justify-content: center; text-align: center; }
+.rail-actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+#char-info .char-skills { justify-content: center; flex: none; }
+/* cena de batalha ocupa a maior parte; Battle List + Log estreitos e fixos */
+#battle-inline .battle-col-left { flex: 1; }
+#battle-inline .battle-col-right { flex: 0 0 316px; }
+/* empilha no mobile: o rail vira faixa horizontal no topo */
+@media (max-width: 900px) {
+  #app-body { flex-direction: column; }
+  #char-info { order: -1; flex: none; width: auto; margin: 0 10px; position: static;
+    flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  #char-info .char-status-bars { width: auto; flex: 1; min-width: 160px; }
+  #battle-inline .battle-col-right { flex: none; }
 }
 .char-status-portrait { flex-shrink: 0; display: flex; align-items: center; }
 .char-status-name-block { flex-shrink: 0; min-width: 120px; }
