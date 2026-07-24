@@ -35,6 +35,12 @@ export function openAchievements() {
 }
 
 export function setPlayerTitle(title) {
+  // Achado de auditoria: aceitava qualquer string sem checar se o título
+  // foi realmente ganho por uma conquista (só cosmético, mas ainda assim
+  // permitia forjar um texto arbitrário ao lado do nome). Título só entra
+  // se estiver na lista de availableTitles(G), derivada das conquistas
+  // reais (que por sua vez usam stats autoritativos).
+  if (title && !availableTitles(G).includes(title)) return;
   G.title = title || null;
   saveGame();
   emit(EVENTS.CHAR_INFO);
