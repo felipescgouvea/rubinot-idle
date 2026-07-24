@@ -4,18 +4,18 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=270';
-import { emit, EVENTS } from '../shared/eventBus.js?v=268';
-import { getMagic, getMaxHp } from './stats.js?v=267';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=299';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=267';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=269';
-import { grantReward } from './rewardGrants.js?v=107';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=267';
-import { addItemToInventory } from './inventoryCore.js?v=268';
-import { ITEMS } from '../domain/items.js?v=281';
-import { saveGame } from './saveGameUseCase.js?v=270';
-import { t } from '../i18n/i18n.js?v=286';
+import { G } from './gameStore.js?v=271';
+import { emit, EVENTS } from '../shared/eventBus.js?v=269';
+import { getMagic, getMaxHp } from './stats.js?v=268';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=300';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=268';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=270';
+import { grantReward } from './rewardGrants.js?v=108';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=268';
+import { addItemToInventory } from './inventoryCore.js?v=269';
+import { ITEMS } from '../domain/items.js?v=282';
+import { saveGame } from './saveGameUseCase.js?v=271';
+import { t } from '../i18n/i18n.js?v=287';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 

@@ -1,12 +1,12 @@
-import { G, ACCOUNT } from './gameStore.js?v=270';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=271';
-import { grantReward } from './rewardGrants.js?v=107';
-import { ITEMS } from '../domain/items.js?v=281';
-import { emit, EVENTS } from '../shared/eventBus.js?v=268';
-import { addItemToInventory } from './inventoryCore.js?v=268';
-import { saveGame } from './saveGameUseCase.js?v=270';
-import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=278';
-import { t } from '../i18n/i18n.js?v=286';
+import { G, ACCOUNT } from './gameStore.js?v=271';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=272';
+import { grantReward } from './rewardGrants.js?v=108';
+import { ITEMS } from '../domain/items.js?v=282';
+import { emit, EVENTS } from '../shared/eventBus.js?v=269';
+import { addItemToInventory } from './inventoryCore.js?v=269';
+import { saveGame } from './saveGameUseCase.js?v=271';
+import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=279';
+import { t } from '../i18n/i18n.js?v=287';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

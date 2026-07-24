@@ -1,17 +1,17 @@
-import { G, ACCOUNT } from './gameStore.js?v=270';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=278';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=281';
-import { RARITY_TIERS } from '../domain/rarity.js?v=267';
-import { emit, EVENTS } from '../shared/eventBus.js?v=268';
-import { getMagic } from './stats.js?v=267';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=300';
-import { getCurrentMonster } from './huntUseCases.js?v=334';
-import { areaName } from '../domain/attackAreas.js?v=266';
-import { saveGame } from './saveGameUseCase.js?v=270';
-import { itemLogIcon } from './logIcons.js?v=269';
-import { t } from '../i18n/i18n.js?v=286';
+import { G, ACCOUNT } from './gameStore.js?v=271';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=279';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=282';
+import { RARITY_TIERS } from '../domain/rarity.js?v=268';
+import { emit, EVENTS } from '../shared/eventBus.js?v=269';
+import { getMagic } from './stats.js?v=268';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=301';
+import { getCurrentMonster } from './huntUseCases.js?v=335';
+import { areaName } from '../domain/attackAreas.js?v=267';
+import { saveGame } from './saveGameUseCase.js?v=271';
+import { itemLogIcon } from './logIcons.js?v=270';
+import { t } from '../i18n/i18n.js?v=287';
 
-export { addItemToInventory } from './inventoryCore.js?v=268';
+export { addItemToInventory } from './inventoryCore.js?v=269';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -150,9 +150,20 @@ export async function sellItem(itemId) {
     return;
   }
   G.gold = res.gold;                                   // gold é sempre do servidor
+  clearEquipSlotIfEmpty(itemId, item.type);
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.NOTIFY, { msg: t('inventory.itemSold', { item: item.name, price: item.sell }), type: 'success' });
   saveGame();
+}
+
+// Se a pilha zerou e o item ainda estava EQUIPADO, limpa o slot (senão o slot
+// aponta pra um item que não existe mais e segue somando ATK/DEF fantasma — e,
+// com consumeAmmo ligado, o tiro básico some sem aviso). Achado da auditoria.
+function clearEquipSlotIfEmpty(itemId, type) {
+  if (!G.inventory[itemId] && type && G.equipment[type] === itemId) {
+    G.equipment[type] = null;
+    syncEquipment(ACCOUNT.activeSlot, type, null);
+  }
 }
 
 export async function sellAllItem(itemId) {
@@ -163,6 +174,7 @@ export async function sellAllItem(itemId) {
   if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: item.name, reason: '' }), type: 'error' }); return; }
   G.gold = res.gold;
   delete G.inventory[itemId];
+  clearEquipSlotIfEmpty(itemId, item.type);
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
   emit(EVENTS.HEADER_STATS);

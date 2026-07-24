@@ -1,13 +1,13 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=270';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=281';
-import { RARITY_TIERS } from '../domain/rarity.js?v=267';
-import { on, EVENTS } from '../shared/eventBus.js?v=268';
-import { saveGame } from '../application/saveGameUseCase.js?v=270';
-import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=273';
-import { t } from '../i18n/i18n.js?v=286';
+import { G } from '../application/gameStore.js?v=271';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=282';
+import { RARITY_TIERS } from '../domain/rarity.js?v=268';
+import { on, EVENTS } from '../shared/eventBus.js?v=269';
+import { saveGame } from '../application/saveGameUseCase.js?v=271';
+import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=274';
+import { t } from '../i18n/i18n.js?v=287';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -106,15 +106,18 @@ function renderInventory() {
   // somava o inventoryOrder cru e mostrava "16/20" com 10 itens na tela.
   const counter = document.getElementById('bag-slot-counter');
   if (counter) {
-    const shown = orderedInventoryIds().filter(id => !equippedIds.has(id) && ITEMS[id]).length;
+    const shown = orderedInventoryIds().filter(id => ITEMS[id] && ((G.inventory[id] || 0) - (equippedIds.has(id) ? 1 : 0)) > 0).length;
     counter.textContent = `(${shown})`;
     counter.classList.remove('bag-slot-counter-full');
   }
   orderedInventoryIds().forEach(id => {
-    if (equippedIds.has(id)) return;
-    const qty = G.inventory[id];
     const item = ITEMS[id];
     if (!item) return;
+    // Uma cópia equipada está "no corpo": só some da bag se for a ÚNICA. Com
+    // qty>1, o RESTANTE continua na bag (antes escondia a pilha inteira e as
+    // outras cópias ficavam inacessíveis — achado da auditoria).
+    let qty = G.inventory[id];
+    if (equippedIds.has(id)) { qty = (qty || 0) - 1; if (qty <= 0) return; }
     const div = document.createElement('div');
     div.className = `inv-item${item.rare ? ' rare' : ''}`;
     div.draggable = true;
