@@ -14,7 +14,7 @@ import { maxSoul } from '../domain/soul.js?v=196';
 import { conjureSpell } from '../application/spellUseCases.js?v=170';
 import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { itemIconImg, spellIconImg } from './shared.js?v=261';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 // Ordem das seções: primeiro o que o jogador USA na mão (conjurar), depois o
 // que o RTC dispara sozinho, e por último o que é só de mundo.

@@ -18,7 +18,7 @@ import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSl
   setRtcHealTierSpell } from '../application/rtcUseCases.js?v=290';
 import { on, emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=261';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 

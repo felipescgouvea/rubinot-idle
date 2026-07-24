@@ -3,8 +3,8 @@ import { MONSTERS } from '../domain/bestiary.js?v=276';
 import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=255';
 import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { escapeHtml, notify, skillIconImg } from './shared.js?v=261';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=258';
-import { t } from '../i18n/i18n.js?v=272';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=259';
+import { t } from '../i18n/i18n.js?v=273';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 const TOTAL_BESTIARY = Object.keys(MONSTERS).length;

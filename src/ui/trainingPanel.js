@@ -8,7 +8,7 @@ import { SPELLS } from '../domain/spells.js?v=256';
 import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=261';
 import { startTraining, stopTraining, startOnlineTraining } from '../application/trainingUseCases.js?v=262';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=89';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar

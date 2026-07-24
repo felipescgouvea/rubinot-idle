@@ -7,7 +7,7 @@
 // vez só, tier alcançado) — ver /bp/claim.
 import { G } from './gameStore.js?v=258';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 // Rótulo curto do prêmio, pra notificação e pros cartões da UI.
 export function rewardLabel(r) {

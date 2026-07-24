@@ -23,7 +23,7 @@ import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=255'
 import { saveGame } from './saveGameUseCase.js?v=258';
 import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=259';
 import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=257';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };

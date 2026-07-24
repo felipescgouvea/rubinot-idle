@@ -10,7 +10,7 @@ import { gainXp } from './huntUseCases.js?v=322';
 import { bumpMissionProgress } from './battlePassUseCases.js?v=255';
 import { addItemToInventory } from './inventoryCore.js?v=256';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 function findTask(roomId, taskIndex) {
   const room = TASK_ROOMS.find(r => r.id === roomId);

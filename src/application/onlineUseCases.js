@@ -4,7 +4,7 @@
 // pill só não atualiza; nunca some depois de ter aparecido uma vez, pra não
 // piscar 0 num soluço de rede.
 import { fetchOnline } from '../infrastructure/authClient.js?v=263';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 let ultimo = { online: 0, top: [] };
 let iniciado = false;
@@ -38,5 +38,8 @@ export function startOnlinePolling() {
   if (iniciado) return;
   iniciado = true;
   tick();
-  setInterval(tick, 60000);
+  // 20s (era 60s) — junto com o envio de presença mais frequente e o cache
+  // menor no servidor (ver server/src/index.js: /online), fecha o atraso
+  // total de ~2min e meio pra poucos segundos.
+  setInterval(tick, 20000);
 }

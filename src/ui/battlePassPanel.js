@@ -4,7 +4,7 @@ import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { rewardIcon } from './uiIcons.js?v=259';
 import { rubiniIconImg } from './shared.js?v=261';
 import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=257';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 function bpRewardIcon(r) {
   return rewardIcon(r, 'bp-reward-sprite');

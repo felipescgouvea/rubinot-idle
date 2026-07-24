@@ -9,7 +9,7 @@ import { getCurrentMonster } from './huntUseCases.js?v=322';
 import { areaName } from '../domain/attackAreas.js?v=254';
 import { saveGame } from './saveGameUseCase.js?v=258';
 import { itemLogIcon } from './logIcons.js?v=257';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 export { addItemToInventory } from './inventoryCore.js?v=256';
 

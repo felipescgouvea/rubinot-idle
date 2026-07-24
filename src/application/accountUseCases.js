@@ -12,7 +12,7 @@ import { saveGame, flushCloudSave, stripEconomyFieldsForCloud } from './saveGame
 import { saveState } from '../infrastructure/storage.js?v=254';
 import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=263';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=258';
 
 // Resumo de cada slot pra UI (Configurações) — nunca o blob inteiro do

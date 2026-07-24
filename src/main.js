@@ -7,7 +7,7 @@
 import { G } from './application/gameStore.js?v=258';
 import { VOCATIONS } from './domain/character.js?v=285';
 import { emit, EVENTS } from './shared/eventBus.js?v=256';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=272';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=273';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=258';
@@ -25,8 +25,8 @@ import { buyShopItem } from './application/shopUseCases.js?v=262';
 import { buyBlessing } from './application/blessingUseCases.js?v=256';
 import { promoteVocation } from './application/promotionUseCases.js?v=254';
 import { setRtcAttackSpellSlot, clearRtcAttackSpellSlot, setRtcSmartElement, setRtcHealSpell, setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcThreshold, setRtcHealTierPct, clearRtcHealTier, setRtcTargetPriority, setRtcAreaMinTargets } from './application/rtcUseCases.js?v=290';
-import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=258';
-import { startOnlinePolling } from './application/onlineUseCases.js?v=27';
+import { registerPlayerName, submitScore } from './application/highscoresUseCases.js?v=259';
+import { startOnlinePolling } from './application/onlineUseCases.js?v=28';
 import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing, postBuyOffer, fillBuyOffer } from './application/marketUseCases.js?v=258';
 import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=255';
 import { rerollPrey, clearPrey } from './application/preyUseCases.js?v=256';
@@ -62,7 +62,7 @@ import { openImbueModal, applyImbuementClick } from './ui/imbuementPanel.js?v=25
 import { wireAdminPanelEvents } from './ui/adminPanel.js?v=265';
 import { showAuthGate, showLoadingGate, hideAuthGate, setAuthSuccessHandler, renderAuthUser, logout } from './ui/authPanel.js?v=255';
 import { openSettingsPanel } from './ui/settingsPanel.js?v=258';
-import { wireGraduationEvents, pickGraduationVocation, confirmGraduation, openGraduationModal } from './ui/graduationModal.js?v=258';
+import { wireGraduationEvents, pickGraduationVocation, confirmGraduation, openGraduationModal } from './ui/graduationModal.js?v=259';
 import { setAdminRate, setRelicDropChancePct, setRarityPercent, resetAdminConfig, setUseZoneMultipliers, setZoneMultiplier, setMarketEnabled, setStaminaEnabled, setConsumeAmmo, setZoneSpawnWeight, setZonePackRange, setLootChance, resetLootChance, initGameConfig } from './application/adminUseCases.js?v=259';
 import { setAdminSpawnZone, setAdminTab, setAdminLootZone } from './ui/adminPanel.js?v=265';
 import { wireTabs, applyMarketVisibility, applyAdminTabVisibility } from './ui/tabs.js?v=272';
@@ -185,6 +185,14 @@ async function bootGame() {
   resumeTrainingOnLoad(); // credita treino offline e religa o tick, se havia treino ativo
   startRegen();
   startOnlinePolling(); // "N online" no cabeçalho (prova social ao vivo)
+  // Reporta presença JÁ ao abrir o jogo, sem esperar o primeiro tick do
+  // setInterval de 90s em highscoresUseCases.js — sem isto, um personagem já
+  // nomeado que volta a jogar (2º dispositivo, nova aba) só atualizava
+  // `updated_at` até 90s depois, então a contagem de "online" ficava presa no
+  // valor antigo por até ~2min e meio somando cache do servidor + poll do
+  // cliente (bug reportado: "logou em 2 dispositivos e a contagem era 1").
+  // Fire-and-forget: não trava o boot por causa de uma chamada de rede.
+  submitScore();
   emit(EVENTS.LOG, '<span class="log-info">⚔️ Bem-vindo ao Rubinot Idle! Escolha sua vocação para começar.</span>');
 
   if (G.vocation) {

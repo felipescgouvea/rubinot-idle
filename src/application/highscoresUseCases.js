@@ -7,7 +7,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=276';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { submitHighscoreOnServer, fetchHighscoresOnServer } from '../infrastructure/authClient.js';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 let lastSubmitAt = 0;
 // Cache por CATEGORIA (level/skill/bestiário pedem ordenações diferentes do
@@ -88,5 +88,8 @@ export function invalidateHighscoresCache() {
   highscoresCache.clear();
 }
 
-// envio periódico junto do autosave
-setInterval(() => { submitScore(); }, 90000);
+// Envio periódico — 30s (era 90s: fazia a contagem de "online" no cabeçalho
+// ficar presa em valores velhos por até ~2min e meio, somado ao cache do
+// servidor e ao poll do cliente; ver server/src/index.js: /online, janela de
+// 3min "cobre 2 envios" continua valendo, agora com folga de 6 envios).
+setInterval(() => { submitScore(); }, 30000);

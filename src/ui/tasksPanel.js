@@ -5,7 +5,7 @@ import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/p
 import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { monsterSpriteImg } from './huntPanel.js?v=275';
 import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=261';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
 // tem sprite real via SPRITE_OVERRIDE em tibiaSprites.js) — só "corrupted" (id

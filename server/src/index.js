@@ -307,15 +307,18 @@ const server = http.createServer(async (req, res) => {
     // ranking, num payload leve pro cabeçalho (e, no futuro, pra landing).
     // SEM auth de propósito — só expõe agregado e nomes que já são públicos no
     // highscore. "Online" = personagem cujo score foi atualizado nos últimos 3
-    // min: o cliente reenvia o score a cada 90s enquanto o jogo está aberto
-    // (ver highscoresUseCases: setInterval), então essa janela cobre 2 envios.
+    // min: o cliente reenvia o score a cada 30s enquanto o jogo está aberto (e
+    // já ao abrir, sem esperar o 1º tick — ver main.js/highscoresUseCases:
+    // setInterval), então essa janela cobre várias vezes o envio.
     if (url.pathname === '/online' && req.method === 'GET') {
-      // /online é PÚBLICO (sem auth): o cabeçalho de qualquer aba poda a cada 90s.
-      // Cache em memória de 20s pra o flood não amplificar 2 queries por request
-      // contra o Supabase (achado da auditoria — DoS/queima de quota). O dado é
-      // agregado e tolera 20s de atraso.
+      // /online é PÚBLICO (sem auth): o cabeçalho de qualquer aba poda a cada 20s.
+      // Cache em memória de 8s (era 20s — deixava a contagem visivelmente presa
+      // no valor antigo por mais tempo do que o necessário, reportado como
+      // "logou em 2 dispositivos e a contagem ainda era 1") pra o flood não
+      // amplificar 2 queries por request contra o Supabase (achado da auditoria
+      // — DoS/queima de quota). O dado é agregado e tolera poucos segundos de atraso.
       const nowOn = Date.now();
-      if (onlineCache.data && nowOn - onlineCache.at < 20000) return send(res, 200, onlineCache.data);
+      if (onlineCache.data && nowOn - onlineCache.at < 8000) return send(res, 200, onlineCache.data);
       try {
         const desde = new Date(nowOn - 3 * 60 * 1000).toISOString();
         const filtro = `updated_at=gte.${encodeURIComponent(desde)}`;
@@ -712,18 +715,26 @@ const server = http.createServer(async (req, res) => {
         return send(res, 409, { error: 'kit inicial já foi concedido pra este personagem' });
       }
 
+      // Cada slot do kit (e cada item de supply) é independente dos outros —
+      // rodar em paralelo (Promise.all) em vez de um for-await sequencial
+      // corta o round-trip total ao Supabase de ~N chamadas em série pra só a
+      // profundidade de UMA cadeia (2 upserts), não N cadeias inteiras. Era o
+      // gargalo real do delay ao criar personagem (mesmo padrão do
+      // /character/graduate abaixo).
       const kit = STARTER_KITS[vocation] || {};
-      for (const [eqSlot, itemId] of Object.entries(kit)) {
+      await Promise.all(Object.entries(kit).map(async ([eqSlot, itemId]) => {
         // munição entra como PILHA (ver STARTER_AMMO_QTY / selectVocation no
         // cliente) — 1 flecha só era o mesmo que começar "sem flecha".
         const qty = eqSlot === 'ammo' ? STARTER_AMMO_QTY : 1;
-        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
-        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
-      }
+        await Promise.all([
+          upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id'),
+          upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot'),
+        ]);
+      }));
       const supplies = STARTER_SUPPLIES[vocation] || {};
-      for (const [itemId, qty] of Object.entries(supplies)) {
-        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
-      }
+      await Promise.all(Object.entries(supplies).map(([itemId, qty]) =>
+        upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id')
+      ));
 
       return send(res, 200, { ok: true });   // stats já garantido no início da rota
     }
@@ -751,17 +762,26 @@ const server = http.createServer(async (req, res) => {
         return send(res, 403, { error: `graduação exige nível ${GRADUATION_LEVEL}` });
       }
 
+      // Cada slot do kit é independente dos outros — rodar em paralelo
+      // (Promise.all) em vez de um for-await sequencial. Era o gargalo real
+      // do delay ao clicar "sair da ilha inicial": 6 slots × (1 leitura + 2
+      // upserts) em série viravam ~18 round-trips seguidos ao Supabase; em
+      // paralelo caem pra profundidade de 1 cadeia (leitura+upsert do
+      // inventário, que continuam sequenciais ENTRE SI pro mesmo slot — soma
+      // a pilha existente, não pode ser feito sem ler antes).
       const kit = GRADUATE_KITS[vocation] || {};
-      for (const [eqSlot, itemId] of Object.entries(kit)) {
+      await Promise.all(Object.entries(kit).map(async ([eqSlot, itemId]) => {
         const qty = eqSlot === 'ammo' ? GRADUATE_AMMO_QTY : 1;
         // Munição SOMA à pilha existente em vez de sobrescrever: o paladino
         // chega no 8 com flechas no bolso, e um upsert com valor fixo apagaria
         // o que ele juntou.
-        const atual = await selectOne('player_inventory', { user_id: user.id, slot, item_id: itemId });
-        const novaQty = (atual ? Number(atual.qty) || 0 : 0) + qty;
-        await upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty: novaQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
-        await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
-      }
+        const inventoryChain = selectOne('player_inventory', { user_id: user.id, slot, item_id: itemId }).then(atual => {
+          const novaQty = (atual ? Number(atual.qty) || 0 : 0) + qty;
+          return upsertRow('player_inventory', { user_id: user.id, slot, item_id: itemId, qty: novaQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+        });
+        const equipmentChain = upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: itemId, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
+        await Promise.all([inventoryChain, equipmentChain]);
+      }));
       await upsertRow('player_stats', { user_id: user.id, slot, graduated: true, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, vocation, graduated: true });
     }

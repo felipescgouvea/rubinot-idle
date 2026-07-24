@@ -4,7 +4,7 @@ import { ITEMS } from '../domain/items.js?v=269';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=263';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 
 export async function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);

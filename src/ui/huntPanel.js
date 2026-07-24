@@ -15,7 +15,7 @@ import { uiIcon, huntToggleIcon } from './uiIcons.js?v=259';
 import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=322';
 import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=254';
 import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=259';
-import { t } from '../i18n/i18n.js?v=272';
+import { t } from '../i18n/i18n.js?v=273';
 import { setStageWalking } from './stageWalk.js?v=95';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)

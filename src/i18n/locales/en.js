@@ -880,6 +880,7 @@ export default {
   'graduation.kitTitle': '{vocation} Graduate Set',
   'graduation.confirmKeep': 'Confirm and travel to the mainland',
   'graduation.confirmSwitch': 'Become a {vocation} and travel',
+  'graduation.confirming': 'Traveling…',
 
   // ---- blessing use-cases (application/blessingUseCases.js) ----
   'hunt.blessingsMaxed': 'You already have all blessings.',
