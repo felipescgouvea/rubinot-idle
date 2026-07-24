@@ -51,7 +51,7 @@ import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
 import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
 import { PREY_SLOTS, PREY_MAX_RARITY, preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType, isPreyActive } from '../../src/domain/prey.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason, TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../../src/domain/progression.js?v=130';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason, TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked, WORLDS } from '../../src/domain/progression.js?v=131';
 
 // Reseta o bp (resgates + premium) se a temporada virou desde o último — mês
 // calendário (ver currentBpSeason). Preguiçoso: aplicado no próximo /bp/*.
@@ -473,7 +473,17 @@ const server = http.createServer(async (req, res) => {
         // Provisório enquanto não graduou (Rook): rege o RITMO DE TREINO — a
         // vocação do set não pode dar vantagem de skill/ML (ver domain/character.js).
         graduated: !!(stats && stats.graduated),
-        spd, maxHp, maxMana, hp, mana, stamina, world: body.world || 'auroria',
+        // Mundo REAL (achado de auditoria: body.world era aceito sem checar
+        // reqLevel — um cliente adulterado mandava "mystian" (reqLevel 60,
+        // +40% XP +30% Gold) num personagem nível 1 e o servidor aplicava o
+        // multiplicador de verdade em cada kill, roubado pra sempre em
+        // player_stats). Se o world pedido não existe ou o level real não
+        // atinge o reqLevel, cai pro world base (sempre desbloqueado).
+        spd, maxHp, maxMana, hp, mana, stamina,
+        world: (() => {
+          const w = WORLDS.find(x => x.id === body.world);
+          return (w && level >= w.reqLevel) ? w.id : 'auroria';
+        })(),
         promoted: !!(stats && stats.promoted), // promoção acelera a regeneração passiva
         rtc: body.rtc || {}, fightMode: body.fightMode, // undefined = 1.0/1.0 (comportamento atual até o cliente enviar o modo)
         density: body.density, // 'solo'|'normal'|'pack' — undefined = tamanho natural
