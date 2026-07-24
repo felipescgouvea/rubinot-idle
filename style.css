@@ -482,6 +482,9 @@ body {
   border: 1px solid var(--gold);
   box-shadow: inset 0 1px 2px #ffffff66, inset 0 -3px 7px #00000022, 0 1px 3px #0000001f;
 }
+/* o sprite é um <span> inline (canvas dentro) que ganhava ~19px de "descida" da
+   linha e subia o boneco no tile; flex + line-height:0 centraliza de verdade. */
+#char-info .char-status-portrait .char-voc-big { display: flex; align-items: center; justify-content: center; line-height: 0; }
 #char-info .char-status-name-block { min-width: 0; text-align: center; }
 #char-info .char-status-name-block .char-nick-line,
 #char-info .char-status-name-block .char-name-line,
@@ -2171,7 +2174,9 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   display: flex; flex-direction: row; gap: 14px; padding: 0; align-items: stretch;
 }
 #battle-inline #battle-scene { margin: 0 !important; flex: none; }
-#battle-inline #dungeon-stage { flex: none; height: 360px; min-height: 360px; }
+/* Sem a Battle List, a cena ocupa a largura toda — mais alta pra manter boa
+   proporção na janela cheia. */
+#battle-inline #dungeon-stage { flex: none; height: 460px; min-height: 460px; }
 #battle-inline #hunt-toggle { margin: 0 !important; flex: none; }
 #battle-inline #battle-list-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 #battle-inline #battle-list { flex: 1; height: auto; max-height: none; overflow-y: auto; }
