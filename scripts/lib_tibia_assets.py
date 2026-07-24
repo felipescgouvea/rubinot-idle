@@ -162,3 +162,55 @@ def compose_layers(ids, base_index, layers, size):
 def trim(img):
     bb = img.getbbox()
     return img.crop(bb) if bb else img
+
+# ---------------- colorização de outfit (paleta 133 cores + template) ----------------
+# Paleta HSI do Tibia/OTClient: 19 matizes x 7 níveis de saturação/brilho = 133.
+# Réplica de Outfit::getColor (OTClient) — ver [[extrair-sprites-cliente-tibia]].
+_HSI_H = 19
+def _outfit_color(c):
+    if c >= 7 * _HSI_H: c = 0
+    loc1 = loc2 = loc3 = 0.0
+    if c % _HSI_H != 0:
+        loc1 = (c % _HSI_H) * (1.0 / 18.0)
+        loc2 = 1.0; loc3 = 1.0
+    tier = c // _HSI_H
+    if   tier == 0: loc2 = 0.25
+    elif tier == 1: loc2 = 0.50
+    elif tier == 2: loc2 = 0.75
+    elif tier == 3: loc3 = 0.75
+    elif tier == 4: loc3 = 0.50
+    elif tier == 5: loc2 = 0.75; loc3 = 0.50
+    else:           loc2 = 0.50; loc3 = 0.50
+    if loc2 == 0:
+        v = int(loc3 * 255); return (v, v, v)
+    # HSV -> RGB (h=loc1, s=loc2, v=loc3)
+    h = loc1 * 6.0
+    if h >= 6.0: h = 0.0
+    i = int(h); f = h - i
+    p = loc3 * (1 - loc2); q = loc3 * (1 - loc2 * f); t = loc3 * (1 - loc2 * (1 - f))
+    r, g, b = [(loc3, t, p), (q, loc3, p), (p, loc3, t), (p, q, loc3), (t, p, loc3), (loc3, p, q)][i]
+    return (int(r * 255), int(g * 255), int(b * 255))
+
+def colorize(base, mask, colors):
+    """Aplica as cores de outfit ao `base` usando a `mask` de template.
+    colors = (head, body, legs, feet) índices 0-132. Regiões da máscara:
+    amarelo=head, vermelho=body, verde=legs, azul=feet."""
+    head, body, legs, feet = (_outfit_color(colors[0]), _outfit_color(colors[1]),
+                              _outfit_color(colors[2]), _outfit_color(colors[3]))
+    bp = base.load(); mp = mask.load()
+    out = base.copy(); op = out.load()
+    W, H = base.size
+    for y in range(H):
+        for x in range(W):
+            br, bg, bb, ba = bp[x, y]
+            if ba == 0: continue
+            mr, mg, mb, ma = mp[x, y] if (x < mask.width and y < mask.height) else (0, 0, 0, 0)
+            if ma == 0: continue
+            ry = mr > 127; gy = mg > 127; by = mb > 127
+            if ry and gy:   cr, cg, cb = head
+            elif ry:        cr, cg, cb = body
+            elif gy:        cr, cg, cb = legs
+            elif by:        cr, cg, cb = feet
+            else:           continue
+            op[x, y] = (br * cr // 255, bg * cg // 255, bb * cb // 255, ba)
+    return out

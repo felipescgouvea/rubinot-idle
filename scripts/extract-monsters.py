@@ -18,7 +18,7 @@ CANVAS = 64
 FILL = 0.82
 SOUTH = 2
 
-# CS: nome-normalizado -> lookType
+# CS: nome-normalizado -> (lookType, (head,body,legs,feet))
 CS = {}
 for p in glob.glob(os.path.join(REPO, "reference", "crystalserver", "data-global", "monster", "**", "*.lua"), recursive=True):
     try: txt = open(p, encoding="latin1").read()
@@ -26,24 +26,31 @@ for p in glob.glob(os.path.join(REPO, "reference", "crystalserver", "data-global
     mn = re.search(r'createMonsterType\("([^"]+)"', txt)
     lt = re.search(r'lookType\s*=\s*(\d+)', txt)
     if mn and lt and int(lt.group(1)) > 0:
-        CS[L.norm(mn.group(1))] = int(lt.group(1))
+        def gi(k):
+            m = re.search(k + r'\s*=\s*(\d+)', txt); return int(m.group(1)) if m else 0
+        CS[L.norm(mn.group(1))] = (int(lt.group(1)), (gi("lookHead"), gi("lookBody"), gi("lookLegs"), gi("lookFeet")))
 BY_LT = L.outfit_by_looktype()
 
-def render(lt):
+def render(lt, colors):
     """Animação de caminhada (sul) do outfit como lista de frames 64x64, + durs.
-    Retorna (frames, durs) ou None se não for layers=1 renderizável."""
+    Trata layers=1 (recorte direto) e layers=2 (tint com as cores do outfit).
+    Retorna (frames, durs) ou None."""
     ap = L.appearance(BY_LT[lt])
     walk = next((g for g in ap["groups"] if g["fgid"] == 1 and g["phases"]), None)
     idle = next((g for g in ap["groups"] if g["fgid"] == 0), None)
     g = walk or idle
-    if not g or g["layers"] != 1 or not g["ids"]: return None
-    pw = g["pw"]
+    if not g or g["layers"] not in (1, 2) or not g["ids"]: return None
+    pw = g["pw"]; ly = g["layers"]
     nf = max(1, len(g["phases"]))
     raw = []
     for f in range(nf):
-        idx = f * pw + SOUTH
-        if idx >= len(g["ids"]): idx = SOUTH if SOUTH < len(g["ids"]) else 0
-        s = L.sprite(g["ids"][idx])
+        cell = (f * pw + SOUTH) * ly
+        if cell + ly - 1 >= len(g["ids"]): cell = SOUTH * ly if SOUTH * ly + ly - 1 < len(g["ids"]) else 0
+        if ly == 1:
+            s = L.sprite(g["ids"][cell])
+        else:
+            b = L.sprite(g["ids"][cell]); m = L.sprite(g["ids"][cell + 1])
+            s = L.colorize(b, m, colors) if (b is not None and m is not None) else b
         if s is not None: raw.append(s)
     if not raw: return None
     # bbox união -> recorte -> escala pra ~82% do canvas -> centraliza
@@ -67,9 +74,9 @@ def render(lt):
 files = sorted(f for f in os.listdir(MON_DIR) if f.endswith(".webp"))
 tasks = []
 for f in files:
-    lt = CS.get(L.norm(f[:-5]))
-    if lt and lt in BY_LT:
-        tasks.append((f, lt))
+    ent = CS.get(L.norm(f[:-5]))
+    if ent and ent[0] in BY_LT:
+        tasks.append((f, ent[0], ent[1]))
 print(f"monstros: {len(files)} | casam looktype: {len(tasks)}")
 
 if MODE == "--preview":
@@ -77,19 +84,19 @@ if MODE == "--preview":
     cell = 68; cols = 8; rows = (len(sample)+cols-1)//cols
     sheet = Image.new("RGBA", (cell*cols*2+4, cell*rows+4), (28,28,36,255))
     n_render = 0
-    for i,(f,lt) in enumerate(sample):
+    for i,(f,lt,colors) in enumerate(sample):
         cx=(i%cols)*cell*2+2; cy=(i//cols)*cell+2
         cur = Image.open(os.path.join(MON_DIR,f)).convert("RGBA"); cur.thumbnail((cell-4,cell-4)); sheet.paste(cur,(cx,cy),cur)
-        r = render(lt)
+        r = render(lt, colors)
         if r: sheet.paste(r[0][0],(cx+cell,cy),r[0][0]); n_render+=1
     out = os.environ.get("PREVIEW_OUT", os.path.join(os.path.dirname(__file__),"mon_preview.png"))
     sheet.save(out)
     print(f"preview (esq=atual, dir=cliente): {out}  | renderizados no sample: {n_render}/{len(sample)}")
 else:
     ok=skip=0
-    for f,lt in tasks:
+    for f,lt,colors in tasks:
         try:
-            r = render(lt)
+            r = render(lt, colors)
             if not r: skip+=1; continue
             frames,durs = r
             frames[0].save(os.path.join(MON_DIR,f), save_all=True, append_images=frames[1:],
