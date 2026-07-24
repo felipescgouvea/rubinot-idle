@@ -133,7 +133,16 @@ async function creditTraining(userId, slot, stats, vocation) {
   const skills = (skillsRow && skillsRow.skills) || defaultSkills();
   if (tries <= 0) return { skills, tries: 0 };
   // Provisório em Rook (ainda não graduou): ritmo neutro — ver domain/character.js.
-  const { sk } = applySkillGain(skills, skillId, tries, vocation, !(stats && stats.graduated));
+  const provisorio = !(stats && stats.graduated);
+  let { sk } = applySkillGain(skills, skillId, tries, vocation, provisorio);
+  // Knight e Paladin lutam com escudo equipado — o treino deles sobe Shielding
+  // JUNTO com a skill escolhida (não precisa dedicar um treino à parte só pra
+  // isso), pedido do Felipe. Sorcerer/Druid usam Spellbook (não escudo de
+  // verdade), então ficam de fora. Evita creditar 2x se a skill escolhida já
+  // FOR shielding (treino offline permite escolher qualquer skill).
+  if ((vocation === 'knight' || vocation === 'paladin') && skillId !== 'shielding') {
+    sk = applySkillGain(sk, 'shielding', tries, vocation, provisorio).sk;
+  }
   await upsertRow('player_skills', { user_id: userId, slot, skills: sk, updated_at: new Date().toISOString() }, 'user_id,slot');
   return { skills: sk, tries };
 }
