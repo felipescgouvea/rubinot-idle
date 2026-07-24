@@ -1292,6 +1292,13 @@ img.monster-sprite {
   object-fit: contain;
   filter: drop-shadow(0 3px 5px #00000044);
 }
+/* Cena de batalha: criatura no TAMANHO ORIGINAL do cliente (o sprite sai em
+   escala 1:1 num canvas 64px — ver scripts/extract-monsters.py), exibida a 64px
+   = 1:1, sem encolher (pedido do Felipe: "o monstro precisa ter o tamanho
+   original"). Escopado em .stage-monster pra NÃO mexer no ícone de zona nem na
+   Battle List (que seguem 52/34px). object-fit:contain herdado; pixelated (de
+   .monster-sprite) mantém o pixel art nítido no 1:1. */
+.stage-monster img.monster-sprite { width: 64px; height: 64px; }
 
 /* Mesma armadilha, mesmos sintomas: estas classes declaram tamanho e são usadas
    em ícones que também levam `tibia-icon`. Como `img.tibia-icon` é 0-1-1 e uma

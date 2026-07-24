@@ -59,17 +59,20 @@ def render(lt, colors):
     x0 = min(b[0] for b in boxes); y0 = min(b[1] for b in boxes)
     x1 = max(b[2] for b in boxes); y1 = max(b[3] for b in boxes)
     bw, bh = x1 - x0, y1 - y0
-    scale = (CANVAS * FILL) / max(bw, bh)
+    # TAMANHO NATIVO (Felipe: "o monstro precisa ter o tamanho ORIGINAL"): NÃO
+    # encolhe. O sprite sai na escala 1:1 do cliente, centrado num canvas 64
+    # (Cyclops ~63px enche; criaturas de 1 tile ~32px ficam menores, como no
+    # Tibia real). Só reduz (LANCZOS, suave) o que passa de 64px — bosses/
+    # criaturas multi-tile — pra caber no canvas. A cena exibe a 64px (1:1).
+    scale = 1.0 if max(bw, bh) <= CANVAS else CANVAS / max(bw, bh)
     frames = []
     for im in raw:
         crop = im.crop((x0, y0, x1, y1))
-        nw, nh = max(1, round(bw * scale)), max(1, round(bh * scale))
-        # LANCZOS (não NEAREST): o sprite nativo (32 ou 64px) é reescalado pra
-        # ~82% de 64px, um fator quase sempre não-inteiro. NEAREST nesse caso
-        # "mastiga" o pixel art (linhas/colunas somem irregularmente) e o Cyclops
-        # & cia saíam serrilhados na cena. LANCZOS reamostra suave; como o
-        # conteúdo fica ~52px e a cena mostra a 52px (≈1:1), sai limpo.
-        crop = crop.resize((nw, nh), Image.LANCZOS)
+        if scale != 1.0:
+            nw, nh = max(1, round(bw * scale)), max(1, round(bh * scale))
+            crop = crop.resize((nw, nh), Image.LANCZOS)
+        else:
+            nw, nh = bw, bh
         canvas = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
         canvas.paste(crop, ((CANVAS - nw) // 2, (CANVAS - nh) // 2), crop)
         frames.append(canvas)
