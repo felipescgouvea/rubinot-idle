@@ -192,8 +192,20 @@ function readBody(req) {
 // mas corta o flood malicioso (50-100/s). 429 pede pra esperar.
 const RL_CAP = 40, RL_REFILL_PER_MS = 20 / 1000;
 const rlBuckets = new Map();   // userId -> { tokens, last }
+let rlLastPrune = 0;
+let onlineCache = { at: 0, data: null };   // cache de 20s da rota pública /online
 function rateLimited(userId) {
   const now = Date.now();
+  // Poda preguiçosa: um bucket CHEIO e inativo é indistinguível de um recém-criado,
+  // então pode ser descartado sem alterar o rate limit. Sem isto o Map crescia 1
+  // entrada por usuário DISTINTO pra sempre (vazamento de memória — achado da auditoria).
+  if (rlBuckets.size > 5000 && now - rlLastPrune > 60000) {
+    rlLastPrune = now;
+    for (const [id, bk] of rlBuckets) {
+      const tk = Math.min(RL_CAP, bk.tokens + (now - bk.last) * RL_REFILL_PER_MS);
+      if (tk >= RL_CAP && now - bk.last > 120000) rlBuckets.delete(id);
+    }
+  }
   let b = rlBuckets.get(userId);
   if (!b) { b = { tokens: RL_CAP, last: now }; rlBuckets.set(userId, b); }
   b.tokens = Math.min(RL_CAP, b.tokens + (now - b.last) * RL_REFILL_PER_MS);
@@ -275,14 +287,22 @@ const server = http.createServer(async (req, res) => {
     // min: o cliente reenvia o score a cada 90s enquanto o jogo está aberto
     // (ver highscoresUseCases: setInterval), então essa janela cobre 2 envios.
     if (url.pathname === '/online' && req.method === 'GET') {
+      // /online é PÚBLICO (sem auth): o cabeçalho de qualquer aba poda a cada 90s.
+      // Cache em memória de 20s pra o flood não amplificar 2 queries por request
+      // contra o Supabase (achado da auditoria — DoS/queima de quota). O dado é
+      // agregado e tolera 20s de atraso.
+      const nowOn = Date.now();
+      if (onlineCache.data && nowOn - onlineCache.at < 20000) return send(res, 200, onlineCache.data);
       try {
-        const desde = new Date(Date.now() - 3 * 60 * 1000).toISOString();
+        const desde = new Date(nowOn - 3 * 60 * 1000).toISOString();
         const filtro = `updated_at=gte.${encodeURIComponent(desde)}`;
         const [online, top] = await Promise.all([
           countWhere('rubinot_idle_scores', filtro),
           selectRaw('rubinot_idle_scores', 'select=name,level,vocation&order=level.desc,xp.desc&limit=5'),
         ]);
-        return send(res, 200, { ok: true, online, top: top.filter(t => t.name) });
+        const payload = { ok: true, online, top: top.filter(t => t.name) };
+        onlineCache = { at: nowOn, data: payload };
+        return send(res, 200, payload);
       } catch (e) {
         // Nunca derruba o cabeçalho por causa disto — devolve 0/vazio.
         return send(res, 200, { ok: true, online: 0, top: [] });
@@ -411,6 +431,12 @@ const server = http.createServer(async (req, res) => {
         autoSell: (body.autoSell && typeof body.autoSell === 'object')
           ? { enabled: !!body.autoSell.enabled, maxValue: Math.max(0, Math.floor(Number(body.autoSell.maxValue) || 0)) }
           : { enabled: false, maxValue: 0 },
+        // Boosts (xp/loot/gold) e charms equipados — o servidor aplica o efeito no
+        // combate/loot (settleKill). boosts é mapa tipo->expiraEm (ms); charms é
+        // lista de ids (o servidor recalcula o valor por CHARMS, nunca confia no
+        // cliente). Sem isto, boost pago e charm desbloqueado não faziam nada.
+        boosts: (body.boosts && typeof body.boosts === 'object') ? body.boosts : {},
+        charms: Array.isArray(body.charms) ? body.charms.slice(0, 3) : [],
         // Presas ativas. A FORÇA do bônus não é aceita como veio: huntEngine
         // recalcula pela raridade (ver preyBonus lá) — o cliente só informa
         // qual criatura, que tipo de bônus e até quando vale.
@@ -1389,7 +1415,11 @@ const server = http.createServer(async (req, res) => {
         // arena limitada a 15 batalhas/dia), só barra o absurdo forjado.
         arena_points: Math.min(100000, Math.max(0, Math.floor(Number(body.arenaPoints)) || 0)),
         tasks_done: Math.min(94, Math.max(0, Math.floor(Number(body.tasksDone)) || 0)),
-        world: typeof body.world === 'string' ? body.world : undefined,
+        // world SANEADO na fonte (mesmo charset seguro de playerName/vocation):
+        // sem isto um cliente mandava world com HTML/script, gravado e renderizado
+        // no ranking de OUTROS jogadores (XSS armazenado → roubo de sessão). O
+        // cliente também escapa na renderização (defesa em profundidade).
+        world: (typeof body.world === 'string' && body.world.length <= 24 && /^[A-Za-zÀ-ÿ0-9 ]+$/.test(body.world)) ? body.world : undefined,
         bestiary_count: Math.min(2254, Math.max(0, Math.floor(Number(body.bestiaryCount)) || 0)),
         skill_magic: (sk.magic && sk.magic.lv) || 0,
         skill_fist: (sk.fist && sk.fist.lv) || 10,

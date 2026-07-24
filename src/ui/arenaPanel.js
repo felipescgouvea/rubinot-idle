@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=253';
-import { VOCATIONS } from '../domain/character.js?v=280';
-import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=252';
-import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=251';
-import { rewardIcon } from './uiIcons.js?v=254';
-import { t } from '../i18n/i18n.js?v=267';
+import { G } from '../application/gameStore.js?v=254';
+import { VOCATIONS } from '../domain/character.js?v=281';
+import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=253';
+import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=252';
+import { rewardIcon } from './uiIcons.js?v=255';
+import { t } from '../i18n/i18n.js?v=268';
 
 function divisionRewardIcon(r) {
   return rewardIcon(r, 'inline-icon');

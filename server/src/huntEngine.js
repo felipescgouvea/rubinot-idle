@@ -18,7 +18,8 @@ import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progres
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
 import { XP_TABLE, VOC_TRAINING, applySkillGain, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=156';
 import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=139';
-import { SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
+import { SHOP_ITEMS, isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
+import { CHARMS } from '../../src/domain/charms.js?v=128';
 import { RARITY_TIERS, rollIndependentRarityTiers } from '../../src/domain/rarity.js?v=126';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../../src/domain/spells.js?v=127';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId, pickHealTier, pickTarget, orderByPackSize } from '../../src/domain/rtcConfig.js?v=159';
@@ -233,6 +234,19 @@ function applyDueDots(session, pack) {
 // Antes disto o prey era puramente decorativo: o jogador travava a criatura,
 // via "+40% XP" na tela, e não recebia nada — o servidor nunca sequer ficava
 // sabendo que existia uma presa (a caçada inteira é resolvida aqui).
+// Soma dos value dos charms EQUIPADOS com um dado efeito (xp/gold/loot/damage/
+// lifeleech). Recalculado da fonte CHARMS a cada uso — o cliente só manda os ids,
+// nunca o valor (mesma blindagem do prey). Ver domain/charms.js.
+function charmSum(session, effect) {
+  const ids = Array.isArray(session.charms) ? session.charms : [];
+  let total = 0;
+  for (const id of ids) {
+    const c = CHARMS[id];
+    if (c && c.effect === effect) total += c.value || 0;
+  }
+  return total;
+}
+
 function preyBonus(session, defKey, tipo) {
   const slots = Array.isArray(session.prey) ? session.prey : [];
   const agora = Date.now();
@@ -382,9 +396,17 @@ async function settleKill(session, mon, cfg) {
     || (session.bossOnly && mon.defKey === boostedBossForDate(todayS));
   const creatureBoostMult = isBoostedCreature ? 2 : 1;
   const staminaMult = cfg.staminaEnabled ? staminaXpMult(session.stamina) : 1;
-  const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(session.world) * boostedMult * cfg.goldRate);
+  // Boost do JOGADOR (comprado/ganho: xp/gold/loot) + Charms equipados — antes
+  // NADA disto era aplicado no combate server-authoritative (jogador pagava RC e
+  // gastava pontos de charm sem efeito). Boost = +50% fixo enquanto ativo; charm
+  // = soma dos value por efeito (ver domain/charms.js). Recalculado da fonte.
+  const agoraTs = Date.now();
+  const xpBoost = (isBoostActive(session.boosts, 'xp', agoraTs) ? 1.5 : 1) * (1 + charmSum(session, 'xp'));
+  const goldBoost = (isBoostActive(session.boosts, 'gold', agoraTs) ? 1.5 : 1) * (1 + charmSum(session, 'gold'));
+  const lootBoost = (isBoostActive(session.boosts, 'loot', agoraTs) ? 1.5 : 1) * (1 + charmSum(session, 'loot'));
+  const goldGained = Math.floor((mon.gold[0] + Math.random() * (mon.gold[1] - mon.gold[0])) * zoneGoldMult * worldGoldMultiplier(session.world) * boostedMult * cfg.goldRate * goldBoost);
   const preyXpMult = 1 + preyBonus(session, mon.defKey, 'xp');
-  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * creatureBoostMult * cfg.xpRate * staminaMult * preyXpMult);
+  const xpGained = Math.floor(mon.xp * zoneXpMult * worldXpMultiplier(session.world) * boostedMult * creatureBoostMult * cfg.xpRate * staminaMult * preyXpMult * xpBoost);
 
   // Progresso vai pra MEMÓRIA, não pro banco. Antes cada morte fazia 1 leitura
   // + 3 escritas no Supabase; com 10 mil jogadores isso é dezenas de milhares
@@ -444,7 +466,7 @@ async function settleKill(session, mon, cfg) {
   let autoSellGold = 0;
   for (const [itemId, chance] of lootTable) {
     // Boosted creature/boss dobra a chance de loot (cap em 1 = drop garantido).
-    if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult * (1 + preyLoot))) {
+    if (Math.random() < Math.min(1, chance * cfg.lootRate * creatureBoostMult * (1 + preyLoot) * lootBoost)) {
       const it = ITEMS[itemId];
       const sellVal = it && it.type === 'misc' ? (it.sell || 0) : -1;
       if (autoSell && sellVal > 0 && sellVal <= autoSell.maxValue) {
@@ -544,8 +566,9 @@ async function resolveTick(session) {
   const atkRoll = rollPlayerAttack({ vocation: session.vocation, level: session.level, skills: session.skills, equipment: session.equipment, relics: session.relics, fightMode: session.fightMode });
   let basicDmg = atkRoll.damage * elementMod(primary.defKey, atkRoll.element);
   if (atkRoll.physical) basicDmg = reducePhysical(basicDmg, primary.def, 0);
-  // Presa de DANO: só vale contra a criatura travada no slot.
-  basicDmg *= 1 + preyBonus(session, primary.defKey, 'damage');
+  // Presa de DANO (só contra a criatura travada) + Charm de dano (Wound/Enflame,
+  // sempre ativo enquanto equipado — ver domain/charms.js). Ambos aditivos.
+  basicDmg *= 1 + preyBonus(session, primary.defKey, 'damage') + charmSum(session, 'damage');
   const dealt = semMunicao ? 0 : Math.max(1, Math.floor(basicDmg));
   if (dealt > 0) {
     primary.hp -= dealt;
@@ -572,6 +595,10 @@ async function resolveTick(session) {
     else if (e.type === 'manaleech') session.mana = Math.min(session.maxMana, session.mana + Math.max(1, Math.floor(dealt * e.pct)));
     else if (e.type === 'elemental') primary.hp -= Math.max(1, Math.floor(dealt * e.pct * elementMod(primary.defKey, e.element)));
   }
+  // Charm Vampiric: cura uma fração do dano do golpe básico (separado do imbuement
+  // de arma acima — os dois somam). Recalculado da fonte (charmSum).
+  const cLeech = dealt > 0 ? charmSum(session, 'lifeleech') : 0;
+  if (cLeech > 0 && session.hp > 0) session.hp = Math.min(session.maxHp, session.hp + Math.max(1, Math.floor(dealt * cLeech)));
   if (dealt > 0 && voc.attackSkill !== 'magic') {
     const meleeSkillId = equippedWeaponSkillId(session.equipment, session.relics);
     trainSkill(session, meleeSkillId, meleeSkillId === 'distance' ? 2 : 1, cfg);
@@ -647,7 +674,8 @@ async function resolveTick(session) {
     if (hitFn) {
       const label = pick.kind === 'spell' ? pick.s.words : pick.rune.name;
       if (primary.hp > 0) {
-        const sdmg = Math.max(1, Math.floor(hitFn() * elementMod(primary.defKey, element)));
+        // Charm de dano vale pra magia/runa também (senão o mago não se beneficia).
+        const sdmg = Math.max(1, Math.floor(hitFn() * elementMod(primary.defKey, element) * (1 + charmSum(session, 'damage'))));
         primary.hp -= sdmg;
         // dano da magia/runa vai NA MESMA LINHA da ação no log do cliente.
         pushCombat(session, { kind: 'spell', label, element, amount: sdmg, target: primary.name });
