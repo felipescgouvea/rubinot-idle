@@ -1,13 +1,14 @@
-// Abre/fecha o modal de batalha. Só alterna o display — o conteúdo (sprite do
-// jogador/monstro, log) é o mesmo elemento fixo do DOM o tempo todo, mantido
-// atualizado pelos eventos de caçada mesmo com o modal fechado, então reabrir
-// sempre mostra o estado atual sem recriar nada.
+// A batalha agora vive INLINE na aba Hunt (não é mais um modal flutuante — ela é
+// a estrela da tela). openBattleModal virou "leve o jogador pra ver a luta":
+// troca pra aba Hunt e rola até a cena. Chamado quando começa um boss/zona
+// (bossRushPanel, zonePicker) pra o combate aparecer na hora.
 export function openBattleModal() {
-  const el = document.getElementById('battle-modal-overlay');
-  if (el) el.style.display = 'flex';
+  const tab = document.querySelector('.tab[data-tab="hunt"]');
+  if (tab) tab.click();
+  const el = document.getElementById('battle-inline');
+  if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-export function closeBattleModal() {
-  const el = document.getElementById('battle-modal-overlay');
-  if (el) el.style.display = 'none';
-}
+// No-op: a batalha é inline, não há o que fechar. Mantido pra não quebrar quem
+// ainda chama (ESC no main.js, etc.).
+export function closeBattleModal() {}

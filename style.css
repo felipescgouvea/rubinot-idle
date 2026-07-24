@@ -1285,6 +1285,12 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .log-info { color: var(--ink-faint); font-style: italic; }
 .log-xp { color: var(--navy-1); font-weight: 600; }
 .log-death { color: #c0392b; font-weight: 700; }
+/* timestamp discreto — o jogador acompanha o EVENTO, não a hora; fica só como
+   pista leve à esquerda em vez de gritar em cada linha. */
+.log-time { opacity: 0.32; font-size: 0.85em; font-variant-numeric: tabular-nums; }
+/* contador de repetição agrupada (×N) — ver ui/shared.js: addLog. */
+.log-count { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 9px;
+  background: #0d2f5416; color: var(--navy-1); font-size: 0.82em; font-weight: 800; }
 
 /* ============ LOOT ============ */
 #loot-display { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 14px !important; }
@@ -2026,6 +2032,75 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   #battle-modal-box #battle-list { height: 140px; max-height: 140px; flex: none; }
   #battle-modal-box #combat-log { height: 200px; flex: none; }
 }
+
+/* ============ BATALHA INLINE (aba Hunt) — a cena é a ESTRELA da tela ============
+   Mesma estrutura de 2 colunas do antigo modal, agora embutida na aba Hunt com
+   altura fixa (as seções rolam por dentro). Ver index.html #battle-inline. */
+/* A aba Hunt vira BLOCO (não o flex-wrap padrão de .panel) pra a cena de batalha
+   e os extras empilharem full-width — senão o card-herói ficava do tamanho do
+   conteúdo, sobrando um vazio enorme à direita. */
+#tab-hunt.active { display: block; }
+#battle-inline {
+  display: flex; flex-direction: column; gap: 12px;
+  height: min(660px, 74vh); padding: 12px 14px; min-height: 0;
+}
+/* foco visual: a cena de batalha é o herói — borda/realce mais fortes que os
+   cards secundários (hierarquia pedida na crítica de design). */
+#battle-inline.is-hero { border-width: 2px; box-shadow: 0 6px 26px #00000055, 0 0 0 1px #ffd77733 inset; }
+.battle-inline-top { display: flex; align-items: center; gap: 10px; flex: none; }
+.battle-inline-top #zone-current-bar { flex: 1; margin: 0; }
+.battle-inline-top #hunt-status-switch-btn { flex: none; width: auto; }
+#battle-inline #battle-modal-body {
+  flex: 1; min-height: 0; display: flex; flex-direction: row; gap: 14px; padding: 0; overflow: hidden;
+}
+#battle-inline #battle-scene { margin: 0 !important; flex: 1; min-height: 0; }
+#battle-inline #dungeon-stage { flex: 1; height: auto; min-height: 240px; }
+#battle-inline #hunt-toggle { margin: 0 !important; flex: none; }
+#battle-inline #battle-list-card { margin: 0 !important; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+#battle-inline #battle-list { flex: 1; height: auto; max-height: none; overflow-y: auto; }
+#battle-inline #combat-log-card { margin: 0 !important; flex: 1.25; min-height: 0; display: flex; flex-direction: column; overflow: visible; }
+#battle-inline #combat-log { margin: 10px 12px !important; flex: 1; height: auto; min-height: 0; }
+
+/* extras (analyzer/loot/blessings + equipment) abaixo, com MENOS peso visual */
+#hunt-extras { display: flex; gap: 14px; margin-top: 14px; align-items: flex-start; }
+.hunt-extras-left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.hunt-extras-right { flex: 0 1 300px; min-width: 260px; }
+
+@media (max-width: 900px) {
+  #battle-inline { height: auto; }
+  #battle-inline #battle-modal-body { flex-direction: column; }
+  #battle-inline #battle-scene { flex: none; }
+  #battle-inline #dungeon-stage { flex: none; height: 200px; }
+  #battle-inline #battle-list { height: 150px; max-height: 150px; flex: none; }
+  #battle-inline #combat-log { height: 200px; flex: none; }
+  #hunt-extras { flex-direction: column; }
+  .hunt-extras-right { flex: none; width: 100%; }
+}
+
+/* ============ GAME FEEL / JUICE da batalha ============ */
+/* boneco "respira" — vida sutil no palco mesmo parado; as animações one-shot de
+   hit/ataque definem seu próprio `animation` e retomam o idle ao terminar. */
+@keyframes player-idle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.player-sprite-wrap { animation: player-idle 2.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .player-sprite-wrap { animation: none; } }
+
+/* número de dano LEGÍVEL sobre a cena + crit dourado destacado (.big vem do JS
+   quando o golpe é grande — ver ui/huntPanel.js: floatDamage). */
+.dmg-float { text-shadow: 0 2px 3px #000, 0 0 3px #000; }
+.dmg-float.big { color: #ffe083 !important; font-weight: 900; letter-spacing: 0.5px; }
+
+/* poeirinha quando a criatura tomba — dá um "respiro" satisfatório à morte. */
+.stage-monster.leaving .monster-sprite-wrap::after {
+  content: ''; position: absolute; left: 50%; bottom: 2px; width: 32px; height: 11px;
+  transform: translateX(-50%); border-radius: 50%; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse at center, #e6d8b488 0%, #e6d8b400 70%);
+  animation: death-dust 0.55s ease-out forwards;
+}
+@keyframes death-dust {
+  0% { opacity: 0.9; transform: translateX(-50%) scale(0.4); }
+  100% { opacity: 0; transform: translateX(-50%) scale(1.9); }
+}
+@media (prefers-reduced-motion: reduce) { .stage-monster.leaving .monster-sprite-wrap::after { animation: none; opacity: 0; } }
 
 /* ============ SELETOR DE OUTFIT — duas colunas lado a lado (customizar à
    esquerda, galeria à direita), como pedido; :has() só alarga esse modal

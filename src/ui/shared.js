@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=258';
-import { ITEMS } from '../domain/items.js?v=271';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=261';
+import { on, EVENTS } from '../shared/eventBus.js?v=259';
+import { ITEMS } from '../domain/items.js?v=272';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=262';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -104,9 +104,24 @@ function logTimestamp() {
 function addLog(html, cat = 'combate') {
   const log = document.getElementById('combat-log');
   if (!log) return;
+  // Agrupa repetição consecutiva IDÊNTICA (ex.: "Troll morreu! +22 XP" seis
+  // vezes vira uma linha só com "×6") — antes o log virava uma parede de texto
+  // igual e o jogador não via o que importava. Só agrupa linhas exatamente iguais
+  // (mesmo html + categoria); linhas com número diferente continuam separadas.
+  const last = log.lastElementChild;
+  if (last && last.dataset.raw === html && last.dataset.cat === cat) {
+    const n = (parseInt(last.dataset.count || '1', 10) + 1);
+    last.dataset.count = String(n);
+    let badge = last.querySelector('.log-count');
+    if (!badge) { badge = document.createElement('span'); badge.className = 'log-count'; last.appendChild(badge); }
+    badge.textContent = `×${n}`;
+    log.scrollTop = log.scrollHeight;
+    return;
+  }
   const line = document.createElement('div');
   line.className = 'log-line';
   line.dataset.cat = cat;
+  line.dataset.raw = html;
   line.innerHTML = `<span class="log-time">${logTimestamp()}</span> ${html}`;
   log.appendChild(line);
   // keep last 120 lines
