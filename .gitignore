@@ -7,3 +7,4 @@ scripts/.wiki-cache/
 reference/
 
 scripts/*-cs-auditoria.json
+__pycache__/
