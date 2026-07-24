@@ -4,23 +4,23 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=265';
-import { MONSTERS } from '../domain/bestiary.js?v=283';
+import { G } from '../application/gameStore.js?v=266';
+import { MONSTERS } from '../domain/bestiary.js?v=284';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
-} from '../domain/prey.js?v=261';
+} from '../domain/prey.js?v=262';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=262';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=261';
-import { on, EVENTS } from '../shared/eventBus.js?v=263';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=268';
-import { monsterSpriteImg } from './huntPanel.js?v=282';
-import { uiIcon } from './uiIcons.js?v=266';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=264';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=264';
-import { t } from '../i18n/i18n.js?v=281';
+} from '../domain/charms.js?v=263';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=262';
+import { on, EVENTS } from '../shared/eventBus.js?v=264';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=269';
+import { monsterSpriteImg } from './huntPanel.js?v=283';
+import { uiIcon } from './uiIcons.js?v=267';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=265';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=265';
+import { t } from '../i18n/i18n.js?v=282';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.

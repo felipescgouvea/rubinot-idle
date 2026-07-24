@@ -469,7 +469,19 @@ body {
   border: 2px solid var(--gold); border-radius: 8px;
   box-shadow: 0 2px 8px #00000033, inset 0 1px 0 #ffffff55;
 }
-#char-info .char-status-portrait { justify-content: center; }
+/* pequeno "pedestal" atrás do boneco pra ele não flutuar no pergaminho:
+   tile arredondado + sombra de contato embaixo dos pés + leve luz no topo. */
+#char-info .char-status-portrait {
+  justify-content: center; align-items: center;
+  width: 86px; height: 86px; margin: 0 auto; padding: 4px; box-sizing: border-box;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse 58% 20% at 50% 84%, #00000038, transparent 72%),
+    radial-gradient(ellipse at 50% 36%, #ffffff33, transparent 70%),
+    linear-gradient(180deg, #efe1bf, #d6c096);
+  border: 1px solid var(--gold);
+  box-shadow: inset 0 1px 2px #ffffff66, inset 0 -3px 7px #00000022, 0 1px 3px #0000001f;
+}
 #char-info .char-status-name-block { min-width: 0; text-align: center; }
 #char-info .char-status-name-block .char-nick-line,
 #char-info .char-status-name-block .char-name-line,
