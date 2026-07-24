@@ -48,6 +48,7 @@ import { GRADUATION_LEVEL } from '../../src/domain/cities.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
+import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
 import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, currentBpSeason } from '../../src/domain/progression.js?v=130';
 
@@ -258,7 +259,7 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/equip', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
+  '/conjure', '/imbue', '/equip', '/charm/unlock', '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
   // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
   // player_equipment em /imbue (pra achar o item equipado de verdade) podia
@@ -439,6 +440,17 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      // Charms REALMENTE desbloqueados (achado de auditoria: antes o servidor
+      // "recalculava o VALOR" do charm mas nunca checava se o id em si
+      // pertencia ao jogador — um cliente adulterado mandava qualquer id de
+      // CHARMS e ganhava o bônus de gold/xp/loot de graça. player_charms é a
+      // fonte real (ver /charm/unlock mais abaixo); interseção com o que o
+      // cliente pediu, não o inverso — nunca confia numa lista maior do que a real.
+      const charmsRow = await selectOne('player_charms', { user_id: user.id, slot });
+      const ownedCharms = (charmsRow && charmsRow.state && Array.isArray(charmsRow.state.unlocked)) ? charmsRow.state.unlocked : [];
+      const requestedCharms = Array.isArray(body.charms) ? body.charms : [];
+      const realCharms = requestedCharms.filter(id => ownedCharms.includes(id)).slice(0, 3);
+
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
         // Instante em que a caçada COMEÇOU (default now() da coluna). Sem isto,
@@ -466,7 +478,7 @@ const server = http.createServer(async (req, res) => {
         // lista de ids (o servidor recalcula o valor por CHARMS, nunca confia no
         // cliente). Sem isto, boost pago e charm desbloqueado não faziam nada.
         boosts: (body.boosts && typeof body.boosts === 'object') ? body.boosts : {},
-        charms: Array.isArray(body.charms) ? body.charms.slice(0, 3) : [],
+        charms: realCharms,
         // Presas ativas. A FORÇA do bônus não é aceita como veio: huntEngine
         // recalcula pela raridade (ver preyBonus lá) — o cliente só informa
         // qual criatura, que tipo de bônus e até quando vale.
@@ -992,6 +1004,51 @@ const server = http.createServer(async (req, res) => {
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       if (activeRow) { const s = getLiveSession(activeRow.id); if (s) { s.imbuements = s.imbuements || {}; s.imbuements[eqSlot] = imbuement; } }
       return send(res, 200, { ok: true, gold: gold - def.cost.gold, eqSlot, imbuement });
+    }
+
+    // Charm Points/desbloqueio AUTORITATIVO (achado de auditoria: /hunt/start
+    // aceitava `body.charms` sem checar posse contra NADA server-side — um
+    // cliente adulterado mandava qualquer id de charm e ganhava o bônus real
+    // de gold/xp/loot no combate, de graça, sem nunca ter matado nada pro
+    // bestiário. player_bestiary.state.kills (ver huntEngine.js: settleKill/
+    // flushBestiaryKills) é a fonte real de mortes por espécie; Charm Points
+    // disponíveis = soma de charmPointsForKills(mortes) por espécie MENOS a
+    // soma do custo dos charms já desbloqueados (player_charms.state.unlocked).
+    async function charmPointsAvailable(userId, slot) {
+      const [bestiaryRow, charmsRow] = await Promise.all([
+        selectOne('player_bestiary', { user_id: userId, slot }),
+        selectOne('player_charms', { user_id: userId, slot }),
+      ]);
+      const kills = (bestiaryRow && bestiaryRow.state && bestiaryRow.state.kills) || {};
+      const unlocked = (charmsRow && charmsRow.state && Array.isArray(charmsRow.state.unlocked)) ? charmsRow.state.unlocked : [];
+      const earned = Object.values(kills).reduce((sum, n) => sum + charmPointsForKills(Number(n) || 0), 0);
+      const spent = unlocked.reduce((sum, id) => sum + ((CHARMS[id] && CHARMS[id].cost) || 0), 0);
+      return { points: Math.max(0, earned - spent), unlocked, kills };
+    }
+
+    if (url.pathname === '/charm/state' && req.method === 'GET') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const slot = validSlot(Number(url.searchParams.get('slot')));
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const { points, unlocked, kills } = await charmPointsAvailable(user.id, slot);
+      return send(res, 200, { ok: true, points, unlocked, kills });
+    }
+
+    if (url.pathname === '/charm/unlock' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const charm = Object.prototype.hasOwnProperty.call(CHARMS, body.charmId) ? CHARMS[body.charmId] : null;
+      if (!charm) return send(res, 400, { error: 'charm inválido' });
+      const { points, unlocked } = await charmPointsAvailable(user.id, slot);
+      if (unlocked.includes(body.charmId)) return send(res, 409, { error: 'charm já desbloqueado' });
+      if (points < charm.cost) return send(res, 400, { error: 'charm points insuficientes' });
+      const novoUnlocked = [...unlocked, body.charmId];
+      await upsertRow('player_charms', { user_id: user.id, slot, state: { unlocked: novoUnlocked }, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, unlocked: novoUnlocked, points: points - charm.cost });
     }
 
     // ---- Treino de dummy AUTORITATIVO (aba Training) ----

@@ -769,8 +769,7 @@ export default {
   'bossrush.zoneLocked': 'Zone not unlocked yet.',
 
   // ---- bestiary use-cases (application/bestiaryUseCases.js) ----
-  'bestiary.progressLog': 'Bestiary: {monster} advanced! +{delta} Charm Points.',
-  'bestiary.progressNotify': '+{delta} Charm Points ({monster})',
+  'bestiary.progressLog': 'Bestiary progress: +{delta} Charm Points.',
   'bestiary.insufficientCharmPoints': 'Not enough Charm Points (needs {cost}).',
   'bestiary.charmUnlocked': 'Charm "{name}" unlocked!',
   'bestiary.maxCharmsEquipped': 'Maximum of {max} charms equipped.',

@@ -5,7 +5,7 @@ import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyRewa
 import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=261';
 import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=256';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 // Sprite real pro gold/Rubini Coin (mesmo dispatcher do Battle Pass, ver
 // ui/battlePassPanel.js: bpRewardIcon); XP Boost e Supply Completo não têm

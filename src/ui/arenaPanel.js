@@ -3,7 +3,7 @@ import { VOCATIONS } from '../domain/character.js?v=285';
 import { ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, ARENA_DAILY_LIMIT, arenaDivisionForPoints } from '../domain/progression.js?v=257';
 import { startArenaBattle, arenaAttemptsLeft, claimArenaDivisionReward } from '../application/arenaUseCases.js?v=256';
 import { rewardIcon } from './uiIcons.js?v=259';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 function divisionRewardIcon(r) {
   return rewardIcon(r, 'inline-icon');

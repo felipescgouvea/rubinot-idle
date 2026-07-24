@@ -6,8 +6,8 @@ import { G, ACCOUNT } from './gameStore.js?v=258';
 import { MAX_BLESSINGS, blessingCost } from '../domain/blessings.js?v=254';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { buyBlessingOnServer } from '../infrastructure/authClient.js?v=263';
-import { t } from '../i18n/i18n.js?v=273';
+import { buyBlessingOnServer } from '../infrastructure/authClient.js?v=264';
+import { t } from '../i18n/i18n.js?v=274';
 
 export async function buyBlessing() {
   G.blessings = G.blessings || 0;

@@ -17,7 +17,7 @@ import { isStaminaEnabled } from '../application/adminUseCases.js?v=259';
 import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=254';
 import { selectVocation } from '../application/characterUseCases.js?v=259';
 import { registerPlayerName } from '../application/highscoresUseCases.js?v=259';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=95';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto

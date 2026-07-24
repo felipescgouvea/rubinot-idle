@@ -1,44 +1,53 @@
-// Casos de uso do Bestiário e Charms: creditar Charm Points quando uma
-// criatura cruza etapas do bestiário, desbloquear charms e equipá-los.
-// Escuta MONSTER_KILLED (como taskUseCases) — a caçada não precisa saber que
-// bestiário existe, só anuncia a morte.
-import { G } from './gameStore.js?v=258';
-import { MONSTERS } from '../domain/bestiary.js?v=276';
-import { CHARMS, CHARM_EQUIP_SLOTS, charmPointsForKills } from '../domain/charms.js?v=255';
+// Casos de uso do Bestiário e Charms: Charm Points e desbloqueio são
+// AUTORITATIVOS NO SERVIDOR (ver server/src/index.js: /charm/state,
+// /charm/unlock) — antes G.charmPoints/G.charmsUnlocked eram só locais, e
+// /hunt/start aceitava qualquer id de charm do cliente sem checar posse
+// contra nada real (achado de auditoria: um cliente adulterado ganhava o
+// bônus real de gold/xp/loot de graça). player_bestiary.state.kills (contagem
+// de mortes por espécie) é gravado pelo PRÓPRIO servidor a cada kill (ver
+// huntEngine.js: settleKill/flushBestiaryKills) — o cliente não escreve mais
+// nisso, só espelha o que o servidor devolve.
+import { G, ACCOUNT } from './gameStore.js?v=258';
+import { CHARMS, CHARM_EQUIP_SLOTS } from '../domain/charms.js?v=255';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=256';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=273';
+import { fetchCharmState, unlockCharmOnServer } from '../infrastructure/authClient.js?v=264';
+import { t } from '../i18n/i18n.js?v=274';
 
-// Credita a DIFERENÇA de Charm Points de uma criatura: total que ela já vale
-// (pelas mortes acumuladas) menos o que já foi creditado dela antes. Assim uma
-// mesma etapa nunca paga duas vezes, mesmo recarregando o save.
-function creditBestiary(monsterId) {
-  const kills = (G.killCounters && G.killCounters[monsterId]) || 0;
-  const earned = charmPointsForKills(kills);
-  G.bestiaryCredited = G.bestiaryCredited || {};
-  const already = G.bestiaryCredited[monsterId] || 0;
-  const delta = earned - already;
-  if (delta <= 0) return;
-  G.bestiaryCredited[monsterId] = earned;
-  G.charmPoints = (G.charmPoints || 0) + delta;
-  const m = MONSTERS[monsterId];
-  const monsterName = m ? m.name : monsterId;
-  emit(EVENTS.LOG, `<span class="log-loot">📖 ${t('bestiary.progressLog', { monster: monsterName, delta })}</span>`);
-  emit(EVENTS.NOTIFY, { msg: `📖 ${t('bestiary.progressNotify', { delta, monster: monsterName })}`, type: 'success' });
+let lastSyncAt = 0;
+
+// Busca o estado real (pontos, desbloqueados, mortes por espécie) e espelha
+// em G — chamado ao matar (throttled) e ao abrir o Bestiário. Notifica só
+// quando os pontos sobem (equivalente a "completou uma etapa"), sem tentar
+// atribuir a mortes específicas (isso exigiria o servidor devolver por onde
+// veio o ganho, o que não é necessário pra a mecânica em si).
+export async function syncCharmState(force = false) {
+  const now = Date.now();
+  if (!force && now - lastSyncAt < 5000) return;
+  lastSyncAt = now;
+  const res = await fetchCharmState(ACCOUNT.activeSlot);
+  if (!res.ok) return;
+  const before = G.charmPoints || 0;
+  G.charmPoints = res.points;
+  G.charmsUnlocked = res.unlocked;
+  G.killCounters = res.kills || {};
+  if (res.points > before) {
+    emit(EVENTS.LOG, `<span class="log-loot">📖 ${t('bestiary.progressLog', { delta: res.points - before })}</span>`);
+  }
   emit(EVENTS.HEADER_STATS);
+  emit(EVENTS.BESTIARY_PANEL);
 }
 
-export function unlockCharm(charmId) {
+export async function unlockCharm(charmId) {
   const charm = CHARMS[charmId];
   if (!charm) return;
-  G.charmsUnlocked = G.charmsUnlocked || [];
-  if (G.charmsUnlocked.includes(charmId)) return;
-  if ((G.charmPoints || 0) < charm.cost) {
-    emit(EVENTS.NOTIFY, { msg: t('bestiary.insufficientCharmPoints', { cost: charm.cost }), type: 'error' });
+  const res = await unlockCharmOnServer(ACCOUNT.activeSlot, charmId);
+  if (!res.ok) {
+    emit(EVENTS.NOTIFY, { msg: res.error === 'charm points insuficientes' ? t('bestiary.insufficientCharmPoints', { cost: charm.cost }) : `⚠️ ${res.error}`, type: 'error' });
     return;
   }
-  G.charmPoints -= charm.cost;
-  G.charmsUnlocked.push(charmId);
+  G.charmPoints = res.points;
+  G.charmsUnlocked = res.unlocked;
   emit(EVENTS.NOTIFY, { msg: `${charm.icon} ${t('bestiary.charmUnlocked', { name: charm.name })}`, type: 'success' });
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.BESTIARY_PANEL);
@@ -63,4 +72,4 @@ export function toggleCharmEquipped(charmId) {
   saveGame();
 }
 
-on(EVENTS.MONSTER_KILLED, ({ monsterId }) => creditBestiary(monsterId));
+on(EVENTS.MONSTER_KILLED, () => { syncCharmState(); });

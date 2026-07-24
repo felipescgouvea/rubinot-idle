@@ -5,7 +5,7 @@ import { G } from './gameStore.js?v=258';
 import { findOutfit, isOutfitOwned } from '../domain/outfits.js?v=254';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 export function setOutfitGender(gender) {
   G.outfitGender = gender === 'female' ? 'female' : 'male';

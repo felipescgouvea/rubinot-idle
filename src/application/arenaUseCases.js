@@ -15,7 +15,7 @@ import { bumpMissionProgress } from './battlePassUseCases.js?v=255';
 import { addItemToInventory } from './inventoryCore.js?v=256';
 import { ITEMS } from '../domain/items.js?v=269';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 

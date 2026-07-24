@@ -347,6 +347,7 @@ async function flushVitals(session) {
   session.prog = novoProg();
   const tinhaTier = session.bossTierSujo;
   session.bossTierSujo = false;
+  flushBestiaryKills(session, d.speciesKills).catch(() => {}); // fire-and-forget, próprio catch interno já devolve o delta
   try {
     await callRpc('apply_hunt_progress', {
       p_user: session.userId, p_slot: session.slot,
@@ -371,7 +372,33 @@ async function flushVitals(session) {
 }
 
 function novoProg() {
-  return { gold: 0, xp: 0, goldEarned: 0, kills: 0, bossPoints: 0 };
+  return { gold: 0, xp: 0, goldEarned: 0, kills: 0, bossPoints: 0, speciesKills: {} };
+}
+
+// Persiste o progresso de bestiário (mortes POR ESPÉCIE) acumulado desde o
+// último flush em player_bestiary.state.kills — fonte de verdade real pros
+// Charm Points (ver domain/charms.js: charmPointsForKills). Antes disto, a
+// contagem por espécie só existia em G.killCounters no CLIENTE, então
+// qualquer valor de Charm Points/charm desbloqueado podia ser forjado (achado
+// da auditoria: /hunt/start aceitava `body.charms` sem checar posse contra
+// nada server-side, e o charm falso já multiplicava gold/xp reais no
+// combate). Read-modify-write simples (não é hot path — só roda no mesmo
+// timer de 5s do flushVitals, uma vez por sessão viva).
+async function flushBestiaryKills(session, deltas) {
+  const ids = Object.keys(deltas);
+  if (!ids.length) return;
+  try {
+    const row = await selectOne('player_bestiary', { user_id: session.userId, slot: session.slot });
+    const kills = (row && row.state && row.state.kills) || {};
+    for (const id of ids) kills[id] = (kills[id] || 0) + deltas[id];
+    await upsertRow('player_bestiary', { user_id: session.userId, slot: session.slot, state: { kills }, updated_at: new Date().toISOString() }, 'user_id,slot');
+  } catch (e) {
+    // Mesmo espírito do catch de flushVitals: devolve os deltas pro próximo
+    // flush em vez de perder a contagem por um blip de rede.
+    const back = session.prog.speciesKills;
+    for (const id of ids) back[id] = (back[id] || 0) + deltas[id];
+    console.error('flush de bestiário falhou', session.id, e.message);
+  }
 }
 
 // Stamina cai com o tempo REAL de caçada decorrido (não por tick nominal —
@@ -434,6 +461,7 @@ async function settleKill(session, mon, cfg) {
   session.prog.gold += goldGained;
   session.prog.goldEarned += goldGained;
   session.prog.kills += 1;
+  session.prog.speciesKills[mon.defKey] = (session.prog.speciesKills[mon.defKey] || 0) + 1;
   if (leveledUp) {
     session.maxHp = computeMaxHp({ vocation: session.vocation, level, equipment: session.equipment, relics: session.relics });
     session.maxMana = computeMaxMana({ vocation: session.vocation, level });

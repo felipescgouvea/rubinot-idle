@@ -7,7 +7,7 @@ import { MONSTERS } from '../domain/bestiary.js?v=276';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { submitHighscoreOnServer, fetchHighscoresOnServer } from '../infrastructure/authClient.js';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 let lastSubmitAt = 0;
 // Cache por CATEGORIA (level/skill/bestiário pedem ordenações diferentes do

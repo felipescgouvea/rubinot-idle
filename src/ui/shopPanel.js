@@ -5,7 +5,7 @@ import { on, EVENTS } from '../shared/eventBus.js?v=256';
 import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=261';
 import { buyShopItem } from '../application/shopUseCases.js?v=262';
 import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=259';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;

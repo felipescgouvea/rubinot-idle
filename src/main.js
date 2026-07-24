@@ -7,13 +7,13 @@
 import { G } from './application/gameStore.js?v=258';
 import { VOCATIONS } from './domain/character.js?v=285';
 import { emit, EVENTS } from './shared/eventBus.js?v=256';
-import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=273';
+import { getLocale, setLocale, applyStaticTranslations } from './i18n/i18n.js?v=274';
 
 // application
 import { saveGame, flushCloudSave } from './application/saveGameUseCase.js?v=258';
 import { loadGame, confirmReset, applyCloudSave } from './application/persistenceUseCases.js?v=297';
 import { confirmSwitchCharacterSlot } from './application/accountUseCases.js?v=256';
-import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect, fetchSaveEpoch } from './infrastructure/authClient.js?v=263';
+import { isLoggedIn, ensureValidToken, loadCloudSave, consumeAuthRedirect, fetchSaveEpoch } from './infrastructure/authClient.js?v=264';
 import { clearState, loadSaveEpoch, saveSaveEpoch } from './infrastructure/storage.js?v=253';
 import { selectVocation, graduate, checkGraduation, ensureStarterKitPending } from './application/characterUseCases.js?v=259';
 import { toggleHunt, startRegen, selectTarget, checkAndResumeHuntSession, setFightMode, renderFightModeButtons, setDensity, renderDensityButtons } from './application/huntUseCases.js?v=322';
@@ -30,7 +30,7 @@ import { startOnlinePolling } from './application/onlineUseCases.js?v=28';
 import { depositToMarket, withdrawFromMarket, listItemOnMarket, cancelMyListing, buyMarketListing, postBuyOffer, fillBuyOffer } from './application/marketUseCases.js?v=258';
 import { setOutfitGender, selectOutfit, buyOutfit, toggleOutfitAddon, setOutfitColor } from './application/outfitUseCases.js?v=255';
 import { rerollPrey, clearPrey } from './application/preyUseCases.js?v=256';
-import { unlockCharm, toggleCharmEquipped } from './application/bestiaryUseCases.js?v=256';
+import { unlockCharm, toggleCharmEquipped, syncCharmState } from './application/bestiaryUseCases.js?v=257';
 import { claimDailyReward } from './application/dailyRewardUseCases.js?v=256';
 import { startTraining, stopTraining, startOnlineTraining, resumeTrainingOnLoad } from './application/trainingUseCases.js?v=262';
 
@@ -193,6 +193,7 @@ async function bootGame() {
   // cliente (bug reportado: "logou em 2 dispositivos e a contagem era 1").
   // Fire-and-forget: não trava o boot por causa de uma chamada de rede.
   submitScore();
+  if (G.vocation) syncCharmState(true); // Charm Points/desbloqueados reais (ver bestiaryUseCases.js)
   emit(EVENTS.LOG, '<span class="log-info">⚔️ Bem-vindo ao Rubinot Idle! Escolha sua vocação para começar.</span>');
 
   if (G.vocation) {

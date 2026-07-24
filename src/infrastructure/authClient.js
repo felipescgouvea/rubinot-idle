@@ -502,6 +502,17 @@ export function fetchOnline() {
   return huntFetch('/online');
 }
 
+// ---- Charm Points/desbloqueio AUTORITATIVO — ver server/src/index.js:
+// /charm/state, /charm/unlock. Substitui o G.charmPoints/G.charmsUnlocked
+// puramente locais (achado de auditoria: /hunt/start aceitava qualquer id de
+// charm do cliente sem checar posse — ver application/bestiaryUseCases.js). ----
+export function fetchCharmState(slot) {
+  return huntFetch(`/charm/state?slot=${slot}`);
+}
+export function unlockCharmOnServer(slot, charmId) {
+  return huntFetch('/charm/unlock', { method: 'POST', body: { slot, charmId } });
+}
+
 // ---- Daily Reward (piloto) — ver server/src/index.js ----
 export function fetchDailyRewardState(slot) {
   return huntFetch(`/daily-reward/state?slot=${slot}`);

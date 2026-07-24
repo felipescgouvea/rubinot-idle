@@ -6,7 +6,7 @@ import { IMBUEMENTS } from '../domain/imbuements.js?v=254';
 import { ITEMS } from '../domain/items.js?v=269';
 import { emit, EVENTS } from '../shared/eventBus.js?v=256';
 import { saveGame } from './saveGameUseCase.js?v=258';
-import { imbueOnServer } from '../infrastructure/authClient.js?v=263';
+import { imbueOnServer } from '../infrastructure/authClient.js?v=264';
 
 // Pré-checagem local (só pra UX — o servidor revalida): tem a arma equipada, o
 // gold e os materiais?

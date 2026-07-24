@@ -8,7 +8,7 @@ import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../do
 import { resolveEquippedItem } from '../domain/items.js?v=269';
 import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=255';
 import { skillIconImg } from './shared.js?v=261';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 // A aba Skills mostra SÓ as skills. Os atributos derivados (ATK/DEF/SPD/MGC)
 // saíram: eles já aparecem no cabeçalho do personagem, e a subaba obrigava um

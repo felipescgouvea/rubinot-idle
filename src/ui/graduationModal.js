@@ -17,7 +17,7 @@ import { GRADUATE_KITS, GRADUATE_AMMO_QTY, ITEMS } from '../domain/items.js?v=26
 import { graduate } from '../application/characterUseCases.js?v=259';
 import { on, EVENTS, emit } from '../shared/eventBus.js?v=256';
 import { itemIconImg } from './shared.js?v=261';
-import { t } from '../i18n/i18n.js?v=273';
+import { t } from '../i18n/i18n.js?v=274';
 
 const ORDEM = ['knight', 'paladin', 'sorcerer', 'druid'];
 
