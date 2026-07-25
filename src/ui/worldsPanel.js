@@ -1,7 +1,7 @@
-import { G } from '../application/gameStore.js?v=272';
-import { WORLDS } from '../domain/progression.js?v=271';
-import { on, EVENTS } from '../shared/eventBus.js?v=270';
-import { t } from '../i18n/i18n.js?v=288';
+import { G } from '../application/gameStore.js?v=273';
+import { WORLDS } from '../domain/progression.js?v=272';
+import { on, EVENTS } from '../shared/eventBus.js?v=271';
+import { t } from '../i18n/i18n.js?v=289';
 
 export function renderWorldsPanel() {
   const grid = document.getElementById('worlds-grid');

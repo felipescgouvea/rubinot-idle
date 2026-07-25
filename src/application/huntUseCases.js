@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=272';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=280';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=277';
-import { ZONES } from '../domain/bestiary.js?v=290';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=299';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=270';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=302';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=301';
-import { elementMod } from '../domain/elements.js?v=268';
-import { STAMINA_MAX } from '../domain/stamina.js?v=268';
-import { ITEMS } from '../domain/items.js?v=283';
-import { MONSTERS } from '../domain/bestiary.js?v=290';
-import { RARITY_TIERS } from '../domain/rarity.js?v=269';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=271';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=270';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=269';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=269';
-import { saveGame } from './saveGameUseCase.js?v=272';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=273';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=271';
-import { t } from '../i18n/i18n.js?v=288';
+import { G, ACCOUNT } from './gameStore.js?v=273';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=281';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=278';
+import { ZONES } from '../domain/bestiary.js?v=291';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=300';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=271';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=303';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=302';
+import { elementMod } from '../domain/elements.js?v=269';
+import { STAMINA_MAX } from '../domain/stamina.js?v=269';
+import { ITEMS } from '../domain/items.js?v=284';
+import { MONSTERS } from '../domain/bestiary.js?v=291';
+import { RARITY_TIERS } from '../domain/rarity.js?v=270';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=272';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=271';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=270';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=270';
+import { saveGame } from './saveGameUseCase.js?v=273';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=274';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=272';
+import { t } from '../i18n/i18n.js?v=289';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -984,6 +984,10 @@ export async function checkAndResumeHuntSession() {
   // com o que estivesse no save (local ou nuvem), por mais desatualizado que
   // estivesse, e o cálculo aproximado de applyOfflineProgress rodava em cima
   // desse valor já errado, compondo o erro a cada boot.
+  // Snapshot ANTES do reconcile pra o resumo "enquanto você esteve fora": o
+  // servidor acumulou xp/gold com a aba fechada, e o delta antes×depois do
+  // reconcile é exatamente o que rendeu offline (G.lastSave = quando fechou).
+  const away0 = { lvl: G.level, xp: G.xp || 0, gold: G.gold || 0, at: G.lastSave || 0 };
   await reconcileWithServer();
   if (!res.hunting) {
     // Cliente achava (pelo save) que ainda estava caçando, mas o servidor já
@@ -1008,7 +1012,33 @@ export async function checkAndResumeHuntSession() {
   }
   G.activeZone = res.zoneId || G.activeZone;
   G.hunting = true;
+  // Restaura o modo Boss Rush da sessão viva — sem isto, o F5 no meio de um
+  // Boss Rush voltava com bossOnly=false: o tier não era creditado ao matar o
+  // boss e re-desafiar dava double-credit de boss_points (ver server /hunt/state).
+  setBossOnlyMode(!!res.bossOnly);
   currentSessionId = res.sessionId || null;
+  // Pop-up "enquanto você esteve fora" — o listener/modal já existiam (ver
+  // ui/huntPanel.js: renderOfflineProgressModal), só faltava emitir. Só mostra
+  // se ficou fora >2min e houve ganho; kills é estimado pelo XP do monstro
+  // principal da zona (o servidor não devolve o total de kills offline aqui).
+  const totalXp = lv => XP_TABLE.slice(0, Math.max(0, lv - 1)).reduce((a, b) => a + b, 0);
+  const xpGained = (totalXp(G.level) + (G.xp || 0)) - (totalXp(away0.lvl) + away0.xp);
+  const goldGained = (G.gold || 0) - away0.gold;
+  const awayMs = away0.at ? Date.now() - away0.at : 0;
+  if (awayMs > 120000 && (xpGained > 0 || goldGained > 0)) {
+    const zone = ZONES[G.activeZone];
+    const mainId = zone && zone.monsters && zone.monsters[0];
+    const mainXp = mainId && MONSTERS[mainId] ? MONSTERS[mainId].xp : 0;
+    emit(EVENTS.OFFLINE_PROGRESS, {
+      zoneName: zone ? t(zone.name) : (G.activeZone || ''),
+      zoneMainMonster: mainId || null,
+      hours: Math.floor(awayMs / 3600000),
+      minutes: Math.floor((awayMs % 3600000) / 60000),
+      kills: mainXp > 0 ? Math.max(0, Math.round(xpGained / mainXp)) : 0,
+      xpGained: Math.max(0, xpGained),
+      goldGained: Math.max(0, goldGained),
+    });
+  }
   beginLocalLoop(true);   // retomada: preserva o lastKillSeq restaurado acima
   emit(EVENTS.LOG, t('hunt.logEnterZone', { icon: '⚔️', zone: t(ZONES[G.activeZone] ? ZONES[G.activeZone].name : G.activeZone) }));
   return true;

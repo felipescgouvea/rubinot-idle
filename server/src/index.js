@@ -661,6 +661,10 @@ const server = http.createServer(async (req, res) => {
         // disto no F5 (ver huntUseCases.js: checkAndResumeHuntSession) em vez de
         // zerar. Só existe com caçada ativa.
         startedAt: activeRow ? activeRow.started_at : null,
+        // Modo Boss Rush da sessão viva — sem isto, no F5 o cliente retomava a
+        // caçada com bossOnly=false, não creditava o tier ao matar o boss e
+        // re-desafiar dava double-credit de boss_points (achado da auditoria).
+        bossOnly: activeRow ? !!activeRow.boss_only : false,
         stats: stats || { gold: 0, xp: 0, level: 1, total_gold_earned: 0, total_kills: 0, hp: null, mana: null, blessings: 0, stamina: STAMINA_MAX, last_death: null },
         inventory,
         relics: liveSession ? (liveSession.relics || []) : relicRows.map(r => ({ id: r.id, itemId: r.item_id, rarity: r.rarity, bonusPct: Number(r.bonus_pct) })),
