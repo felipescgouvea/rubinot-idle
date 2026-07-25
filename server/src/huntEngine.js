@@ -177,13 +177,12 @@ function espelharNoLive(userId, slot, itemId, novaQty) {
 }
 
 export async function incrementInventory(userId, slot, itemId, delta) {
-  const existing = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
-  // A bag NÃO tem teto de tipos — mesma regra do cliente (ver domain/items.js).
-  // Havia aqui um limite de 20 tipos distintos que o cliente já não tinha: com
-  // 20 itens diferentes na mochila, comprar qualquer coisa nova falhava com
-  // "bag cheia" e todo loot de item inédito era descartado em silêncio.
-  const newQty = Math.max(0, (existing ? Number(existing.qty) : 0) + delta);
-  await upsertRow('player_inventory', { user_id: userId, slot, item_id: itemId, qty: newQty, updated_at: new Date().toISOString() }, 'user_id,slot,item_id');
+  // ATÔMICO no banco (função increment_inventory: qty = GREATEST(0, qty+delta) num
+  // único UPDATE com lock de linha). Antes era select-then-upsert e o tick de loot
+  // (settleKill, roda FORA do ECON lock) corria com as rotas HTTP de inventário
+  // (shop/imbue/market, DENTRO do lock): dois escritores no mesmo item duplicavam ou
+  // perdiam a quantidade. A bag não tem teto de tipos (mesma regra do cliente).
+  const newQty = Number(await callRpc('increment_inventory', { p_user: userId, p_slot: slot, p_item: itemId, p_delta: delta }));
   espelharNoLive(userId, slot, itemId, newQty);
   return newQty;
 }
