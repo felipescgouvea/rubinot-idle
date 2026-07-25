@@ -7,7 +7,7 @@
 // só rodam no servidor; aqui só chamamos os endpoints e espelhamos G.prey com
 // a resposta autoritativa.
 import { G, ACCOUNT } from './gameStore.js?v=294';
-import { MONSTERS } from '../domain/bestiary.js?v=312';
+import { MONSTERS } from '../domain/bestiary.js?v=313';
 import { PREY_SLOTS, PREY_BONUS_TYPES, preyRerollCost } from '../domain/prey.js?v=290';
 import { emit, EVENTS } from '../shared/eventBus.js?v=292';
 import { saveGame } from './saveGameUseCase.js?v=294';

@@ -7,7 +7,7 @@ import { createDefaultRtc, isRuneAvailableToVocation, normalizeAttackSpells, isR
 import { isSpellAvailable } from '../domain/spells.js?v=292';
 import { findOutfit } from '../domain/outfits.js?v=290';
 import { DEFAULT_OUTFIT_COLORS } from '../domain/outfitColors.js?v=290';
-import { ZONES } from '../domain/bestiary.js?v=312';
+import { ZONES } from '../domain/bestiary.js?v=313';
 import { isRelicId, STARTER_KITS } from '../domain/items.js?v=305';
 import { addItemToInventory } from './inventoryCore.js?v=292';
 import { LEGACY_RARITY_MAP } from '../domain/rarity.js?v=291';

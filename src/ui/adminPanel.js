@@ -4,7 +4,7 @@
 // as mudanças aplicam na hora e são salvas.
 import { ADMIN_RATE_FIELDS, RARITY_TIER_ORDER, zoneSpawnPercents } from '../domain/adminConfig.js?v=293';
 import { RARITY_TIERS } from '../domain/rarity.js?v=291';
-import { ZONES, MONSTERS } from '../domain/bestiary.js?v=312';
+import { ZONES, MONSTERS } from '../domain/bestiary.js?v=313';
 import { ITEMS } from '../domain/items.js?v=305';
 import { on, EVENTS } from '../shared/eventBus.js?v=292';
 import { getAdminConfig, getZoneSpawn, getMonsterLoot } from '../application/adminUseCases.js?v=295';

@@ -2,8 +2,8 @@
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
 import { G } from '../application/gameStore.js?v=294';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=312';
-import { MONSTERS } from '../domain/bestiary.js?v=312';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=313';
+import { MONSTERS } from '../domain/bestiary.js?v=313';
 import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=321';
 import { cityName } from '../domain/cities.js?v=297';
 import { ITEMS } from '../domain/items.js?v=305';

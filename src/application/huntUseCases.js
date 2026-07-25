@@ -6,7 +6,7 @@
 import { G, ACCOUNT } from './gameStore.js?v=294';
 import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=302';
 import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=299';
-import { ZONES } from '../domain/bestiary.js?v=312';
+import { ZONES } from '../domain/bestiary.js?v=313';
 import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=321';
 import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=292';
 import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=324';
@@ -14,7 +14,7 @@ import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.j
 import { elementMod } from '../domain/elements.js?v=290';
 import { STAMINA_MAX } from '../domain/stamina.js?v=290';
 import { ITEMS } from '../domain/items.js?v=305';
-import { MONSTERS } from '../domain/bestiary.js?v=312';
+import { MONSTERS } from '../domain/bestiary.js?v=313';
 import { RARITY_TIERS } from '../domain/rarity.js?v=291';
 import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=293';
 import { emit, on, EVENTS } from '../shared/eventBus.js?v=292';

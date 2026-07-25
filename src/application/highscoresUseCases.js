@@ -3,7 +3,7 @@
 // player_skills — o cliente só reporta o que ainda não é autoritativo
 // (arena/tasks/bestiário, ver server/src/index.js: /highscores/submit).
 import { G, ACCOUNT } from './gameStore.js?v=294';
-import { MONSTERS } from '../domain/bestiary.js?v=312';
+import { MONSTERS } from '../domain/bestiary.js?v=313';
 import { emit, EVENTS } from '../shared/eventBus.js?v=292';
 import { submitHighscoreOnServer, fetchHighscoresOnServer } from '../infrastructure/authClient.js';
 import { saveGame } from './saveGameUseCase.js?v=294';
