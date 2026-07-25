@@ -17,8 +17,11 @@ const { itemSpriteFile, monsterSpriteFile, SPRITELESS_ITEMS = [] } = await impor
 const spriteless = new Set(SPRITELESS_ITEMS); // itens sem sprite mas JÁ pré-marcados (não vão 404)
 
 const stripQ = s => s.replace(/\?.*$/, '');
-const itemFiles = new Set(readdirSync(join(ROOT, 'assets/sprites/items')));
-const monFiles = new Set(readdirSync(join(ROOT, 'assets/sprites/monsters')));
+// Case-INSENSITIVE: o working tree no Windows pode ter um case divergente do git
+// (que é o que vai pra prod), gerando falso-positivo de "404". O objetivo aqui é
+// pegar arquivo AUSENTE, não divergência de case (que o FS local nem distingue).
+const itemFiles = new Set(readdirSync(join(ROOT, 'assets/sprites/items')).map(f => f.toLowerCase()));
+const monFiles = new Set(readdirSync(join(ROOT, 'assets/sprites/monsters')).map(f => f.toLowerCase()));
 
 // Conjunto de itens REALMENTE renderizados (loot de hunt, kits, loja) — são os
 // que podem gerar 404 na tela; um item de catálogo nunca mostrado, não.
@@ -46,18 +49,21 @@ const problems = { missingItemSprite: [], missingMonSprite: [], badMonster: [], 
 for (const id of renderedItems) {
   if (!ITEMS[id]) { problems.badMonster.push(`loot aponta pra item inexistente: ${id}`); continue; }
   const f = stripQ(itemSpriteFile(id)).replace(/^items\//, '');
-  if (!itemFiles.has(f) && !spriteless.has(id)) problems.missingItemSprite.push(`${id} -> ${f}`);
+  if (!itemFiles.has(f.toLowerCase()) && !spriteless.has(id)) problems.missingItemSprite.push(`${id} -> ${f}`);
 }
 for (const id of huntMonsterIds) {
   const m = MONSTERS[id];
   if (!m) { problems.badMonster.push(`zona referencia monstro inexistente: ${id}`); continue; }
   const f = stripQ(monsterSpriteFile(id, m)).replace(/^monsters\//, '');
-  if (!monFiles.has(f)) problems.missingMonSprite.push(`${id} -> ${f}`);
+  if (!monFiles.has(f.toLowerCase())) problems.missingMonSprite.push(`${id} -> ${f}`);
   // invariantes
   if (!(m.hp > 0) || !Number.isFinite(m.hp)) problems.badMonster.push(`${id}: hp inválido (${m.hp})`);
   if (!(m.atk >= 0) || !Number.isFinite(m.atk)) problems.badMonster.push(`${id}: atk inválido (${m.atk})`);
   if (!(m.xp >= 0) || !Number.isFinite(m.xp)) problems.badMonster.push(`${id}: xp inválido (${m.xp})`);
-  if (m.hp >= 50000 || m.atk >= 2000) problems.badMonster.push(`${id}: valor placeholder suspeito (hp ${m.hp}, atk ${m.atk})`);
+  // Placeholder de atk: o `atk` é o dano melee MÁX (normalRandom(0,atk)); nenhum
+  // melee real do Tibia passa de ~3000, então atk>4000 = placeholder/custom não
+  // sourceado (ver audit-monster-atk.mjs). hp alto sozinho NÃO é bug (boss legítimo).
+  if (m.atk > 4000) problems.badMonster.push(`${id}: atk placeholder suspeito (${m.atk}, hp ${m.hp})`);
   (m.spells || []).forEach((s, i) => {
     if (!s.element) problems.badSpell.push(`${id} spell[${i}]: sem element`);
     if (s.max == null || !Number.isFinite(s.max)) problems.badSpell.push(`${id} spell[${i}]: max inválido`);
