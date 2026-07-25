@@ -1,23 +1,23 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=301';
-import { renderSpellsPanel } from './spellsPanel.js?v=209';
-import { renderSkillsPanel } from './skillsPanel.js?v=295';
-import { renderArenaPanel } from './arenaPanel.js?v=294';
-import { renderWorldsPanel } from './worldsPanel.js?v=293';
-import { renderBattlePassPanel } from './battlePassPanel.js?v=293';
-import { renderRtcPanel } from './rtcPanel.js?v=328';
-import { renderShopPanel } from './shopPanel.js?v=301';
-import { renderMarketPanel } from './marketPanel.js?v=297';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=298';
-import { renderBossRushPanel } from './bossRushPanel.js?v=299';
-import { renderBestiaryTab } from './bestiaryPanel.js?v=299';
-import { renderTrainingSection } from './trainingPanel.js?v=302';
-import { renderImbuePanel } from './imbuementPanel.js?v=293';
-import { renderAdminPanel } from './adminPanel.js?v=303';
-import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=297';
-import { on, EVENTS } from '../shared/eventBus.js?v=294';
+import { renderTasksPanel } from './tasksPanel.js?v=302';
+import { renderSpellsPanel } from './spellsPanel.js?v=210';
+import { renderSkillsPanel } from './skillsPanel.js?v=296';
+import { renderArenaPanel } from './arenaPanel.js?v=295';
+import { renderWorldsPanel } from './worldsPanel.js?v=294';
+import { renderBattlePassPanel } from './battlePassPanel.js?v=294';
+import { renderRtcPanel } from './rtcPanel.js?v=329';
+import { renderShopPanel } from './shopPanel.js?v=302';
+import { renderMarketPanel } from './marketPanel.js?v=298';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=299';
+import { renderBossRushPanel } from './bossRushPanel.js?v=300';
+import { renderBestiaryTab } from './bestiaryPanel.js?v=300';
+import { renderTrainingSection } from './trainingPanel.js?v=303';
+import { renderImbuePanel } from './imbuementPanel.js?v=294';
+import { renderAdminPanel } from './adminPanel.js?v=304';
+import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=298';
+import { on, EVENTS } from '../shared/eventBus.js?v=295';
 
 const RENDER_BY_TAB = {
   tasks: renderTasksPanel,

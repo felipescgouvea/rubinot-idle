@@ -1,10 +1,10 @@
-import { G, ACCOUNT } from './gameStore.js?v=296';
-import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=295';
-import { ITEMS } from '../domain/items.js?v=307';
-import { emit, EVENTS } from '../shared/eventBus.js?v=294';
-import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=304';
-import { saveGame } from './saveGameUseCase.js?v=296';
-import { t } from '../i18n/i18n.js?v=312';
+import { G, ACCOUNT } from './gameStore.js?v=297';
+import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=296';
+import { ITEMS } from '../domain/items.js?v=308';
+import { emit, EVENTS } from '../shared/eventBus.js?v=295';
+import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=305';
+import { saveGame } from './saveGameUseCase.js?v=297';
+import { t } from '../i18n/i18n.js?v=313';
 
 export async function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);
@@ -64,7 +64,11 @@ export async function buyShopItem(id, qty = 1) {
 
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
   if (balance < total) { emit(EVENTS.NOTIFY, { msg: t('shop.insufficientBalance'), type: 'error' }); return; }
-  G.rubini -= total; // só chega aqui pra currency 'rubini' (gold já tratado acima)
+  // Debita a moeda CERTA. Hoje só currency 'rubini' chega aqui (gold item/refill
+  // já foi tratado acima), mas debitar rubini incondicional era um footgun (#R3):
+  // um boost/outfit precificado em gold cobraria Rubini. O ramo gold fecha isso.
+  if (s.currency === 'rubini') G.rubini -= total;
+  else G.gold -= total;
 
   const now = Date.now();
   const base = isBoostActive(G.boosts, s.boost, now) ? G.boosts[s.boost] : now;
