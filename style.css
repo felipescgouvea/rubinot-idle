@@ -2029,6 +2029,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .world-type { font-size: 10px; color: var(--ink-faint); margin-bottom: 6px; }
 .world-bonus { font-size: 11px; color: var(--green-1); font-weight: 600; }
 .world-bonus-icon { width: 13px; height: 13px; object-fit: contain; image-rendering: pixelated; vertical-align: -2px; }
+.inline-bp-icon { width: 13px; height: 13px; object-fit: contain; image-rendering: pixelated; vertical-align: -2px; }
 .world-req { font-size: 10.5px; color: var(--red-hot); margin-top: 3px; font-weight: 600; }
 
 /* ============ BATTLE PASS ============ */

@@ -1,18 +1,20 @@
 // Recompensa Diária (Reward Shrine) — não ocupa uma aba: é um botão no header
 // que abre um modal com o ciclo de 7 dias e o botão de resgate. Um "selo"
 // vermelho no botão avisa quando há recompensa disponível hoje.
-import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=307';
-import { on, EVENTS } from '../shared/eventBus.js?v=308';
-import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=313';
-import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=308';
-import { t } from '../i18n/i18n.js?v=326';
+import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=308';
+import { on, EVENTS } from '../shared/eventBus.js?v=309';
+import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=314';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=312';
+import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=309';
+import { t } from '../i18n/i18n.js?v=327';
 
-// Sprite real pro gold/Rubini Coin (mesmo dispatcher do Battle Pass, ver
-// ui/battlePassPanel.js: bpRewardIcon); XP Boost e Supply Completo não têm
-// item único equivalente no Tibia, ficam de emoji mesmo.
+// Sprite REAL do Tibia por tipo de recompensa (nada inventado): gold/Rubini têm
+// dispatcher próprio; refill = Health Potion; boost de XP = Experience Icon.
 function dailyRewardIcon(r, cls = 'daily-icon-img') {
   if (r.type === 'gold') return goldIconImg(cls);
   if (r.type === 'rubini') return rubiniIconImg(cls);
+  if (r.type === 'refill') return spriteImgOrFallback(spriteUrl('items/Health_Potion.webp'), 'refill', r.icon, cls);
+  if (r.type === 'boost') return spriteImgOrFallback(spriteUrl('vitals/Experience_Icon.webp'), 'xp boost', r.icon, cls);
   return r.icon;
 }
 
