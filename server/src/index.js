@@ -1387,11 +1387,12 @@ const server = http.createServer(async (req, res) => {
       // Trocar de treino sem perder o que já acumulou: credita o anterior antes.
       let skills = null;
       if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation); skills = r.skills; }
-      // Janela da varinha de treino: o cliente informa até quando o boost dele
-      // vale (G.boosts.training) e o servidor guarda, pra creditar em dobro
-      // mesmo o jogo estando fechado. Só aceita avançar a janela — nunca
-      // encurtar uma que já estava valendo.
-      const wandUntil = Number(body.trainingBoostUntil) || 0;
+      // Janela da varinha de treino: vem de player_stats.boosts.training
+      // (server-authoritative, #3) — o trainWand de Arena/BP grava lá via
+      // grantBoostServer. Antes vinha de body.trainingBoostUntil e o cliente forjava
+      // ano 3000 = 2x skill/ML permanente de graça. Só aceita avançar a janela —
+      // nunca encurtar uma que já estava valendo.
+      const wandUntil = (stats && stats.boosts && Number(stats.boosts.training)) || 0;
       const prevUntil = stats && stats.training_boost_until ? new Date(stats.training_boost_until).getTime() : 0;
       const boostUntil = Math.max(wandUntil, prevUntil);
       await upsertRow('player_stats', {
