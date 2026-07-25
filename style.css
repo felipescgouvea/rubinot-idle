@@ -2126,20 +2126,61 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .ach-text { display: flex; flex-direction: column; line-height: 1.25; flex: 1; }
 .ach-text small { color: #8a92b8; font-size: 11px; }
 .ach-check { color: #4ade80; font-weight: 800; }
-/* Imbuements */
-.imbue-active { margin: 6px 0; padding: 7px 10px; border-radius: 8px; background: rgba(240,193,75,.1); border: 1px solid rgba(240,193,75,.3); font-size: 13px; }
-.imbue-active.muted { background: #1c2136; border-color: #2b3350; color: #a8b0d0; }
-.imbue-list { display: flex; flex-direction: column; gap: 7px; max-height: 44vh; overflow-y: auto; }
-.imbue-row { padding: 8px 10px; border-radius: 8px; background: #1c2136; border: 1px solid #2b3350; }
-/* Os cards de imbuement são ESCUROS dentro de um modal claro: sem cor própria,
-   o nome (um <b> simples) herdava a tinta escura do modal e sumia no fundo —
-   a descrição e o custo tinham cor e apareciam, só o nome não. */
-.imbue-head { display: flex; align-items: center; gap: 6px; color: #eef1ff; }
-.imbue-head small { color: #8a92b8; font-weight: 400; }
-.imbue-icon { font-size: 1.2rem; }
-.imbue-cost { font-size: 11.5px; color: #b8c0e0; margin: 4px 0 6px; }
-.imbue-lack { color: #f87171; }
-.imbue-btn { background: #7b4bd5; border: none; color: #fff; padding: 5px 14px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+/* Imbuements — janela do shrine do Tibia: item no topo, fontes astrais em
+   SPRITE (não texto). Usa as vars do tema (antes era um azul-escuro hardcoded
+   que destoava do resto do app no claro/escuro — queixa do Felipe). */
+.imbue-window { display: flex; flex-direction: column; gap: 10px; }
+.imbue-title { font-family: var(--serif); }
+.imbue-item-slot {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+}
+.imbue-slot-box {
+  width: 46px; height: 46px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; background: var(--input-bg);
+  border: 1px solid var(--line-soft); box-shadow: inset 0 1px 3px #00000033;
+}
+.imbue-slot-img { width: 38px; height: 38px; image-rendering: pixelated; }
+.imbue-slot-empty { color: var(--ink-faint); font-size: 22px; }
+.imbue-slot-info { min-width: 0; }
+.imbue-slot-name { font-weight: 800; color: var(--ink); font-size: 14px; }
+.imbue-active { font-size: 12.5px; margin-top: 3px; }
+.imbue-active.on { color: var(--gold-soft); font-weight: 700; }
+.imbue-active.muted { color: var(--ink-faint); }
+.imbue-hint { font-size: 12px; }
+.imbue-list { display: flex; flex-direction: column; gap: 9px; max-height: 46vh; overflow-y: auto; padding-right: 2px; }
+.imbue-row {
+  padding: 10px 12px; border-radius: 10px;
+  background: var(--surface-1); border: 1px solid var(--line-soft);
+  box-shadow: 0 1px 3px #00000022;
+}
+.imbue-row-main { display: flex; align-items: center; gap: 9px; }
+.imbue-gem { font-size: 1.4rem; flex: none; }
+.imbue-row-txt { min-width: 0; flex: 1; }
+.imbue-row-txt b { color: var(--ink); display: block; }
+.imbue-row-txt small { color: var(--ink-soft); }
+.imbue-dur { font-size: 11.5px; color: var(--ink-faint); flex: none; white-space: nowrap; }
+.imbue-mats { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.imbue-mat {
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 7px 3px 4px; border-radius: 7px;
+  background: var(--input-bg); border: 1px solid var(--line-soft);
+  font-size: 11.5px; font-weight: 700;
+}
+.imbue-mat-img { width: 22px; height: 22px; image-rendering: pixelated; flex: none; }
+.imbue-mat-count { font-variant-numeric: tabular-nums; }
+.imbue-mat.ok .imbue-mat-count { color: var(--green-badge, #2e8b57); }
+.imbue-mat.lack { border-color: #c0392b66; }
+.imbue-mat.lack .imbue-mat-count { color: var(--red-hot); }
+.imbue-row-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.imbue-gold { font-weight: 800; color: var(--ink); display: inline-flex; align-items: center; gap: 5px; }
+.imbue-btn {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  border: 1px solid var(--gold-soft); color: #241a06;
+  padding: 6px 18px; border-radius: 7px; cursor: pointer; font-weight: 800;
+}
+.imbue-btn:hover:not(:disabled) { filter: brightness(1.06); }
 .imbue-btn:disabled { opacity: .4; cursor: not-allowed; }
 
 /* ============ MODAL DE BATALHA ============ */

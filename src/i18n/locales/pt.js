@@ -1000,6 +1000,7 @@ export default {
   'imbue.expired': 'expirado',
   'imbue.activeOn': 'Ativo na arma:',
   'imbue.noneActive': 'Nenhum imbuement ativo na arma.',
+  'imbue.noWeapon': 'Nenhuma arma equipada',
   'imbue.apply': 'Aplicar',
   'imbue.title': 'Imbuements',
   'imbue.hint': 'Aplicar troca o imbuement atual da arma. Trocar de arma perde o imbuement.',

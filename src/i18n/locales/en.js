@@ -999,6 +999,7 @@ export default {
   'imbue.expired': 'expired',
   'imbue.activeOn': 'Active on weapon:',
   'imbue.noneActive': 'No imbuement active on the weapon.',
+  'imbue.noWeapon': 'No weapon equipped',
   'imbue.apply': 'Apply',
   'imbue.title': 'Imbuements',
   'imbue.hint': "Applying replaces the weapon's current imbuement. Switching weapons loses the imbuement.",
