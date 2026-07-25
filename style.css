@@ -1291,6 +1291,34 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   .loot-pop { animation-duration: 0.8s; }
 }
 
+/* Estado PARADO do palco: escurece de leve e mostra um CTA pulsante pra retomar
+   (ver huntPanel.js: updateSceneMode). O palco congelava sem vida, parecia travado. */
+#dungeon-stage.scene-stopped::before {
+  content: ''; position: absolute; inset: 0; z-index: 14;
+  background: rgba(8, 10, 18, 0.5); pointer-events: none;
+}
+.scene-stopped-cta {
+  position: absolute; inset: 0; z-index: 15;
+  display: flex; align-items: center; justify-content: center; pointer-events: none;
+}
+.scene-resume-btn {
+  pointer-events: auto;
+  padding: 12px 26px; font-size: 1.05rem; font-weight: 800; letter-spacing: 0.3px;
+  color: #1a1207; cursor: pointer;
+  background: linear-gradient(180deg, #ffe08a, #e0a52e);
+  border: 1px solid #b8811f; border-radius: 10px;
+  box-shadow: 0 4px 14px #000a, 0 0 18px #ffb43c66;
+  animation: resume-pulse 1.8s ease-in-out infinite;
+}
+.scene-resume-btn:hover { filter: brightness(1.08); }
+@keyframes resume-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 14px #000a, 0 0 14px #ffb43c55; }
+  50%      { transform: scale(1.05); box-shadow: 0 4px 18px #000c, 0 0 26px #ffb43c99; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-resume-btn { animation: none; }
+}
+
 /* ---- efeito de cura (o "brilho verde" clássico do Tibia ao curar) ---- */
 .player-sprite-wrap.healing::after {
   content: '';

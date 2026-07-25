@@ -22,6 +22,7 @@ export default {
   'hunt.chooseZone': 'Choose a hunting ground…',
   'hunt.switchHunt': 'Switch Hunt',
   'hunt.stopToSwitch': 'Stop hunting to switch grounds',
+  'hunt.resumeCta': 'Resume hunt',
   'hunt.viewBattle': 'View Battle',
   'hunt.recentLoot': 'Recent Loot',
   'hunt.blessings': 'Blessings',

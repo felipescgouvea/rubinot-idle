@@ -23,6 +23,7 @@ export default {
   'hunt.chooseZone': 'Escolher zona de caça…',
   'hunt.switchHunt': 'Trocar de Hunt',
   'hunt.stopToSwitch': 'Pare a caçada pra trocar de zona',
+  'hunt.resumeCta': 'Retomar caçada',
   'hunt.viewBattle': 'Ver Batalha',
   'hunt.recentLoot': 'Loot Recente',
   'hunt.blessings': 'Bênçãos',
