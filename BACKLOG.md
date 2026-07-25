@@ -24,6 +24,16 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) + revisar contraste dark geral (voc name, muted)
 - [x] **Cor do painel lateral (sidebar)**: navy mais profundo/premium (escuro + brilho dourado no topo) — `511df44a`
 - [x] **Ícones dos custos de Imbuement**: gema-emoji → sprite real do Tibia (1ª fonte astral); fontes astrais já eram sprites reais (verificado no DOM) — `7c2a2a28`
+- [ ] **Cores ruins nos botões da Loja** (Premium/Rubini Store/Equipamentos/Artigos Mágicos): cada card com cor destoante/berrante, sem harmonia — retrabalhar a paleta — (screenshot anexada, salvar manualmente)
+- [ ] **Loja Premium**: remover o texto "(Dinheiro Real)" do botão — (screenshot anexada, salvar manualmente)
+- [ ] **Sprites cortadas ainda** em alguns monstros (ex.: Valkyrie e Smuggler Baron Silvertoe nos cards de Boss Zone) — cabeça/corpo saindo do frame — (screenshot anexada, salvar manualmente)
+- [ ] **(auditoria design 07-25) Abas "leves" com viewport vazio**: Worlds/Highscores/Market/Shop deixam ~40% inferior da tela como gradiente azul morto — parece inacabado; preencher/centralizar melhor
+- [ ] **(auditoria design 07-25) Letterbox do palco de batalha**: tarjas pretas grossas em cima/embaixo, área jogável pequena e sprites minúsculos — aproveitar melhor o frame
+- [ ] **(auditoria design 07-25) Mais "juice" no combate**: dano flutuante, pop de loot, flash de level-up — hoje o feedback vive só num log de texto plano (núcleo do jogo silencioso demais visualmente)
+- [ ] **(auditoria design 07-25) Estado "parado" = tela morta**: com hunt Stopped o palco congela sem vida — dar estado de repouso animado / CTA visual forte pra retomar
+- [ ] **(auditoria design 07-25) Diferenciar HP/MP/XP no rail**: barras verde/azul/dourado parecidas e minúsculas — num relance não dá pra distinguir vida de experiência
+- [ ] **(auditoria design 07-25) Trocar emojis de SO por sprites do tema**: Worlds usa emoji do sistema (arco-íris/sol/espiral/sparkles) e Battle Pass usa ⭐ — destoa do pixel-art autêntico do resto
+- [ ] **(auditoria design 07-25) Padronizar formatação de número**: convive "330631/485200 XP" (cru) com "330.6K · 68%" na mesma tela — escolher um padrão abreviado consistente
 
 **Funcional / UX**
 - [x] **Página dedicada de Imbuements** (aba própria, máquina de imbuing do Tibia): seletor de item equipado (arma/elmo/armadura) + imbuements por slot. 5 imbuements novos de proteção (elmo/armadura via `computePlayerAbsorb`), server aplica por slot. VERIFICADO no browser. — `3e19d100`/`d858912c`
@@ -34,6 +44,25 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] Paladino — **flecha fantasma** (BUG) · 🔎 **ROOT-CAUSE achado** (07-25): não é paladino-específico — **toda magia/runa com projétil próprio** dispara o missile no cast (`huntUseCases.js:1234`/`1248`) **e** o `applyServerPack` dispara uma flecha básica **adicional** a partir da mesma queda de HP (`:675`), porque casts com missile não deixam marca pro reconciliador saber que o projétil daquele dano já voou. No paladino a flecha é distinta → o double salta aos olhos ("2ª flecha"). **Fix desenhado:** estender `pendingSpellFx` com flag `hasProjectile` nos dois ramos de missile; em `applyServerPack`, quando a queda de HP é atribuída a esse cast, **suprimir a flecha básica** (mantendo dano/queda de vida). ⚠️ mexe na sincronia HP↔projétil (dois relógios) que já causou vários bugs aqui — **NÃO deployar cego**: precisa de ciclo de verificação visual no browser (regra do projeto). Bloqueado só por isso.
 - [x] **Imbuements**: janela recriada fiel ao shrine do Tibia (item no slot, fontes astrais em sprite, tema) — `4186835a`
 - [x] **Market recriado do zero** fiel ao Tibia: navegador de itens (busca + sprite) + detalhe com ofertas venda/compra + criar oferta, sem `<select>` nativo — `cedb8c18`
+- [ ] **Boss Zone com bosses REAIS, não monstros "promovidos" a boss** (CANON): cada zona de boss tem que usar o boss canônico do Tibia daquela criatura — ex.: **Rotworm Queen** é o boss dos rotworms, não um rotworm com stats inflados. **Rever TODOS os bosses** (nome/sprite/stats/loot do boss real, fonte Crystal/TibiaWiki)
+- [ ] **(auditoria design 07-25) Toasts de eventos importantes**: subiu de nível / dropou item raro / task concluída / charm desbloqueado — hoje tudo vira uma linha no log que passa batido; precisa de destaque
+- [ ] **(auditoria design 07-25) Rotular/clarificar os 3 botões de ação do rail** (Outfit + dois ícones-mistério): sem label a afordância é nula, ninguém sabe o que fazem
+
+---
+
+## 🐛 Loop "procure e ajuste bugs" (07-25) — corrigidos e deployados
+
+- [x] **Monstros de endgame com `atk` placeholder gigante = INSTAKILL** (BUG severo). O `atk` do jogo é o dano melee MÁX (`normalRandom(0,atk)`); ~350 monstros de tier alto (Soul War / Podzilla / Darklight / Rotten Blood) tinham `atk` **85106–273171** (3–8× o próprio HP) → melee de ~100k = morte instantânea, zonas/task-rooms #85–94 injogáveis. **Fix (nada inventado):** `scripts/audit-monster-atk.mjs` casa cada monstro ao seu `.lua` no `reference/crystalserver` e extrai o `maxDamage` do ataque `"melee"` real. **224 monstros corrigidos da fonte** (ex.: branchy_crawler 85106→950, oozing_carcass 181934→600, darklight_matter 266009→1100, bakragore→3000, casters→0). Guard novo pra não regredir.
+  - ⏳ **Restam 128** com `atk>3000`: **85 custom/evento** (não existem no Crystal — `*_creature`, `timedisplaced_anomaly_*`, `community_handler_*`, `feroxa_killable_werewolf`…) + **41 melee skill-based** (`.lua` define melee por skill/attack, não `maxDamage`). Precisam de sourcing/decisão manual — não instakillam tão óbvio, mas continuam altos. `node scripts/audit-monster-atk.mjs` lista.
+  - 📌 Gap de conteúdo relacionado: 350/351 desses monstros **não têm `spells`** no jogo (só melee) — perderam as magias elementais do Tibia. Follow-up: importar os `combat`/spells dos `.lua` (parte da auditoria-valores-monstros).
+- [x] **Arena "melhor de 2" quebrada** (BUG) — vencer o round 2 depois de perder o 1 dava 1-1 e `won = wins>losses` caía como **derrota** (round 2 era decorativo); e 2 rounds sem KO (0-0) também contava derrota. **Fix:** virou **melhor de 3** (1º a 2 rounds), round sem KO em 30 ticks decide por % de vida restante → nenhum empate, resultado sempre decisivo (2-0/2-1 vitória, 0-2/1-2 derrota). Verificado com sim de 100k (winrate 49.8% em odds 50/50, zero estados inválidos). `arenaUseCases.js`.
+- [x] **Task: recompensa concedida 2× num tick multi-kill** (BUG) — `MONSTER_KILLED` dispara em loop síncrono; `checkTaskProgress` (async) suspendia no `await` com `activeTask` ainda setado → 2ª entrada reconclui. XP/gold/inv voltam no reconcile, mas **taskCoins NÃO** (fora de `ECONOMY_FIELDS`) → dobravam de vez. **Fix:** guard de reentrância `completingTask`. `taskUseCases.js`.
+
+**Achados do bug-hunt entregues a outra frente (não encostar aqui — servidor/economia):**
+- [ ] **#1 Recompensa de task (xp/gold/item) só concedida no cliente** e sobrescrita pelo próximo reconcile → perda. O header do `taskUseCases.js` trata isso como escolha de design ("auto-mitigada pelo reconcile"), mas se o servidor não concede no `/task/complete`, o reward some. **Sessão de economia decide** (server-authoritative).
+- [ ] **#3 Boosts comprados no meio da caça não valem** até parar/reiniciar (snapshot de hunt-start; `boosts` nunca é reenviado). Já mapeado em `exploit-buffs-client-authoritative` (server).
+- [ ] **#5 `KILL_COUNTERS` emitido sem listener** (`huntUseCases.js:824`) — progresso de bestiário/charm não atualiza ao vivo, só ao reabrir a aba. Cosmético. (não toquei: precisa definir o refresh certo do painel)
+- [ ] **#6 Level-up "fantasma" durante reward de task** — `gainXp` sobe level local + modal de graduação + heal, e o reconcile de-leva de volta. Deriva do #1.
 
 ---
 
@@ -114,13 +143,13 @@ Boss Rush tier, skill grind e bestiário são infinitos mas mal recompensados (s
 
 ## P3 — Quick wins (baixo risco, dá pra batelar já)
 
-- **[perf] Battle list re-renderiza 2× por evento de combate** — `huntPanel.js:688` (MONSTER_DISPLAY) e `:696` (BATTLE_LIST) ambos chamam `renderBattleList()`, e o combate emite os dois eventos juntos. Tirar a chamada do handler de MONSTER_DISPLAY. **Bug real de perf no hot path.** · S
+- [x] ~~**[perf] Battle list re-renderiza 2× por evento de combate**~~ — ✅ **JÁ RESOLVIDO**: `renderBattleList()` (`huntPanel.js:435`) coalesce via `requestAnimationFrame` + guard `_battleListScheduled`, então 2 chamadas = 1 render/frame. Backlog estava desatualizado.
 - **[a11y] Foco de teclado invisível** — só 3 regras `:focus` em 3252 linhas; `:711` faz `outline:none` em inputs. Adicionar `:focus-visible { outline: 2px solid var(--gold-bright); }` global. · S
 - **[a11y/perf] Sprites sem `loading`/`decoding`/`alt`** — `tibiaSprites.js:149`. Adicionar `loading="lazy" decoding="async" alt`. Corta network do first-paint em shop/bestiário/market. · S
 - **[a11y] Reduced-motion abrangente** — 31 keyframes, só 9 regras cobrindo ~6 elementos. Catch-all `@media (prefers-reduced-motion: reduce)`. · S
 - **[robustez] `window.onunhandledrejection`** — hoje só captura falha de module-load. Cloud-save/atlas/realtime falham em silêncio. · S
 - **[i18n] Sobras de PT num jogo default-EN** — log de boas-vindas (`main.js:197` "Bem-vindo…"), "Missões Semanais" (`index.html:455`), intro do Spells (`index.html:340-342`), seção buy do market (`marketPanel.js:63-80`). Rotear por `t()`. *(Market é da outra sessão — coordenar.)* · S
-- **[correção] Comentário mentiroso** — `bestiary.js:2649` diz que criaturas escalam com nível; `combatFormulas.js:440` explicitamente NÃO escala. Corrigir o comentário. · S
+- [x] ~~**[correção] Comentário mentiroso** — `bestiary.js:2649`~~ — ✅ **JÁ RESOLVIDO**: o comentário agora diz corretamente que as criaturas NÃO escalam com o nível (bate com `combatFormulas.js`).
 - **[UX] Busca no market e no bestiário** — market despeja *todo* item vendável num `<select>` (`marketPanel.js:152`); bestiário lista tudo sem filtro. Typeahead + filtro "perto do próximo charm point". · S–M
 - **[CI] Enforçar os guards no deploy** — `check-import-versions.mjs` + `check-imports-faltando.mjs` só rodam se alguém lembrar. Wire num pre-push hook ou GH Action. · S
 

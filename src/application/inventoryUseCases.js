@@ -1,17 +1,17 @@
-import { G, ACCOUNT } from './gameStore.js?v=293';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=301';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=304';
-import { RARITY_TIERS } from '../domain/rarity.js?v=290';
-import { emit, EVENTS } from '../shared/eventBus.js?v=291';
-import { getMagic } from './stats.js?v=290';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=323';
-import { getCurrentMonster } from './huntUseCases.js?v=357';
-import { areaName } from '../domain/attackAreas.js?v=289';
-import { saveGame } from './saveGameUseCase.js?v=293';
-import { itemLogIcon } from './logIcons.js?v=292';
-import { t } from '../i18n/i18n.js?v=309';
+import { G, ACCOUNT } from './gameStore.js?v=294';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=302';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=305';
+import { RARITY_TIERS } from '../domain/rarity.js?v=291';
+import { emit, EVENTS } from '../shared/eventBus.js?v=292';
+import { getMagic } from './stats.js?v=291';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=324';
+import { getCurrentMonster } from './huntUseCases.js?v=358';
+import { areaName } from '../domain/attackAreas.js?v=290';
+import { saveGame } from './saveGameUseCase.js?v=294';
+import { itemLogIcon } from './logIcons.js?v=293';
+import { t } from '../i18n/i18n.js?v=310';
 
-export { addItemToInventory } from './inventoryCore.js?v=291';
+export { addItemToInventory } from './inventoryCore.js?v=292';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -219,6 +219,12 @@ export async function useItem(itemId) {
     emit(EVENTS.NOTIFY, { msg: t('inventory.useBlocked', { item: item.name, reason: res.error || '' }), type: 'error' });
     return;
   }
+  // O servidor consumiu 1 unidade (useItemInSession: changeSessionInv -1, tanto
+  // poção quanto runa). Espelha no inventário local — senão a contagem na Bag
+  // fica velha até o próximo reconcile de hunt. Crítico no uso PARADO (fora de
+  // caçada não há poll que corrija), igual performIdleRtcHeal já faz.
+  G.inventory[itemId] = Math.max(0, (G.inventory[itemId] || 0) - 1);
+  if (G.inventory[itemId] === 0) delete G.inventory[itemId];
 
   // Feedback cosmético com os números REAIS que o servidor devolveu — gold/
   // xp/loot/relíquia de uma eventual morte já foram creditados lá dentro

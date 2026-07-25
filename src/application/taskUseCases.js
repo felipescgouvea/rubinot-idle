@@ -10,17 +10,17 @@
 // matar nada. A concessão da recompensa em si (grantRewards) continua local
 // — já é auto-mitigada pelo reconcile de gold/xp/inventário de qualquer
 // forma, então não precisa duplicar toda a lógica de reward no servidor.
-import { G, ACCOUNT } from './gameStore.js?v=293';
-import { MONSTERS } from '../domain/bestiary.js?v=311';
-import { ITEMS } from '../domain/items.js?v=304';
-import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=292';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=291';
-import { gainXp } from './huntUseCases.js?v=357';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=290';
-import { addItemToInventory } from './inventoryCore.js?v=291';
-import { saveGame } from './saveGameUseCase.js?v=293';
-import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=301';
-import { t } from '../i18n/i18n.js?v=309';
+import { G, ACCOUNT } from './gameStore.js?v=294';
+import { MONSTERS } from '../domain/bestiary.js?v=312';
+import { ITEMS } from '../domain/items.js?v=305';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=293';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=292';
+import { gainXp } from './huntUseCases.js?v=358';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=291';
+import { addItemToInventory } from './inventoryCore.js?v=292';
+import { saveGame } from './saveGameUseCase.js?v=294';
+import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=302';
+import { t } from '../i18n/i18n.js?v=310';
 
 // Busca o mapa real de conclusões do servidor e espelha em G — chamado no
 // boot, pra nunca depender de um valor que só existia no save local/na nuvem
@@ -94,13 +94,22 @@ function grantRewards(rewards) {
   return parts.join(', ');
 }
 
+// Reentrância: um tick que mata ≥2 monstros da task emite MONSTER_KILLED em loop
+// síncrono; como checkTaskProgress é async e suspende no await de conclusão (com
+// G.activeTask AINDA setado), a 2ª entrada passava de novo pelo gate e concedia a
+// recompensa 2x — os taskCoins dobravam de vez (não são revertidos pelo reconcile).
+// Este guard fecha a porta enquanto uma conclusão está em voo.
+let completingTask = false;
+
 async function checkTaskProgress() {
-  if (!G.activeTask) return;
+  if (!G.activeTask || completingTask) return;
   const { roomId, taskIndex, key, required } = G.activeTask;
   const kills = G.taskKills[key] || 0;
-  if (kills >= required) {
-    const found = findTask(roomId, taskIndex);
-    if (!found) { G.activeTask = null; return; }
+  if (kills < required) { emit(EVENTS.ACTIVE_TASK); return; }
+  const found = findTask(roomId, taskIndex);
+  if (!found) { G.activeTask = null; emit(EVENTS.ACTIVE_TASK); return; }
+  completingTask = true;
+  try {
     const { task } = found;
     const firstTime = (G.taskCompletion[key] || 0) === 0;
     // Servidor valida mortes reais (player_bestiary) e o gate de desbloqueio
@@ -125,6 +134,8 @@ async function checkTaskProgress() {
     emit(EVENTS.TASKS_PANEL);
     emit(EVENTS.HEADER_STATS);
     saveGame();
+  } finally {
+    completingTask = false;
   }
   emit(EVENTS.ACTIVE_TASK);
 }

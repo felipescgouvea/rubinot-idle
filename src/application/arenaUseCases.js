@@ -4,18 +4,18 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=293';
-import { emit, EVENTS } from '../shared/eventBus.js?v=291';
-import { getMagic, getMaxHp } from './stats.js?v=290';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=322';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=290';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=292';
-import { grantReward } from './rewardGrants.js?v=130';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=290';
-import { addItemToInventory } from './inventoryCore.js?v=291';
-import { ITEMS } from '../domain/items.js?v=304';
-import { saveGame } from './saveGameUseCase.js?v=293';
-import { t } from '../i18n/i18n.js?v=309';
+import { G } from './gameStore.js?v=294';
+import { emit, EVENTS } from '../shared/eventBus.js?v=292';
+import { getMagic, getMaxHp } from './stats.js?v=291';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=323';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=291';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=293';
+import { grantReward } from './rewardGrants.js?v=131';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=291';
+import { addItemToInventory } from './inventoryCore.js?v=292';
+import { ITEMS } from '../domain/items.js?v=305';
+import { saveGame } from './saveGameUseCase.js?v=294';
+import { t } from '../i18n/i18n.js?v=310';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
@@ -97,11 +97,17 @@ export async function startArenaBattle() {
   const escNome = String(enemyName).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const log = [`<span style="color:var(--arcane)">⚔️ ${t('arena.logVs', { enemy: escNome })}${realTag}</span>`];
 
-  // Simulate best-of-2
+  // Melhor de 3: quem levar 2 rounds ganha a série (para assim que alguém
+  // "fecha" em 2, então vai de 2 a 3 rounds). Um round que estoura os 30 ticks
+  // sem KO é decidido por quem sobrou com maior % de vida — assim NENHUM round
+  // fica empatado e o resultado da série é sempre decisivo (2-0/2-1 vitória,
+  // 0-2/1-2 derrota). Antes era "melhor de 2" com um bug: vencer o round 2
+  // depois de perder o 1 dava 1-1 e caía como derrota (round 2 não valia nada).
   let wins = 0, losses = 0;
-  for (let round = 1; round <= 2; round++) {
+  for (let round = 1; round <= 3 && wins < 2 && losses < 2; round++) {
     let playerHp = getMaxHp(), eHp = enemyHp;
     log.push(`<span style="color:var(--muted)">${t('arena.roundHeader', { round })}</span>`);
+    let resolved = false;
     for (let tick = 0; tick < 30; tick++) {
       // jogador bate: golpe real de arma (+ magia elemental se mago); físico
       // reduzido pela armadura/defesa do oponente, elemental (mago) passa direto.
@@ -112,11 +118,16 @@ export async function startArenaBattle() {
       // oponente bate: normal_random(0, maxHit) reduzido pela armadura+defesa do jogador.
       const ed = Math.max(1, Math.floor(reducePhysical(normalRandom(0, enemyMaxHit), pArmor, pDef)));
       eHp -= pd; playerHp -= ed;
-      if (eHp <= 0) { log.push(`<span class="log-heal">✅ ${t('arena.roundWon', { round })}</span>`); wins++; break; }
-      if (playerHp <= 0) { log.push(`<span class="log-dmg">❌ ${t('arena.roundLost', { round })}</span>`); losses++; break; }
+      if (eHp <= 0) { log.push(`<span class="log-heal">✅ ${t('arena.roundWon', { round })}</span>`); wins++; resolved = true; break; }
+      if (playerHp <= 0) { log.push(`<span class="log-dmg">❌ ${t('arena.roundLost', { round })}</span>`); losses++; resolved = true; break; }
     }
-    if (wins > losses && round === 1) { log.push(`<span style="color:var(--muted)">${t('arena.roundsEnd')}</span>`); break; }
+    // Sem KO em 30 ticks: decide pelo maior % de vida restante (sem empate).
+    if (!resolved) {
+      if (playerHp / getMaxHp() >= eHp / enemyHp) { log.push(`<span class="log-heal">✅ ${t('arena.roundWon', { round })}</span>`); wins++; }
+      else { log.push(`<span class="log-dmg">❌ ${t('arena.roundLost', { round })}</span>`); losses++; }
+    }
   }
+  log.push(`<span style="color:var(--muted)">${t('arena.roundsEnd')}</span>`);
 
   const won = wins > losses;
   const ptsDelta = won ? Math.floor(15 + Math.random() * 10) : -Math.floor(8 + Math.random() * 7);
