@@ -3459,6 +3459,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
 
 .mk-browser { display: flex; flex-direction: column; gap: 8px; }
 .mk-search { width: 100%; }
+.bestiary-search { margin: 6px 0 12px; }
 .mk-browse-list {
   display: flex; flex-direction: column; gap: 2px;
   max-height: 52vh; overflow-y: auto;

@@ -4,23 +4,23 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=295';
-import { MONSTERS } from '../domain/bestiary.js?v=314';
+import { G } from '../application/gameStore.js?v=296';
+import { MONSTERS } from '../domain/bestiary.js?v=315';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
-} from '../domain/prey.js?v=291';
+} from '../domain/prey.js?v=292';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=292';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=291';
-import { on, EVENTS } from '../shared/eventBus.js?v=293';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=298';
-import { monsterSpriteImg } from './huntPanel.js?v=312';
-import { uiIcon } from './uiIcons.js?v=296';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=294';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=294';
-import { t } from '../i18n/i18n.js?v=311';
+} from '../domain/charms.js?v=293';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=292';
+import { on, EVENTS } from '../shared/eventBus.js?v=294';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=299';
+import { monsterSpriteImg } from './huntPanel.js?v=313';
+import { uiIcon } from './uiIcons.js?v=297';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=295';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=295';
+import { t } from '../i18n/i18n.js?v=312';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -103,11 +103,21 @@ export function pickPrey(slotIndex, monsterId) {
 }
 
 // ---------- Bestiário ----------
+let bestiarySearch = ''; // filtro por nome (input estático no index.html, não perde foco)
+
+// Chamado pelo oninput do #bestiary-search — re-renderiza só a lista.
+export function bestiarySearchInput(v) {
+  bestiarySearch = v;
+  renderBestiarySection();
+}
+
 function renderBestiarySection() {
   const el = document.getElementById('bestiary-list');
   if (!el) return;
-  const mons = encounteredMonsters().sort((a, b) => (G.killCounters[b] || 0) - (G.killCounters[a] || 0));
-  if (!mons.length) { el.innerHTML = `<p class="muted">${t('bestiary.huntToFill')}</p>`; return; }
+  let mons = encounteredMonsters().sort((a, b) => (G.killCounters[b] || 0) - (G.killCounters[a] || 0));
+  const q = bestiarySearch.trim().toLowerCase();
+  if (q) mons = mons.filter(id => (MONSTERS[id] && MONSTERS[id].name || '').toLowerCase().includes(q));
+  if (!mons.length) { el.innerHTML = `<p class="muted">${q ? t('bestiary.noMatch') : t('bestiary.huntToFill')}</p>`; return; }
   el.innerHTML = mons.map(id => {
     const kills = G.killCounters[id] || 0;
     const done = bestiaryStagesCompleted(kills);

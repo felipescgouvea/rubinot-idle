@@ -503,6 +503,8 @@ export default {
   'bestiary.choosePreySlot': 'Escolher Presa — Slot {n}',
   'bestiary.preyPickHint': 'O bônus (dano, XP ou loot) e a intensidade (★) são sorteados ao travar a presa, válidos por 2h.',
   'bestiary.huntToFill': 'Cace criaturas para preencher seu bestiário e ganhar Charm Points.',
+  'bestiary.searchCreature': 'Buscar criatura',
+  'bestiary.noMatch': 'Nenhuma criatura corresponde à busca.',
   'bestiary.weak': 'Fraco:',
   'bestiary.resist': 'Resiste:',
   'bestiary.immune': 'Imune:',

@@ -502,6 +502,8 @@ export default {
   'bestiary.choosePreySlot': 'Choose Prey — Slot {n}',
   'bestiary.preyPickHint': 'The bonus (damage, XP, or loot) and its intensity (★) are rolled when you lock in the prey, valid for 2h.',
   'bestiary.huntToFill': 'Hunt creatures to fill your bestiary and earn Charm Points.',
+  'bestiary.searchCreature': 'Search creature',
+  'bestiary.noMatch': 'No creature matches your search.',
   'bestiary.weak': 'Weak:',
   'bestiary.resist': 'Resist:',
   'bestiary.immune': 'Immune:',
