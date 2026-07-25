@@ -144,8 +144,13 @@ SPRITELESS_ITEMS.forEach(id => {
 // pro emoji. Senão, tenta a imagem real e registra a falha (pro futuro) se
 // ela quebrar. `cls` vai tanto na <img> (+ "tibia-icon") quanto no <span>.
 export function spriteImgOrFallback(url, alt, emoji, cls = '') {
+  // decoding=async é seguro; loading=lazy NÃO: o mesmo helper monta o sprite da
+  // criatura no palco de batalha (criado dinamicamente e animado), e o lazy
+  // adiava o carregamento de quem não estava "no viewport" na hora — a criatura
+  // aparecia só com a barra de vida e sem sprite. Grid de shop/bestiário perde um
+  // ganho pequeno; o combate não pode perder o sprite.
   if (isSpriteFailed(url)) return `<span class="${cls}">${emoji}</span>`;
-  return `<img src="${url}" alt="${alt}" class="${cls} tibia-icon" loading="lazy" decoding="async"
+  return `<img src="${url}" alt="${alt}" class="${cls} tibia-icon" decoding="async"
     onerror="window.__markSpriteFailed && window.__markSpriteFailed('${url}'); this.outerHTML='<span class=&quot;${cls}&quot;>${emoji}</span>'" />`;
 }
 

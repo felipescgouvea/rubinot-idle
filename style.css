@@ -64,6 +64,11 @@
    não piscar tema errado no load. */
 :root[data-theme="dark"] {
   color-scheme: dark;
+  /* navy é usado em texto "frio" (recursos do rail, rótulos, nome da vocação).
+     Não era invertido no escuro → texto navy-escuro sobre fundo escuro, quase
+     ilegível. No escuro vira azul claro legível. */
+  --navy-1: #7fb0e6;
+  --navy-2: #a9c8ee;
   --ink: #e9dcc4;
   --ink-soft: #c6b493;
   --ink-faint: #9a8760;
@@ -2763,8 +2768,8 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 #boosted-card .boosted-body { display: flex; flex-direction: row; gap: 6px; margin: 4px 6px !important; }
 #boosted-card .boosted-item { padding: 3px 5px; border-width: 1px; }
 #boosted-card .boosted-label { font-size: 6.5px; }
-#boosted-card .boosted-sprite { height: 26px; margin: 1px 0; }
-#boosted-card .boosted-sprite-img { max-height: 24px; max-width: 24px; }
+#boosted-card .boosted-sprite { height: 42px; margin: 2px 0; }
+#boosted-card .boosted-sprite-img { max-height: 40px; max-width: 40px; }
 #boosted-card .boosted-name { font-size: 8px; line-height: 1.05; }
 
 /* Seletor de quantidade na loja (poções/runas): campo numérico + barra de
@@ -2781,7 +2786,7 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
   display: flex; align-items: center; gap: 3px;
   flex: 1; min-width: 0;
   border: 1px solid var(--line-soft); border-radius: 6px;
-  background: #fff; padding: 2px 4px;
+  background: var(--input-bg); padding: 2px 4px;
 }
 .shop-qty-num {
   width: 30px; flex: none; padding: 0;
@@ -2798,7 +2803,7 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 .shop-qty-arrow {
   flex: none; width: 15px; height: 17px; padding: 0;
   border: 1px solid var(--line-soft); border-radius: 3px;
-  background: linear-gradient(180deg, #fff, #e7ddc0);
+  background: linear-gradient(180deg, var(--surface-1), var(--parch-3));
   font-size: 8px; line-height: 1; color: var(--ink);
   cursor: pointer;
 }
@@ -3062,7 +3067,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 .num-stepper {
   display: inline-flex; align-items: center; gap: 2px;
   border: 1px solid var(--line-soft); border-radius: 6px;
-  background: #fff; padding: 1px 2px; vertical-align: middle;
+  background: var(--input-bg); padding: 1px 2px; vertical-align: middle;
 }
 .num-stepper input {
   width: 34px; flex: none; padding: 1px 0;
@@ -3074,7 +3079,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   flex: none; width: 18px; height: 18px; padding: 0;
   display: flex; align-items: center; justify-content: center;
   border: 1px solid var(--line-soft); border-radius: 3px;
-  background: linear-gradient(180deg, #fff, #e7ddc0);
+  background: linear-gradient(180deg, var(--surface-1), var(--parch-3));
   font-size: 12px; font-weight: 700; line-height: 1; color: var(--ink);
   cursor: pointer; user-select: none;
 }
@@ -3291,6 +3296,16 @@ select {
   cursor: pointer;
 }
 select:hover { border-color: var(--gold-soft); }
+
+/* Checkbox/radio nativos: azul do SO destoava do dourado da UI. */
+input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
+
+/* Hovers que usavam #fff opaco (flash branco no tema escuro). Mantém o branco no
+   claro; no escuro vira um realce translúcido suave. */
+:root[data-theme="dark"] .prey-pick:hover,
+:root[data-theme="dark"] .training-skill-btn:hover,
+:root[data-theme="dark"] .training-spell-btn:hover:not(:disabled),
+:root[data-theme="dark"] .log-tab:hover { background: #ffffff1c; }
 
 /* Reduced-motion abrangente: havia várias regras pontuais, mas dano flutuante,
    flashes de spell, voo de projétil e level-up ficavam de fora. Este catch-all
