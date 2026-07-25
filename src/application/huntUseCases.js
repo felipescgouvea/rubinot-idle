@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=284';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=292';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=289';
-import { ZONES } from '../domain/bestiary.js?v=302';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=311';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=282';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=314';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=313';
-import { elementMod } from '../domain/elements.js?v=280';
-import { STAMINA_MAX } from '../domain/stamina.js?v=280';
-import { ITEMS } from '../domain/items.js?v=295';
-import { MONSTERS } from '../domain/bestiary.js?v=302';
-import { RARITY_TIERS } from '../domain/rarity.js?v=281';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=283';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=282';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=281';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=281';
-import { saveGame } from './saveGameUseCase.js?v=284';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=285';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=283';
-import { t } from '../i18n/i18n.js?v=300';
+import { G, ACCOUNT } from './gameStore.js?v=285';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=293';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=290';
+import { ZONES } from '../domain/bestiary.js?v=303';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=312';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=283';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=315';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=314';
+import { elementMod } from '../domain/elements.js?v=281';
+import { STAMINA_MAX } from '../domain/stamina.js?v=281';
+import { ITEMS } from '../domain/items.js?v=296';
+import { MONSTERS } from '../domain/bestiary.js?v=303';
+import { RARITY_TIERS } from '../domain/rarity.js?v=282';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=284';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=283';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=282';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=282';
+import { saveGame } from './saveGameUseCase.js?v=285';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=286';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=284';
+import { t } from '../i18n/i18n.js?v=301';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -482,9 +482,11 @@ function aplicarEstadoDoServidor(res, myEpoch) {
       lastSeenDeathAt = d.at;
       G.lastSeenDeathAt = d.at; // persiste no save (ver checkAndResumeHuntSession) pra não reexibir esta morte num reload futuro
       emit(EVENTS.LOG, t('hunt.logYouDied', { monster: d.monster, xpLost: d.xpLost }));
-      emit(EVENTS.NOTIFY, { msg: t('hunt.notifyYouDied', { monster: d.monster, xpLost: d.xpLost }), type: 'error' });
       saveGame();
       stopHuntLocalOnly(); // morte de verdade → encerra a caçada
+      // Janela de morte estilo Tibia (bloqueante, OK obrigatório) no lugar do
+      // toast — a morte é um evento grande, merece uma pausa explícita.
+      emit(EVENTS.PLAYER_DEATH, { monster: d.monster, xpLost: d.xpLost, level: G.level });
     } else {
       // Sessão sumiu no servidor SEM morte: ele REINICIOU (deploy/reboot) ou
       // houve um blip de rede — não foi o jogador que parou nem morreu. Em vez

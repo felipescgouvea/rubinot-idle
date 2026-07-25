@@ -3326,3 +3326,53 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
     scroll-behavior: auto !important;
   }
 }
+
+/* ===== Janela de MORTE estilo Tibia (ver ui/deathModal.js) =====
+   Overlay bloqueante: cobre tudo, alto z-index, e só o botão OK fecha. Paleta
+   dramática fixa (pedra escura + dourado + acento vermelho), independente do
+   tema — é uma tela de morte, o clima é o mesmo no claro e no escuro. */
+.death-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #3a0d0dcc 0%, #000000ee 75%);
+  backdrop-filter: blur(2px);
+  animation: death-fade 260ms ease-out;
+}
+@keyframes death-fade { from { opacity: 0; } to { opacity: 1; } }
+.death-window {
+  width: min(92vw, 380px);
+  background: linear-gradient(180deg, #241c17, #17110d);
+  border: 2px solid var(--gold, #b8860b);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px #000000cc, inset 0 1px 0 #ffffff1a, 0 0 30px #8b000055;
+  overflow: hidden;
+  animation: death-pop 300ms cubic-bezier(.2, .9, .3, 1.2);
+}
+@keyframes death-pop { from { transform: scale(.82) translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+.death-header {
+  font-family: var(--serif, 'Cinzel', serif); font-weight: 900;
+  text-transform: uppercase; letter-spacing: 2px; text-align: center;
+  font-size: 17px; color: #ffe3d6;
+  padding: 12px 10px;
+  background: linear-gradient(180deg, #7a1a15, #4a0f0c);
+  border-bottom: 1px solid #d4a01766;
+  text-shadow: 0 1px 2px #000, 0 0 12px #ff4d3d55;
+}
+.death-body { display: flex; align-items: center; gap: 14px; padding: 18px 18px 8px; }
+.death-skull { width: 72px; height: 72px; flex: none; image-rendering: pixelated; filter: drop-shadow(0 2px 6px #000) drop-shadow(0 0 10px #ff2a2a66); }
+.death-skull-fallback { font-size: 60px; line-height: 1; flex: none; filter: drop-shadow(0 0 10px #ff2a2a66); }
+.death-lines { text-align: left; color: #e9dcc4; font-size: 13.5px; line-height: 1.5; }
+.death-lines p { margin: 0 0 3px; }
+.death-killed { font-weight: 700; }
+.death-xp { color: #ff9a8a; }
+.death-level { color: var(--gold-bright, #f1c40f); font-weight: 700; }
+.death-ok {
+  display: block; margin: 8px auto 18px; padding: 9px 40px;
+  font-family: var(--serif, 'Cinzel', serif); font-weight: 700; font-size: 15px; letter-spacing: 1px;
+  color: #241a06; cursor: pointer;
+  background: linear-gradient(180deg, #ffe9a3 12%, var(--gold-bright, #f1c40f) 48%, var(--gold, #b8860b) 88%);
+  border: 1px solid #7a5c12; border-radius: 8px;
+  box-shadow: inset 0 1px 0 #ffffff88, 0 3px 8px #000000aa;
+}
+.death-ok:hover { filter: brightness(1.08); }
+.death-ok:active { transform: translateY(1px); }

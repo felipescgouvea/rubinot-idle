@@ -70,6 +70,9 @@ export const EVENTS = {
   // precisa saber que tasks existem, só anuncia "matei uma criatura X")
   MONSTER_KILLED: 'monsterKilled',
   LEVEL_UP: 'levelUp',
+  // Morte do jogador: abre a janela de morte estilo Tibia (OK obrigatório antes
+  // de qualquer ação — ver ui/deathModal.js).
+  PLAYER_DEATH: 'playerDeath',
   // Graduação: o personagem atingiu o nível de sair da ilha inicial e ainda não
   // escolheu a vocação definitiva (ver application/characterUseCases.js:
   // graduate / ui/graduationModal.js).
