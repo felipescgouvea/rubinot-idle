@@ -5,7 +5,7 @@
    borda #3d3225 · navy #1e5799→#164070 · ouro #b8860b · verde #2e7d32
    Fontes do site: Inter (corpo 12px) + Cinzel (títulos)
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;600;700;900&family=Spectral:wght@400;500;600;700&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -48,8 +48,11 @@
   --hp-c: #c0392b;
   --mana-c: #1e5799;
   --xp-c: #d4a017;
-  --serif: 'Cinzel', serif;
-  --body: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Tipografia trocada (pedido do Felipe): saiu Cinzel+Inter, entrou uma direção
+     medieval coesa — Grenze Gotisch (gótico, títulos/nomes) + Spectral (serifada
+     legível, corpo/UI/números). Os ícones do Tibia são sprites, não fonte: intactos. */
+  --serif: 'Grenze Gotisch', 'Cinzel', serif;
+  --body: 'Spectral', Georgia, 'Times New Roman', serif;
   /* aliases usados em estilos inline do game.js */
   --muted: #8a6f4d;
   --arcane: #8e44ad;
