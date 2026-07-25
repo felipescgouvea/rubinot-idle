@@ -9,7 +9,7 @@ $ARGUMENTS
 
 ## Passos
 
-1. **Se houver uma ou mais imagens anexadas nesta mensagem** (screenshot colada junto com o `/r`):
+1. **Se houver uma ou mais imagens anexadas nesta mensagem** (screenshot colada junto com o `/req`):
    - Gere um slug curto do report (kebab-case, sem acento, ~4 palavras) e um timestamp com:
      `date +%Y%m%d-%H%M%S`
    - Salve CADA imagem em `docs/reports/screenshots/<timestamp>-<slug>.png` (use `-N` no fim se houver mais de uma: `-1`, `-2`, ...).
