@@ -125,7 +125,7 @@ Level 8 libera ~90 zonas de 20 cidades de uma vez (`cities.js:66`), sem `reqLeve
 - **Level-up passa quase mudo** (só toast + log) — o beat de dopamina nº1 do RPG merece burst na tela + "HP/MP restaurados". Combate já é juicy; a meta-progressão não.
 - **Zero badge nas 15 abas** (só Daily tem "!"). Tier de BP resgatável, task completa, charm agora acessível, promoção disponível — tudo invisível até abrir a aba. Adicionar badge de "resgatável".
 - **Boosted-of-the-day sem CTA**: card mostra a criatura 2× XP mas não leva pra zona dela. Fazer clicar → zone picker filtrado.
-- **Título da aba do browser** ("(1) Rubinot Idle") quando há algo pra resgatar — gancho de re-engajamento mais barato sem push.
+- [x] **Título da aba do browser** ("(N) Rubinot Idle") quando há algo pra resgatar — gancho de re-engajamento mais barato sem push. ✅ FEITO + VERIFICADO em prod (`e0727efa`): `notifyTitle.js` conta categorias resgatáveis (diária/task pronta/tier-missão de BP); cada subsistema reporta seu flag de onde já calcula o booleano (zero falso-positivo); avaliado no boot pelo estado salvo. Probe: base "Rubinot Idle" → (1) → (2) → limpo, 0 erros de boot.
 
 ---
 
