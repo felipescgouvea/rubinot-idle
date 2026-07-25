@@ -20,7 +20,7 @@ A resposta canônica do Tibia/Crystal para os dois é a mesma: **subir o teto + 
 
 ## P0 — Estratégico (define a próxima fase; escolher 1–2 pra encampar)
 
-### P0.1 — Subir/remover o cap de level 100 · S (código) · `[server]` `[CANON]`
+### P0.1 — Subir/remover o cap de level 100 · S (código) · `[server]` `[CANON]` · ✅ FEITO (cap 2000, deploy 07-25)
 `tibiaTotalExp(level)` já produz valores corretos pra qualquer nível. Estender `XP_TABLE` (ex.: 500) e tirar o clamp `< 100` do loop de level-up e do loop de de-level na morte (`huntEngine.js:445,830`; `character.js:175`). **Maior alavanca do backlog por custo:** restaura curva canônica infinita, dessatura o leaderboard, e transforma o excesso de XP de task (P2.6) numa cauda longa saudável em vez de um desbalanceamento.
 
 ### P0.2 — Wheel of Destiny · L · `[server]`
