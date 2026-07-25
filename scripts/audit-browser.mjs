@@ -114,16 +114,27 @@ try {
   // num sorcerer, setRtcAttackSpellSlot ignora silenciosamente (isSpellAvailable
   // falha) e a magia nunca casta — o que dava um falso "spell não logou". buzz
   // (sorc) e mud_attack (druid) compartilham as words-chave que o probe procura.
-  const atk = await page.evaluate(() => {
+  const atk = await page.evaluate(async () => {
     let voc = null, existing = [];
     try { const p = JSON.parse(localStorage.getItem('rubinot_idle_v1')); const g = (p && p.slots && p.slots[p.activeSlot || 0]) || p; voc = g && g.vocation; existing = ((g && g.rtc && g.rtc.attackSpells) || []).filter(Boolean); } catch (e) {}
     // Se a conta já tem magia de ataque configurada, PRESERVA (sobrescrever com uma
     // magia de nível 1 podia trocar por uma que o sorc de nível alto nem casta).
     // Só configura uma compatível quando não há nenhuma.
-    if (existing.length) return { voc, id: existing[0], kept: true };
-    const id = voc === 'druid' ? 'mud_attack' : 'buzz';
-    if (window.setRtcAttackSpellSlot) window.setRtcAttackSpellSlot(0, id, 'spell');
-    return { voc, id, kept: false };
+    let id, kept;
+    if (existing.length) { id = existing[0]; kept = true; }
+    else { id = voc === 'druid' ? 'mud_attack' : 'buzz'; if (window.setRtcAttackSpellSlot) window.setRtcAttackSpellSlot(0, id, 'spell'); kept = false; }
+    // Custo de mana da magia — pra o C2 saber se o jogador PODIA castar. Uma magia
+    // cara (ex.: Divine Caldera, 160) com mana baixa após caçar simplesmente não
+    // casta; sem isso o probe acusava "magia não logou" que era só falta de mana.
+    let manaCost = 0;
+    try {
+      const base = new URL('.', location.href).href;
+      const mainSrc = await (await fetch(base + 'src/main.js?p=' + Date.now())).text();
+      const sV = (mainSrc.match(/spells\.js\?v=(\d+)/) || [])[1];
+      const sp = await import(base + 'src/domain/spells.js?v=' + sV);
+      manaCost = (sp.SPELLS && sp.SPELLS[id] && sp.SPELLS[id].mana) || 0;
+    } catch (e) {}
+    return { voc, id, kept, manaCost };
   });
   log(`RTC magia de ataque: ${atk.id} (voc ${atk.voc}, ${atk.kept ? 'preexistente' : 'configurada'})`);
   await page.waitForTimeout(500);
@@ -144,11 +155,16 @@ try {
   const spellLogged = samples.some(s => s.sawSpell) || /🗣️|exevo|exori|infir|conjur/i.test(samples.map(s => s.logText).join(' '));
   const manaMovedDown = samples.some(s => s.mana.length === 2 && s.mana[0] < s.mana[1]); // dipou abaixo do teto = castou
   const fxSeen = last.fxSeen;
-  log(`combate=${combatRan} manaSane=${manaSane} spellLog=${spellLogged} manaDip=${manaMovedDown} fx=${fxSeen}`);
+  // Só é bug se o jogador TINHA mana pra castar e mesmo assim não castou — uma magia
+  // cara com mana baixa após caçar não casta por design, não por defeito.
+  const manaCost = atk.manaCost || 0;
+  const couldCast = manaCost === 0 || samples.some(s => s.mana.length === 2 && s.mana[0] >= manaCost);
+  log(`combate=${combatRan} manaSane=${manaSane} spellLog=${spellLogged} manaDip=${manaMovedDown} fx=${fxSeen} custoMana=${manaCost} pôdeCastar=${couldCast}`);
   if (!combatRan) problems.push('C1: combate não rodou (log vazio)');
   if (!manaSane) problems.push('C1: mana fora de [0,max]');
-  if (!spellLogged) problems.push('C2: magia não apareceu no log (RTC não castou?)');
-  if (!manaMovedDown && !spellLogged) problems.push('C2: mana nunca dipou nem magia logou — magia não está sendo usada');
+  if (!spellLogged && couldCast) problems.push('C2: magia não apareceu no log (RTC não castou?)');
+  else if (!spellLogged) log(`C2 pulado: mana nunca atingiu o custo de ${atk.id} (${manaCost}) — não dava pra castar, não é bug`);
+  if (!manaMovedDown && !spellLogged && couldCast) problems.push('C2: mana nunca dipou nem magia logou — magia não está sendo usada');
   if (fxSeen === 0) problems.push('C2: nenhum efeito de combate renderizado no palco (fx=0)');
 
   // --- Cenário 2b: Estilo de Luta (Fight Mode) — os 3 modos aplicam sem erro e
