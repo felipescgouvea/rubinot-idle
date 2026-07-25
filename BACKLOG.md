@@ -47,6 +47,9 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] **Boss Zone com bosses REAIS, não monstros "promovidos" a boss** (CANON): cada zona de boss tem que usar o boss canônico do Tibia daquela criatura — ex.: **Rotworm Queen** é o boss dos rotworms, não um rotworm com stats inflados. **Rever TODOS os bosses** (nome/sprite/stats/loot do boss real, fonte Crystal/TibiaWiki)
 - [ ] **(auditoria design 07-25) Toasts de eventos importantes**: subiu de nível / dropou item raro / task concluída / charm desbloqueado — hoje tudo vira uma linha no log que passa batido; precisa de destaque
 - [ ] **(auditoria design 07-25) Rotular/clarificar os 3 botões de ação do rail** (Outfit + dois ícones-mistério): sem label a afordância é nula, ninguém sabe o que fazem
+- [x] **Linked Task: tela de COLETAR recompensa** (não creditar automático): ao bater o alvo a task fica "pronta" (botão verde **Coletar Recompensa** no painel, não credita nada); o jogador clica pra coletar — como no Tibia. A coleta é **server-authoritative** (`/task/complete` agora CONCEDE xp/gold/item de fato via `grantTaskRewardsServer`, com recálculo de nível e ressincronia da sessão viva de caçada). **Resolve #1/#6** de vez: antes o cliente creditava local e o reconcile revertia (xp de task, dezenas de milhões, evaporava). taskCoin fica no cliente (não é revertido). Guard de clique único fecha o double-grant. VERIFICADO em prod (probe + Supabase: gold +10K/xp +9K persistem no player_stats, 0 erros) — `0f6e5dcf`
+- [ ] **Barra de vida do monstro com números**: mostrar HP atual / HP máximo na barra
+- [ ] **Dano no personagem = número flutuante subindo**: quando o jogador leva hit, mostrar o número do dano subindo (como já sobe sobre o monstro)
 
 ---
 
