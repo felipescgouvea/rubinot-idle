@@ -72,11 +72,11 @@ try {
     const stage = document.getElementById('dungeon-stage') || document.body;
     new MutationObserver(muts => { for (const mu of muts) for (const n of mu.addedNodes) { if (n.nodeType === 1 && (n.className || '').toString().match(/projectile|area|effect|fx|splash/i)) window.__fxSeen++; } })
       .observe(stage, { childList: true, subtree: true });
-    // hook: marca "magia castada" no MOMENTO que a linha 🗣️ entra no log — robusto
-    // contra a janela curta do logText (o log cresce e empurra o cast pra fora).
+    // hook: marca "magia castada" no MOMENTO que a linha 🗣️ entra no DOM — robusto
+    // contra a janela curta do logText (o log cresce e empurra o cast pra fora) E
+    // contra o re-render do #combat-log (observa o body, que não é recriado).
     window.__sawSpellCast = false;
-    const clog = document.getElementById('combat-log');
-    if (clog) new MutationObserver(muts => { for (const mu of muts) for (const n of mu.addedNodes) { if (n.nodeType === 1 && /🗣️/.test(n.textContent || '')) window.__sawSpellCast = true; } }).observe(clog, { childList: true, subtree: true });
+    new MutationObserver(muts => { for (const mu of muts) for (const n of mu.addedNodes) { if (n.nodeType === 1 && /🗣️/.test(n.textContent || '')) window.__sawSpellCast = true; } }).observe(document.body, { childList: true, subtree: true });
   });
 
   // diagnóstico: o char DEVERIA carregar do cloud save no boot (main.js). Se a
