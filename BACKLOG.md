@@ -26,6 +26,7 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] Botão de imbuements abre modal **diferente** do painel global da aba — quero **idêntico**
 - [ ] **Janela de morte estilo Tibia**: ao morrer, abrir diálogo com OK obrigatório antes de qualquer ação
 - [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia**
+- [ ] **Paladino — flecha fantasma** (BUG): quando o primeiro hit é HS e o monstro demora pra morrer, sai uma segunda flecha que não deveria disparar
 
 ---
 
@@ -137,9 +138,3 @@ Boss Rush tier, skill grind e bestiário são infinitos mas mal recompensados (s
 
 ---
 
-## Sequência recomendada
-
-**Fase 1 (destrava o endgame):** P0.1 (cap) → P0.2 (Wheel) — juntos consertam a saturação de progressão e de leaderboard.
-**Fase 2 (dá throughput e metas visíveis):** P1.1 (Cyclopedia) → P1.5 (celebração/badges) → P1.3/P1.4 (onboarding + nível recomendado).
-**Fase 3 (sinks e profundidade):** P0.3 (Forge, que também é o sink de gold) → P2.1/P2.2 (charm/imbuement tiers) → P1.2 (Bosstiary).
-Quick-wins do P3 podem entrar batelados a qualquer momento entre as fases.

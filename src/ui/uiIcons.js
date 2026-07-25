@@ -6,13 +6,14 @@
 // ícone do chrome: mudar o sprite de um conceito num lugar só reflete em toda a
 // UI que usa uiIcon()/data-icon. O emoji continua como fallback gracioso (mesmo
 // mecanismo de spriteImgOrFallback dos ícones de conteúdo — ver tibiaSprites.js).
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=283';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=284';
 
 // conceito do chrome -> { sprite real do TibiaWiki, emoji de fallback }
 // Escolhas: objeto canônico do Tibia que melhor representa cada área.
 export const UI_ICONS = {
-  hunt:       { file: 'items/Map.webp',                  emoji: '🗺️' }, // mapa das hunts
-  rtc:        { file: 'items/Spellbook.webp',            emoji: '🖥️' }, // config de auto-cast
+  hunt:       { file: 'items/Target_Board.webp',         emoji: '🎯' }, // alvo de caça (Map parecia envelope)
+  rtc:        { file: 'items/Wand_of_Cosmic_Energy.webp', emoji: '🪄' }, // varinha = auto-cast (distinto do livro de Spells)
+  spells:     { file: 'items/Spellbook.webp',            emoji: '📖' }, // livro de magias (era duplicado no RTC)
   tasks:      { file: 'items/Scroll.webp',               emoji: '📜' }, // pergaminho de tarefa
   skills:     { file: 'skills/Sword_Fighting_Icon.webp', emoji: '⚡' },
   training:   { file: 'skills/Training_Dummy.gif',       emoji: '🏋️' }, // boneco de treino real

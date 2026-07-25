@@ -69,6 +69,9 @@
      ilegível. No escuro vira azul claro legível. */
   --navy-1: #7fb0e6;
   --navy-2: #a9c8ee;
+  /* --cream é superfície (aba ativa do log, mini-cards). Não invertia → a aba
+     selecionada do log ficava creme-clara com texto claro por cima = invisível. */
+  --cream: #2c2419;
   --ink: #e9dcc4;
   --ink-soft: #c6b493;
   --ink-faint: #9a8760;
