@@ -760,6 +760,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-auto-flow: row;
+  grid-auto-rows: 1fr;   /* todas as linhas com a MESMA altura, independente do texto do card */
   gap: 12px;
 }
 @media (max-width: 900px) {
@@ -1951,6 +1952,10 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   min-width: 96px;
   flex-shrink: 0;
   box-shadow: 0 1px 3px #00000022;
+  /* Todos os cards com a MESMA altura, independente do tamanho do texto do
+     prêmio (1 ou 2 linhas): flex-column + min-height + botão empurrado pra base. */
+  display: flex; flex-direction: column; align-items: center;
+  min-height: 116px; justify-content: space-between;
 }
 .bp-reward.claimed { border-color: var(--green-badge); opacity: 0.6; }
 .bp-reward.available { border: 2px solid var(--gold); background: var(--surface-3); animation: bp-pulse 2s ease-in-out infinite; }
