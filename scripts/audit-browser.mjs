@@ -48,6 +48,7 @@ const readVitals = () => page.evaluate(() => {
     logText: (document.getElementById('combat-log')?.innerText || '').slice(-4000),
     logLines: document.getElementById('combat-log')?.children.length || 0,
     fxSeen: window.__fxSeen || 0,
+    sawSpell: window.__sawSpellCast || false,
   };
 });
 
@@ -71,6 +72,11 @@ try {
     const stage = document.getElementById('dungeon-stage') || document.body;
     new MutationObserver(muts => { for (const mu of muts) for (const n of mu.addedNodes) { if (n.nodeType === 1 && (n.className || '').toString().match(/projectile|area|effect|fx|splash/i)) window.__fxSeen++; } })
       .observe(stage, { childList: true, subtree: true });
+    // hook: marca "magia castada" no MOMENTO que a linha 🗣️ entra no log — robusto
+    // contra a janela curta do logText (o log cresce e empurra o cast pra fora).
+    window.__sawSpellCast = false;
+    const clog = document.getElementById('combat-log');
+    if (clog) new MutationObserver(muts => { for (const mu of muts) for (const n of mu.addedNodes) { if (n.nodeType === 1 && /🗣️/.test(n.textContent || '')) window.__sawSpellCast = true; } }).observe(clog, { childList: true, subtree: true });
   });
 
   // diagnóstico: o char DEVERIA carregar do cloud save no boot (main.js). Se a
@@ -133,7 +139,9 @@ try {
   // O log de cast SEMPRE traz o emoji 🗣️ + as palavras (huntUseCases: renderCombatEvents).
   // As palavras variam por magia (exori, exevo, infir, conjura...), então o emoji é o
   // sinal confiável — antes o regex só cobria "exori" e dava falso-negativo pra "exevo".
-  const spellLogged = /🗣️|exevo|exori|infir|conjur/i.test(samples.map(s => s.logText).join(' '));
+  // O observer (window.__sawSpellCast) é a fonte confiável — pega o cast no momento,
+  // sem depender da janela curta do logText. O regex fica como reforço.
+  const spellLogged = samples.some(s => s.sawSpell) || /🗣️|exevo|exori|infir|conjur/i.test(samples.map(s => s.logText).join(' '));
   const manaMovedDown = samples.some(s => s.mana.length === 2 && s.mana[0] < s.mana[1]); // dipou abaixo do teto = castou
   const fxSeen = last.fxSeen;
   log(`combate=${combatRan} manaSane=${manaSane} spellLog=${spellLogged} manaDip=${manaMovedDown} fx=${fxSeen}`);
