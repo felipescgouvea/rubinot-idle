@@ -1219,6 +1219,18 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .dmg-float[data-el="death"]    { color: #c58bff; }
 .dmg-float[data-el="holy"]     { color: #ffe98a; }
 .dmg-float.heal                { color: #7df0a2; }
+/* Dano RECEBIDO pelo jogador: sobe sobre o boneco. Fica DENTRO de
+   .player-sprite-wrap, então precisa resetar o inset:0/100%/font-size 2.7rem que a
+   regra `.player-sprite-wrap span` impõe ao sprite. Vermelho fixo (dano no player),
+   sem herdar a cor do elemento. */
+.player-sprite-wrap .dmg-float.on-player {
+  inset: auto; width: auto; height: auto;
+  top: -6px; left: 50%;
+  line-height: 1;
+  font-size: calc(0.82rem * var(--dmg-scale, 1));
+  color: #ff5a5a;
+  z-index: 5;
+}
 @keyframes dmg-float-rise {
   0%   { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.7); }
   18%  { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1.12); }

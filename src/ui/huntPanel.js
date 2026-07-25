@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=301';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=320';
-import { MONSTERS } from '../domain/bestiary.js?v=320';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=328';
-import { cityName } from '../domain/cities.js?v=304';
-import { ITEMS } from '../domain/items.js?v=312';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=302';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=297';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=299';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=304';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=302';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=365';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=297';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=302';
-import { t } from '../i18n/i18n.js?v=317';
-import { setStageWalking } from './stageWalk.js?v=138';
+import { G } from '../application/gameStore.js?v=302';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=321';
+import { MONSTERS } from '../domain/bestiary.js?v=321';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=329';
+import { cityName } from '../domain/cities.js?v=305';
+import { ITEMS } from '../domain/items.js?v=313';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=303';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=298';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=300';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=305';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=303';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=366';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=298';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=303';
+import { t } from '../i18n/i18n.js?v=318';
+import { setStageWalking } from './stageWalk.js?v=139';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -678,16 +678,24 @@ export function playMeleeSwing({ swing, targetUid } = {}) {
 // elemento do golpe e o tamanho escala (leve) com a magnitude do dano. É só
 // juice — pointer-events:none, nunca bloqueia o clique de alvo. Auto-remove no
 // fim da animação (com fallback por timeout se o animationend não disparar).
-function floatDamage({ uid, amount, element } = {}) {
+function floatDamage({ uid, amount, element, onPlayer } = {}) {
   if (amount == null || amount <= 0) return;
-  const cont = document.getElementById('stage-pack');
-  if (!cont) return;
-  const targetEl = (uid != null && cont.querySelector(`[data-uid="${CSS.escape(String(uid))}"]`))
-    || cont.querySelector('.stage-monster:not(.leaving)');
+  // onPlayer: o número sobe sobre o boneco do jogador (dano RECEBIDO). Senão, sobre a
+  // criatura atingida (dano causado) — o padrão de sempre.
+  let targetEl;
+  if (onPlayer) {
+    targetEl = document.getElementById('player-sprite-wrap');
+  } else {
+    const cont = document.getElementById('stage-pack');
+    if (!cont) return;
+    targetEl = (uid != null && cont.querySelector(`[data-uid="${CSS.escape(String(uid))}"]`))
+      || cont.querySelector('.stage-monster:not(.leaving)');
+  }
   if (!targetEl) return;
   const span = document.createElement('span');
   span.className = 'dmg-float';
-  if (element && element !== 'physical') span.dataset.el = element;
+  if (onPlayer) span.classList.add('on-player'); // vermelho de dano recebido (ver style.css)
+  if (!onPlayer && element && element !== 'physical') span.dataset.el = element;
   // escala suave: golpe pequeno ~1.0, golpe grande até ~1.7 (satura pra não virar cartaz)
   span.style.setProperty('--dmg-scale', String(Math.min(1.7, 1 + amount / 1400)));
   // golpe grande = crit dourado (juice — ver .dmg-float.big no style.css)
