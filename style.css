@@ -145,9 +145,14 @@ body {
   flex: 0 0 176px; position: sticky; top: 12px;
   display: flex; flex-direction: column; gap: 9px;
   max-height: calc(100vh - 24px);
-  background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-2) 55%, var(--navy-deep) 100%);
-  border: 2px solid var(--gold); border-radius: 8px; padding: 12px 9px;
-  box-shadow: inset 0 1px 0 #ffffff2a, 0 3px 10px #00000066;
+  /* Navy mais PROFUNDO e menos "azul de escritório": gradiente escuro com um
+     brilho dourado quente no topo (atrás do logo) que amarra na borda de ouro —
+     fica mais premium e destoa menos do pergaminho do conteúdo. */
+  background:
+    radial-gradient(130% 55% at 50% 0%, #e7bd5722 0%, transparent 58%),
+    linear-gradient(180deg, #12365e 0%, #0d2745 52%, #091b32 100%);
+  border: 2px solid var(--gold); border-radius: 10px; padding: 12px 9px;
+  box-shadow: inset 0 1px 0 #ffffff26, inset 0 0 30px #00000055, 0 4px 14px #00000077;
 }
 #sidebar .logo { justify-content: center; min-width: 0; margin-bottom: 2px; }
 #sidebar .logo-img { height: 36px; }

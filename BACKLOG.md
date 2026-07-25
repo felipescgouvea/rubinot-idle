@@ -23,6 +23,7 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [x] Texto da **aba selecionada** no log invisível no dark — `896ff386`
 - [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) + revisar contraste dark geral (voc name, muted)
 - [ ] **Cor do painel lateral (sidebar) está ruim** — melhorar
+- [ ] **Ícones errados nos custos de Imbuement** (Vampirism/Void/Scorch): usar **só ícone padrão do Tibia** pros itens/astral sources; remover todos os que não são sprite real do Tibia — (screenshot anexada, salvar manualmente)
 
 **Funcional / UX**
 - [x] **Página dedicada de Imbuements** (aba própria, máquina de imbuing do Tibia): seletor de item equipado (arma/elmo/armadura) + imbuements por slot. 5 imbuements novos de proteção (elmo/armadura via `computePlayerAbsorb`), server aplica por slot. VERIFICADO no browser. — `3e19d100`/`d858912c`
