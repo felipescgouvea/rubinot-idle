@@ -103,8 +103,23 @@ try {
     await page.waitForTimeout(7000);
   } else { log('personagem já existe; seguindo.'); }
 
-  // configura magia de ataque de nível 1 (mud_attack) no RTC antes de caçar
-  await page.evaluate(() => window.setRtcAttackSpellSlot && window.setRtcAttackSpellSlot(0, 'mud_attack', 'spell'));
+  // configura magia de ataque de nível 1 COMPATÍVEL com a vocação real do
+  // personagem (a conta de teste pode ser sorc OU druid). mud_attack é druid-only:
+  // num sorcerer, setRtcAttackSpellSlot ignora silenciosamente (isSpellAvailable
+  // falha) e a magia nunca casta — o que dava um falso "spell não logou". buzz
+  // (sorc) e mud_attack (druid) compartilham as words-chave que o probe procura.
+  const atk = await page.evaluate(() => {
+    let voc = null, existing = [];
+    try { const p = JSON.parse(localStorage.getItem('rubinot_idle_v1')); const g = (p && p.slots && p.slots[p.activeSlot || 0]) || p; voc = g && g.vocation; existing = ((g && g.rtc && g.rtc.attackSpells) || []).filter(Boolean); } catch (e) {}
+    // Se a conta já tem magia de ataque configurada, PRESERVA (sobrescrever com uma
+    // magia de nível 1 podia trocar por uma que o sorc de nível alto nem casta).
+    // Só configura uma compatível quando não há nenhuma.
+    if (existing.length) return { voc, id: existing[0], kept: true };
+    const id = voc === 'druid' ? 'mud_attack' : 'buzz';
+    if (window.setRtcAttackSpellSlot) window.setRtcAttackSpellSlot(0, id, 'spell');
+    return { voc, id, kept: false };
+  });
+  log(`RTC magia de ataque: ${atk.id} (voc ${atk.voc}, ${atk.kept ? 'preexistente' : 'configurada'})`);
   await page.waitForTimeout(500);
 
   // --- Cenário 1+2: caçar com magia ---
@@ -115,7 +130,10 @@ try {
   const last = samples[samples.length - 1];
   const combatRan = last.logLines > 3;
   const manaSane = samples.every(s => s.mana.length < 2 || (s.mana[0] >= 0 && s.mana[0] <= s.mana[1]));
-  const spellLogged = /infir tera|exori|conjur|magia|spell/i.test(samples.map(s => s.logText).join(' '));
+  // O log de cast SEMPRE traz o emoji 🗣️ + as palavras (huntUseCases: renderCombatEvents).
+  // As palavras variam por magia (exori, exevo, infir, conjura...), então o emoji é o
+  // sinal confiável — antes o regex só cobria "exori" e dava falso-negativo pra "exevo".
+  const spellLogged = /🗣️|exevo|exori|infir|conjur/i.test(samples.map(s => s.logText).join(' '));
   const manaMovedDown = samples.some(s => s.mana.length === 2 && s.mana[0] < s.mana[1]); // dipou abaixo do teto = castou
   const fxSeen = last.fxSeen;
   log(`combate=${combatRan} manaSane=${manaSane} spellLog=${spellLogged} manaDip=${manaMovedDown} fx=${fxSeen}`);
