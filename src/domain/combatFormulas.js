@@ -4,9 +4,10 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=314';
-import { resolveEquippedItem } from './items.js?v=298';
-import { pickWeightedMonster } from './adminConfig.js?v=286';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=315';
+import { resolveEquippedItem } from './items.js?v=299';
+import { pickWeightedMonster } from './adminConfig.js?v=287';
+import { IMBUEMENTS, isImbuementActive } from './imbuements.js?v=285';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -201,7 +202,7 @@ export function computePlayerArmor(equipment, relics) {
 // cada peça equipada e reduzimos o dano daquele elemento por essa %.
 export const ELEMENTAL_RESIST_CAP = 80; // teto por elemento — nunca imunidade total (fiel: Tibia não deixa chegar a 100%)
 export const ELEMENTS = ['fire', 'energy', 'ice', 'earth', 'death', 'holy'];
-export function computePlayerAbsorb(equipment, relics) {
+export function computePlayerAbsorb(equipment, relics, imbuements, now = Date.now()) {
   const totals = {};
   Object.values(equipment).forEach(slotValue => {
     const item = resolveEquippedItem(slotValue, relics);
@@ -210,6 +211,19 @@ export function computePlayerAbsorb(equipment, relics) {
       if (pct) totals[el] = (totals[el] || 0) + pct;
     });
   });
+  // Imbuements de PROTEÇÃO (elmo/armadura): somam resistência elemental, exatamente
+  // como o `absorb` do equipamento (ver domain/imbuements.js). effect.pct já é em
+  // PONTOS de resistência (%). Só conta o imbuement do slot cujo item está equipado
+  // (o imbuement mora no item — trocar de peça perde o imbuement).
+  if (imbuements) {
+    Object.entries(imbuements).forEach(([eqSlot, imb]) => {
+      if (!equipment[eqSlot] || !isImbuementActive(imb, now)) return;
+      const def = IMBUEMENTS[imb.id];
+      if (def && def.effect && def.effect.type === 'protection') {
+        totals[def.effect.element] = (totals[def.effect.element] || 0) + def.effect.pct;
+      }
+    });
+  }
   Object.keys(totals).forEach(el => { totals[el] = Math.min(ELEMENTAL_RESIST_CAP, totals[el]); });
   return totals;
 }

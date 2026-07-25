@@ -90,7 +90,7 @@ function getPlayerDefense(session) {
 // que o jogador SOFRE das magias do monstro (ver reduceElemental no contra-
 // ataque). Lida fresca a cada tick pra respeitar troca de equipamento na caçada.
 function getPlayerAbsorb(session) {
-  return computePlayerAbsorb(session.equipment, session.relics);
+  return computePlayerAbsorb(session.equipment, session.relics, session.imbuements);
 }
 
 // Registra um evento de combate com o VALOR REAL (dano/cura) pra o cliente logar

@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=287';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=305';
-import { MONSTERS } from '../domain/bestiary.js?v=305';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=314';
-import { cityName } from '../domain/cities.js?v=290';
-import { ITEMS } from '../domain/items.js?v=298';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=288';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=283';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=285';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=290';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=288';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=351';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=283';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=288';
-import { t } from '../i18n/i18n.js?v=303';
-import { setStageWalking } from './stageWalk.js?v=124';
+import { G } from '../application/gameStore.js?v=288';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=306';
+import { MONSTERS } from '../domain/bestiary.js?v=306';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=315';
+import { cityName } from '../domain/cities.js?v=291';
+import { ITEMS } from '../domain/items.js?v=299';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=289';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=284';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=286';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=291';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=289';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=352';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=284';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=289';
+import { t } from '../i18n/i18n.js?v=304';
+import { setStageWalking } from './stageWalk.js?v=125';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram

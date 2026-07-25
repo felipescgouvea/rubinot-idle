@@ -24,6 +24,8 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) + revisar contraste dark geral (voc name, muted)
 
 **Funcional / UX**
+- [~] **Página dedicada de Imbuements** (como a máquina de imbuing do Tibia): aba própria, **selecionar QUAL item imbuir** (não só a arma). Save já é por-slot (`G.imbuements[eqSlot]`) e o `/imbue` do servidor já é genérico; falta: conteúdo de imbuement não-arma (proteção elemental p/ armor/helmet via `computePlayerAbsorb`), aplicar no combate por slot, e a página com seleção de item. Descrições dos imbuements PT→EN junto. — EM ANDAMENTO
+- [ ] Descrições dos imbuements ainda em PT no modo EN (`imbuements.js` desc hardcoded) — cai junto com a página dedicada
 - [~] **auto-sell não funciona** — caminho client→server→settleKill traçado e CORRETO; junk é `type:misc` com sell (cyclops_toe=55>max50, mouldy_cheese=0 não vende). Provável teto (maxValue) / item worth 0. **Falta repro ao vivo (rate-limit).**
 - [x] Botão **Trocar Hunt** habilitado só quando NÃO está caçando — `34e263ce`
 - [x] **Janela de morte estilo Tibia** (OK bloqueante antes de continuar) — `f324754d`
