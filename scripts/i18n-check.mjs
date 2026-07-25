@@ -45,3 +45,12 @@ if (missing.length) {
   console.log(`\nUSADAS MAS AUSENTES EM EN (${missing.length}):`);
   for (const [k, f] of missing.slice(0, 50)) console.log(`  ${k}  <- ${f.split(/[\\/]/).slice(-2).join('/')}`);
 } else console.log('nenhuma chave literal ausente');
+
+// Guard de CI: falha SÓ na paridade en/pt (check limpo, sem falsos-positivos).
+// As chaves literais ausentes ficam como aviso (o regex pega t('...') em
+// comentários também, então não são 100% confiáveis pra bloquear o deploy).
+if (onlyEn.length || onlyPt.length) {
+  console.error(`\n❌ paridade en/pt quebrada: ${onlyEn.length} só-EN, ${onlyPt.length} só-PT`);
+  process.exit(1);
+}
+console.log('✅ paridade en/pt OK');
