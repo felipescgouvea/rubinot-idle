@@ -10,6 +10,10 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
+  /* Faz o navegador temar os controles NATIVOS (setas de select, a LISTA aberta
+     do dropdown, scrollbars, form controls) conforme o tema — é o único jeito de
+     o dropdown aberto de um <select> nativo acompanhar claro/escuro. */
+  color-scheme: light;
   --ink: #3d2314;
   --ink-soft: #5d4327;
   --ink-faint: #8a6f4d;
@@ -59,6 +63,7 @@
    override abaixo. Aplicado ANTES do CSS por um script inline no <head> pra
    não piscar tema errado no load. */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --ink: #e9dcc4;
   --ink-soft: #c6b493;
   --ink-faint: #9a8760;
@@ -2863,7 +2868,7 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 .admin-zone-mult { font-size: 11px; font-weight: 700; color: var(--ink-soft); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .admin-zone-mult input { width: 100%; padding: 4px 6px; border: 1px solid var(--line-soft); border-radius: 6px; background: #fff; color: var(--ink); font-weight: 700; }
 /* Sub-painel de spawn por hunt */
-.admin-spawn-select { width: 100%; padding: 7px 10px; border: 1px solid var(--line-soft); border-radius: 8px; background: #fff; color: var(--ink); font-weight: 700; margin: 4px 0 2px; }
+.admin-spawn-select { width: 100%; padding: 7px 10px; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--input-bg); color: var(--ink); font-weight: 700; margin: 4px 0 2px; }
 .admin-spawn-list { display: flex; flex-direction: column; gap: 5px; max-height: 320px; overflow-y: auto; margin-top: 6px; padding: 8px; border: 1px solid var(--line-soft); border-radius: 8px; background: rgba(0,0,0,0.03); }
 .admin-spawn-row { display: grid; grid-template-columns: 1fr 90px 52px; align-items: center; gap: 8px; }
 .admin-spawn-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -2980,14 +2985,29 @@ img.training-subhead-icon { width: 18px; height: 18px; }
   92%      { transform: translateX(-3px); filter: brightness(1.2); }
   100%     { transform: translateX(0); filter: none; }
 }
-/* Corpo a corpo não tem projétil: o próprio boneco avança no dummy. */
+/* Corpo a corpo: dummy no CENTRO e o boneco COLADO nele (à esquerda), pra o
+   golpe CONECTAR. Antes o boneco ficava num canto (left 26) e o dummy no outro
+   (right 30), ~340px de distância: a "investida" de 11px batia no vazio e o
+   dummy tremia sozinho lá longe. A distância (Paladino) MANTÉM o layout largo,
+   porque lá o projétil precisa do corredor pra voar — por isso só os 4 skills
+   de contato (sword/axe/club/fist) recebem o layout central. */
 .training-stage[data-tskill="sword"] .tstage-player,
 .training-stage[data-tskill="axe"] .tstage-player,
 .training-stage[data-tskill="club"] .tstage-player,
-.training-stage[data-tskill="fist"] .tstage-player { animation: tstage-lunge 1.4s ease-in-out infinite; }
+.training-stage[data-tskill="fist"] .tstage-player {
+  left: calc(50% - 62px);
+  animation: tstage-lunge 1.4s ease-in-out infinite;
+}
+.training-stage[data-tskill="sword"] .tstage-dummy,
+.training-stage[data-tskill="axe"] .tstage-dummy,
+.training-stage[data-tskill="club"] .tstage-dummy,
+.training-stage[data-tskill="fist"] .tstage-dummy { left: calc(50% - 4px); right: auto; }
+/* Investida: fecha o vão até o dummy e encosta nele no impacto (o dummy reage
+   em tstage-hit ~5% depois do pico). Sprites têm margem transparente, então a
+   investida é generosa pra o corpo do boneco de fato tocar o dummy. */
 @keyframes tstage-lunge {
-  0%, 70%  { transform: translateY(-50%) translateX(0); }
-  82%      { transform: translateY(-50%) translateX(11px); }
+  0%, 62%  { transform: translateY(-50%) translateX(0); }
+  80%      { transform: translateY(-50%) translateX(22px); }
   100%     { transform: translateY(-50%) translateX(0); }
 }
 
@@ -3098,8 +3118,8 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 .rtc-select {
   width: 100%; max-width: 420px; padding: 6px 8px; border-radius: 5px;
   font: inherit; font-size: .84rem;
-  border: 1px solid var(--border, #2c2c34);
-  background: var(--panel, #16161c); color: var(--text, #e6e6ec);
+  border: 1px solid var(--line-soft);
+  background: var(--input-bg); color: var(--ink);
 }
 
 /* ---- Gesto de conjurar e beber poção (ver ui/characterPanel.js) ----
@@ -3257,6 +3277,20 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
    com box-shadow), então isto cobre o resto sem competir com eles. */
 :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; border-radius: 3px; }
 :focus:not(:focus-visible) { outline: none; }
+
+/* Select nativo temado: o do Market caía no BRANCO do SO e o .rtc-select num
+   fallback ESCURO de vars inexistentes (caixa escura no tema claro). Isto dá a
+   TODA <select> a caixa fechada no tema (parchment/ink/borda), mantendo a seta
+   nativa (que o color-scheme acima já ajusta ao tema). A LISTA aberta continua
+   sendo do SO, mas o color-scheme faz ela acompanhar claro/escuro. */
+select {
+  font: inherit; font-size: .84rem;
+  padding: 6px 10px; border-radius: 6px;
+  border: 1px solid var(--line-soft);
+  background: var(--input-bg); color: var(--ink);
+  cursor: pointer;
+}
+select:hover { border-color: var(--gold-soft); }
 
 /* Reduced-motion abrangente: havia várias regras pontuais, mas dano flutuante,
    flashes de spell, voo de projétil e level-up ficavam de fora. Este catch-all
