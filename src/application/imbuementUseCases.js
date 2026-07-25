@@ -1,12 +1,12 @@
 // Aplicar Imbuements (aprimoramento temporário de equipamento). Validado no
 // servidor (gold + materiais); o cliente só manda a INTENÇÃO e espelha o
 // resultado. O efeito no combate é 100% server-side (ver huntEngine.js).
-import { G, ACCOUNT } from './gameStore.js?v=294';
-import { IMBUEMENTS } from '../domain/imbuements.js?v=290';
-import { ITEMS } from '../domain/items.js?v=305';
-import { emit, EVENTS } from '../shared/eventBus.js?v=292';
-import { saveGame } from './saveGameUseCase.js?v=294';
-import { imbueOnServer } from '../infrastructure/authClient.js?v=302';
+import { G, ACCOUNT } from './gameStore.js?v=295';
+import { IMBUEMENTS } from '../domain/imbuements.js?v=291';
+import { ITEMS } from '../domain/items.js?v=306';
+import { emit, EVENTS } from '../shared/eventBus.js?v=293';
+import { saveGame } from './saveGameUseCase.js?v=295';
+import { imbueOnServer } from '../infrastructure/authClient.js?v=303';
 
 // Pré-checagem local (só pra UX — o servidor revalida): tem a arma equipada, o
 // gold e os materiais?

@@ -6,11 +6,11 @@
 // de reagente são todos conferidos no servidor (ver server/src/index.js:
 // /conjure). Aqui só disparamos o pedido e aplicamos o que ele devolveu — se o
 // cliente pudesse creditar a runa sozinho, runa viraria item infinito.
-import { G } from './gameStore.js?v=294';
-import { SPELLS } from '../domain/spells.js?v=234';
-import { ITEMS } from '../domain/items.js?v=305';
-import { conjureOnServer } from '../infrastructure/authClient.js?v=302';
-import { emit, EVENTS } from '../shared/eventBus.js?v=292';
+import { G } from './gameStore.js?v=295';
+import { SPELLS } from '../domain/spells.js?v=235';
+import { ITEMS } from '../domain/items.js?v=306';
+import { conjureOnServer } from '../infrastructure/authClient.js?v=303';
+import { emit, EVENTS } from '../shared/eventBus.js?v=293';
 
 export async function conjureSpell(slot, spellId) {
   const s = SPELLS[spellId];

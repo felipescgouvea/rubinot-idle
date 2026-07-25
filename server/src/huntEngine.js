@@ -1180,7 +1180,7 @@ export async function usePotionStandalone(userId, slot, itemId) {
 
   await incrementInventory(userId, slot, itemId, -1);
   await updateRows('player_stats', { user_id: userId, slot }, { hp, mana });
-  return { ok: true, hp, mana, healedHp: hp - beforeHp, healedMana: mana - beforeMana };
+  return { ok: true, hp, mana, healedHp: hp - beforeHp, healedMana: mana - beforeMana, invItem: { id: itemId, qty: Number(invRow.qty) - 1 } };
 }
 
 // RTC (cura automática) FORA de caçada — antes o RTC só existia dentro do
@@ -1290,7 +1290,9 @@ export async function useItemInSession(session, itemId) {
     if (item.mana) session.mana = Math.min(session.maxMana, session.mana + potionRestore(item.mana));
     await changeSessionInv(session, itemId, -1);
     await flushVitals(session);
-    return { ok: true, hp: session.hp, mana: session.mana, healedHp: session.hp - beforeHp, healedMana: session.mana - beforeMana };
+    // invItem = qty AUTORITATIVA do item após o consumo, pro cliente espelhar a Bag
+    // (o cliente não decrementa mais localmente — ver inventoryUseCases.js: useItem).
+    return { ok: true, hp: session.hp, mana: session.mana, healedHp: session.hp - beforeHp, healedMana: session.mana - beforeMana, invItem: { id: itemId, qty: sessionQty(session, itemId) } };
   }
 
   // Runa de ataque: mesmo gate de vocação/Magic Level do RTC (ver
@@ -1326,6 +1328,7 @@ export async function useItemInSession(session, itemId) {
   return {
     ok: true, hp: session.hp, mana: session.mana,
     dmg: primaryDmg, targetName: primaryName, killed: deaths.length > 0, hitCount: targets.length,
+    invItem: { id: itemId, qty: sessionQty(session, itemId) },
   };
   } finally { session.busy = false; }
 }
