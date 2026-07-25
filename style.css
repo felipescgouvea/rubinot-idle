@@ -3417,3 +3417,88 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
 }
 .death-ok:hover { filter: brightness(1.08); }
 .death-ok:active { transform: translateY(1px); }
+
+/* ===== MERCADO recriado fiel ao Market do Tibia (ver ui/marketPanel.js) =====
+   Cabeçalho de saldo, navegador de itens à esquerda (busca + sprites), detalhe
+   do item à direita (ofertas de venda/compra + criar oferta), minhas ofertas
+   embaixo. Tudo em var() do tema (claro/escuro). */
+.mk-window { display: flex; flex-direction: column; gap: 12px; padding: 0 14px 14px; }
+.mk-balance {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 10px 14px; border-radius: 10px;
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+}
+.mk-bal-item { font-size: 13px; color: var(--ink-soft); }
+.mk-bal-item b { color: var(--ink); }
+.mk-bal-actions { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+.mk-bal-actions input { width: 120px; }
+
+.mk-body { display: grid; grid-template-columns: 248px 1fr; gap: 12px; align-items: start; }
+@media (max-width: 760px) { .mk-body { grid-template-columns: 1fr; } }
+
+.mk-browser { display: flex; flex-direction: column; gap: 8px; }
+.mk-search { width: 100%; }
+.mk-browse-list {
+  display: flex; flex-direction: column; gap: 2px;
+  max-height: 52vh; overflow-y: auto;
+  border: 1px solid var(--line-soft); border-radius: 10px; padding: 6px;
+  background: var(--surface-1);
+}
+.mk-browse-row {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 5px 8px; border: 1px solid transparent; border-radius: 8px;
+  background: transparent; cursor: pointer; text-align: left; font: inherit; color: var(--ink);
+}
+.mk-browse-row:hover { background: var(--surface-3); }
+.mk-browse-row.sel { background: var(--surface-3); border-color: var(--gold); }
+.mk-browse-img { width: 28px; height: 28px; image-rendering: pixelated; flex: none; }
+.mk-browse-name { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mk-browse-meta { font-size: 11px; color: var(--ink-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.mk-detail {
+  border: 1px solid var(--line-soft); border-radius: 10px; padding: 14px;
+  background: var(--surface-1); min-height: 220px;
+}
+.mk-detail-empty, .mk-detail-empty.muted { display: flex; align-items: center; justify-content: center; min-height: 200px; }
+.mk-detail-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.mk-detail-icon {
+  width: 52px; height: 52px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; background: var(--input-bg); border: 1px solid var(--line-soft); box-shadow: inset 0 1px 3px #00000033;
+}
+.mk-detail-img { width: 40px; height: 40px; image-rendering: pixelated; }
+.mk-detail-name { font-family: var(--serif); font-weight: 700; font-size: 16px; color: var(--ink); }
+.mk-detail-sub { font-size: 11.5px; }
+
+.mk-book { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 620px) { .mk-book { grid-template-columns: 1fr; } }
+.mk-book-title { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; margin: 0 0 6px; }
+.mk-book-title .muted { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 11px; }
+.mk-sell-title { color: var(--green-badge, #2e8b57); }
+.mk-buy-title { color: var(--navy-1); }
+.mk-offer-table { width: 100%; font-size: 12px; }
+.mk-offer-table td, .mk-offer-table th { padding: 4px 6px; }
+.mk-offer-table .btn-blue { padding: 3px 10px; font-size: 11px; }
+.mk-days { font-size: 10px; }
+.mk-empty { padding: 10px 4px; font-size: 12px; }
+
+.mk-create { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line-soft); display: flex; flex-direction: column; gap: 8px; }
+.mk-create-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mk-create-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); min-width: 96px; }
+.mk-create-row input { width: 84px; }
+.mk-act { width: auto !important; padding: 7px 16px !important; }
+.mk-act-buy { background: linear-gradient(180deg, var(--navy-1), var(--navy-2)) !important; border-color: var(--navy-2) !important; color: #fff !important; }
+.mk-fee { font-size: 11px; }
+
+.mk-mine-title { margin: 4px 0 8px; }
+.mk-mine { display: flex; flex-direction: column; gap: 6px; }
+.mk-mine-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 12px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line-soft);
+}
+.mk-mine-item { flex: 1; min-width: 0; font-size: 13px; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+.mk-mine-img { width: 22px; height: 22px; image-rendering: pixelated; }
+.mk-mine-price { font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.mk-tag-buy { color: var(--navy-1); font-weight: 700; font-size: 11.5px; }
+.mk-tag-sell { color: var(--green-badge, #2e8b57); font-weight: 700; font-size: 11.5px; }
+.mk-cancel { background: linear-gradient(180deg, #c0392b, #7b241c); border: 1px solid #7b241c; color: #fff; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11.5px; }
+.mk-cancel:hover { filter: brightness(1.08); }

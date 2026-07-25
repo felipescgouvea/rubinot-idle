@@ -28,8 +28,8 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [x] Botão **Trocar Hunt** habilitado só quando NÃO está caçando — `34e263ce`
 - [x] **Janela de morte estilo Tibia** (OK bloqueante antes de continuar) — `f324754d`
 - [ ] Paladino — **flecha fantasma** (BUG): 1º hit HS + monstro demora a morrer → 2ª flecha que não devia. **Falta repro (rate-limit).**
-- [ ] **Imbuements**: recriar a janela **fiel ao cliente do Tibia** (sprites do Tibia)
-- [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia**
+- [x] **Imbuements**: janela recriada fiel ao shrine do Tibia (item no slot, fontes astrais em sprite, tema) — `4186835a`
+- [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia** — EM ANDAMENTO
 
 ---
 
