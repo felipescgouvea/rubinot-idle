@@ -1,7 +1,8 @@
-import { G } from '../application/gameStore.js?v=307';
-import { WORLDS } from '../domain/progression.js?v=306';
-import { on, EVENTS } from '../shared/eventBus.js?v=305';
-import { t } from '../i18n/i18n.js?v=323';
+import { G } from '../application/gameStore.js?v=308';
+import { WORLDS } from '../domain/progression.js?v=307';
+import { on, EVENTS } from '../shared/eventBus.js?v=306';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=309';
+import { t } from '../i18n/i18n.js?v=324';
 
 export function renderWorldsPanel() {
   const grid = document.getElementById('worlds-grid');
@@ -9,7 +10,7 @@ export function renderWorldsPanel() {
     const unlocked = G.level >= w.reqLevel;
     const active = G.currentWorld === w.id;
     return `<div class="world-card ${active ? 'active-world' : ''} ${!unlocked ? 'locked' : ''}" onclick="${unlocked ? `selectWorld('${w.id}')` : ''}">
-      <div class="world-icon">${w.icon}</div>
+      <div class="world-icon">${spriteImgOrFallback(spriteUrl(w.sprite), w.name, w.icon, 'world-icon-img')}</div>
       <div class="world-name">${w.name} ${active ? '✓' : ''}</div>
       <div class="world-type">${w.type} — ${t('worlds.playersCount', { n: w.players.toLocaleString() })}</div>
       <div class="world-bonus">🎁 ${w.bonus}</div>

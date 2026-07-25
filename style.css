@@ -5,7 +5,7 @@
    borda #3d3225 · navy #1e5799→#164070 · ouro #b8860b · verde #2e7d32
    Fontes do site: Inter (corpo 12px) + Cinzel (títulos)
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;600;700;900&family=Spectral:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Metamorphous&family=Spectral:wght@400;500;600;700&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -48,10 +48,12 @@
   --hp-c: #c0392b;
   --mana-c: #1e5799;
   --xp-c: #d4a017;
-  /* Tipografia trocada (pedido do Felipe): saiu Cinzel+Inter, entrou uma direção
-     medieval coesa — Grenze Gotisch (gótico, títulos/nomes) + Spectral (serifada
-     legível, corpo/UI/números). Os ícones do Tibia são sprites, não fonte: intactos. */
-  --serif: 'Grenze Gotisch', 'Cinzel', serif;
+  /* Tipografia (pedido do Felipe: pegada "Dragon Hunter"). A Dragon Hunter em si é
+     licença SÓ uso pessoal (proibido comercial) e o jogo tem loja de dinheiro real,
+     então usamos METAMORPHOUS — fonte de fantasia/aventura medieval, mesmo espírito,
+     open-source (OFL, livre pra uso comercial). Spectral (serifada legível) no corpo.
+     Os ícones do Tibia são sprites, não fonte: intactos. */
+  --serif: 'Metamorphous', 'Cinzel', serif;
   --body: 'Spectral', Georgia, 'Times New Roman', serif;
   /* aliases usados em estilos inline do game.js */
   --muted: #8a6f4d;
@@ -2022,6 +2024,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .world-card.locked { opacity: 0.55; cursor: default; filter: grayscale(0.5); }
 .world-card.locked:hover { transform: none; border-color: var(--line-soft); box-shadow: 0 1px 4px #00000022; }
 .world-icon { font-size: 2.1rem; margin-bottom: 6px; filter: drop-shadow(0 2px 3px #00000033); }
+/* sprite real do Tibia (gema) no card de mundo — mesmo tamanho visual do emoji antigo */
+.world-icon-img { width: 34px; height: 34px; object-fit: contain; image-rendering: pixelated; vertical-align: middle; }
 .world-name { font-family: var(--serif); font-weight: 700; color: var(--navy-2); margin-bottom: 3px; letter-spacing: 1px; font-size: 14px; }
 .world-type { font-size: 10px; color: var(--ink-faint); margin-bottom: 6px; }
 .world-bonus { font-size: 11px; color: var(--green-1); font-weight: 600; }

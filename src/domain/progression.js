@@ -2,12 +2,15 @@
 // combate direto. Regras puras; nada aqui toca DOM, storage ou rede.
 
 export const WORLDS = [
-  { id: 'auroria',  name: 'Auroria',  icon: '🌅', type: 'Open PvP',    reqLevel: 1,  bonus: '+10% XP', players: 2370, unlocked: true },
-  { id: 'bellum',   name: 'Bellum',   icon: '⚔️', type: 'Optional PvP', reqLevel: 25, bonus: '+20% Gold', players: 1840, unlocked: false },
-  { id: 'spectrum', name: 'Spectrum', icon: '🌈', type: 'Optional PvP', reqLevel: 20, bonus: '+15% XP', players: 1320, unlocked: false },
-  { id: 'elysian',  name: 'Elysian',  icon: '✨', type: 'Retro PvP',   reqLevel: 40, bonus: '+25% XP +15% Gold', players: 3400, unlocked: false },
-  { id: 'solarian', name: 'Solarian', icon: '☀️', type: 'Retro PvP',   reqLevel: 35, bonus: '+20% XP', players: 2100, unlocked: false },
-  { id: 'mystian',  name: 'Mystian',  icon: '🌀', type: 'Retro PvP',   reqLevel: 60, bonus: '+40% XP +30% Gold', players: 1800, unlocked: false },
+  // sprite = gema REAL do Tibia (item canônico), uma cor distinta por mundo — o emoji
+  // fica só de fallback. Mundos são conceito deste idle (não há "sprite de mundo" no
+  // Tibia), então a gema colorida é o objeto real mais neutro pra representá-los.
+  { id: 'auroria',  name: 'Auroria',  sprite: 'items/Yellow_Gem.webp', icon: '🌅', type: 'Open PvP',    reqLevel: 1,  bonus: '+10% XP', players: 2370, unlocked: true },
+  { id: 'bellum',   name: 'Bellum',   sprite: 'items/Red_Gem.webp',    icon: '⚔️', type: 'Optional PvP', reqLevel: 25, bonus: '+20% Gold', players: 1840, unlocked: false },
+  { id: 'spectrum', name: 'Spectrum', sprite: 'items/Green_Gem.webp',  icon: '🌈', type: 'Optional PvP', reqLevel: 20, bonus: '+15% XP', players: 1320, unlocked: false },
+  { id: 'elysian',  name: 'Elysian',  sprite: 'items/White_Gem.webp',  icon: '✨', type: 'Retro PvP',   reqLevel: 40, bonus: '+25% XP +15% Gold', players: 3400, unlocked: false },
+  { id: 'solarian', name: 'Solarian', sprite: 'items/Blue_Gem.webp',   icon: '☀️', type: 'Retro PvP',   reqLevel: 35, bonus: '+20% XP', players: 2100, unlocked: false },
+  { id: 'mystian',  name: 'Mystian',  sprite: 'items/Violet_Gem.webp', icon: '🌀', type: 'Retro PvP',   reqLevel: 60, bonus: '+40% XP +30% Gold', players: 1800, unlocked: false },
 ];
 
 export function worldXpMultiplier(worldId) {
