@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=304';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=323';
-import { MONSTERS } from '../domain/bestiary.js?v=323';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=331';
-import { cityName } from '../domain/cities.js?v=307';
-import { ITEMS } from '../domain/items.js?v=315';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=305';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=300';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=302';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=307';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=305';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=368';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=300';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=305';
-import { t } from '../i18n/i18n.js?v=320';
-import { setStageWalking } from './stageWalk.js?v=141';
+import { G } from '../application/gameStore.js?v=305';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=324';
+import { MONSTERS } from '../domain/bestiary.js?v=324';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=332';
+import { cityName } from '../domain/cities.js?v=308';
+import { ITEMS } from '../domain/items.js?v=316';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=306';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=301';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=303';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=308';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=306';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=369';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=301';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=306';
+import { t } from '../i18n/i18n.js?v=321';
+import { setStageWalking } from './stageWalk.js?v=142';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -727,8 +727,24 @@ function levelUpFlash(level) {
   clearTimeout(levelUpTimer); levelUpTimer = setTimeout(done, 2800);
 }
 
+// Pop do drop raro sobre o palco — o sprite da relíquia salta com o brilho da
+// raridade e some. Só loot raro (relíquia) dispara; junk comum não polui a tela.
+function lootPop({ itemId, color } = {}) {
+  const stage = document.getElementById('dungeon-stage') || document.getElementById('battle-scene');
+  if (!stage || !itemId) return;
+  const el = document.createElement('div');
+  el.className = 'loot-pop';
+  if (color) el.style.setProperty('--rarity', color);
+  el.innerHTML = itemIconImg(itemId, 'loot-pop-icon');
+  stage.appendChild(el);
+  const done = () => el.remove();
+  el.addEventListener('animationend', done, { once: true });
+  setTimeout(done, 1800);
+}
+
 export function wireHuntPanelEvents() {
   on(EVENTS.LEVEL_UP, ({ level } = {}) => levelUpFlash(level));
+  on(EVENTS.LOOT_POP, lootPop);
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
   on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
   on(EVENTS.COMBAT_PROJECTILE, (p) => playProjectile(p));

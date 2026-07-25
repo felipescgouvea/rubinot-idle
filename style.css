@@ -1267,6 +1267,30 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   .levelup-flash { animation-duration: 1.2s; }
 }
 
+/* Pop de drop raro sobre o palco (ver huntPanel.js: lootPop). O sprite da relíquia
+   salta com o glow da cor da raridade e sobe sumindo. */
+.loot-pop {
+  position: absolute; left: 50%; top: 60%;
+  transform: translate(-50%, -50%);
+  z-index: 19; pointer-events: none;
+  animation: loot-pop-rise 1.8s ease-out forwards;
+}
+.loot-pop-icon {
+  width: 40px; height: 40px; font-size: 34px; line-height: 40px; text-align: center;
+  object-fit: contain; image-rendering: pixelated;
+  filter: drop-shadow(0 0 6px var(--rarity, #ffd76a)) drop-shadow(0 2px 3px #000);
+}
+@keyframes loot-pop-rise {
+  0%   { opacity: 0; transform: translate(-50%, -30%) scale(0.4); }
+  18%  { opacity: 1; transform: translate(-50%, -55%) scale(1.25); }
+  32%  { transform: translate(-50%, -60%) scale(1); }
+  70%  { opacity: 1; transform: translate(-50%, -78%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -100%) scale(0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loot-pop { animation-duration: 0.8s; }
+}
+
 /* ---- efeito de cura (o "brilho verde" clássico do Tibia ao curar) ---- */
 .player-sprite-wrap.healing::after {
   content: '';

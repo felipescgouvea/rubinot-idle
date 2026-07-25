@@ -34,6 +34,7 @@ export const EVENTS = {
   EQUIPMENT_SLOTS: 'equipmentSlots',
   INVENTORY: 'inventory',
   LOOT: 'loot',
+  LOOT_POP: 'lootPop', // sprite do item raro (relíquia) saltando no palco
   KILL_COUNTERS: 'killCounters',
   ZONE_PICKER: 'zonePicker',
   HUNT_BUTTON: 'huntButton',

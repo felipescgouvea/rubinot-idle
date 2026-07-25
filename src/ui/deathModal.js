@@ -3,9 +3,9 @@
 // botão OK que PRECISA ser clicado antes de qualquer outra ação — como o "You
 // are dead" do cliente do Tibia. Sem clique-fora pra fechar: a morte é um marco,
 // não some sozinha. O overlay é criado sob demanda (não polui o index.html).
-import { on, EVENTS } from '../shared/eventBus.js?v=302';
-import { t } from '../i18n/i18n.js?v=320';
-import { spriteUrl } from '../infrastructure/tibiaSprites.js?v=305';
+import { on, EVENTS } from '../shared/eventBus.js?v=303';
+import { t } from '../i18n/i18n.js?v=321';
+import { spriteUrl } from '../infrastructure/tibiaSprites.js?v=306';
 
 let overlay = null;
 let currentOnKey = null; // dedupe: no máximo 1 listener de teclado de morte por vez

@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=304';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=312';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=309';
-import { ZONES } from '../domain/bestiary.js?v=323';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=331';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=302';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=334';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=333';
-import { elementMod } from '../domain/elements.js?v=300';
-import { STAMINA_MAX } from '../domain/stamina.js?v=300';
-import { ITEMS } from '../domain/items.js?v=315';
-import { MONSTERS } from '../domain/bestiary.js?v=323';
-import { RARITY_TIERS } from '../domain/rarity.js?v=301';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=303';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=302';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=301';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=301';
-import { saveGame } from './saveGameUseCase.js?v=304';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=305';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=303';
-import { t } from '../i18n/i18n.js?v=320';
+import { G, ACCOUNT } from './gameStore.js?v=305';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=313';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=310';
+import { ZONES } from '../domain/bestiary.js?v=324';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=332';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=303';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=335';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=334';
+import { elementMod } from '../domain/elements.js?v=301';
+import { STAMINA_MAX } from '../domain/stamina.js?v=301';
+import { ITEMS } from '../domain/items.js?v=316';
+import { MONSTERS } from '../domain/bestiary.js?v=324';
+import { RARITY_TIERS } from '../domain/rarity.js?v=302';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=304';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=303';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=302';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=302';
+import { saveGame } from './saveGameUseCase.js?v=305';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=306';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=304';
+import { t } from '../i18n/i18n.js?v=321';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -802,6 +802,9 @@ function applyServerKillEvents(k) {
       const pct = Math.round(bonusPct * 100);
       emit(EVENTS.LOG, { html: `<span class="log-loot" style="color:${tier.color};font-weight:700">${t('log.relicDrop', { tier: t(tier.name), item: item.name, pct })}</span>`, cat: 'loot' });
       emit(EVENTS.NOTIFY, { msg: t('hunt.notifyRelicDrop', { tier: t(tier.name), item: item.name, pct }), type: 'success' });
+      // Pop visual do drop raro sobre o palco (o toast passava batido) — o sprite do
+      // item salta com o brilho da raridade. Ver huntPanel.js: lootPop.
+      emit(EVENTS.LOOT_POP, { itemId: r.itemId || r.item_id, color: tier.color });
     });
   }
   if (k.defKey) {
