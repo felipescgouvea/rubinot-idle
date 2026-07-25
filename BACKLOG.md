@@ -19,18 +19,17 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [x] Texto da aba SELECIONADA do log invisível no dark (`--cream` não invertia) — `896ff386`
 - [x] Ícones da sidebar: Caçada=Map(envelope)→Target_Board; Spells duplicava RTC→Spellbook próprio; RTC→Wand — `896ff386`
 - [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) — trocar
-- [ ] Cards de **igual altura** independente do texto — tiers do Battle Pass **e** cards de Hunt
-- [ ] Fontes dark: revisar contraste geral (voc name, muted) além do navy
-- [ ] Texto da **aba selecionada** no log de combate fica **invisível** (contraste zero na aba ativa)
+- [x] Cards de **igual altura** independente do texto (Battle Pass + zonas de hunt) — `34e263ce`
+- [x] Texto da **aba selecionada** no log invisível no dark — `896ff386`
+- [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) + revisar contraste dark geral (voc name, muted)
 
 **Funcional / UX**
 - [~] **auto-sell não funciona** — caminho client→server→settleKill traçado e CORRETO; junk é `type:misc` com sell (cyclops_toe=55>max50, mouldy_cheese=0 não vende). Provável teto (maxValue) / item worth 0. **Falta repro ao vivo (rate-limit).**
-- [ ] Botão **Trocar Hunt** habilitado só quando NÃO está caçando
-- [ ] Paladino: se o 1º hit é HS e o monstro demora a morrer, sai uma **2ª flecha** que não devia (bug de timing de projétil)
-- [ ] Botão de imbuements abre modal **diferente** do painel global da aba — quero **idêntico**
-- [ ] **Janela de morte estilo Tibia**: ao morrer, diálogo com OK obrigatório antes de qualquer ação
+- [x] Botão **Trocar Hunt** habilitado só quando NÃO está caçando — `34e263ce`
+- [x] **Janela de morte estilo Tibia** (OK bloqueante antes de continuar) — `f324754d`
+- [ ] Paladino — **flecha fantasma** (BUG): 1º hit HS + monstro demora a morrer → 2ª flecha que não devia. **Falta repro (rate-limit).**
+- [ ] **Imbuements**: recriar a janela **fiel ao cliente do Tibia** (sprites do Tibia)
 - [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia**
-- [ ] **Paladino — flecha fantasma** (BUG): quando o primeiro hit é HS e o monstro demora pra morrer, sai uma segunda flecha que não deveria disparar
 
 ---
 
