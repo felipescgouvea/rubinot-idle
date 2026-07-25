@@ -11,7 +11,8 @@ import { join, basename } from 'node:path';
 
 const REF = 'reference/crystalserver';
 const WRITE = process.argv.includes('--write');
-const THRESH = 3000; // nenhum melee real do Tibia passa disso; acima = placeholder
+const threshArg = process.argv.find(a => a.startsWith('--thresh='));
+const THRESH = threshArg ? parseInt(threshArg.split('=')[1], 10) : 3000; // acima disso = suspeito de placeholder
 
 // normaliza nome de arquivo/monstro pra casar apesar de apóstrofo/hífen/espaço:
 // "druid's_apparition" -> "druids_apparition"; "rotten_man-maggot" -> "rotten_man_maggot"
@@ -42,15 +43,40 @@ const luaIndex = findLuas(join(REF, 'data-global', 'monster'), new Map());
 findLuas(join(REF, 'data-crystal', 'monster'), luaIndex);
 const luaFor = id => luaIndex.get(norm(ALIAS[id] || id));
 
-// ---- 2. extrai o maxDamage do ataque "melee" de um .lua ----
+// ---- 2. extrai o dano melee MÁX do ataque "melee" de um .lua ----
+// Fiel ao Crystal (src/creatures/monsters/monsters.cpp + items/weapons/weapons.cpp):
+//   - se o melee tem `maxDamage` explícito -> |maxDamage|
+//   - se tem `skill`/`attack` -> getMaxMeleeDamage = ceil(skill*attack*0.05 + attack*0.5)
+function meleeFromLine(seg) {
+  const maxD = seg.match(/maxDamage\s*=\s*(-?\d+)/);
+  if (maxD) return Math.abs(parseInt(maxD[1], 10));
+  const skill = seg.match(/\bskill\s*=\s*(\d+)/);
+  const attack = seg.match(/\battack\s*=\s*(\d+)/);
+  if (skill && attack) {
+    const s = parseInt(skill[1], 10), a = parseInt(attack[1], 10);
+    return Math.ceil(s * a * 0.05 + a * 0.5); // getMaxMeleeDamage(skill, attack)
+  }
+  return null;
+}
+// O jogo tem UM knob de dano (atk). Regra fiel: se o monstro tem melee, o atk é o
+// dano melee MÁX (ataque físico principal); se é caster/distance (sem melee), é o
+// MAIOR dano dos ataques "combat" (o ataque à distância/spell primário) — assim
+// não fica instakill (placeholder) nem inofensivo (zerado).
 function meleeMaxFromLua(path) {
-  const src = readFileSync(path, 'utf8');
-  // linha do tipo: { name = "melee", ... maxDamage = -950 }
-  const m = src.match(/name\s*=\s*"melee"[^}]*maxDamage\s*=\s*(-?\d+)/);
-  if (m) return Math.abs(parseInt(m[1], 10));
-  // alguns usam skill/attack em vez de maxDamage explícito -> sem melee tabelado
-  const hasMelee = /name\s*=\s*"melee"/.test(src);
-  return hasMelee ? null : 0; // null = melee sem número; 0 = sem melee
+  // remove linhas comentadas do Lua (--) pra não ler ataque desativado
+  const src = readFileSync(path, 'utf8').split('\n').filter(l => !l.trim().startsWith('--')).join('\n');
+  const meleeLine = src.match(/name\s*=\s*"melee"[^\n]*/);
+  if (meleeLine) {
+    const m = meleeFromLine(meleeLine[0]);
+    if (m == null) return null; // melee sem número nem skill/attack -> revisar
+    if (m > 0) return m;
+  }
+  // sem melee (ou melee 0): pega o maior maxDamage dos ataques "combat"
+  let best = 0;
+  const re = /name\s*=\s*"combat"[^\n]*?maxDamage\s*=\s*(-?\d+)/g;
+  let mm;
+  while ((mm = re.exec(src))) best = Math.max(best, Math.abs(parseInt(mm[1], 10)));
+  return best; // 0 = sem melee nem combat tabelado (raríssimo)
 }
 
 // ---- 3. carrega os monstros do jogo ----
@@ -62,20 +88,26 @@ const corrupt = Object.entries(CAT)
   .filter(([id, d]) => d && typeof d === 'object' && typeof d.atk === 'number' && d.atk > THRESH)
   .sort((a, b) => b[1].atk - a[1].atk);
 
-const fixes = [];   // {id, from, to}
-const noLua = [];   // sem .lua correspondente
-const noMelee = []; // .lua achado mas sem maxDamage de melee tabelado
+const fixes = [];    // {id, from, to} — aplicáveis
+const noLua = [];    // sem .lua correspondente (custom/evento)
+const noMelee = [];  // .lua achado mas sem maxDamage nem skill/attack
+const wouldZero = []; // source diz melee=0 (caster/distance) MAS o monstro não
+                      // tem spells no jogo -> zerar deixaria inofensivo; pular.
 
 for (const [id, d] of corrupt) {
   const lua = luaFor(id);
   if (!lua) { noLua.push([id, d.atk]); continue; }
   const real = meleeMaxFromLua(lua);
   if (real == null) { noMelee.push([id, d.atk, lua.replace(/\\/g, '/')]); continue; }
-  if (real !== d.atk) fixes.push({ id, from: d.atk, to: real });
+  if (real === d.atk) continue;
+  const hasSpells = CAT[id].spells && CAT[id].spells.length;
+  if (real === 0 && !hasSpells) { wouldZero.push([id, d.atk]); continue; }
+  fixes.push({ id, from: d.atk, to: real });
 }
 
 console.log(`corrompidos (atk>${THRESH}): ${corrupt.length}`);
 console.log(`  com fix da fonte: ${fixes.length}`);
+console.log(`  zeraria (caster/distance sem spell no jogo) — pulado: ${wouldZero.length}`);
 console.log(`  sem .lua no reference: ${noLua.length}`);
 console.log(`  .lua sem melee tabelado: ${noMelee.length}`);
 
