@@ -169,7 +169,14 @@ export function tibiaTotalExp(level) {
   return Math.round((50 * level ** 3 - 300 * level ** 2 + 850 * level - 600) / 3);
 }
 
+// Teto de nível. No Tibia real NÃO há teto (jogadores passam de 1000), e o
+// número central de um idle não pode dead-endar — antes travava em 100 e a XP
+// parava de converter, saturando o leaderboard. tibiaTotalExp é fórmula pura,
+// então o único custo de estender é o tamanho da tabela; numericamente é seguro
+// muito além disto (totalExp(2000) ≈ 1,3e11, longe do inteiro seguro do JS).
+export const MAX_LEVEL = 2000;
+
 // XP_TABLE[i] = XP necessária para ir do nível (i+1) para (i+2), ou seja a
 // diferença de experiência total entre dois níveis consecutivos do Tibia.
 // Usado por gainXp() (ver application/huntUseCases.js) e pela barra de XP.
-export const XP_TABLE = Array.from({ length: 100 }, (_, i) => tibiaTotalExp(i + 2) - tibiaTotalExp(i + 1));
+export const XP_TABLE = Array.from({ length: MAX_LEVEL }, (_, i) => tibiaTotalExp(i + 2) - tibiaTotalExp(i + 1));

@@ -16,7 +16,7 @@ import {
 } from '../../src/domain/combatFormulas.js?v=159';
 import { worldXpMultiplier, worldGoldMultiplier } from '../../src/domain/progression.js?v=128';
 import { zoneMultiplier, resolveMonsterLoot, resolveZoneSpawn } from '../../src/domain/adminConfig.js?v=128';
-import { XP_TABLE, VOC_TRAINING, applySkillGain, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=156';
+import { XP_TABLE, MAX_LEVEL, VOC_TRAINING, applySkillGain, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=156';
 import { ITEMS, EQUIPPABLE_TYPES, equippableFallbackPool, canUsePotion, resolveEquippedItem } from '../../src/domain/items.js?v=139';
 import { SHOP_ITEMS, isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { CHARMS } from '../../src/domain/charms.js?v=128';
@@ -442,7 +442,7 @@ async function settleKill(session, mon, cfg) {
   const xpAntes = session.xpAbs;
   session.xpAbs += xpGained;
   let level = session.level;
-  while (level < 100 && session.xpAbs >= XP_TABLE[level - 1]) {
+  while (level < MAX_LEVEL && session.xpAbs >= XP_TABLE[level - 1]) {
     session.xpAbs -= XP_TABLE[level - 1];
     level++;
   }
@@ -822,12 +822,12 @@ async function resolveTick(session) {
     const curLevelXp = session.xpAbs;
     const xpAntesDoNivel = XP_TABLE.slice(0, level - 1).reduce((a, b) => a + b, 0);
     const totalExp = xpAntesDoNivel + curLevelXp;
-    const levelPercent = level < 100 && XP_TABLE[level - 1] ? (curLevelXp / XP_TABLE[level - 1]) * 100 : 0;
+    const levelPercent = level < MAX_LEVEL && XP_TABLE[level - 1] ? (curLevelXp / XP_TABLE[level - 1]) * 100 : 0;
     const xpLost = Math.floor(totalExp * deathXpLossPct(level, blessings, session.promoted, levelPercent, totalExp));
     const novaTotal = Math.max(0, totalExp - xpLost);
     // recompõe nível + XP do nível a partir da total (de-levela se preciso)
     let novoNivel = 1, resto = novaTotal;
-    while (novoNivel < 100 && resto >= XP_TABLE[novoNivel - 1]) { resto -= XP_TABLE[novoNivel - 1]; novoNivel++; }
+    while (novoNivel < MAX_LEVEL && resto >= XP_TABLE[novoNivel - 1]) { resto -= XP_TABLE[novoNivel - 1]; novoNivel++; }
     session.level = novoNivel;
     session.xpAbs = resto;
     session.maxHp = computeMaxHp({ vocation: session.vocation, level: novoNivel, equipment: session.equipment, relics: session.relics });
