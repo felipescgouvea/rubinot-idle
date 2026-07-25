@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=303';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=322';
-import { MONSTERS } from '../domain/bestiary.js?v=322';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=330';
-import { cityName } from '../domain/cities.js?v=306';
-import { ITEMS } from '../domain/items.js?v=314';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=304';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=299';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=301';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=306';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=304';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=367';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=299';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=304';
-import { t } from '../i18n/i18n.js?v=319';
-import { setStageWalking } from './stageWalk.js?v=140';
+import { G } from '../application/gameStore.js?v=304';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=323';
+import { MONSTERS } from '../domain/bestiary.js?v=323';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=331';
+import { cityName } from '../domain/cities.js?v=307';
+import { ITEMS } from '../domain/items.js?v=315';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=305';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=300';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=302';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=307';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=305';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=368';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=300';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=305';
+import { t } from '../i18n/i18n.js?v=320';
+import { setStageWalking } from './stageWalk.js?v=141';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -709,7 +709,26 @@ function floatDamage({ uid, amount, element, onPlayer } = {}) {
   setTimeout(done, 1000);
 }
 
+// Burst de LEVEL UP sobre o palco — subir de nível é o beat de dopamina nº1 do RPG
+// e passava quase mudo (só um toast genérico + linha no log). Um selo dourado que
+// pulsa e some, com "HP/MP restaurados" (o reconcile já enche os dois no level-up).
+let levelUpTimer = null;
+function levelUpFlash(level) {
+  const stage = document.getElementById('dungeon-stage') || document.getElementById('battle-scene');
+  if (!stage) return;
+  const old = stage.querySelector('.levelup-flash');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'levelup-flash';
+  el.innerHTML = `<span class="levelup-title">⬆ ${t('levelup.title')}</span><span class="levelup-lvl">${t('levelup.level', { level })}</span><span class="levelup-sub">${t('levelup.restored')}</span>`;
+  stage.appendChild(el);
+  const done = () => el.remove();
+  el.addEventListener('animationend', done, { once: true });
+  clearTimeout(levelUpTimer); levelUpTimer = setTimeout(done, 2800);
+}
+
 export function wireHuntPanelEvents() {
+  on(EVENTS.LEVEL_UP, ({ level } = {}) => levelUpFlash(level));
   on(EVENTS.MONSTER_DISPLAY, ({ hit, killed, spellElement, bossAura } = {}) => { renderMonsterDisplay(hit, killed, spellElement, bossAura); renderBattleList(); updateSceneMode(); });
   on(EVENTS.COMBAT_FX, (fx) => playAreaEffect(fx));
   on(EVENTS.COMBAT_PROJECTILE, (p) => playProjectile(p));

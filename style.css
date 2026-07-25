@@ -1241,6 +1241,32 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   .dmg-float { animation-duration: 0.4s; }
 }
 
+/* Burst de LEVEL UP sobre o palco (ver huntPanel.js: levelUpFlash). Selo dourado que
+   pulsa no centro e sobe sumindo — o beat de dopamina do level-up, que passava mudo. */
+.levelup-flash {
+  position: absolute; left: 50%; top: 42%;
+  transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  z-index: 20; pointer-events: none; text-align: center;
+  animation: levelup-pop 2.8s ease-out forwards;
+}
+.levelup-title {
+  font-weight: 900; font-size: 2rem; letter-spacing: 1px; line-height: 1.05;
+  color: #ffe08a; text-shadow: 0 0 8px #ffb43c, 0 0 18px #ff9a2e, 0 2px 2px #000;
+}
+.levelup-lvl { font-weight: 800; font-size: 1.1rem; color: #fff; text-shadow: 0 1px 2px #000, 0 0 6px #ffb43c; }
+.levelup-sub { font-size: 0.8rem; color: #7df0a2; text-shadow: 0 1px 2px #000; }
+@keyframes levelup-pop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  14%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  26%  { transform: translate(-50%, -50%) scale(1); }
+  75%  { opacity: 1; transform: translate(-50%, -60%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -80%) scale(0.95); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .levelup-flash { animation-duration: 1.2s; }
+}
+
 /* ---- efeito de cura (o "brilho verde" clássico do Tibia ao curar) ---- */
 .player-sprite-wrap.healing::after {
   content: '';

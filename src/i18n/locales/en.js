@@ -275,6 +275,9 @@ export default {
   'character.xpFraction': '{xp}/{xpNext} XP',
   'character.max': 'MAX',
   'character.xpFractionPct': '{xp}/{xpNext} · {pct}%',
+  'levelup.title': 'LEVEL UP',
+  'levelup.level': 'Level {level}',
+  'levelup.restored': 'HP & MP restored',
   'character.noXp': '-- XP',
 
   // ---- rtc panel (ui/rtcPanel.js) ----
