@@ -3,12 +3,13 @@
 // materiais em sprite) e o imbuement ativo. O efeito é resolvido no combate pelo
 // servidor (ver huntEngine.js). Renderiza numa ABA própria (#imbue-content) e
 // também num modal (atalho do card de equipamento) — mesmo corpo.
-import { G } from '../application/gameStore.js?v=291';
-import { IMBUEMENTS, isImbuementActive, activeImbuementFor, IMBUEABLE_SLOTS, imbuementsForSlot } from '../domain/imbuements.js?v=288';
-import { ITEMS } from '../domain/items.js?v=302';
-import { canImbue } from '../application/imbuementUseCases.js?v=287';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=294';
-import { t } from '../i18n/i18n.js?v=307';
+import { G } from '../application/gameStore.js?v=293';
+import { IMBUEMENTS, isImbuementActive, activeImbuementFor, IMBUEABLE_SLOTS, imbuementsForSlot } from '../domain/imbuements.js?v=290';
+import { ITEMS } from '../domain/items.js?v=304';
+import { canImbue } from '../application/imbuementUseCases.js?v=289';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=296';
+import { spriteUrl, spriteImgOrFallback, imbueIconFile } from '../infrastructure/tibiaSprites.js?v=294';
+import { t } from '../i18n/i18n.js?v=309';
 
 let selSlot = null; // slot selecionado na máquina (weapon/helmet/armor)
 
@@ -58,12 +59,13 @@ function slotDetailHtml() {
   const rows = imbuementsForSlot(selSlot).map(([id, def]) => {
     const pre = canImbue(id);
     const mats = def.cost.materials.map(([mid, q]) => matSprite(mid, q)).join('');
-    // Ícone do imbuement = sprite REAL do Tibia da sua 1ª fonte astral (nada de
-    // emoji — pedido do Felipe: só sprite do Tibia nos custos/itens).
-    const iconItem = def.cost.materials[0] && def.cost.materials[0][0];
+    // Ícone do imbuement = o ícone REAL do Tibia (assets/sprites/imbuements/, via
+    // scripts/fetch-imbue-icons.mjs). Se o arquivo ainda não existe, cai no glyph
+    // do elemento (def.icon) — nunca num sprite chutado.
+    const gem = spriteImgOrFallback(spriteUrl(imbueIconFile(def.name)), def.name, def.icon, 'imbue-gem-img');
     return `<div class="imbue-row">
       <div class="imbue-row-main">
-        <span class="imbue-gem">${iconItem ? itemIconImg(iconItem, 'imbue-gem-img') : ''}</span>
+        <span class="imbue-gem">${gem}</span>
         <div class="imbue-row-txt"><b>${def.name}</b><small>${t(def.desc)}</small></div>
         <span class="imbue-dur">⏳ ${def.durationH}h</span>
       </div>
@@ -119,7 +121,7 @@ export function selectImbueSlot(slot) {
 
 // Aplica o imbuement e re-renderiza (import dinâmico pra não acoplar circular).
 export async function applyImbuementClick(id) {
-  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=287');
+  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=289');
   await applyImbuement(id);
   rerender();
 }

@@ -189,6 +189,13 @@ export function spellIconFile(spellName) {
   return 'spells/' + localName(spellName.replace(/ /g, '_') + '.gif');
 }
 
+// Ícone REAL do imbuement (mesmo pipeline dos ícones de magia — ver
+// scripts/fetch-imbue-icons.mjs). Se o arquivo não existir, spriteImgOrFallback
+// cai no glyph do elemento; nunca num sprite "chutado".
+export function imbueIconFile(imbueName) {
+  return 'imbuements/' + imbueName.replace(/ /g, '_') + '.webp';
+}
+
 // Vitais do personagem (HP/Mana/XP) — sprites reais da janela de status do Tibia.
 export const VITAL_ICON_FILES = {
   hp: 'vitals/Hit_Points_Icon.webp',

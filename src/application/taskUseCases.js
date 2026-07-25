@@ -10,17 +10,17 @@
 // matar nada. A concessão da recompensa em si (grantRewards) continua local
 // — já é auto-mitigada pelo reconcile de gold/xp/inventário de qualquer
 // forma, então não precisa duplicar toda a lógica de reward no servidor.
-import { G, ACCOUNT } from './gameStore.js?v=291';
-import { MONSTERS } from '../domain/bestiary.js?v=309';
-import { ITEMS } from '../domain/items.js?v=302';
-import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=290';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=289';
-import { gainXp } from './huntUseCases.js?v=355';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=288';
-import { addItemToInventory } from './inventoryCore.js?v=289';
-import { saveGame } from './saveGameUseCase.js?v=291';
-import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=299';
-import { t } from '../i18n/i18n.js?v=307';
+import { G, ACCOUNT } from './gameStore.js?v=293';
+import { MONSTERS } from '../domain/bestiary.js?v=311';
+import { ITEMS } from '../domain/items.js?v=304';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=292';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=291';
+import { gainXp } from './huntUseCases.js?v=357';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=290';
+import { addItemToInventory } from './inventoryCore.js?v=291';
+import { saveGame } from './saveGameUseCase.js?v=293';
+import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=301';
+import { t } from '../i18n/i18n.js?v=309';
 
 // Busca o mapa real de conclusões do servidor e espelha em G — chamado no
 // boot, pra nunca depender de um valor que só existia no save local/na nuvem
