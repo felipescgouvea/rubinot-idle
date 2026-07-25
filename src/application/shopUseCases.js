@@ -1,10 +1,10 @@
-import { G, ACCOUNT } from './gameStore.js?v=298';
-import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=297';
-import { ITEMS } from '../domain/items.js?v=309';
-import { emit, EVENTS } from '../shared/eventBus.js?v=296';
-import { buyShopItemOnServer } from '../infrastructure/authClient.js?v=306';
-import { saveGame } from './saveGameUseCase.js?v=298';
-import { t } from '../i18n/i18n.js?v=314';
+import { G, ACCOUNT } from './gameStore.js?v=299';
+import { SHOP_ITEMS, isBoostActive } from '../domain/shopCatalog.js?v=298';
+import { ITEMS } from '../domain/items.js?v=310';
+import { emit, EVENTS } from '../shared/eventBus.js?v=297';
+import { buyShopItemOnServer, spendRubiniOnServer } from '../infrastructure/authClient.js?v=307';
+import { saveGame } from './saveGameUseCase.js?v=299';
+import { t } from '../i18n/i18n.js?v=315';
 
 export async function buyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);
@@ -62,13 +62,19 @@ export async function buyShopItem(id, qty = 1) {
     return;
   }
 
-  const balance = s.currency === 'rubini' ? G.rubini : G.gold;
+  const balance = s.currency === 'rubini' ? (G.rubini || 0) : (G.gold || 0);
   if (balance < total) { emit(EVENTS.NOTIFY, { msg: t('shop.insufficientBalance'), type: 'error' }); return; }
-  // Debita a moeda CERTA. Hoje só currency 'rubini' chega aqui (gold item/refill
-  // já foi tratado acima), mas debitar rubini incondicional era um footgun (#R3):
-  // um boost/outfit precificado em gold cobraria Rubini. O ramo gold fecha isso.
-  if (s.currency === 'rubini') G.rubini -= total;
-  else G.gold -= total;
+  // #R1: gasto de Rubini AUTORITATIVO no servidor. Antes era `G.rubini -= total`
+  // só no cliente, e o próximo daily/BP claim sobrescrevia G.rubini com
+  // player_stats.rubini (que só via os GANHOS) — REEMBOLSANDO o boost. O servidor
+  // debita player_stats e devolve o saldo real. (#R3: debita a moeda certa.)
+  if (s.currency === 'rubini') {
+    const res = await spendRubiniOnServer(ACCOUNT.activeSlot, total);
+    if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('shop.insufficientBalance'), type: 'error' }); return; }
+    G.rubini = res.rubini;
+  } else {
+    G.gold -= total; // defensivo — hoje só rubini chega aqui (gold item/refill tratado acima)
+  }
 
   const now = Date.now();
   const base = isBoostActive(G.boosts, s.boost, now) ? G.boosts[s.boost] : now;

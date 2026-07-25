@@ -516,6 +516,10 @@ export function unlockCharmOnServer(slot, charmId) {
 export function grantCharmBonusOnServer(slot, amount) {
   return huntFetch('/charm/grant-bonus', { method: 'POST', body: { slot, amount } });
 }
+// #R1: gasta Rubini AUTORITATIVO no servidor (boost/outfit) — devolve o saldo real.
+export function spendRubiniOnServer(slot, amount) {
+  return huntFetch('/rubini/spend', { method: 'POST', body: { slot, amount } });
+}
 
 // ---- Presas (Prey) AUTORITATIVAS — ver server/src/index.js: /prey/*.
 // Substitui G.prey mutado só localmente (achado de auditoria: /hunt/start

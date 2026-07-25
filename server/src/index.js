@@ -260,7 +260,7 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/equip', '/charm/unlock', '/charm/grant-bonus', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
+  '/conjure', '/imbue', '/equip', '/charm/unlock', '/charm/grant-bonus', '/rubini/spend', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
   '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
   // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
@@ -1155,6 +1155,26 @@ const server = http.createServer(async (req, res) => {
       await addCharmBonus(user.id, slot, amount);
       const { points } = await charmPointsAvailable(user.id, slot);
       return send(res, 200, { ok: true, points });
+    }
+
+    // #R1: gasto de Rubini AUTORITATIVO no servidor (boost/outfit). Antes o gasto
+    // era só client-side (G.rubini -= x no save) e o servidor nunca sabia, então
+    // o próximo daily/BP claim sobrescrevia G.rubini com player_stats.rubini (que
+    // só via os GANHOS) e reembolsava o que o jogador tinha gasto. Debitar aqui faz
+    // player_stats.rubini refletir os gastos → o claim para de reembolsar. No mutex ECON.
+    if (url.pathname === '/rubini/spend' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const amount = Math.floor(Number(body.amount) || 0);
+      if (!(amount > 0) || amount > 100000) return send(res, 400, { error: 'amount inválido' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const rubini = stats ? Number(stats.rubini) || 0 : 0;
+      if (rubini < amount) return send(res, 400, { error: 'Rubini Coins insuficientes' });
+      await upsertRow('player_stats', { user_id: user.id, slot, rubini: rubini - amount, updated_at: new Date().toISOString() }, 'user_id,slot');
+      return send(res, 200, { ok: true, rubini: rubini - amount });
     }
 
     // Presas (Prey) AUTORITATIVAS (achado de auditoria: mesma classe do bug de

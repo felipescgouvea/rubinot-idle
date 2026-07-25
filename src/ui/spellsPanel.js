@@ -6,15 +6,15 @@
 // Só as de CONJURAÇÃO têm botão: são as únicas lançadas na mão. Ataque e cura
 // são automáticos pelo RTC — mostrar um "lançar" ali seria mentira, porque
 // quem decide o momento é o motor de combate no servidor.
-import { G, ACCOUNT } from '../application/gameStore.js?v=298';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=238';
-import { ITEMS } from '../domain/items.js?v=309';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=294';
-import { maxSoul } from '../domain/soul.js?v=236';
-import { conjureSpell } from '../application/spellUseCases.js?v=210';
-import { on, EVENTS } from '../shared/eventBus.js?v=296';
-import { itemIconImg, spellIconImg } from './shared.js?v=301';
-import { t } from '../i18n/i18n.js?v=314';
+import { G, ACCOUNT } from '../application/gameStore.js?v=299';
+import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=239';
+import { ITEMS } from '../domain/items.js?v=310';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=295';
+import { maxSoul } from '../domain/soul.js?v=237';
+import { conjureSpell } from '../application/spellUseCases.js?v=211';
+import { on, EVENTS } from '../shared/eventBus.js?v=297';
+import { itemIconImg, spellIconImg } from './shared.js?v=302';
+import { t } from '../i18n/i18n.js?v=315';
 
 // Ordem das seções: primeiro o que o jogador USA na mão (conjurar), depois o
 // que o RTC dispara sozinho, e por último o que é só de mundo.

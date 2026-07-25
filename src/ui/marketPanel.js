@@ -6,14 +6,14 @@
 // A LÓGICA de economia (carteira, listar, comprar, preencher ordem) continua em
 // application/marketUseCases.js — aqui é só a janela (render). Os handlers são
 // expostos no window por main.js (depositToMarket, listItemOnMarket, ...).
-import { G } from '../application/gameStore.js?v=298';
-import { ITEMS } from '../domain/items.js?v=309';
-import { on, EVENTS } from '../shared/eventBus.js?v=296';
-import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=301';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=299';
-import { fetchMyMarketWallet, fetchMarketListings, fetchMarketStats } from '../application/marketUseCases.js?v=298';
-import { isMarketEnabled } from '../application/adminUseCases.js?v=299';
-import { t } from '../i18n/i18n.js?v=314';
+import { G } from '../application/gameStore.js?v=299';
+import { ITEMS } from '../domain/items.js?v=310';
+import { on, EVENTS } from '../shared/eventBus.js?v=297';
+import { formatNum, escapeHtml, itemIconImg, goldIconImg } from './shared.js?v=302';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=300';
+import { fetchMyMarketWallet, fetchMarketListings, fetchMarketStats } from '../application/marketUseCases.js?v=299';
+import { isMarketEnabled } from '../application/adminUseCases.js?v=300';
+import { t } from '../i18n/i18n.js?v=315';
 
 // Estado só da janela (não é save): item selecionado, dados carregados e busca.
 let selectedId = null;
