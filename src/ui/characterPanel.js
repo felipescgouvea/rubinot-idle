@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=279';
-import { VOCATIONS, XP_TABLE, MAX_LEVEL, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=306';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=276';
-import { skillIconImg, itemIconImg } from './shared.js?v=282';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=275';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=275';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=275';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=275';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=276';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=277';
-import { formatNum, applyHpState } from './shared.js?v=282';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=296';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=343';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=280';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=275';
-import { selectVocation } from '../application/characterUseCases.js?v=280';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=280';
-import { t } from '../i18n/i18n.js?v=295';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=116';
+import { G } from '../application/gameStore.js?v=280';
+import { VOCATIONS, XP_TABLE, MAX_LEVEL, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=307';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=277';
+import { skillIconImg, itemIconImg } from './shared.js?v=283';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=276';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=276';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=276';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=276';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=277';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=278';
+import { formatNum, applyHpState } from './shared.js?v=283';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=297';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=344';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=281';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=276';
+import { selectVocation } from '../application/characterUseCases.js?v=281';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=281';
+import { t } from '../i18n/i18n.js?v=296';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=117';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -322,7 +322,10 @@ function renderBars() {
   const maxHp = getMaxHp(), maxMana = getMaxMana();
   const hpPct = Math.round((G.hp / maxHp) * 100);
   const manaPct = Math.round((G.mana / maxMana) * 100);
-  const xpPct = G.level < MAX_LEVEL ? Math.round((G.xp / XP_TABLE[G.level - 1]) * 100) : 100;
+  // clamp em 100: um personagem que ficou no antigo cap 100 acumulou XP não
+  // convertida; até o 1º reconcile do servidor (que agora sobe o nível) o G.xp
+  // pode passar de um nível inteiro e estourar a barra além de 100%.
+  const xpPct = G.level < MAX_LEVEL ? Math.min(100, Math.round((G.xp / XP_TABLE[G.level - 1]) * 100)) : 100;
 
   const hpBar = document.getElementById('hp-bar');
   hpBar.style.width = hpPct + '%';
@@ -457,7 +460,7 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
   document.getElementById('player-mana-fill').style.width = manaPct + '%';
   document.getElementById('player-mana-label').textContent = `${Math.floor(Math.min(Math.max(0, G.mana), maxMana))}/${maxMana}`;
   const xpNext = XP_TABLE[G.level - 1];
-  const xpPct = (G.level < MAX_LEVEL && xpNext) ? Math.max(0, Math.round((G.xp / xpNext) * 100)) : 100;
+  const xpPct = (G.level < MAX_LEVEL && xpNext) ? Math.min(100, Math.max(0, Math.round((G.xp / xpNext) * 100))) : 100;
   document.getElementById('player-xp-fill').style.width = xpPct + '%';
   document.getElementById('player-xp-label').textContent = (G.level < MAX_LEVEL && xpNext) ? t('character.xpFraction', { xp: G.xp, xpNext }) : t('character.max');
 }
