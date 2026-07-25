@@ -512,6 +512,10 @@ export function fetchCharmState(slot) {
 export function unlockCharmOnServer(slot, charmId) {
   return huntFetch('/charm/unlock', { method: 'POST', body: { slot, charmId } });
 }
+// #R4: credita charm points de prêmio (Arena) no acumulador server-side.
+export function grantCharmBonusOnServer(slot, amount) {
+  return huntFetch('/charm/grant-bonus', { method: 'POST', body: { slot, amount } });
+}
 
 // ---- Presas (Prey) AUTORITATIVAS — ver server/src/index.js: /prey/*.
 // Substitui G.prey mutado só localmente (achado de auditoria: /hunt/start

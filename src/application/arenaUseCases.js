@@ -4,18 +4,19 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=297';
-import { emit, EVENTS } from '../shared/eventBus.js?v=295';
-import { getMagic, getMaxHp } from './stats.js?v=294';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=326';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=294';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=296';
-import { grantReward } from './rewardGrants.js?v=134';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=294';
-import { addItemToInventory } from './inventoryCore.js?v=295';
-import { ITEMS } from '../domain/items.js?v=308';
-import { saveGame } from './saveGameUseCase.js?v=297';
-import { t } from '../i18n/i18n.js?v=313';
+import { G } from './gameStore.js?v=298';
+import { emit, EVENTS } from '../shared/eventBus.js?v=296';
+import { getMagic, getMaxHp } from './stats.js?v=295';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=327';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=295';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=297';
+import { grantReward } from './rewardGrants.js?v=135';
+import { grantCharmBonus } from './bestiaryUseCases.js?v=296';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=295';
+import { addItemToInventory } from './inventoryCore.js?v=296';
+import { ITEMS } from '../domain/items.js?v=309';
+import { saveGame } from './saveGameUseCase.js?v=298';
+import { t } from '../i18n/i18n.js?v=314';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
@@ -140,7 +141,7 @@ export async function startArenaBattle() {
     // Bônus de sequência: +3 por vitória seguida, até um teto de +30.
     const streakBonus = Math.min(30, (G.arenaStreak - 1) * 3);
     const rcGained = 25 + streakBonus;
-    G.charmPoints = (G.charmPoints || 0) + rcGained;
+    await grantCharmBonus(rcGained); // #R4: charm de prêmio é server-authoritative (antes era local e o sync descartava)
     bumpMissionProgress('arenaWins', 1);
     const streakSuffix = streakBonus ? ` (${t('arena.streakLabel', { streak: G.arenaStreak })})` : '';
     log.push(`<span class="log-kill">🏆 ${t('arena.victoryLog', { pts: ptsDelta, rc: rcGained })}${streakSuffix}</span>`);
@@ -162,13 +163,14 @@ export async function startArenaBattle() {
 // Recompensa única por alcançar uma divisão — só pode reivindicar a divisão
 // atual ou uma já ultrapassada (nunca uma acima do que os pontos permitem),
 // e nunca duas vezes a mesma.
-export function claimArenaDivisionReward(division) {
+export async function claimArenaDivisionReward(division) {
   const current = arenaDivisionForPoints(G.arenaPoints);
   const reached = ARENA_DIVISIONS.indexOf(division) <= ARENA_DIVISIONS.indexOf(current);
   if (!reached || G.arenaDivisionsClaimed.includes(division)) return;
   const reward = ARENA_DIVISION_REWARDS[division];
   if (!reward) return;
   if (!grantReward(reward)) return;   // tipo desconhecido: não marca como resgatado
+  if (reward.type === 'charm') await grantCharmBonus(reward.amount); // #R4: server-authoritative
   G.arenaDivisionsClaimed.push(division);
   emit(EVENTS.HEADER_STATS);
   saveGame();

@@ -5,9 +5,9 @@
 // Os quatro tipos vivem todos no save do jogador (G), não no servidor, então o
 // grant é client-side; o servidor só valida QUE o resgate pode acontecer (uma
 // vez só, tier alcançado) — ver /bp/claim.
-import { G } from './gameStore.js?v=297';
-import { emit, EVENTS } from '../shared/eventBus.js?v=295';
-import { t } from '../i18n/i18n.js?v=313';
+import { G } from './gameStore.js?v=298';
+import { emit, EVENTS } from '../shared/eventBus.js?v=296';
+import { t } from '../i18n/i18n.js?v=314';
 
 // Rótulo curto do prêmio, pra notificação e pros cartões da UI.
 export function rewardLabel(r) {
@@ -33,7 +33,10 @@ export function grantReward(r) {
     const base = G.boosts[kind] && G.boosts[kind] > now ? G.boosts[kind] : now;
     G.boosts[kind] = base + r.minutes * 60000;
   } else if (r.type === 'charm') {
-    G.charmPoints = (G.charmPoints || 0) + r.amount;
+    // #R4: charm points são server-authoritative (derivados das kills + bonus).
+    // O crédito acontece no servidor — BP no /bp/claim, Arena via grantCharmBonus —
+    // e o CHAMADOR aplica o total real. Creditar local aqui duplicaria e seria
+    // descartado pelo sync na próxima morte. Só reconhecemos o tipo (notifica abaixo).
   } else if (r.type === 'preyCard') {
     G.preyCards = (G.preyCards || 0) + r.amount;
   } else {

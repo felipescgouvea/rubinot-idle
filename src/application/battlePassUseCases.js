@@ -1,12 +1,12 @@
-import { G, ACCOUNT } from './gameStore.js?v=297';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=298';
-import { grantReward } from './rewardGrants.js?v=134';
-import { ITEMS } from '../domain/items.js?v=308';
-import { emit, EVENTS } from '../shared/eventBus.js?v=295';
-import { addItemToInventory } from './inventoryCore.js?v=295';
-import { saveGame } from './saveGameUseCase.js?v=297';
-import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=305';
-import { t } from '../i18n/i18n.js?v=313';
+import { G, ACCOUNT } from './gameStore.js?v=298';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=299';
+import { grantReward } from './rewardGrants.js?v=135';
+import { ITEMS } from '../domain/items.js?v=309';
+import { emit, EVENTS } from '../shared/eventBus.js?v=296';
+import { addItemToInventory } from './inventoryCore.js?v=296';
+import { saveGame } from './saveGameUseCase.js?v=298';
+import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=306';
+import { t } from '../i18n/i18n.js?v=314';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -117,6 +117,10 @@ export async function claimBpReward(tier, kind = 'free') {
   // atuais (boost/charm/carta de presa/varinha de treino) vivem no save do
   // jogador, não em player_stats, então quem aplica é o cliente.
   grantReward(r);
+  // #R4: charm points de BP são creditados no servidor (/bp/claim) — aplica o
+  // total autoritativo que ele devolve (antes o crédito era só local e o sync
+  // das kills o descartava na próxima morte).
+  if (res.charmPoints != null) G.charmPoints = res.charmPoints;
   emit(EVENTS.BATTLE_PASS_PANEL);
   emit(EVENTS.HEADER_STATS);
   saveGame();

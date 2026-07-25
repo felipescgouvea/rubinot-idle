@@ -7,14 +7,23 @@
 // de mortes por espécie) é gravado pelo PRÓPRIO servidor a cada kill (ver
 // huntEngine.js: settleKill/flushBestiaryKills) — o cliente não escreve mais
 // nisso, só espelha o que o servidor devolve.
-import { G, ACCOUNT } from './gameStore.js?v=297';
-import { CHARMS, CHARM_EQUIP_SLOTS } from '../domain/charms.js?v=294';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=295';
-import { saveGame } from './saveGameUseCase.js?v=297';
-import { fetchCharmState, unlockCharmOnServer } from '../infrastructure/authClient.js?v=305';
-import { t } from '../i18n/i18n.js?v=313';
+import { G, ACCOUNT } from './gameStore.js?v=298';
+import { CHARMS, CHARM_EQUIP_SLOTS } from '../domain/charms.js?v=295';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=296';
+import { saveGame } from './saveGameUseCase.js?v=298';
+import { fetchCharmState, unlockCharmOnServer, grantCharmBonusOnServer } from '../infrastructure/authClient.js?v=306';
+import { t } from '../i18n/i18n.js?v=314';
 
 let lastSyncAt = 0;
+
+// #R4: credita charm points de prêmio (Arena) no servidor e aplica o novo total
+// autoritativo. Antes o prêmio era só `G.charmPoints += amount` local, e o sync
+// (que deriva das kills) o descartava na próxima morte. Ver server /charm/grant-bonus.
+export async function grantCharmBonus(amount) {
+  if (!(amount > 0)) return;
+  const res = await grantCharmBonusOnServer(ACCOUNT.activeSlot, amount);
+  if (res && res.ok && res.points != null) { G.charmPoints = res.points; emit(EVENTS.HEADER_STATS); }
+}
 
 // Busca o estado real (pontos, desbloqueados, mortes por espécie) e espelha
 // em G — chamado ao matar (throttled) e ao abrir o Bestiário. Notifica só

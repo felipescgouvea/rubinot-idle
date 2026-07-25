@@ -260,7 +260,7 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/equip', '/charm/unlock', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
+  '/conjure', '/imbue', '/equip', '/charm/unlock', '/charm/grant-bonus', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
   '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
   // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
@@ -1020,9 +1020,11 @@ const server = http.createServer(async (req, res) => {
       if (reward.type === 'gold') gold += reward.amount;
       else if (reward.type === 'rubini') rubini += reward.amount;
       else if (reward.type === 'item') { await incrementInventory(user.id, slot, reward.itemId, 1); grantedItem = reward.itemId; }
+      else if (reward.type === 'charm') await addCharmBonus(user.id, slot, reward.amount); // #R4: charm agora é server-side
       claimed.push(tier);
       await upsertRow('player_stats', { user_id: user.id, slot, gold, rubini, bp, updated_at: new Date().toISOString() }, 'user_id,slot');
-      return send(res, 200, { ok: true, gold, rubini, itemId: grantedItem, tier, kind });
+      const charmPoints = reward.type === 'charm' ? (await charmPointsAvailable(user.id, slot)).points : undefined;
+      return send(res, 200, { ok: true, gold, rubini, itemId: grantedItem, tier, kind, charmPoints });
     }
 
     // Comprar a trilha PREMIUM do Battle Pass (paga em Rubini Coins).
@@ -1093,9 +1095,23 @@ const server = http.createServer(async (req, res) => {
       ]);
       const kills = (bestiaryRow && bestiaryRow.state && bestiaryRow.state.kills) || {};
       const unlocked = (charmsRow && charmsRow.state && Array.isArray(charmsRow.state.unlocked)) ? charmsRow.state.unlocked : [];
-      const earned = Object.values(kills).reduce((sum, n) => sum + charmPointsForKills(Number(n) || 0), 0);
+      // bonus = charm points de prêmio (Arena/Battle Pass) — não derivam das kills,
+      // então o servidor os acumula em player_charms.state.bonus (ver addCharmBonus).
+      // Sem isto, o prêmio de charm era creditado só no cliente e o sync (que
+      // deriva das kills) o descartava na próxima morte (#R4).
+      const bonus = (charmsRow && charmsRow.state && Number(charmsRow.state.bonus)) || 0;
+      const earned = Object.values(kills).reduce((sum, n) => sum + charmPointsForKills(Number(n) || 0), 0) + bonus;
       const spent = unlocked.reduce((sum, id) => sum + ((CHARMS[id] && CHARMS[id].cost) || 0), 0);
       return { points: Math.max(0, earned - spent), unlocked, kills };
+    }
+
+    // Credita charm points de prêmio (Arena/BP) no acumulador server-side, preservando
+    // o resto do state (unlocked). Chamado dentro do mutex ECON (ver ECON_PATHS).
+    async function addCharmBonus(userId, slot, amount) {
+      const charmsRow = await selectOne('player_charms', { user_id: userId, slot });
+      const state = (charmsRow && charmsRow.state) || { unlocked: [] };
+      state.bonus = (Number(state.bonus) || 0) + amount;
+      await upsertRow('player_charms', { user_id: userId, slot, state, updated_at: new Date().toISOString() }, 'user_id,slot');
     }
 
     if (url.pathname === '/charm/state' && req.method === 'GET') {
@@ -1119,8 +1135,26 @@ const server = http.createServer(async (req, res) => {
       if (unlocked.includes(body.charmId)) return send(res, 409, { error: 'charm já desbloqueado' });
       if (points < charm.cost) return send(res, 400, { error: 'charm points insuficientes' });
       const novoUnlocked = [...unlocked, body.charmId];
-      await upsertRow('player_charms', { user_id: user.id, slot, state: { unlocked: novoUnlocked }, updated_at: new Date().toISOString() }, 'user_id,slot');
+      // Preserva state.bonus (charm de prêmio) ao regravar o unlocked (#R4).
+      const prevState = (await selectOne('player_charms', { user_id: user.id, slot }))?.state || {};
+      await upsertRow('player_charms', { user_id: user.id, slot, state: { ...prevState, unlocked: novoUnlocked }, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, unlocked: novoUnlocked, points: points - charm.cost });
+    }
+
+    // #R4: credita charm points de PRÊMIO (vitória/divisão de Arena — client-side,
+    // sem endpoint próprio). O BP concede o dele atômico no /bp/claim. Serializado
+    // pelo mutex ECON (ver ECON_PATHS) pra não perder incrementos concorrentes.
+    if (url.pathname === '/charm/grant-bonus' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const amount = Math.floor(Number(body.amount) || 0);
+      if (!(amount > 0) || amount > 10000) return send(res, 400, { error: 'amount inválido' });
+      await addCharmBonus(user.id, slot, amount);
+      const { points } = await charmPointsAvailable(user.id, slot);
+      return send(res, 200, { ok: true, points });
     }
 
     // Presas (Prey) AUTORITATIVAS (achado de auditoria: mesma classe do bug de
