@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=312';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=320';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=317';
-import { ZONES } from '../domain/bestiary.js?v=331';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=339';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=310';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=342';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=341';
-import { elementMod } from '../domain/elements.js?v=308';
-import { STAMINA_MAX } from '../domain/stamina.js?v=308';
-import { ITEMS } from '../domain/items.js?v=323';
-import { MONSTERS } from '../domain/bestiary.js?v=331';
-import { RARITY_TIERS } from '../domain/rarity.js?v=309';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=311';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=310';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=309';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=309';
-import { saveGame } from './saveGameUseCase.js?v=312';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=313';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=311';
-import { t } from '../i18n/i18n.js?v=328';
+import { G, ACCOUNT } from './gameStore.js?v=313';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=321';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=318';
+import { ZONES } from '../domain/bestiary.js?v=332';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=340';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=311';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=343';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=342';
+import { elementMod } from '../domain/elements.js?v=309';
+import { STAMINA_MAX } from '../domain/stamina.js?v=309';
+import { ITEMS } from '../domain/items.js?v=324';
+import { MONSTERS } from '../domain/bestiary.js?v=332';
+import { RARITY_TIERS } from '../domain/rarity.js?v=310';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=312';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=311';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=310';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=310';
+import { saveGame } from './saveGameUseCase.js?v=313';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=314';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=312';
+import { t } from '../i18n/i18n.js?v=329';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -674,8 +674,12 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
         emit(EVENTS.MONSTER_DISPLAY, {});
       };
       if (missile) {
+        // Magia/runa com projétil PRÓPRIO já voou a sua no cast: a flecha básica vira
+        // SILENCIOSA (invisível) — só serve de relógio pra a queda de HP, sem a 2ª
+        // flecha fantasma. Ver huntUseCases (pendingSpellFx.hasProjectile) e playProjectile.
+        const silent = !!(pendingSpellFx && Date.now() - pendingSpellFx.at < 3000 && pendingSpellFx.hasProjectile);
         pendingHits.set(hitId, applyHit);
-        emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: uid, hitId });
+        emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: uid, hitId, silent });
         // salvaguarda: se o evento de pouso nunca chegar (painel não montado
         // ainda, aba trocada), não deixa o golpe pendente pra sempre.
         setTimeout(() => { if (pendingHits.delete(hitId)) applyHit(); }, hitSyncFallbackMs());
@@ -730,10 +734,13 @@ function applyServerPack(pack, frontDmg = 0, frontEl = 'physical') {
       emit(EVENTS.BATTLE_LIST);
     };
     if (missile) {
+      // Mesma regra do golpe normal: se a magia/runa já voou o projétil dela, a flecha
+      // básica FATAL vira silenciosa (relógio invisível) pra não sair a 2ª flecha.
+      const silent = !!(pendingSpellFx && Date.now() - pendingSpellFx.at < 3000 && pendingSpellFx.hasProjectile);
       pendingFatalUid = killedFrontUid;
       const hitId = String(++hitSeq);
       pendingHits.set(hitId, showFatal);
-      emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid, hitId });
+      emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: killedFrontUid, hitId, silent });
       setTimeout(() => { if (pendingHits.delete(hitId)) showFatal(); }, hitSyncFallbackMs());
     } else {
       // Golpe FATAL corpo-a-corpo: swing sobre o alvo antes de ele tombar.
@@ -1240,8 +1247,10 @@ export function doCosmeticTick() {
       if (runeMissile) emit(EVENTS.COMBAT_PROJECTILE, { missile: runeMissile, targetUid: String(primary.uid || primary.defKey) });
       // GUARDA em vez de emitir agora: o efeito sai junto com a queda de vida
       // confirmada pelo servidor (ver applyServerPack). Emitir aqui é o relógio
-      // do tick LOCAL, que corre solto do dano real.
-      pendingSpellFx = { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid, at: Date.now(), element: rune.element || 'physical' };
+      // do tick LOCAL, que corre solto do dano real. hasProjectile: quando a runa
+      // JÁ voou o próprio projétil acima, o applyServerPack não pode disparar a
+      // flecha básica ADICIONAL (era a "2ª flecha fantasma" — ver playProjectile silent).
+      pendingSpellFx = { effect: runeEffectName(pick.id), shape: areaId, targetUid: primary.uid, at: Date.now(), element: rune.element || 'physical', hasProjectile: !!runeMissile };
     } else if (pick && pick.kind === 'spell') {
       const atkSpellId = pick.id, atkSpell = pick.s;
       startSpellCd(atkSpellId, atkSpell.cd);
@@ -1252,6 +1261,10 @@ export function doCosmeticTick() {
         // Ethereal Spear/Strong Ethereal Spear: joga uma lança de verdade
         // (ver domain/combatFx.js: SPELL_MISSILE) em vez do efeito de área.
         emit(EVENTS.COMBAT_PROJECTILE, { missile, targetUid: String(primary.uid || primary.defKey) });
+        // A lança da magia É o projétil visível — marca pra o applyServerPack NÃO
+        // disparar a flecha básica adicional (a "flecha fantasma" do paladino). Sem
+        // efeito de área (o próprio projétil é o golpe); só serve de flag + relógio.
+        pendingSpellFx = { effect: null, shape: 'single', targetUid: primary.uid, at: Date.now(), element: atkSpell.element || 'physical', hasProjectile: true };
       } else {
         pendingSpellFx = { effect: spellEffectName(atkSpellId, atkSpell.element), shape: atkSpell.area || 'single', targetUid: primary.uid, at: Date.now(), element: atkSpell.element || 'physical' };
       }
