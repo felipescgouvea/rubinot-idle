@@ -17,6 +17,12 @@
   --parch-2: #efe0be;
   --parch-3: #e8d5ac;
   --parch-deep: #dcc79a;
+  /* superfícies internas claras (log de combate, linhas de tabela, mini-cards) —
+     viraram vars pra o tema escuro poder invertê-las de uma vez. */
+  --surface-1: #fdf6e3;
+  --surface-2: #faf0d8;
+  --surface-3: #fdf4d7;
+  --input-bg: #ffffff;
   --cream: #f0e6d2;
   --line: #3d3225;
   --line-soft: #b8a67f;
@@ -46,6 +52,49 @@
   --accent: #1e5799;
   --green: #2e7d32;
 }
+
+/* ===== TEMA ESCURO — [data-theme="dark"] no <html> (toggle no topbar).
+   A maioria das superfícies usa var(--parch/ink/surface/cream/...), então
+   inverter as vars já vira quase tudo; fundo, inputs e alguns detalhes têm
+   override abaixo. Aplicado ANTES do CSS por um script inline no <head> pra
+   não piscar tema errado no load. */
+:root[data-theme="dark"] {
+  --ink: #e9dcc4;
+  --ink-soft: #c6b493;
+  --ink-faint: #9a8760;
+  --parch-1: #2d2721;
+  --parch-2: #26211b;
+  --parch-3: #201b15;
+  --parch-deep: #17130d;
+  --surface-1: #221d16;
+  --surface-2: #272019;
+  --surface-3: #2c2418;
+  --input-bg: #191510;
+  --line-soft: #57492f;
+  --line: #0c0a07;
+  --brown-btn: #6b573f;
+  --brown-btn-line: #3d3325;
+  --muted: #9a8760;
+}
+:root[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse 85% 55% at 50% -8%, #1c2b47 0%, transparent 62%),
+    radial-gradient(ellipse 120% 60% at 50% 112%, #10161f 0%, transparent 55%),
+    linear-gradient(180deg, #10141b 0%, #0c0f15 60%, #0a0c11 100%);
+}
+:root[data-theme="dark"] input[type="text"],
+:root[data-theme="dark"] input[type="number"],
+:root[data-theme="dark"] input[type="email"],
+:root[data-theme="dark"] input[type="password"],
+:root[data-theme="dark"] .autosell-input,
+:root[data-theme="dark"] .admin-rarity-row input,
+:root[data-theme="dark"] .admin-zone-mult input,
+:root[data-theme="dark"] .admin-spawn-row input,
+:root[data-theme="dark"] .admin-loot-row input {
+  background: var(--input-bg); color: var(--ink); border-color: var(--line-soft);
+}
+/* botão de tema no topbar */
+.theme-toggle { min-width: 34px; }
 
 body {
   /* céu ilustrado do site: azul com nuvens suaves e horizonte */
@@ -421,7 +470,7 @@ body {
 .vocation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 14px !important; }
 
 .voc-btn {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-2));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-2));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 16px 10px;
@@ -525,7 +574,7 @@ body {
 .bar-row-mini span { font-size: 9.5px; color: var(--ink-soft); width: 64px; text-align: right; font-weight: 600; flex-shrink: 0; }
 .char-status-stats { display: flex; gap: 6px; flex-shrink: 0; }
 .stat-chip {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 5px;
   padding: 3px 8px;
@@ -554,7 +603,7 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .hunt-analyzer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .ha-cell {
   display: flex; flex-direction: column; gap: 1px;
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft); border-radius: 6px; padding: 5px 8px;
 }
 .ha-label { font-size: 10px; color: var(--ink-faint); letter-spacing: 0.3px; }
@@ -577,7 +626,7 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .char-skills { display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto; align-content: center; }
 .char-skill-chip {
   display: flex; align-items: center; gap: 3px;
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 5px;
   padding: 2px 5px 3px;
@@ -624,7 +673,7 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin: 12px 0; }
 .stat-box {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 6px;
   padding: 9px 6px;
@@ -637,7 +686,7 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 /* ============ CAÇADA ============ */
 input[type="text"] {
   flex: 1;
-  background: #fdf6e3;
+  background: var(--surface-1);
   border: 1px solid var(--line-soft);
   color: var(--ink);
   border-radius: 4px;
@@ -659,7 +708,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   display: flex;
   align-items: center;
   gap: 7px;
-  background: #fdf6e3;
+  background: var(--surface-1);
   border: 1px solid var(--line-soft);
   color: var(--ink);
   border-radius: 4px;
@@ -690,7 +739,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   .zone-picker-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 .zone-card {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 10px;
   padding: 14px 10px;
@@ -700,7 +749,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   align-items: center;
   min-width: 0;
 }
-.zone-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
+.zone-card.active { border: 2px solid var(--gold); background: var(--surface-3); }
 .zone-card.locked { opacity: 0.55; }
 /* Card de cidade (passo 1 do picker) */
 .city-card {
@@ -716,7 +765,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   transition: transform .08s ease, border-color .08s ease, box-shadow .08s ease;
 }
 .city-card:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 4px 12px #0002; }
-.city-card.active { border: 2px solid var(--gold); background: #fdf4d7; }
+.city-card.active { border: 2px solid var(--gold); background: var(--surface-3); }
 .city-card.locked { opacity: 0.6; }
 .city-card-icon { font-size: 2.6rem; filter: drop-shadow(0 2px 3px #00000033); }
 .city-card-blurb { font-size: 11px; color: var(--ink-soft); line-height: 1.35; margin-top: 4px; min-height: 30px; }
@@ -822,7 +871,7 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 
 #kill-counters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .kill-pill {
-  background: #faf0d8;
+  background: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 10px;
   padding: 2px 10px;
@@ -1394,7 +1443,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
   overflow-x: hidden;
   font-size: 11px;
   line-height: 1.8;
-  background: #fdf6e3;
+  background: var(--surface-1);
   border: 1px solid var(--line-soft);
   border-radius: 6px;
   padding: 9px 16px 9px 11px;
@@ -1419,7 +1468,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 /* ============ LOOT ============ */
 #loot-display { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 14px !important; }
 .loot-item {
-  background: #faf0d8;
+  background: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 5px;
   padding: 4px 9px;
@@ -1428,7 +1477,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
   box-shadow: 0 1px 3px #00000022;
 }
 .loot-item.rare { border-color: #8e44ad; color: #6d3488; background: #f5ebfa; }
-.loot-item.epic { border-color: var(--gold); color: #8a6408; background: #fdf4d7; }
+.loot-item.epic { border-color: var(--gold); color: #8a6408; background: var(--surface-3); }
 
 /* ============ TAREFAS ============ */
 #task-rooms { margin: 12px 14px !important; }
@@ -1436,7 +1485,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .admin-subtab-btn.locked { opacity: 0.55; cursor: not-allowed; }
 .task-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; align-items: start; }
 .task-card {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 10px 12px;
@@ -1482,7 +1531,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .task-btn.done { background: linear-gradient(180deg, var(--green-badge), var(--green-1)); border-color: var(--green-2); }
 
 #active-task-display {
-  background: linear-gradient(180deg, #fdf4d7, #f5e6b8);
+  background: linear-gradient(180deg, var(--surface-3), #f5e6b8);
   border: 2px solid var(--gold);
   border-radius: 8px;
   padding: 13px;
@@ -1496,7 +1545,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 
 /* ============ SKILLS / RTC ============ */
 #skill-points-display {
-  background: #faf0d8;
+  background: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 6px;
   padding: 11px 14px;
@@ -1511,7 +1560,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 #rtc-settings h4 { font-family: var(--serif); color: var(--navy-2); }
 #rtc-settings h5 { font-family: var(--serif); color: var(--navy-1); font-size: 13px; font-weight: 700; }
 .skill-card {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 13px;
@@ -1728,7 +1777,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 /* ============ ARENA ============ */
 #arena-info { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 11px; margin: 12px 14px !important; }
 .arena-stat {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 14px;
@@ -1739,7 +1788,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .arena-stat-lbl { font-size: 9.5px; color: var(--ink-faint); margin-top: 4px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
 
 #arena-battle-area {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 16px;
@@ -1749,7 +1798,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .arena-vs { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
 .arena-fighter {
   flex: 1;
-  background: #fdf6e3;
+  background: var(--surface-1);
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 13px;
@@ -1778,12 +1827,12 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 }
 .arena-btn:hover { filter: brightness(1.12); }
 
-.arena-log { margin-top: 13px; font-size: 10.5px; line-height: 1.85; max-height: 160px; overflow-y: auto; background: #fdf6e3; border: 1px solid var(--line-soft); border-radius: 6px; padding: 9px 11px; }
+.arena-log { margin-top: 13px; font-size: 10.5px; line-height: 1.85; max-height: 160px; overflow-y: auto; background: var(--surface-1); border: 1px solid var(--line-soft); border-radius: 6px; padding: 9px 11px; }
 
 /* ============ INVENTÁRIO ============ */
 #equipment-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 9px; margin: 12px 14px !important; }
 .equip-slot {
-  background: #fdf6e3;
+  background: var(--surface-1);
   border: 2px dashed var(--line-soft);
   border-radius: 8px;
   padding: 10px 8px;
@@ -1793,7 +1842,7 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
   transition: all 0.2s;
 }
 .equip-slot:hover { border-color: var(--gold); }
-.equip-slot.filled { border-style: solid; border-color: var(--gold); background: #fdf4d7; box-shadow: 0 1px 5px #b8860b33; }
+.equip-slot.filled { border-style: solid; border-color: var(--gold); background: var(--surface-3); box-shadow: 0 1px 5px #b8860b33; }
 .equip-slot-name { font-size: 8.5px; color: var(--ink-faint); margin-bottom: 4px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
 .equip-slot-item { font-size: 10.5px; color: var(--ink); }
 .equip-slot-icon { font-size: 21px; filter: drop-shadow(0 1px 2px #00000033); }
@@ -1802,7 +1851,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 
 #inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; margin: 8px 14px 14px !important; }
 .inv-item {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 9px 6px;
@@ -1834,7 +1883,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* ============ MUNDOS ============ */
 #worlds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 12px 14px 14px !important; }
 .world-card {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 15px;
@@ -1843,7 +1892,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   box-shadow: 0 1px 4px #00000022;
 }
 .world-card:hover { border-color: var(--navy-1); transform: translateY(-2px); box-shadow: 0 4px 12px #00000033; }
-.world-card.active-world { border: 2px solid var(--gold); background: #fdf4d7; box-shadow: 0 2px 10px #b8860b33; }
+.world-card.active-world { border: 2px solid var(--gold); background: var(--surface-3); box-shadow: 0 2px 10px #b8860b33; }
 .world-card.locked { opacity: 0.55; cursor: default; filter: grayscale(0.5); }
 .world-card.locked:hover { transform: none; border-color: var(--line-soft); box-shadow: 0 1px 4px #00000022; }
 .world-icon { font-size: 2.1rem; margin-bottom: 6px; filter: drop-shadow(0 2px 3px #00000033); }
@@ -1854,7 +1903,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 
 /* ============ BATTLE PASS ============ */
 #bp-progress-area {
-  background: #faf0d8;
+  background: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 13px;
@@ -1867,7 +1916,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 
 #bp-rewards-track, #arena-division-rewards { display: flex; gap: 11px; overflow-x: auto; padding-bottom: 8px; margin: 0 14px 14px !important; }
 .bp-reward {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 12px 9px;
@@ -1877,7 +1926,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   box-shadow: 0 1px 3px #00000022;
 }
 .bp-reward.claimed { border-color: var(--green-badge); opacity: 0.6; }
-.bp-reward.available { border: 2px solid var(--gold); background: #fdf4d7; animation: bp-pulse 2s ease-in-out infinite; }
+.bp-reward.available { border: 2px solid var(--gold); background: var(--surface-3); animation: bp-pulse 2s ease-in-out infinite; }
 @keyframes bp-pulse { 0%,100% { box-shadow: 0 0 6px #b8860b44; } 50% { box-shadow: 0 0 16px #b8860b88; } }
 /* Battle Pass — trilha premium */
 .bp-reward-col { display: flex; flex-direction: column; gap: 6px; }
@@ -1906,7 +1955,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 
 .bp-missions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 0 14px 14px !important; }
 .bp-mission {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 10px 12px;
@@ -1920,7 +1969,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   width: 100%;
   border-collapse: collapse;
   font-size: 11.5px;
-  background: #fdf6e3;
+  background: var(--surface-1);
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   overflow: hidden;
@@ -1941,7 +1990,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .hs-table td { padding: 7px 10px; border-bottom: 1px solid #3d322514; color: var(--ink); }
 .hs-table tbody tr:nth-child(even) { background: #f5e9cc; }
 .hs-table tbody tr:hover { background: #fdf0d5; }
-.hs-table tr.hs-me { background: #fdf4d7 !important; outline: 2px solid var(--gold); outline-offset: -2px; }
+.hs-table tr.hs-me { background: var(--surface-3) !important; outline: 2px solid var(--gold); outline-offset: -2px; }
 .hs-table .hs-highlight-col { font-weight: 800; color: var(--gold-dim); }
 /* Tabelas largas (Highscores 9 col, Mercado 6 col) rolam DENTRO da própria
    área no mobile em vez de estourar o eixo horizontal da PÁGINA inteira
@@ -2254,13 +2303,13 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   padding-right: 4px;
 }
 .outfit-card {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 10px;
   text-align: center;
 }
-.outfit-card.wearing { border: 2px solid var(--gold); background: #fdf4d7; }
+.outfit-card.wearing { border: 2px solid var(--gold); background: var(--surface-3); }
 .outfit-card-sprite-wrap { min-height: 48px; display: flex; align-items: center; justify-content: center; }
 .outfit-card-sprite { height: 48px; width: auto; image-rendering: pixelated; filter: drop-shadow(0 2px 3px #00000033); }
 .outfit-card-sprite-fallback { font-size: 2rem; }
@@ -2270,7 +2319,7 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .outfit-picker-sep { border: none; border-top: 1px solid var(--line-soft); margin: 16px 0; }
 .outfit-customize-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
 .outfit-preview-wrap {
-  background: linear-gradient(180deg, #faf0d8, var(--parch-3));
+  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 10px;
@@ -2550,7 +2599,7 @@ img.training-dummy-badge { width: 16px; height: 16px; }
   color: var(--ink); font-size: 11px; font-weight: 700; cursor: pointer;
 }
 .training-spell-btn:hover:not(:disabled) { border-color: var(--gold); background: #fff; }
-.training-spell-btn.selected { border: 2px solid var(--gold); background: #fdf4d7; }
+.training-spell-btn.selected { border: 2px solid var(--gold); background: var(--surface-3); }
 .training-spell-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .training-spell-btn small { color: var(--ink-soft); font-weight: 600; }
 
