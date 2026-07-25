@@ -2030,6 +2030,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .world-bonus { font-size: 11px; color: var(--green-1); font-weight: 600; }
 .world-bonus-icon { width: 13px; height: 13px; object-fit: contain; image-rendering: pixelated; vertical-align: -2px; }
 .inline-bp-icon { width: 13px; height: 13px; object-fit: contain; image-rendering: pixelated; vertical-align: -2px; }
+/* ícone real em título de modal (Achievements/Daily) — era emoji */
+.inline-title-icon { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; vertical-align: -4px; }
 .world-req { font-size: 10.5px; color: var(--red-hot); margin-top: 3px; font-weight: 600; }
 
 /* ============ BATTLE PASS ============ */

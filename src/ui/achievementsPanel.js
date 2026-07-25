@@ -1,13 +1,13 @@
 // Painel de Achievements + seleção de Título. Modal aberto pelo botão 🏆 na
 // barra do personagem. As conquistas são recomputadas dos stats (autoritativos)
 // a cada abertura — nada persistido além do título escolhido (G.title).
-import { G } from '../application/gameStore.js?v=311';
-import { ACHIEVEMENTS, isAchievementUnlocked, availableTitles } from '../domain/achievements.js?v=307';
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=312';
-import { openModal } from './shared.js?v=314';
-import { emit, EVENTS } from '../shared/eventBus.js?v=309';
-import { saveGame } from '../application/saveGameUseCase.js?v=311';
-import { t } from '../i18n/i18n.js?v=327';
+import { G } from '../application/gameStore.js?v=312';
+import { ACHIEVEMENTS, isAchievementUnlocked, availableTitles } from '../domain/achievements.js?v=308';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=313';
+import { openModal } from './shared.js?v=315';
+import { emit, EVENTS } from '../shared/eventBus.js?v=310';
+import { saveGame } from '../application/saveGameUseCase.js?v=312';
+import { t } from '../i18n/i18n.js?v=328';
 
 function achievementsHtml() {
   const unlocked = ACHIEVEMENTS.filter(a => isAchievementUnlocked(a, G));
@@ -24,7 +24,7 @@ function achievementsHtml() {
     .concat(titles.map(tt => `<button class="ach-title-btn ${G.title === tt ? 'active' : ''}" onclick="setPlayerTitle('${tt.replace(/'/g, "\\'")}')">${tt}</button>`))
     .join(' ');
   return `
-    <h3>🏆 ${t('achiev.title')} <span class="muted" style="font-size:12px">(${unlocked.length}/${ACHIEVEMENTS.length})</span></h3>
+    <h3>${spriteImgOrFallback(spriteUrl('items/Golden_Goblet.webp'), 'achievements', '🏆', 'inline-title-icon')} ${t('achiev.title')} <span class="muted" style="font-size:12px">(${unlocked.length}/${ACHIEVEMENTS.length})</span></h3>
     <div class="ach-titles">
       <div class="muted" style="font-size:12px;margin-bottom:4px">${t('achiev.displayedTitle')}${titles.length ? '' : t('achiev.noTitlesHint')}:</div>
       ${titleBtns}
