@@ -32,6 +32,7 @@ import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows, callRpc } from './db.js';
+import { acquireUserLock } from './econLock.js';
 import { temOuvinte, empurrar } from './realtime.js';
 
 // sessionId -> objeto de sessão (ver startSession) — tudo em memória; só
@@ -339,7 +340,22 @@ async function applyRtcHealing(session, cfg) {
 //
 // hp/mana/stamina/skills vão como valor absoluto porque a sessão é a única
 // dona deles enquanto a caçada existe.
-async function flushVitals(session) {
+// #R2 (corrida da carteira): segura o mutex do usuário enquanto grava o progresso,
+// A MENOS que o caller já o tenha (os endpoints ECON seguram o lock durante todo o
+// request — ver econLock.js). Sem isto, o flush (gold = gold + delta) que caísse
+// ENTRE o select e o upsert de uma compra (gold = stats.gold - custo, absoluto) era
+// sobrescrito, perdendo o ganho da caçada. O flush do scheduler (tick periódico e
+// stopSession) não tem lock -> `alreadyLocked=false` adquire; useItemInSession vem
+// de /hunt/use-item (já no mutex) -> `true`.
+async function flushVitals(session, alreadyLocked = false) {
+  const release = alreadyLocked ? null : await acquireUserLock(session.userId);
+  try {
+    await _flushVitalsImpl(session);
+  } finally {
+    if (release) release();
+  }
+}
+async function _flushVitalsImpl(session) {
   // Zera os deltas ANTES de enviar: uma morte que aconteça durante o await
   // acumula no contador novo e será gravada no flush seguinte. Se somássemos
   // depois, ela entraria duas vezes.
@@ -1289,7 +1305,7 @@ export async function useItemInSession(session, itemId) {
     if (item.heal) session.hp = Math.min(session.maxHp, session.hp + potionRestore(item.heal));
     if (item.mana) session.mana = Math.min(session.maxMana, session.mana + potionRestore(item.mana));
     await changeSessionInv(session, itemId, -1);
-    await flushVitals(session);
+    await flushVitals(session, true); // já no mutex ECON (/hunt/use-item) — não re-adquire (#R2)
     // invItem = qty AUTORITATIVA do item após o consumo, pro cliente espelhar a Bag
     // (o cliente não decrementa mais localmente — ver inventoryUseCases.js: useItem).
     return { ok: true, hp: session.hp, mana: session.mana, healedHp: session.hp - beforeHp, healedMana: session.mana - beforeMana, invItem: { id: itemId, qty: sessionQty(session, itemId) } };
@@ -1324,7 +1340,7 @@ export async function useItemInSession(session, itemId) {
     catch (e) { console.error('settleKill (runa) falhou (corpo já removido):', session.id, m.defKey, e.message); }
   }
   if (!session.currentPack.length) session.nextSpawnAt = Date.now() + 1500;
-  await flushVitals(session);
+  await flushVitals(session, true); // já no mutex ECON (/hunt/use-item) — não re-adquire (#R2)
   return {
     ok: true, hp: session.hp, mana: session.mana,
     dmg: primaryDmg, targetName: primaryName, killed: deaths.length > 0, hitCount: targets.length,

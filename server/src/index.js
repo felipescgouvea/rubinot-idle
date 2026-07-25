@@ -66,6 +66,7 @@ import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
 import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow, selectRaw, countWhere } from './db.js';
+import { acquireUserLock } from './econLock.js';
 import { iniciarRealtime } from './realtime.js';
 import { validSlot } from './slots.js';
 
@@ -276,17 +277,8 @@ const ECON_PATHS = new Set([
   // debitada (last-write-wins no upsert): duplicava a cura sem gastar a
   // poção correspondente (achado de auditoria).
 ]);
-const userLocks = new Map();   // userId -> cauda da fila de promessas
-async function acquireUserLock(userId) {
-  const prev = userLocks.get(userId) || Promise.resolve();
-  let release;
-  const curr = new Promise(r => { release = r; });
-  const tail = prev.then(() => curr);
-  userLocks.set(userId, tail);
-  await prev.catch(() => {});
-  return () => { release(); if (userLocks.get(userId) === tail) userLocks.delete(userId); };
-}
-
+// acquireUserLock agora vem de ./econLock.js (compartilhado com huntEngine: o
+// flush do tick também segura o lock — ver #R2 / corrida da carteira).
 
 const server = http.createServer(async (req, res) => {
   try {
