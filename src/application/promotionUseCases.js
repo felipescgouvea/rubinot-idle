@@ -3,7 +3,7 @@
 // Validada no servidor (nível e gold conferidos lá — nunca o cliente declara
 // "promovi"; mesmo modelo de blessingUseCases/shopUseCases).
 import { G, ACCOUNT } from './gameStore.js?v=279';
-import { PROMOTION } from '../domain/character.js?v=307';
+import { PROMOTION } from '../domain/character.js?v=306';
 import { emit, EVENTS } from '../shared/eventBus.js?v=277';
 import { saveGame } from './saveGameUseCase.js?v=279';
 import { promoteOnServer } from '../infrastructure/authClient.js?v=287';
