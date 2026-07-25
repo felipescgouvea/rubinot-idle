@@ -3,12 +3,12 @@
 // materiais em sprite) e o imbuement ativo. O efeito é resolvido no combate pelo
 // servidor (ver huntEngine.js). Renderiza numa ABA própria (#imbue-content) e
 // também num modal (atalho do card de equipamento) — mesmo corpo.
-import { G } from '../application/gameStore.js?v=288';
-import { IMBUEMENTS, isImbuementActive, activeImbuementFor, IMBUEABLE_SLOTS, imbuementsForSlot } from '../domain/imbuements.js?v=285';
-import { ITEMS } from '../domain/items.js?v=299';
-import { canImbue } from '../application/imbuementUseCases.js?v=284';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=291';
-import { t } from '../i18n/i18n.js?v=304';
+import { G } from '../application/gameStore.js?v=289';
+import { IMBUEMENTS, isImbuementActive, activeImbuementFor, IMBUEABLE_SLOTS, imbuementsForSlot } from '../domain/imbuements.js?v=286';
+import { ITEMS } from '../domain/items.js?v=300';
+import { canImbue } from '../application/imbuementUseCases.js?v=285';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=292';
+import { t } from '../i18n/i18n.js?v=305';
 
 let selSlot = null; // slot selecionado na máquina (weapon/helmet/armor)
 
@@ -83,7 +83,6 @@ function ensureSel() {
 function imbueBodyHtml() {
   ensureSel();
   return `<div class="imbue-window">
-    <h3 class="imbue-title">🔮 ${t('imbue.title')}</h3>
     <div class="imbue-hint muted">${t('imbue.hintPage')}</div>
     ${slotPickerHtml()}
     <div class="imbue-detail" id="imbue-detail">${slotDetailHtml()}</div>
@@ -117,7 +116,7 @@ export function selectImbueSlot(slot) {
 
 // Aplica o imbuement e re-renderiza (import dinâmico pra não acoplar circular).
 export async function applyImbuementClick(id) {
-  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=284');
+  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=285');
   await applyImbuement(id);
   rerender();
 }
