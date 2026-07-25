@@ -5,9 +5,9 @@
 // Os quatro tipos vivem todos no save do jogador (G), não no servidor, então o
 // grant é client-side; o servidor só valida QUE o resgate pode acontecer (uma
 // vez só, tier alcançado) — ver /bp/claim.
-import { G } from './gameStore.js?v=300';
-import { emit, EVENTS } from '../shared/eventBus.js?v=298';
-import { t } from '../i18n/i18n.js?v=316';
+import { G } from './gameStore.js?v=301';
+import { emit, EVENTS } from '../shared/eventBus.js?v=299';
+import { t } from '../i18n/i18n.js?v=317';
 
 // Rótulo curto do prêmio, pra notificação e pros cartões da UI.
 export function rewardLabel(r) {
@@ -23,15 +23,12 @@ export function rewardLabel(r) {
 // chama não marcar como resgatado à toa.
 export function grantReward(r) {
   if (!r) return false;
-  const now = Date.now();
   if (r.type === 'boost' || r.type === 'trainWand') {
-    // 'trainWand' é um boost de treino com outro nome — o Tibia chama de
-    // exercise weapon; aqui acelera o treino de dummy enquanto durar.
-    const kind = r.type === 'trainWand' ? 'training' : r.boost;
-    G.boosts = G.boosts || {};
-    // acumula tempo em vez de sobrescrever (igual à compra na loja)
-    const base = G.boosts[kind] && G.boosts[kind] > now ? G.boosts[kind] : now;
-    G.boosts[kind] = base + r.minutes * 60000;
+    // #3: boost e varinha de treino ('trainWand' = exercise weapon, boost de treino)
+    // são server-authoritative — o servidor concede (BP no /bp/claim, Arena via
+    // grantBoostOnServer) e o CHAMADOR aplica G.boosts do retorno. Creditar local aqui
+    // seria descartado pelo /hunt/start (que agora só lê player_stats.boosts). Só
+    // reconhecemos o tipo (notifica abaixo).
   } else if (r.type === 'charm') {
     // #R4: charm points são server-authoritative (derivados das kills + bonus).
     // O crédito acontece no servidor — BP no /bp/claim, Arena via grantCharmBonus —

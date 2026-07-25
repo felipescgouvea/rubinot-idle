@@ -1,12 +1,12 @@
-import { G, ACCOUNT } from './gameStore.js?v=300';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=301';
-import { grantReward } from './rewardGrants.js?v=137';
-import { ITEMS } from '../domain/items.js?v=311';
-import { emit, EVENTS } from '../shared/eventBus.js?v=298';
-import { addItemToInventory } from './inventoryCore.js?v=298';
-import { saveGame } from './saveGameUseCase.js?v=300';
-import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=308';
-import { t } from '../i18n/i18n.js?v=316';
+import { G, ACCOUNT } from './gameStore.js?v=301';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, bpTierForXp, dailyMissionsFor, weeklyMissionsFor, bpWeekId, currentBpSeason } from '../domain/progression.js?v=302';
+import { grantReward } from './rewardGrants.js?v=138';
+import { ITEMS } from '../domain/items.js?v=312';
+import { emit, EVENTS } from '../shared/eventBus.js?v=299';
+import { addItemToInventory } from './inventoryCore.js?v=299';
+import { saveGame } from './saveGameUseCase.js?v=301';
+import { bpClaimOnServer, bpBuyPremiumOnServer } from '../infrastructure/authClient.js?v=309';
+import { t } from '../i18n/i18n.js?v=317';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -125,6 +125,10 @@ export async function claimBpReward(tier, kind = 'free') {
   // player_stats) — aplica o saldo real (antes o cliente nem aplicava, o rubini
   // de tier de BP só aparecia no próximo daily claim).
   if (res.rubini != null) G.rubini = res.rubini;
+  // #3: boost/varinha de treino de BP são concedidos no servidor (/bp/claim chama
+  // grantBoostServer) — aplica o mapa de boosts autoritativo (antes era local e o
+  // /hunt/start, que agora só lê player_stats.boosts, o ignoraria).
+  if (res.boosts) G.boosts = res.boosts;
   emit(EVENTS.BATTLE_PASS_PANEL);
   emit(EVENTS.HEADER_STATS);
   saveGame();

@@ -241,6 +241,26 @@ export async function grantTaskRewardsServer(userId, slot, rewards) {
   return { gold, totalGoldEarned, level, xp, grantedItems };
 }
 
+// Concede/acumula um boost (xp/gold/loot/training) no SERVIDOR (server-authoritative).
+// Antes o boost vivia só em G.boosts (cliente) e o /hunt/start confiava em body.boosts:
+// (1) cliente adulterado forjava {xp,gold,loot: ano 3000} -> +50% permanente de graça;
+// (2) boost comprado no meio da caça não valia até rezonar (a sessão guardava o
+// snapshot do hunt-start). Agora grava player_stats.boosts (mapa tipo->expiraEm, ms) E
+// atualiza a sessão viva, então o efeito vale NA HORA. Fontes: loja (/shop/buy-boost),
+// BP (/bp/claim), arena (/boost/grant); o daily já gravava player_stats.boosts.
+export async function grantBoostServer(userId, slot, boostType, minutes) {
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  const boosts0 = (stats && stats.boosts && typeof stats.boosts === 'object') ? stats.boosts : {};
+  const now = Date.now();
+  // acumula tempo em cima do que ainda está valendo (igual à loja/daily)
+  const base = isBoostActive(boosts0, boostType, now) ? boosts0[boostType] : now;
+  const boosts = { ...boosts0, [boostType]: base + Math.max(0, minutes) * 60000 };
+  await upsertRow('player_stats', { user_id: userId, slot, boosts, updated_at: new Date().toISOString() }, 'user_id,slot');
+  const live = getLiveSessionBySlot(userId, slot);
+  if (live) live.boosts = boosts;
+  return boosts;
+}
+
 // --- DANO CONTÍNUO (magias "utori", ver domain/dotDamage.js) ---------------
 // A sequência de golpes é montada no CAST e guardada na própria criatura, com
 // horário absoluto de cada golpe. Isso tem duas consequências que são fiéis ao

@@ -61,10 +61,10 @@ function resetBpIfNewSeason(bp) {
   return bp;
 }
 import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
-import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
+import { isBoostActive, SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
-import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory, grantTaskRewardsServer } from './huntEngine.js';
+import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory, grantTaskRewardsServer, grantBoostServer } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow, selectRaw, countWhere } from './db.js';
 import { acquireUserLock } from './econLock.js';
 import { iniciarRealtime } from './realtime.js';
@@ -261,7 +261,7 @@ const ECON_PATHS = new Set([
   '/market/withdraw', '/market/deposit', '/market/list', '/market/cancel',
   '/market/list-buy', '/market/fill', '/market/buy', '/buy-blessing', '/promote',
   '/bp/buy-premium', '/bp/claim', '/shop/buy', '/inventory/sell', '/inventory/sell-relic',
-  '/conjure', '/imbue', '/equip', '/charm/unlock', '/charm/grant-bonus', '/rubini/spend', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
+  '/conjure', '/imbue', '/equip', '/charm/unlock', '/charm/grant-bonus', '/rubini/spend', '/shop/buy-boost', '/boost/grant', '/prey/activate', '/prey/reroll', '/prey/clear', '/task/complete',
   '/hunt/use-item', '/character/starter-kit', '/character/graduate',
   '/daily-reward/claim',   // grava gold/rubini absoluto — sem o lock, corria com deposit/shop/blessing e duplicava gold
   // /equip: sem o lock, corria com /imbue pro mesmo personagem — a leitura de
@@ -494,10 +494,13 @@ const server = http.createServer(async (req, res) => {
           ? { enabled: !!body.autoSell.enabled, maxValue: Math.max(0, Math.floor(Number(body.autoSell.maxValue) || 0)) }
           : { enabled: false, maxValue: 0 },
         // Boosts (xp/loot/gold) e charms equipados — o servidor aplica o efeito no
-        // combate/loot (settleKill). boosts é mapa tipo->expiraEm (ms); charms é
-        // lista de ids (o servidor recalcula o valor por CHARMS, nunca confia no
-        // cliente). Sem isto, boost pago e charm desbloqueado não faziam nada.
-        boosts: (body.boosts && typeof body.boosts === 'object') ? body.boosts : {},
+        // combate/loot (settleKill). charms é lista de ids (o servidor recalcula o
+        // valor por CHARMS, nunca confia no cliente). Boosts (mapa tipo->expiraEm ms)
+        // vêm 100% de player_stats.boosts — igual prey/charms, server-authoritative:
+        // `body.boosts` era aceito verbatim (cliente forjava +50% permanente de graça).
+        // As fontes (loja/BP/arena/daily) gravam player_stats.boosts via
+        // grantBoostServer; aqui só LEMOS. `body.boosts` não é mais lido, de propósito.
+        boosts: (stats && stats.boosts && typeof stats.boosts === 'object') ? stats.boosts : {},
         charms: realCharms,
         // Presas ativas — vêm 100% de player_prey (achado de auditoria:
         // `body.prey` era aceito do cliente inteiro, sem checar se a
@@ -1009,14 +1012,17 @@ const server = http.createServer(async (req, res) => {
       let gold = stats ? Number(stats.gold) : 0;
       let rubini = stats ? Number(stats.rubini) || 0 : 0;
       let grantedItem = null;
+      let boosts;
       if (reward.type === 'gold') gold += reward.amount;
       else if (reward.type === 'rubini') rubini += reward.amount;
       else if (reward.type === 'item') { await incrementInventory(user.id, slot, reward.itemId, 1); grantedItem = reward.itemId; }
       else if (reward.type === 'charm') await addCharmBonus(user.id, slot, reward.amount); // #R4: charm agora é server-side
+      else if (reward.type === 'boost') boosts = await grantBoostServer(user.id, slot, reward.boost, reward.minutes); // #3: boost server-side
+      else if (reward.type === 'trainWand') boosts = await grantBoostServer(user.id, slot, 'training', reward.minutes); // #3: varinha de treino = boost de treino
       claimed.push(tier);
       await upsertRow('player_stats', { user_id: user.id, slot, gold, rubini, bp, updated_at: new Date().toISOString() }, 'user_id,slot');
       const charmPoints = reward.type === 'charm' ? (await charmPointsAvailable(user.id, slot)).points : undefined;
-      return send(res, 200, { ok: true, gold, rubini, itemId: grantedItem, tier, kind, charmPoints });
+      return send(res, 200, { ok: true, gold, rubini, itemId: grantedItem, tier, kind, charmPoints, boosts });
     }
 
     // Comprar a trilha PREMIUM do Battle Pass (paga em Rubini Coins).
@@ -1167,6 +1173,44 @@ const server = http.createServer(async (req, res) => {
       if (rubini < amount) return send(res, 400, { error: 'Rubini Coins insuficientes' });
       await upsertRow('player_stats', { user_id: user.id, slot, rubini: rubini - amount, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, rubini: rubini - amount });
+    }
+
+    // Compra de BOOST na loja — server-authoritative (o boost virou dado do servidor,
+    // ver grantBoostServer). Valida o item no catálogo, debita Rubini e concede o
+    // boost atômico (mutex ECON), pra o cliente não forjar tipo/duração/preço.
+    if (url.pathname === '/shop/buy-boost' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const s = SHOP_ITEMS.find(x => x.id === body.itemId);
+      if (!s || s.type !== 'boost') return send(res, 400, { error: 'item inválido' });
+      if (s.currency !== 'rubini') return send(res, 400, { error: 'boost não é de Rubini' });
+      const stats = await selectOne('player_stats', { user_id: user.id, slot });
+      const rubini = stats ? Number(stats.rubini) || 0 : 0;
+      if (rubini < s.price) return send(res, 400, { error: 'Rubini Coins insuficientes' });
+      await upsertRow('player_stats', { user_id: user.id, slot, rubini: rubini - s.price, updated_at: new Date().toISOString() }, 'user_id,slot');
+      const boosts = await grantBoostServer(user.id, slot, s.boost, s.minutes);
+      return send(res, 200, { ok: true, rubini: rubini - s.price, boosts });
+    }
+
+    // Concessão de boost da ARENA — a arena é resolvida no cliente (não há endpoint de
+    // batalha), então isto é client-trusted, MAS validado: só os 4 tipos reais e
+    // duração limitada (catálogo de arena/BP dá 30-60min). Mesma classe do
+    // /charm/grant-bonus. Fecha o PIOR: o +50% permanente forjado no /hunt/start.
+    if (url.pathname === '/boost/grant' && req.method === 'POST') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      const slot = validSlot(body.slot);
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const boostType = body.boost;
+      if (!['xp', 'gold', 'loot', 'training'].includes(boostType)) return send(res, 400, { error: 'boost inválido' });
+      const minutes = Math.floor(Number(body.minutes) || 0);
+      if (!(minutes > 0) || minutes > 120) return send(res, 400, { error: 'duração inválida' });
+      const boosts = await grantBoostServer(user.id, slot, boostType, minutes);
+      return send(res, 200, { ok: true, boosts });
     }
 
     // Presas (Prey) AUTORITATIVAS (achado de auditoria: mesma classe do bug de

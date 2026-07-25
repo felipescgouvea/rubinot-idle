@@ -4,19 +4,20 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=300';
-import { emit, EVENTS } from '../shared/eventBus.js?v=298';
-import { getMagic, getMaxHp } from './stats.js?v=297';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=329';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=297';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=299';
-import { grantReward } from './rewardGrants.js?v=137';
-import { grantCharmBonus } from './bestiaryUseCases.js?v=298';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=297';
-import { addItemToInventory } from './inventoryCore.js?v=298';
-import { ITEMS } from '../domain/items.js?v=311';
-import { saveGame } from './saveGameUseCase.js?v=300';
-import { t } from '../i18n/i18n.js?v=316';
+import { G, ACCOUNT } from './gameStore.js?v=301';
+import { emit, EVENTS } from '../shared/eventBus.js?v=299';
+import { getMagic, getMaxHp } from './stats.js?v=298';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=330';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=298';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=300';
+import { grantReward } from './rewardGrants.js?v=138';
+import { grantCharmBonus } from './bestiaryUseCases.js?v=299';
+import { grantBoostOnServer } from '../infrastructure/authClient.js?v=309';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=298';
+import { addItemToInventory } from './inventoryCore.js?v=299';
+import { ITEMS } from '../domain/items.js?v=312';
+import { saveGame } from './saveGameUseCase.js?v=301';
+import { t } from '../i18n/i18n.js?v=317';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
@@ -171,6 +172,12 @@ export async function claimArenaDivisionReward(division) {
   if (!reward) return;
   if (!grantReward(reward)) return;   // tipo desconhecido: não marca como resgatado
   if (reward.type === 'charm') await grantCharmBonus(reward.amount); // #R4: server-authoritative
+  // #3: boost/varinha de treino são server-authoritative — concede no servidor e
+  // aplica o mapa autoritativo (o /hunt/start só lê player_stats.boosts agora).
+  else if (reward.type === 'boost' || reward.type === 'trainWand') {
+    const res = await grantBoostOnServer(ACCOUNT.activeSlot, reward.type === 'trainWand' ? 'training' : reward.boost, reward.minutes);
+    if (res.ok && res.boosts) G.boosts = res.boosts;
+  }
   G.arenaDivisionsClaimed.push(division);
   emit(EVENTS.HEADER_STATS);
   saveGame();

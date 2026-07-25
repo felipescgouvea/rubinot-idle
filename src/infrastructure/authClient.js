@@ -521,6 +521,16 @@ export function spendRubiniOnServer(slot, amount) {
   return huntFetch('/rubini/spend', { method: 'POST', body: { slot, amount } });
 }
 
+// #3: boost server-authoritative. Compra de boost na loja (debita Rubini + concede
+// atômico, valida o item no catálogo) e concessão de boost da Arena (client-trusted
+// validado). O BP concede boost dentro do próprio /bp/claim.
+export function buyBoostOnServer(slot, itemId) {
+  return huntFetch('/shop/buy-boost', { method: 'POST', body: { slot, itemId } });
+}
+export function grantBoostOnServer(slot, boost, minutes) {
+  return huntFetch('/boost/grant', { method: 'POST', body: { slot, boost, minutes } });
+}
+
 // ---- Presas (Prey) AUTORITATIVAS — ver server/src/index.js: /prey/*.
 // Substitui G.prey mutado só localmente (achado de auditoria: /hunt/start
 // aceitava qualquer raridade/tipo forjado — ver application/preyUseCases.js). ----

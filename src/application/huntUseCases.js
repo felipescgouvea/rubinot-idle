@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=300';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=308';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=305';
-import { ZONES } from '../domain/bestiary.js?v=319';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=327';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=298';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=330';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=329';
-import { elementMod } from '../domain/elements.js?v=296';
-import { STAMINA_MAX } from '../domain/stamina.js?v=296';
-import { ITEMS } from '../domain/items.js?v=311';
-import { MONSTERS } from '../domain/bestiary.js?v=319';
-import { RARITY_TIERS } from '../domain/rarity.js?v=297';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=299';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=298';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=297';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=297';
-import { saveGame } from './saveGameUseCase.js?v=300';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=301';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=299';
-import { t } from '../i18n/i18n.js?v=316';
+import { G, ACCOUNT } from './gameStore.js?v=301';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=309';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=306';
+import { ZONES } from '../domain/bestiary.js?v=320';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=328';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=299';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=331';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=330';
+import { elementMod } from '../domain/elements.js?v=297';
+import { STAMINA_MAX } from '../domain/stamina.js?v=297';
+import { ITEMS } from '../domain/items.js?v=312';
+import { MONSTERS } from '../domain/bestiary.js?v=320';
+import { RARITY_TIERS } from '../domain/rarity.js?v=298';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=300';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=299';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=298';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=298';
+import { saveGame } from './saveGameUseCase.js?v=301';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=302';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=300';
+import { t } from '../i18n/i18n.js?v=317';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -295,12 +295,12 @@ function buildHuntSnapshot() {
   // sem isso, o "auto-vender lixo" ligado na tela não fazia NADA (queixa do
   // Felipe) — o item de valor baixo entrava no inventário do mesmo jeito. O
   // servidor converte em gold na hora do drop (ver huntEngine.js).
-  // boosts (xp/loot/gold) e charms equipados vão no snapshot porque o COMBATE é
-  // resolvido no servidor: sem isso, boost comprado com Rubini Coin e charm
-  // desbloqueado com pontos NÃO tinham efeito nenhum (achado da auditoria — o
-  // jogador pagava e não recebia). O servidor RECALCULA o efeito a partir da
-  // fonte (CHARMS/mult fixo), nunca confia em número declarado.
-  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, prey: G.prey || [], fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1, autoSell: G.autoSell || { enabled: false, maxValue: 50 }, boosts: G.boosts || {}, charms: G.charmsEquipped || [] };
+  // charms equipados vão no snapshot porque o COMBATE é resolvido no servidor: sem
+  // isso, charm desbloqueado com pontos NÃO tinha efeito. O servidor RECALCULA o
+  // efeito pela fonte (CHARMS), nunca confia em número declarado. #3: `boosts` não vai
+  // mais — o /hunt/start lê player_stats.boosts (server-authoritative); mandar seria
+  // ignorado (e antes era o vetor do +50% permanente forjado).
+  return { slot: ACCOUNT.activeSlot, zoneId: G.activeZone, bossOnly, vocation: G.vocation, world: G.currentWorld, rtc: G.rtc, prey: G.prey || [], fightMode: G.fightMode || 'balanced', density: G.density || 'normal', bossTier: bossOnly ? ((G.bossTiers && G.bossTiers[G.activeZone]) || 1) : 1, autoSell: G.autoSell || { enabled: false, maxValue: 50 }, charms: G.charmsEquipped || [] };
 }
 
 // Estilo de Luta (Fight Mode do Crystal Server, ver domain/combatFormulas: FIGHT_MODES) —
