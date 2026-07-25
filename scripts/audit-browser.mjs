@@ -156,9 +156,12 @@ try {
   const manaMovedDown = samples.some(s => s.mana.length === 2 && s.mana[0] < s.mana[1]); // dipou abaixo do teto = castou
   const fxSeen = last.fxSeen;
   // Só é bug se o jogador TINHA mana pra castar e mesmo assim não castou — uma magia
-  // cara com mana baixa após caçar não casta por design, não por defeito.
+  // cara com mana baixa após caçar não casta por design, não por defeito. Exige mana
+  // suficiente em ao menos 2 amostras: um pico único (mana oscilando no limite do
+  // custo, ex.: Divine Caldera 160) não garante um tick com mana pra castar, e antes
+  // dava C2 falso quando a magia só castava raramente/nunca.
   const manaCost = atk.manaCost || 0;
-  const couldCast = manaCost === 0 || samples.some(s => s.mana.length === 2 && s.mana[0] >= manaCost);
+  const couldCast = manaCost === 0 || samples.filter(s => s.mana.length === 2 && s.mana[0] >= manaCost).length >= 2;
   log(`combate=${combatRan} manaSane=${manaSane} spellLog=${spellLogged} manaDip=${manaMovedDown} fx=${fxSeen} custoMana=${manaCost} pôdeCastar=${couldCast}`);
   if (!combatRan) problems.push('C1: combate não rodou (log vazio)');
   if (!manaSane) problems.push('C1: mana fora de [0,max]');
