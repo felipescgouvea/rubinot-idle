@@ -34,6 +34,7 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] **(auditoria design 07-25) Diferenciar HP/MP/XP no rail**: barras verde/azul/dourado parecidas e minúsculas — num relance não dá pra distinguir vida de experiência
 - [ ] **(auditoria design 07-25) Trocar emojis de SO por sprites do tema**: Worlds usa emoji do sistema (arco-íris/sol/espiral/sparkles) e Battle Pass usa ⭐ — destoa do pixel-art autêntico do resto
 - [x] **(auditoria design 07-25) Padronizar formatação de número**: barra de XP do palco agora usa o mesmo formato abreviado do rail (105.2K/495.1K · 21%), era número cru — `d24b617a`
+- [x] **Trocar toda a tipografia** do jogo — saiu Cinzel+Inter, entrou **Grenze Gotisch** (gótico medieval, `--serif`: títulos/nomes/nav) + **Spectral** (serifada legível, `--body`: corpo/UI/números). Todo o jogo usa só as 2 variáveis, então a troca é global; ícones do Tibia (sprites) intactos. Verificado no browser — `b9a6bd94`. **Escolha de fonte é subjetiva: troca de 1 linha se o Felipe quiser outra dupla.**
 
 **Funcional / UX**
 - [x] **Página dedicada de Imbuements** (aba própria, máquina de imbuing do Tibia): seletor de item equipado (arma/elmo/armadura) + imbuements por slot. 5 imbuements novos de proteção (elmo/armadura via `computePlayerAbsorb`), server aplica por slot. VERIFICADO no browser. — `3e19d100`/`d858912c`
