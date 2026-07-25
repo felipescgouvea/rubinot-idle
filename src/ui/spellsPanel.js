@@ -6,24 +6,24 @@
 // Só as de CONJURAÇÃO têm botão: são as únicas lançadas na mão. Ataque e cura
 // são automáticos pelo RTC — mostrar um "lançar" ali seria mentira, porque
 // quem decide o momento é o motor de combate no servidor.
-import { G, ACCOUNT } from '../application/gameStore.js?v=276';
-import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=216';
-import { ITEMS } from '../domain/items.js?v=287';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=272';
-import { maxSoul } from '../domain/soul.js?v=214';
-import { conjureSpell } from '../application/spellUseCases.js?v=188';
-import { on, EVENTS } from '../shared/eventBus.js?v=274';
-import { itemIconImg, spellIconImg } from './shared.js?v=279';
-import { t } from '../i18n/i18n.js?v=292';
+import { G, ACCOUNT } from '../application/gameStore.js?v=277';
+import { SPELLS, isSpellAvailable } from '../domain/spells.js?v=217';
+import { ITEMS } from '../domain/items.js?v=288';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=273';
+import { maxSoul } from '../domain/soul.js?v=215';
+import { conjureSpell } from '../application/spellUseCases.js?v=189';
+import { on, EVENTS } from '../shared/eventBus.js?v=275';
+import { itemIconImg, spellIconImg } from './shared.js?v=280';
+import { t } from '../i18n/i18n.js?v=293';
 
 // Ordem das seções: primeiro o que o jogador USA na mão (conjurar), depois o
 // que o RTC dispara sozinho, e por último o que é só de mundo.
 const SECOES = [
-  { id: 'conjure', titulo: '📜 Conjuração', hint: 'Fabrica munição e runas. Custa mana e soul points — e as runas ainda gastam uma Blank Rune.' },
-  { id: 'attack', titulo: '⚔️ Ataque', hint: 'Lançadas automaticamente pelo RTC, na ordem de prioridade que você configurar.' },
-  { id: 'heal', titulo: '💚 Cura', hint: 'O RTC casta a de cura escolhida quando seu HP cruza o gatilho.' },
-  { id: 'support', titulo: '🛡️ Suporte', hint: 'Buffs de combate.' },
-  { id: 'utility', titulo: '🔧 Utilidade', hint: 'Magias de mundo aberto (luz, corda, grupo). Existem no livro, mas não têm efeito na caçada.' },
+  { id: 'conjure', emoji: '📜', tituloKey: 'spells.secConjureTitle', hintKey: 'spells.secConjureHint' },
+  { id: 'attack', emoji: '⚔️', tituloKey: 'spells.secAttackTitle', hintKey: 'spells.secAttackHint' },
+  { id: 'heal', emoji: '💚', tituloKey: 'spells.secHealTitle', hintKey: 'spells.secHealHint' },
+  { id: 'support', emoji: '🛡️', tituloKey: 'spells.secSupportTitle', hintKey: 'spells.secSupportHint' },
+  { id: 'utility', emoji: '🔧', tituloKey: 'spells.secUtilityTitle', hintKey: 'spells.secUtilityHint' },
 ];
 
 function soulAtual() { return Math.min(G.soulMax || maxSoul(G.promoted), G.soul || 0); }
@@ -32,12 +32,12 @@ function soulAtual() { return Math.min(G.soulMax || maxSoul(G.promoted), G.soul 
 // MOTIVO (em vez de só true/false) é o que evita o botão morto: o jogador vê
 // "faltam 2 soul" em vez de clicar num botão que não faz nada.
 function bloqueio(id, s) {
-  if (!isSpellAvailable(id, G.vocation, G.level)) return `🔒 nível ${s.level}`;
+  if (!isSpellAvailable(id, G.vocation, G.level)) return `🔒 ${t('spells.blockLevel', { level: s.level })}`;
   if (s.type !== 'conjure') return null;
-  if ((G.mana || 0) < s.mana) return `💧 falta mana (${s.mana})`;
-  if ((s.soul || 0) > soulAtual()) return `✨ falta soul (${s.soul})`;
+  if ((G.mana || 0) < s.mana) return `💧 ${t('spells.blockMana', { mana: s.mana })}`;
+  if ((s.soul || 0) > soulAtual()) return `✨ ${t('spells.blockSoul', { soul: s.soul })}`;
   if (s.reagent && (G.inventory[s.reagent.item] || 0) < s.reagent.count) {
-    return `📦 falta ${ITEMS[s.reagent.item].name}`;
+    return `📦 ${t('spells.blockReagent', { item: ITEMS[s.reagent.item].name })}`;
   }
   return null;
 }
@@ -48,13 +48,13 @@ function detalhe(id, s) {
   if (s.type === 'conjure') {
     const alvo = ITEMS[s.conjures.item];
     partes.push(`→ ${s.conjures.count}× ${alvo ? alvo.name : s.conjures.item}`);
-    if (s.reagent) partes.push(`usa ${s.reagent.count}× ${ITEMS[s.reagent.item].name}`);
+    if (s.reagent) partes.push(t('spells.uses', { count: s.reagent.count, item: ITEMS[s.reagent.item].name }));
   }
   if (s.type === 'attack') {
-    if (s.dot) partes.push('dano ao longo do tempo');
+    if (s.dot) partes.push(t('spells.dot'));
     if (isAreaAttack(s.area)) partes.push(areaName(s.area, t));
   }
-  if (s.buff && s.buff.ms) partes.push(`dura ${Math.round(s.buff.ms / 1000)}s`);
+  if (s.buff && s.buff.ms) partes.push(t('spells.lasts', { sec: Math.round(s.buff.ms / 1000) }));
   return partes.join(' · ');
 }
 
@@ -65,7 +65,7 @@ function linha(id, s) {
     ? itemIconImg(s.conjures.item, 'rtc-row-icon-img')
     : spellIconImg(s.name, s.icon, 'item-icon');
   const acao = s.type === 'conjure'
-    ? `<button class="rtc-row-btn" onclick="castConjureSpell('${id}')" ${trava ? 'disabled' : ''}>${trava || 'Conjurar'}</button>`
+    ? `<button class="rtc-row-btn" onclick="castConjureSpell('${id}')" ${trava ? 'disabled' : ''}>${trava || t('spells.conjure')}</button>`
     : `<span class="muted">${trava || ''}</span>`;
   return `<div class="rtc-row ${destravada ? '' : 'locked'}">
     <span class="rtc-row-icon">${icone}</span>
@@ -81,7 +81,7 @@ export function renderSpellsPanel() {
   const box = document.getElementById('spells-book');
   if (!box) return;
   const voc = G.vocation;
-  if (!voc) { box.innerHTML = '<p class="muted">Crie um personagem para ver o livro de magias.</p>'; return; }
+  if (!voc) { box.innerHTML = `<p class="muted">${t('spells.noCharacter')}</p>`; return; }
 
   const daVocacao = Object.entries(SPELLS).filter(([, s]) => s.voc.includes(voc));
   const teto = G.soulMax || maxSoul(G.promoted);
@@ -91,8 +91,8 @@ export function renderSpellsPanel() {
       .sort((a, b) => a[1].level - b[1].level || a[1].name.localeCompare(b[1].name));
     if (!lista.length) return '';
     const destravadas = lista.filter(([id]) => isSpellAvailable(id, voc, G.level)).length;
-    return `<h5>${sec.titulo} <span class="muted">(${destravadas}/${lista.length})</span></h5>
-      <p class="muted">${sec.hint}</p>
+    return `<h5>${sec.emoji} ${t(sec.tituloKey)} <span class="muted">(${destravadas}/${lista.length})</span></h5>
+      <p class="muted">${t(sec.hintKey)}</p>
       <div class="rtc-rows">${lista.map(([id, s]) => linha(id, s)).join('')}</div>`;
   }).join('');
 

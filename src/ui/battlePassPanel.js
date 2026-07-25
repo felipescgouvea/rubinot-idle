@@ -1,10 +1,10 @@
-import { G } from '../application/gameStore.js?v=276';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=276';
-import { on, EVENTS } from '../shared/eventBus.js?v=274';
-import { rewardIcon } from './uiIcons.js?v=277';
-import { rubiniIconImg } from './shared.js?v=279';
-import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=275';
-import { t } from '../i18n/i18n.js?v=292';
+import { G } from '../application/gameStore.js?v=277';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=277';
+import { on, EVENTS } from '../shared/eventBus.js?v=275';
+import { rewardIcon } from './uiIcons.js?v=278';
+import { rubiniIconImg } from './shared.js?v=280';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=276';
+import { t, getLocale } from '../i18n/i18n.js?v=293';
 
 function bpRewardIcon(r) {
   return rewardIcon(r, 'bp-reward-sprite');
@@ -37,10 +37,10 @@ export function renderBattlePassPanel() {
   ensureSeason(); // vira a temporada (reseta o BP) se o mês mudou
   const xpInTier = G.bpXp % BP_XP_PER_TIER;
   const pct = Math.round((xpInTier / BP_XP_PER_TIER) * 100);
-  const seasonName = new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  const seasonName = new Date().toLocaleDateString(getLocale() === 'pt' ? 'pt-BR' : 'en-US', { month: 'long', year: 'numeric' });
 
   document.getElementById('bp-progress-area').innerHTML = `
-    <div><strong>${t('battlepass.currentTier', { tier: `<span style="color:var(--accent)">${G.bpTier}</span>` })}</strong> <span class="muted" style="font-size:12px">· 🎖️ Temporada de ${seasonName}</span></div>
+    <div><strong>${t('battlepass.currentTier', { tier: `<span style="color:var(--accent)">${G.bpTier}</span>` })}</strong> <span class="muted" style="font-size:12px">· 🎖️ ${t('bp.seasonOf', { season: seasonName })}</span></div>
     <div class="bp-xp-row">
       <span style="font-size:12px;color:var(--muted)">${xpInTier}/${BP_XP_PER_TIER} XP</span>
       <div class="bp-xp-bar-track"><div class="bp-xp-bar" style="width:${pct}%"></div></div>
@@ -56,8 +56,8 @@ export function renderBattlePassPanel() {
   const premEl = document.getElementById('bp-premium-banner');
   if (premEl) {
     premEl.innerHTML = G.bpPremium
-      ? `<div class="bp-premium-on">⭐ Trilha Premium ativa</div>`
-      : `<div class="bp-premium-off">⭐ Trilha Premium — recompensas melhores por tier <button class="bp-claim-btn" style="width:auto;padding:6px 14px" onclick="buyBpPremium()">Desbloquear (${BP_PREMIUM_COST_RUBINI} ${rubiniIconImg('inline-icon')})</button></div>`;
+      ? `<div class="bp-premium-on">⭐ ${t('bp.premiumActive')}</div>`
+      : `<div class="bp-premium-off">⭐ ${t('bp.premiumOffer')} <button class="bp-claim-btn" style="width:auto;padding:6px 14px" onclick="buyBpPremium()">${t('bp.unlock')} (${BP_PREMIUM_COST_RUBINI} ${rubiniIconImg('inline-icon')})</button></div>`;
   }
 
   const track = document.getElementById('bp-rewards-track');
@@ -69,7 +69,7 @@ export function renderBattlePassPanel() {
     const p = premByTier[r.tier];
     const pClaimed = p && claimedPrem.includes(r.tier);
     const pAvailable = p && G.bpPremium && G.bpTier >= r.tier && !pClaimed;
-    const premHtml = p ? `<div class="bp-reward bp-reward-premium ${pClaimed ? 'claimed' : ''} ${pAvailable ? 'available' : ''}" title="Trilha premium">
+    const premHtml = p ? `<div class="bp-reward bp-reward-premium ${pClaimed ? 'claimed' : ''} ${pAvailable ? 'available' : ''}" title="${t('bp.premiumTrackTitle')}">
       <div class="bp-reward-icon">⭐ ${bpRewardIcon(p)}</div>
       <div class="bp-reward-name">${t(p.name)}</div>
       <button class="bp-claim-btn" onclick="claimBpReward(${r.tier}, 'premium')" ${!pAvailable ? 'disabled' : ''}>

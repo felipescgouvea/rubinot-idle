@@ -1,15 +1,16 @@
 // Modal de Imbuements — escolhe um aprimoramento pra arma equipada, mostra
 // custo (gold + materiais) e o imbuement ativo com tempo restante. O efeito é
 // resolvido no combate pelo servidor (ver huntEngine.js).
-import { G } from '../application/gameStore.js?v=276';
-import { IMBUEMENTS, isImbuementActive } from '../domain/imbuements.js?v=272';
-import { ITEMS } from '../domain/items.js?v=287';
-import { canImbue } from '../application/imbuementUseCases.js?v=272';
-import { openModal } from './shared.js?v=279';
+import { G } from '../application/gameStore.js?v=277';
+import { IMBUEMENTS, isImbuementActive } from '../domain/imbuements.js?v=273';
+import { ITEMS } from '../domain/items.js?v=288';
+import { canImbue } from '../application/imbuementUseCases.js?v=273';
+import { openModal } from './shared.js?v=280';
+import { t } from '../i18n/i18n.js?v=293';
 
 function fmtRemaining(expiresAt) {
   const ms = new Date(expiresAt).getTime() - Date.now();
-  if (ms <= 0) return 'expirado';
+  if (ms <= 0) return t('imbue.expired');
   const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000);
   return h > 0 ? `${h}h ${m}min` : `${m}min`;
 }
@@ -19,8 +20,8 @@ function imbueHtml() {
   const activeOn = isImbuementActive(active);
   const activeDef = activeOn ? IMBUEMENTS[active.id] : null;
   const activeHtml = activeOn
-    ? `<div class="imbue-active">Ativo na arma: <b>${activeDef.icon} ${activeDef.name}</b> · ${activeDef.desc} · ⏳ ${fmtRemaining(active.expiresAt)}</div>`
-    : `<div class="imbue-active muted">Nenhum imbuement ativo na arma.</div>`;
+    ? `<div class="imbue-active">${t('imbue.activeOn')} <b>${activeDef.icon} ${activeDef.name}</b> · ${activeDef.desc} · ⏳ ${fmtRemaining(active.expiresAt)}</div>`
+    : `<div class="imbue-active muted">${t('imbue.noneActive')}</div>`;
   const rows = Object.entries(IMBUEMENTS).map(([id, def]) => {
     const pre = canImbue(id);
     const mats = def.cost.materials.map(([itemId, qty]) => {
@@ -30,12 +31,12 @@ function imbueHtml() {
     return `<div class="imbue-row">
       <div class="imbue-head"><span class="imbue-icon">${def.icon}</span> <b>${def.name}</b> <small>${def.desc}</small></div>
       <div class="imbue-cost">💰 ${def.cost.gold.toLocaleString()} · ${mats} · ⏳ ${def.durationH}h</div>
-      <button class="imbue-btn" ${pre.ok ? '' : 'disabled'} onclick="applyImbuementClick('${id}')" title="${pre.ok ? 'Aplicar' : pre.reason}">Aplicar</button>
+      <button class="imbue-btn" ${pre.ok ? '' : 'disabled'} onclick="applyImbuementClick('${id}')" title="${pre.ok ? t('imbue.apply') : pre.reason}">${t('imbue.apply')}</button>
     </div>`;
   }).join('');
-  return `<h3>🔮 Imbuements</h3>
+  return `<h3>🔮 ${t('imbue.title')}</h3>
     ${activeHtml}
-    <div class="muted" style="font-size:12px;margin:6px 0">Aplicar troca o imbuement atual da arma. Trocar de arma perde o imbuement.</div>
+    <div class="muted" style="font-size:12px;margin:6px 0">${t('imbue.hint')}</div>
     <div class="imbue-list">${rows}</div>`;
 }
 
@@ -46,7 +47,7 @@ export function openImbueModal() {
 // Chamado pelo botão Aplicar — importa dinamicamente pra não acoplar a UI ao
 // use case de forma circular; re-renderiza o modal após aplicar.
 export async function applyImbuementClick(id) {
-  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=272');
+  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=273');
   await applyImbuement(id);
   openModal(imbueHtml());
 }

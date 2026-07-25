@@ -962,4 +962,65 @@ export default {
   'shop.magic.subRefill': '🔋 Full Supply',
   'shop.magic.subPotions': '🧪 Potions',
   'shop.magic.subRunes': '📜 Runes',
+
+  // ---- spells panel (ui/spellsPanel.js) ----
+  'spells.secConjureTitle': 'Conjuring',
+  'spells.secConjureHint': 'Crafts ammunition and runes. Costs mana and soul points — and runes also consume a Blank Rune.',
+  'spells.secAttackTitle': 'Attack',
+  'spells.secAttackHint': 'Cast automatically by the RTC, in the priority order you configure.',
+  'spells.secHealTitle': 'Healing',
+  'spells.secHealHint': 'The RTC casts your chosen heal when your HP crosses the trigger.',
+  'spells.secSupportTitle': 'Support',
+  'spells.secSupportHint': 'Combat buffs.',
+  'spells.secUtilityTitle': 'Utility',
+  'spells.secUtilityHint': 'Open-world spells (light, rope, party). They exist in the book, but have no effect on the hunt.',
+  'spells.blockLevel': 'level {level}',
+  'spells.blockMana': 'not enough mana ({mana})',
+  'spells.blockSoul': 'not enough soul ({soul})',
+  'spells.blockReagent': 'need {item}',
+  'spells.dot': 'damage over time',
+  'spells.uses': 'uses {count}× {item}',
+  'spells.lasts': 'lasts {sec}s',
+  'spells.conjure': 'Conjure',
+  'spells.noCharacter': 'Create a character to see the spellbook.',
+
+  // ---- imbuement panel (ui/imbuementPanel.js) ----
+  'imbue.expired': 'expired',
+  'imbue.activeOn': 'Active on weapon:',
+  'imbue.noneActive': 'No imbuement active on the weapon.',
+  'imbue.apply': 'Apply',
+  'imbue.title': 'Imbuements',
+  'imbue.hint': "Applying replaces the weapon's current imbuement. Switching weapons loses the imbuement.",
+
+  // ---- achievements panel (ui/achievementsPanel.js) ----
+  'achiev.title': 'Achievements',
+  'achiev.noTitle': 'No title',
+  'achiev.titleLabel': 'title: “{title}”',
+  'achiev.displayedTitle': 'Displayed title',
+  'achiev.noTitlesHint': ' — unlock achievements with a title',
+
+  // ---- battle pass panel extras (ui/battlePassPanel.js) ----
+  'bp.seasonOf': 'Season of {season}',
+  'bp.premiumActive': 'Premium Track active',
+  'bp.premiumOffer': 'Premium Track — better rewards per tier',
+  'bp.unlock': 'Unlock',
+  'bp.premiumTrackTitle': 'Premium track',
+
+  // ---- character panel promote button (ui/characterPanel.js) ----
+  'character.promoteReqLevel': 'Requires level {level}',
+  'character.promoteReqGold': 'Requires {gold} gold',
+  'character.promoteEffect': 'Doubles HP/mana regeneration',
+
+  // ---- bestiary panel charm types + prey value (ui/bestiaryPanel.js) ----
+  'bestiary.charmTypeOffensive': 'Offensive',
+  'bestiary.charmTypeUtility': 'Utility',
+  'bestiary.charmTypePassive': 'Passive',
+  'bestiary.charmTypeDefensive': 'Defensive',
+  'bestiary.preyValueTitle': 'Prey value',
+
+  // ---- boosted panel (ui/boostedPanel.js) ----
+  'boosted.creature': 'CREATURE',
+  'boosted.boss': 'BOSS',
+  'boosted.creatureTooltip': 'Double XP and loot when hunting this creature today',
+  'boosted.bossTooltip': 'Double XP and loot when facing this boss today',
 };

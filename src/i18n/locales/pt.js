@@ -963,4 +963,65 @@ export default {
   'shop.magic.subRefill': '🔋 Supply Completo',
   'shop.magic.subPotions': '🧪 Poções',
   'shop.magic.subRunes': '📜 Runas',
+
+  // ---- spells panel (ui/spellsPanel.js) ----
+  'spells.secConjureTitle': 'Conjuração',
+  'spells.secConjureHint': 'Fabrica munição e runas. Custa mana e soul points — e as runas ainda gastam uma Blank Rune.',
+  'spells.secAttackTitle': 'Ataque',
+  'spells.secAttackHint': 'Lançadas automaticamente pelo RTC, na ordem de prioridade que você configurar.',
+  'spells.secHealTitle': 'Cura',
+  'spells.secHealHint': 'O RTC casta a de cura escolhida quando seu HP cruza o gatilho.',
+  'spells.secSupportTitle': 'Suporte',
+  'spells.secSupportHint': 'Buffs de combate.',
+  'spells.secUtilityTitle': 'Utilidade',
+  'spells.secUtilityHint': 'Magias de mundo aberto (luz, corda, grupo). Existem no livro, mas não têm efeito na caçada.',
+  'spells.blockLevel': 'nível {level}',
+  'spells.blockMana': 'falta mana ({mana})',
+  'spells.blockSoul': 'falta soul ({soul})',
+  'spells.blockReagent': 'falta {item}',
+  'spells.dot': 'dano ao longo do tempo',
+  'spells.uses': 'usa {count}× {item}',
+  'spells.lasts': 'dura {sec}s',
+  'spells.conjure': 'Conjurar',
+  'spells.noCharacter': 'Crie um personagem para ver o livro de magias.',
+
+  // ---- imbuement panel (ui/imbuementPanel.js) ----
+  'imbue.expired': 'expirado',
+  'imbue.activeOn': 'Ativo na arma:',
+  'imbue.noneActive': 'Nenhum imbuement ativo na arma.',
+  'imbue.apply': 'Aplicar',
+  'imbue.title': 'Imbuements',
+  'imbue.hint': 'Aplicar troca o imbuement atual da arma. Trocar de arma perde o imbuement.',
+
+  // ---- achievements panel (ui/achievementsPanel.js) ----
+  'achiev.title': 'Achievements',
+  'achiev.noTitle': 'Sem título',
+  'achiev.titleLabel': 'título: “{title}”',
+  'achiev.displayedTitle': 'Título exibido',
+  'achiev.noTitlesHint': ' — desbloqueie conquistas com título',
+
+  // ---- battle pass panel extras (ui/battlePassPanel.js) ----
+  'bp.seasonOf': 'Temporada de {season}',
+  'bp.premiumActive': 'Trilha Premium ativa',
+  'bp.premiumOffer': 'Trilha Premium — recompensas melhores por tier',
+  'bp.unlock': 'Desbloquear',
+  'bp.premiumTrackTitle': 'Trilha premium',
+
+  // ---- character panel promote button (ui/characterPanel.js) ----
+  'character.promoteReqLevel': 'Requer nível {level}',
+  'character.promoteReqGold': 'Requer {gold} de ouro',
+  'character.promoteEffect': 'Dobra a regeneração de HP/mana',
+
+  // ---- bestiary panel charm types + prey value (ui/bestiaryPanel.js) ----
+  'bestiary.charmTypeOffensive': 'Offensive',
+  'bestiary.charmTypeUtility': 'Utility',
+  'bestiary.charmTypePassive': 'Passive',
+  'bestiary.charmTypeDefensive': 'Defensive',
+  'bestiary.preyValueTitle': 'Prey value',
+
+  // ---- boosted panel (ui/boostedPanel.js) ----
+  'boosted.creature': 'CREATURE',
+  'boosted.boss': 'BOSS',
+  'boosted.creatureTooltip': 'Dobro de XP e loot ao caçar esta criatura hoje',
+  'boosted.bossTooltip': 'Dobro de XP e loot ao enfrentar este boss hoje',
 };

@@ -4,23 +4,23 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=276';
-import { MONSTERS } from '../domain/bestiary.js?v=294';
+import { G } from '../application/gameStore.js?v=277';
+import { MONSTERS } from '../domain/bestiary.js?v=295';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
-} from '../domain/prey.js?v=272';
+} from '../domain/prey.js?v=273';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=273';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=272';
-import { on, EVENTS } from '../shared/eventBus.js?v=274';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=279';
-import { monsterSpriteImg } from './huntPanel.js?v=293';
-import { uiIcon } from './uiIcons.js?v=277';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=275';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=275';
-import { t } from '../i18n/i18n.js?v=292';
+} from '../domain/charms.js?v=274';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=273';
+import { on, EVENTS } from '../shared/eventBus.js?v=275';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=280';
+import { monsterSpriteImg } from './huntPanel.js?v=294';
+import { uiIcon } from './uiIcons.js?v=278';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=276';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=276';
+import { t } from '../i18n/i18n.js?v=293';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -65,7 +65,7 @@ function renderPreySection() {
           <span class="prey-bonus-val">+${Math.round(slot.bonusPct * 100)}%</span>
           <span class="prey-bonus-label">${t(bt.name)}</span>
         </div>
-        <div class="prey-stars" title="Prey value">${stars}</div>
+        <div class="prey-stars" title="${t('bestiary.preyValueTitle')}">${stars}</div>
         <div class="prey-timer-track"><div class="prey-timer-fill" style="width:${timePct}%"></div><span class="prey-timer-label">${fmtRemaining(remain)}</span></div>
         <div class="prey-card-actions">
           <button class="prey-btn reroll" onclick="rerollPrey(${i})" title="${t('bestiary.rerollTooltip', { cost: preyRerollCost(G.level).toLocaleString() })}">🎲 ${t('bestiary.reroll')}</button>
@@ -141,11 +141,11 @@ function renderBestiarySection() {
 // Tipo do charm no estilo do Cyclopedia do Tibia (Offensive/Defensive/etc.),
 // derivado do efeito — só rótulo visual, não muda mecânica.
 const CHARM_TYPE = {
-  damage:    { label: 'Offensive', cls: 'off' },
-  loot:      { label: 'Utility',   cls: 'util' },
-  gold:      { label: 'Utility',   cls: 'util' },
-  xp:        { label: 'Passive',   cls: 'pass' },
-  lifeleech: { label: 'Defensive', cls: 'def' },
+  damage:    { label: 'bestiary.charmTypeOffensive', cls: 'off' },
+  loot:      { label: 'bestiary.charmTypeUtility',   cls: 'util' },
+  gold:      { label: 'bestiary.charmTypeUtility',   cls: 'util' },
+  xp:        { label: 'bestiary.charmTypePassive',   cls: 'pass' },
+  lifeleech: { label: 'bestiary.charmTypeDefensive', cls: 'def' },
 };
 function renderCharmsSection() {
   const el = document.getElementById('charms-list');
@@ -156,12 +156,12 @@ function renderCharmsSection() {
     const isUnlocked = unlocked.includes(id);
     const isEquipped = equipped.includes(id);
     const affordable = (G.charmPoints || 0) >= c.cost;
-    const ty = CHARM_TYPE[c.effect] || { label: 'Passive', cls: 'pass' };
+    const ty = CHARM_TYPE[c.effect] || { label: 'bestiary.charmTypePassive', cls: 'pass' };
     const state = isEquipped ? 'equipped' : isUnlocked ? 'unlocked' : (affordable ? 'buyable' : 'locked');
     return `<div class="charm-row ${state}">
       <div class="charm-icon-frame">${uiIcon('charm_' + id, 'charm-icon-img')}</div>
       <div class="charm-info">
-        <div class="charm-title-row"><span class="charm-name">${c.name}</span><span class="charm-type ${ty.cls}">${ty.label}</span></div>
+        <div class="charm-title-row"><span class="charm-name">${c.name}</span><span class="charm-type ${ty.cls}">${t(ty.label)}</span></div>
         <div class="charm-desc">${t(c.desc)}</div>
       </div>
       <div class="charm-action">${isUnlocked
