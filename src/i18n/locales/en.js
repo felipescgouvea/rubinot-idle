@@ -584,6 +584,8 @@ export default {
   'tasks.activeTaskLabel': 'Active Task',
   'tasks.killsProgress': '{kills} / {required} kills ({pct}%)',
   'tasks.cancelTask': 'Cancel Task',
+  'tasks.readyToClaim': '✅ Task complete — claim your reward!',
+  'tasks.claimReward': 'Claim Reward',
 
   // ---- skills panel (ui/skillsPanel.js) ----
   'skills.noVocation': 'Choose a vocation to start training.',

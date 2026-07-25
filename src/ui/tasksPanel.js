@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=299';
-import { MONSTERS } from '../domain/bestiary.js?v=318';
-import { ITEMS } from '../domain/items.js?v=310';
-import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=298';
-import { on, EVENTS } from '../shared/eventBus.js?v=297';
-import { monsterSpriteImg } from './huntPanel.js?v=316';
-import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=302';
-import { t } from '../i18n/i18n.js?v=315';
+import { G } from '../application/gameStore.js?v=300';
+import { MONSTERS } from '../domain/bestiary.js?v=319';
+import { ITEMS } from '../domain/items.js?v=311';
+import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=299';
+import { on, EVENTS } from '../shared/eventBus.js?v=298';
+import { monsterSpriteImg } from './huntPanel.js?v=317';
+import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=303';
+import { t } from '../i18n/i18n.js?v=316';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
 // tem sprite real via SPRITE_OVERRIDE em tibiaSprites.js) — só "corrupted" (id
@@ -113,11 +113,18 @@ function renderActiveTask() {
   const kills = G.taskKills[key] || 0;
   const pct = Math.min(100, Math.round((kills / required) * 100));
   const monsterIcons = (monsters || []).map(id => monsterSpriteImg(id, 'inline-icon')).join('');
+  // Task pronta: em vez de creditar sozinha, mostra o botão de COLETAR (a coleta é
+  // server-authoritative — ver application/taskUseCases.js: claimTaskReward). Enquanto
+  // não completou, só dá pra cancelar.
+  const ready = !!G.activeTask.ready;
+  const actionBtn = ready
+    ? `<button onclick="claimTaskReward()" style="margin-top:8px;background:#27ae60;border:none;color:#fff;padding:6px 18px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:bold">✅ ${t('tasks.claimReward')}</button>`
+    : `<button onclick="cancelTask()" style="margin-top:6px;background:#e74c3c;border:none;color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px">${t('tasks.cancelTask')}</button>`;
   el.innerHTML = `
     <div class="active-task-header">📋 ${t('tasks.activeTaskLabel')}: ${task ? task.name : ''} — ${monsterIcons}</div>
-    <div>${t('tasks.killsProgress', { kills, required, pct })}</div>
+    <div>${ready ? t('tasks.readyToClaim') : t('tasks.killsProgress', { kills, required, pct })}</div>
     <div class="task-progress-bar-track"><div class="task-progress-bar" style="width:${pct}%"></div></div>
-    <button onclick="cancelTask()" style="margin-top:6px;background:#e74c3c;border:none;color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px">${t('tasks.cancelTask')}</button>
+    ${actionBtn}
   `;
 }
 

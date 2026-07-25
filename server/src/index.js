@@ -64,7 +64,7 @@ import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.
 import { isBoostActive } from '../../src/domain/shopCatalog.js?v=128';
 import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
-import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory } from './huntEngine.js';
+import { startSession, stopSession, getLiveSession, getLiveSessionBySlot, reapStaleSessionsOnBoot, useItemInSession, usePotionStandalone, idleRtcHealStandalone, buyShopItemStandalone, sellItemStandalone, sellRelicStandalone, updateSessionRtc, incrementInventory, grantTaskRewardsServer } from './huntEngine.js';
 import { selectOne, selectMany, selectLatest, selectManyOrdered, insertRow, updateRows, upsertRow, selectRaw, countWhere } from './db.js';
 import { acquireUserLock } from './econLock.js';
 import { iniciarRealtime } from './realtime.js';
@@ -1314,7 +1314,15 @@ const server = http.createServer(async (req, res) => {
       const key = taskKey(task);
       const novaCompletion = { ...completion, [key]: (completion[key] || 0) + 1 };
       await upsertRow('player_tasks', { user_id: user.id, slot, state: { completion: novaCompletion }, updated_at: new Date().toISOString() }, 'user_id,slot');
-      return send(res, 200, { ok: true, completion: novaCompletion });
+      // Coleta server-authoritative (#1/#6): concede xp/gold/item no SERVIDOR — antes o
+      // cliente creditava local e o reconcile revertia (recompensa evaporava). 1ª
+      // conclusão = firstReward + repeatReward juntos; repetições = só repeatReward
+      // (fiel ao RubinOT). taskCoin fica no cliente (não é revertido pelo reconcile).
+      // Estamos no mutex ECON -> serializa com o flush da caçada (#R2).
+      const firstTime = (completion[key] || 0) === 0;
+      const rewards = firstTime ? [...(task.firstReward || []), ...(task.repeatReward || [])] : (task.repeatReward || []);
+      const granted = await grantTaskRewardsServer(user.id, slot, rewards);
+      return send(res, 200, { ok: true, completion: novaCompletion, firstTime, ...granted });
     }
 
     // ---- Treino de dummy AUTORITATIVO (aba Training) ----

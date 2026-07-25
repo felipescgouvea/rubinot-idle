@@ -7,20 +7,24 @@
 // auditoria: G.taskCompletion nunca era reconciliado (não está em
 // ECONOMY_FIELDS de saveGameUseCase.js), então sobrevivia intacto num save
 // forjado e um cliente adulterado desbloqueava as 5 salas pra sempre sem
-// matar nada. A concessão da recompensa em si (grantRewards) continua local
-// — já é auto-mitigada pelo reconcile de gold/xp/inventário de qualquer
-// forma, então não precisa duplicar toda a lógica de reward no servidor.
-import { G, ACCOUNT } from './gameStore.js?v=299';
-import { MONSTERS } from '../domain/bestiary.js?v=318';
-import { ITEMS } from '../domain/items.js?v=310';
-import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=298';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=297';
-import { gainXp } from './huntUseCases.js?v=363';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=296';
-import { addItemToInventory } from './inventoryCore.js?v=297';
-import { saveGame } from './saveGameUseCase.js?v=299';
-import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=307';
-import { t } from '../i18n/i18n.js?v=315';
+// matar nada.
+//
+// A RECOMPENSA também é server-authoritative e COLETADA pelo jogador (#1/#6):
+// ao bater o alvo a task fica "pronta" (não credita nada); o jogador clica
+// pra coletar (claimTaskReward), e é o /task/complete que concede xp/gold/item
+// de fato. Antes o cliente creditava local e o reconcile de gold/xp/inventário
+// revertia tudo — a recompensa (xp de task chega a dezenas de milhões)
+// evaporava. taskCoin fica local (não está em ECONOMY_FIELDS, não é revertido).
+import { G, ACCOUNT } from './gameStore.js?v=300';
+import { MONSTERS } from '../domain/bestiary.js?v=319';
+import { ITEMS } from '../domain/items.js?v=311';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=299';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=298';
+import { getMaxHp, getMaxMana } from './stats.js?v=297';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=297';
+import { saveGame } from './saveGameUseCase.js?v=300';
+import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=308';
+import { t } from '../i18n/i18n.js?v=316';
 
 // Busca o mapa real de conclusões do servidor e espelha em G — chamado no
 // boot, pra nunca depender de um valor que só existia no save local/na nuvem
@@ -59,83 +63,81 @@ export function startTask(roomId, taskIndex) {
   saveGame();
 }
 
-// Concede uma lista de rewards ({type, amount|itemId|qty|itemIds}) ao jogador.
-// Tipos suportados: xp, gold, item, taskCoin, randomItem (sorteia 1 item da
-// lista itemIds e credita qty 1). Retorna um resumo textual pro log/notificação.
-function grantRewards(rewards) {
+// Credita a parte CLIENT-SIDE dos rewards (só taskCoin — não está em
+// ECONOMY_FIELDS, não é revertido pelo reconcile) e monta o resumo textual pro
+// log/notificação. xp/gold já foram concedidos pelo servidor (server-authoritative);
+// aqui só espelhamos os valores dele. `granted.grantedItems` traz a nova qty de
+// cada item que o servidor creditou (cobre item e o randomItem que ele sorteou).
+function applyTaskRewards(rewards, granted) {
   const parts = [];
   for (const r of rewards || []) {
     if (!r) continue;
-    if (r.type === 'xp') {
-      gainXp(r.amount);
-      parts.push(`+${r.amount.toLocaleString()} XP`);
-    } else if (r.type === 'gold') {
-      G.gold += r.amount;
-      G.totalGoldEarned += r.amount;
-      parts.push(`+${r.amount.toLocaleString()} Gold`);
-    } else if (r.type === 'taskCoin') {
-      G.taskCoins += r.qty;
-      parts.push(`+${r.qty} Task Coin${r.qty > 1 ? 's' : ''}`);
-    } else if (r.type === 'item') {
-      const qty = r.qty || 1;
-      for (let i = 0; i < qty; i++) addItemToInventory(r.itemId);
-      const itemName = ITEMS[r.itemId]?.name || r.itemId;
-      parts.push(`+${qty}x ${itemName}`);
-    } else if (r.type === 'randomItem') {
-      const pool = r.itemIds || [];
-      if (pool.length) {
-        const picked = pool[Math.floor(Math.random() * pool.length)];
-        addItemToInventory(picked, 1);
-        const itemName = ITEMS[picked]?.name || picked;
-        parts.push(`+1x ${itemName}`);
-      }
-    }
+    if (r.type === 'xp') parts.push(`+${r.amount.toLocaleString()} XP`);
+    else if (r.type === 'gold') parts.push(`+${r.amount.toLocaleString()} Gold`);
+    else if (r.type === 'taskCoin') { G.taskCoins += r.qty; parts.push(`+${r.qty} Task Coin${r.qty > 1 ? 's' : ''}`); }
+  }
+  for (const gi of (granted?.grantedItems || [])) {
+    G.inventory[gi.itemId] = gi.qty; // qty é o total atualizado que o servidor devolveu
+    if (!G.inventoryOrder.includes(gi.itemId)) G.inventoryOrder.push(gi.itemId);
+    parts.push(`+${ITEMS[gi.itemId]?.name || gi.itemId}`);
   }
   return parts.join(', ');
 }
 
-// Reentrância: um tick que mata ≥2 monstros da task emite MONSTER_KILLED em loop
-// síncrono; como checkTaskProgress é async e suspende no await de conclusão (com
-// G.activeTask AINDA setado), a 2ª entrada passava de novo pelo gate e concedia a
-// recompensa 2x — os taskCoins dobravam de vez (não são revertidos pelo reconcile).
-// Este guard fecha a porta enquanto uma conclusão está em voo.
-let completingTask = false;
-
-async function checkTaskProgress() {
-  if (!G.activeTask || completingTask) return;
-  const { roomId, taskIndex, key, required } = G.activeTask;
+// Ao bater o alvo, a task NÃO credita nada — fica "pronta pra coletar". O jogador
+// coleta pelo painel (claimTaskReward), como no RubinOT. Isso também fecha o
+// double-grant antigo: a coleta é um clique único e server-authoritative.
+function checkTaskProgress() {
+  if (!G.activeTask) return;
+  const { key, required } = G.activeTask;
   const kills = G.taskKills[key] || 0;
-  if (kills < required) { emit(EVENTS.ACTIVE_TASK); return; }
+  if (kills >= required && !G.activeTask.ready) {
+    G.activeTask.ready = true;
+    emit(EVENTS.NOTIFY, { msg: t('tasks.readyToClaim'), type: 'success' });
+    emit(EVENTS.TASKS_PANEL);
+    saveGame();
+  }
+  emit(EVENTS.ACTIVE_TASK);
+}
+
+// Coleta a recompensa da task pronta — SERVER-AUTHORITATIVE. O /task/complete
+// valida (mortes reais + gate de desbloqueio), avança a completion e CONCEDE
+// xp/gold/item de fato; aqui só espelhamos o que ele devolveu. Guard de
+// reentrância impede clique duplo enquanto o request está em voo.
+let claimingTask = false;
+export async function claimTaskReward() {
+  if (!G.activeTask || !G.activeTask.ready || claimingTask) return;
+  const { roomId, taskIndex, key } = G.activeTask;
   const found = findTask(roomId, taskIndex);
-  if (!found) { G.activeTask = null; emit(EVENTS.ACTIVE_TASK); return; }
-  completingTask = true;
+  if (!found) { G.activeTask = null; emit(EVENTS.TASKS_PANEL); emit(EVENTS.ACTIVE_TASK); return; }
+  claimingTask = true;
   try {
     const { task } = found;
-    const firstTime = (G.taskCompletion[key] || 0) === 0;
-    // Servidor valida mortes reais (player_bestiary) e o gate de desbloqueio
-    // antes de aceitar o avanço — nunca aceita G.taskCompletion como veio.
+    const prevLevel = G.level;
     const res = await completeTaskOnServer(ACCOUNT.activeSlot, roomId, taskIndex);
-    if (!res.ok) {
-      emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' });
-      emit(EVENTS.ACTIVE_TASK);
-      return;
-    }
+    if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' }); return; }
     G.taskCompletion = res.completion;
-    // Recompensa exclusiva de 1ª vez (verde) É ADICIONAL à repetível (vermelha):
-    // na 1ª conclusão o jogador recebe firstReward + repeatReward juntos; da 2ª
-    // em diante só repeatReward — fiel ao padrão real do RubinOT (Linked Tasks).
-    const rewards = firstTime ? [...(task.firstReward || []), ...(task.repeatReward || [])] : (task.repeatReward || []);
-    const summary = grantRewards(rewards);
+    // Valores autoritativos do servidor (xp é o do nível atual; level já recalculado).
+    if (res.gold != null) G.gold = res.gold;
+    if (res.totalGoldEarned != null) G.totalGoldEarned = res.totalGoldEarned;
+    if (res.xp != null) G.xp = res.xp;
+    if (res.level != null) G.level = res.level;
+    const rewards = res.firstTime ? [...(task.firstReward || []), ...(task.repeatReward || [])] : (task.repeatReward || []);
+    const summary = applyTaskRewards(rewards, res);
+    if (G.level > prevLevel) { G.hp = getMaxHp(); G.mana = getMaxMana(); emit(EVENTS.LEVEL_UP, { level: G.level }); }
     bumpMissionProgress('tasks', 1);
-    emit(EVENTS.NOTIFY, { msg: t(firstTime ? 'tasks.completeFirstTime' : 'tasks.completeRepeat', { rewards: summary }), type: 'success' });
-    emit(EVENTS.LOG, `<span class="${firstTime ? 'log-heal' : 'log-loot'}">${t(firstTime ? 'tasks.logCompleteFirstTime' : 'tasks.logComplete', { task: task.name })}</span>`);
+    emit(EVENTS.NOTIFY, { msg: t(res.firstTime ? 'tasks.completeFirstTime' : 'tasks.completeRepeat', { rewards: summary }), type: 'success' });
+    emit(EVENTS.LOG, `<span class="${res.firstTime ? 'log-heal' : 'log-loot'}">${t(res.firstTime ? 'tasks.logCompleteFirstTime' : 'tasks.logComplete', { task: task.name })}</span>`);
     G.taskKills[key] = 0;
     G.activeTask = null;
     emit(EVENTS.TASKS_PANEL);
     emit(EVENTS.HEADER_STATS);
+    emit(EVENTS.CHAR_INFO);
+    emit(EVENTS.BARS);
+    emit(EVENTS.INVENTORY);
     saveGame();
   } finally {
-    completingTask = false;
+    claimingTask = false;
   }
   emit(EVENTS.ACTIVE_TASK);
 }

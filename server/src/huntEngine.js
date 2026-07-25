@@ -188,6 +188,59 @@ export async function incrementInventory(userId, slot, itemId, delta) {
   return newQty;
 }
 
+// Concede os rewards de uma task no SERVIDOR (server-authoritative), pra o resgate
+// deixar de ser client-side e evaporar no reconcile (#1/#6). Trata xp (com recálculo
+// de nível igual à morte), gold e item/randomItem em player_stats/player_inventory.
+// taskCoin fica no cliente (não está em ECONOMY_FIELDS -> o reconcile não o reverte).
+// Chamado pelo /task/complete, que está no mutex ECON (serializa com o flush, #R2).
+export async function grantTaskRewardsServer(userId, slot, rewards) {
+  let addXp = 0, addGold = 0;
+  const grantedItems = [];
+  for (const r of rewards || []) {
+    if (!r) continue;
+    if (r.type === 'xp') addXp += Math.max(0, Number(r.amount) || 0);
+    else if (r.type === 'gold') addGold += Math.max(0, Number(r.amount) || 0);
+    else if (r.type === 'item' && ITEMS[r.itemId]) {
+      const q = Math.max(1, Number(r.qty) || 1);
+      const newQty = await incrementInventory(userId, slot, r.itemId, q);
+      grantedItems.push({ itemId: r.itemId, qty: newQty });
+    } else if (r.type === 'randomItem') {
+      const pool = (r.itemIds || []).filter(id => ITEMS[id]);
+      if (pool.length) {
+        const picked = pool[Math.floor(Math.random() * pool.length)];
+        const newQty = await incrementInventory(userId, slot, picked, 1);
+        grantedItems.push({ itemId: picked, qty: newQty });
+      }
+    }
+    // taskCoin: creditado no cliente (persiste no save; não é revertido pelo reconcile).
+  }
+  // Se está caçando, a SESSÃO é dona do xp/level/gold — drena o pendente dela pra
+  // player_stats primeiro (padrão da morte), aplica o reward absoluto, e ressincroniza
+  // a sessão pra o próximo flush não regredir o nível. Estamos no mutex ECON
+  // (/task/complete), então flushVitals(live, true) não re-adquire o lock (#R2).
+  const live = getLiveSessionBySlot(userId, slot);
+  if (live) await flushVitals(live, true);
+  const stats = await selectOne('player_stats', { user_id: userId, slot });
+  let gold = (stats ? Number(stats.gold) || 0 : 0) + addGold;
+  const totalGoldEarned = (stats ? Number(stats.total_gold_earned) || 0 : 0) + addGold;
+  let level = stats ? Number(stats.level) || 1 : 1;
+  let xp = stats ? Number(stats.xp) || 0 : 0;
+  if (addXp > 0) {
+    let resto = XP_TABLE.slice(0, level - 1).reduce((a, b) => a + b, 0) + xp + addXp;
+    let novoNivel = 1;
+    while (novoNivel < MAX_LEVEL && resto >= XP_TABLE[novoNivel - 1]) { resto -= XP_TABLE[novoNivel - 1]; novoNivel++; }
+    level = novoNivel; xp = resto;
+  }
+  await upsertRow('player_stats', { user_id: userId, slot, gold, total_gold_earned: totalGoldEarned, level, xp, updated_at: new Date().toISOString() }, 'user_id,slot');
+  if (live) {
+    live.level = level; live.xpAbs = xp;
+    live.maxHp = computeMaxHp({ vocation: live.vocation, level, equipment: live.equipment, relics: live.relics });
+    live.maxMana = computeMaxMana({ vocation: live.vocation, level });
+    live.hp = Math.min(live.hp, live.maxHp); live.mana = Math.min(live.mana, live.maxMana);
+  }
+  return { gold, totalGoldEarned, level, xp, grantedItems };
+}
+
 // --- DANO CONTÍNUO (magias "utori", ver domain/dotDamage.js) ---------------
 // A sequência de golpes é montada no CAST e guardada na própria criatura, com
 // horário absoluto de cada golpe. Isso tem duas consequências que são fiéis ao
