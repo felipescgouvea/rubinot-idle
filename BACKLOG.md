@@ -30,7 +30,7 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [ ] **(auditoria design 07-25) Abas "leves" com viewport vazio**: Worlds/Highscores/Market/Shop deixam ~40% inferior da tela como gradiente azul morto — parece inacabado; preencher/centralizar melhor
 - [ ] **(auditoria design 07-25) Letterbox do palco de batalha**: tarjas pretas grossas em cima/embaixo, área jogável pequena e sprites minúsculos — aproveitar melhor o frame
 - [x] **(auditoria design 07-25) Mais "juice" no combate**: dano flutuante sobre o jogador (`c8db6cb4`) + flash de LEVEL UP no palco (`b01825fd`) + pop de drop raro (`e9788496`) — todos verificados no browser.
-- [ ] **(auditoria design 07-25) Estado "parado" = tela morta**: com hunt Stopped o palco congela sem vida — dar estado de repouso animado / CTA visual forte pra retomar
+- [x] **(auditoria design 07-25) Estado "parado" = tela morta**: palco parado agora escurece de leve + CTA dourado pulsante "▶ Retomar caçada" no centro — `cd6d8686`, verificado no browser.
 - [ ] **(auditoria design 07-25) Diferenciar HP/MP/XP no rail**: barras verde/azul/dourado parecidas e minúsculas — num relance não dá pra distinguir vida de experiência
 - [ ] **(auditoria design 07-25) Trocar emojis de SO por sprites do tema**: Worlds usa emoji do sistema (arco-íris/sol/espiral/sparkles) e Battle Pass usa ⭐ — destoa do pixel-art autêntico do resto
 - [x] **(auditoria design 07-25) Padronizar formatação de número**: barra de XP do palco agora usa o mesmo formato abreviado do rail (105.2K/495.1K · 21%), era número cru — `d24b617a`
