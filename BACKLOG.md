@@ -29,7 +29,7 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [x] **Janela de morte estilo Tibia** (OK bloqueante antes de continuar) — `f324754d`
 - [ ] Paladino — **flecha fantasma** (BUG): 1º hit HS + monstro demora a morrer → 2ª flecha que não devia. **Falta repro (rate-limit).**
 - [x] **Imbuements**: janela recriada fiel ao shrine do Tibia (item no slot, fontes astrais em sprite, tema) — `4186835a`
-- [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia** — EM ANDAMENTO
+- [x] **Market recriado do zero** fiel ao Tibia: navegador de itens (busca + sprite) + detalhe com ofertas venda/compra + criar oferta, sem `<select>` nativo — `cedb8c18`
 
 ---
 
