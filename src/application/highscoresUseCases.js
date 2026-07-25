@@ -2,12 +2,12 @@
 // servidor (Railway) lê level/xp/kills/skills reais de player_stats/
 // player_skills — o cliente só reporta o que ainda não é autoritativo
 // (arena/tasks/bestiário, ver server/src/index.js: /highscores/submit).
-import { G, ACCOUNT } from './gameStore.js?v=290';
-import { MONSTERS } from '../domain/bestiary.js?v=308';
-import { emit, EVENTS } from '../shared/eventBus.js?v=288';
+import { G, ACCOUNT } from './gameStore.js?v=291';
+import { MONSTERS } from '../domain/bestiary.js?v=309';
+import { emit, EVENTS } from '../shared/eventBus.js?v=289';
 import { submitHighscoreOnServer, fetchHighscoresOnServer } from '../infrastructure/authClient.js';
-import { saveGame } from './saveGameUseCase.js?v=290';
-import { t } from '../i18n/i18n.js?v=306';
+import { saveGame } from './saveGameUseCase.js?v=291';
+import { t } from '../i18n/i18n.js?v=307';
 
 let lastSubmitAt = 0;
 // Cache por CATEGORIA (level/skill/bestiário pedem ordenações diferentes do

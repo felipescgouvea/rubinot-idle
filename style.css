@@ -2176,7 +2176,8 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
   box-shadow: 0 1px 3px #00000022;
 }
 .imbue-row-main { display: flex; align-items: center; gap: 9px; }
-.imbue-gem { font-size: 1.4rem; flex: none; }
+.imbue-gem { font-size: 1.4rem; flex: none; display: inline-flex; align-items: center; }
+.imbue-gem-img { width: 30px; height: 30px; image-rendering: pixelated; }
 .imbue-row-txt { min-width: 0; flex: 1; }
 .imbue-row-txt b { color: var(--ink); display: block; }
 .imbue-row-txt small { color: var(--ink-soft); }

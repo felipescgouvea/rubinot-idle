@@ -4,21 +4,21 @@
 // uma com seu próprio limiar de % de HP). Cada vocação vê só o que faz
 // sentido pra ela — ver domain/spells.js (voc por spell) e
 // domain/rtcConfig.js (runas por vocação).
-import { G } from '../application/gameStore.js?v=290';
-import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=288';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=301';
-import { VOCATIONS } from '../domain/character.js?v=317';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=286';
+import { G } from '../application/gameStore.js?v=291';
+import { SPELLS, defaultHealSpellId, isSpellAvailable } from '../domain/spells.js?v=289';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=302';
+import { VOCATIONS } from '../domain/character.js?v=318';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=287';
 import { isRuneAvailableToVocation, normalizeAttackSpells, runeMinMl, canUseAttackRune, isRuneEntry, runeEntryId, ATTACK_SLOT_COUNT,
-  HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeHealTiers } from '../domain/rtcConfig.js?v=320';
-import { getMagic } from '../application/stats.js?v=287';
-import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=286';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=286';
+  HEAL_TIER_COUNT, TARGET_PRIORITIES, normalizeHealTiers } from '../domain/rtcConfig.js?v=321';
+import { getMagic } from '../application/stats.js?v=288';
+import { areaName, isAreaAttack } from '../domain/attackAreas.js?v=287';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=287';
 import { setRtcHealPotion, setRtcManaPotion, clearRtcPotion, setRtcAttackSpellSlot, clearRtcAttackSpellSlot,
-  setRtcHealTierSpell } from '../application/rtcUseCases.js?v=322';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=288';
-import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=293';
-import { t } from '../i18n/i18n.js?v=306';
+  setRtcHealTierSpell } from '../application/rtcUseCases.js?v=323';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=289';
+import { itemIconImg, spellIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=294';
+import { t } from '../i18n/i18n.js?v=307';
 
 const ALL_ATTACK_RUNES = Object.entries(ITEMS).filter(([, i]) => i.type === 'rune' && i.dmg);
 
