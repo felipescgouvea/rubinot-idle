@@ -1,10 +1,11 @@
-import { G } from '../application/gameStore.js?v=313';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=313';
-import { on, EVENTS } from '../shared/eventBus.js?v=311';
-import { rewardIcon, uiIcon } from './uiIcons.js?v=314';
-import { rubiniIconImg } from './shared.js?v=316';
-import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=312';
-import { t, getLocale } from '../i18n/i18n.js?v=329';
+import { G } from '../application/gameStore.js?v=314';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=314';
+import { on, EVENTS } from '../shared/eventBus.js?v=312';
+import { rewardIcon, uiIcon } from './uiIcons.js?v=315';
+import { rubiniIconImg } from './shared.js?v=317';
+import { setTitleFlag } from './notifyTitle.js?v=312';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=313';
+import { t, getLocale } from '../i18n/i18n.js?v=330';
 
 function bpRewardIcon(r) {
   return rewardIcon(r, 'bp-reward-sprite');
@@ -88,6 +89,15 @@ export function renderBattlePassPanel() {
       ${premHtml}
     </div>`;
   }).join('');
+
+  // Título da aba do navegador: "(N) Rubinot Idle" quando há tier/missão pra resgatar.
+  // Mesmos predicados usados acima pra pintar os botões (não reinventa "resgatável").
+  const claimedPremArr = G.bpClaimedPremium || [];
+  const freeClaimable = BP_REWARDS.some(r => G.bpTier >= r.tier && !G.bpClaimed.includes(r.tier));
+  const premClaimable = G.bpPremium && BP_PREMIUM_REWARDS.some(r => G.bpTier >= r.tier && !claimedPremArr.includes(r.tier));
+  const missionClaimable = currentMissions().some(m => (G.bpMissionProgress[m.track] || 0) >= m.goal && !G.bpMissionClaimed.includes(m.id))
+    || currentWeeklyMissions().some(m => (G.bpWeeklyProgress[m.track] || 0) >= m.goal && !G.bpWeeklyClaimed.includes(m.id));
+  setTitleFlag('bp', !!(freeClaimable || premClaimable || missionClaimable));
 }
 
 export function wireBattlePassPanelEvents() {

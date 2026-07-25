@@ -28,6 +28,7 @@ const COM_ESTADO = new Set([
   'adminUseCases.js',
   'saveGameUseCase.js',
   'authClient.js',       // sessão viva (token/refresh) + trava de leitura da nuvem — duplicar desloga no meio e bloqueia save
+  'notifyTitle.js',      // Set de flags de "tem coisa pra resgatar" que dita o título da aba
 ]);
 
 const RE = /from '([^']*\/([\w.-]+\.js))\?v=(\d+)'/g;
