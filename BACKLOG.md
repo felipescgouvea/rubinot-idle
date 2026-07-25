@@ -16,15 +16,19 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 - [x] Fontes escuras demais no tema noturno (nome da vocação / recursos do rail em navy-escuro) — `--navy-*` invertido no dark — `0a7b60eb`
 - [x] Boosted: monstros pequenos demais pra ver (24→40px) — `0a7b60eb`
 - [x] Dropdown do Market caindo no branco do SO / selects sem tema — `color-scheme` + `<select>` temado — `efb3f2ed`
-- [ ] Ícone estranho no Boosted (rótulo CREATURE) — trocar
-- [ ] Ícones **inadequados na sidebar**: Caçada usa Map (parece envelope); Spells duplica o ícone do RTC
-- [ ] Cards de **igual altura** independente do texto — vale pros tiers do Battle Pass **e** pros cards de Hunt
+- [x] Texto da aba SELECIONADA do log invisível no dark (`--cream` não invertia) — `896ff386`
+- [x] Ícones da sidebar: Caçada=Map(envelope)→Target_Board; Spells duplicava RTC→Spellbook próprio; RTC→Wand — `896ff386`
+- [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) — trocar
+- [ ] Cards de **igual altura** independente do texto — tiers do Battle Pass **e** cards de Hunt
 - [ ] Fontes dark: revisar contraste geral (voc name, muted) além do navy
+- [ ] Texto da **aba selecionada** no log de combate fica **invisível** (contraste zero na aba ativa)
 
 **Funcional / UX**
-- [ ] **auto-sell não está funcionando** (BUG) — investigar
+- [~] **auto-sell não funciona** — caminho client→server→settleKill traçado e CORRETO; junk é `type:misc` com sell (cyclops_toe=55>max50, mouldy_cheese=0 não vende). Provável teto (maxValue) / item worth 0. **Falta repro ao vivo (rate-limit).**
+- [ ] Botão **Trocar Hunt** habilitado só quando NÃO está caçando
+- [ ] Paladino: se o 1º hit é HS e o monstro demora a morrer, sai uma **2ª flecha** que não devia (bug de timing de projétil)
 - [ ] Botão de imbuements abre modal **diferente** do painel global da aba — quero **idêntico**
-- [ ] **Janela de morte estilo Tibia**: ao morrer, abrir diálogo com OK obrigatório antes de qualquer ação
+- [ ] **Janela de morte estilo Tibia**: ao morrer, diálogo com OK obrigatório antes de qualquer ação
 - [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia**
 - [ ] **Paladino — flecha fantasma** (BUG): quando o primeiro hit é HS e o monstro demora pra morrer, sai uma segunda flecha que não deveria disparar
 
