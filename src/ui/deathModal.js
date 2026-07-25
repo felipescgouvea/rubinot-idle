@@ -8,6 +8,7 @@ import { t } from '../i18n/i18n.js?v=310';
 import { spriteUrl } from '../infrastructure/tibiaSprites.js?v=295';
 
 let overlay = null;
+let currentOnKey = null; // dedupe: no máximo 1 listener de teclado de morte por vez
 
 function ensureOverlay() {
   if (overlay) return overlay;
@@ -38,9 +39,14 @@ function showDeath({ monster, xpLost, level } = {}) {
   ov.style.display = 'flex';
   ov.setAttribute('aria-hidden', 'false');
   const btn = ov.querySelector('.death-ok');
-  const close = () => { ov.style.display = 'none'; ov.setAttribute('aria-hidden', 'true'); document.removeEventListener('keydown', onKey); };
+  const close = () => { ov.style.display = 'none'; ov.setAttribute('aria-hidden', 'true'); document.removeEventListener('keydown', onKey); if (currentOnKey === onKey) currentOnKey = null; };
   const onKey = (e) => { if (e.key === 'Enter' || e.key === 'Escape' || e.key === ' ') { e.preventDefault(); close(); } };
   btn.addEventListener('click', close, { once: true });
+  // Se uma morte anterior ainda tinha o listener ativo (2ª PLAYER_DEATH com o
+  // overlay aberto — pode acontecer no reconcile pós-resume), remove antes de
+  // registrar o novo, pra nunca acumular listeners no document.
+  if (currentOnKey) document.removeEventListener('keydown', currentOnKey);
+  currentOnKey = onKey;
   document.addEventListener('keydown', onKey);
   btn.focus();
 }

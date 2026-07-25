@@ -37,7 +37,7 @@ function bloqueio(id, s) {
   if ((G.mana || 0) < s.mana) return `💧 ${t('spells.blockMana', { mana: s.mana })}`;
   if ((s.soul || 0) > soulAtual()) return `✨ ${t('spells.blockSoul', { soul: s.soul })}`;
   if (s.reagent && (G.inventory[s.reagent.item] || 0) < s.reagent.count) {
-    return `📦 ${t('spells.blockReagent', { item: ITEMS[s.reagent.item].name })}`;
+    return `📦 ${t('spells.blockReagent', { item: ITEMS[s.reagent.item]?.name || s.reagent.item })}`;
   }
   return null;
 }
@@ -48,7 +48,7 @@ function detalhe(id, s) {
   if (s.type === 'conjure') {
     const alvo = ITEMS[s.conjures.item];
     partes.push(`→ ${s.conjures.count}× ${alvo ? alvo.name : s.conjures.item}`);
-    if (s.reagent) partes.push(t('spells.uses', { count: s.reagent.count, item: ITEMS[s.reagent.item].name }));
+    if (s.reagent) partes.push(t('spells.uses', { count: s.reagent.count, item: ITEMS[s.reagent.item]?.name || s.reagent.item }));
   }
   if (s.type === 'attack') {
     if (s.dot) partes.push(t('spells.dot'));

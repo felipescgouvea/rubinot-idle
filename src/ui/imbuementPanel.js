@@ -107,8 +107,16 @@ export function openImbueModal() {
   openModal(imbueBodyHtml());
 }
 
-// Re-renderiza o corpo no container ativo (aba se visível, senão modal).
+// Re-renderiza o corpo no container ativo. IMPORTANTE: o modal pode estar aberto
+// POR CIMA da aba imbue (o botão do header abre o modal em qualquer aba). Se eu
+// só olhasse a visibilidade da aba, um clique no modal redesenharia a aba ATRÁS
+// dele e o modal ficaria congelado. Então checo o modal PRIMEIRO: se ele está
+// aberto mostrando o imbue, redesenho o modal; senão caio na aba.
 function rerender() {
+  const overlay = document.getElementById('modal-overlay');
+  const modalShowingImbue = overlay && overlay.style.display !== 'none'
+    && document.getElementById('modal-content')?.querySelector('.imbue-window');
+  if (modalShowingImbue) { openModal(imbueBodyHtml()); return; }
   const tabEl = document.getElementById('imbue-content');
   if (tabEl && tabEl.offsetParent !== null) { renderImbuePanel(); return; }
   openModal(imbueBodyHtml());

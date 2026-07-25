@@ -2,7 +2,7 @@
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
 import { renderTasksPanel } from './tasksPanel.js?v=299';
-import { renderSpellsPanel } from './spellsPanel.js?v=206';
+import { renderSpellsPanel } from './spellsPanel.js?v=207';
 import { renderSkillsPanel } from './skillsPanel.js?v=293';
 import { renderArenaPanel } from './arenaPanel.js?v=292';
 import { renderWorldsPanel } from './worldsPanel.js?v=291';
@@ -14,7 +14,7 @@ import { renderHighscoresPanel } from './highscoresPanel.js?v=296';
 import { renderBossRushPanel } from './bossRushPanel.js?v=297';
 import { renderBestiaryTab } from './bestiaryPanel.js?v=297';
 import { renderTrainingSection } from './trainingPanel.js?v=300';
-import { renderImbuePanel } from './imbuementPanel.js?v=290';
+import { renderImbuePanel } from './imbuementPanel.js?v=291';
 import { renderAdminPanel } from './adminPanel.js?v=301';
 import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=295';
 import { on, EVENTS } from '../shared/eventBus.js?v=292';
