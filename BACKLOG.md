@@ -7,6 +7,28 @@ Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = pre
 
 ---
 
+## 📌 Punch-list do Felipe — revisão ao vivo (07-25)
+> Regra permanente: **todo pedido do Felipe entra aqui** pra não se perder.
+
+**Estética / cosmético**
+- [x] Treino do Knight (melee): dummy no CENTRO, boneco colado, investida que conecta + animação de ataque — `efb3f2ed`
+- [x] Sprites de monstro **sumindo** na batalha (só a barra de vida aparecia) — regressão do `loading=lazy`, revertida — `0a7b60eb`
+- [x] Fontes escuras demais no tema noturno (nome da vocação / recursos do rail em navy-escuro) — `--navy-*` invertido no dark — `0a7b60eb`
+- [x] Boosted: monstros pequenos demais pra ver (24→40px) — `0a7b60eb`
+- [x] Dropdown do Market caindo no branco do SO / selects sem tema — `color-scheme` + `<select>` temado — `efb3f2ed`
+- [ ] Ícone estranho no Boosted (rótulo CREATURE) — trocar
+- [ ] Ícones **inadequados na sidebar**: Caçada usa Map (parece envelope); Spells duplica o ícone do RTC
+- [ ] Cards de **igual altura** independente do texto — vale pros tiers do Battle Pass **e** pros cards de Hunt
+- [ ] Fontes dark: revisar contraste geral (voc name, muted) além do navy
+
+**Funcional / UX**
+- [ ] **auto-sell não está funcionando** (BUG) — investigar
+- [ ] Botão de imbuements abre modal **diferente** do painel global da aba — quero **idêntico**
+- [ ] **Janela de morte estilo Tibia**: ao morrer, abrir diálogo com OK obrigatório antes de qualquer ação
+- [ ] **RECRIAR o Market do zero**, fiel à janela do Tibia global, usando **só sprites do Tibia**
+
+---
+
 ## 🎯 A grande virada estratégica (o "porquê" do P0)
 
 Duas descobertas convergentes explicam por que o jogo "acaba":
