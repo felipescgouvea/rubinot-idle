@@ -26,6 +26,11 @@ function loadImage(src) {
     img.onerror = () => reject(new Error('atlas ' + src));
     img.src = src;
   });
+  // Não ENVENENAR o cache com falha transitória: guardar a promise rejeitada
+  // fazia UMA falha de rede no atlas derrubar a caminhada pro emoji pelo RESTO
+  // da sessão (mesma armadilha corrigida em outfitRenderer.js). Ao rejeitar,
+  // remove do cache pra permitir nova tentativa no próximo render.
+  p.catch(() => { if (atlasCache.get(src) === p) atlasCache.delete(src); });
   atlasCache.set(src, p);
   return p;
 }

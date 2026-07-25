@@ -4,18 +4,18 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G } from './gameStore.js?v=275';
-import { emit, EVENTS } from '../shared/eventBus.js?v=273';
-import { getMagic, getMaxHp } from './stats.js?v=272';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=304';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=272';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=274';
-import { grantReward } from './rewardGrants.js?v=112';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=272';
-import { addItemToInventory } from './inventoryCore.js?v=273';
-import { ITEMS } from '../domain/items.js?v=286';
-import { saveGame } from './saveGameUseCase.js?v=275';
-import { t } from '../i18n/i18n.js?v=291';
+import { G } from './gameStore.js?v=276';
+import { emit, EVENTS } from '../shared/eventBus.js?v=274';
+import { getMagic, getMaxHp } from './stats.js?v=273';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=305';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=273';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=275';
+import { grantReward } from './rewardGrants.js?v=113';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=273';
+import { addItemToInventory } from './inventoryCore.js?v=274';
+import { ITEMS } from '../domain/items.js?v=287';
+import { saveGame } from './saveGameUseCase.js?v=276';
+import { t } from '../i18n/i18n.js?v=292';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
@@ -59,8 +59,6 @@ export async function startArenaBattle() {
     emit(EVENTS.NOTIFY, { msg: t('arena.dailyLimitReached', { limit: ARENA_DAILY_LIMIT }), type: 'error' });
     return { noAttemptsLeft: true };
   }
-  G.arenaBattlesToday++;
-
   // tenta um oponente REAL do ranking global; sem ninguém por perto, cai num bot
   let enemyName, enemyLevel, enemyPts, isReal = false;
   const real = await fetchArenaOpponentRequest(G.level, G.playerName);
@@ -74,6 +72,9 @@ export async function startArenaBattle() {
     enemyLevel = G.level + Math.floor(Math.random() * 5) - 2;
     enemyPts = Math.max(0, G.arenaPoints + Math.floor(Math.random() * 30) - 15);
   }
+  // Só consome a tentativa DEPOIS de ter um oponente resolvido: se o fetch do
+  // oponente real lançar (rede), o jogador não perde a tentativa do dia.
+  G.arenaBattlesToday++;
   // Combate FIEL ao Crystal Server (mesma maquinaria da caçada: rollPlayerAttack +
   // reducePhysical). O oponente é um fantasma escalado pelo level dele — dano
   // máximo, armadura e defesa derivam do que o JOGADOR tem, ajustados pelo

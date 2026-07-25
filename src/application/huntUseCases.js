@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=275';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=283';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=280';
-import { ZONES } from '../domain/bestiary.js?v=293';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=302';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=273';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=305';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=304';
-import { elementMod } from '../domain/elements.js?v=271';
-import { STAMINA_MAX } from '../domain/stamina.js?v=271';
-import { ITEMS } from '../domain/items.js?v=286';
-import { MONSTERS } from '../domain/bestiary.js?v=293';
-import { RARITY_TIERS } from '../domain/rarity.js?v=272';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=274';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=273';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=272';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=272';
-import { saveGame } from './saveGameUseCase.js?v=275';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=276';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=274';
-import { t } from '../i18n/i18n.js?v=291';
+import { G, ACCOUNT } from './gameStore.js?v=276';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=284';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=281';
+import { ZONES } from '../domain/bestiary.js?v=294';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, PROMOTION } from '../domain/character.js?v=303';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=274';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=306';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=305';
+import { elementMod } from '../domain/elements.js?v=272';
+import { STAMINA_MAX } from '../domain/stamina.js?v=272';
+import { ITEMS } from '../domain/items.js?v=287';
+import { MONSTERS } from '../domain/bestiary.js?v=294';
+import { RARITY_TIERS } from '../domain/rarity.js?v=273';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=275';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=274';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=273';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=273';
+import { saveGame } from './saveGameUseCase.js?v=276';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=277';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=275';
+import { t } from '../i18n/i18n.js?v=292';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -869,6 +869,10 @@ function beginLocalLoop(resume = false) {
 }
 
 export function startHunt() {
+  // Idempotência: se já está caçando (ou uma partida está subindo), não abrir
+  // uma 2ª sessão no servidor. Os chamadores atuais já checam, mas sem esta
+  // guarda qualquer chamada dupla criava uma sessão órfã e resetava os cursores.
+  if (G.hunting || starting) return;
   if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('hunt.needVocation'), type: 'error' }); return; }
   if (!G.activeZone) { emit(EVENTS.NOTIFY, { msg: t('hunt.needZone'), type: 'error' }); return; }
   const zone = ZONES[G.activeZone];
@@ -1061,6 +1065,10 @@ function stopHuntLocalOnly() {
   prevPackByUid = new Map();
   manualTargetUid = null;
   recentDead = [];
+  // Descarta hits/FX de projétil ainda pendentes: seus setTimeout de fallback
+  // disparavam ~projectileSpeed depois do Stop e piscavam um dano/efeito perdido.
+  pendingHits.clear();
+  pendingSpellFx = null;
   emit(EVENTS.HUNT_BUTTON, { hunting: false });
   emit(EVENTS.BATTLE_LIST);
 }
@@ -1291,9 +1299,10 @@ export function startRegen() {
     if (isStaminaEnabled()) {
       if (typeof G.stamina !== 'number') G.stamina = STAMINA_MAX;
       const step = 2 / 60;
-      G.stamina = G.hunting
-        ? Math.max(0, G.stamina - step)
-        : Math.min(STAMINA_MAX, G.stamina + step / 3);
+      // Durante a caçada o servidor é a fonte de verdade da stamina (reconcile
+      // sobrescreve G.stamina) — mexer aqui só criava jitter contra o valor
+      // autoritativo. Local só cuida da REGENERAÇÃO em descanso.
+      if (!G.hunting) G.stamina = Math.min(STAMINA_MAX, G.stamina + step / 3);
     }
     emit(EVENTS.BARS);
     emit(EVENTS.HEADER_STATS);

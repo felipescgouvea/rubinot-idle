@@ -3,20 +3,23 @@
 // customização do jogo real — 2 addons (toggle) e cor por região (cabeça,
 // corpo, pernas, pés) escolhida na paleta oficial de 133 cores — com preview
 // ao vivo, recolorido de verdade por região (ver infrastructure/outfitRenderer.js).
-import { G } from '../application/gameStore.js?v=275';
-import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=271';
-import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=271';
-import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=271';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=271';
-import { on, EVENTS } from '../shared/eventBus.js?v=273';
-import { openModal, rubiniIconImg } from './shared.js?v=278';
-import { t } from '../i18n/i18n.js?v=291';
+import { G } from '../application/gameStore.js?v=276';
+import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=272';
+import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=272';
+import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=272';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=272';
+import { on, EVENTS } from '../shared/eventBus.js?v=274';
+import { openModal, rubiniIconImg } from './shared.js?v=279';
+import { t } from '../i18n/i18n.js?v=292';
 
 // Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
 // parte do save (não é uma decisão de jogo, é só onde o clique da paleta vai).
 let activeColorChannel = 'head';
 
-const CHANNEL_LABEL = { head: t('outfit.channelHead'), body: t('outfit.channelBody'), legs: t('outfit.channelLegs'), feet: t('outfit.channelFeet') };
+// Resolve os rótulos no MOMENTO do render (não no import): senão a troca de
+// idioma nas Configurações não reflete nos canais de cor — ficavam congelados
+// no idioma do carregamento.
+const channelLabels = () => ({ head: t('outfit.channelHead'), body: t('outfit.channelBody'), legs: t('outfit.channelLegs'), feet: t('outfit.channelFeet') });
 
 function currentOutfitId() {
   return G.outfit || (G.vocation ? VOCATION_DEFAULT_OUTFIT[G.vocation] : null);
@@ -29,10 +32,11 @@ function outfitCardSprite(outfitId, gender) {
 }
 
 function colorChannelButtons(colors) {
-  return Object.keys(CHANNEL_LABEL).map(ch => `
+  const labels = channelLabels();
+  return Object.keys(labels).map(ch => `
     <button class="color-channel-btn ${activeColorChannel === ch ? 'active' : ''}"
       style="background:#${colors[ch]}" onclick="setActiveColorChannel('${ch}')"
-      title="${CHANNEL_LABEL[ch]}">${CHANNEL_LABEL[ch]}</button>
+      title="${labels[ch]}">${labels[ch]}</button>
   `).join('');
 }
 
@@ -122,7 +126,7 @@ export function openOutfitPicker() {
 }
 
 export function setActiveColorChannel(channel) {
-  if (!CHANNEL_LABEL[channel]) return;
+  if (!['head', 'body', 'legs', 'feet'].includes(channel)) return;
   activeColorChannel = channel;
   renderOutfitPicker();
 }

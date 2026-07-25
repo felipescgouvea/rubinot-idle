@@ -5,11 +5,11 @@
 // Isso evita duplicar o loop de combate inteiro; o preço é ter que cuidar
 // explicitamente pra não deixar a caçada normal do jogador "vazada" quando
 // ele entra/sai do Boss Rush — ver startBossRush()/stopBossRush() abaixo.
-import { G } from './gameStore.js?v=275';
-import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=293';
-import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=339';
-import { emit, EVENTS } from '../shared/eventBus.js?v=273';
-import { t } from '../i18n/i18n.js?v=291';
+import { G } from './gameStore.js?v=276';
+import { ZONES, MONSTERS, BOSS_MONSTER_IDS, isZoneUnlocked } from '../domain/bestiary.js?v=294';
+import { startHunt, stopHunt, setBossOnlyMode, isBossOnlyHunt } from './huntUseCases.js?v=340';
+import { emit, EVENTS } from '../shared/eventBus.js?v=274';
+import { t } from '../i18n/i18n.js?v=292';
 
 // Zona/estado de caçada "de fora" do Boss Rush — guardados só pra restaurar a
 // escolha normal do jogador (aba Caçada) quando ele sai do Boss Rush, em vez
@@ -44,9 +44,14 @@ export function startBossRush(zoneId) {
   }
   // Guarda a zona/estado normal só na 1ª entrada no Boss Rush (trocar de boss
   // dentro do próprio Boss Rush não deve sobrescrever o que tinha ANTES dele).
+  // Persistimos TAMBÉM no G (não só em vars de módulo) porque um F5 dentro do
+  // Boss Rush zera as vars de módulo — sem isso, sair do Boss Rush pós-refresh
+  // fazia G.activeZone virar null e largava o jogador sem zona nem caçada.
   if (!isBossOnlyHunt()) {
     savedZone = G.activeZone;
     savedHunting = G.hunting;
+    G.bossRushReturnZone = G.activeZone || null;
+    G.bossRushReturnHunting = !!G.hunting;
   }
   if (G.hunting) stopHunt();
   G.activeZone = zoneId;
@@ -58,7 +63,16 @@ export function startBossRush(zoneId) {
 export function stopBossRush() {
   if (G.hunting) stopHunt();
   setBossOnlyMode(false);
-  G.activeZone = savedZone;
+  // Resolve a zona de retorno das vars de módulo OU do que ficou persistido no
+  // G (caso de F5 dentro do Boss Rush). Nunca zera activeZone: se não houver
+  // zona pra voltar, mantém a atual em vez de largar o jogador sem seleção.
+  const returnZone = savedZone || G.bossRushReturnZone || null;
+  const returnHunting = savedHunting || !!G.bossRushReturnHunting;
+  if (returnZone) G.activeZone = returnZone;
+  savedZone = null;
+  savedHunting = false;
+  delete G.bossRushReturnZone;
+  delete G.bossRushReturnHunting;
   emit(EVENTS.ZONE_PICKER);
-  if (savedHunting && G.activeZone) startHunt();
+  if (returnHunting && G.activeZone) startHunt();
 }
