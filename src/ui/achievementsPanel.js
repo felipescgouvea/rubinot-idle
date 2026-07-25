@@ -1,12 +1,13 @@
 // Painel de Achievements + seleção de Título. Modal aberto pelo botão 🏆 na
 // barra do personagem. As conquistas são recomputadas dos stats (autoritativos)
 // a cada abertura — nada persistido além do título escolhido (G.title).
-import { G } from '../application/gameStore.js?v=309';
-import { ACHIEVEMENTS, isAchievementUnlocked, availableTitles } from '../domain/achievements.js?v=305';
-import { openModal } from './shared.js?v=312';
-import { emit, EVENTS } from '../shared/eventBus.js?v=307';
-import { saveGame } from '../application/saveGameUseCase.js?v=309';
-import { t } from '../i18n/i18n.js?v=325';
+import { G } from '../application/gameStore.js?v=310';
+import { ACHIEVEMENTS, isAchievementUnlocked, availableTitles } from '../domain/achievements.js?v=306';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=311';
+import { openModal } from './shared.js?v=313';
+import { emit, EVENTS } from '../shared/eventBus.js?v=308';
+import { saveGame } from '../application/saveGameUseCase.js?v=310';
+import { t } from '../i18n/i18n.js?v=326';
 
 function achievementsHtml() {
   const unlocked = ACHIEVEMENTS.filter(a => isAchievementUnlocked(a, G));
@@ -14,7 +15,7 @@ function achievementsHtml() {
   const rows = ACHIEVEMENTS.map(a => {
     const on = isAchievementUnlocked(a, G);
     return `<div class="ach-row ${on ? 'on' : 'off'}">
-      <span class="ach-icon">${on ? a.icon : '🔒'}</span>
+      <span class="ach-icon">${on ? spriteImgOrFallback(spriteUrl(a.sprite), a.name, a.icon, 'ach-icon-img') : '🔒'}</span>
       <span class="ach-text"><b>${a.name}</b><small>${a.desc}${a.title ? ` · ${t('achiev.titleLabel', { title: a.title })}` : ''}</small></span>
       ${on ? '<span class="ach-check">✓</span>' : ''}
     </div>`;
