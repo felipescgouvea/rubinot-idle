@@ -3,17 +3,17 @@
 // arquivo só chama as rotas novas em infrastructure/authClient.js e, DEPOIS
 // da confirmação `ok` do servidor, muta G localmente pra cache/feedback
 // visual (nunca antes — evita ter que reverter uma mutação otimista).
-import { G, ACCOUNT } from './gameStore.js?v=308';
-import { ITEMS } from '../domain/items.js?v=319';
-import { emit, EVENTS } from '../shared/eventBus.js?v=306';
-import { t } from '../i18n/i18n.js?v=324';
+import { G, ACCOUNT } from './gameStore.js?v=309';
+import { ITEMS } from '../domain/items.js?v=320';
+import { emit, EVENTS } from '../shared/eventBus.js?v=307';
+import { t } from '../i18n/i18n.js?v=325';
 import {
   fetchMarketWallet, depositToMarketOnServer, withdrawFromMarketOnServer,
   fetchMarketListingsOnServer, listItemOnServerMarket, cancelListingOnServerMarket,
   buyListingOnServerMarket, fetchMarketStatsOnServer,
   listBuyOfferOnServer, fillBuyOfferOnServer,
 } from '../infrastructure/authClient.js';
-import { saveGame } from './saveGameUseCase.js?v=308';
+import { saveGame } from './saveGameUseCase.js?v=309';
 
 export async function fetchMyMarketWallet() {
   const result = await fetchMarketWallet(ACCOUNT.activeSlot);

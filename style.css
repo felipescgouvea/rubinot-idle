@@ -5,7 +5,9 @@
    borda #3d3225 · navy #1e5799→#164070 · ouro #b8860b · verde #2e7d32
    Fontes do site: Inter (corpo 12px) + Cinzel (títulos)
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Metamorphous&family=Spectral:wght@400;500;600;700&display=swap');
+/* Tipografia = a MESMA do site oficial rubinot.com.br/news: a stack de fonte NATIVA
+   do sistema (Segoe UI no Windows, San Francisco no Mac, Roboto no Android...), sem
+   webfont. Limpa e legível; nada de fonte decorativa. Ver --serif/--body abaixo. */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -48,13 +50,10 @@
   --hp-c: #c0392b;
   --mana-c: #1e5799;
   --xp-c: #d4a017;
-  /* Tipografia (pedido do Felipe: pegada "Dragon Hunter"). A Dragon Hunter em si é
-     licença SÓ uso pessoal (proibido comercial) e o jogo tem loja de dinheiro real,
-     então usamos METAMORPHOUS — fonte de fantasia/aventura medieval, mesmo espírito,
-     open-source (OFL, livre pra uso comercial). Spectral (serifada legível) no corpo.
-     Os ícones do Tibia são sprites, não fonte: intactos. */
-  --serif: 'Metamorphous', 'Cinzel', serif;
-  --body: 'Spectral', Georgia, 'Times New Roman', serif;
+  /* Tipografia igual à do rubinot.com.br/news: stack de fonte NATIVA do sistema, em
+     títulos (--serif) e corpo (--body) — o site oficial não usa serifada/webfont. */
+  --serif: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
   /* aliases usados em estilos inline do game.js */
   --muted: #8a6f4d;
   --arcane: #8e44ad;
