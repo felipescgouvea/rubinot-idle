@@ -962,7 +962,7 @@ export default {
   'shop.desc.goldBoost': '+30% gold for 30 minutes.',
   'shop.desc.refill': 'Instantly restores HP and mana.',
   'shop.item.fullSupply': 'Full Supply',
-  'shop.premium.title': '💳 Premium Store (Real Money)',
+  'shop.premium.title': '💳 Premium Store',
   'shop.premium.subtitle': "Buy Rubini Coins with real money — separate from anything earned by playing. Payment isn't connected to a real gateway yet.",
   'shop.premium.subRcPacks': '💎 Rubini Coins Packs',
   'shop.rubini.title': '💎 Rubini Store',
