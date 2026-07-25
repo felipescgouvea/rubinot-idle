@@ -93,6 +93,20 @@
 :root[data-theme="dark"] .admin-loot-row input {
   background: var(--input-bg); color: var(--ink); border-color: var(--line-soft);
 }
+/* superfícies opacas claras que não usam var — override manual pra não virarem
+   manchas brancas no escuro (mercado/trade, highscores, loot raro, arena, scroll) */
+:root[data-theme="dark"] .trade-window { background: var(--surface-2); }
+:root[data-theme="dark"] .trade-list { background: var(--surface-1); }
+:root[data-theme="dark"] .trade-row:hover { background: #332a1c; }
+:root[data-theme="dark"] .trade-row.selected { background: #3d3115; }
+:root[data-theme="dark"] .trade-footer { background: var(--surface-3); }
+:root[data-theme="dark"] .hs-table tbody tr:nth-child(even) { background: #221d16; }
+:root[data-theme="dark"] .hs-table tbody tr:hover { background: #2c2418; }
+:root[data-theme="dark"] .loot-item.rare { background: #241a2e; color: #c79bec; border-color: #6d3488; }
+:root[data-theme="dark"] .arena-fighter.enemy { background: #2e1c1a; }
+:root[data-theme="dark"] ::-webkit-scrollbar-track { background: #17130d; }
+:root[data-theme="dark"] #equip-card .slot-backpack:hover,
+:root[data-theme="dark"] .inv-item.drag-over { background: #332a1c; }
 /* botão de tema no topbar */
 .theme-toggle { min-width: 34px; }
 
