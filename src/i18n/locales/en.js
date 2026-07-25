@@ -64,6 +64,7 @@ export default {
   // ---- battle pass tab ----
   'battlepass.title': 'Battle Pass — Current Season',
   'battlepass.dailyMissions': 'Daily Missions',
+  'battlepass.weeklyMissions': 'Weekly Missions',
   'battlepass.tierRewards': 'Tier Rewards',
 
   // ---- shop tab ----
@@ -974,6 +975,10 @@ export default {
   'spells.secSupportHint': 'Combat buffs.',
   'spells.secUtilityTitle': 'Utility',
   'spells.secUtilityHint': 'Open-world spells (light, rope, party). They exist in the book, but have no effect on the hunt.',
+  'spells.bookTitle': 'Spellbook',
+  'spells.bookIntro': "All your vocation's spells. You cast the conjuring ones here; attack and healing are fired by the RTC.",
+  'log.welcome': 'Welcome to Rubinot Idle! Choose your vocation to begin.',
+  'log.gameLoaded': 'Game loaded — {voc} Level {level}',
   'spells.blockLevel': 'level {level}',
   'spells.blockMana': 'not enough mana ({mana})',
   'spells.blockSoul': 'not enough soul ({soul})',

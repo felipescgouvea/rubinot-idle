@@ -3250,3 +3250,22 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
 #char-create-box #char-name-field { margin: 0 0 10px !important; }
 /* A dica transbordava a caixa (largura fixa herdada do layout antigo). */
 #char-create-box #starter-set-hint { margin: 0 0 12px; max-width: 100%; }
+
+/* ===== Acessibilidade (passe de quick-win — ver BACKLOG.md P3) ===== */
+/* Foco de teclado visível: abas, botões e links caíam no anel do navegador
+   (invisível sobre o gradiente navy). Inputs já têm o próprio anel (via :focus
+   com box-shadow), então isto cobre o resto sem competir com eles. */
+:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; border-radius: 3px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* Reduced-motion abrangente: havia várias regras pontuais, mas dano flutuante,
+   flashes de spell, voo de projétil e level-up ficavam de fora. Este catch-all
+   neutraliza tudo; as regras pontuais (animation:none) continuam válidas. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -2646,9 +2646,11 @@ export function bossAuraClass(tier) {
 // worldId/level são mantidos na assinatura por compatibilidade com quem chama
 // (Boss Rush, huntPanel), mas NÃO gateiam mais o acesso: a navegação é por
 // CIDADE (ver domain/cities.js), o mundo virou só um bônus de fundo, e NÃO há
-// restrição de nível pra entrar numa hunt (as criaturas escalam com o nível do
-// jogador). A única trava que resta é a cadeia de boss: uma hunt encadeada só
-// abre depois de derrotar o boss da anterior.
+// restrição de nível pra entrar numa hunt. IMPORTANTE: as criaturas NÃO escalam
+// com o nível do jogador — usam os valores fixos do Tibia (ver
+// combatFormulas.js: "SEM escala por nível"); entrar numa zona forte cedo é
+// escolha (e risco) do jogador. A única trava que resta é a cadeia de boss: uma
+// hunt encadeada só abre depois de derrotar o boss da anterior.
 export function isZoneUnlocked(zoneId, level, worldId, defeatedZoneBosses) {
   const zone = ZONES[zoneId];
   if (!zone) return false;

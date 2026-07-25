@@ -65,6 +65,7 @@ export default {
   // ---- battle pass tab ----
   'battlepass.title': 'Battle Pass — Temporada Atual',
   'battlepass.dailyMissions': 'Missões Diárias',
+  'battlepass.weeklyMissions': 'Missões Semanais',
   'battlepass.tierRewards': 'Recompensas por Tier',
 
   // ---- shop tab ----
@@ -975,6 +976,10 @@ export default {
   'spells.secSupportHint': 'Buffs de combate.',
   'spells.secUtilityTitle': 'Utilidade',
   'spells.secUtilityHint': 'Magias de mundo aberto (luz, corda, grupo). Existem no livro, mas não têm efeito na caçada.',
+  'spells.bookTitle': 'Livro de Magias',
+  'spells.bookIntro': 'Todas as magias da sua vocação. As de conjuração você lança aqui; ataque e cura quem dispara é o RTC.',
+  'log.welcome': 'Bem-vindo ao Rubinot Idle! Escolha sua vocação para começar.',
+  'log.gameLoaded': 'Partida carregada — {voc} Nível {level}',
   'spells.blockLevel': 'nível {level}',
   'spells.blockMana': 'falta mana ({mana})',
   'spells.blockSoul': 'falta soul ({soul})',

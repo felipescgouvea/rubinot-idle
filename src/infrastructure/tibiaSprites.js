@@ -145,7 +145,7 @@ SPRITELESS_ITEMS.forEach(id => {
 // ela quebrar. `cls` vai tanto na <img> (+ "tibia-icon") quanto no <span>.
 export function spriteImgOrFallback(url, alt, emoji, cls = '') {
   if (isSpriteFailed(url)) return `<span class="${cls}">${emoji}</span>`;
-  return `<img src="${url}" alt="${alt}" class="${cls} tibia-icon"
+  return `<img src="${url}" alt="${alt}" class="${cls} tibia-icon" loading="lazy" decoding="async"
     onerror="window.__markSpriteFailed && window.__markSpriteFailed('${url}'); this.outerHTML='<span class=&quot;${cls}&quot;>${emoji}</span>'" />`;
 }
 

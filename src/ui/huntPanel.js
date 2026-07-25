@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=277';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=295';
-import { MONSTERS } from '../domain/bestiary.js?v=295';
-import { XP_TABLE } from '../domain/character.js?v=304';
-import { cityName } from '../domain/cities.js?v=280';
-import { ITEMS } from '../domain/items.js?v=288';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=278';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=273';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=275';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=280';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=278';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=341';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=273';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=278';
-import { t } from '../i18n/i18n.js?v=293';
-import { setStageWalking } from './stageWalk.js?v=114';
+import { G } from '../application/gameStore.js?v=278';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=296';
+import { MONSTERS } from '../domain/bestiary.js?v=296';
+import { XP_TABLE } from '../domain/character.js?v=305';
+import { cityName } from '../domain/cities.js?v=281';
+import { ITEMS } from '../domain/items.js?v=289';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=279';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=274';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=276';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=281';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=279';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=342';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=274';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=279';
+import { t } from '../i18n/i18n.js?v=294';
+import { setStageWalking } from './stageWalk.js?v=115';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -420,7 +420,18 @@ function battleListEntry({ uid, defKey, name, pct, hp, maxHp, target, dead, hit 
   </div>`;
 }
 
+// Coalesce: um tick de combate emite BATTLE_LIST **e** MONSTER_DISPLAY (e cada
+// handler pedia render), reconstruindo a lista 2× por evento no hot path. Aqui
+// juntamos qualquer rajada de chamadas num único render por frame — sem tirar o
+// render dos MONSTER_DISPLAY "solteiros" (spell hit, limpar alvo) que NÃO vêm
+// acompanhados de BATTLE_LIST e ainda precisam atualizar a barra de HP da lista.
+let _battleListScheduled = false;
 export function renderBattleList() {
+  if (_battleListScheduled) return;
+  _battleListScheduled = true;
+  requestAnimationFrame(() => { _battleListScheduled = false; renderBattleListNow(); });
+}
+function renderBattleListNow() {
   const el = document.getElementById('battle-list');
   if (!el) return;
   const pack = getCurrentPack() || [];
