@@ -38,7 +38,7 @@
 - [x] Fundo dos cards de **linked task** + botões de navegação da Loja retematizados: pergaminho definido (`parch-1→parch-2`) + borda dourada + realce interno; tirado o `#f5ead0` hardcoded que ficava creme-berrante no tema escuro. Verificado em prod nos 2 temas (shot-tab-tasks/shop + dark). — `5c8df271`
 - [x] **Cor do header + botão "Trocar Hunt"** = navy profunda do painel lateral esquerdo (`#sidebar`). Verificado em prod (shot-header-navy: mesmo gradiente do sidebar). — `8afc5392`
 - [ ] Sprite dos **imbuements** infiel — usar o ícone real do Tibia
-- [ ] Remover **animação extra** dos monstros no palco de batalha — deixar só a animação original de andar (passos)
+- [x] Removido o bob sintético `monster-walk` dos monstros no palco — fica só a animação NATIVA da sprite (WebP 8-9 frames = "os passos originais"). Verificado em prod (probe-monster-anim: animationName none, sprite anima nativamente, 0 erros). — `04ee0d26`
 
 ### 🧩 Revisão ao vivo 26/07 — Features / reformas
 - [x] Remover o botão **Imbue** do card do personagem (redundante com a aba/página de Imbuements). Verificado em prod (probe-store-header: Imbue fora do card, 0 erros). — `9706a4c5`
