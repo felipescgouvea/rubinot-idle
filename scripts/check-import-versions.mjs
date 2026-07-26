@@ -29,6 +29,7 @@ const COM_ESTADO = new Set([
   'saveGameUseCase.js',
   'authClient.js',       // sessão viva (token/refresh) + trava de leitura da nuvem — duplicar desloga no meio e bloqueia save
   'notifyTitle.js',      // Set de flags de "tem coisa pra resgatar" que dita o título da aba
+  'shared.js',           // modalCloseHandler (handler de close do modal atual) — duplicar quebra o dismiss
 ]);
 
 const RE = /from '([^']*\/([\w.-]+\.js))\?v=(\d+)'/g;

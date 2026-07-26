@@ -3,13 +3,13 @@
 // materiais em sprite) e o imbuement ativo. O efeito é resolvido no combate pelo
 // servidor (ver huntEngine.js). Renderiza numa ABA própria (#imbue-content) e
 // também num modal (atalho do card de equipamento) — mesmo corpo.
-import { G } from '../application/gameStore.js?v=323';
-import { IMBUEMENTS, isImbuementActive, activeImbuementFor, IMBUEABLE_SLOTS, imbuementsForSlot } from '../domain/imbuements.js?v=320';
-import { ITEMS } from '../domain/items.js?v=334';
-import { canImbue } from '../application/imbuementUseCases.js?v=319';
-import { openModal, itemIconImg, goldIconImg } from './shared.js?v=326';
-import { spriteUrl, spriteImgOrFallback, imbueIconFile } from '../infrastructure/tibiaSprites.js?v=324';
-import { t } from '../i18n/i18n.js?v=339';
+import { G } from '../application/gameStore.js?v=324';
+import { IMBUEMENTS, isImbuementActive, activeImbuementFor, IMBUEABLE_SLOTS, imbuementsForSlot } from '../domain/imbuements.js?v=321';
+import { ITEMS } from '../domain/items.js?v=335';
+import { canImbue } from '../application/imbuementUseCases.js?v=320';
+import { openModal, itemIconImg, goldIconImg } from './shared.js?v=327';
+import { spriteUrl, spriteImgOrFallback, imbueIconFile } from '../infrastructure/tibiaSprites.js?v=325';
+import { t } from '../i18n/i18n.js?v=340';
 
 let selSlot = null; // slot selecionado na máquina (weapon/helmet/armor)
 
@@ -129,7 +129,7 @@ export function selectImbueSlot(slot) {
 
 // Aplica o imbuement e re-renderiza (import dinâmico pra não acoplar circular).
 export async function applyImbuementClick(id) {
-  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=319');
+  const { applyImbuement } = await import('../application/imbuementUseCases.js?v=320');
   await applyImbuement(id);
   rerender();
 }

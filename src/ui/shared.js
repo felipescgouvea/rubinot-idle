@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=321';
-import { ITEMS } from '../domain/items.js?v=334';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=324';
+import { on, EVENTS } from '../shared/eventBus.js?v=322';
+import { ITEMS } from '../domain/items.js?v=335';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=325';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -146,13 +146,30 @@ export function notify(msg, type = 'info') {
   setTimeout(() => el.remove(), 3500);
 }
 
-export function openModal(html) {
+// Handler opcional de "fechar" do modal atual. O botão Close estático e o
+// clique-fora chamam dismissModal(), que usa este handler se houver (ex.: o
+// detalhe do item aberto da Bag volta PRA Bag em vez de fechar tudo) ou fecha
+// de vez. Sem handler = comportamento normal (fecha).
+let modalCloseHandler = null;
+
+export function openModal(html, onClose = null) {
   document.getElementById('modal-content').innerHTML = html;
   document.getElementById('modal-overlay').style.display = 'flex';
+  modalCloseHandler = onClose;
 }
 
 export function closeModal() {
   document.getElementById('modal-overlay').style.display = 'none';
+  modalCloseHandler = null;
+}
+
+// Chamado pelo Close estático e pelo clique-fora (ver index.html). Se o modal
+// registrou um onClose, ele decide o que fazer (e é responsável por fechar ou
+// trocar de modal); senão, fecha normalmente.
+export function dismissModal() {
+  const h = modalCloseHandler;
+  modalCloseHandler = null;
+  if (h) h(); else closeModal();
 }
 
 export function wireSharedEvents() {
