@@ -48,7 +48,7 @@
 
 ## Infra / a11y / mobile (P4)
 - [ ] **CI rodando o smoke set dos probes** pra gatear deploy · M · `[test]`
-- [ ] **Unit test das fórmulas de combate** (gear+monstro conhecidos → dano conhecido) · M · `[test]`
+- [x] **Unit test das fórmulas de combate** (gear+monstro conhecidos → dano conhecido) · M · `[test]` — scripts/test-combat-formulas.mjs, 18 asserts determinísticos (getMaxWeaponDamage/melee, reduceElemental+cap 80, reducePhysical bordas, fight modes, mana) — `6007b9df`
 - [ ] **Mobile:** breakpoint único (900px) + fonte base 12px + alvos de toque auditados · M–L
 - [ ] **Log estruturado no servidor** (level/ts/sessionId/event) · S–M · `[obs]`
 
