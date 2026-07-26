@@ -8,3 +8,4 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — fix(boosted): pool da Boosted Creature restrito a criaturas huntáveis (CTA sempre acha a zona) — `673f522f` — ✅ testado 2026-07-26 (probe-boosted-cta: clicável, abre modal, 0 erros + smoke-prod)
 - 2026-07-26 — style(rail): cor de canal por vital (outline colorido HP/MP/XP) — `fb718c4e` — ✅ testado 2026-07-26 (screenshot shot-rail-vitals nos 2 temas: halos vermelho/azul/dourado nítidos)
 - 2026-07-26 — style(loja): botões de compra em dourado (era verde, destoava do tema) — `869cebe4` — ✅ testado 2026-07-26 (screenshot shot-shop: Loja coesa navy/dourado + smoke-prod)
+- 2026-07-26 — style(item): janela de detalhe temada (botões dourado/bronze/neutro) — `455dd0e5` — ✅ testado 2026-07-26 (screenshot item-modal 2 temas + smoke implícito)
