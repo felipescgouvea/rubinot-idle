@@ -71,6 +71,6 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 **Infra / quick wins**
 - CI com os guards no deploy — `.github/workflows/guards.yml`
 - Já existiam: battle list coalesce via rAF · `:focus-visible` · `prefers-reduced-motion` · `window.onunhandledrejection`
-- 2026-07-26 — feat(hunt): barra de vida/mana FLUTUANTE sobre o boneco no palco (estilo cliente do Tibia) + remoção dos HP/Mana duplicados abaixo do palco (só XP resta) — `466e7e22`
-- 2026-07-26 — chore(shop): "(Dinheiro Real)" já não aparece em botão nenhum (verificado; aba = "💳 Loja Premium", preço em R$) — sem mudança de código
-- 2026-07-26 — fix(hunt): cena do palco preenche 100% da largura (fim do letterbox/tarjas pretas), sem distorcer o pixel art — `2ba4e122`
+- 2026-07-26 — feat(hunt): barra de vida/mana FLUTUANTE sobre o boneco no palco (estilo cliente do Tibia) + remoção dos HP/Mana duplicados abaixo do palco (só XP resta) — `466e7e22` — ✅ testado 2026-07-26 (probe-player-overhead em prod: overhead dentro do palco e acima da sprite, 1160/1160 & 1635/1635, 0 duplicata, 0 erros)
+- 2026-07-26 — chore(shop): "(Dinheiro Real)" já não aparece em botão nenhum (verificado; aba = "💳 Loja Premium", preço em R$) — sem mudança de código — ✅ verificado 2026-07-26 (grep: 0 ocorrências em botão)
+- 2026-07-26 — fix(hunt): cena do palco preenche 100% da largura (fim do letterbox/tarjas pretas), sem distorcer o pixel art — `2ba4e122` — ✅ testado 2026-07-26 (shot-stage-fill em prod: cena de ponta a ponta, sem tarjas pretas, sem distorção)
