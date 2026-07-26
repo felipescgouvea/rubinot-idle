@@ -65,7 +65,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 
 ## P3 — Quick wins
 
-- [ ] **[a11y/perf] Sprites: `decoding="async"` + `alt`** no helper compartilhado — ⚠️ NUNCA `loading="lazy"` (já sumiu sprite na batalha, ver Concluído) · S
+- [x] **[a11y/perf] Sprites: `decoding="async"` + `alt`** — o helper compartilhado já tinha os dois; adicionado `decoding="async"` também nos <img> avulsos (logo/ghost/outfit/treino/morte), que já tinham `alt`. NUNCA `loading=lazy`. Smoke OK. — `97984cd4`
 - [ ] **[UX] #5 `KILL_COUNTERS` sem listener** (`huntUseCases.js`) — progresso de bestiário/charm só atualiza ao reabrir a aba. Cosmético; falta definir o refresh certo do painel
 - [ ] **[dívida] Código de outfit morto na Loja** — outfits saíram do catálogo (`shopCatalog.js:9-10`, nenhum `type:'outfit'` em `SHOP_ITEMS`), mas `shopPanel.js` ainda carrega os branches de outfit (owned/wearing + `background:#fdf4d7` hardcoded fora do tema) em ~94/114-115/145/147 — nunca renderiza; remover. · S
 
