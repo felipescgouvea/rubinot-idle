@@ -1503,7 +1503,7 @@ img.tibia-icon {
   filter: drop-shadow(0 1px 1px #00000033);
 }
 
-img.zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; }
+img.zone-card-monster-icon { width: 28px; height: 28px; object-fit: contain; transform: scale(0.86); }
 img.task-card-monster-icon { width: 34px; height: 34px; object-fit: contain; }
 img.reward-icon { width: 1.1em; height: 1.1em; }
 img.hs-category-icon-img { width: 14px; height: 14px; object-fit: contain; }
@@ -1513,7 +1513,10 @@ img.grad-kit-icon { width: 32px; height: 32px; }
 /* Mesma armadilha de especificidade das de cima, achadas pelo guarda
    estatico (scripts/check-css-icone-atropelado.mjs) em vez de uma por vez
    conforme o painel dono da classe aparecia na tela. */
-img.zone-card-icon-img { width: 56px; height: 56px; object-fit: contain; }
+/* scale(0.86) dá respiro: a sprite do cliente enche o próprio canvas (pose
+   nativa 1:1), o que no preview pequeno parecia "cortada"/apertada. O palco de
+   batalha usa outra classe e mantém o 1:1. */
+img.zone-card-icon-img { width: 56px; height: 56px; object-fit: contain; transform: scale(0.86); }
 img.rtc-row-icon-img { width: 26px; height: 26px; object-fit: contain; }
 img.prey-portrait-img { width: 62px; height: 62px; object-fit: contain; }
 img.prey-monster-icon { width: 32px; height: 32px; }

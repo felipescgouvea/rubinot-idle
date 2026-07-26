@@ -40,11 +40,17 @@ def render(lt, colors):
     idle = next((g for g in ap["groups"] if g["fgid"] == 0), None)
     g = walk or idle
     if not g or g["layers"] not in (1, 2) or not g["ids"]: return None
-    pw = g["pw"]; ly = g["layers"]
+    pw = g["pw"]; ph = g["ph"]; pd = g["pd"]; ly = g["layers"]
     nf = max(1, len(g["phases"]))
     raw = []
     for f in range(nf):
-        cell = (f * pw + SOUTH) * ly
+        # Ordem dos ids no appearances: fase -> z(pd) -> y(ph) -> x(pw) -> layer.
+        # y=0/z=0 é o outfit base (sem addon, sem montaria). Ignorar ph/pd fazia
+        # o índice andar de pw em pw por fase, então a partir da 2ª fase ele caía
+        # nas células de ADDON — que são recortes soltos (uma mão, uma arma) e não
+        # o corpo inteiro. Resultado: sprite piscando em pedaços nos outfits com
+        # addon (Amazon, Bandit, Valkyrie, Warlock, os Asura...).
+        cell = (f * pd * ph * pw + SOUTH) * ly
         if cell + ly - 1 >= len(g["ids"]): cell = SOUTH * ly if SOUTH * ly + ly - 1 < len(g["ids"]) else 0
         if ly == 1:
             s = L.sprite(g["ids"][cell])
@@ -77,7 +83,9 @@ def render(lt, colors):
         canvas.paste(crop, ((CANVAS - nw) // 2, (CANVAS - nh) // 2), crop)
         frames.append(canvas)
     durs = [g["phases"][f] if f < len(g["phases"]) else 100 for f in range(len(frames))]
-    return frames, durs
+    # pd*ph>1 => outfit com addon/montaria: é exatamente o caso que a indexação
+    # antiga errava, e o único cujo resultado muda com a correção.
+    return frames, durs, (pd * ph > 1)
 
 files = sorted(f for f in os.listdir(MON_DIR) if f.endswith(".webp"))
 tasks = []
@@ -106,10 +114,11 @@ else:
         try:
             r = render(lt, colors)
             if not r: skip+=1; continue
-            frames,durs = r
+            frames,durs,afetado = r
+            if not afetado and "--all" not in sys.argv: skip+=1; continue
             frames[0].save(os.path.join(MON_DIR,f), save_all=True, append_images=frames[1:],
                            duration=durs, loop=0, lossless=True, disposal=2)
             ok+=1
         except Exception:
             skip+=1
-    print(f"gravados: {ok} | pulados (layers=2/sem outfit/erro, mantêm atual): {skip}")
+    print(f"gravados: {ok} | pulados (sem addon/montaria, sem outfit ou erro: inalterados): {skip}")
