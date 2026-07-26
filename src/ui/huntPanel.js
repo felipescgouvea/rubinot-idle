@@ -1,22 +1,22 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=346';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=365';
-import { MONSTERS } from '../domain/bestiary.js?v=365';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=373';
-import { cityName } from '../domain/cities.js?v=349';
-import { ITEMS } from '../domain/items.js?v=357';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=347';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=342';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=344';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=349';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=347';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=410';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=342';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=347';
-import { t } from '../i18n/i18n.js?v=362';
-import { setStageWalking } from './stageWalk.js?v=183';
+import { G } from '../application/gameStore.js?v=347';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=366';
+import { MONSTERS } from '../domain/bestiary.js?v=366';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=374';
+import { cityName } from '../domain/cities.js?v=350';
+import { ITEMS } from '../domain/items.js?v=358';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=348';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=343';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=345';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=350';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=348';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=411';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=343';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=348';
+import { t } from '../i18n/i18n.js?v=363';
+import { setStageWalking } from './stageWalk.js?v=184';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -351,8 +351,8 @@ function renderHuntAnalyzer() {
       <div class="ha-cell"><span class="ha-label">${uiIcon('kills', 'inline-icon')} ${t('hunt.analyzerKills')}</span><span class="ha-val">${formatNum(st.kills)}</span></div>
       <div class="ha-cell"><span class="ha-label">${xi} XP</span><span class="ha-val">${formatNum(st.xp)}</span><span class="ha-rate">${formatNum(st.xpH)}/h</span></div>
       <div class="ha-cell"><span class="ha-label">${gi} ${t('hunt.analyzerGold')}</span><span class="ha-val">${formatNum(st.gold)}</span><span class="ha-rate">${formatNum(st.goldH)}/h</span></div>
-      <div class="ha-cell"><span class="ha-label">${uiIcon('log_loot', 'inline-icon')} ${t('hunt.analyzerLoot')}</span><span class="ha-val">${formatNum(st.loot)}</span></div>
-      <div class="ha-cell"><span class="ha-label">${uiIcon('log_supplies', 'inline-icon')} ${t('hunt.analyzerSupplies')}</span><span class="ha-val">-${formatNum(st.supplies)}</span></div>
+      <div class="ha-cell"><span class="ha-label">${uiIcon('log_loot', 'inline-icon')} ${t('hunt.analyzerLoot')}</span><span class="ha-val">${formatNum(st.loot)}</span><span class="ha-rate">${formatNum(st.lootH)}/h</span></div>
+      <div class="ha-cell"><span class="ha-label">${uiIcon('log_supplies', 'inline-icon')} ${t('hunt.analyzerSupplies')}</span><span class="ha-val">-${formatNum(st.supplies)}</span><span class="ha-rate">-${formatNum(st.suppliesH)}/h</span></div>
       <div class="ha-cell"><span class="ha-label">${gi} ${t('hunt.analyzerProfit')}</span><span class="ha-val" style="color:${profitColor}">${formatNum(st.profit)}</span><span class="ha-rate">${formatNum(st.profitH)}/h</span></div>
     </div>
     <div class="ha-note muted">${t('hunt.analyzerNote')}</div>`;
