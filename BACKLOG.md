@@ -50,7 +50,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 - [ ] **P1.4 Nível recomendado por zona + agrupar abas** · M — hint de nível no zone picker (derivável de HP/atk/xp); agrupar abas por seção e travar até o unlock. Reduz o cliff do level 8
 - [ ] **P1.5 Celebrar marcos** · M
   - [x] Badges de "resgatável" nas abas **Tasks e Battle Pass** — ponto verde pulsante dirigido pelos mesmos sinais de claimable do `notifyTitle` (`setTabBadge`). Verificado em prod (probe-tab-badges: aparece/some, 0 erros). — `094902a9` · (charm/promoção ficam como follow-up: mesmo `setTabBadge`, falta o sinal de claimable de cada um)
-  - [ ] Boosted-of-the-day sem CTA — clicar no card leva ao zone picker filtrado pela criatura
+  - [x] Boosted-of-the-day CTA — card da criatura clicável abre o zone picker na cidade da 1ª zona dela (`08ad171b`). O `/test` pegou que o card ficava inerte pra ~63% das criaturas (pool incluía não-huntáveis); o `/fix` restringiu o pool de boosted a criaturas huntáveis (`673f522f`) → CTA 100%. Verificado (probe-boosted-cta: clicável, abre modal, 0 erros).
 
 ## P2 — Profundidade / conteúdo
 
