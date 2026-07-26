@@ -3838,3 +3838,25 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
 .imbue-tier-powerful .imbue-tier-name { color: #ffd97a; }
 .imbue-tier-pct { font-weight: 700; font-size: 13px; color: #6fcf6f; }
 .imbue-tier-gold { font-size: 10px; opacity: .85; display: flex; align-items: center; gap: 3px; }
+
+/* ===== Aba Quests (raids com prêmio) — ui/questsPanel.js ===== */
+.tab-emoji { display: inline-block; width: 18px; text-align: center; margin-right: 2px; }
+.quest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin: 12px 14px; }
+.quest-card {
+  border: 1px solid var(--line-soft, #6b573f); border-radius: 10px; padding: 12px;
+  background: linear-gradient(180deg, var(--surface-2, #272019), var(--parch-3, #201b15));
+  display: flex; flex-direction: column; gap: 10px;
+}
+.quest-card.done { border-color: #6fcf6f88; }
+.quest-head { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink, #e9dcc4); }
+.quest-icon { font-size: 16px; }
+.quest-done-badge { margin-left: auto; font-size: 10px; color: #6fcf6f; font-weight: 700; white-space: nowrap; }
+.quest-body { display: flex; gap: 10px; }
+.quest-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center;
+  background: #0003; border-radius: 8px; padding: 8px 4px; }
+.quest-cell-cap { font-size: 9px; letter-spacing: .06em; text-transform: uppercase; color: var(--gold, #c9a24a); font-weight: 700; }
+.quest-boss-img, .quest-reward-img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; }
+.quest-cell-name { font-size: 11px; color: var(--ink, #e9dcc4); }
+.quest-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; }
+.quest-foot .muted { font-size: 10.5px; }
+.quest-start-btn { padding: 6px 12px; font-size: 12.5px; white-space: nowrap; }

@@ -567,6 +567,10 @@ export function fetchDailyRewardState(slot) {
   return huntFetch(`/daily-reward/state?slot=${slot}`);
 }
 
+export function fetchQuestState(slot) {
+  return huntFetch(`/quest/state?slot=${slot}`);
+}
+
 export function claimDailyRewardOnServer(slot) {
   return huntFetch('/daily-reward/claim', { method: 'POST', body: { slot } });
 }

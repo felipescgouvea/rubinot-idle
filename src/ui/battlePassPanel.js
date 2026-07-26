@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=353';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=353';
-import { on, EVENTS } from '../shared/eventBus.js?v=351';
-import { rewardIcon, uiIcon } from './uiIcons.js?v=354';
-import { rubiniIconImg } from './shared.js?v=356';
-import { setTitleFlag, setTabBadge } from './notifyTitle.js?v=351';
-import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=352';
-import { t, getLocale } from '../i18n/i18n.js?v=369';
+import { G } from '../application/gameStore.js?v=354';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=354';
+import { on, EVENTS } from '../shared/eventBus.js?v=352';
+import { rewardIcon, uiIcon } from './uiIcons.js?v=355';
+import { rubiniIconImg } from './shared.js?v=357';
+import { setTitleFlag, setTabBadge } from './notifyTitle.js?v=352';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=353';
+import { t, getLocale } from '../i18n/i18n.js?v=370';
 
 function bpRewardIcon(r) {
   return rewardIcon(r, 'bp-reward-sprite');

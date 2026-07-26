@@ -2,8 +2,8 @@
 // navegador, para os alvos do jogo: criaturas da Battle List e itens da mochila.
 // Delegado (um listener no document) — não precisa re-wire a cada re-render dos
 // painéis. Fora desses alvos, o menu nativo do navegador continua normal.
-import { ITEMS } from '../domain/items.js?v=364';
-import { t } from '../i18n/i18n.js?v=369';
+import { ITEMS } from '../domain/items.js?v=365';
+import { t } from '../i18n/i18n.js?v=370';
 
 let menuEl = null;
 function ensureMenu() {

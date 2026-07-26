@@ -45,3 +45,19 @@ export function questEnemySequence(quest) {
 export function isQuestDone(completed, questId) {
   return Array.isArray(completed) && completed.includes(questId);
 }
+
+// Zona SINTÉTICA de uma Quest (id "quest:<questId>"), usada tanto no servidor
+// (monta a sessão da raid) quanto no cliente (resolve a zona ATIVA pra display do
+// palco). Não entra no catálogo ZONES nem no seletor de caça. `name` é literal
+// (cai em t() como chave inexistente, igual às recompensas). Retorna null se não
+// for um id de quest válido.
+export function questZone(zoneId) {
+  if (typeof zoneId !== 'string' || !zoneId.startsWith('quest:')) return null;
+  const q = QUESTS[zoneId.slice(6)];
+  if (!q) return null;
+  return {
+    city: 'quest', name: q.name, icon: q.icon, worldReq: null,
+    monsters: questEnemySequence(q), boss: q.boss,
+    theme: ['#3a2a4a', '#1a1226'], biome: 'ruins', quest: q.id, hidden: true,
+  };
+}

@@ -3,28 +3,32 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=353';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=361';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=358';
-import { ZONES } from '../domain/bestiary.js?v=372';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=380';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=351';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=383';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=382';
-import { elementMod } from '../domain/elements.js?v=349';
-import { STAMINA_MAX } from '../domain/stamina.js?v=349';
-import { ITEMS } from '../domain/items.js?v=364';
-import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=352';
-import { MONSTERS } from '../domain/bestiary.js?v=372';
-import { RARITY_TIERS } from '../domain/rarity.js?v=350';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=352';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=351';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=350';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=350';
-import { saveGame } from './saveGameUseCase.js?v=353';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=354';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=352';
-import { t } from '../i18n/i18n.js?v=369';
+import { G, ACCOUNT } from './gameStore.js?v=354';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=362';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=359';
+import { ZONES } from '../domain/bestiary.js?v=373';
+import { questZone } from '../domain/quests.js?v=2';
+// Resolve a zona ATIVA — inclui as zonas sintéticas de Quest (quest:<id>), que
+// não estão em ZONES. Zona normal continua vindo do catálogo.
+const zoneDef = id => ZONES[id] || questZone(id);
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=381';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=352';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=384';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=383';
+import { elementMod } from '../domain/elements.js?v=350';
+import { STAMINA_MAX } from '../domain/stamina.js?v=350';
+import { ITEMS } from '../domain/items.js?v=365';
+import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=353';
+import { MONSTERS } from '../domain/bestiary.js?v=373';
+import { RARITY_TIERS } from '../domain/rarity.js?v=351';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=353';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=352';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=351';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=351';
+import { saveGame } from './saveGameUseCase.js?v=354';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=355';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=353';
+import { t } from '../i18n/i18n.js?v=370';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -823,7 +827,7 @@ function applyServerKillEvents(k) {
   }
   if (k.defKey) {
     emit(EVENTS.MONSTER_KILLED, { monsterId: k.defKey });
-    const zone = ZONES[G.activeZone];
+    const zone = zoneDef(G.activeZone);
     if (zone && k.defKey === zone.boss && G.activeZone) {
       G.defeatedZoneBosses = G.defeatedZoneBosses || [];
       if (!G.defeatedZoneBosses.includes(G.activeZone)) {
@@ -897,7 +901,7 @@ export function startHunt() {
   if (G.hunting || starting) return;
   if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('hunt.needVocation'), type: 'error' }); return; }
   if (!G.activeZone) { emit(EVENTS.NOTIFY, { msg: t('hunt.needZone'), type: 'error' }); return; }
-  const zone = ZONES[G.activeZone];
+  const zone = zoneDef(G.activeZone);
   // Sem restrição de nível pra caçar — as criaturas escalam com o nível do
   // jogador; entrar numa zona forte cedo é escolha (e risco) do jogador.
   G.hunting = true;
@@ -1052,7 +1056,7 @@ export async function checkAndResumeHuntSession() {
   const goldGained = (G.gold || 0) - away0.gold;
   const awayMs = away0.at ? Date.now() - away0.at : 0;
   if (awayMs > 120000 && (xpGained > 0 || goldGained > 0)) {
-    const zone = ZONES[G.activeZone];
+    const zone = zoneDef(G.activeZone);
     const mainId = zone && zone.monsters && zone.monsters[0];
     const mainXp = mainId && MONSTERS[mainId] ? MONSTERS[mainId].xp : 0;
     emit(EVENTS.OFFLINE_PROGRESS, {
@@ -1066,7 +1070,7 @@ export async function checkAndResumeHuntSession() {
     });
   }
   beginLocalLoop(true);   // retomada: preserva o lastKillSeq restaurado acima
-  emit(EVENTS.LOG, t('hunt.logEnterZone', { icon: '⚔️', zone: t(ZONES[G.activeZone] ? ZONES[G.activeZone].name : G.activeZone) }));
+  emit(EVENTS.LOG, t('hunt.logEnterZone', { icon: '⚔️', zone: t(zoneDef(G.activeZone) ? zoneDef(G.activeZone).name : G.activeZone) }));
   return true;
 }
 
