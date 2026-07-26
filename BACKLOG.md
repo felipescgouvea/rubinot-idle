@@ -13,7 +13,7 @@
 - [ ] `[decisão]` **Sprites de monstro "cortadas"** (zone picker + boss zone) — é a pose NATIVA 1:1 do cliente enchendo o frame 64px (Valkyrie/Silvertoe já são do cliente). Aceitar como está OU permitir padding leve nas criaturas que enchem o frame (desvio do 1:1)?
 
 ## Estética
-- [ ] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted)
+- [x] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted) — já satisfeito: inversão navy resolveu o voc-name; `muted` e `boosted-label` medem 9:1 em prod; tudo legível no screenshot dark (verificado, sem mudança)
 - [x] Loja Premium: remover o texto "(Dinheiro Real)" do botão — já satisfeito: nenhum botão exibe "(Dinheiro Real)"; aba = "💳 Loja Premium" e o preço mostra "R$ x,xx"
 - [x] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto — `#app` estica as colunas até embaixo (rail navy + aside emolduram a página); gradiente morto abaixo do conteúdo 40%→7% — `0b81c23b`
 - [x] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena — cena agora preenche 100% da largura (era 560px fixos) — `2ba4e122`
