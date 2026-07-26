@@ -3,27 +3,27 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=321';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=329';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=326';
-import { ZONES } from '../domain/bestiary.js?v=340';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=348';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=319';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=351';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=350';
-import { elementMod } from '../domain/elements.js?v=317';
-import { STAMINA_MAX } from '../domain/stamina.js?v=317';
-import { ITEMS } from '../domain/items.js?v=332';
-import { MONSTERS } from '../domain/bestiary.js?v=340';
-import { RARITY_TIERS } from '../domain/rarity.js?v=318';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=320';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=319';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=318';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=318';
-import { saveGame } from './saveGameUseCase.js?v=321';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=322';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=320';
-import { t } from '../i18n/i18n.js?v=337';
+import { G, ACCOUNT } from './gameStore.js?v=322';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=330';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=327';
+import { ZONES } from '../domain/bestiary.js?v=341';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=349';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=320';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=352';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=351';
+import { elementMod } from '../domain/elements.js?v=318';
+import { STAMINA_MAX } from '../domain/stamina.js?v=318';
+import { ITEMS } from '../domain/items.js?v=333';
+import { MONSTERS } from '../domain/bestiary.js?v=341';
+import { RARITY_TIERS } from '../domain/rarity.js?v=319';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=321';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=320';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=319';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=319';
+import { saveGame } from './saveGameUseCase.js?v=322';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=323';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=321';
+import { t } from '../i18n/i18n.js?v=338';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };

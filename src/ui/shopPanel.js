@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=321';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=320';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=332';
-import { on, EVENTS } from '../shared/eventBus.js?v=319';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=324';
-import { buyShopItem } from '../application/shopUseCases.js?v=325';
-import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=322';
-import { t } from '../i18n/i18n.js?v=337';
+import { G } from '../application/gameStore.js?v=322';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=321';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=333';
+import { on, EVENTS } from '../shared/eventBus.js?v=320';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=325';
+import { buyShopItem } from '../application/shopUseCases.js?v=326';
+import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=323';
+import { t } from '../i18n/i18n.js?v=338';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -102,7 +102,7 @@ export function confirmBuyShopItem(id, qty = 1) {
   openModal(`
     <h3>${shopIconHtml(s)} ${t(s.name)}</h3>
     <p>${t('shop.confirmBuyMsg', { count, name: t(s.name), price: totalLabel })}</p>
-    <button onclick="buyShopItem('${id}', ${count}); closeModal();" style="margin-top:8px;background:#2ecc71;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('shop.confirmBuyYes')}</button>
+    <button onclick="buyShopItem('${id}', ${count}); closeModal();" style="margin-top:8px;background:linear-gradient(180deg,#e6b52e,#b5850f);border:1px solid #8a6f1f;color:#3a2c08;text-shadow:0 1px 0 #ffffff66;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%;font-weight:700">${t('shop.confirmBuyYes')}</button>
     <button onclick="closeModal()" style="margin-top:6px;background:#6272a4;border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;width:100%">${t('shop.confirmBuyNo')}</button>
   `);
 }

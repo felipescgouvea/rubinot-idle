@@ -4,13 +4,13 @@
 // da Bag). Não introduz estado novo: reaproveita G.autoSell e setAutoSell/
 // setAutoSellMax (mesmas funções da Bag, ver ui/inventoryAndEquipmentPanel.js)
 // e G.lastSave (gravado em cada saveGame, ver application/saveGameUseCase.js).
-import { G } from '../application/gameStore.js?v=321';
-import { currentUser } from '../infrastructure/authClient.js?v=329';
-import { getCharacterSlots } from '../application/accountUseCases.js?v=319';
-import { VOCATIONS } from '../domain/character.js?v=348';
-import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=321';
-import { goldIconImg, openModal } from './shared.js?v=324';
-import { t, getLocale, LOCALE_NAMES } from '../i18n/i18n.js?v=337';
+import { G } from '../application/gameStore.js?v=322';
+import { currentUser } from '../infrastructure/authClient.js?v=330';
+import { getCharacterSlots } from '../application/accountUseCases.js?v=320';
+import { VOCATIONS } from '../domain/character.js?v=349';
+import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=322';
+import { goldIconImg, openModal } from './shared.js?v=325';
+import { t, getLocale, LOCALE_NAMES } from '../i18n/i18n.js?v=338';
 
 function fmtLastSave() {
   if (!G.lastSave) return t('settings.neverSavedThisSession');

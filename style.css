@@ -1885,6 +1885,15 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
   background: linear-gradient(180deg, #8a6f1f, #5c4a14); color: #fff4d0;
   border-color: var(--gold-bright); box-shadow: 0 1px 4px #00000044;
 }
+/* Botões de compra da Loja em DOURADO (não o verde que destoava do tema
+   navy/dourado). Escopado a .shop-main pra não mexer nos botões de Skills/zonas
+   (que compartilham .skill-upgrade-btn e continuam verdes). */
+.shop-main .skill-upgrade-btn {
+  background: linear-gradient(180deg, #e6b52e, #b5850f);
+  border-color: #8a6f1f; color: #3a2c08; text-shadow: 0 1px 0 #ffffff66;
+}
+.shop-main .skill-upgrade-btn:hover:not(:disabled) { filter: none; background: linear-gradient(180deg, #f0c14b, #c8930f); }
+.shop-main .skill-upgrade-btn:disabled { background: linear-gradient(180deg, #cbb98f, #b3a071); border-color: #9c8a5e; color: #6b5c34; }
 .shop-main {
   flex: 1 1 auto; min-width: 0;
   background: linear-gradient(180deg, #f5ead0, var(--parch-2));
@@ -3111,9 +3120,9 @@ img.battle-list-sprite { width: 34px; height: 34px; object-fit: contain; }
 .trade-selected-name { font-weight: 700; font-size: 13px; }
 .trade-total { margin-left: auto; font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .trade-total-lbl { color: var(--muted); }
-.trade-buy-btn { background: #2c7d3f; border: 1px solid #1d5a2c; color: #fff; font-weight: 700; padding: 7px 22px; border-radius: 5px; cursor: pointer; }
-.trade-buy-btn:hover:not(:disabled) { background: #359349; }
-.trade-buy-btn:disabled { background: #8d8d8d; border-color: #6f6f6f; cursor: not-allowed; }
+.trade-buy-btn { background: linear-gradient(180deg, #e6b52e, #b5850f); border: 1px solid #8a6f1f; color: #3a2c08; text-shadow: 0 1px 0 #ffffff66; font-weight: 700; padding: 7px 22px; border-radius: 5px; cursor: pointer; }
+.trade-buy-btn:hover:not(:disabled) { background: linear-gradient(180deg, #f0c14b, #c8930f); }
+.trade-buy-btn:disabled { background: #b6a97f; border-color: #9c8a5e; color: #6b5c34; cursor: not-allowed; }
 @media (max-width: 620px) { .trade-total { margin-left: 0; } .trade-buy-btn { width: 100%; } }
 
 /* Cabeçalho da sub-seção de Magic Level (Paladino treina arma E magia) */
