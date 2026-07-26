@@ -1,10 +1,10 @@
 // Quadro "BOOSTED" do dia — mostra a Boosted Creature e o Boosted Boss
 // sorteados pra hoje, no mesmo espírito do bloco BOOSTED do site oficial do
 // RubinOT. Renderizado na aba Caçada; troca sozinho quando o dia vira.
-import { MONSTERS, ZONES, boostedCreatureForDate, boostedBossForDate } from '../domain/bestiary.js?v=359';
-import { monsterSpriteImg } from './huntPanel.js?v=357';
-import { uiIcon } from './uiIcons.js?v=341';
-import { t } from '../i18n/i18n.js?v=356';
+import { MONSTERS, ZONES, boostedCreatureForDate, boostedBossForDate } from '../domain/bestiary.js?v=360';
+import { monsterSpriteImg } from './huntPanel.js?v=358';
+import { uiIcon } from './uiIcons.js?v=342';
+import { t } from '../i18n/i18n.js?v=357';
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);

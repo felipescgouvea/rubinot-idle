@@ -1201,6 +1201,20 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
   font-size: 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px #000000aa;
 }
 
+/* Vida/Mana FLUTUANTES sobre o boneco no palco (estilo cliente do Tibia): nome +
+   barra de vida + barra de mana empilhados, centralizados logo acima da cabeça
+   do personagem (que fica em top:72%). Compacto — é um overlay, não a UI cheia
+   (o rail à esquerda já tem os números grandes). */
+.player-overhead {
+  position: absolute; left: 50%; top: 72%;
+  transform: translate(-50%, calc(-100% - 34px));
+  width: 100px; z-index: 4; pointer-events: none;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.player-overhead .player-battle-name { font-size: 10px; letter-spacing: 0.3px; margin: 0 0 1px; }
+.player-overhead-bar { height: 9px; margin-top: 0; border-radius: 5px; }
+.player-overhead-bar .player-hp-label { font-size: 8px; }
+
 /* ---- monstro atual ---- */
 /* monstro no palco: aparece à frente do boneco (mais abaixo), sobre o piso da
    dungeon — sem card próprio (a cena agora é uma só). */

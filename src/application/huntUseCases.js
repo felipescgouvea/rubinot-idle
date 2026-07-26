@@ -3,28 +3,28 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=340';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=348';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=345';
-import { ZONES } from '../domain/bestiary.js?v=359';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=367';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=338';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=370';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=369';
-import { elementMod } from '../domain/elements.js?v=336';
-import { STAMINA_MAX } from '../domain/stamina.js?v=336';
-import { ITEMS } from '../domain/items.js?v=351';
-import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=339';
-import { MONSTERS } from '../domain/bestiary.js?v=359';
-import { RARITY_TIERS } from '../domain/rarity.js?v=337';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=339';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=338';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=337';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=337';
-import { saveGame } from './saveGameUseCase.js?v=340';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=341';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=339';
-import { t } from '../i18n/i18n.js?v=356';
+import { G, ACCOUNT } from './gameStore.js?v=341';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=349';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=346';
+import { ZONES } from '../domain/bestiary.js?v=360';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=368';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=339';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=371';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=370';
+import { elementMod } from '../domain/elements.js?v=337';
+import { STAMINA_MAX } from '../domain/stamina.js?v=337';
+import { ITEMS } from '../domain/items.js?v=352';
+import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=340';
+import { MONSTERS } from '../domain/bestiary.js?v=360';
+import { RARITY_TIERS } from '../domain/rarity.js?v=338';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=340';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=339';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=338';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=338';
+import { saveGame } from './saveGameUseCase.js?v=341';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=342';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=340';
+import { t } from '../i18n/i18n.js?v=357';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
