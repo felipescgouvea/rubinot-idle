@@ -14,3 +14,4 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — fix(a11y): Escape usa dismissModal (handler único), remove listener duplicado — `11a140ef` — ✅ testado 2026-07-26 (probe-modal-a11y: role=dialog, Escape fecha, Escape no detalhe→Bag, 0 erros)
 - 2026-07-26 — feat(a11y): tablist ARIA nas abas (role tablist/tab/tabpanel + aria-selected) — `eec967be` — ✅ testado 2026-07-26 (probe-tablist-a11y: roles ok, aria-selected troca no clique, 0 erros)
 - 2026-07-26 — perf(a11y): decoding=async nos <img> avulsos (helper já tinha) — `97984cd4` — ✅ testado 2026-07-26 (smoke-prod: sobe frio/quente/cache, 0 erros)
+- 2026-07-26 — refactor(loja): remove dead-code de outfit no shopPanel — `f9f38733` — ✅ testado 2026-07-26 (probe-shop-ammo + smoke-prod, Loja idêntica, 0 erros)
