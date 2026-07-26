@@ -50,7 +50,14 @@ export const SPRITE_OVERRIDE = {
 // no último frame (o bicho aparecia ESTÁTICO em batalha depois de ~0,6s —
 // reportado pelo Felipe). Corrigido via patch de 2 bytes (loop -> 0/infinito),
 // sem reencode/perda. Guarda: scripts/check-monster-sprite-loop.mjs.
-const MONSTER_SPRITE_VER = 5;
+// v6: correção da indexação de sprites em outfits com ADDON/MONTARIA. A ordem
+// real dos ids no appearances é fase -> z(pd) -> y(ph) -> x(pw) -> layer, e o
+// extrator andava só de pw em pw por fase — então a partir do 2º frame ele caía
+// nas células de addon, que são recortes soltos (uma mão, uma arma). O bicho
+// piscava em pedaços durante a caminhada (reportado pelo Felipe na Amazon).
+// 252 sprites regravados; os sem addon (pd*ph==1) não mudam — a fórmula nova é
+// idêntica à antiga nesse caso.
+const MONSTER_SPRITE_VER = 6;
 export function monsterSpriteFile(monsterId, monster) {
   const file = SPRITE_OVERRIDE[monsterId] || (monster.name.replace(/ /g, '_') + '.gif');
   return 'monsters/' + localName(file) + '?sv=' + MONSTER_SPRITE_VER;
