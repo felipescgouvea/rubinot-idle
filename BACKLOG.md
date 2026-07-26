@@ -10,7 +10,7 @@
 
 ## Decisões pendentes (precisam do Felipe)
 - [x] **exori quase não dispara pelo RTC** — DECIDIDO+FEITO: a reserva de mana de cura agora só vale quando a cura é iminente (HP < gatilho); com HP alto o exori (125) dispara livre. Não muda o custo canônico. — `a1463034`
-- [ ] `[decisão]` **Sprites de monstro "cortadas"** (zone picker + boss zone) — é a pose NATIVA 1:1 do cliente enchendo o frame 64px (Valkyrie/Silvertoe já são do cliente). Aceitar como está OU permitir padding leve nas criaturas que enchem o frame (desvio do 1:1)?
+- [x] **Sprites de monstro "cortadas"** (zone picker + boss zone) — DECIDIDO+FEITO: respiro leve (scale .86) nos previews pequenos; criatura aparece inteira e centrada. Palco de batalha mantém o 1:1 nativo. — `20130fc9`
 
 ## Estética
 - [x] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted) — já satisfeito: inversão navy resolveu o voc-name; `muted` e `boosted-label` medem 9:1 em prod; tudo legível no screenshot dark (verificado, sem mudança)
