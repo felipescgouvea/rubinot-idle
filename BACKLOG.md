@@ -35,7 +35,7 @@
 - [ ] Sprites de monstro ainda **cortadas** no card do Boosted (ex.: Valkyrie) — container recorta a sprite 64×64; ajustar `object-fit`/altura de `.boosted-sprite`
 
 ### 🎨 Revisão ao vivo 26/07 — Estética
-- [ ] Fundo dos cards de **linked task** feio + botões de navegação da Loja (Rubini Store / Equipamentos / Artigos Mágicos) com fundo ruim — retematizar
+- [x] Fundo dos cards de **linked task** + botões de navegação da Loja retematizados: pergaminho definido (`parch-1→parch-2`) + borda dourada + realce interno; tirado o `#f5ead0` hardcoded que ficava creme-berrante no tema escuro. Verificado em prod nos 2 temas (shot-tab-tasks/shop + dark). — `5c8df271`
 - [x] **Cor do header + botão "Trocar Hunt"** = navy profunda do painel lateral esquerdo (`#sidebar`). Verificado em prod (shot-header-navy: mesmo gradiente do sidebar). — `8afc5392`
 - [ ] Sprite dos **imbuements** infiel — usar o ícone real do Tibia
 - [ ] Remover **animação extra** dos monstros no palco de batalha — deixar só a animação original de andar (passos)
