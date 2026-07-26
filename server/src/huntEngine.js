@@ -30,6 +30,7 @@ import { buildDotSchedule } from '../../src/domain/dotDamage.js?v=125';
 import { preyBonusPct, PREY_MAX_RARITY } from '../../src/domain/prey.js?v=125';
 import { staminaXpMult } from '../../src/domain/stamina.js?v=125';
 import { activeImbuementFor } from '../../src/domain/imbuements.js?v=125';
+import { QUESTS } from '../../src/domain/quests.js?v=1';
 import { getGameConfig } from './gameConfig.js';
 import { selectOne, selectMany, selectLatest, insertRow, upsertRow, updateRows, deleteRows, callRpc } from './db.js';
 import { acquireUserLock } from './econLock.js';
@@ -604,6 +605,23 @@ async function settleKill(session, mon, cfg) {
     session.prog.goldEarned += autoSellGold;
   }
 
+  // Quest: vencer o CHEFE da quest concede o prêmio real do Tibia UMA vez só.
+  // Server-authoritative (não confia no cliente) e não-repetível (checa a lista
+  // de concluídas). Persiste a conclusão na hora — evento raro e importante.
+  if (session.questId && QUESTS[session.questId] && mon.defKey === QUESTS[session.questId].boss) {
+    const done = session.completedQuests || (session.completedQuests = []);
+    if (!done.includes(session.questId)) {
+      done.push(session.questId);
+      const rewardItem = QUESTS[session.questId].reward.item;
+      const captured = await changeSessionInv(session, rewardItem, 1);
+      if (captured) lootGained.push(rewardItem); // aparece na linha de loot
+      try {
+        await upsertRow('player_stats', { user_id: session.userId, slot: session.slot, completed_quests: done, updated_at: new Date().toISOString() }, 'user_id,slot');
+      } catch (e) { console.error('falha ao persistir quest concluída', session.questId, e.message); }
+      session.questJustDone = session.questId; // sinal cosmético pro cliente (linha de log)
+    }
+  }
+
   const relicsGained = [];
   if (session.bossOnly && BOSS_MONSTER_IDS.has(mon.defKey) && Math.random() < cfg.relicDropChance) {
     const equippablePool = mon.loot.map(([id]) => id).filter(id => ITEMS[id] && EQUIPPABLE_TYPES.includes(ITEMS[id].type));
@@ -1061,7 +1079,9 @@ function regenVitals(session) {
 
 async function tick(session) {
   regenVitals(session);   // antes de qualquer saída antecipada: regenera sempre
-  const zone = ZONES[session.zoneId];
+  // zoneObj: zona resolvida passada no start (inclui as ZONAS SINTÉTICAS de
+  // quest, que não estão em ZONES). Cai no catálogo pras zonas normais.
+  const zone = session.zoneObj || ZONES[session.zoneId];
   if (!zone) return;
   if (!session.currentPack || !session.currentPack.length) {
     if (Date.now() < session.nextSpawnAt) return;
@@ -1145,6 +1165,8 @@ export function startSession(session) {
       session.bossPointsAbs = Number(row.boss_points) || 0;
       if (row.boss_max_tier && typeof row.boss_max_tier === 'object') session.bossMaxTier = row.boss_max_tier;
       if (row.level) session.level = Math.max(session.level || 1, row.level);
+      // Quests já concluídas (pra não conceder o prêmio de novo numa rejogada).
+      session.completedQuests = Array.isArray(row.completed_quests) ? row.completed_quests : [];
     })
     .catch(e => console.error('falha ao carregar stats da sessão', session.id, e.message))
     // Só DEPOIS de ter os absolutos o combate pode rodar. Sem esta trava, uma

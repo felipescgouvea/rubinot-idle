@@ -48,6 +48,7 @@ import { GRADUATION_LEVEL } from '../../src/domain/cities.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS, imbuementCost } from '../../src/domain/imbuements.js?v=125';
+import { QUESTS, questEnemySequence } from '../../src/domain/quests.js?v=1';
 import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
 import { PREY_SLOTS, PREY_MAX_RARITY, preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType, isPreyActive } from '../../src/domain/prey.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
@@ -99,6 +100,21 @@ function defaultSkills() {
   const out = {};
   Object.entries(TIBIA_SKILLS).forEach(([id, s]) => { out[id] = { lv: s.base, tries: 0 }; });
   return out;
+}
+
+// Zona SINTÉTICA de uma Quest (não está em ZONES): a raid roda como uma caçada
+// cujo pool de monstros é a sequência de inimigos da quest (ondas + chefe), e o
+// `quest` marca a sessão pra conceder o prêmio ao vencer o chefe. Ver
+// domain/quests.js e huntEngine.js (session.questId / session.zoneObj).
+function questZone(zoneId) {
+  if (typeof zoneId !== 'string' || !zoneId.startsWith('quest:')) return null;
+  const q = QUESTS[zoneId.slice(6)];
+  if (!q) return null;
+  return {
+    city: 'quest', name: q.name, icon: q.icon, worldReq: null,
+    monsters: questEnemySequence(q), boss: q.boss,
+    theme: ['#3a2a4a', '#1a1226'], biome: 'ruins', quest: q.id,
+  };
 }
 
 // Devolve o gold RESERVADO de uma buy offer à carteira do comprador (o poster).
@@ -370,7 +386,7 @@ const server = http.createServer(async (req, res) => {
       if (!user) return;
       const body = await readBody(req);
       const slot = validSlot(body.slot);
-      const zone = slot !== null && ZONES[body.zoneId];
+      const zone = slot !== null && (ZONES[body.zoneId] || questZone(body.zoneId));
       if (slot === null || !zone) return send(res, 400, { error: 'slot ou zoneId inválido' });
       if (!body.vocation) return send(res, 400, { error: 'falta vocation' });
 
@@ -480,6 +496,9 @@ const server = http.createServer(async (req, res) => {
 
       startSession({
         id: inserted.id, userId: user.id, slot, zoneId: body.zoneId, bossOnly: !!body.bossOnly,
+        // Zona resolvida (inclui zona sintética de quest) + questId — marca a
+        // sessão pra conceder o prêmio da quest ao vencer o chefe (huntEngine).
+        zoneObj: zone, questId: zone.quest || null,
         // Instante em que a caçada COMEÇOU (default now() da coluna). Sem isto,
         // reabrir o jogo (F5) fazia o cronômetro "Caçando · Xm" e o Hunt Analyzer
         // voltarem a ZERO, parecendo que a caçada reiniciou (queixa do Felipe) —
@@ -1953,6 +1972,17 @@ const server = http.createServer(async (req, res) => {
       const row = await selectOne('player_daily_reward', { user_id: user.id, slot });
       const state = dailyRewardState(row ? row.last_claim_date : null, row ? row.streak : 0, todayStr());
       return send(res, 200, { ok: true, canClaim: state.canClaim, streak: state.streak, longStreak: (row && row.long_streak) || 0 });
+    }
+
+    // Quests concluídas (pra a aba Quests marcar o que já foi feito). A
+    // conclusão/prêmio são concedidos no combate (huntEngine), não aqui.
+    if (url.pathname === '/quest/state' && req.method === 'GET') {
+      const user = await requireUser(req, res);
+      if (!user) return;
+      const slot = validSlot(Number(url.searchParams.get('slot')));
+      if (slot === null) return send(res, 400, { error: 'slot inválido' });
+      const row = await selectOne('player_stats', { user_id: user.id, slot });
+      return send(res, 200, { ok: true, completed: (row && Array.isArray(row.completed_quests)) ? row.completed_quests : [] });
     }
 
     if (url.pathname === '/daily-reward/claim' && req.method === 'POST') {
