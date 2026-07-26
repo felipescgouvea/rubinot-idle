@@ -1,9 +1,9 @@
 // Utilitários de UI compartilhados: formatação e os 4 mecanismos genéricos de
 // feedback (notificação, log de combate, modal). Point de entrada único que
 // liga esses mecanismos aos eventos emitidos pela camada application.
-import { on, EVENTS } from '../shared/eventBus.js?v=322';
-import { ITEMS } from '../domain/items.js?v=335';
-import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=325';
+import { on, EVENTS } from '../shared/eventBus.js?v=323';
+import { ITEMS } from '../domain/items.js?v=336';
+import { itemSpriteFile, spriteUrl, skillIconFile, spellIconFile, VITAL_ICON_FILES, RUBINI_COIN_FILE, CHARM_POINTS_ICON_FILE, TRAINING_DUMMY_FILE, TASK_COIN_FILE, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=326';
 
 // Ícone de item: tenta a sprite real do TibiaWiki; sem sucesso, cai no emoji
 // (mesmo padrão de monsterSpriteImg em huntPanel.js). `cls` deve ser a
@@ -151,25 +151,46 @@ export function notify(msg, type = 'info') {
 // detalhe do item aberto da Bag volta PRA Bag em vez de fechar tudo) ou fecha
 // de vez. Sem handler = comportamento normal (fecha).
 let modalCloseHandler = null;
+let modalOpener = null; // elemento que estava focado antes de abrir — pra devolver o foco
 
 export function openModal(html, onClose = null) {
+  // Só guarda o opener na PRIMEIRA abertura da pilha (bag→item reabre openModal;
+  // não queremos perder o foco original de quem abriu a bag).
+  const overlay = document.getElementById('modal-overlay');
+  const wasOpen = overlay.style.display !== 'none';
+  if (!wasOpen) modalOpener = document.activeElement;
   document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('modal-overlay').style.display = 'flex';
+  overlay.style.display = 'flex';
   modalCloseHandler = onClose;
+  // a11y: foca a caixa do modal pra teclado/leitor de tela entrarem nela.
+  const box = document.getElementById('modal-box');
+  if (box) { box.setAttribute('tabindex', '-1'); box.focus(); }
 }
 
 export function closeModal() {
   document.getElementById('modal-overlay').style.display = 'none';
   modalCloseHandler = null;
+  // a11y: devolve o foco a quem abriu o modal.
+  if (modalOpener && typeof modalOpener.focus === 'function') modalOpener.focus();
+  modalOpener = null;
 }
 
-// Chamado pelo Close estático e pelo clique-fora (ver index.html). Se o modal
-// registrou um onClose, ele decide o que fazer (e é responsável por fechar ou
-// trocar de modal); senão, fecha normalmente.
+// Chamado pelo Close estático, pelo clique-fora e pelo Escape (ver index.html e
+// o listener abaixo). Se o modal registrou um onClose, ele decide o que fazer
+// (fechar ou trocar de modal); senão, fecha normalmente.
 export function dismissModal() {
   const h = modalCloseHandler;
   modalCloseHandler = null;
   if (h) h(); else closeModal();
+}
+
+// a11y: Escape fecha/dispensa o modal aberto (mesmo caminho do Close).
+if (typeof document !== 'undefined') {
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const o = document.getElementById('modal-overlay');
+    if (o && getComputedStyle(o).display !== 'none') dismissModal();
+  });
 }
 
 export function wireSharedEvents() {
