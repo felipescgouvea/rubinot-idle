@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=314';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=313';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=325';
-import { on, EVENTS } from '../shared/eventBus.js?v=312';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=317';
-import { buyShopItem } from '../application/shopUseCases.js?v=318';
-import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=315';
-import { t } from '../i18n/i18n.js?v=330';
+import { G } from '../application/gameStore.js?v=315';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=314';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=326';
+import { on, EVENTS } from '../shared/eventBus.js?v=313';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=318';
+import { buyShopItem } from '../application/shopUseCases.js?v=319';
+import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=316';
+import { t } from '../i18n/i18n.js?v=331';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -96,7 +96,7 @@ export function confirmBuyShopItem(id, qty = 1) {
   // não faz sentido confirmar isso.
   if (owned || s.currency === 'real') { buyShopItem(id, qty); return; }
   const item = s.itemId ? ITEMS[s.itemId] : null;
-  const count = item && (item.type === 'potion' || item.type === 'rune') ? Math.max(1, Math.floor(Number(qty) || 1)) : 1;
+  const count = item && (item.type === 'potion' || item.type === 'rune' || item.type === 'ammo') ? Math.max(1, Math.floor(Number(qty) || 1)) : 1;
   const total = s.price * count;
   const totalLabel = s.currency === 'rubini' ? `${total} ${rubiniIconImg('inline-icon')} RC` : `${formatNum(total)} ${goldIconImg('inline-icon')}`;
   openModal(`
