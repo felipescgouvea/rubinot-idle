@@ -26,3 +26,48 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — janela de imbuing redesenhada no estilo do cliente do Tibia (painel escuro, gems em soquete dourado) — `f6053a9d`
 - 2026-07-26 — auto-sell com presets (Desligado/Lixo barato/Lixo comum ≤250) — `b66e5ba8`
 - 2026-07-26 — treino UNIFICADO ponta a ponta (servidor rate por contexto live/resume + cliente painel único com outfit fiel no boneco) — `543f9cbe`
+
+## Histórico migrado do BACKLOG (entregas anteriores ao log)
+
+**Economia server-authoritative (exploits fechados)**
+- #R1 Rubini gasto reembolsado em daily/BP → `/rubini/spend` no mutex ECON — `3453525a`
+- #R2 corrida da carteira (gold delta vs escrita absoluta) → `flushVitals` pega o lock — `5642946d`
+- #R3 débito na moeda errada (cliente) → escolhe gold/rubini certo
+- #R4 charm points de Arena/BP descartados → `player_charms.state.bonus` — `6bd007c0`
+- #R5 `/charm/unlock` sem lock → fechado pelo lock do #R2
+- #1 task reward só no cliente → server-authoritative + coleta manual — `0f6e5dcf`
+- #3 boosts client-authoritative → server (loja/BP/arena) — `c4bda7f1`
+- #6 level-up fantasma no reward de task → resolvido pelo task collect — `0f6e5dcf`
+
+**Combate & conteúdo**
+- Cap de level 100 → 2000 (P0.1) — deploy 07-25
+- `atk` placeholder = instakill: 363 monstros corrigidos da fonte Crystal
+- Flecha fantasma do paladino — `a4b03f6b`
+- Arena "melhor de 2" quebrada → melhor de 3, sem empate
+- Task reward 2× em multi-kill → guard de reentrância
+- Página dedicada de Imbuements + shrine fiel — `3e19d100`/`d858912c`/`4186835a`
+- Market recriado fiel ao Tibia — `cedb8c18`
+- Janela de morte estilo Tibia — `f324754d`
+- P2.6 XP de task já é estático por task (verificado, sem mudança)
+
+**UI / estética / juice**
+- Tipografia = stack nativa do rubinot.com.br/news — `fba368ae`
+- Ícones = sprites reais do Tibia (Worlds/Achievements/Boosted/Daily/BP/Retomar) — `e8c8488c`/`6bb1e5ed`/`750b2b4b`
+- Ícones de custo de Imbuement = sprite real — `7c2a2a28`
+- Treino do Knight (melee): dummy central, investida — `efb3f2ed`
+- Sprites sumindo na batalha (regressão loading=lazy) revertida — `0a7b60eb`
+- Dark: fontes navy invertidas + aba do log — `0a7b60eb`/`896ff386`
+- Boosted 24→40px + ícone 🐾/💀 — `0a7b60eb`/`c8db6cb4`
+- Dropdown do Market temado — `efb3f2ed`
+- Ícones da sidebar corrigidos — `896ff386`
+- Cards de igual altura + sidebar navy premium — `34e263ce`/`511df44a`
+- Juice no combate (dano flutuante + LEVEL UP + drop raro) — `c8db6cb4`/`b01825fd`/`e9788496`
+- Palco parado escurece + CTA "Retomar caçada" — `cd6d8686`
+- Número abreviado na barra de XP + labels do rail — `d24b617a`
+- Título da aba "(N) Rubinot Idle" — `e0727efa`
+- Botão Trocar Hunt só fora da caça — `34e263ce`
+- Busca no bestiário — `1edf2a20`
+
+**Infra / quick wins**
+- CI com os guards no deploy — `.github/workflows/guards.yml`
+- Já existiam: battle list coalesce via rAF · `:focus-visible` · `prefers-reduced-motion` · `window.onunhandledrejection`
