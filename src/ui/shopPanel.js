@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=328';
-import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=327';
-import { ITEMS, potionReqLabel } from '../domain/items.js?v=339';
-import { on, EVENTS } from '../shared/eventBus.js?v=326';
-import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=331';
-import { buyShopItem } from '../application/shopUseCases.js?v=332';
-import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=329';
-import { t } from '../i18n/i18n.js?v=344';
+import { G } from '../application/gameStore.js?v=329';
+import { SHOP_ITEMS, SHOPS, isBoostActive } from '../domain/shopCatalog.js?v=328';
+import { ITEMS, potionReqLabel } from '../domain/items.js?v=340';
+import { on, EVENTS } from '../shared/eventBus.js?v=327';
+import { formatNum, itemIconImg, goldIconImg, rubiniIconImg, vitalIconImg, openModal, closeModal } from './shared.js?v=332';
+import { buyShopItem } from '../application/shopUseCases.js?v=333';
+import { spriteImgOrFallback, spriteUrl } from '../infrastructure/tibiaSprites.js?v=330';
+import { t } from '../i18n/i18n.js?v=345';
 
 function shopPriceLabel(s) {
   if (s.currency === 'real') return `R$ ${s.priceBRL.toFixed(2).replace('.', ',')}`;
@@ -91,10 +91,8 @@ export function scrollShopQty(e, id) {
 export function confirmBuyShopItem(id, qty = 1) {
   const s = SHOP_ITEMS.find(x => x.id === id);
   if (!s) return;
-  const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
-  // Trocar/tirar um outfit já comprado é reversível e não custa nada de novo —
-  // não faz sentido confirmar isso.
-  if (owned || s.currency === 'real') { buyShopItem(id, qty); return; }
+  // Compra em dinheiro real não passa pelo modal de confirmação de gold/RC.
+  if (s.currency === 'real') { buyShopItem(id, qty); return; }
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const count = item && (item.type === 'potion' || item.type === 'rune' || item.type === 'ammo') ? Math.max(1, Math.floor(Number(qty) || 1)) : 1;
   const total = s.price * count;
@@ -111,8 +109,6 @@ function renderShopCard(s) {
   const isReal = s.currency === 'real';
   const balance = s.currency === 'rubini' ? G.rubini : G.gold;
   const canAfford = isReal || balance >= s.price;
-  const owned = s.type === 'outfit' && G.outfitsOwned.includes(s.id);
-  const wearing = owned && G.outfit === s.icon;
   const item = s.itemId ? ITEMS[s.itemId] : null;
   const statKeys = item && item.type === 'potion' ? ['atk', 'def', 'magic'] : ['atk', 'def', 'magic', 'heal', 'mana', 'dmg'];
   const stats = item ? statKeys.filter(k => item[k]).map(k => `${k.toUpperCase()} +${item[k]}`).join(' · ') : '';
@@ -141,10 +137,10 @@ function renderShopCard(s) {
           ${canAfford ? t('shop.buy') : t('shop.noBalance')}
         </button>
       </div>`
-    : `<button class="skill-upgrade-btn" onclick="confirmBuyShopItem('${s.id}')" ${(!canAfford && !owned) ? 'disabled' : ''}>
-        ${owned ? (wearing ? `✅ ${t('shop.wearingClickToRemove')}` : t('shop.wearOutfit')) : isReal ? t('shop.buy') : canAfford ? t('shop.buy') : t('shop.insufficientBalance')}
+    : `<button class="skill-upgrade-btn" onclick="confirmBuyShopItem('${s.id}')" ${!canAfford ? 'disabled' : ''}>
+        ${(isReal || canAfford) ? t('shop.buy') : t('shop.insufficientBalance')}
       </button>`;
-  return `<div class="skill-card" style="${wearing ? 'border:2px solid var(--gold); background:#fdf4d7;' : ''}">
+  return `<div class="skill-card">
     <div class="skill-card-header">
       <span class="skill-card-name">${iconHtml} ${t(s.name)}</span>
       <span class="skill-card-level" style="font-size:11px">${shopPriceLabel(s)}</span>
