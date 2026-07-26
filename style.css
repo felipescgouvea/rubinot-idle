@@ -2236,6 +2236,18 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .settings-version { text-align: center; font-size: 10.5px; margin: 10px 0 0 !important; }
 .item-detail-stats { margin-top: 10px; font-size: 11.5px; line-height: 1.9; color: var(--ink); }
 .item-detail-stats span { color: var(--navy-1); font-weight: 700; }
+/* Botões da janela de detalhe do item — temados (antes eram cores inline
+   berrantes: azul/laranja/verde soltos). Hierarquia: ação primária (Usar/
+   Equipar) dourada; Vender/Vender Todos em bronze; Desequipar neutro. */
+.item-modal-btn {
+  margin-top: 6px; width: 100%; padding: 7px 14px; border-radius: 6px; cursor: pointer;
+  font-weight: 700; font-family: var(--body); font-size: 12.5px; border: 1px solid;
+  transition: filter 0.15s;
+}
+.item-modal-btn:hover { filter: brightness(1.07); }
+.item-modal-btn.primary { background: linear-gradient(180deg, #e6b52e, #b5850f); border-color: #8a6f1f; color: #3a2c08; text-shadow: 0 1px 0 #ffffff66; }
+.item-modal-btn.sell { background: linear-gradient(180deg, #bd8f4e, #8c6836); border-color: #6e4f27; color: #fff3e0; text-shadow: 0 1px 1px #00000055; }
+.item-modal-btn.neutral { background: linear-gradient(180deg, #5a6a86, #414f68); border-color: #37435a; color: #eef2f8; }
 /* comparativo de status ao equipar: valor novo x atual, diferença colorida */
 .stat-cmp { margin: 10px 0; border: 1px solid #2b3350; border-radius: 8px; overflow: hidden; background: #1c2136; }
 .stat-cmp-head { background: #1c2136; color: #8a92b8; font-size: 11px; font-weight: 700; padding: 5px 10px; }
