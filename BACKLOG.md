@@ -44,7 +44,7 @@
 - [ ] **Prey Wildcards + Concoctions** · S–M · `[server]` — wildcards pra rerolar/travar; concoctions = buffs temporizados
 - [ ] **Sink de gold que escala** · M · `[server]` · `[CANON]` — Exercise Weapons na loja e/ou house rent (se o Forge entrar, ele já é o sink)
 - [ ] **Aprofundar o sink de Rubini** · M — boosts mais longos, packs de wildcard, tentativas de arena, cosméticos
-- [ ] **Streak de daily + cadência semanal** · S — marco de streak longo (30 dias), recompensa não-material
+- [x] **Streak de daily + cadência semanal** · S — streak longo de dias consecutivos; marco de 30 dias dá boost de XP 2h (não-material); banner de progresso no modal; server-authoritative (coluna long_streak) — `f63c755e`
 - [ ] **Funil de recompensa pras ladders infinitas** · M — Boss Rush/skill/bestiário dão payoff nos marcos (charm/imbue/wildcard)
 
 ## Infra / a11y / mobile (P4)
