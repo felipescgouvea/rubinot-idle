@@ -53,6 +53,7 @@
 - [ ] **Log estruturado no servidor** (level/ts/sessionId/event) · S–M · `[obs]`
 
 ## Pendências de dados (manual, TibiaWiki — não sourceável automático)
+- [ ] **404 na aba Spells**: `destroy_field_rune` (conjuração Destroy Field) sem sprite e fora do `SPRITELESS_ITEMS` → GET 404 no console. Baixar a sprite real do Destroy Field Rune (existe no Tibia) ou pré-marcar. · S
 - [ ] ~119 monstros custom/evento com `atk>1500` (não existem no Crystal) — `scripts/audit-monster-atk.mjs --thresh=1500`
 - [ ] ~136 monstros com `hp` placeholder (até ~100× o real) — baixar hp exige rebalancear XP junto
 - [ ] Maioria dos monstros custom sem `spells` — importar os `combat` dos `.lua`
