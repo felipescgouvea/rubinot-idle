@@ -15,16 +15,16 @@
 // de fato. Antes o cliente creditava local e o reconcile de gold/xp/inventário
 // revertia tudo — a recompensa (xp de task chega a dezenas de milhões)
 // evaporava. taskCoin fica local (não está em ECONOMY_FIELDS, não é revertido).
-import { G, ACCOUNT } from './gameStore.js?v=319';
-import { MONSTERS } from '../domain/bestiary.js?v=338';
-import { ITEMS } from '../domain/items.js?v=330';
-import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=318';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=317';
-import { getMaxHp, getMaxMana } from './stats.js?v=316';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=316';
-import { saveGame } from './saveGameUseCase.js?v=319';
-import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=327';
-import { t } from '../i18n/i18n.js?v=335';
+import { G, ACCOUNT } from './gameStore.js?v=320';
+import { MONSTERS } from '../domain/bestiary.js?v=339';
+import { ITEMS } from '../domain/items.js?v=331';
+import { TASK_ROOMS, taskKey, isTaskUnlocked, isRoomUnlocked } from '../domain/progression.js?v=319';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=318';
+import { getMaxHp, getMaxMana } from './stats.js?v=317';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=317';
+import { saveGame } from './saveGameUseCase.js?v=320';
+import { fetchTaskState, completeTaskOnServer } from '../infrastructure/authClient.js?v=328';
+import { t } from '../i18n/i18n.js?v=336';
 
 // Busca o mapa real de conclusões do servidor e espelha em G — chamado no
 // boot, pra nunca depender de um valor que só existia no save local/na nuvem
