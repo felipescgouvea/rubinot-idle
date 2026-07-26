@@ -10,9 +10,3 @@ scripts/*-cs-auditoria.json
 __pycache__/
 scripts/_*
 scripts/*_preview.png
-
-# Logs locais de trabalho dos agentes (paralelos) — NÃO vão pro git.
-# finished.md = entregas de cada dreno de /backlog; defects.md = bugs achados
-# pela skill test. São por-agente/por-sessão, não estado compartilhado do repo.
-finished.md
-defects.md
