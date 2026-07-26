@@ -1,13 +1,13 @@
 // Recompensa Diária (Reward Shrine) — não ocupa uma aba: é um botão no header
 // que abre um modal com o ciclo de 7 dias e o botão de resgate. Um "selo"
 // vermelho no botão avisa quando há recompensa disponível hoje.
-import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak } from '../domain/dailyReward.js?v=348';
-import { on, EVENTS } from '../shared/eventBus.js?v=349';
-import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=354';
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=352';
-import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=349';
-import { setTitleFlag } from './notifyTitle.js?v=349';
-import { t } from '../i18n/i18n.js?v=367';
+import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak, LONG_STREAK_MILESTONE, daysToNextMilestone } from '../domain/dailyReward.js?v=349';
+import { on, EVENTS } from '../shared/eventBus.js?v=350';
+import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=355';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=353';
+import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=350';
+import { setTitleFlag } from './notifyTitle.js?v=350';
+import { t } from '../i18n/i18n.js?v=368';
 
 // Sprite REAL do Tibia por tipo de recompensa (nada inventado): gold/Rubini têm
 // dispatcher próprio; refill = Health Potion; boost de XP = Experience Icon.
@@ -42,9 +42,19 @@ export async function openDailyReward() {
       <div class="daily-name">${t(r.name)}</div>
     </div>`;
   }).join('');
+  const ls = state.longStreak || 0;
+  const toNext = daysToNextMilestone(ls);
+  const msPct = Math.round(((LONG_STREAK_MILESTONE - toNext) / LONG_STREAK_MILESTONE) * 100);
+  const longStreakBanner = `
+    <div class="daily-longstreak">
+      <div class="daily-ls-head"><span class="daily-ls-flame">🔥</span> ${t('daily.longStreakLabel', { days: ls })}</div>
+      <div class="daily-ls-track"><div class="daily-ls-fill" style="width:${msPct}%"></div></div>
+      <div class="daily-ls-hint muted">${t('daily.milestoneHint', { days: toNext, milestone: LONG_STREAK_MILESTONE })}</div>
+    </div>`;
   openModal(`
     <h3>${spriteImgOrFallback(spriteUrl('items/Reward_Box.webp'), 'daily', '🎁', 'inline-title-icon')} ${t('daily.title')}</h3>
     <p class="muted">${t('daily.intro')}</p>
+    ${longStreakBanner}
     <div class="daily-grid">${cards}</div>
     <div class="daily-claim-row">
       ${state.canClaim

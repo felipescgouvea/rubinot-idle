@@ -60,7 +60,7 @@ function resetBpIfNewSeason(bp) {
   if (bp.season !== season) { bp.claimedFree = []; bp.claimedPremium = []; bp.premium = false; bp.season = season; }
   return bp;
 }
-import { dailyRewardState, rewardForStreak } from '../../src/domain/dailyReward.js?v=126';
+import { dailyRewardState, rewardForStreak, longStreakAfterClaim, milestoneRewardFor } from '../../src/domain/dailyReward.js?v=126';
 import { isBoostActive, SHOP_ITEMS } from '../../src/domain/shopCatalog.js?v=128';
 import { SPELLS, isSpellAvailable } from '../../src/domain/spells.js?v=127';
 import { spendSoul, currentSoul, maxSoul } from '../../src/domain/soul.js?v=125';
@@ -1948,7 +1948,7 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const row = await selectOne('player_daily_reward', { user_id: user.id, slot });
       const state = dailyRewardState(row ? row.last_claim_date : null, row ? row.streak : 0, todayStr());
-      return send(res, 200, { ok: true, canClaim: state.canClaim, streak: state.streak });
+      return send(res, 200, { ok: true, canClaim: state.canClaim, streak: state.streak, longStreak: (row && row.long_streak) || 0 });
     }
 
     if (url.pathname === '/daily-reward/claim' && req.method === 'POST') {
@@ -1993,11 +1993,22 @@ const server = http.createServer(async (req, res) => {
         await upsertRow('player_stats', { user_id: user.id, slot, boosts, updated_at: new Date().toISOString() }, 'user_id,slot');
       }
 
+      // Streak LONGO (dias consecutivos): incrementa e, a cada marco de 30 dias,
+      // concede um prêmio EXTRA não-material (boost de XP), empilhado no boost do
+      // dia (se houver). Fonte de verdade no servidor (não confia no cliente).
+      const newLongStreak = longStreakAfterClaim(row ? row.last_claim_date : null, row ? row.long_streak : 0, todayStr());
+      let milestone = milestoneRewardFor(newLongStreak);
+      if (milestone && milestone.type === 'boost') {
+        const base = isBoostActive(boosts, milestone.boost, Date.now()) ? boosts[milestone.boost] : Date.now();
+        boosts = { ...boosts, [milestone.boost]: base + milestone.minutes * 60000 };
+        await upsertRow('player_stats', { user_id: user.id, slot, boosts, updated_at: new Date().toISOString() }, 'user_id,slot');
+      }
+
       await upsertRow('player_daily_reward', {
-        user_id: user.id, slot, last_claim_date: todayStr(), streak: state.streak, updated_at: new Date().toISOString(),
+        user_id: user.id, slot, last_claim_date: todayStr(), streak: state.streak, long_streak: newLongStreak, updated_at: new Date().toISOString(),
       }, 'user_id,slot');
 
-      return send(res, 200, { ok: true, reward, gold, rubini, hp, mana, boosts });
+      return send(res, 200, { ok: true, reward, gold, rubini, hp, mana, boosts, longStreak: newLongStreak, milestone });
     }
 
     send(res, 404, { error: 'not found' });

@@ -46,3 +46,29 @@ export function rewardForStreak(streak) {
   const idx = ((streak - 1) % DAILY_CYCLE);
   return DAILY_REWARDS[idx];
 }
+
+// ---- Streak LONGO (dias consecutivos de login, NÃO reinicia no ciclo de 7) ----
+// Premia retenção de longo prazo: a cada marco de 30 dias consecutivos, um
+// prêmio EXTRA não-material (boost de XP), além da recompensa do dia. Reseta pra
+// 1 se perder um dia. Prêmio não-material de propósito (regra de prêmios do jogo).
+export const LONG_STREAK_MILESTONE = 30;
+export const LONG_STREAK_REWARD = { icon: '🏆', name: 'daily.reward.milestone30', type: 'boost', boost: 'xp', minutes: 120 };
+
+// Novo long_streak DEPOIS de resgatar hoje (chamar só quando canClaim é true).
+export function longStreakAfterClaim(lastClaimDate, lastLongStreak, todayStr) {
+  if (!lastClaimDate) return 1;
+  const diff = dayDiff(lastClaimDate, todayStr);
+  if (diff === 1) return (lastLongStreak || 0) + 1;   // dia consecutivo
+  return 1;                                            // primeiro dia OU perdeu a sequência
+}
+
+// Prêmio de marco quando o novo long_streak bate um múltiplo do marco (30, 60, …).
+export function milestoneRewardFor(longStreak) {
+  return (longStreak > 0 && longStreak % LONG_STREAK_MILESTONE === 0) ? LONG_STREAK_REWARD : null;
+}
+
+// Quantos dias faltam pro próximo marco de 30.
+export function daysToNextMilestone(longStreak) {
+  const s = longStreak || 0;
+  return LONG_STREAK_MILESTONE - (s % LONG_STREAK_MILESTONE);
+}

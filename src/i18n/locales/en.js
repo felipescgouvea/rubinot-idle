@@ -650,6 +650,11 @@ export default {
   'daily.alreadyClaimed': "Today's reward already claimed (streak: day {day}). Come back tomorrow!",
   'daily.reward.supplyRefill': 'Full Supply Refill',
   'daily.reward.xpBoost30': 'XP Boost (30 min)',
+  'daily.reward.milestone30': '🏆 XP Boost (2h)',
+  'daily.longStreakLabel': '{days}-day login streak',
+  'daily.milestoneHint': '{days} days to the {milestone}-day reward',
+  'daily.milestoneClaimed': '🏆 {days}-day streak! Bonus: {name}',
+  'daily.logMilestone': '🏆 {days}-day login streak reward: {name}',
 
   // ---- worlds panel (ui/worldsPanel.js) ----
   'worlds.playersCount': '{n} players',

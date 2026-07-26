@@ -4,16 +4,17 @@
 // server/src/index.js: /daily-reward/state e /daily-reward/claim); este
 // arquivo só chama as rotas e mantém um cache local (G.dailyLastClaim/
 // G.dailyStreak) pra feedback visual entre reloads.
-import { G, ACCOUNT } from './gameStore.js?v=351';
+import { G, ACCOUNT } from './gameStore.js?v=352';
 import { fetchDailyRewardState, claimDailyRewardOnServer } from '../infrastructure/authClient.js';
-import { emit, EVENTS } from '../shared/eventBus.js?v=349';
-import { saveGame } from './saveGameUseCase.js?v=351';
-import { t } from '../i18n/i18n.js?v=367';
+import { emit, EVENTS } from '../shared/eventBus.js?v=350';
+import { saveGame } from './saveGameUseCase.js?v=352';
+import { t } from '../i18n/i18n.js?v=368';
 
 export async function getDailyState() {
   const result = await fetchDailyRewardState(ACCOUNT.activeSlot);
-  if (!result.ok) return { canClaim: false, streak: G.dailyStreak || 1 };
-  return { canClaim: result.canClaim, streak: result.streak };
+  if (!result.ok) return { canClaim: false, streak: G.dailyStreak || 1, longStreak: G.dailyLongStreak || 0 };
+  if (result.longStreak != null) G.dailyLongStreak = result.longStreak;
+  return { canClaim: result.canClaim, streak: result.streak, longStreak: result.longStreak || 0 };
 }
 
 // Concede a recompensa de hoje (o servidor decide o valor real e aplica em
@@ -46,8 +47,15 @@ export async function claimDailyReward() {
   G.dailyLastClaim = new Date().toISOString().slice(0, 10);
   G.dailyStreak = state.streak;
 
+  if (result.longStreak != null) G.dailyLongStreak = result.longStreak;
+
   emit(EVENTS.NOTIFY, { msg: t('daily.rewardClaimed', { icon: reward.icon, day: state.streak, name: t(reward.name) }), type: 'success' });
   emit(EVENTS.LOG, `<span class="log-loot">${t('daily.logClaimed', { day: state.streak, name: t(reward.name) })}</span>`);
+  // Marco de streak longo (30 dias): prêmio EXTRA não-material — festeja à parte.
+  if (result.milestone) {
+    emit(EVENTS.NOTIFY, { msg: t('daily.milestoneClaimed', { days: result.longStreak, name: t(result.milestone.name) }), type: 'success' });
+    emit(EVENTS.LOG, `<span class="log-heal">${t('daily.logMilestone', { days: result.longStreak, name: t(result.milestone.name) })}</span>`);
+  }
   emit(EVENTS.HEADER_STATS);
   emit(EVENTS.CHAR_INFO);
   emit(EVENTS.DAILY_REWARD_PANEL);

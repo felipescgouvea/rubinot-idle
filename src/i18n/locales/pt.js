@@ -651,6 +651,11 @@ export default {
   'daily.alreadyClaimed': 'Recompensa de hoje já resgatada (sequência: dia {day}). Volte amanhã!',
   'daily.reward.supplyRefill': 'Supply Completo',
   'daily.reward.xpBoost30': 'XP Boost (30 min)',
+  'daily.reward.milestone30': '🏆 Boost de XP (2h)',
+  'daily.longStreakLabel': 'Streak de {days} dias de login',
+  'daily.milestoneHint': 'faltam {days} dias pro prêmio de {milestone} dias',
+  'daily.milestoneClaimed': '🏆 Streak de {days} dias! Bônus: {name}',
+  'daily.logMilestone': '🏆 Prêmio de streak de {days} dias de login: {name}',
 
   // ---- worlds panel (ui/worldsPanel.js) ----
   'worlds.playersCount': '{n} jogadores',

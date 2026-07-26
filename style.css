@@ -3809,3 +3809,15 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
   .fight-mode-btn, .density-btn { min-height: 44px; }
   #combat-log-tabs .log-tab { min-height: 38px; }
 }
+
+/* ===== Streak longo do Daily (marco de 30 dias) — ui/dailyRewardPanel.js ===== */
+.daily-longstreak {
+  margin: 10px 0 12px; padding: 10px 12px; border-radius: 9px;
+  background: linear-gradient(180deg, #3a2a12, #241906);
+  border: 1px solid var(--gold-soft, #b8862b);
+}
+.daily-ls-head { font-weight: 700; font-size: 13px; color: #ffd97a; display: flex; align-items: center; gap: 6px; }
+.daily-ls-flame { font-size: 14px; }
+.daily-ls-track { height: 8px; margin: 7px 0 5px; border-radius: 5px; background: #00000055; overflow: hidden; }
+.daily-ls-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #f0b93a, #ffd97a); transition: width .3s ease; }
+.daily-ls-hint { font-size: 11px; margin: 0; }
