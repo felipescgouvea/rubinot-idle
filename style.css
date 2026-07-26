@@ -725,9 +725,9 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
    o HP fica laranja no estado "mid" e se aproxima do dourado do XP. O PNG da
    borda tem o centro transparente, então a cor aparece atrás do fill. Ver
    index.html: .row-hp/.row-mana/.row-xp. */
-.row-hp .bar-track { background-color: #5a2620; }
-.row-mana .bar-track { background-color: #1e3a5c; }
-.row-xp .bar-track { background-color: #544418; }
+.row-hp .bar-track { box-shadow: 0 0 0 1.5px #e74c3c, 0 0 5px #e74c3c66; }
+.row-mana .bar-track { box-shadow: 0 0 0 1.5px #3d7ec9, 0 0 5px #3d7ec966; }
+.row-xp .bar-track { box-shadow: 0 0 0 1.5px #e0a825, 0 0 5px #e0a82566; }
 .bar-row span { width: 82px; font-size: 10.5px; color: var(--ink-soft); text-align: right; font-weight: 600; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin: 12px 0; }
