@@ -6,6 +6,7 @@ Este diretório descreve **o que** o Rubinot Idle faz e **por quê**, do ponto d
 
 - **Raiz** — fundamentos do jogo e sistemas que **não** são abas da barra lateral (personagem, conta, inventário, configurações, persistência, recompensa diária, presas, conquistas), mais as regras e critérios transversais.
 - **Uma pasta por item da barra lateral** (`10-caca/` … `25-admin/`) — cada pasta reúne os arquivos de especificação daquele tópico.
+- **Fichas de dados** — `10-caca/monsters/` tem uma ficha por criatura (HP, ataque, XP, loot, zonas) e `12-spells/<vocação>/` uma ficha por magia (palavras, nível, mana, dano/cura, recarga). Geradas a partir dos valores reais do jogo.
 
 ## Fundamentos
 
@@ -25,9 +26,9 @@ Este diretório descreve **o que** o Rubinot Idle faz e **por quê**, do ponto d
 
 ## Barra lateral (uma pasta por item)
 
-- [10-caca/](10-caca/) — **Caça**: [combate](10-caca/combate.md), [zonas e cidades](10-caca/zonas-e-cidades.md), [áreas de ataque](10-caca/areas-de-ataque.md).
+- [10-caca/](10-caca/) — **Caça**: [combate](10-caca/combate.md), [zonas e cidades](10-caca/zonas-e-cidades.md), [áreas de ataque](10-caca/areas-de-ataque.md) e [`monsters/`](10-caca/monsters/) (uma ficha por criatura do jogo).
 - [11-rtc/](11-rtc/rtc.md) — **RTC**: automação de ataque e cura.
-- [12-spells/](12-spells/spells.md) — **Spells**: livro de magias por vocação.
+- [12-spells/](12-spells/spells.md) — **Spells**: visão geral + uma ficha por magia, em subpastas por vocação (`knight/`, `paladin/`, `sorcerer/`, `druid/`) e `shared/` (magias de 2+ vocações).
 - [13-tasks/](13-tasks/tasks.md) — **Tarefas**: Linked Tasks encadeadas por sala.
 - [14-skills/](14-skills/skills.md) — **Skills**: habilidades que sobem por uso.
 - [15-imbuements/](15-imbuements/imbuements.md) — **Imbuements**: aprimoramento temporário de equipamento.

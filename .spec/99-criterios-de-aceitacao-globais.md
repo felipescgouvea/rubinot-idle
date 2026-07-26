@@ -1,12 +1,12 @@
 # Critérios de Aceitação Globais
 
-Checklist para validar o Rubinot Idle como um todo. Os critérios específicos de cada área estão nos respectivos arquivos/pastas; aqui ficam os que atravessam o jogo inteiro.
+Checklist para validar o Rubinot Idle como um todo. Os critérios de cada área estão nos respectivos arquivos; aqui ficam os que atravessam o jogo inteiro.
 
 ## Fidelidade a Tibia/RubinOT
 - [ ] Todo monstro do bestiário existe oficialmente no Tibia, **ou** está listado como exceção documentada de conteúdo exclusivo do RubinOT em [90-regras-de-negocio-gerais.md](90-regras-de-negocio-gerais.md).
-- [ ] Toda sprite de monstro é arte real do **cliente** do Tibia (1:1, sem fallback); nenhuma sprite foi desenhada, gerada ou emprestada de outro jogo.
+- [ ] Toda sprite de monstro é arte real do **cliente** do Tibia (1:1, sem fallback); nenhuma foi desenhada, gerada ou emprestada de outro jogo.
 - [ ] Toda mecânica tem equivalente real citado em Tibia/RubinOT, ou está listada como liberdade de design deliberada.
-- [ ] Todo nome exibido de criatura/item/magia é o nome real do Tibia, igual em qualquer idioma.
+- [ ] Todo nome exibido de criatura/item/magia é o real do Tibia, igual em qualquer idioma.
 - [ ] As fórmulas de combate seguem o Crystal Server; nenhum valor foi aproximado de memória.
 - [ ] As pendências de conformidade conhecidas estão listadas em [90-regras-de-negocio-gerais.md](90-regras-de-negocio-gerais.md) e não crescem silenciosamente a cada nova funcionalidade.
 

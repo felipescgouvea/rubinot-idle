@@ -1,28 +1,26 @@
 # Bestiário
 
 ## Objetivo
-Reproduzir o Bestiary do Tibia: um catálogo de todas as criaturas que o jogador vai preenchendo ao matá-las, ganhando Charm Points ao completar cada criatura. Dá um objetivo de coleção e alimenta os Charms.
+Reproduzir o Bestiary do Tibia: catálogo de todas as criaturas, preenchido ao matá-las, que dá Charm Points ao completar cada uma. Objetivo de coleção e fonte dos Charms.
 
 ## Quem usa
 Todo jogador. A aba **Bestiário** lista as criaturas e o progresso de cada uma.
 
 ## O que o usuário precisa conseguir fazer
-- Consultar todas as criaturas, com atributos, loot e progresso de abates.
-- Buscar uma criatura pelo nome.
-- Ver quanto falta para o próximo estágio e acompanhar o progresso ao vivo enquanto caça.
+- Consultar criaturas (atributos, loot, progresso de abates) e buscar por nome.
+- Ver quanto falta para o próximo estágio, ao vivo enquanto caça.
 
 ## Regras de negócio
-- **Três estágios por criatura**, por contagem acumulada de abates (fiel ao Tibia): I, II e III, cada um a uma quantidade de mortes.
-- **Charm Points só ao completar a criatura.** Os pontos são pagos **de uma vez** quando o **último estágio (III)** é concluído — cruzar estágios intermediários não paga nada ainda.
-  **Por quê:** é a regra do Tibia; recompensa completar a criatura, não matá-la algumas vezes.
-- O catálogo mostra os **valores reais do Tibia** de cada criatura (HP, ataque, XP, gold, loot).
-- A contagem de abates é autoritativa do servidor; o bestiário só a reflete.
-- Os Charm Points ganhos são gastos em **Charms** (ver [charms.md](charms.md)).
+- **Três estágios por criatura** (I, II, III), por contagem acumulada de abates — fiel ao Tibia.
+- **Charm Points só ao concluir o estágio III**, pagos de uma vez pela soma cheia — porque a regra do Tibia recompensa completar a criatura, não matá-la algumas vezes. Cruzar estágios intermediários não paga.
+- O catálogo mostra os **valores reais do Tibia** (HP, ataque, XP, gold, loot).
+- A contagem de abates é autoritativa do servidor; o bestiário só reflete.
+- Charm Points são gastos em **Charms** (ver [charms.md](charms.md)).
 
 ## Comportamento esperado
-- Com a aba aberta, o progresso de abates atualiza ao vivo a cada morte.
-- Completar o estágio III de uma criatura credita a soma cheia dos Charm Points daquela criatura, uma única vez.
-- A busca filtra a lista pelo nome real da criatura.
+- Aba aberta: progresso atualiza ao vivo a cada morte.
+- Completar o estágio III credita a soma cheia dos Charm Points, uma única vez.
+- Busca filtra pelo nome real da criatura.
 
 ## Critérios de aceitação
 - [ ] Cada criatura tem três estágios por contagem de abates.

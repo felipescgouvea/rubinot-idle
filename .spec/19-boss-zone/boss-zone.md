@@ -1,31 +1,29 @@
 # Boss Zone
 
 ## Objetivo
-Deixar o jogador desafiar diretamente o **boss** de uma zona já desbloqueada, sem enfrentar os monstros comuns dela — e subir a dificuldade (tier) do boss para mais desafio e recompensa. Dá um alvo de combate focado e uma ladder de poder.
+Deixar o jogador desafiar o **boss** de uma zona já desbloqueada, sem os monstros comuns dela, e subir a dificuldade (tier) para mais desafio e recompensa. Alvo de combate focado e ladder de poder.
 
 ## Quem usa
 Todo jogador que já desbloqueou pelo menos uma zona. A aba **Boss Zone** lista os bosses disponíveis.
 
 ## O que o usuário precisa conseguir fazer
-- Ver os bosses das zonas que já desbloqueou, ordenados por força.
-- Desafiar um boss diretamente (só ele aparece, sem o elenco comum da zona).
+- Ver os bosses das zonas desbloqueadas, ordenados por força, e desafiar um diretamente (só ele aparece).
 - Subir o tier do boss para versões mais fortes.
-- Sair do Boss Zone e voltar exatamente para a caçada normal que estava fazendo.
+- Sair e voltar exatamente para a caçada normal anterior.
 
 ## Regras de negócio
-- **Só bosses de zonas desbloqueadas.** A lista é a das zonas já liberadas (mesmo gate de progressão da caçada normal), filtrando as que têm boss definido.
-- **Reaproveita o combate da caçada.** Usa o mesmo motor da aba Caça, restringindo o spawn ao boss — as mesmas fórmulas, loot e regras valem.
-- **Tiers.** Cada zona tem um tier de boss que o jogador pode subir; um tier maior aplica um multiplicador que deixa o boss **mais forte** (HP/ataque/dano de magia) que o mesmo bicho encontrado à toa — e, portanto, mais recompensador.
-- **Ranking.** O tier máximo derrotado em cada zona soma para o ranking de Boss Zone nos Highscores (autoritativo do servidor).
-- Entrar/sair do Boss Zone **não vaza** para a caçada normal: ao sair, o jogo restaura a zona e o estado de caça anteriores (mesmo após recarregar a página).
+- **Só bosses de zonas desbloqueadas** — mesmo gate de progressão da caçada normal, filtrando as que têm boss.
+- **Reaproveita o combate da caçada.** Mesmo motor da aba Caça, restringindo o spawn ao boss; mesmas fórmulas, loot e regras.
+- **Tiers.** Cada zona tem um tier que o jogador pode subir; tier maior aplica multiplicador que deixa o boss **mais forte** (HP/ataque/dano de magia) e mais recompensador que o mesmo bicho encontrado à toa.
+- **Ranking.** O tier máximo derrotado por zona soma para o ranking de Boss Zone nos Highscores (autoritativo do servidor).
+- Entrar/sair **não vaza** para a caçada normal: ao sair, restaura a zona e o estado de caça anteriores (mesmo após recarregar).
 
 ## Comportamento esperado
 - Desafiar um boss inicia a luta só contra ele.
-- Sair do Boss Zone volta o jogador à zona/caçada que ele tinha antes de entrar.
-- Um boss de zona bloqueada não aparece na lista.
+- Sair volta à zona/caçada anterior; boss de zona bloqueada não aparece na lista.
 
 ## Nota de fidelidade
-- Desafiar um boss diretamente aproxima-se do Bosstiary do Tibia, mas a correspondência exata não está confirmada — registrado em [../90-regras-de-negocio-gerais.md](../90-regras-de-negocio-gerais.md).
+- Desafiar um boss diretamente aproxima-se do Bosstiary do Tibia, sem correspondência exata confirmada — registrado em [../90-regras-de-negocio-gerais.md](../90-regras-de-negocio-gerais.md).
 
 ## Critérios de aceitação
 - [ ] Só aparecem bosses de zonas já desbloqueadas, ordenados por força.
