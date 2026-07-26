@@ -4,23 +4,24 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=347';
-import { MONSTERS } from '../domain/bestiary.js?v=366';
+import { G } from '../application/gameStore.js?v=348';
+import { MONSTERS } from '../domain/bestiary.js?v=367';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
-} from '../domain/prey.js?v=343';
+} from '../domain/prey.js?v=344';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=344';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=343';
-import { on, EVENTS } from '../shared/eventBus.js?v=345';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=350';
-import { monsterSpriteImg } from './huntPanel.js?v=364';
-import { uiIcon } from './uiIcons.js?v=348';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=346';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=346';
-import { t } from '../i18n/i18n.js?v=363';
+} from '../domain/charms.js?v=345';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=344';
+import { on, EVENTS } from '../shared/eventBus.js?v=346';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=351';
+import { setTabBadge } from './notifyTitle.js?v=346';
+import { monsterSpriteImg } from './huntPanel.js?v=365';
+import { uiIcon } from './uiIcons.js?v=349';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=347';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=347';
+import { t } from '../i18n/i18n.js?v=364';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -182,7 +183,18 @@ function renderCharmsSection() {
   }).join('');
 }
 
+// Selo de "resgatável" na aba Bestiário: há charm point sobrando pra desbloquear
+// pelo menos um charm ainda não desbloqueado (marco a celebrar). Atualiza mesmo
+// com a aba fechada — é o sinal de que tem coisa pra pegar.
+function anyCharmBuyable() {
+  const unlocked = G.charmsUnlocked || [];
+  const pts = G.charmPoints || 0;
+  return Object.entries(CHARMS).some(([id, c]) => !unlocked.includes(id) && pts >= c.cost);
+}
+export function updateCharmBadge() { setTabBadge('bestiary', anyCharmBuyable()); }
+
 export function renderBestiaryTab() {
+  updateCharmBadge();
   const cpEl = document.getElementById('charm-points-display');
   if (cpEl) cpEl.innerHTML = `<span class="charm-points-badge">${charmPointsIconImg('inline-icon')} ${t('bestiary.charmPointsBadge', { n: (G.charmPoints || 0).toLocaleString() })}</span> · ${t('bestiary.charmsEquippedCount', { equipped: (G.charmsEquipped || []).length, total: CHARM_EQUIP_SLOTS })}`;
   renderPreySection();
@@ -193,10 +205,14 @@ export function renderBestiaryTab() {
 export function wireBestiaryPanelEvents() {
   on(EVENTS.PREY_PANEL, renderBestiaryTab);
   on(EVENTS.BESTIARY_PANEL, renderBestiaryTab);
+  // Charm points mudam (kill/sync) → atualiza o selo mesmo com a aba fechada.
+  on(EVENTS.HEADER_STATS, updateCharmBadge);
   // Progresso de bestiário/charm ao vivo durante a caçada: KILL_COUNTERS dispara
-  // a cada kill (huntUseCases). Só re-renderiza se a aba Bestiário estiver ABERTA
-  // — senão é render à toa (o painel já refaz tudo ao ser reaberto).
+  // a cada kill (huntUseCases). Re-render só com a aba ABERTA (senão é à toa),
+  // mas o SELO é atualizado sempre — é o sinal de que tem charm pra pegar.
   on(EVENTS.KILL_COUNTERS, () => {
+    updateCharmBadge();
     if (document.body.dataset.tab === 'bestiary') renderBestiaryTab();
   });
+  updateCharmBadge();
 }
