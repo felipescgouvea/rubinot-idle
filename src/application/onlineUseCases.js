@@ -3,8 +3,8 @@
 // /online do servidor (público) a cada 60s. Falha de rede não faz barulho — o
 // pill só não atualiza; nunca some depois de ter aparecido uma vez, pra não
 // piscar 0 num soluço de rede.
-import { fetchOnline } from '../infrastructure/authClient.js?v=357';
-import { t } from '../i18n/i18n.js?v=365';
+import { fetchOnline } from '../infrastructure/authClient.js?v=358';
+import { t } from '../i18n/i18n.js?v=366';
 
 let ultimo = { online: 0, top: [], names: [] };
 let iniciado = false;

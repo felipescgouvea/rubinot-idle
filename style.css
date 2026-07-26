@@ -709,7 +709,7 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .elem-chip.immune { background: #88888822; filter: grayscale(0.6); }
 
 /* Skills compactas na barra do personagem (à direita do Outfit) */
-.char-skills { display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto; align-content: center; }
+.char-skills { display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto; align-content: center; max-width: 100%; min-width: 0; }
 .char-skill-chip {
   display: flex; align-items: center; gap: 3px;
   background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
@@ -3799,3 +3799,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
   font-weight: 700; cursor: pointer; padding: 6px 14px; font-size: 12.5px;
 }
 .onboard-next:hover { filter: brightness(1.06); }
+
+/* ===== Mobile: alvos de toque auditados (min ~40px pro dedo) ===== */
+@media (max-width: 900px) {
+  #topbar .btn-small, #topbar .online-pill, #char-info .btn-small { min-height: 40px; }
+  .fight-mode-btn, .density-btn { min-height: 44px; }
+  #combat-log-tabs .log-tab { min-height: 38px; }
+}
