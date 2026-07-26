@@ -734,7 +734,16 @@ async function resolveTick(session) {
   const rtc = session.rtc || {};
   const magic = (session.skills.magic && session.skills.magic.lv) || 0;
   const { spell: healSpellForReserve } = resolveHealSpell(rtc.healSpell, session.vocation, session.level);
-  const healManaReserve = healSpellForReserve ? healSpellForReserve.mana : 0;
+  // Reserva mana de cura SÓ quando a cura está iminente (HP abaixo do gatilho de
+  // cura), não o tempo todo. Antes, reservar sempre deixava o ataque caro do
+  // knight (exori/Berserk, 125 mana) quase nunca disparar num knight de nível
+  // baixo (mana − reserva < 125): com HP cheio ele batia só o básico. Agora, com
+  // HP alto o ataque dispara livre; quando o HP cai abaixo do gatilho, a reserva
+  // volta e a cura não fica sem mana. Isso casa exatamente com quando a cura de
+  // fato roda (hpPct < healSpellThreshold). NÃO muda o custo canônico (125).
+  const hpPctNow = session.maxHp > 0 ? (session.hp / session.maxHp) * 100 : 100;
+  const healImminent = healSpellForReserve && hpPctNow < (rtc.healSpellThreshold || 0);
+  const healManaReserve = healImminent ? healSpellForReserve.mana : 0;
 
   if (isAttackGroupReady(session) && primary.hp > 0) {
     const ready = normalizeAttackSpells(rtc).map(entry => {
