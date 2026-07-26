@@ -647,7 +647,7 @@ export default {
   'hunt.analyzerLoot': 'Loot',
   'hunt.analyzerSupplies': 'Supplies',
   'hunt.analyzerProfit': 'Profit',
-  'hunt.analyzerNote': 'Loot/supplies at sell value. Resets when you start a hunt.',
+  'hunt.analyzerNote': 'Loot at sell value; supplies at buy price. Resets when you start a hunt.',
   'hunt.blessingsInfo': 'On death: lose {lossPct} of your XP · revive with {hpPct} HP. Blessings are consumed on death.',
   'hunt.allBlessings': 'All blessings',
   'hunt.buyBlessing': 'Buy blessing',

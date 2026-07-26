@@ -1,17 +1,17 @@
-import { G, ACCOUNT } from './gameStore.js?v=335';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=343';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=346';
-import { RARITY_TIERS } from '../domain/rarity.js?v=332';
-import { emit, EVENTS } from '../shared/eventBus.js?v=333';
-import { getMagic } from './stats.js?v=332';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=365';
-import { getCurrentMonster } from './huntUseCases.js?v=399';
-import { areaName } from '../domain/attackAreas.js?v=331';
-import { saveGame } from './saveGameUseCase.js?v=335';
-import { itemLogIcon } from './logIcons.js?v=334';
-import { t } from '../i18n/i18n.js?v=351';
+import { G, ACCOUNT } from './gameStore.js?v=336';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=344';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=347';
+import { RARITY_TIERS } from '../domain/rarity.js?v=333';
+import { emit, EVENTS } from '../shared/eventBus.js?v=334';
+import { getMagic } from './stats.js?v=333';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=366';
+import { getCurrentMonster } from './huntUseCases.js?v=400';
+import { areaName } from '../domain/attackAreas.js?v=332';
+import { saveGame } from './saveGameUseCase.js?v=336';
+import { itemLogIcon } from './logIcons.js?v=335';
+import { t } from '../i18n/i18n.js?v=352';
 
-export { addItemToInventory } from './inventoryCore.js?v=333';
+export { addItemToInventory } from './inventoryCore.js?v=334';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.

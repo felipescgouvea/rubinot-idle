@@ -135,6 +135,14 @@ export const SHOP_ITEMS = [
   { id: 'buy_great_spirit_potion',  name: 'Great Spirit Potion',    icon: '🧪', currency: 'gold', price: 254, type: 'item', itemId: 'great_spirit_potion', shop: 'magic' },
 ];
 
+// Preço de COMPRA (em gold) por itemId — usado pra contabilizar o custo de
+// suprimentos no Hunt Analyzer. As poções têm `sell: 0` (não se vende poção),
+// então o custo real do suprimento é o preço de compra na Loja de Artigos Mágicos.
+export const ITEM_BUY_PRICE = Object.fromEntries(
+  SHOP_ITEMS.filter(s => s.type === 'item' && s.currency === 'gold' && s.itemId && s.price)
+    .map(s => [s.itemId, s.price])
+);
+
 // `title`/`subtitle` são chave de tradução (ver ui/shopPanel.js e
 // i18n/locales/*.js: shop.premium.*/shop.rubini.*/shop.equipment.*/shop.magic.*)
 // — o emoji mora DENTRO da string traduzida (igual ao resto do jogo), então

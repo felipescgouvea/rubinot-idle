@@ -648,7 +648,7 @@ export default {
   'hunt.analyzerLoot': 'Loot',
   'hunt.analyzerSupplies': 'Suprimentos',
   'hunt.analyzerProfit': 'Lucro',
-  'hunt.analyzerNote': 'Loot/suprimentos pelo valor de venda. Zera ao iniciar uma caçada.',
+  'hunt.analyzerNote': 'Loot pelo valor de venda; suprimentos pelo preço de compra. Zera ao iniciar uma caçada.',
   'hunt.blessingsInfo': 'Na morte: perde {lossPct} do XP · revive com {hpPct} HP. As bênçãos são consumidas ao morrer.',
   'hunt.allBlessings': 'Todas as bênçãos',
   'hunt.buyBlessing': 'Comprar bênção',

@@ -3,27 +3,28 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=335';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=343';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=340';
-import { ZONES } from '../domain/bestiary.js?v=354';
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=362';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=333';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=365';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=364';
-import { elementMod } from '../domain/elements.js?v=331';
-import { STAMINA_MAX } from '../domain/stamina.js?v=331';
-import { ITEMS } from '../domain/items.js?v=346';
-import { MONSTERS } from '../domain/bestiary.js?v=354';
-import { RARITY_TIERS } from '../domain/rarity.js?v=332';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=334';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=333';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=332';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=332';
-import { saveGame } from './saveGameUseCase.js?v=335';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=336';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=334';
-import { t } from '../i18n/i18n.js?v=351';
+import { G, ACCOUNT } from './gameStore.js?v=336';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=344';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=341';
+import { ZONES } from '../domain/bestiary.js?v=355';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=363';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=334';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=366';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=365';
+import { elementMod } from '../domain/elements.js?v=332';
+import { STAMINA_MAX } from '../domain/stamina.js?v=332';
+import { ITEMS } from '../domain/items.js?v=347';
+import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=335';
+import { MONSTERS } from '../domain/bestiary.js?v=355';
+import { RARITY_TIERS } from '../domain/rarity.js?v=333';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=335';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=334';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=333';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=333';
+import { saveGame } from './saveGameUseCase.js?v=336';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=337';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=335';
+import { t } from '../i18n/i18n.js?v=352';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -386,6 +387,11 @@ function renderCombatEvents(events) {
       // sem avisar ninguém (queixa do Felipe: "janela de suprimentos não é
       // preenchida com as poções usadas no combate").
       const nome = ITEMS[ev.item] ? ITEMS[ev.item].name : ev.item;
+      // Contabiliza o custo do suprimento no Hunt Analyzer: poções têm sell=0, o
+      // custo real é o preço de COMPRA na loja (ver domain/shopCatalog.js). Sem
+      // isto o campo "Suprimentos" ficava sempre em 0 (queixa do Felipe: mana
+      // potion não era contabilizada).
+      huntSession.supplies += ITEM_BUY_PRICE[ev.item] || 0;
       emit(EVENTS.LOG, { html: `🧪 ${nome} +${ev.amount} ${ev.vital === 'mana' ? 'mana' : 'HP'}`, cat: 'suprimento' });
       emit(EVENTS.PLAYER_BATTLE_SIDE, { potion: ev.item, vital: ev.vital });
     } else if (ev.kind === 'monsterhit') {
