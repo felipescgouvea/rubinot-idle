@@ -15,7 +15,7 @@
 ## Estética
 - [ ] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted)
 - [x] Loja Premium: remover o texto "(Dinheiro Real)" do botão — já satisfeito: nenhum botão exibe "(Dinheiro Real)"; aba = "💳 Loja Premium" e o preço mostra "R$ x,xx"
-- [ ] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto
+- [x] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto — `#app` estica as colunas até embaixo (rail navy + aside emolduram a página); gradiente morto abaixo do conteúdo 40%→7% — `0b81c23b`
 - [x] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena — cena agora preenche 100% da largura (era 560px fixos) — `2ba4e122`
 
 ## Funcional / UX
