@@ -23,7 +23,7 @@
 **Funcional / UX**
 - [ ] **Boss Zone com bosses REAIS** `[CANON]` — cada zona usa o boss canônico da criatura (ex.: Rotworm Queen, não rotworm inflado); rever nome/sprite/stats/loot de todos
 - [ ] HP/Mana do personagem no estilo do cliente do Tibia + remover HP/Mana duplicados dentro do palco
-- [ ] Fechar o detalhe do item deve VOLTAR pra mochila (não fechar tudo)
+- [x] Fechar o detalhe do item VOLTA pra mochila (não fecha tudo) — `openModal` ganhou um `onClose`; o Close estático + clique-fora chamam `dismissModal()` que usa o handler (detalhe da Bag → volta pra Bag via `handleItemModalDone`; demais modais fecham normal). Verificado (probe-item-close: da Bag→Bag, Bag→fecha, fora→fecha, 0 erros). — `fb386e67`
 - [ ] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador
 - [x] **BUG: comprar munição em lote na Loja de Equipamentos compra só 1** — `confirmBuyShopItem` só multiplicava pra poção/runa; incluído `ammo` no cálculo de `count`. Verificado em prod (probe-shop-ammo: ammo qty 7 → compra 7, equipamento fica 1, 0 erros). — `fa3ae3ac`
 - [ ] **auto-sell** — não é bug: default `maxValue=50` baixo demais (junk vale 55–243). Decisão de economia do Felipe: subir default / presets ("vender lixo comum") / vender por valor ignorando `type`

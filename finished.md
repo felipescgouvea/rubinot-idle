@@ -9,3 +9,4 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — style(rail): cor de canal por vital (outline colorido HP/MP/XP) — `fb718c4e` — ✅ testado 2026-07-26 (screenshot shot-rail-vitals nos 2 temas: halos vermelho/azul/dourado nítidos)
 - 2026-07-26 — style(loja): botões de compra em dourado (era verde, destoava do tema) — `869cebe4` — ✅ testado 2026-07-26 (screenshot shot-shop: Loja coesa navy/dourado + smoke-prod)
 - 2026-07-26 — style(item): janela de detalhe temada (botões dourado/bronze/neutro) — `455dd0e5` — ✅ testado 2026-07-26 (screenshot item-modal 2 temas + smoke implícito)
+- 2026-07-26 — fix(inventário): Fechar/clique-fora no detalhe do item volta pra Bag (não fecha tudo) + relíquia temada — `fb386e67` — ✅ testado 2026-07-26 (probe-item-close: da Bag→Bag, Bag→fecha, fora→fecha, 0 erros)
