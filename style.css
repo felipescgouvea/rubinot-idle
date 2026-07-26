@@ -543,7 +543,11 @@ body {
 /* barra fina COM fundo (antes era transparente e "parecia que não tinha nada") */
 #topbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 10px;
   padding: 5px 12px;
-  background: linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 100%);
+  /* Mesma navy profunda do painel lateral esquerdo (#sidebar) — pedido do Felipe:
+     header e sidebar com a mesma cor. */
+  background:
+    radial-gradient(130% 120% at 50% 0%, #e7bd5722 0%, transparent 60%),
+    linear-gradient(180deg, #12365e 0%, #0d2745 52%, #091b32 100%);
   border: 2px solid var(--gold); border-radius: 8px;
   box-shadow: inset 0 1px 0 #ffffff2a, 0 2px 8px #00000055; }
 #topbar .auth-user { font-size: 11px; opacity: 0.82; color: var(--cream); overflow: hidden; text-overflow: ellipsis; max-width: 180px; white-space: nowrap; }
@@ -2471,6 +2475,14 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 .battle-inline-top { display: flex; align-items: center; gap: 10px; flex: none; }
 .battle-inline-top #zone-current-bar { flex: 1; margin: 0; }
 .battle-inline-top #hunt-status-switch-btn { flex: none; width: auto; }
+/* "Trocar Hunt" com a MESMA navy profunda do painel lateral esquerdo (#sidebar)
+   e borda dourada — pedido do Felipe (header + botão = cor do sidebar). */
+#hunt-status-switch-btn.btn-blue {
+  background:
+    radial-gradient(130% 160% at 50% 0%, #e7bd5722 0%, transparent 60%),
+    linear-gradient(180deg, #12365e 0%, #0d2745 52%, #091b32 100%);
+  border-color: var(--gold-dim);
+}
 /* Altura NATURAL agora (o log foi pro fim da coluna esquerda): a cena tem altura
    FIXA e o resto empilha embaixo; a coluna direita (Battle List) estica pra
    igualar a altura da esquerda. */
