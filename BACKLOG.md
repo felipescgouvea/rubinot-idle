@@ -18,7 +18,7 @@
 - [ ] Janela de detalhe do item está crua — melhorar visual e botões (Equipar/Vender/Fechar)
 - [ ] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto
 - [ ] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena
-- [ ] Diferenciar HP/MP/XP no rail — barras parecidas e minúsculas
+- [x] Diferenciar HP/MP/XP no rail — cor de canal por vital (outline + glow: HP vermelho, MP azul, XP dourado) POR CIMA do track, somada ao ícone real + fill + valor que já existiam. Resolve a confusão HP-mid(laranja)/XP(dourado). Verificado em prod nos 2 temas (screenshot). — `fb718c4e`
 
 **Funcional / UX**
 - [ ] **Boss Zone com bosses REAIS** `[CANON]` — cada zona usa o boss canônico da criatura (ex.: Rotworm Queen, não rotworm inflado); rever nome/sprite/stats/loot de todos
