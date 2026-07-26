@@ -13,15 +13,15 @@
 // (training -> hunt, uma direção só); o caminho inverso usa o event bus —
 // quando a caçada começa, HUNT_BUTTON{hunting:true} dispara e o treino se
 // desliga sozinho (ver o on() no fim do arquivo).
-import { G, ACCOUNT } from './gameStore.js?v=339';
-import { TRAINABLE_SKILLS, onlineTrainableSkills } from '../domain/training.js?v=337';
-import { TIBIA_SKILLS } from '../domain/character.js?v=366';
-import { SPELLS } from '../domain/spells.js?v=337';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=337';
-import { stopHunt } from './huntUseCases.js?v=403';
-import { saveGame } from './saveGameUseCase.js?v=339';
-import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=347';
-import { t } from '../i18n/i18n.js?v=355';
+import { G, ACCOUNT } from './gameStore.js?v=340';
+import { TRAINABLE_SKILLS } from '../domain/training.js?v=338';
+import { TIBIA_SKILLS } from '../domain/character.js?v=367';
+import { SPELLS } from '../domain/spells.js?v=338';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=338';
+import { stopHunt } from './huntUseCases.js?v=404';
+import { saveGame } from './saveGameUseCase.js?v=340';
+import { trainStartOnServer, trainCreditOnServer, trainStopOnServer, getHuntState } from '../infrastructure/authClient.js?v=348';
+import { t } from '../i18n/i18n.js?v=356';
 
 let trainingInterval = null;
 let creditBusy = false;
@@ -43,7 +43,7 @@ function startTrainingLoop() {
     if (creditBusy || !G.trainingSkill) return;
     creditBusy = true;
     try {
-      const res = await trainCreditOnServer(ACCOUNT.activeSlot, G.vocation);
+      const res = await trainCreditOnServer(ACCOUNT.activeSlot, G.vocation, 'live'); // jogo aberto → ritmo acelerado
       if (res.ok && res.active) { applyServerSkills(res.skills); if (res.tries) sessionTries += res.tries; }
       else if (res.ok && !res.active) { stopTrainingLocal(); } // servidor já não está treinando
     } finally { creditBusy = false; }
@@ -61,45 +61,21 @@ function stopTrainingLocal() {
   stopTrainingLoop();
   G.trainingSkill = null;
   G.trainingSince = null;
-  G.trainingMode = 'offline';
+  G.trainingMode = null;
   G.trainingSpell = null;
   sessionTries = 0;
   emit(EVENTS.TRAINING_PANEL);
 }
 
-export async function startTraining(skillId) {
+// TREINO UNIFICADO (decisão do Felipe): UM só treino, qualquer skill. Ele roda
+// acelerado (10x) enquanto o jogo está aberto (o loop credita context 'live') e
+// continua no ritmo de descanso (1x, até 8h) enquanto fechado (o resume credita
+// 'resume'). Não há mais escolha online/offline. Pro Magic Level, precisa da
+// magia usada no dummy (o ML sobe por mana gasta — ataque ou cura da vocação).
+export async function startTraining(skillId, spellId = null) {
   if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('training.chooseVocationFirst'), type: 'error' }); return; }
   if (!TRAINABLE_SKILLS.includes(skillId)) return;
-  stopHunt(); // treino e caçada são mutuamente exclusivos
-  const res = await trainStartOnServer(ACCOUNT.activeSlot, skillId, 'offline', G.vocation, (G.boosts && G.boosts.training) || 0);
-  if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' }); return; }
-  applyServerSkills(res.skills); // crédito de um treino anterior, se houver
-  G.trainingSkill = skillId;
-  G.trainingSince = Date.now();
-  G.trainingMode = 'offline';
-  G.trainingSpell = null;
-  sessionTries = 0;
-  startTrainingLoop();
-  emit(EVENTS.NOTIFY, { msg: t('training.startedNotify', { skill: TIBIA_SKILLS[skillId].name }), type: 'success' });
-  emit(EVENTS.TRAINING_PANEL);
-  saveGame();
-}
-
-// Treino Online: exige escolher a skill (dentre as que a vocação treina de
-// verdade) e, pro mago, a magia usada no dummy (só cosmético — a matemática de
-// ganho é igual; o que muda é o multiplicador e não acumular offline).
-export async function startOnlineTraining(skillId, spellId = null) {
-  if (!G.vocation) { emit(EVENTS.NOTIFY, { msg: t('training.chooseVocationFirst'), type: 'error' }); return; }
-  if (!onlineTrainableSkills(G.vocation).includes(skillId)) return;
   if (skillId === 'magic') {
-    // QUALQUER magia da vocação treina Magic Level (o ML sobe por mana gasta —
-    // ver ui/trainingPanel.js). O filtro exigia type === 'attack', o que fazia o
-    // botão "Iniciar Treino Online" não fazer NADA, em silêncio, quando a magia
-    // escolhida era de cura — o caso normal do Paladino abaixo do nível 23.
-    // Conjuração e utilidade ficam de fora: a primeira exige soul points e
-    // Blank Rune que o treino não consome (seria ML de graça), e a segunda não
-    // tem o que fazer contra um boneco. Sobram ataque e cura, que é o que o
-    // personagem realmente ficaria lançando no dummy.
     const spell = spellId ? SPELLS[spellId] : null;
     const treinavel = spell && (spell.type === 'attack' || spell.type === 'heal');
     if (!spell || !treinavel || !spell.voc.includes(G.vocation) || G.level < spell.level) {
@@ -107,13 +83,13 @@ export async function startOnlineTraining(skillId, spellId = null) {
       return;
     }
   }
-  stopHunt();
-  const res = await trainStartOnServer(ACCOUNT.activeSlot, skillId, 'online', G.vocation, (G.boosts && G.boosts.training) || 0, spellId);
+  stopHunt(); // treino e caçada são mutuamente exclusivos
+  const res = await trainStartOnServer(ACCOUNT.activeSlot, skillId, G.vocation, (G.boosts && G.boosts.training) || 0, skillId === 'magic' ? spellId : null);
   if (!res.ok) { emit(EVENTS.NOTIFY, { msg: `⚠️ ${res.error}`, type: 'error' }); return; }
-  applyServerSkills(res.skills);
+  applyServerSkills(res.skills); // crédito de um treino anterior, se houver
   G.trainingSkill = skillId;
   G.trainingSince = Date.now();
-  G.trainingMode = 'online';
+  G.trainingMode = 'unified';
   G.trainingSpell = skillId === 'magic' ? spellId : null;
   sessionTries = 0;
   startTrainingLoop();
@@ -160,21 +136,19 @@ export async function resumeTrainingOnLoad() {
   const s = state && state.ok && state.stats;
   if (!s || !s.training_skill) { stopTrainingLocal(); return; }
   G.trainingSkill = s.training_skill;
-  G.trainingMode = s.training_mode === 'online' ? 'online' : 'offline';
+  G.trainingMode = 'unified';
+  G.trainingSpell = s.training_spell || null;
   G.trainingSince = Date.now();
   sessionTries = 0;
-  if (G.trainingMode === 'offline') {
-    const res = await trainCreditOnServer(ACCOUNT.activeSlot, G.vocation);
-    if (res.ok && res.active) {
-      applyServerSkills(res.skills);
-      if (res.tries > 0) {
-        const def = TIBIA_SKILLS[G.trainingSkill];
-        emit(EVENTS.NOTIFY, { msg: t('training.offlineGain', { tries: res.tries, skill: def ? def.name : G.trainingSkill }), type: 'success' });
-      }
+  // Treino unificado: o tempo de jogo FECHADO é creditado no ritmo de descanso
+  // (context 'resume', 1x, cap 8h). Depois o loop 'live' segue no ritmo acelerado.
+  const res = await trainCreditOnServer(ACCOUNT.activeSlot, G.vocation, 'resume');
+  if (res.ok && res.active) {
+    applyServerSkills(res.skills);
+    if (res.tries > 0) {
+      const def = TIBIA_SKILLS[G.trainingSkill];
+      emit(EVENTS.NOTIFY, { msg: t('training.offlineGain', { tries: res.tries, skill: def ? def.name : G.trainingSkill }), type: 'success' });
     }
-  } else {
-    // Online: reancora (descarta o tempo de aba fechada) sem creditar o gap.
-    await trainStartOnServer(ACCOUNT.activeSlot, G.trainingSkill, 'online', G.vocation, (G.boosts && G.boosts.training) || 0, G.trainingSpell || null);
   }
   startTrainingLoop();
   emit(EVENTS.TRAINING_PANEL);

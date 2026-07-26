@@ -109,14 +109,19 @@ async function refundBuyOfferGold(listing) {
 // Online tem cap curto (o cliente credita a cada tick com a aba aberta); offline
 // credita o tempo de aba fechada até TRAINING_MAX_OFFLINE_SEC. NÃO mexe em
 // training_since (o endpoint decide reancorar ou limpar).
-async function creditTraining(userId, slot, stats, vocation) {
+// TREINO UNIFICADO (decisão do Felipe): existe UM só treino contínuo. O rate
+// depende do CONTEXTO do crédito, não de um "modo" fixo:
+//  - context 'live'   → jogo ABERTO (tick vivo): ritmo ACELERADO (10x), janela curta.
+//  - context 'resume' → jogo estava FECHADO (gap na retomada): ritmo de DESCANSO (1x), cap 8h.
+// Assim o mesmo treino rende 10x enquanto aberto e continua (1x) enquanto fechado.
+async function creditTraining(userId, slot, stats, vocation, context = 'live') {
   const skillId = stats.training_skill;
   if (!skillId || !TRAINABLE_SKILLS.includes(skillId) || !stats.training_since || !vocation) return { skills: null, tries: 0 };
-  const mode = stats.training_mode === 'online' ? 'online' : 'offline';
+  const online = context !== 'resume';
   const since = new Date(stats.training_since).getTime();
   let elapsed = Math.max(0, (Date.now() - since) / 1000);
-  elapsed = Math.min(elapsed, mode === 'online' ? 5 * 60 : TRAINING_MAX_OFFLINE_SEC);
-  const base = mode === 'online' ? ONLINE_RATE_MULTIPLIER : 1;
+  elapsed = Math.min(elapsed, online ? 5 * 60 : TRAINING_MAX_OFFLINE_SEC);
+  const base = online ? ONLINE_RATE_MULTIPLIER : 1;
   // Varinha de treino (prêmio de Arena/Battle Pass — a "exercise weapon" do
   // Tibia): enquanto a janela durar, o treino rende o dobro. Só vale a PARTE do
   // tempo coberta pela janela, senão uma varinha de 1h dobraria um treino
@@ -1384,11 +1389,11 @@ const server = http.createServer(async (req, res) => {
       const slot = validSlot(body.slot);
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       if (!TRAINABLE_SKILLS.includes(body.skillId)) return send(res, 400, { error: 'skill inválida' });
-      const mode = body.mode === 'online' ? 'online' : 'offline';
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
-      // Trocar de treino sem perder o que já acumulou: credita o anterior antes.
+      // Trocar de treino sem perder o que já acumulou: credita o anterior antes
+      // (jogo aberto = contexto 'live').
       let skills = null;
-      if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation); skills = r.skills; }
+      if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation, 'live'); skills = r.skills; }
       // Janela da varinha de treino: vem de player_stats.boosts.training
       // (server-authoritative, #3) — o trainWand de Arena/BP grava lá via
       // grantBoostServer. Antes vinha de body.trainingBoostUntil e o cliente forjava
@@ -1399,7 +1404,7 @@ const server = http.createServer(async (req, res) => {
       const boostUntil = Math.max(wandUntil, prevUntil);
       await upsertRow('player_stats', {
         user_id: user.id, slot,
-        training_skill: body.skillId, training_since: new Date().toISOString(), training_mode: mode,
+        training_skill: body.skillId, training_since: new Date().toISOString(), training_mode: 'unified',
         training_spell: body.skillId === 'magic' ? (SPELLS_TREINO[body.spellId] ? body.spellId : null) : null,
         training_boost_until: boostUntil > Date.now() ? new Date(boostUntil).toISOString() : null,
         updated_at: new Date().toISOString(),
@@ -1417,7 +1422,10 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
       if (!stats || !stats.training_skill) return send(res, 200, { ok: true, active: false });
-      const { skills, tries } = await creditTraining(user.id, slot, stats, body.vocation);
+      // context: 'resume' (gap de jogo fechado, ritmo de descanso) vs 'live'
+      // (tick com jogo aberto, ritmo acelerado). Ver creditTraining.
+      const context = body.context === 'resume' ? 'resume' : 'live';
+      const { skills, tries } = await creditTraining(user.id, slot, stats, body.vocation, context);
       // Só REANCORA quando creditou de fato (>=1 try). Um tick curto de treino
       // lento (offline) credita 0 por arredondamento — reancorar aí perderia a
       // fração acumulada a cada tick e o treino nunca renderia. Sem reancorar,
@@ -1435,7 +1443,7 @@ const server = http.createServer(async (req, res) => {
       if (slot === null) return send(res, 400, { error: 'slot inválido' });
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
       let skills = null, tries = 0;
-      if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation); skills = r.skills; tries = r.tries; }
+      if (stats && stats.training_skill) { const r = await creditTraining(user.id, slot, stats, body.vocation, 'live'); skills = r.skills; tries = r.tries; }
       await upsertRow('player_stats', { user_id: user.id, slot, training_skill: null, training_since: null, training_mode: null, updated_at: new Date().toISOString() }, 'user_id,slot');
       return send(res, 200, { ok: true, skills, tries });
     }

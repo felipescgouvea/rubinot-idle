@@ -382,11 +382,14 @@ export function bpBuyPremiumOnServer(slot) {
 // de tries por nível, mesma exceção de baixo risco do /hunt/start).
 // `trainingBoostUntil` = validade da varinha de treino (G.boosts.training). O
 // servidor guarda a janela pra dobrar o rendimento mesmo com o jogo fechado.
-export function trainStartOnServer(slot, skillId, mode, vocation, trainingBoostUntil, spellId = null) {
-  return huntFetch('/train/start', { method: 'POST', body: { slot, skillId, mode, vocation, spellId, trainingBoostUntil } });
+// Treino unificado: sem `mode` (o rate é por contexto no servidor). Assinatura
+// mantém a posição pra não quebrar chamadas antigas, mas o servidor ignora mode.
+export function trainStartOnServer(slot, skillId, vocation, trainingBoostUntil, spellId = null) {
+  return huntFetch('/train/start', { method: 'POST', body: { slot, skillId, vocation, spellId, trainingBoostUntil } });
 }
-export function trainCreditOnServer(slot, vocation) {
-  return huntFetch('/train/credit', { method: 'POST', body: { slot, vocation } });
+// context: 'live' (jogo aberto, 10x) | 'resume' (gap de jogo fechado, 1x).
+export function trainCreditOnServer(slot, vocation, context = 'live') {
+  return huntFetch('/train/credit', { method: 'POST', body: { slot, vocation, context } });
 }
 export function trainStopOnServer(slot, vocation) {
   return huntFetch('/train/stop', { method: 'POST', body: { slot, vocation } });

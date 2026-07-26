@@ -625,6 +625,8 @@ export default {
   'training.onlineIntroFixed': 'Attack the dummy with your bow/crossbow to train {skill} — faster than offline, but only while the game is open.',
   'training.onlineIntroMage': 'Pick the attack spell you\'ll cast on the dummy to train Magic Level — faster than offline, but only while the game is open.',
   'training.startOnlineTraining': 'Start Online Training',
+  'training.startTrainingBtn': 'Start Training',
+  'training.unifiedHint': 'Trains fast while the game is open and keeps going (rest pace) while closed — up to 8h offline.',
   'training.usingSpell': 'Casting {spell} on the dummy',
   'training.onlineMustStayOpen': '⚠️ Keep the game open — online training doesn\'t accrue while away.',
   'training.onlineBlockedByOffline': 'Offline training is active. Stop it below to start Online Training instead.',
