@@ -1201,8 +1201,9 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 #monster-display .monster-empty { color: #ffffffcc; text-shadow: 0 1px 2px #000000aa; }
 .monster-sprite-wrap {
   display: inline-block;
-  transform-origin: center bottom; /* passos "ancorados" nos pés (agachada/lift) */
-  animation: monster-walk 0.62s ease-in-out infinite;
+  /* SEM bob sintético: as WebP dos monstros já são animadas (8-9 frames) — o
+     próprio sprite "dá os passos". O antigo `monster-walk` (rotate/translate por
+     cima) era animação EXTRA e foi removido a pedido do Felipe. */
   min-height: 52px;
 }
 /* Vale pra <img> E pro <span> de emoji do fallback. O TAMANHO fica na regra
@@ -1422,17 +1423,8 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .boss-aura-arcane::before   { box-shadow: 0 0 22px 7px #8e44ad77; background: radial-gradient(circle, #b06ad477 0%, transparent 70%); }
 .boss-aura-crimson::before  { box-shadow: 0 0 26px 8px #d8434388; background: radial-gradient(circle, #e74c3c88 0%, transparent 70%); }
 .zone-card[class*="boss-aura-"] { position: relative; overflow: visible; }
-/* CAMINHADA simulada (o monstro é sprite único, sem atlas de andar como o
-   boneco): compõe passo a passo — sobe ao levantar o pé, encosta com uma leve
-   agachada (scaleY<1) na pisada, balança de um lado pro outro e inclina o corpo
-   pra dentro do passo. Duas pisadas por ciclo (esquerda e direita). */
-@keyframes monster-walk {
-  0%   { transform: translateX(0)     translateY(-3px) rotate(-3deg) scaleY(1.03); }
-  25%  { transform: translateX(-2px)  translateY(0)    rotate(0deg)  scaleY(0.97); }
-  50%  { transform: translateX(0)     translateY(-3px) rotate(3deg)  scaleY(1.03); }
-  75%  { transform: translateX(2px)   translateY(0)    rotate(0deg)  scaleY(0.97); }
-  100% { transform: translateX(0)     translateY(-3px) rotate(-3deg) scaleY(1.03); }
-}
+/* (removido @keyframes monster-walk — os WebP de monstro já são animados; o bob
+   sintético por cima era animação extra que o Felipe pediu pra tirar.) */
 .monster-sprite-wrap.hit { animation: monster-hit 0.25s ease; }
 @keyframes monster-hit {
   0% { transform: translateX(0); filter: drop-shadow(0 0 10px #d84343cc) brightness(1.6); }

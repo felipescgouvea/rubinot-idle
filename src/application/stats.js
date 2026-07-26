@@ -1,11 +1,11 @@
 // Atributos derivados do personagem atual — fininhas amarrações entre o
 // estado vivo (G) e as fórmulas puras do domínio. Sem efeito colateral:
 // seguro pra application E ui chamarem à vontade pra exibir/computar.
-import { G } from './gameStore.js?v=333';
+import { G } from './gameStore.js?v=334';
 import {
   computeMaxHp, computeMaxMana, computeAtk, computeDef, computeMagic, computeSpd,
   equippedWeaponSkillId,
-} from '../domain/combatFormulas.js?v=362';
+} from '../domain/combatFormulas.js?v=363';
 
 export function getMaxHp() {
   return computeMaxHp({ vocation: G.vocation, level: G.level, equipment: G.equipment, relics: G.relics });
