@@ -9,7 +9,7 @@
 ---
 
 ## Decisões pendentes (precisam do Felipe)
-- [ ] `[decisão]` `[server]` `[balanço]` **exori quase não dispara pelo RTC** — mana-gated: knight lvl 35 precisa de ~70% do pool (`mana − reservaCura ≥ 125`). Opções: não reservar cura contra a única spell armada / subir mana base do knight / orientar mana potion no RTC. NÃO baixar o custo (125 é o valor canônico do Crystal).
+- [x] **exori quase não dispara pelo RTC** — DECIDIDO+FEITO: a reserva de mana de cura agora só vale quando a cura é iminente (HP < gatilho); com HP alto o exori (125) dispara livre. Não muda o custo canônico. — `a1463034`
 - [ ] `[decisão]` **Sprites de monstro "cortadas"** (zone picker + boss zone) — é a pose NATIVA 1:1 do cliente enchendo o frame 64px (Valkyrie/Silvertoe já são do cliente). Aceitar como está OU permitir padding leve nas criaturas que enchem o frame (desvio do 1:1)?
 
 ## Estética
@@ -17,6 +17,7 @@
 - [x] Loja Premium: remover o texto "(Dinheiro Real)" do botão — já satisfeito: nenhum botão exibe "(Dinheiro Real)"; aba = "💳 Loja Premium" e o preço mostra "R$ x,xx"
 - [x] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto — `#app` estica as colunas até embaixo (rail navy + aside emolduram a página); gradiente morto abaixo do conteúdo 40%→7% — `0b81c23b`
 - [x] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena — cena agora preenche 100% da largura (era 560px fixos) — `2ba4e122`
+- [ ] **Barras de vida/mana overhead estilo cliente Tibia** — deixar as barras sobre o personagem iguais à screenshot (HP verde + Mana azul finas); mostrar só o **nick** do personagem (sem nível nem vocação); nos **monstros**, só barra de vida + nome — (screenshot anexada, salvar manualmente)
 
 ## Funcional / UX
 - [x] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente) + remover os HP/Mana duplicados dentro do palco — `466e7e22`
