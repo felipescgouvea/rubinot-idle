@@ -2681,10 +2681,18 @@ function hashWithSalt(dateStr, salt) {
   return hash;
 }
 
-// "Boosted Creature" do dia — qualquer criatura comum (não-boss) do bestiário,
-// como o quadro BOOSTED do site oficial. Troca sozinho a cada dia.
+// Criaturas que vivem em ALGUMA zona de hunt (união dos `monsters` de todas as
+// zonas). Só elas entram no sorteio da Boosted Creature — assim o bônus 2× é
+// sempre acionável (dá pra ir caçar a criatura) e o CTA do card sempre acha a
+// zona (ver ui/boostedPanel.js). Antes o pool era TODO o bestiário não-boss, e
+// ~63% caíam em criaturas de task-room/boss-rush/evento sem zona pra mandar o
+// jogador — o card ficava inerte na maioria dos dias.
+const HUNTABLE_CREATURE_IDS = new Set(Object.values(ZONES).flatMap(z => z.monsters || []));
+
+// "Boosted Creature" do dia — criatura comum (não-boss) HUNTÁVEL, como o quadro
+// BOOSTED do site oficial. Troca sozinho a cada dia.
 export function boostedCreatureForDate(dateStr) {
-  const commons = Object.keys(MONSTERS).filter(id => !BOSS_MONSTER_IDS.has(id));
+  const commons = Object.keys(MONSTERS).filter(id => !BOSS_MONSTER_IDS.has(id) && HUNTABLE_CREATURE_IDS.has(id));
   return commons[hashWithSalt(dateStr, 101) % commons.length];
 }
 
