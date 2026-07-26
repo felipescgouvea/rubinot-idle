@@ -7,13 +7,13 @@
 // dois independentemente de quando cada um foi jogado por último. Evita
 // duplicar toda a lógica de start/stop de intervalos (caçada/treino/regen)
 // que só faz sentido rodar uma vez, no boot.
-import { G, ACCOUNT } from './gameStore.js?v=332';
-import { saveGame, flushCloudSave, stripEconomyFieldsForCloud } from './saveGameUseCase.js?v=332';
-import { saveState } from '../infrastructure/storage.js?v=328';
-import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=340';
-import { emit, EVENTS } from '../shared/eventBus.js?v=330';
-import { t } from '../i18n/i18n.js?v=348';
-import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=332';
+import { G, ACCOUNT } from './gameStore.js?v=333';
+import { saveGame, flushCloudSave, stripEconomyFieldsForCloud } from './saveGameUseCase.js?v=333';
+import { saveState } from '../infrastructure/storage.js?v=329';
+import { saveCloudSave, isLoggedIn } from '../infrastructure/authClient.js?v=341';
+import { emit, EVENTS } from '../shared/eventBus.js?v=331';
+import { t } from '../i18n/i18n.js?v=349';
+import { MAX_CHARACTER_SLOTS } from '../domain/gameState.js?v=333';
 
 // Resumo de cada slot pra UI (Configurações) — nunca o blob inteiro do
 // personagem, só o suficiente pra identificar/escolher.

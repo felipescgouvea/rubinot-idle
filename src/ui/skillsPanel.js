@@ -3,12 +3,12 @@
 // Dividida em 2 subtabs: Atributos (ATK/DEF/SPD/MGC, antes fixos na barra
 // de status — pedido do Felipe pra tirar da tela principal) e Skills
 // (treino de cada skill, conteúdo que já existia aqui).
-import { G } from '../application/gameStore.js?v=332';
-import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=359';
-import { resolveEquippedItem } from '../domain/items.js?v=343';
-import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=329';
-import { skillIconImg } from './shared.js?v=335';
-import { t } from '../i18n/i18n.js?v=348';
+import { G } from '../application/gameStore.js?v=333';
+import { TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext } from '../domain/character.js?v=360';
+import { resolveEquippedItem } from '../domain/items.js?v=344';
+import { getAtk, getDef, getSpd, getMagic, getEquippedWeaponSkillId } from '../application/stats.js?v=330';
+import { skillIconImg } from './shared.js?v=336';
+import { t } from '../i18n/i18n.js?v=349';
 
 // A aba Skills mostra SÓ as skills. Os atributos derivados (ATK/DEF/SPD/MGC)
 // saíram: eles já aparecem no cabeçalho do personagem, e a subaba obrigava um

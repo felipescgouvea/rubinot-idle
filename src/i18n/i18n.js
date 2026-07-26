@@ -4,8 +4,8 @@
 // -> inglês) e deixa o jogador trocar em Configurações (ver ui/settingsPanel.js
 // e a chamada setLocale). A escolha fica salva à parte do save do jogo — é
 // preferência de interface, não progresso.
-import en from './locales/en.js?v=348';
-import pt from './locales/pt.js?v=348';
+import en from './locales/en.js?v=349';
+import pt from './locales/pt.js?v=349';
 
 const LOCALES = { en, pt };
 export const LOCALE_NAMES = { en: 'English', pt: 'Português' };

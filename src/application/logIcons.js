@@ -3,9 +3,9 @@
 // as duas tinham CÓPIAS idênticas desta função (a application não pode
 // importar de ui/*.js, então não dá pra reusar ui/shared.js: itemIconImg,
 // mas as duas application/*.js podem compartilhar um helper entre si).
-import { ITEMS } from '../domain/items.js?v=343';
-import { MONSTERS } from '../domain/bestiary.js?v=351';
-import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=333';
+import { ITEMS } from '../domain/items.js?v=344';
+import { MONSTERS } from '../domain/bestiary.js?v=352';
+import { itemSpriteFile, monsterSpriteFile, spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=334';
 
 // alt VAZIO de propósito: no log o ícone vem sempre colado ao nome do item
 // ("<ícone> Lump of Dirt"). Com alt="<nome>", o nome saía DUAS vezes ao copiar

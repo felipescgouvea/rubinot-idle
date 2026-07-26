@@ -1647,14 +1647,16 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 .admin-subtab-btn.locked { opacity: 0.55; cursor: not-allowed; }
 .task-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; align-items: start; }
 .task-card {
-  background: linear-gradient(180deg, var(--surface-2), var(--parch-3));
-  border: 1px solid var(--line-soft);
+  /* Pergaminho mais limpo e definido (parch-1→parch-2) + borda dourada suave e
+     realce interno — os cards estavam lavados/sem definição no painel (Felipe). */
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-2));
+  border: 1px solid var(--gold-dim);
   border-radius: 8px;
   padding: 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 0 1px 4px #00000022;
+  box-shadow: inset 0 1px 0 #ffffff3a, 0 2px 6px #00000026;
   font-size: 11px;
 }
 .task-card-done { border-color: #8fc47a; background: linear-gradient(180deg, #f3f9ec, var(--parch-3)); }
@@ -1888,8 +1890,11 @@ span.dens-icon { font-size: 1.05rem; line-height: 1; }
 }
 .shop-tab-btn {
   text-align: left; padding: 10px 12px; border-radius: 8px; cursor: pointer;
-  background: linear-gradient(180deg, #f5ead0, var(--parch-2));
-  border: 1px solid var(--line-soft); color: var(--navy-2);
+  /* parch-1→parch-2 (theme-aware) no lugar do #f5ead0 hardcoded, que ficava
+     creme-claro berrante no tema escuro (Felipe). Borda dourada = mais definição. */
+  background: linear-gradient(180deg, var(--parch-1), var(--parch-2));
+  border: 1px solid var(--gold-dim); color: var(--navy-2);
+  box-shadow: inset 0 1px 0 #ffffff2e;
   font-family: var(--serif); font-weight: 700; font-size: 13px; line-height: 1.25;
 }
 .shop-tab-btn:hover { border-color: var(--gold-dim); }
