@@ -720,6 +720,14 @@ canvas.char-voc-big { width: 58px; height: 58px; image-rendering: pixelated; }
 .hp-bar.hp-state-low, .player-hp-fill.hp-state-low,
 .monster-hp-fill.hp-state-low, .battle-list-hp-fill.hp-state-low, .stage-monster-hp-fill.hp-state-low { background: linear-gradient(180deg, #ff6b5b, #a52a1f); }
 .xp-bar { background: linear-gradient(180deg, var(--gold-bright), var(--xp-c)); }
+/* Cor-de-canal fixa por vital no rail: tinta a parte VAZIA da trilha (o fill
+   cobre quando cheio) pra os 3 canais lerem distintos num relance — mesmo quando
+   o HP fica laranja no estado "mid" e se aproxima do dourado do XP. O PNG da
+   borda tem o centro transparente, então a cor aparece atrás do fill. Ver
+   index.html: .row-hp/.row-mana/.row-xp. */
+.row-hp .bar-track { background-color: #e74c3c26; }
+.row-mana .bar-track { background-color: #3d7ec926; }
+.row-xp .bar-track { background-color: #d4a01726; }
 .bar-row span { width: 82px; font-size: 10.5px; color: var(--ink-soft); text-align: right; font-weight: 600; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin: 12px 0; }
