@@ -1,6 +1,6 @@
 # Lost Basher
 
-![Lost Basher](../../../assets/sprites/monsters/Lost_Basher.webp)
+![Lost Basher](sprites/Lost_Basher.gif)
 
 - **HP:** 2600
 - **Ataque:** 710 · **Defesa:** 57

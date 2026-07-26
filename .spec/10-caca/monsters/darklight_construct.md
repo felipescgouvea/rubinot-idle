@@ -1,6 +1,6 @@
 # Darklight Construct
 
-![Darklight Construct](../../../assets/sprites/monsters/Darklight_Construct.webp)
+![Darklight Construct](sprites/Darklight_Construct.gif)
 
 - **HP:** 32200
 - **Ataque:** 1050 · **Defesa:** 177

@@ -1,6 +1,6 @@
 # Vexclaw
 
-![Vexclaw](../../../assets/sprites/monsters/Vexclaw.webp)
+![Vexclaw](sprites/Vexclaw.gif)
 
 - **HP:** 8500
 - **Ataque:** 550 · **Defesa:** 55

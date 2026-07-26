@@ -1,6 +1,6 @@
 # Crazed Winter Rearguard
 
-![Crazed Winter Rearguard](../../../assets/sprites/monsters/Crazed_Winter_Rearguard.webp)
+![Crazed Winter Rearguard](sprites/Crazed_Winter_Rearguard.gif)
 
 - **HP:** 5200
 - **Ataque:** 400 · **Defesa:** 76

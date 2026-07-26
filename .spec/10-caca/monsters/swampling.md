@@ -1,6 +1,6 @@
 # Swampling
 
-![Swampling](../../../assets/sprites/monsters/Swampling.webp)
+![Swampling](sprites/Swampling.gif)
 
 - **HP:** 80
 - **Ataque:** 8 · **Defesa:** 4

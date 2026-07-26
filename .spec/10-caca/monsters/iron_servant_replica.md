@@ -1,6 +1,6 @@
 # Iron Servant Replica
 
-![Iron Servant Replica](../../../assets/sprites/monsters/Iron_Servant_Replica.webp)
+![Iron Servant Replica](sprites/Iron_Servant_Replica.gif)
 
 - **HP:** 1000
 - **Ataque:** 272 · **Defesa:** 17

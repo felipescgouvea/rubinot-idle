@@ -1,6 +1,6 @@
 # Knowledge Elemental
 
-![Knowledge Elemental](../../../assets/sprites/monsters/Knowledge_Elemental.webp)
+![Knowledge Elemental](sprites/Knowledge_Elemental.gif)
 
 - **HP:** 10500
 - **Ataque:** 600 · **Defesa:** 76

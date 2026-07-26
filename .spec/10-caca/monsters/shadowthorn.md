@@ -1,6 +1,6 @@
 # Shadowthorn
 
-![Shadowthorn](../../../assets/sprites/monsters/Elf.webp)
+![Shadowthorn](sprites/Elf.gif)
 
 - **HP:** 55
 - **Ataque:** 12 · **Defesa:** 3

@@ -1,6 +1,6 @@
 # Crab
 
-![Crab](../../../assets/sprites/monsters/Crab.webp)
+![Crab](sprites/Crab.gif)
 
 - **HP:** 55
 - **Ataque:** 20 · **Defesa:** 28

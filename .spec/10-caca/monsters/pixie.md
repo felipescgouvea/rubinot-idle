@@ -1,6 +1,6 @@
 # Pixie
 
-![Pixie](../../../assets/sprites/monsters/Pixie.webp)
+![Pixie](sprites/Pixie.gif)
 
 - **HP:** 770
 - **Ataque:** 212 · **Defesa:** 52

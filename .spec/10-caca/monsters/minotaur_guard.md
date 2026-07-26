@@ -1,6 +1,6 @@
 # Minotaur Guard
 
-![Minotaur Guard](../../../assets/sprites/monsters/Minotaur_Guard.webp)
+![Minotaur Guard](sprites/Minotaur_Guard.gif)
 
 - **HP:** 185
 - **Ataque:** 100 · **Defesa:** 15

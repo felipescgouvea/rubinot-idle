@@ -1,6 +1,6 @@
 # Lacewing Moth
 
-![Lacewing Moth](../../../assets/sprites/monsters/Lacewing_Moth.webp)
+![Lacewing Moth](sprites/Lacewing_Moth.gif)
 
 - **HP:** 900
 - **Ataque:** 244 · **Defesa:** 42

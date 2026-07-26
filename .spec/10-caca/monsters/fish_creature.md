@@ -1,6 +1,6 @@
 # Fish (Creature)
 
-![Fish (Creature)](../../../assets/sprites/monsters/Fish_%28Creature%29.webp)
+![Fish (Creature)](sprites/Fish_%28Creature%29.gif)
 
 - **HP:** 25
 - **Ataque:** 7 · **Defesa:** 9

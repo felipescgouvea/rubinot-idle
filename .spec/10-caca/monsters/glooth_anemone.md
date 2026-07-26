@@ -1,6 +1,6 @@
 # Glooth Anemone
 
-![Glooth Anemone](../../../assets/sprites/monsters/Glooth_Anemone.webp)
+![Glooth Anemone](sprites/Glooth_Anemone.gif)
 
 - **HP:** 2400
 - **Ataque:** 150 · **Defesa:** 42

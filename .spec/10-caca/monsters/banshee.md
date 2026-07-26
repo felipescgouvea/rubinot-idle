@@ -1,6 +1,6 @@
 # Banshee
 
-![Banshee](../../../assets/sprites/monsters/Banshee.webp)
+![Banshee](sprites/Banshee.gif)
 
 - **HP:** 1000
 - **Ataque:** 100 · **Defesa:** 25

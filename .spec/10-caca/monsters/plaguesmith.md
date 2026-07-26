@@ -1,6 +1,6 @@
 # Plaguesmith
 
-![Plaguesmith](../../../assets/sprites/monsters/Plaguesmith.webp)
+![Plaguesmith](sprites/Plaguesmith.gif)
 
 - **HP:** 8250
 - **Ataque:** 400 · **Defesa:** 30

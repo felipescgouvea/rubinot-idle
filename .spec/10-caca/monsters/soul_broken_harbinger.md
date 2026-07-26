@@ -1,6 +1,6 @@
 # Soul-broken Harbinger
 
-![Soul-broken Harbinger](../../../assets/sprites/monsters/Soul-broken_Harbinger.webp)
+![Soul-broken Harbinger](sprites/Soul-broken_Harbinger.gif)
 
 - **HP:** 6300
 - **Ataque:** 400 · **Defesa:** 105

@@ -1,6 +1,6 @@
 # Cobra Assassin
 
-![Cobra Assassin](../../../assets/sprites/monsters/Cobra_Assassin.webp)
+![Cobra Assassin](sprites/Cobra_Assassin.gif)
 
 - **HP:** 8200
 - **Ataque:** 500 · **Defesa:** 81

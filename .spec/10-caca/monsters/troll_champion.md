@@ -1,6 +1,6 @@
 # Troll Champion
 
-![Troll Champion](../../../assets/sprites/monsters/Troll_Champion.webp)
+![Troll Champion](sprites/Troll_Champion.gif)
 
 - **HP:** 75
 - **Ataque:** 35 · **Defesa:** 10

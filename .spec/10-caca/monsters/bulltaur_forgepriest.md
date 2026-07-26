@@ -1,6 +1,6 @@
 # Bulltaur Forgepriest
 
-![Bulltaur Forgepriest](../../../assets/sprites/monsters/Bulltaur_Forgepriest.webp)
+![Bulltaur Forgepriest](sprites/Bulltaur_Forgepriest.gif)
 
 - **HP:** 6840
 - **Ataque:** 270 · **Defesa:** 73

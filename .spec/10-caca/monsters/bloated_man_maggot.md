@@ -1,6 +1,6 @@
 # Bloated Man-maggot
 
-![Bloated Man-maggot](../../../assets/sprites/monsters/Bloated_Man-maggot.webp)
+![Bloated Man-maggot](sprites/Bloated_Man-maggot.gif)
 
 - **HP:** 31700
 - **Ataque:** 1500 · **Defesa:** 179

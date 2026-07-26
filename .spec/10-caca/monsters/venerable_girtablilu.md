@@ -1,6 +1,6 @@
 # Venerable Girtablilu
 
-![Venerable Girtablilu](../../../assets/sprites/monsters/Venerable_Girtablilu.webp)
+![Venerable Girtablilu](sprites/Venerable_Girtablilu.gif)
 
 - **HP:** 8500
 - **Ataque:** 400 · **Defesa:** 80

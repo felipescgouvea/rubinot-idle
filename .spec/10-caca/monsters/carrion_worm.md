@@ -1,6 +1,6 @@
 # Carrion Worm
 
-![Carrion Worm](../../../assets/sprites/monsters/Carrion_Worm.webp)
+![Carrion Worm](sprites/Carrion_Worm.gif)
 
 - **HP:** 145
 - **Ataque:** 45 · **Defesa:** 40

@@ -1,6 +1,6 @@
 # Schiach
 
-![Schiach](../../../assets/sprites/monsters/Schiach.webp)
+![Schiach](sprites/Schiach.gif)
 
 - **HP:** 600
 - **Ataque:** 162 · **Defesa:** 43

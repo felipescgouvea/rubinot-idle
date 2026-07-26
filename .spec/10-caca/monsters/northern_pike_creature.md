@@ -1,6 +1,6 @@
 # Northern Pike (Creature)
 
-![Northern Pike (Creature)](../../../assets/sprites/monsters/Northern_Pike_%28Creature%29.webp)
+![Northern Pike (Creature)](sprites/Northern_Pike_%28Creature%29.gif)
 
 - **HP:** 95
 - **Ataque:** 26 · **Defesa:** 9

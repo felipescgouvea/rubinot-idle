@@ -1,6 +1,6 @@
 # Crazed Winter Vanguard
 
-![Crazed Winter Vanguard](../../../assets/sprites/monsters/Crazed_Winter_Vanguard.webp)
+![Crazed Winter Vanguard](sprites/Crazed_Winter_Vanguard.gif)
 
 - **HP:** 5800
 - **Ataque:** 400 · **Defesa:** 77

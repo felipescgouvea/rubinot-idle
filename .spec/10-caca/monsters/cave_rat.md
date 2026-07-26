@@ -1,6 +1,6 @@
 # Cave Rat
 
-![Cave Rat](../../../assets/sprites/monsters/Cave_Rat.webp)
+![Cave Rat](sprites/Cave_Rat.gif)
 
 - **HP:** 30
 - **Ataque:** 10 · **Defesa:** 1

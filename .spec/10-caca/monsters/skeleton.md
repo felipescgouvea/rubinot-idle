@@ -1,6 +1,6 @@
 # Skeleton
 
-![Skeleton](../../../assets/sprites/monsters/Skeleton.webp)
+![Skeleton](sprites/Skeleton.gif)
 
 - **HP:** 50
 - **Ataque:** 17 · **Defesa:** 6

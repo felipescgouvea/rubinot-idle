@@ -1,6 +1,6 @@
 # Corym Charlatan
 
-![Corym Charlatan](../../../assets/sprites/monsters/Corym_Charlatan.webp)
+![Corym Charlatan](sprites/Corym_Charlatan.gif)
 
 - **HP:** 250
 - **Ataque:** 100 · **Defesa:** 17

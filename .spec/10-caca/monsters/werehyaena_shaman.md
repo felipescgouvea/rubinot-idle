@@ -1,6 +1,6 @@
 # Werehyaena Shaman
 
-![Werehyaena Shaman](../../../assets/sprites/monsters/Werehyaena_Shaman.webp)
+![Werehyaena Shaman](sprites/Werehyaena_Shaman.gif)
 
 - **HP:** 2500
 - **Ataque:** 260 · **Defesa:** 38

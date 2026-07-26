@@ -1,6 +1,6 @@
 # Naga Warrior
 
-![Naga Warrior](../../../assets/sprites/monsters/Naga_Warrior.webp)
+![Naga Warrior](sprites/Naga_Warrior.gif)
 
 - **HP:** 5530
 - **Ataque:** 430 · **Defesa:** 110

@@ -1,6 +1,6 @@
 # Massive Earth Elemental
 
-![Massive Earth Elemental](../../../assets/sprites/monsters/Massive_Earth_Elemental.webp)
+![Massive Earth Elemental](sprites/Massive_Earth_Elemental.gif)
 
 - **HP:** 1330
 - **Ataque:** 445 · **Defesa:** 60

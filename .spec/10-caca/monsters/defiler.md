@@ -1,6 +1,6 @@
 # Defiler
 
-![Defiler](../../../assets/sprites/monsters/Defiler.webp)
+![Defiler](sprites/Defiler.gif)
 
 - **HP:** 3650
 - **Ataque:** 240 · **Defesa:** 60

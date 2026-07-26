@@ -1,6 +1,6 @@
 # Troll
 
-![Troll](../../../assets/sprites/monsters/Troll.webp)
+![Troll](sprites/Troll.gif)
 
 - **HP:** 50
 - **Ataque:** 15 · **Defesa:** 6

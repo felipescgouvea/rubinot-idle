@@ -1,6 +1,6 @@
 # Shark
 
-![Shark](../../../assets/sprites/monsters/Shark.webp)
+![Shark](sprites/Shark.gif)
 
 - **HP:** 1200
 - **Ataque:** 190 · **Defesa:** 32

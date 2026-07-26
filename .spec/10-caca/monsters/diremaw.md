@@ -1,6 +1,6 @@
 # Diremaw
 
-![Diremaw](../../../assets/sprites/monsters/Diremaw.webp)
+![Diremaw](sprites/Diremaw.gif)
 
 - **HP:** 3600
 - **Ataque:** 0 · **Defesa:** 118

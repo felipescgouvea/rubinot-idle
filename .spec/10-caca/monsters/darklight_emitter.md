@@ -1,6 +1,6 @@
 # Darklight Emitter
 
-![Darklight Emitter](../../../assets/sprites/monsters/Darklight_Emitter.webp)
+![Darklight Emitter](sprites/Darklight_Emitter.gif)
 
 - **HP:** 27500
 - **Ataque:** 1050 · **Defesa:** 177

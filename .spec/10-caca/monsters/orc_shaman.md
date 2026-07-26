@@ -1,6 +1,6 @@
 # Orc Shaman
 
-![Orc Shaman](../../../assets/sprites/monsters/Orc_Shaman.webp)
+![Orc Shaman](sprites/Orc_Shaman.gif)
 
 - **HP:** 115
 - **Ataque:** 20 · **Defesa:** 8

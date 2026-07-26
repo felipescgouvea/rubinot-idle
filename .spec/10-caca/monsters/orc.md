@@ -1,6 +1,6 @@
 # Orc
 
-![Orc](../../../assets/sprites/monsters/Orc.webp)
+![Orc](sprites/Orc.gif)
 
 - **HP:** 70
 - **Ataque:** 35 · **Defesa:** 4

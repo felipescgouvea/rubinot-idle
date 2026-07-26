@@ -1,6 +1,6 @@
 # Glooth Bandit
 
-![Glooth Bandit](../../../assets/sprites/monsters/Glooth_Bandit.webp)
+![Glooth Bandit](sprites/Glooth_Bandit.gif)
 
 - **HP:** 2600
 - **Ataque:** 305 · **Defesa:** 46

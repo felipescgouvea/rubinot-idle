@@ -1,6 +1,6 @@
 # Barkless Devotee
 
-![Barkless Devotee](../../../assets/sprites/monsters/Barkless_Devotee.webp)
+![Barkless Devotee](sprites/Barkless_Devotee.gif)
 
 - **HP:** 2800
 - **Ataque:** 759 · **Defesa:** 30

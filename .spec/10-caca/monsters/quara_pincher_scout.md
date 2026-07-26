@@ -1,6 +1,6 @@
 # Quara Pincher Scout
 
-![Quara Pincher Scout](../../../assets/sprites/monsters/Quara_Pincher_Scout.webp)
+![Quara Pincher Scout](sprites/Quara_Pincher_Scout.gif)
 
 - **HP:** 775
 - **Ataque:** 34 · **Defesa:** 42

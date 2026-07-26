@@ -1,6 +1,6 @@
 # Insane Siren
 
-![Insane Siren](../../../assets/sprites/monsters/Insane_Siren.webp)
+![Insane Siren](sprites/Insane_Siren.gif)
 
 - **HP:** 6500
 - **Ataque:** 450 · **Defesa:** 105

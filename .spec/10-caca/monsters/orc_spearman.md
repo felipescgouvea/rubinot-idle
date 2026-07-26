@@ -1,6 +1,6 @@
 # Orc Spearman
 
-![Orc Spearman](../../../assets/sprites/monsters/Orc_Spearman.webp)
+![Orc Spearman](sprites/Orc_Spearman.gif)
 
 - **HP:** 105
 - **Ataque:** 25 · **Defesa:** 6

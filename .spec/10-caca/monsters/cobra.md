@@ -1,6 +1,6 @@
 # Cobra
 
-![Cobra](../../../assets/sprites/monsters/Cobra.webp)
+![Cobra](sprites/Cobra.gif)
 
 - **HP:** 65
 - **Ataque:** 132 · **Defesa:** 38

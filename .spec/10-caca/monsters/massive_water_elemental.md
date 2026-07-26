@@ -1,6 +1,6 @@
 # Massive Water Elemental
 
-![Massive Water Elemental](../../../assets/sprites/monsters/Massive_Water_Elemental.webp)
+![Massive Water Elemental](sprites/Massive_Water_Elemental.gif)
 
 - **HP:** 1250
 - **Ataque:** 538 · **Defesa:** 125

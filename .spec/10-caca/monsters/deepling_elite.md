@@ -1,6 +1,6 @@
 # Deepling Elite
 
-![Deepling Elite](../../../assets/sprites/monsters/Deepling_Elite.webp)
+![Deepling Elite](sprites/Deepling_Elite.gif)
 
 - **HP:** 3200
 - **Ataque:** 625 · **Defesa:** 45

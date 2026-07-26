@@ -1,6 +1,6 @@
 # Corym Vanguard
 
-![Corym Vanguard](../../../assets/sprites/monsters/Corym_Vanguard.webp)
+![Corym Vanguard](sprites/Corym_Vanguard.gif)
 
 - **HP:** 700
 - **Ataque:** 140 · **Defesa:** 29

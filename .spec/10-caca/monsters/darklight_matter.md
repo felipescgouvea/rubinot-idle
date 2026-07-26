@@ -1,6 +1,6 @@
 # Darklight Matter
 
-![Darklight Matter](../../../assets/sprites/monsters/Darklight_Matter.webp)
+![Darklight Matter](sprites/Darklight_Matter.gif)
 
 - **HP:** 30150
 - **Ataque:** 1100 · **Defesa:** 181

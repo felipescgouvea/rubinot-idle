@@ -1,6 +1,6 @@
 # Stone Golem
 
-![Stone Golem](../../../assets/sprites/monsters/Stone_Golem.webp)
+![Stone Golem](sprites/Stone_Golem.gif)
 
 - **HP:** 270
 - **Ataque:** 110 · **Defesa:** 36

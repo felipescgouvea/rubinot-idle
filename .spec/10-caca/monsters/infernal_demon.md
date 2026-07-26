@@ -1,6 +1,6 @@
 # Infernal Demon
 
-![Infernal Demon](../../../assets/sprites/monsters/Infernal_Demon.webp)
+![Infernal Demon](sprites/Infernal_Demon.gif)
 
 - **HP:** 32000
 - **Ataque:** 1450 · **Defesa:** 165

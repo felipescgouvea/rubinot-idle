@@ -1,6 +1,6 @@
 # Meandering Mushroom
 
-![Meandering Mushroom](../../../assets/sprites/monsters/Meandering_Mushroom.webp)
+![Meandering Mushroom](sprites/Meandering_Mushroom.gif)
 
 - **HP:** 29100
 - **Ataque:** 950 · **Defesa:** 175

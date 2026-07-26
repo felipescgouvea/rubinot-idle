@@ -1,6 +1,6 @@
 # Sibang
 
-![Sibang](../../../assets/sprites/monsters/Sibang.webp)
+![Sibang](sprites/Sibang.gif)
 
 - **HP:** 225
 - **Ataque:** 43 · **Defesa:** 15

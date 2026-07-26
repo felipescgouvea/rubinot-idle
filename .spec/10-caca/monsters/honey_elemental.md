@@ -1,6 +1,6 @@
 # Honey Elemental
 
-![Honey Elemental](../../../assets/sprites/monsters/Honey_Elemental.webp)
+![Honey Elemental](sprites/Honey_Elemental.gif)
 
 - **HP:** 2560
 - **Ataque:** 481 · **Defesa:** 86

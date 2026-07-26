@@ -1,6 +1,6 @@
 # Nymph
 
-![Nymph](../../../assets/sprites/monsters/Nymph.webp)
+![Nymph](sprites/Nymph.gif)
 
 - **HP:** 900
 - **Ataque:** 244 · **Defesa:** 60

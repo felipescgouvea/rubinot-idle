@@ -1,6 +1,6 @@
 # Swarmer
 
-![Swarmer](../../../assets/sprites/monsters/Swarmer.webp)
+![Swarmer](sprites/Swarmer.gif)
 
 - **HP:** 460
 - **Ataque:** 100 · **Defesa:** 29

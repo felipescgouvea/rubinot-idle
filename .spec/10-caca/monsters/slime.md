@@ -1,6 +1,6 @@
 # Slime
 
-![Slime](../../../assets/sprites/monsters/Slime.webp)
+![Slime](sprites/Slime.gif)
 
 - **HP:** 150
 - **Ataque:** 110 · **Defesa:** 3

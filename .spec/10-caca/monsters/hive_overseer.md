@@ -1,6 +1,6 @@
 # Hive Overseer
 
-![Hive Overseer](../../../assets/sprites/monsters/Hive_Overseer.webp)
+![Hive Overseer](sprites/Hive_Overseer.gif)
 
 - **HP:** 7500
 - **Ataque:** 259 · **Defesa:** 76

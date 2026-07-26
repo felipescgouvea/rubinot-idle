@@ -1,6 +1,6 @@
 # Bonny Bunny
 
-![Bonny Bunny](../../../assets/sprites/monsters/Bonny_Bunny.webp)
+![Bonny Bunny](sprites/Bonny_Bunny.gif)
 
 - **HP:** 200
 - **Ataque:** 55 · **Defesa:** 10

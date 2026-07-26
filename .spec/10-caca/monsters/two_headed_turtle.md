@@ -1,6 +1,6 @@
 # Two-headed Turtle
 
-![Two-headed Turtle](../../../assets/sprites/monsters/Two-headed_Turtle.webp)
+![Two-headed Turtle](sprites/Two-headed_Turtle.gif)
 
 - **HP:** 5010
 - **Ataque:** 300 · **Defesa:** 108

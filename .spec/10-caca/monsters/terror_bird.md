@@ -1,6 +1,6 @@
 # Terror Bird
 
-![Terror Bird](../../../assets/sprites/monsters/Terror_Bird.webp)
+![Terror Bird](sprites/Terror_Bird.gif)
 
 - **HP:** 300
 - **Ataque:** 90 · **Defesa:** 12

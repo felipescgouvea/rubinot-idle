@@ -1,6 +1,6 @@
 # Foam Stalker
 
-![Foam Stalker](../../../assets/sprites/monsters/Foam_Stalker.webp)
+![Foam Stalker](sprites/Foam_Stalker.gif)
 
 - **HP:** 4500
 - **Ataque:** 300 · **Defesa:** 108

@@ -1,6 +1,6 @@
 # Broodrider Inferniarch
 
-![Broodrider Inferniarch](../../../assets/sprites/monsters/Broodrider_Inferniarch.webp)
+![Broodrider Inferniarch](sprites/Broodrider_Inferniarch.gif)
 
 - **HP:** 9600
 - **Ataque:** 250 · **Defesa:** 70

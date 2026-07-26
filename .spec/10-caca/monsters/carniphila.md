@@ -1,6 +1,6 @@
 # Carniphila
 
-![Carniphila](../../../assets/sprites/monsters/Carniphila.webp)
+![Carniphila](sprites/Carniphila.gif)
 
 - **HP:** 255
 - **Ataque:** 230 · **Defesa:** 22

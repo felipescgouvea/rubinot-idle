@@ -1,6 +1,6 @@
 # Wyrm
 
-![Wyrm](../../../assets/sprites/monsters/Wyrm.webp)
+![Wyrm](sprites/Wyrm.gif)
 
 - **HP:** 1825
 - **Ataque:** 235 · **Defesa:** 34

@@ -1,6 +1,6 @@
 # Swan Maiden
 
-![Swan Maiden](../../../assets/sprites/monsters/Swan_Maiden.webp)
+![Swan Maiden](sprites/Swan_Maiden.gif)
 
 - **HP:** 800
 - **Ataque:** 217 · **Defesa:** 54

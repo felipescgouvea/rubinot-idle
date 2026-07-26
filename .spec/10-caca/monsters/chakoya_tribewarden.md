@@ -1,6 +1,6 @@
 # Chakoya Tribewarden
 
-![Chakoya Tribewarden](../../../assets/sprites/monsters/Chakoya_Tribewarden.webp)
+![Chakoya Tribewarden](sprites/Chakoya_Tribewarden.gif)
 
 - **HP:** 68
 - **Ataque:** 30 · **Defesa:** 9

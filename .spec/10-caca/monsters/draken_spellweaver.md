@@ -1,6 +1,6 @@
 # Draken Spellweaver
 
-![Draken Spellweaver](../../../assets/sprites/monsters/Draken_Spellweaver.webp)
+![Draken Spellweaver](sprites/Draken_Spellweaver.gif)
 
 - **HP:** 5000
 - **Ataque:** 350 · **Defesa:** 25

@@ -1,6 +1,6 @@
 # Undead Mine Worker
 
-![Undead Mine Worker](../../../assets/sprites/monsters/Undead_Mine_Worker.webp)
+![Undead Mine Worker](sprites/Undead_Mine_Worker.gif)
 
 - **HP:** 65
 - **Ataque:** 18 · **Defesa:** 5

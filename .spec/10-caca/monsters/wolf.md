@@ -1,6 +1,6 @@
 # Wolf
 
-![Wolf](../../../assets/sprites/monsters/Wolf.webp)
+![Wolf](sprites/Wolf.gif)
 
 - **HP:** 25
 - **Ataque:** 17 · **Defesa:** 4

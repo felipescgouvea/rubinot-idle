@@ -1,6 +1,6 @@
 # Scorpion
 
-![Scorpion](../../../assets/sprites/monsters/Scorpion.webp)
+![Scorpion](sprites/Scorpion.gif)
 
 - **HP:** 45
 - **Ataque:** 50 · **Defesa:** 22

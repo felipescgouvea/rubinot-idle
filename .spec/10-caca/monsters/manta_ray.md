@@ -1,6 +1,6 @@
 # Manta Ray
 
-![Manta Ray](../../../assets/sprites/monsters/Manta_Ray.webp)
+![Manta Ray](sprites/Manta_Ray.gif)
 
 - **HP:** 680
 - **Ataque:** 184 · **Defesa:** 42

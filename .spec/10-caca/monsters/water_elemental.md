@@ -1,6 +1,6 @@
 # Water Elemental
 
-![Water Elemental](../../../assets/sprites/monsters/Water_Elemental.webp)
+![Water Elemental](sprites/Water_Elemental.gif)
 
 - **HP:** 550
 - **Ataque:** 235 · **Defesa:** 37

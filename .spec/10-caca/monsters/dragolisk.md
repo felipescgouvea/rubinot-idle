@@ -1,6 +1,6 @@
 # Dragolisk
 
-![Dragolisk](../../../assets/sprites/monsters/Dragolisk.webp)
+![Dragolisk](sprites/Dragolisk.gif)
 
 - **HP:** 6180
 - **Ataque:** 280 · **Defesa:** 86

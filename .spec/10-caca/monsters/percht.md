@@ -1,6 +1,6 @@
 # Percht
 
-![Percht](../../../assets/sprites/monsters/Percht.webp)
+![Percht](sprites/Percht.gif)
 
 - **HP:** 620
 - **Ataque:** 168 · **Defesa:** 40

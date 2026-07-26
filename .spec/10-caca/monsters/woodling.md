@@ -1,6 +1,6 @@
 # Woodling
 
-![Woodling](../../../assets/sprites/monsters/Woodling.webp)
+![Woodling](sprites/Woodling.gif)
 
 - **HP:** 80
 - **Ataque:** 15 · **Defesa:** 2

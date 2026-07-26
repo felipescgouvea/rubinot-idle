@@ -1,6 +1,6 @@
 # Spectre
 
-![Spectre](../../../assets/sprites/monsters/Spectre.webp)
+![Spectre](sprites/Spectre.gif)
 
 - **HP:** 1350
 - **Ataque:** 305 · **Defesa:** 40

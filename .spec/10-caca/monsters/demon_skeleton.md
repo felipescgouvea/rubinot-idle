@@ -1,6 +1,6 @@
 # Demon Skeleton
 
-![Demon Skeleton](../../../assets/sprites/monsters/Demon_Skeleton.webp)
+![Demon Skeleton](sprites/Demon_Skeleton.gif)
 
 - **HP:** 400
 - **Ataque:** 14 · **Defesa:** 19

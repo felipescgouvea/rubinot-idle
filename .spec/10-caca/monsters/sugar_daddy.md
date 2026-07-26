@@ -1,6 +1,6 @@
 # Sugar Daddy
 
-![Sugar Daddy](../../../assets/sprites/monsters/Sugar_Daddy.webp)
+![Sugar Daddy](sprites/Sugar_Daddy.gif)
 
 - **HP:** 9500
 - **Ataque:** 350 · **Defesa:** 22

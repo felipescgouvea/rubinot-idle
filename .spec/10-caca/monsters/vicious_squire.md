@@ -1,6 +1,6 @@
 # Vicious Squire
 
-![Vicious Squire](../../../assets/sprites/monsters/Vicious_Squire.webp)
+![Vicious Squire](sprites/Vicious_Squire.gif)
 
 - **HP:** 1000
 - **Ataque:** 230 · **Defesa:** 30

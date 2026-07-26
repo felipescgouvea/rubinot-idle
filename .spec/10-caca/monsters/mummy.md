@@ -1,6 +1,6 @@
 # Mummy
 
-![Mummy](../../../assets/sprites/monsters/Mummy.webp)
+![Mummy](sprites/Mummy.gif)
 
 - **HP:** 240
 - **Ataque:** 85 · **Defesa:** 27

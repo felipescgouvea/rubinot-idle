@@ -1,6 +1,6 @@
 # Sugar Cube Worker
 
-![Sugar Cube Worker](../../../assets/sprites/monsters/Sugar_Cube_Worker.webp)
+![Sugar Cube Worker](sprites/Sugar_Cube_Worker.gif)
 
 - **HP:** 65
 - **Ataque:** 19 · **Defesa:** 8

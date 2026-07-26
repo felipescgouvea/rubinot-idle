@@ -1,6 +1,6 @@
 # Frazzlemaw
 
-![Frazzlemaw](../../../assets/sprites/monsters/Frazzlemaw.webp)
+![Frazzlemaw](sprites/Frazzlemaw.gif)
 
 - **HP:** 4100
 - **Ataque:** 450 · **Defesa:** 74

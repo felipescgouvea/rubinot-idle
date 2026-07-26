@@ -1,6 +1,6 @@
 # Elephant
 
-![Elephant](../../../assets/sprites/monsters/Elephant.webp)
+![Elephant](sprites/Elephant.gif)
 
 - **HP:** 320
 - **Ataque:** 100 · **Defesa:** 20

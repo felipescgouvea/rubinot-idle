@@ -1,6 +1,6 @@
 # Infernal Phantom
 
-![Infernal Phantom](../../../assets/sprites/monsters/Infernal_Phantom.webp)
+![Infernal Phantom](sprites/Infernal_Phantom.gif)
 
 - **HP:** 26000
 - **Ataque:** 800 · **Defesa:** 165

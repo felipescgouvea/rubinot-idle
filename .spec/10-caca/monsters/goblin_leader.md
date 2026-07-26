@@ -1,6 +1,6 @@
 # Goblin Leader
 
-![Goblin Leader](../../../assets/sprites/monsters/Goblin_Leader.webp)
+![Goblin Leader](sprites/Goblin_Leader.gif)
 
 - **HP:** 50
 - **Ataque:** 50 · **Defesa:** 7

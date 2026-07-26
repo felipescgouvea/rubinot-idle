@@ -1,6 +1,6 @@
 # Earth Elemental
 
-![Earth Elemental](../../../assets/sprites/monsters/Earth_Elemental.webp)
+![Earth Elemental](sprites/Earth_Elemental.gif)
 
 - **HP:** 650
 - **Ataque:** 178 · **Defesa:** 45

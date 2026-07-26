@@ -1,6 +1,6 @@
 # Hellspawn
 
-![Hellspawn](../../../assets/sprites/monsters/Hellspawn.webp)
+![Hellspawn](sprites/Hellspawn.gif)
 
 - **HP:** 3500
 - **Ataque:** 350 · **Defesa:** 44

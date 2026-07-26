@@ -1,6 +1,6 @@
 # Dragon Lord
 
-![Dragon Lord](../../../assets/sprites/monsters/Dragon_Lord.webp)
+![Dragon Lord](sprites/Dragon_Lord.gif)
 
 - **HP:** 1900
 - **Ataque:** 230 · **Defesa:** 34

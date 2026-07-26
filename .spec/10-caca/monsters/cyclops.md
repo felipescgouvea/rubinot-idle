@@ -1,6 +1,6 @@
 # Cyclops
 
-![Cyclops](../../../assets/sprites/monsters/Cyclops.webp)
+![Cyclops](sprites/Cyclops.gif)
 
 - **HP:** 260
 - **Ataque:** 105 · **Defesa:** 17

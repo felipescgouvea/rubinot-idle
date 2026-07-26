@@ -1,6 +1,6 @@
 # Quara Mantassin Scout
 
-![Quara Mantassin Scout](../../../assets/sprites/monsters/Quara_Mantassin_Scout.webp)
+![Quara Mantassin Scout](sprites/Quara_Mantassin_Scout.gif)
 
 - **HP:** 220
 - **Ataque:** 34 · **Defesa:** 42

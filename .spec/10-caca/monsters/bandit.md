@@ -1,6 +1,6 @@
 # Bandit
 
-![Bandit](../../../assets/sprites/monsters/Bandit.webp)
+![Bandit](sprites/Bandit.gif)
 
 - **HP:** 245
 - **Ataque:** 45 · **Defesa:** 8

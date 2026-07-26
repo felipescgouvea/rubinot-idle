@@ -1,6 +1,6 @@
 # Drillworm
 
-![Drillworm](../../../assets/sprites/monsters/Drillworm.webp)
+![Drillworm](sprites/Drillworm.gif)
 
 - **HP:** 1500
 - **Ataque:** 300 · **Defesa:** 41

@@ -1,6 +1,6 @@
 # Druid's Apparition
 
-![Druid's Apparition](../../../assets/sprites/monsters/Druid's_Apparition.webp)
+![Druid's Apparition](sprites/Druid's_Apparition.gif)
 
 - **HP:** 25000
 - **Ataque:** 850 · **Defesa:** 162

@@ -1,6 +1,6 @@
 # Tiger
 
-![Tiger](../../../assets/sprites/monsters/Tiger.webp)
+![Tiger](sprites/Tiger.gif)
 
 - **HP:** 75
 - **Ataque:** 40 · **Defesa:** 5

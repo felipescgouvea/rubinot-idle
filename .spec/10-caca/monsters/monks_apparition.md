@@ -1,6 +1,6 @@
 # Monk's Apparition
 
-![Monk's Apparition](../../../assets/sprites/monsters/Monk's_Apparition.webp)
+![Monk's Apparition](sprites/Monk's_Apparition.gif)
 
 - **HP:** 25000
 - **Ataque:** 900 · **Defesa:** 162

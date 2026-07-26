@@ -1,6 +1,6 @@
 # Minotaur Archer
 
-![Minotaur Archer](../../../assets/sprites/monsters/Minotaur_Archer.webp)
+![Minotaur Archer](sprites/Minotaur_Archer.gif)
 
 - **HP:** 100
 - **Ataque:** 25 · **Defesa:** 6

@@ -1,6 +1,6 @@
 # Polar Bear
 
-![Polar Bear](../../../assets/sprites/monsters/Polar_Bear.webp)
+![Polar Bear](sprites/Polar_Bear.gif)
 
 - **HP:** 85
 - **Ataque:** 30 · **Defesa:** 7

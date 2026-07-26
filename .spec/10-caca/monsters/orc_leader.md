@@ -1,6 +1,6 @@
 # Orc Leader
 
-![Orc Leader](../../../assets/sprites/monsters/Orc_Leader.webp)
+![Orc Leader](sprites/Orc_Leader.gif)
 
 - **HP:** 450
 - **Ataque:** 255 · **Defesa:** 20

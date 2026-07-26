@@ -1,6 +1,6 @@
 # Werehyaena
 
-![Werehyaena](../../../assets/sprites/monsters/Werehyaena.webp)
+![Werehyaena](sprites/Werehyaena.gif)
 
 - **HP:** 2700
 - **Ataque:** 300 · **Defesa:** 36

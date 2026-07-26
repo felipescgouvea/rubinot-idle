@@ -1,6 +1,6 @@
 # Burning Book
 
-![Burning Book](../../../assets/sprites/monsters/Burning_Book.webp)
+![Burning Book](sprites/Burning_Book.gif)
 
 - **HP:** 18000
 - **Ataque:** 600 · **Defesa:** 82

@@ -1,6 +1,6 @@
 # Orc Warlord
 
-![Orc Warlord](../../../assets/sprites/monsters/Orc_Warlord.webp)
+![Orc Warlord](sprites/Orc_Warlord.gif)
 
 - **HP:** 950
 - **Ataque:** 250 · **Defesa:** 28

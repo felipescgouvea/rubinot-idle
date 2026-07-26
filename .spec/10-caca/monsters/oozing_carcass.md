@@ -1,6 +1,6 @@
 # Oozing Carcass
 
-![Oozing Carcass](../../../assets/sprites/monsters/Oozing_Carcass.webp)
+![Oozing Carcass](sprites/Oozing_Carcass.gif)
 
 - **HP:** 27500
 - **Ataque:** 600 · **Defesa:** 175

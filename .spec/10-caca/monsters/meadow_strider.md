@@ -1,6 +1,6 @@
 # Meadow Strider
 
-![Meadow Strider](../../../assets/sprites/monsters/Meadow_Strider.webp)
+![Meadow Strider](sprites/Meadow_Strider.gif)
 
 - **HP:** 100
 - **Ataque:** 16 · **Defesa:** 1

@@ -1,6 +1,6 @@
 # Oozing Corpus
 
-![Oozing Corpus](../../../assets/sprites/monsters/Oozing_Corpus.webp)
+![Oozing Corpus](sprites/Oozing_Corpus.gif)
 
 - **HP:** 28700
 - **Ataque:** 1600 · **Defesa:** 179

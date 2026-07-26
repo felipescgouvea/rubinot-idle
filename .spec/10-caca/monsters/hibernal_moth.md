@@ -1,6 +1,6 @@
 # Hibernal Moth
 
-![Hibernal Moth](../../../assets/sprites/monsters/Hibernal_Moth.webp)
+![Hibernal Moth](sprites/Hibernal_Moth.gif)
 
 - **HP:** 850
 - **Ataque:** 231 · **Defesa:** 37

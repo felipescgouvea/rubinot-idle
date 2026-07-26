@@ -1,6 +1,6 @@
 # Spit Nettle
 
-![Spit Nettle](../../../assets/sprites/monsters/Spit_Nettle.webp)
+![Spit Nettle](sprites/Spit_Nettle.gif)
 
 - **HP:** 150
 - **Ataque:** 45 · **Defesa:** 12

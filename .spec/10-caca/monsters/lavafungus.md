@@ -1,6 +1,6 @@
 # Lavafungus
 
-![Lavafungus](../../../assets/sprites/monsters/Lavafungus.webp)
+![Lavafungus](sprites/Lavafungus.gif)
 
 - **HP:** 7200
 - **Ataque:** 810 · **Defesa:** 70

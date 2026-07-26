@@ -1,6 +1,6 @@
 # Glooth Brigand
 
-![Glooth Brigand](../../../assets/sprites/monsters/Glooth_Brigand.webp)
+![Glooth Brigand](sprites/Glooth_Brigand.gif)
 
 - **HP:** 2400
 - **Ataque:** 300 · **Defesa:** 51

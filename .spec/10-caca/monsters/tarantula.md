@@ -1,6 +1,6 @@
 # Tarantula
 
-![Tarantula](../../../assets/sprites/monsters/Tarantula.webp)
+![Tarantula](sprites/Tarantula.gif)
 
 - **HP:** 225
 - **Ataque:** 90 · **Defesa:** 20

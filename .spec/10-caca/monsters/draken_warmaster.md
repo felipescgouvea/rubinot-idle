@@ -1,6 +1,6 @@
 # Draken Warmaster
 
-![Draken Warmaster](../../../assets/sprites/monsters/Draken_Warmaster.webp)
+![Draken Warmaster](sprites/Draken_Warmaster.gif)
 
 - **HP:** 4150
 - **Ataque:** 350 · **Defesa:** 55

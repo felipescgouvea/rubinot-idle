@@ -1,6 +1,6 @@
 # Deathling Spellsinger
 
-![Deathling Spellsinger](../../../assets/sprites/monsters/Deathling_Spellsinger.webp)
+![Deathling Spellsinger](sprites/Deathling_Spellsinger.gif)
 
 - **HP:** 7200
 - **Ataque:** 300 · **Defesa:** 107

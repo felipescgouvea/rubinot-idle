@@ -1,6 +1,6 @@
 # Elf
 
-![Elf](../../../assets/sprites/monsters/Elf.webp)
+![Elf](sprites/Elf.gif)
 
 - **HP:** 100
 - **Ataque:** 15 · **Defesa:** 6

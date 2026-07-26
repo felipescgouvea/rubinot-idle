@@ -1,6 +1,6 @@
 # Deepling Worker
 
-![Deepling Worker](../../../assets/sprites/monsters/Deepling_Worker.webp)
+![Deepling Worker](sprites/Deepling_Worker.gif)
 
 - **HP:** 190
 - **Ataque:** 150 · **Defesa:** 7

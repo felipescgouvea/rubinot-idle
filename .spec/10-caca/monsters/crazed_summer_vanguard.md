@@ -1,6 +1,6 @@
 # Crazed Summer Vanguard
 
-![Crazed Summer Vanguard](../../../assets/sprites/monsters/Crazed_Summer_Vanguard.webp)
+![Crazed Summer Vanguard](sprites/Crazed_Summer_Vanguard.gif)
 
 - **HP:** 5500
 - **Ataque:** 450 · **Defesa:** 77

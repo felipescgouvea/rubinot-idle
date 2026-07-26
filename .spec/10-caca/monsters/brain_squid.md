@@ -1,6 +1,6 @@
 # Brain Squid
 
-![Brain Squid](../../../assets/sprites/monsters/Brain_Squid.webp)
+![Brain Squid](sprites/Brain_Squid.gif)
 
 - **HP:** 18000
 - **Ataque:** 350 · **Defesa:** 78

@@ -1,6 +1,6 @@
 # Toad
 
-![Toad](../../../assets/sprites/monsters/Toad.webp)
+![Toad](sprites/Toad.gif)
 
 - **HP:** 135
 - **Ataque:** 30 · **Defesa:** 6

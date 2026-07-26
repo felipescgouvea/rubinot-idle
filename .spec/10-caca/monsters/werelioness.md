@@ -1,6 +1,6 @@
 # Werelioness
 
-![Werelioness](../../../assets/sprites/monsters/Werelioness.webp)
+![Werelioness](sprites/Werelioness.gif)
 
 - **HP:** 3000
 - **Ataque:** 350 · **Defesa:** 38

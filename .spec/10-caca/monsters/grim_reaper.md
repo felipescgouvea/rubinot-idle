@@ -1,6 +1,6 @@
 # Grim Reaper
 
-![Grim Reaper](../../../assets/sprites/monsters/Grim_Reaper.webp)
+![Grim Reaper](sprites/Grim_Reaper.gif)
 
 - **HP:** 3900
 - **Ataque:** 815 · **Defesa:** 30

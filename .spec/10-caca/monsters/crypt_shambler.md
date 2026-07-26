@@ -1,6 +1,6 @@
 # Crypt Shambler
 
-![Crypt Shambler](../../../assets/sprites/monsters/Crypt_Shambler.webp)
+![Crypt Shambler](sprites/Crypt_Shambler.gif)
 
 - **HP:** 330
 - **Ataque:** 140 · **Defesa:** 28

@@ -1,6 +1,6 @@
 # Usurper Knight
 
-![Usurper Knight](../../../assets/sprites/monsters/Usurper_Knight.webp)
+![Usurper Knight](sprites/Usurper_Knight.gif)
 
 - **HP:** 8200
 - **Ataque:** 500 · **Defesa:** 83

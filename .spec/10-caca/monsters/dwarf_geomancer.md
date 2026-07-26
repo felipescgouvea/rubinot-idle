@@ -1,6 +1,6 @@
 # Dwarf Geomancer
 
-![Dwarf Geomancer](../../../assets/sprites/monsters/Dwarf_Geomancer.webp)
+![Dwarf Geomancer](sprites/Dwarf_Geomancer.gif)
 
 - **HP:** 380
 - **Ataque:** 100 · **Defesa:** 8

@@ -1,6 +1,6 @@
 # Rotten Man-maggot
 
-![Rotten Man-maggot](../../../assets/sprites/monsters/Rotten_Man-maggot.webp)
+![Rotten Man-maggot](sprites/Rotten_Man-maggot.gif)
 
 - **HP:** 31100
 - **Ataque:** 900 · **Defesa:** 175

@@ -1,6 +1,6 @@
 # Insectoid Worker
 
-![Insectoid Worker](../../../assets/sprites/monsters/Insectoid_Worker.webp)
+![Insectoid Worker](sprites/Insectoid_Worker.gif)
 
 - **HP:** 950
 - **Ataque:** 110 · **Defesa:** 30

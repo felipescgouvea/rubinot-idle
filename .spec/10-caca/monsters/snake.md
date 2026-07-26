@@ -1,6 +1,6 @@
 # Snake
 
-![Snake](../../../assets/sprites/monsters/Snake.webp)
+![Snake](sprites/Snake.gif)
 
 - **HP:** 15
 - **Ataque:** 8 · **Defesa:** 4

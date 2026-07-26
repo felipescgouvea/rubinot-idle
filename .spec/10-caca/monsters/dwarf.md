@@ -1,6 +1,6 @@
 # Dwarf
 
-![Dwarf](../../../assets/sprites/monsters/Dwarf.webp)
+![Dwarf](sprites/Dwarf.gif)
 
 - **HP:** 90
 - **Ataque:** 30 · **Defesa:** 5

@@ -1,6 +1,6 @@
 # Minotaur
 
-![Minotaur](../../../assets/sprites/monsters/Minotaur.webp)
+![Minotaur](sprites/Minotaur.gif)
 
 - **HP:** 100
 - **Ataque:** 45 · **Defesa:** 11

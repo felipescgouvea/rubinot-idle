@@ -1,6 +1,6 @@
 # Deepworm
 
-![Deepworm](../../../assets/sprites/monsters/Deepworm.webp)
+![Deepworm](sprites/Deepworm.gif)
 
 - **HP:** 3500
 - **Ataque:** 300 · **Defesa:** 118

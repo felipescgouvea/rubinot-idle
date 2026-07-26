@@ -1,6 +1,6 @@
 # Rotworm
 
-![Rotworm](../../../assets/sprites/monsters/Rotworm.webp)
+![Rotworm](sprites/Rotworm.gif)
 
 - **HP:** 65
 - **Ataque:** 40 · **Defesa:** 2

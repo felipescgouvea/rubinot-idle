@@ -1,6 +1,6 @@
 # Walking Pillar
 
-![Walking Pillar](../../../assets/sprites/monsters/Walking_Pillar.webp)
+![Walking Pillar](sprites/Walking_Pillar.gif)
 
 - **HP:** 38000
 - **Ataque:** 1500 · **Defesa:** 181

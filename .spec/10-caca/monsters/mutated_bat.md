@@ -1,6 +1,6 @@
 # Mutated Bat
 
-![Mutated Bat](../../../assets/sprites/monsters/Mutated_Bat.webp)
+![Mutated Bat](sprites/Mutated_Bat.gif)
 
 - **HP:** 900
 - **Ataque:** 288 · **Defesa:** 19

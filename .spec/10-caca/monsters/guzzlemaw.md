@@ -1,6 +1,6 @@
 # Guzzlemaw
 
-![Guzzlemaw](../../../assets/sprites/monsters/Guzzlemaw.webp)
+![Guzzlemaw](sprites/Guzzlemaw.gif)
 
 - **HP:** 6400
 - **Ataque:** 550 · **Defesa:** 74

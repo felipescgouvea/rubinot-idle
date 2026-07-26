@@ -1,6 +1,6 @@
 # Cult Believer
 
-![Cult Believer](../../../assets/sprites/monsters/Cult_Believer.webp)
+![Cult Believer](sprites/Cult_Believer.gif)
 
 - **HP:** 975
 - **Ataque:** 200 · **Defesa:** 30

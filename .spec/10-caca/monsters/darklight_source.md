@@ -1,6 +1,6 @@
 # Darklight Source
 
-![Darklight Source](../../../assets/sprites/monsters/Darklight_Source.webp)
+![Darklight Source](sprites/Darklight_Source.gif)
 
 - **HP:** 31550
 - **Ataque:** 1200 · **Defesa:** 181

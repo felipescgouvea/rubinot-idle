@@ -1,6 +1,6 @@
 # Haunted Treeling
 
-![Haunted Treeling](../../../assets/sprites/monsters/Haunted_Treeling.webp)
+![Haunted Treeling](sprites/Haunted_Treeling.gif)
 
 - **HP:** 450
 - **Ataque:** 250 · **Defesa:** 20

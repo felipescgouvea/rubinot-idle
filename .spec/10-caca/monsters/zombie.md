@@ -1,6 +1,6 @@
 # Zombie
 
-![Zombie](../../../assets/sprites/monsters/Zombie.webp)
+![Zombie](sprites/Zombie.gif)
 
 - **HP:** 500
 - **Ataque:** 136 · **Defesa:** 20

@@ -1,6 +1,6 @@
 # Mould Phantom
 
-![Mould Phantom](../../../assets/sprites/monsters/Mould_Phantom.webp)
+![Mould Phantom](sprites/Mould_Phantom.gif)
 
 - **HP:** 28000
 - **Ataque:** 900 · **Defesa:** 164

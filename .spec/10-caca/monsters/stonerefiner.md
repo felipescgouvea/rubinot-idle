@@ -1,6 +1,6 @@
 # Stonerefiner
 
-![Stonerefiner](../../../assets/sprites/monsters/Stonerefiner.webp)
+![Stonerefiner](sprites/Stonerefiner.gif)
 
 - **HP:** 800
 - **Ataque:** 115 · **Defesa:** 20

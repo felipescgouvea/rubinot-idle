@@ -1,6 +1,6 @@
 # Gargoyle
 
-![Gargoyle](../../../assets/sprites/monsters/Gargoyle.webp)
+![Gargoyle](sprites/Gargoyle.gif)
 
 - **HP:** 250
 - **Ataque:** 65 · **Defesa:** 26

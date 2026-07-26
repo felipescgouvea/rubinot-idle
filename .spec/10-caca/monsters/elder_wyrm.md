@@ -1,6 +1,6 @@
 # Elder Wyrm
 
-![Elder Wyrm](../../../assets/sprites/monsters/Elder_Wyrm.webp)
+![Elder Wyrm](sprites/Elder_Wyrm.gif)
 
 - **HP:** 2700
 - **Ataque:** 400 · **Defesa:** 48

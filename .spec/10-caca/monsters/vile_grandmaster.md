@@ -1,6 +1,6 @@
 # Vile Grandmaster
 
-![Vile Grandmaster](../../../assets/sprites/monsters/Vile_Grandmaster.webp)
+![Vile Grandmaster](sprites/Vile_Grandmaster.gif)
 
 - **HP:** 1700
 - **Ataque:** 260 · **Defesa:** 40

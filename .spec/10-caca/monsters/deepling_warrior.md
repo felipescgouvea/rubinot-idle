@@ -1,6 +1,6 @@
 # Deepling Warrior
 
-![Deepling Warrior](../../../assets/sprites/monsters/Deepling_Warrior.webp)
+![Deepling Warrior](sprites/Deepling_Warrior.gif)
 
 - **HP:** 1600
 - **Ataque:** 56 · **Defesa:** 51

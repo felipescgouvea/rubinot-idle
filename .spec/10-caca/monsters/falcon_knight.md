@@ -1,6 +1,6 @@
 # Falcon Knight
 
-![Falcon Knight](../../../assets/sprites/monsters/Falcon_Knight.webp)
+![Falcon Knight](sprites/Falcon_Knight.gif)
 
 - **HP:** 9000
 - **Ataque:** 400 · **Defesa:** 86

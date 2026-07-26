@@ -1,6 +1,6 @@
 # Behemoth
 
-![Behemoth](../../../assets/sprites/monsters/Behemoth.webp)
+![Behemoth](sprites/Behemoth.gif)
 
 - **HP:** 4000
 - **Ataque:** 455 · **Defesa:** 50

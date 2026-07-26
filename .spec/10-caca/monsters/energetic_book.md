@@ -1,6 +1,6 @@
 # Energetic Book
 
-![Energetic Book](../../../assets/sprites/monsters/Energetic_Book.webp)
+![Energetic Book](sprites/Energetic_Book.gif)
 
 - **HP:** 18500
 - **Ataque:** 500 · **Defesa:** 82

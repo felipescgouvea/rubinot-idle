@@ -1,6 +1,6 @@
 # Smuggler
 
-![Smuggler](../../../assets/sprites/monsters/Smuggler.webp)
+![Smuggler](sprites/Smuggler.gif)
 
 - **HP:** 130
 - **Ataque:** 60 · **Defesa:** 8

@@ -1,6 +1,6 @@
 # Mycobiontic Beetle
 
-![Mycobiontic Beetle](../../../assets/sprites/monsters/Mycobiontic_Beetle.webp)
+![Mycobiontic Beetle](sprites/Mycobiontic_Beetle.gif)
 
 - **HP:** 30200
 - **Ataque:** 1600 · **Defesa:** 179

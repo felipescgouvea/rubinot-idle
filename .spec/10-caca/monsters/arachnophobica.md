@@ -1,6 +1,6 @@
 # Arachnophobica
 
-![Arachnophobica](../../../assets/sprites/monsters/Arachnophobica.webp)
+![Arachnophobica](sprites/Arachnophobica.gif)
 
 - **HP:** 5000
 - **Ataque:** 400 · **Defesa:** 70

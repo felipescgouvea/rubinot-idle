@@ -1,6 +1,6 @@
 # Crawler
 
-![Crawler](../../../assets/sprites/monsters/Crawler.webp)
+![Crawler](sprites/Crawler.gif)
 
 - **HP:** 1450
 - **Ataque:** 120 · **Defesa:** 38

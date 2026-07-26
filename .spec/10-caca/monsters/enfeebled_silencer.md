@@ -1,6 +1,6 @@
 # Enfeebled Silencer
 
-![Enfeebled Silencer](../../../assets/sprites/monsters/Enfeebled_Silencer.webp)
+![Enfeebled Silencer](sprites/Enfeebled_Silencer.gif)
 
 - **HP:** 1100
 - **Ataque:** 79 · **Defesa:** 57

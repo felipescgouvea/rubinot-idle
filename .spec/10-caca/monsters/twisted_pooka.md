@@ -1,6 +1,6 @@
 # Twisted Pooka
 
-![Twisted Pooka](../../../assets/sprites/monsters/Twisted_Pooka.webp)
+![Twisted Pooka](sprites/Twisted_Pooka.gif)
 
 - **HP:** 700
 - **Ataque:** 190 · **Defesa:** 41

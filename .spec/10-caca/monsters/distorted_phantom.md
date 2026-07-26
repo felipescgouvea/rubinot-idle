@@ -1,6 +1,6 @@
 # Distorted Phantom
 
-![Distorted Phantom](../../../assets/sprites/monsters/Distorted_Phantom.webp)
+![Distorted Phantom](sprites/Distorted_Phantom.gif)
 
 - **HP:** 26000
 - **Ataque:** 750 · **Defesa:** 162

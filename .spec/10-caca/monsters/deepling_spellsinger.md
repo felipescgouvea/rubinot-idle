@@ -1,6 +1,6 @@
 # Deepling Spellsinger
 
-![Deepling Spellsinger](../../../assets/sprites/monsters/Deepling_Spellsinger.webp)
+![Deepling Spellsinger](sprites/Deepling_Spellsinger.gif)
 
 - **HP:** 850
 - **Ataque:** 56 · **Defesa:** 51

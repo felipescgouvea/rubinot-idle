@@ -1,6 +1,6 @@
 # Chasm Spawn
 
-![Chasm Spawn](../../../assets/sprites/monsters/Chasm_Spawn.webp)
+![Chasm Spawn](sprites/Chasm_Spawn.gif)
 
 - **HP:** 4500
 - **Ataque:** 250 · **Defesa:** 118

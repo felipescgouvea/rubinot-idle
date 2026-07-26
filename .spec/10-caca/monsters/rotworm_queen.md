@@ -1,6 +1,6 @@
 # Rotworm Queen
 
-![Rotworm Queen](../../../assets/sprites/monsters/Rotworm_Queen.webp)
+![Rotworm Queen](sprites/Rotworm_Queen.gif)
 
 - **HP:** 105
 - **Ataque:** 30 · **Defesa:** 4

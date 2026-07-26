@@ -1,6 +1,6 @@
 # Merlkin
 
-![Merlkin](../../../assets/sprites/monsters/Merlkin.webp)
+![Merlkin](sprites/Merlkin.gif)
 
 - **HP:** 235
 - **Ataque:** 30 · **Defesa:** 16

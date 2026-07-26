@@ -1,6 +1,6 @@
 # Devourer
 
-![Devourer](../../../assets/sprites/monsters/Devourer.webp)
+![Devourer](sprites/Devourer.gif)
 
 - **HP:** 1900
 - **Ataque:** 260 · **Defesa:** 45

@@ -1,6 +1,6 @@
 # Grimeleech
 
-![Grimeleech](../../../assets/sprites/monsters/Grimeleech.webp)
+![Grimeleech](sprites/Grimeleech.gif)
 
 - **HP:** 9500
 - **Ataque:** 450 · **Defesa:** 65

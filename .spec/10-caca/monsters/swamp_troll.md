@@ -1,6 +1,6 @@
 # Swamp Troll
 
-![Swamp Troll](../../../assets/sprites/monsters/Swamp_Troll.webp)
+![Swamp Troll](sprites/Swamp_Troll.gif)
 
 - **HP:** 55
 - **Ataque:** 13 · **Defesa:** 6

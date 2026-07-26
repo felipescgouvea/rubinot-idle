@@ -1,6 +1,6 @@
 # Spider
 
-![Spider](../../../assets/sprites/monsters/Spider.webp)
+![Spider](sprites/Spider.gif)
 
 - **HP:** 20
 - **Ataque:** 9 · **Defesa:** 2

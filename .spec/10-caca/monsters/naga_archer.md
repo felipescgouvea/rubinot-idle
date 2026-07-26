@@ -1,6 +1,6 @@
 # Naga Archer
 
-![Naga Archer](../../../assets/sprites/monsters/Naga_Archer.webp)
+![Naga Archer](sprites/Naga_Archer.gif)
 
 - **HP:** 4640
 - **Ataque:** 300 · **Defesa:** 110

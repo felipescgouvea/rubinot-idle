@@ -1,6 +1,6 @@
 # Bulltaur Alchemist
 
-![Bulltaur Alchemist](../../../assets/sprites/monsters/Bulltaur_Alchemist.webp)
+![Bulltaur Alchemist](sprites/Bulltaur_Alchemist.gif)
 
 - **HP:** 5690
 - **Ataque:** 270 · **Defesa:** 67

@@ -1,6 +1,6 @@
 # Wilting Leaf Golem
 
-![Wilting Leaf Golem](../../../assets/sprites/monsters/Wilting_Leaf_Golem.webp)
+![Wilting Leaf Golem](sprites/Wilting_Leaf_Golem.gif)
 
 - **HP:** 380
 - **Ataque:** 170 · **Defesa:** 21

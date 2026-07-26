@@ -1,6 +1,6 @@
 # Shadowthorn Templar
 
-![Shadowthorn Templar](../../../assets/sprites/monsters/Elf_Arcanist.webp)
+![Shadowthorn Templar](sprites/Elf_Arcanist.gif)
 
 - **HP:** 140
 - **Ataque:** 28 · **Defesa:** 6

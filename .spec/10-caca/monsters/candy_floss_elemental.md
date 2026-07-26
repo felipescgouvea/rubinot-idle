@@ -1,6 +1,6 @@
 # Candy Floss Elemental
 
-![Candy Floss Elemental](../../../assets/sprites/monsters/Candy_Floss_Elemental.webp)
+![Candy Floss Elemental](sprites/Candy_Floss_Elemental.gif)
 
 - **HP:** 3700
 - **Ataque:** 481 · **Defesa:** 86

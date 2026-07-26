@@ -1,6 +1,6 @@
 # Sopping Carcass
 
-![Sopping Carcass](../../../assets/sprites/monsters/Sopping_Carcass.webp)
+![Sopping Carcass](sprites/Sopping_Carcass.gif)
 
 - **HP:** 32700
 - **Ataque:** 1100 · **Defesa:** 175

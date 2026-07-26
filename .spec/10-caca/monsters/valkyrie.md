@@ -1,6 +1,6 @@
 # Valkyrie
 
-![Valkyrie](../../../assets/sprites/monsters/Valkyrie.webp)
+![Valkyrie](sprites/Valkyrie.gif)
 
 - **HP:** 190
 - **Ataque:** 70 · **Defesa:** 12

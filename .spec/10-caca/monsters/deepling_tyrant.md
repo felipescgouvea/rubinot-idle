@@ -1,6 +1,6 @@
 # Deepling Tyrant
 
-![Deepling Tyrant](../../../assets/sprites/monsters/Deepling_Tyrant.webp)
+![Deepling Tyrant](sprites/Deepling_Tyrant.gif)
 
 - **HP:** 4500
 - **Ataque:** 1090 · **Defesa:** 54

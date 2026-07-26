@@ -1,6 +1,6 @@
 # Giant Spider
 
-![Giant Spider](../../../assets/sprites/monsters/Giant_Spider.webp)
+![Giant Spider](sprites/Giant_Spider.gif)
 
 - **HP:** 1300
 - **Ataque:** 300 · **Defesa:** 30

@@ -1,6 +1,6 @@
 # Capricious Phantom
 
-![Capricious Phantom](../../../assets/sprites/monsters/Capricious_Phantom.webp)
+![Capricious Phantom](sprites/Capricious_Phantom.gif)
 
 - **HP:** 30000
 - **Ataque:** 900 · **Defesa:** 167

@@ -1,6 +1,6 @@
 # Spitter
 
-![Spitter](../../../assets/sprites/monsters/Spitter.webp)
+![Spitter](sprites/Spitter.gif)
 
 - **HP:** 1500
 - **Ataque:** 259 · **Defesa:** 76

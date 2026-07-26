@@ -1,6 +1,6 @@
 # Baleful Bunny
 
-![Baleful Bunny](../../../assets/sprites/monsters/Baleful_Bunny.webp)
+![Baleful Bunny](sprites/Baleful_Bunny.gif)
 
 - **HP:** 500
 - **Ataque:** 160 · **Defesa:** 35

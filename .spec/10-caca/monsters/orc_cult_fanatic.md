@@ -1,6 +1,6 @@
 # Orc Cult Fanatic
 
-![Orc Cult Fanatic](../../../assets/sprites/monsters/Orc_Cult_Fanatic.webp)
+![Orc Cult Fanatic](sprites/Orc_Cult_Fanatic.gif)
 
 - **HP:** 1300
 - **Ataque:** 350 · **Defesa:** 22

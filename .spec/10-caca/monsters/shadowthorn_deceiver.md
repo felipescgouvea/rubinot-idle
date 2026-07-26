@@ -1,6 +1,6 @@
 # Shadowthorn Deceiver
 
-![Shadowthorn Deceiver](../../../assets/sprites/monsters/Elf_Overseer.webp)
+![Shadowthorn Deceiver](sprites/Elf_Overseer.gif)
 
 - **HP:** 82
 - **Ataque:** 18 · **Defesa:** 4

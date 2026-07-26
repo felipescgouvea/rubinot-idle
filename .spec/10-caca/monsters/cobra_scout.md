@@ -1,6 +1,6 @@
 # Cobra Scout
 
-![Cobra Scout](../../../assets/sprites/monsters/Cobra_Scout.webp)
+![Cobra Scout](sprites/Cobra_Scout.gif)
 
 - **HP:** 8500
 - **Ataque:** 350 · **Defesa:** 81

@@ -1,6 +1,6 @@
 # Orclops Doomhauler
 
-![Orclops Doomhauler](../../../assets/sprites/monsters/Orclops_Doomhauler.webp)
+![Orclops Doomhauler](sprites/Orclops_Doomhauler.gif)
 
 - **HP:** 1700
 - **Ataque:** 486 · **Defesa:** 35

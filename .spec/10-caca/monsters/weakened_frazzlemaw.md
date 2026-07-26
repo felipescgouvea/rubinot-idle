@@ -1,6 +1,6 @@
 # Weakened Frazzlemaw
 
-![Weakened Frazzlemaw](../../../assets/sprites/monsters/Weakened_Frazzlemaw.webp)
+![Weakened Frazzlemaw](sprites/Weakened_Frazzlemaw.gif)
 
 - **HP:** 1200
 - **Ataque:** 79 · **Defesa:** 57

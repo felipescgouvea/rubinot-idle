@@ -1,6 +1,6 @@
 # Diamond Servant Replica
 
-![Diamond Servant Replica](../../../assets/sprites/monsters/Diamond_Servant_Replica.webp)
+![Diamond Servant Replica](sprites/Diamond_Servant_Replica.gif)
 
 - **HP:** 2000
 - **Ataque:** 200 · **Defesa:** 25

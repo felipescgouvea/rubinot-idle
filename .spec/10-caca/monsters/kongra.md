@@ -1,6 +1,6 @@
 # Kongra
 
-![Kongra](../../../assets/sprites/monsters/Kongra.webp)
+![Kongra](sprites/Kongra.gif)
 
 - **HP:** 340
 - **Ataque:** 60 · **Defesa:** 18

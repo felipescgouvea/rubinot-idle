@@ -1,6 +1,6 @@
 # Mole
 
-![Mole](../../../assets/sprites/monsters/Mole.webp)
+![Mole](sprites/Mole.gif)
 
 - **HP:** 200
 - **Ataque:** 54 · **Defesa:** 20

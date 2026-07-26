@@ -1,6 +1,6 @@
 # Dawnfly
 
-![Dawnfly](../../../assets/sprites/monsters/Dawnfly.webp)
+![Dawnfly](sprites/Dawnfly.gif)
 
 - **HP:** 90
 - **Ataque:** 20 · **Defesa:** 3

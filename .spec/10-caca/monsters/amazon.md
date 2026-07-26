@@ -1,6 +1,6 @@
 # Amazon
 
-![Amazon](../../../assets/sprites/monsters/Amazon.webp)
+![Amazon](sprites/Amazon.gif)
 
 - **HP:** 110
 - **Ataque:** 45 · **Defesa:** 10

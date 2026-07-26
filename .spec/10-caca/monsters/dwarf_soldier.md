@@ -1,6 +1,6 @@
 # Dwarf Soldier
 
-![Dwarf Soldier](../../../assets/sprites/monsters/Dwarf_Soldier.webp)
+![Dwarf Soldier](sprites/Dwarf_Soldier.gif)
 
 - **HP:** 135
 - **Ataque:** 70 · **Defesa:** 10

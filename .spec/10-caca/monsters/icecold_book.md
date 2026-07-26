@@ -1,6 +1,6 @@
 # Icecold Book
 
-![Icecold Book](../../../assets/sprites/monsters/Icecold_Book.webp)
+![Icecold Book](sprites/Icecold_Book.gif)
 
 - **HP:** 21000
 - **Ataque:** 850 · **Defesa:** 82

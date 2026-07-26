@@ -1,6 +1,6 @@
 # Orc Cult Inquisitor
 
-![Orc Cult Inquisitor](../../../assets/sprites/monsters/Orc_Cult_Inquisitor.webp)
+![Orc Cult Inquisitor](sprites/Orc_Cult_Inquisitor.gif)
 
 - **HP:** 1500
 - **Ataque:** 400 · **Defesa:** 40

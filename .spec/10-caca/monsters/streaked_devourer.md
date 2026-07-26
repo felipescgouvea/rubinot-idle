@@ -1,6 +1,6 @@
 # Streaked Devourer
 
-![Streaked Devourer](../../../assets/sprites/monsters/Streaked_Devourer.webp)
+![Streaked Devourer](sprites/Streaked_Devourer.gif)
 
 - **HP:** 7000
 - **Ataque:** 550 · **Defesa:** 62

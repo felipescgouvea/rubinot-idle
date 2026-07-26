@@ -1,6 +1,6 @@
 # Courage Leech
 
-![Courage Leech](../../../assets/sprites/monsters/Courage_Leech.webp)
+![Courage Leech](sprites/Courage_Leech.gif)
 
 - **HP:** 27000
 - **Ataque:** 700 · **Defesa:** 160

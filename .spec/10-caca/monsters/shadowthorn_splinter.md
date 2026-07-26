@@ -1,6 +1,6 @@
 # Shadowthorn Splinter
 
-![Shadowthorn Splinter](../../../assets/sprites/monsters/Elf_Scout.webp)
+![Shadowthorn Splinter](sprites/Elf_Scout.gif)
 
 - **HP:** 68
 - **Ataque:** 15 · **Defesa:** 3

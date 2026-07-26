@@ -1,6 +1,6 @@
 # Thanatursus
 
-![Thanatursus](../../../assets/sprites/monsters/Thanatursus.webp)
+![Thanatursus](sprites/Thanatursus.gif)
 
 - **HP:** 7200
 - **Ataque:** 450 · **Defesa:** 78

@@ -1,6 +1,6 @@
 # Dawnfire Asura
 
-![Dawnfire Asura](../../../assets/sprites/monsters/Dawnfire_Asura.webp)
+![Dawnfire Asura](sprites/Dawnfire_Asura.gif)
 
 - **HP:** 2900
 - **Ataque:** 252 · **Defesa:** 48

@@ -1,6 +1,6 @@
 # Paladin's Apparition
 
-![Paladin's Apparition](../../../assets/sprites/monsters/Paladin's_Apparition.webp)
+![Paladin's Apparition](sprites/Paladin's_Apparition.gif)
 
 - **HP:** 25000
 - **Ataque:** 850 · **Defesa:** 162

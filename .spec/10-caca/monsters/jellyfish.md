@@ -1,6 +1,6 @@
 # Jellyfish
 
-![Jellyfish](../../../assets/sprites/monsters/Jellyfish.webp)
+![Jellyfish](sprites/Jellyfish.gif)
 
 - **HP:** 55
 - **Ataque:** 13 · **Defesa:** 11

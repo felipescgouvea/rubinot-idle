@@ -1,6 +1,6 @@
 # Sopping Corpus
 
-![Sopping Corpus](../../../assets/sprites/monsters/Sopping_Corpus.webp)
+![Sopping Corpus](sprites/Sopping_Corpus.gif)
 
 - **HP:** 33400
 - **Ataque:** 1600 · **Defesa:** 179

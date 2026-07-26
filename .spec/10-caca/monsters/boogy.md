@@ -1,6 +1,6 @@
 # Boogy
 
-![Boogy](../../../assets/sprites/monsters/Boogy.webp)
+![Boogy](sprites/Boogy.gif)
 
 - **HP:** 1300
 - **Ataque:** 355 · **Defesa:** 35

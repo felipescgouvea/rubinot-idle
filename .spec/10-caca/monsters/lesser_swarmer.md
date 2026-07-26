@@ -1,6 +1,6 @@
 # Lesser Swarmer
 
-![Lesser Swarmer](../../../assets/sprites/monsters/Lesser_Swarmer.webp)
+![Lesser Swarmer](sprites/Lesser_Swarmer.gif)
 
 - **HP:** 230
 - **Ataque:** 63 · **Defesa:** 13

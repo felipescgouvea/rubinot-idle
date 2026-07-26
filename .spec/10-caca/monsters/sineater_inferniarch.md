@@ -1,6 +1,6 @@
 # Sineater Inferniarch
 
-![Sineater Inferniarch](../../../assets/sprites/monsters/Sineater_Inferniarch.webp)
+![Sineater Inferniarch](sprites/Sineater_Inferniarch.gif)
 
 - **HP:** 9150
 - **Ataque:** 250 · **Defesa:** 68

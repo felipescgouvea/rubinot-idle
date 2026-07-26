@@ -1,6 +1,6 @@
 # Lost Thrower
 
-![Lost Thrower](../../../assets/sprites/monsters/Lost_Thrower.webp)
+![Lost Thrower](sprites/Lost_Thrower.gif)
 
 - **HP:** 1700
 - **Ataque:** 464 · **Defesa:** 50

@@ -1,6 +1,6 @@
 # Gazer Spectre
 
-![Gazer Spectre](../../../assets/sprites/monsters/Gazer_Spectre.webp)
+![Gazer Spectre](sprites/Gazer_Spectre.gif)
 
 - **HP:** 4500
 - **Ataque:** 350 · **Defesa:** 68

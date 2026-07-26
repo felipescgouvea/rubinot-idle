@@ -1,6 +1,6 @@
 # Leaf Golem
 
-![Leaf Golem](../../../assets/sprites/monsters/Leaf_Golem.webp)
+![Leaf Golem](sprites/Leaf_Golem.gif)
 
 - **HP:** 90
 - **Ataque:** 55 · **Defesa:** 11

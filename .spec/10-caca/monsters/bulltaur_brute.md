@@ -1,6 +1,6 @@
 # Bulltaur Brute
 
-![Bulltaur Brute](../../../assets/sprites/monsters/Bulltaur_Brute.webp)
+![Bulltaur Brute](sprites/Bulltaur_Brute.gif)
 
 - **HP:** 6560
 - **Ataque:** 170 · **Defesa:** 78

@@ -1,6 +1,6 @@
 # Candy Horror
 
-![Candy Horror](../../../assets/sprites/monsters/Candy_Horror.webp)
+![Candy Horror](sprites/Candy_Horror.gif)
 
 - **HP:** 3100
 - **Ataque:** 481 · **Defesa:** 86

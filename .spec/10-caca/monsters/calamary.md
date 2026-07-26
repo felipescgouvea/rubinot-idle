@@ -1,6 +1,6 @@
 # Calamary
 
-![Calamary](../../../assets/sprites/monsters/Calamary.webp)
+![Calamary](sprites/Calamary.gif)
 
 - **HP:** 75
 - **Ataque:** 20 · **Defesa:** 13

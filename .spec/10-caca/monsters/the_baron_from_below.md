@@ -1,6 +1,6 @@
 # The Baron from Below
 
-![The Baron from Below](../../../assets/sprites/monsters/The_Baron_from_Below.webp)
+![The Baron from Below](sprites/The_Baron_from_Below.gif)
 
 - **HP:** 350000
 - **Ataque:** 92 · **Defesa:** 22

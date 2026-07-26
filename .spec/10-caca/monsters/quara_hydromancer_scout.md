@@ -1,6 +1,6 @@
 # Quara Hydromancer Scout
 
-![Quara Hydromancer Scout](../../../assets/sprites/monsters/Quara_Hydromancer_Scout.webp)
+![Quara Hydromancer Scout](sprites/Quara_Hydromancer_Scout.gif)
 
 - **HP:** 1100
 - **Ataque:** 34 · **Defesa:** 42

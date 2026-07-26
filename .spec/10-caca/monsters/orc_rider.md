@@ -1,6 +1,6 @@
 # Orc Rider
 
-![Orc Rider](../../../assets/sprites/monsters/Orc_Rider.webp)
+![Orc Rider](sprites/Orc_Rider.gif)
 
 - **HP:** 180
 - **Ataque:** 130 · **Defesa:** 9

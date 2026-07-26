@@ -1,6 +1,6 @@
 # Hazardous Phantom
 
-![Hazardous Phantom](../../../assets/sprites/monsters/Hazardous_Phantom.webp)
+![Hazardous Phantom](sprites/Hazardous_Phantom.gif)
 
 - **HP:** 70000
 - **Ataque:** 1100 · **Defesa:** 28

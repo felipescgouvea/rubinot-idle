@@ -1,6 +1,6 @@
 # Elf Scout
 
-![Elf Scout](../../../assets/sprites/monsters/Elf_Scout.webp)
+![Elf Scout](sprites/Elf_Scout.gif)
 
 - **HP:** 160
 - **Ataque:** 30 · **Defesa:** 7

@@ -1,6 +1,6 @@
 # Venerable Foam Stalker
 
-![Venerable Foam Stalker](../../../assets/sprites/monsters/Venerable_Foam_Stalker.webp)
+![Venerable Foam Stalker](sprites/Venerable_Foam_Stalker.gif)
 
 - **HP:** 5650
 - **Ataque:** 1554 · **Defesa:** 10

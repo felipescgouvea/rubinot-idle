@@ -1,6 +1,6 @@
 # Wardragon
 
-![Wardragon](../../../assets/sprites/monsters/Wardragon.webp)
+![Wardragon](sprites/Wardragon.gif)
 
 - **HP:** 6960
 - **Ataque:** 300 · **Defesa:** 80

@@ -1,6 +1,6 @@
 # Werelion
 
-![Werelion](../../../assets/sprites/monsters/Werelion.webp)
+![Werelion](sprites/Werelion.gif)
 
 - **HP:** 2800
 - **Ataque:** 325 · **Defesa:** 38

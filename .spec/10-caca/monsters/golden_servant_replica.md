@@ -1,6 +1,6 @@
 # Golden Servant Replica
 
-![Golden Servant Replica](../../../assets/sprites/monsters/Golden_Servant_Replica.webp)
+![Golden Servant Replica](sprites/Golden_Servant_Replica.gif)
 
 - **HP:** 2000
 - **Ataque:** 540 · **Defesa:** 29

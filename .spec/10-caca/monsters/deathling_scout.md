@@ -1,6 +1,6 @@
 # Deathling Scout
 
-![Deathling Scout](../../../assets/sprites/monsters/Deathling_Scout.webp)
+![Deathling Scout](sprites/Deathling_Scout.gif)
 
 - **HP:** 7200
 - **Ataque:** 300 · **Defesa:** 107

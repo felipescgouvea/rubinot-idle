@@ -1,6 +1,6 @@
 # Turbulent Elemental
 
-![Turbulent Elemental](../../../assets/sprites/monsters/Turbulent_Elemental.webp)
+![Turbulent Elemental](sprites/Turbulent_Elemental.gif)
 
 - **HP:** 28000
 - **Ataque:** 900 · **Defesa:** 167

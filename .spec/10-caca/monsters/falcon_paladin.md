@@ -1,6 +1,6 @@
 # Falcon Paladin
 
-![Falcon Paladin](../../../assets/sprites/monsters/Falcon_Paladin.webp)
+![Falcon Paladin](sprites/Falcon_Paladin.gif)
 
 - **HP:** 8500
 - **Ataque:** 250 · **Defesa:** 82

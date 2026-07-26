@@ -1,6 +1,6 @@
 # Burster Spectre
 
-![Burster Spectre](../../../assets/sprites/monsters/Burster_Spectre.webp)
+![Burster Spectre](sprites/Burster_Spectre.gif)
 
 - **HP:** 6500
 - **Ataque:** 400 · **Defesa:** 70

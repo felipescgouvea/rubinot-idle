@@ -1,6 +1,6 @@
 # Silencer
 
-![Silencer](../../../assets/sprites/monsters/Silencer.webp)
+![Silencer](sprites/Silencer.gif)
 
 - **HP:** 5400
 - **Ataque:** 350 · **Defesa:** 71

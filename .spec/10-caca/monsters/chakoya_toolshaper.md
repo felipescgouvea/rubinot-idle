@@ -1,6 +1,6 @@
 # Chakoya Toolshaper
 
-![Chakoya Toolshaper](../../../assets/sprites/monsters/Chakoya_Toolshaper.webp)
+![Chakoya Toolshaper](sprites/Chakoya_Toolshaper.gif)
 
 - **HP:** 80
 - **Ataque:** 80 · **Defesa:** 7

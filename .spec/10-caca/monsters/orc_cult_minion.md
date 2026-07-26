@@ -1,6 +1,6 @@
 # Orc Cult Minion
 
-![Orc Cult Minion](../../../assets/sprites/monsters/Orc_Cult_Minion.webp)
+![Orc Cult Minion](sprites/Orc_Cult_Minion.gif)
 
 - **HP:** 1000
 - **Ataque:** 350 · **Defesa:** 30

@@ -1,6 +1,6 @@
 # Troll-Trained Salamander
 
-![Troll-Trained Salamander](../../../assets/sprites/monsters/Troll-Trained_Salamander.webp)
+![Troll-Trained Salamander](sprites/Troll-Trained_Salamander.gif)
 
 - **HP:** 70
 - **Ataque:** 13 · **Defesa:** 1

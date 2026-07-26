@@ -1,6 +1,6 @@
 # Waspoid
 
-![Waspoid](../../../assets/sprites/monsters/Waspoid.webp)
+![Waspoid](sprites/Waspoid.gif)
 
 - **HP:** 1100
 - **Ataque:** 259 · **Defesa:** 76

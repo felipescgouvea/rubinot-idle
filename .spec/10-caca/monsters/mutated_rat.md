@@ -1,6 +1,6 @@
 # Mutated Rat
 
-![Mutated Rat](../../../assets/sprites/monsters/Mutated_Rat.webp)
+![Mutated Rat](sprites/Mutated_Rat.gif)
 
 - **HP:** 550
 - **Ataque:** 40 · **Defesa:** 3

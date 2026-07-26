@@ -1,6 +1,6 @@
 # Warlock
 
-![Warlock](../../../assets/sprites/monsters/Warlock.webp)
+![Warlock](sprites/Warlock.gif)
 
 - **HP:** 3500
 - **Ataque:** 130 · **Defesa:** 33

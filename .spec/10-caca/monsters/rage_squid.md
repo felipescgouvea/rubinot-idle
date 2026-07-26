@@ -1,6 +1,6 @@
 # Rage Squid
 
-![Rage Squid](../../../assets/sprites/monsters/Rage_Squid.webp)
+![Rage Squid](sprites/Rage_Squid.gif)
 
 - **HP:** 17000
 - **Ataque:** 600 · **Defesa:** 78

@@ -1,6 +1,6 @@
 # Dwarf Guard
 
-![Dwarf Guard](../../../assets/sprites/monsters/Dwarf_Guard.webp)
+![Dwarf Guard](sprites/Dwarf_Guard.gif)
 
 - **HP:** 245
 - **Ataque:** 140 · **Defesa:** 18

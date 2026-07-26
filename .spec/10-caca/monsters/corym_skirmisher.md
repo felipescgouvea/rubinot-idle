@@ -1,6 +1,6 @@
 # Corym Skirmisher
 
-![Corym Skirmisher](../../../assets/sprites/monsters/Corym_Skirmisher.webp)
+![Corym Skirmisher](sprites/Corym_Skirmisher.gif)
 
 - **HP:** 450
 - **Ataque:** 150 · **Defesa:** 25

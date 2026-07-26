@@ -1,6 +1,6 @@
 # White Lion
 
-![White Lion](../../../assets/sprites/monsters/White_Lion.webp)
+![White Lion](sprites/White_Lion.gif)
 
 - **HP:** 2700
 - **Ataque:** 350 · **Defesa:** 38

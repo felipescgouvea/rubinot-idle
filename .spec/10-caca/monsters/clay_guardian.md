@@ -1,6 +1,6 @@
 # Clay Guardian
 
-![Clay Guardian](../../../assets/sprites/monsters/Clay_Guardian.webp)
+![Clay Guardian](sprites/Clay_Guardian.gif)
 
 - **HP:** 625
 - **Ataque:** 180 · **Defesa:** 42

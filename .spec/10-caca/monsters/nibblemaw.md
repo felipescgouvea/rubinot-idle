@@ -1,6 +1,6 @@
 # Nibblemaw
 
-![Nibblemaw](../../../assets/sprites/monsters/Nibblemaw.webp)
+![Nibblemaw](sprites/Nibblemaw.gif)
 
 - **HP:** 2900
 - **Ataque:** 481 · **Defesa:** 86

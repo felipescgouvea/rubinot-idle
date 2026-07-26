@@ -1,6 +1,6 @@
 # Renegade Knight
 
-![Renegade Knight](../../../assets/sprites/monsters/Renegade_Knight.webp)
+![Renegade Knight](sprites/Renegade_Knight.gif)
 
 - **HP:** 1450
 - **Ataque:** 245 · **Defesa:** 38

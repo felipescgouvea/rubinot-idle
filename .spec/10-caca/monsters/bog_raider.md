@@ -1,6 +1,6 @@
 # Bog Raider
 
-![Bog Raider](../../../assets/sprites/monsters/Bog_Raider.webp)
+![Bog Raider](sprites/Bog_Raider.gif)
 
 - **HP:** 1300
 - **Ataque:** 180 · **Defesa:** 20

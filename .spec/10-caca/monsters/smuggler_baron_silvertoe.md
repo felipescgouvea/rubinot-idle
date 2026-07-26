@@ -1,6 +1,6 @@
 # Smuggler Baron Silvertoe
 
-![Smuggler Baron Silvertoe](../../../assets/sprites/monsters/Smuggler_Baron_Silvertoe.webp)
+![Smuggler Baron Silvertoe](sprites/Smuggler_Baron_Silvertoe.gif)
 
 - **HP:** 280
 - **Ataque:** 76 · **Defesa:** 16

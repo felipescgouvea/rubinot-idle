@@ -1,6 +1,6 @@
 # Animated Feather
 
-![Animated Feather](../../../assets/sprites/monsters/Animated_Feather.webp)
+![Animated Feather](sprites/Animated_Feather.gif)
 
 - **HP:** 13000
 - **Ataque:** 400 · **Defesa:** 79

@@ -1,6 +1,6 @@
 # Dragon
 
-![Dragon](../../../assets/sprites/monsters/Dragon.webp)
+![Dragon](sprites/Dragon.gif)
 
 - **HP:** 1000
 - **Ataque:** 120 · **Defesa:** 25

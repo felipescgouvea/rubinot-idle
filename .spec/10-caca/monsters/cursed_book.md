@@ -1,6 +1,6 @@
 # Cursed Book
 
-![Cursed Book](../../../assets/sprites/monsters/Cursed_Book.webp)
+![Cursed Book](sprites/Cursed_Book.gif)
 
 - **HP:** 20000
 - **Ataque:** 600 · **Defesa:** 82

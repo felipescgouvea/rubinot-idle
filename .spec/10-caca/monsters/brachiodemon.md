@@ -1,6 +1,6 @@
 # Brachiodemon
 
-![Brachiodemon](../../../assets/sprites/monsters/Brachiodemon.webp)
+![Brachiodemon](sprites/Brachiodemon.gif)
 
 - **HP:** 25000
 - **Ataque:** 950 · **Defesa:** 165

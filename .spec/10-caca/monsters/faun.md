@@ -1,6 +1,6 @@
 # Faun
 
-![Faun](../../../assets/sprites/monsters/Faun.webp)
+![Faun](sprites/Faun.gif)
 
 - **HP:** 900
 - **Ataque:** 244 · **Defesa:** 45

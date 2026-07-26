@@ -1,6 +1,6 @@
 # Frost Giantess
 
-![Frost Giantess](../../../assets/sprites/monsters/Frost_Giantess.webp)
+![Frost Giantess](sprites/Frost_Giantess.gif)
 
 - **HP:** 275
 - **Ataque:** 150 · **Defesa:** 20

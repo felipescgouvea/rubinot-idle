@@ -1,6 +1,6 @@
 # Mega Dragon
 
-![Mega Dragon](../../../assets/sprites/monsters/Mega_Dragon.webp)
+![Mega Dragon](sprites/Mega_Dragon.gif)
 
 - **HP:** 7920
 - **Ataque:** 400 · **Defesa:** 76

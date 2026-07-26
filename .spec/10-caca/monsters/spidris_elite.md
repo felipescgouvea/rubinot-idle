@@ -1,6 +1,6 @@
 # Spidris Elite
 
-![Spidris Elite](../../../assets/sprites/monsters/Spidris_Elite.webp)
+![Spidris Elite](sprites/Spidris_Elite.gif)
 
 - **HP:** 5000
 - **Ataque:** 259 · **Defesa:** 76

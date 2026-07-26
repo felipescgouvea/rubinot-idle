@@ -1,6 +1,6 @@
 # Angry Sugar Fairy
 
-![Angry Sugar Fairy](../../../assets/sprites/monsters/Angry_Sugar_Fairy.webp)
+![Angry Sugar Fairy](sprites/Angry_Sugar_Fairy.gif)
 
 - **HP:** 3000
 - **Ataque:** 481 · **Defesa:** 86

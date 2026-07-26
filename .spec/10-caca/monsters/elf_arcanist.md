@@ -1,6 +1,6 @@
 # Elf Arcanist
 
-![Elf Arcanist](../../../assets/sprites/monsters/Elf_Arcanist.webp)
+![Elf Arcanist](sprites/Elf_Arcanist.gif)
 
 - **HP:** 220
 - **Ataque:** 35 · **Defesa:** 15

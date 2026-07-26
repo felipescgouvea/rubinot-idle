@@ -1,6 +1,6 @@
 # Centipede
 
-![Centipede](../../../assets/sprites/monsters/Centipede.webp)
+![Centipede](sprites/Centipede.gif)
 
 - **HP:** 70
 - **Ataque:** 45 · **Defesa:** 18

@@ -1,6 +1,6 @@
 # Vibrant Phantom
 
-![Vibrant Phantom](../../../assets/sprites/monsters/Vibrant_Phantom.webp)
+![Vibrant Phantom](sprites/Vibrant_Phantom.gif)
 
 - **HP:** 27000
 - **Ataque:** 800 · **Defesa:** 160

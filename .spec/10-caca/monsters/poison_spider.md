@@ -1,6 +1,6 @@
 # Poison Spider
 
-![Poison Spider](../../../assets/sprites/monsters/Poison_Spider.webp)
+![Poison Spider](sprites/Poison_Spider.gif)
 
 - **HP:** 26
 - **Ataque:** 20 · **Defesa:** 38

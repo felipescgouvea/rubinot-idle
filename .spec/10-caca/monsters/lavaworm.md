@@ -1,6 +1,6 @@
 # Lavaworm
 
-![Lavaworm](../../../assets/sprites/monsters/Lavaworm.webp)
+![Lavaworm](sprites/Lavaworm.gif)
 
 - **HP:** 7500
 - **Ataque:** 600 · **Defesa:** 60

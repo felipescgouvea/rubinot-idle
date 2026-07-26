@@ -1,6 +1,6 @@
 # Ladybug
 
-![Ladybug](../../../assets/sprites/monsters/Ladybug.webp)
+![Ladybug](sprites/Ladybug.gif)
 
 - **HP:** 255
 - **Ataque:** 71 · **Defesa:** 8

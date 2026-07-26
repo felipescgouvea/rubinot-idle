@@ -1,6 +1,6 @@
 # Deepling Guard
 
-![Deepling Guard](../../../assets/sprites/monsters/Deepling_Guard.webp)
+![Deepling Guard](sprites/Deepling_Guard.gif)
 
 - **HP:** 1900
 - **Ataque:** 56 · **Defesa:** 51

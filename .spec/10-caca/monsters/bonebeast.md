@@ -1,6 +1,6 @@
 # Bonebeast
 
-![Bonebeast](../../../assets/sprites/monsters/Bonebeast.webp)
+![Bonebeast](sprites/Bonebeast.gif)
 
 - **HP:** 515
 - **Ataque:** 200 · **Defesa:** 22

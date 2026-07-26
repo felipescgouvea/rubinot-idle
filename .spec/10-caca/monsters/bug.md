@@ -1,6 +1,6 @@
 # Bug
 
-![Bug](../../../assets/sprites/monsters/Bug.webp)
+![Bug](sprites/Bug.gif)
 
 - **HP:** 29
 - **Ataque:** 23 · **Defesa:** 1

@@ -1,6 +1,6 @@
 # Orc Berserker
 
-![Orc Berserker](../../../assets/sprites/monsters/Orc_Berserker.webp)
+![Orc Berserker](sprites/Orc_Berserker.gif)
 
 - **HP:** 210
 - **Ataque:** 200 · **Defesa:** 12

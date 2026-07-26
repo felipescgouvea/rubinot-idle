@@ -1,6 +1,6 @@
 # Many Faces
 
-![Many Faces](../../../assets/sprites/monsters/Many_Faces.webp)
+![Many Faces](sprites/Many_Faces.gif)
 
 - **HP:** 30000
 - **Ataque:** 1300 · **Defesa:** 162

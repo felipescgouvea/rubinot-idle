@@ -1,6 +1,6 @@
 # Kollos
 
-![Kollos](../../../assets/sprites/monsters/Kollos.webp)
+![Kollos](sprites/Kollos.gif)
 
 - **HP:** 3800
 - **Ataque:** 259 · **Defesa:** 76

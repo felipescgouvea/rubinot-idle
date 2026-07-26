@@ -1,6 +1,6 @@
 # Bony Sea Devil
 
-![Bony Sea Devil](../../../assets/sprites/monsters/Bony_Sea_Devil.webp)
+![Bony Sea Devil](sprites/Bony_Sea_Devil.gif)
 
 - **HP:** 24000
 - **Ataque:** 900 · **Defesa:** 167

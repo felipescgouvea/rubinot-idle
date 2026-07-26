@@ -1,6 +1,6 @@
 # Guardian of Tales
 
-![Guardian of Tales](../../../assets/sprites/monsters/Guardian_Of_Tales.webp)
+![Guardian of Tales](sprites/Guardian_Of_Tales.gif)
 
 - **HP:** 15000
 - **Ataque:** 600 · **Defesa:** 77

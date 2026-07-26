@@ -1,6 +1,6 @@
 # Wandering Pillar
 
-![Wandering Pillar](../../../assets/sprites/monsters/Wandering_Pillar.webp)
+![Wandering Pillar](sprites/Wandering_Pillar.gif)
 
 - **HP:** 37000
 - **Ataque:** 1200 · **Defesa:** 177

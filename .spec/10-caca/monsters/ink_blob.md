@@ -1,6 +1,6 @@
 # Ink Blob
 
-![Ink Blob](../../../assets/sprites/monsters/Ink_Blob.webp)
+![Ink Blob](sprites/Ink_Blob.gif)
 
 - **HP:** 9500
 - **Ataque:** 550 · **Defesa:** 70

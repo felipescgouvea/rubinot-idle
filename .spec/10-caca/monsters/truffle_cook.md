@@ -1,6 +1,6 @@
 # Truffle Cook
 
-![Truffle Cook](../../../assets/sprites/monsters/Truffle_Cook.webp)
+![Truffle Cook](sprites/Truffle_Cook.gif)
 
 - **HP:** 54
 - **Ataque:** 15 · **Defesa:** 13

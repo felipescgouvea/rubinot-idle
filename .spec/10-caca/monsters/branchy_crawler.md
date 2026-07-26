@@ -1,6 +1,6 @@
 # Branchy Crawler
 
-![Branchy Crawler](../../../assets/sprites/monsters/Branchy_Crawler.webp)
+![Branchy Crawler](sprites/Branchy_Crawler.gif)
 
 - **HP:** 27000
 - **Ataque:** 950 · **Defesa:** 164

@@ -1,6 +1,6 @@
 # Girtablilu Warrior
 
-![Girtablilu Warrior](../../../assets/sprites/monsters/Girtablilu_Warrior.webp)
+![Girtablilu Warrior](sprites/Girtablilu_Warrior.gif)
 
 - **HP:** 8500
 - **Ataque:** 400 · **Defesa:** 76

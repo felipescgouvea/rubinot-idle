@@ -1,6 +1,6 @@
 # Rotten Golem
 
-![Rotten Golem](../../../assets/sprites/monsters/Rotten_Golem.webp)
+![Rotten Golem](sprites/Rotten_Golem.gif)
 
 - **HP:** 28000
 - **Ataque:** 950 · **Defesa:** 164

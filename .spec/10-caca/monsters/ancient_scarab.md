@@ -1,6 +1,6 @@
 # Ancient Scarab
 
-![Ancient Scarab](../../../assets/sprites/monsters/Ancient_Scarab.webp)
+![Ancient Scarab](sprites/Ancient_Scarab.gif)
 
 - **HP:** 1000
 - **Ataque:** 210 · **Defesa:** 30

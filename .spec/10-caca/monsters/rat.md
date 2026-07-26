@@ -1,6 +1,6 @@
 # Rat
 
-![Rat](../../../assets/sprites/monsters/Rat.webp)
+![Rat](sprites/Rat.gif)
 
 - **HP:** 20
 - **Ataque:** 8 · **Defesa:** 2

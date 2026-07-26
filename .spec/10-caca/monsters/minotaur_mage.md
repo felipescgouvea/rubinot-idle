@@ -1,6 +1,6 @@
 # Minotaur Mage
 
-![Minotaur Mage](../../../assets/sprites/monsters/Minotaur_Mage.webp)
+![Minotaur Mage](sprites/Minotaur_Mage.gif)
 
 - **HP:** 155
 - **Ataque:** 21 · **Defesa:** 18

@@ -1,6 +1,6 @@
 # Biting Book
 
-![Biting Book](../../../assets/sprites/monsters/Biting_Book.webp)
+![Biting Book](sprites/Biting_Book.gif)
 
 - **HP:** 6500
 - **Ataque:** 1055 · **Defesa:** 76

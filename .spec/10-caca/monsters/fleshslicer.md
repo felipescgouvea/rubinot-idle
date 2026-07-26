@@ -1,6 +1,6 @@
 # Fleshslicer
 
-![Fleshslicer](../../../assets/sprites/monsters/Fleshslicer.webp)
+![Fleshslicer](sprites/Fleshslicer.gif)
 
 - **HP:** 5700
 - **Ataque:** 99 · **Defesa:** 7

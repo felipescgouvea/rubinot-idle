@@ -1,6 +1,6 @@
 # Sorcerer's Apparition
 
-![Sorcerer's Apparition](../../../assets/sprites/monsters/Sorcerer's_Apparition.webp)
+![Sorcerer's Apparition](sprites/Sorcerer's_Apparition.gif)
 
 - **HP:** 25000
 - **Ataque:** 900 · **Defesa:** 162

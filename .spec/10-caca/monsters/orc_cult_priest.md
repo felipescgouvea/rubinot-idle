@@ -1,6 +1,6 @@
 # Orc Cult Priest
 
-![Orc Cult Priest](../../../assets/sprites/monsters/Orc_Cult_Priest.webp)
+![Orc Cult Priest](sprites/Orc_Cult_Priest.gif)
 
 - **HP:** 1300
 - **Ataque:** 358 · **Defesa:** 27

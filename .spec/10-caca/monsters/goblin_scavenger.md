@@ -1,6 +1,6 @@
 # Goblin Scavenger
 
-![Goblin Scavenger](../../../assets/sprites/monsters/Goblin_Scavenger.webp)
+![Goblin Scavenger](sprites/Goblin_Scavenger.gif)
 
 - **HP:** 60
 - **Ataque:** 15 · **Defesa:** 7

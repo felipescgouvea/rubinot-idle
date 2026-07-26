@@ -1,6 +1,6 @@
 # Dark Faun
 
-![Dark Faun](../../../assets/sprites/monsters/Dark_Faun.webp)
+![Dark Faun](sprites/Dark_Faun.gif)
 
 - **HP:** 1100
 - **Ataque:** 314 · **Defesa:** 50

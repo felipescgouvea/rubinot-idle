@@ -1,6 +1,6 @@
 # Orc Cultist
 
-![Orc Cultist](../../../assets/sprites/monsters/Orc_Cultist.webp)
+![Orc Cultist](sprites/Orc_Cultist.gif)
 
 - **HP:** 1350
 - **Ataque:** 364 · **Defesa:** 30

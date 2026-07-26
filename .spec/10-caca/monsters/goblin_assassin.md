@@ -1,6 +1,6 @@
 # Goblin Assassin
 
-![Goblin Assassin](../../../assets/sprites/monsters/Goblin_Assassin.webp)
+![Goblin Assassin](sprites/Goblin_Assassin.gif)
 
 - **HP:** 75
 - **Ataque:** 15 · **Defesa:** 6

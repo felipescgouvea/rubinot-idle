@@ -1,6 +1,6 @@
 # Dark Torturer
 
-![Dark Torturer](../../../assets/sprites/monsters/Dark_Torturer.webp)
+![Dark Torturer](sprites/Dark_Torturer.gif)
 
 - **HP:** 7350
 - **Ataque:** 513 · **Defesa:** 45

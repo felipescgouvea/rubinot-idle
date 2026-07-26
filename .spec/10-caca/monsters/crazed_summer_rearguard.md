@@ -1,6 +1,6 @@
 # Crazed Summer Rearguard
 
-![Crazed Summer Rearguard](../../../assets/sprites/monsters/Crazed_Summer_Rearguard.webp)
+![Crazed Summer Rearguard](sprites/Crazed_Summer_Rearguard.gif)
 
 - **HP:** 5300
 - **Ataque:** 450 · **Defesa:** 76

@@ -1,6 +1,6 @@
 # Bonelord
 
-![Bonelord](../../../assets/sprites/monsters/Bonelord.webp)
+![Bonelord](sprites/Bonelord.gif)
 
 - **HP:** 260
 - **Ataque:** 5 · **Defesa:** 28

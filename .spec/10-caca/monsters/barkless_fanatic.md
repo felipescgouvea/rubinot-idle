@@ -1,6 +1,6 @@
 # Barkless Fanatic
 
-![Barkless Fanatic](../../../assets/sprites/monsters/Barkless_Fanatic.webp)
+![Barkless Fanatic](sprites/Barkless_Fanatic.gif)
 
 - **HP:** 3200
 - **Ataque:** 864 · **Defesa:** 30

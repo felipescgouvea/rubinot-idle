@@ -1,6 +1,6 @@
 # Goggle Cake
 
-![Goggle Cake](../../../assets/sprites/monsters/Goggle_Cake.webp)
+![Goggle Cake](sprites/Goggle_Cake.gif)
 
 - **HP:** 2700
 - **Ataque:** 481 · **Defesa:** 86

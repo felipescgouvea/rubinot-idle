@@ -1,6 +1,6 @@
 # Pooka
 
-![Pooka](../../../assets/sprites/monsters/Pooka.webp)
+![Pooka](sprites/Pooka.gif)
 
 - **HP:** 500
 - **Ataque:** 135 · **Defesa:** 38

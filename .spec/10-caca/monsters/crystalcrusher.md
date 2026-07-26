@@ -1,6 +1,6 @@
 # Crystalcrusher
 
-![Crystalcrusher](../../../assets/sprites/monsters/Crystalcrusher.webp)
+![Crystalcrusher](sprites/Crystalcrusher.gif)
 
 - **HP:** 570
 - **Ataque:** 156 · **Defesa:** 48

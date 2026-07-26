@@ -1,6 +1,6 @@
 # Cloak Of Terror
 
-![Cloak Of Terror](../../../assets/sprites/monsters/Cloak_Of_Terror.webp)
+![Cloak Of Terror](sprites/Cloak_Of_Terror.gif)
 
 - **HP:** 28000
 - **Ataque:** 1000 · **Defesa:** 160

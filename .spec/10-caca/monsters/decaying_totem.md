@@ -1,6 +1,6 @@
 # Decaying Totem
 
-![Decaying Totem](../../../assets/sprites/monsters/Decaying_Totem.webp)
+![Decaying Totem](sprites/Decaying_Totem.gif)
 
 - **HP:** 115
 - **Ataque:** 32 · **Defesa:** 7

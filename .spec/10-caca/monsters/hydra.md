@@ -1,6 +1,6 @@
 # Hydra
 
-![Hydra](../../../assets/sprites/monsters/Hydra.webp)
+![Hydra](sprites/Hydra.gif)
 
 - **HP:** 2350
 - **Ataque:** 270 · **Defesa:** 27

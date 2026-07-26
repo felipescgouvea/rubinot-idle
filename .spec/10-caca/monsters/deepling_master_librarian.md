@@ -1,6 +1,6 @@
 # Deepling Master Librarian
 
-![Deepling Master Librarian](../../../assets/sprites/monsters/Deepling_Master_Librarian.webp)
+![Deepling Master Librarian](sprites/Deepling_Master_Librarian.gif)
 
 - **HP:** 1700
 - **Ataque:** 450 · **Defesa:** 45

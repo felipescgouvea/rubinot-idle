@@ -1,6 +1,6 @@
 # Converter
 
-![Converter](../../../assets/sprites/monsters/Converter.webp)
+![Converter](sprites/Converter.gif)
 
 - **HP:** 29600
 - **Ataque:** 900 · **Defesa:** 177

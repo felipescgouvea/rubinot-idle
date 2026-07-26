@@ -1,6 +1,6 @@
 # Undead Prospector
 
-![Undead Prospector](../../../assets/sprites/monsters/Undead_Prospector.webp)
+![Undead Prospector](sprites/Undead_Prospector.gif)
 
 - **HP:** 100
 - **Ataque:** 50 · **Defesa:** 8

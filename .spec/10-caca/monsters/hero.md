@@ -1,6 +1,6 @@
 # Hero
 
-![Hero](../../../assets/sprites/monsters/Hero.webp)
+![Hero](sprites/Hero.gif)
 
 - **HP:** 1400
 - **Ataque:** 240 · **Defesa:** 35

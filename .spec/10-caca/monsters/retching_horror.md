@@ -1,6 +1,6 @@
 # Retching Horror
 
-![Retching Horror](../../../assets/sprites/monsters/Retching_Horror.webp)
+![Retching Horror](sprites/Retching_Horror.gif)
 
 - **HP:** 5300
 - **Ataque:** 500 · **Defesa:** 74

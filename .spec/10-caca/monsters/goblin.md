@@ -1,6 +1,6 @@
 # Goblin
 
-![Goblin](../../../assets/sprites/monsters/Goblin.webp)
+![Goblin](sprites/Goblin.gif)
 
 - **HP:** 50
 - **Ataque:** 10 · **Defesa:** 6

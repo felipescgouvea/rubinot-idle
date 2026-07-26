@@ -1,6 +1,6 @@
 # Darklight Striker
 
-![Darklight Striker](../../../assets/sprites/monsters/Darklight_Striker.webp)
+![Darklight Striker](sprites/Darklight_Striker.gif)
 
 - **HP:** 29700
 - **Ataque:** 1200 · **Defesa:** 181

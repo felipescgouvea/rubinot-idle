@@ -1,6 +1,6 @@
 # Mirror Image
 
-![Mirror Image](../../../assets/sprites/monsters/Mirror_Image.webp)
+![Mirror Image](sprites/Mirror_Image.gif)
 
 - **HP:** 35000
 - **Ataque:** 700 · **Defesa:** 10

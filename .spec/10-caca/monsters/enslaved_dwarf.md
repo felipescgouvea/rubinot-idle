@@ -1,6 +1,6 @@
 # Enslaved Dwarf
 
-![Enslaved Dwarf](../../../assets/sprites/monsters/Enslaved_Dwarf.webp)
+![Enslaved Dwarf](sprites/Enslaved_Dwarf.gif)
 
 - **HP:** 3800
 - **Ataque:** 1025 · **Defesa:** 60

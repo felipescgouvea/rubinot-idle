@@ -1,6 +1,6 @@
 # Lost Husher
 
-![Lost Husher](../../../assets/sprites/monsters/Lost_Husher.webp)
+![Lost Husher](sprites/Lost_Husher.gif)
 
 - **HP:** 1600
 - **Ataque:** 512 · **Defesa:** 55

@@ -1,6 +1,6 @@
 # Midnight Asura
 
-![Midnight Asura](../../../assets/sprites/monsters/Midnight_Asura.webp)
+![Midnight Asura](sprites/Midnight_Asura.gif)
 
 - **HP:** 3100
 - **Ataque:** 387 · **Defesa:** 55

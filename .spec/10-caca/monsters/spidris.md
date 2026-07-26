@@ -1,6 +1,6 @@
 # Spidris
 
-![Spidris](../../../assets/sprites/monsters/Spidris.webp)
+![Spidris](sprites/Spidris.gif)
 
 - **HP:** 3700
 - **Ataque:** 259 · **Defesa:** 76

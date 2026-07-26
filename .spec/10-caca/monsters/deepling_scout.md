@@ -1,6 +1,6 @@
 # Deepling Scout
 
-![Deepling Scout](../../../assets/sprites/monsters/Deepling_Scout.webp)
+![Deepling Scout](sprites/Deepling_Scout.gif)
 
 - **HP:** 240
 - **Ataque:** 56 · **Defesa:** 51

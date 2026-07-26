@@ -1,6 +1,6 @@
 # Lion
 
-![Lion](../../../assets/sprites/monsters/Lion.webp)
+![Lion](sprites/Lion.gif)
 
 - **HP:** 80
 - **Ataque:** 40 · **Defesa:** 6

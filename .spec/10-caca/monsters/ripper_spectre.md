@@ -1,6 +1,6 @@
 # Ripper Spectre
 
-![Ripper Spectre](../../../assets/sprites/monsters/Ripper_Spectre.webp)
+![Ripper Spectre](sprites/Ripper_Spectre.gif)
 
 - **HP:** 3800
 - **Ataque:** 350 · **Defesa:** 69

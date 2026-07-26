@@ -1,6 +1,6 @@
 # Usurper Archer
 
-![Usurper Archer](../../../assets/sprites/monsters/Usurper_Archer.webp)
+![Usurper Archer](sprites/Usurper_Archer.gif)
 
 - **HP:** 7300
 - **Ataque:** 430 · **Defesa:** 82

@@ -1,6 +1,6 @@
 # Knight's Apparition
 
-![Knight's Apparition](../../../assets/sprites/monsters/Knight's_Apparition.webp)
+![Knight's Apparition](sprites/Knight's_Apparition.gif)
 
 - **HP:** 25000
 - **Ataque:** 900 · **Defesa:** 162

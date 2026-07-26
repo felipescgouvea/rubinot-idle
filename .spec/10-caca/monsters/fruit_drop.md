@@ -1,6 +1,6 @@
 # Fruit Drop
 
-![Fruit Drop](../../../assets/sprites/monsters/Fruit_Drop.webp)
+![Fruit Drop](sprites/Fruit_Drop.gif)
 
 - **HP:** 63
 - **Ataque:** 17 · **Defesa:** 8

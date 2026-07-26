@@ -1,6 +1,6 @@
 # Makara
 
-![Makara](../../../assets/sprites/monsters/Makara.webp)
+![Makara](sprites/Makara.gif)
 
 - **HP:** 5050
 - **Ataque:** 390 · **Defesa:** 110

@@ -1,6 +1,6 @@
 # Ghost
 
-![Ghost](../../../assets/sprites/monsters/Ghost.webp)
+![Ghost](sprites/Ghost.gif)
 
 - **HP:** 150
 - **Ataque:** 80 · **Defesa:** 22

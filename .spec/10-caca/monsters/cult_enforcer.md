@@ -1,6 +1,6 @@
 # Cult Enforcer
 
-![Cult Enforcer](../../../assets/sprites/monsters/Cult_Enforcer.webp)
+![Cult Enforcer](sprites/Cult_Enforcer.gif)
 
 - **HP:** 1150
 - **Ataque:** 250 · **Defesa:** 30

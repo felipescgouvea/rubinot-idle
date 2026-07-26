@@ -1,6 +1,6 @@
 # Squid Warden
 
-![Squid Warden](../../../assets/sprites/monsters/Squid_Warden.webp)
+![Squid Warden](sprites/Squid_Warden.gif)
 
 - **HP:** 16500
 - **Ataque:** 900 · **Defesa:** 78

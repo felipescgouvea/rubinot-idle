@@ -1,6 +1,6 @@
 # Chakoya Windcaller
 
-![Chakoya Windcaller](../../../assets/sprites/monsters/Chakoya_Windcaller.webp)
+![Chakoya Windcaller](sprites/Chakoya_Windcaller.gif)
 
 - **HP:** 84
 - **Ataque:** 23 · **Defesa:** 7

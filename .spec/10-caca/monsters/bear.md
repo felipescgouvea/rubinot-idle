@@ -1,6 +1,6 @@
 # Bear
 
-![Bear](../../../assets/sprites/monsters/Bear.webp)
+![Bear](sprites/Bear.gif)
 
 - **HP:** 80
 - **Ataque:** 25 · **Defesa:** 5

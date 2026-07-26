@@ -1,6 +1,6 @@
 # Orc Warrior
 
-![Orc Warrior](../../../assets/sprites/monsters/Orc_Warrior.webp)
+![Orc Warrior](sprites/Orc_Warrior.gif)
 
 - **HP:** 125
 - **Ataque:** 60 · **Defesa:** 8

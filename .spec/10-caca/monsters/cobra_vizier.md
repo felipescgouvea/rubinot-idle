@@ -1,6 +1,6 @@
 # Cobra Vizier
 
-![Cobra Vizier](../../../assets/sprites/monsters/Cobra_Vizier.webp)
+![Cobra Vizier](sprites/Cobra_Vizier.gif)
 
 - **HP:** 8500
 - **Ataque:** 500 · **Defesa:** 82

@@ -1,6 +1,6 @@
 # Choking Fear
 
-![Choking Fear](../../../assets/sprites/monsters/Choking_Fear.webp)
+![Choking Fear](sprites/Choking_Fear.gif)
 
 - **HP:** 5800
 - **Ataque:** 500 · **Defesa:** 65

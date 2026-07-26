@@ -1,6 +1,6 @@
 # Gorger Inferniarch
 
-![Gorger Inferniarch](../../../assets/sprites/monsters/Gorger_Inferniarch.webp)
+![Gorger Inferniarch](sprites/Gorger_Inferniarch.gif)
 
 - **HP:** 9450
 - **Ataque:** 250 · **Defesa:** 74
