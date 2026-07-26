@@ -1,5 +1,7 @@
 # Zombie
 
+![Zombie](../../../assets/sprites/monsters/Zombie.webp)
+
 - **HP:** 500
 - **Ataque:** 136 · **Defesa:** 20
 - **Experiência:** 280
@@ -19,5 +21,3 @@
 | Mana Potion | 0.74% |
 | Heavily Rusted Armor | 5.7% |
 | Half-Eaten Brain | 10% |
-
-Fonte: TibiaWiki / Crystal Server.

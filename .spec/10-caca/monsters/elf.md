@@ -1,5 +1,7 @@
 # Elf
 
+![Elf](../../../assets/sprites/monsters/Elf.webp)
+
 - **HP:** 100
 - **Ataque:** 15 · **Defesa:** 6
 - **Experiência:** 42
@@ -19,5 +21,3 @@
 | Heaven Blossom | 0.94% |
 | Plum | 20% |
 | Elvish Talisman | 2.1% |
-
-Fonte: TibiaWiki / Crystal Server.

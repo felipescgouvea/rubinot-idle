@@ -1,5 +1,7 @@
 # Orc Warlord
 
+![Orc Warlord](../../../assets/sprites/monsters/Orc_Warlord.webp)
+
 - **HP:** 950
 - **Ataque:** 250 · **Defesa:** 28
 - **Experiência:** 670
@@ -32,5 +34,3 @@
 | Broken Helmet | 24.3% |
 | Orc Leather | 20.6% |
 | Skull Belt | 4.6% |
-
-Fonte: TibiaWiki / Crystal Server.

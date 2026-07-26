@@ -1,5 +1,7 @@
 # Massive Earth Elemental
 
+![Massive Earth Elemental](../../../assets/sprites/monsters/Massive_Earth_Elemental.webp)
+
 - **HP:** 1330
 - **Ataque:** 445 · **Defesa:** 60
 - **Experiência:** 1100
@@ -21,5 +23,3 @@
 | Lump of Earth | 40.7% |
 | Clay Lump | 0.48% |
 | Coal | 0.43% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Sugar Daddy
 
+![Sugar Daddy](../../../assets/sprites/monsters/Sugar_Daddy.webp)
+
 - **HP:** 9500
 - **Ataque:** 350 · **Defesa:** 22
 - **Experiência:** 15550
@@ -27,5 +29,3 @@
 | Candy Necklace | 0.18% |
 | Candy-Coated Quiver | 0.18% |
 | Creamy Grimoire | 0.18% |
-
-Fonte: TibiaWiki / Crystal Server.

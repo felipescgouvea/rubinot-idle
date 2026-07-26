@@ -1,5 +1,7 @@
 # Ghost
 
+![Ghost](../../../assets/sprites/monsters/Ghost.webp)
+
 - **HP:** 150
 - **Ataque:** 80 · **Defesa:** 22
 - **Experiência:** 120
@@ -18,5 +20,3 @@
 | Shadow Herb | 14.4% |
 | White Piece of Cloth | 1.9% |
 | Ghostly Tissue | 1.9% |
-
-Fonte: TibiaWiki / Crystal Server.

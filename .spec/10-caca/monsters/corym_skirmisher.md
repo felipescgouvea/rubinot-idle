@@ -1,5 +1,7 @@
 # Corym Skirmisher
 
+![Corym Skirmisher](../../../assets/sprites/monsters/Corym_Skirmisher.webp)
+
 - **HP:** 450
 - **Ataque:** 150 · **Defesa:** 25
 - **Experiência:** 260
@@ -22,5 +24,3 @@
 | Rat Cheese | 16.7% |
 | Rat God Doll | 0.01% |
 | Leather Harness | 0.56% |
-
-Fonte: TibiaWiki / Crystal Server.

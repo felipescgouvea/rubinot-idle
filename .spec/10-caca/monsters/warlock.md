@@ -1,5 +1,7 @@
 # Warlock
 
+![Warlock](../../../assets/sprites/monsters/Warlock.webp)
+
 - **HP:** 3500
 - **Ataque:** 130 · **Defesa:** 33
 - **Experiência:** 4000
@@ -33,5 +35,3 @@
 | Great Health Potion | 5.2% |
 | Lightning Robe | 1% |
 | Luminous Orb | 0.51% |
-
-Fonte: TibiaWiki / Crystal Server.

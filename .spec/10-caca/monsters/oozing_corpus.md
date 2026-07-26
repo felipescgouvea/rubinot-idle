@@ -1,5 +1,7 @@
 # Oozing Corpus
 
+![Oozing Corpus](../../../assets/sprites/monsters/Oozing_Corpus.webp)
+
 - **HP:** 28700
 - **Ataque:** 1600 · **Defesa:** 179
 - **Experiência:** 20600
@@ -19,5 +21,3 @@
 | Worm Sponge | 7.3% |
 | Violet Gem | 5.1% |
 | Jade Hammer | 3.1% |
-
-Fonte: TibiaWiki / Crystal Server.

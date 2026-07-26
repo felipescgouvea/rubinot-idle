@@ -1,5 +1,7 @@
 # Valkyrie
 
+![Valkyrie](../../../assets/sprites/monsters/Valkyrie.webp)
+
 - **HP:** 190
 - **Ataque:** 70 · **Defesa:** 12
 - **Experiência:** 85
@@ -23,5 +25,3 @@
 | Health Potion | 0.5% |
 | Double Axe | 0.43% |
 | Small Diamond | 0.13% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Haunted Treeling
 
+![Haunted Treeling](../../../assets/sprites/monsters/Haunted_Treeling.webp)
+
 - **HP:** 450
 - **Ataque:** 250 · **Defesa:** 20
 - **Experiência:** 310
@@ -19,5 +21,3 @@
 | Dwarven Ring | 0.66% |
 | Small Emerald | 0.62% |
 | Bullseye Potion | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

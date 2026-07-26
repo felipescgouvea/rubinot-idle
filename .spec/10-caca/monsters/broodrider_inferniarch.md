@@ -1,5 +1,7 @@
 # Broodrider Inferniarch
 
+![Broodrider Inferniarch](../../../assets/sprites/monsters/Broodrider_Inferniarch.webp)
+
 - **HP:** 9600
 - **Ataque:** 250 · **Defesa:** 70
 - **Experiência:** 7850
@@ -21,5 +23,3 @@
 | Onyx Chip | 24.5% |
 | Broodrider Saddle | 24.5% |
 | Broodrider Inferniarch Soul Core | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

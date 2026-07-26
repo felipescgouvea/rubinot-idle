@@ -1,5 +1,7 @@
 # Bear
 
+![Bear](../../../assets/sprites/monsters/Bear.webp)
+
 - **HP:** 80
 - **Ataque:** 25 · **Defesa:** 5
 - **Experiência:** 23
@@ -14,5 +16,3 @@
 | Ham | 20% |
 | Bear Paw | 2% |
 | Honeycomb | 0.46% |
-
-Fonte: TibiaWiki / Crystal Server.

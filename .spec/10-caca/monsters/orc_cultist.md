@@ -1,5 +1,7 @@
 # Orc Cultist
 
+![Orc Cultist](../../../assets/sprites/monsters/Orc_Cultist.webp)
+
 - **HP:** 1350
 - **Ataque:** 364 · **Defesa:** 30
 - **Experiência:** 950
@@ -18,5 +20,3 @@
 | Orc Tusk | 8.3% |
 | Green Piece of Cloth | 5% |
 | Brown Crystal Splinter | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

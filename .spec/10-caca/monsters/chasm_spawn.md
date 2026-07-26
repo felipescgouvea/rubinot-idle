@@ -1,5 +1,7 @@
 # Chasm Spawn
 
+![Chasm Spawn](../../../assets/sprites/monsters/Chasm_Spawn.webp)
+
 - **HP:** 4500
 - **Ataque:** 250 · **Defesa:** 118
 - **Experiência:** 3600
@@ -23,5 +25,3 @@
 | Violet Crystal Shard | 4.7% |
 | Mushroom Backpack | 0.61% |
 | Suspicious Device | 0.85% |
-
-Fonte: TibiaWiki / Crystal Server.

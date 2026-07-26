@@ -1,5 +1,7 @@
 # Iron Servant Replica
 
+![Iron Servant Replica](../../../assets/sprites/monsters/Iron_Servant_Replica.webp)
+
 - **HP:** 1000
 - **Ataque:** 272 · **Defesa:** 17
 - **Experiência:** 210
@@ -14,5 +16,3 @@
 | Health Potion | 2% |
 | Halberd | 1% |
 | Slime Mould | 0.31% |
-
-Fonte: TibiaWiki / Crystal Server.

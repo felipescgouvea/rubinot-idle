@@ -1,5 +1,7 @@
 # Foam Stalker
 
+![Foam Stalker](../../../assets/sprites/monsters/Foam_Stalker.webp)
+
 - **HP:** 4500
 - **Ataque:** 300 · **Defesa:** 108
 - **Experiência:** 3120
@@ -31,5 +33,3 @@
 | Knight Legs | 3.6% |
 | Violet Gem | 3.4% |
 | Collar of Orange Plasma | 0.56% |
-
-Fonte: TibiaWiki / Crystal Server.

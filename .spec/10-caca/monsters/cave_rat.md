@@ -1,5 +1,7 @@
 # Cave Rat
 
+![Cave Rat](../../../assets/sprites/monsters/Cave_Rat.webp)
+
 - **HP:** 30
 - **Ataque:** 10 · **Defesa:** 1
 - **Experiência:** 10
@@ -13,5 +15,3 @@
 | Cookie | 0.75% |
 | Cheese | 30% |
 | Worm | 9.7% |
-
-Fonte: TibiaWiki / Crystal Server.

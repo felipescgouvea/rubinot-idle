@@ -1,5 +1,7 @@
 # Crypt Shambler
 
+![Crypt Shambler](../../../assets/sprites/monsters/Crypt_Shambler.webp)
+
 - **HP:** 330
 - **Ataque:** 140 · **Defesa:** 28
 - **Experiência:** 195
@@ -19,5 +21,3 @@
 | Bone Shield | 1% |
 | Worm | 9% |
 | Half-Digested Piece of Meat | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

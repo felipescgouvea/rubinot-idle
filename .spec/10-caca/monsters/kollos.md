@@ -1,5 +1,7 @@
 # Kollos
 
+![Kollos](../../../assets/sprites/monsters/Kollos.webp)
+
 - **HP:** 3800
 - **Ataque:** 259 · **Defesa:** 76
 - **Experiência:** 2400
@@ -23,5 +25,3 @@
 | Hive Scythe | 0.7% |
 | Buggy Backpack | 0.46% |
 | Tarsal Arrow | 10.2% |
-
-Fonte: TibiaWiki / Crystal Server.

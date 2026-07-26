@@ -1,5 +1,7 @@
 # Deathling Scout
 
+![Deathling Scout](../../../assets/sprites/monsters/Deathling_Scout.webp)
+
 - **HP:** 7200
 - **Ataque:** 300 · **Defesa:** 107
 - **Experiência:** 6300
@@ -27,5 +29,3 @@
 | Life Ring | 2.3% |
 | Fish Fin | 0.79% |
 | Necklace of the Deep | 0.51% |
-
-Fonte: TibiaWiki / Crystal Server.

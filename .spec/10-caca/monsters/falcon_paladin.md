@@ -1,5 +1,7 @@
 # Falcon Paladin
 
+![Falcon Paladin](../../../assets/sprites/monsters/Falcon_Paladin.webp)
+
 - **HP:** 8500
 - **Ataque:** 250 · **Defesa:** 82
 - **Experiência:** 6900
@@ -25,5 +27,3 @@
 | Falcon Crest | 0.73% |
 | Golden Armor | 0.31% |
 | Mastermind Shield | 0.31% |
-
-Fonte: TibiaWiki / Crystal Server.

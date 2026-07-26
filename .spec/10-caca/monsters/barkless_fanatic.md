@@ -1,5 +1,7 @@
 # Barkless Fanatic
 
+![Barkless Fanatic](../../../assets/sprites/monsters/Barkless_Fanatic.webp)
+
 - **HP:** 3200
 - **Ataque:** 864 · **Defesa:** 30
 - **Experiência:** 2500
@@ -13,5 +15,3 @@
 | Bed of Nails | 2.3% |
 | Fig Leaf | 12.7% |
 | Tiger Eye | 6.9% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Spectre
 
+![Spectre](../../../assets/sprites/monsters/Spectre.webp)
+
 - **HP:** 1350
 - **Ataque:** 305 · **Defesa:** 40
 - **Experiência:** 2100
@@ -23,5 +25,3 @@
 | Relic Sword | 0.7% |
 | Great Mana Potion | 0.92% |
 | Shiny Stone | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

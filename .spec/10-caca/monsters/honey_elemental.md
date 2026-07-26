@@ -1,5 +1,7 @@
 # Honey Elemental
 
+![Honey Elemental](../../../assets/sprites/monsters/Honey_Elemental.webp)
+
 - **HP:** 2560
 - **Ataque:** 481 · **Defesa:** 86
 - **Experiência:** 2400
@@ -19,5 +21,3 @@
 | Fire Sword | 0.43% |
 | Terra Amulet | 0.54% |
 | Dark Chocolate Coin | 0.43% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Venerable Girtablilu
 
+![Venerable Girtablilu](../../../assets/sprites/monsters/Venerable_Girtablilu.webp)
+
 - **HP:** 8500
 - **Ataque:** 400 · **Defesa:** 80
 - **Experiência:** 5300
@@ -34,5 +36,3 @@
 | Necrotic Rod | 1% |
 | Springsprout Rod | 1% |
 | Wand of Decay | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

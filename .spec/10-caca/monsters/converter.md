@@ -1,5 +1,7 @@
 # Converter
 
+![Converter](../../../assets/sprites/monsters/Converter.webp)
+
 - **HP:** 29600
 - **Ataque:** 900 · **Defesa:** 177
 - **Experiência:** 21425
@@ -17,5 +19,3 @@
 | Focus Cape | 6.9% |
 | White Gem | 14.5% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

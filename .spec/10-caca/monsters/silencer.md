@@ -1,5 +1,7 @@
 # Silencer
 
+![Silencer](../../../assets/sprites/monsters/Silencer.webp)
+
 - **HP:** 5400
 - **Ataque:** 350 · **Defesa:** 71
 - **Experiência:** 5100
@@ -24,5 +26,3 @@
 | Cluster Of Solace | 4.6% |
 | Silencer Claws | 17% |
 | Silencer Resonating Chamber | 8.4% |
-
-Fonte: TibiaWiki / Crystal Server.

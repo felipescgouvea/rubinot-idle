@@ -1,5 +1,7 @@
 # Tiger
 
+![Tiger](../../../assets/sprites/monsters/Tiger.webp)
+
 - **HP:** 75
 - **Ataque:** 40 · **Defesa:** 5
 - **Experiência:** 40
@@ -12,5 +14,3 @@
 |---|---|
 | Meat | 35.2% |
 | Striped Fur | 10.8% |
-
-Fonte: TibiaWiki / Crystal Server.

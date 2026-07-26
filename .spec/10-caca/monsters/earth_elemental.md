@@ -1,5 +1,7 @@
 # Earth Elemental
 
+![Earth Elemental](../../../assets/sprites/monsters/Earth_Elemental.webp)
+
 - **HP:** 650
 - **Ataque:** 178 · **Defesa:** 45
 - **Experiência:** 550
@@ -19,5 +21,3 @@
 | Lump of Earth | 20.5% |
 | Clay Lump | 0.57% |
 | Coal | 0.47% |
-
-Fonte: TibiaWiki / Crystal Server.

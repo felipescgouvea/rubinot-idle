@@ -1,5 +1,7 @@
 # Troll-Trained Salamander
 
+![Troll-Trained Salamander](../../../assets/sprites/monsters/Troll-Trained_Salamander.webp)
+
 - **HP:** 70
 - **Ataque:** 13 · **Defesa:** 1
 - **Experiência:** 23
@@ -21,5 +23,3 @@
 | Short Sword | 4.5% |
 | Shovel | 5.1% |
 | Studded Helmet | 4.1% |
-
-Fonte: TibiaWiki / Crystal Server.

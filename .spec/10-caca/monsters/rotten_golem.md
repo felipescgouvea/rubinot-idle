@@ -1,5 +1,7 @@
 # Rotten Golem
 
+![Rotten Golem](../../../assets/sprites/monsters/Rotten_Golem.webp)
+
 - **HP:** 28000
 - **Ataque:** 950 · **Defesa:** 164
 - **Experiência:** 17860
@@ -24,5 +26,3 @@
 | Terra Mantle | 0.51% |
 | Rubber Cap | 0.43% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

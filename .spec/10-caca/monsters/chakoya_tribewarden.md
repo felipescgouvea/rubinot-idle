@@ -1,5 +1,7 @@
 # Chakoya Tribewarden
 
+![Chakoya Tribewarden](../../../assets/sprites/monsters/Chakoya_Tribewarden.webp)
+
 - **HP:** 68
 - **Ataque:** 30 · **Defesa:** 9
 - **Experiência:** 40
@@ -18,5 +20,3 @@
 | Green Perch | 0.1% |
 | Mammoth Whopper | 0.13% |
 | Fireproof Horn | 0.35% |
-
-Fonte: TibiaWiki / Crystal Server.

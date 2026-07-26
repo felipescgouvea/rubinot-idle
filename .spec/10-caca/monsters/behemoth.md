@@ -1,5 +1,7 @@
 # Behemoth
 
+![Behemoth](../../../assets/sprites/monsters/Behemoth.webp)
+
 - **HP:** 4000
 - **Ataque:** 455 · **Defesa:** 50
 - **Experiência:** 2500
@@ -32,5 +34,3 @@
 | Titan Axe | 0.09% |
 | Great Health Potion | 5.1% |
 | Battle Stone | 14% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Falcon Knight
 
+![Falcon Knight](../../../assets/sprites/monsters/Falcon_Knight.webp)
+
 - **HP:** 9000
 - **Ataque:** 400 · **Defesa:** 86
 - **Experiência:** 6300
@@ -35,5 +37,3 @@
 | Heavy Mace | 0.46% |
 | Closed Trap | 0.37% |
 | Demonbone Amulet | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

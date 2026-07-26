@@ -1,5 +1,7 @@
 # Knight's Apparition
 
+![Knight's Apparition](../../../assets/sprites/monsters/Knight's_Apparition.webp)
+
 - **HP:** 25000
 - **Ataque:** 900 · **Defesa:** 162
 - **Experiência:** 28600
@@ -20,5 +22,3 @@
 | Stone Skin Amulet | 1.5% |
 | Crown Shield | 0.64% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

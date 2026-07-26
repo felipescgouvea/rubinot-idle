@@ -1,5 +1,7 @@
 # Insectoid Worker
 
+![Insectoid Worker](../../../assets/sprites/monsters/Insectoid_Worker.webp)
+
 - **HP:** 950
 - **Ataque:** 110 · **Defesa:** 30
 - **Experiência:** 650
@@ -15,5 +17,3 @@
 | Health Potion | 5.1% |
 | Compound Eye | 15.4% |
 | Dung Ball | 15% |
-
-Fonte: TibiaWiki / Crystal Server.

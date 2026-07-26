@@ -1,5 +1,7 @@
 # Spider
 
+![Spider](../../../assets/sprites/monsters/Spider.webp)
+
 - **HP:** 20
 - **Ataque:** 9 · **Defesa:** 2
 - **Experiência:** 12
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Spider Fangs | 0.96% |
-
-Fonte: TibiaWiki / Crystal Server.

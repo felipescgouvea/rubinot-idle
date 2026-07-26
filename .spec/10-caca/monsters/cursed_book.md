@@ -1,5 +1,7 @@
 # Cursed Book
 
+![Cursed Book](../../../assets/sprites/monsters/Cursed_Book.webp)
+
 - **HP:** 20000
 - **Ataque:** 600 · **Defesa:** 82
 - **Experiência:** 13345
@@ -26,5 +28,3 @@
 | Springsprout Rod | 0.35% |
 | Sacred Tree Amulet | 0.35% |
 | Swamplair Armor | 0.25% |
-
-Fonte: TibiaWiki / Crystal Server.

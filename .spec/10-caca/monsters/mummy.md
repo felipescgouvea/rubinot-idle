@@ -1,5 +1,7 @@
 # Mummy
 
+![Mummy](../../../assets/sprites/monsters/Mummy.webp)
+
 - **HP:** 240
 - **Ataque:** 85 · **Defesa:** 27
 - **Experiência:** 150
@@ -23,5 +25,3 @@
 | Gauze Bandage | 10% |
 | Mini Mummy | 0.01% |
 | Flask of Embalming Fluid | 11.7% |
-
-Fonte: TibiaWiki / Crystal Server.

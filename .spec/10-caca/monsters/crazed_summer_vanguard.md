@@ -1,5 +1,7 @@
 # Crazed Summer Vanguard
 
+![Crazed Summer Vanguard](../../../assets/sprites/monsters/Crazed_Summer_Vanguard.webp)
+
 - **HP:** 5500
 - **Ataque:** 450 · **Defesa:** 77
 - **Experiência:** 5000
@@ -24,5 +26,3 @@
 | Magma Boots | 2.9% |
 | Sun Fruit | 0.9% |
 | Bullseye Potion | 0.3% |
-
-Fonte: TibiaWiki / Crystal Server.

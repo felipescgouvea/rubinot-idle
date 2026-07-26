@@ -1,5 +1,7 @@
 # Wandering Pillar
 
+![Wandering Pillar](../../../assets/sprites/monsters/Wandering_Pillar.webp)
+
 - **HP:** 37000
 - **Ataque:** 1200 · **Defesa:** 177
 - **Experiência:** 23200
@@ -24,5 +26,3 @@
 | Green Gem | 12.9% |
 | Basalt Core | 9% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

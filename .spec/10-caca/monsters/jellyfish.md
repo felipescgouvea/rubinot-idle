@@ -1,5 +1,7 @@
 # Jellyfish
 
+![Jellyfish](../../../assets/sprites/monsters/Jellyfish.webp)
+
 - **HP:** 55
 - **Ataque:** 13 · **Defesa:** 11
 - **Experiência:** 0
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Shrimp | 8.2% |
-
-Fonte: TibiaWiki / Crystal Server.

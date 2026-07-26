@@ -1,5 +1,7 @@
 # Squid Warden
 
+![Squid Warden](../../../assets/sprites/monsters/Squid_Warden.webp)
+
 - **HP:** 16500
 - **Ataque:** 900 · **Defesa:** 78
 - **Experiência:** 15300
@@ -24,5 +26,3 @@
 | Glacier Robe | 0.15% |
 | Glacier Kilt | 0.15% |
 | Slime Heart | 10% |
-
-Fonte: TibiaWiki / Crystal Server.

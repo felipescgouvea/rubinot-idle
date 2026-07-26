@@ -1,5 +1,7 @@
 # Gazer Spectre
 
+![Gazer Spectre](../../../assets/sprites/monsters/Gazer_Spectre.webp)
+
 - **HP:** 4500
 - **Ataque:** 350 · **Defesa:** 68
 - **Experiência:** 4200
@@ -26,5 +28,3 @@
 | Small Enchanted Emerald | 0.8% |
 | Onyx Chip | 0.77% |
 | Hexagonal Ruby | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

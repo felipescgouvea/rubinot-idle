@@ -1,5 +1,7 @@
 # Deepling Master Librarian
 
+![Deepling Master Librarian](../../../assets/sprites/monsters/Deepling_Master_Librarian.webp)
+
 - **HP:** 1700
 - **Ataque:** 450 · **Defesa:** 45
 - **Experiência:** 1900
@@ -21,5 +23,3 @@
 | Fish Fin | 2.1% |
 | Necklace of the Deep | 1.4% |
 | Ornate Crossbow | 0.29% |
-
-Fonte: TibiaWiki / Crystal Server.

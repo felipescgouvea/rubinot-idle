@@ -1,5 +1,7 @@
 # Nibblemaw
 
+![Nibblemaw](../../../assets/sprites/monsters/Nibblemaw.webp)
+
 - **HP:** 2900
 - **Ataque:** 481 · **Defesa:** 86
 - **Experiência:** 2700
@@ -22,5 +24,3 @@
 | Lime Tart | 0.95% |
 | Dark Chocolate Coin | 0.75% |
 | Assassin Dagger | 0.44% |
-
-Fonte: TibiaWiki / Crystal Server.

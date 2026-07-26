@@ -1,5 +1,7 @@
 # Bug
 
+![Bug](../../../assets/sprites/monsters/Bug.webp)
+
 - **HP:** 29
 - **Ataque:** 23 · **Defesa:** 1
 - **Experiência:** 18
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Cherry | 2.6% |
-
-Fonte: TibiaWiki / Crystal Server.

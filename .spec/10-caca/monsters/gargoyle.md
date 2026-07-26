@@ -1,5 +1,7 @@
 # Gargoyle
 
+![Gargoyle](../../../assets/sprites/monsters/Gargoyle.webp)
+
 - **HP:** 250
 - **Ataque:** 65 · **Defesa:** 26
 - **Experiência:** 150
@@ -21,5 +23,3 @@
 | Stone Wing | 11.7% |
 | Shiny Stone | 0.19% |
 | Piece of Marble Rock | 0.63% |
-
-Fonte: TibiaWiki / Crystal Server.

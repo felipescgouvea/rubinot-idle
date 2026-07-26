@@ -1,5 +1,7 @@
 # Bony Sea Devil
 
+![Bony Sea Devil](../../../assets/sprites/monsters/Bony_Sea_Devil.webp)
+
 - **HP:** 24000
 - **Ataque:** 900 · **Defesa:** 167
 - **Experiência:** 19470
@@ -26,5 +28,3 @@
 | Glacier Kilt | 0.88% |
 | Glacial Rod | 1.2% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Quara Pincher Scout
 
+![Quara Pincher Scout](../../../assets/sprites/monsters/Quara_Pincher_Scout.webp)
+
 - **HP:** 775
 - **Ataque:** 34 · **Defesa:** 42
 - **Experiência:** 600
@@ -16,5 +18,3 @@
 | Halberd | 2.1% |
 | Fish Fin | 0.82% |
 | Life Crystal | 0.78% |
-
-Fonte: TibiaWiki / Crystal Server.

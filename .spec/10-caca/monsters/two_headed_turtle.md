@@ -1,5 +1,7 @@
 # Two-headed Turtle
 
+![Two-headed Turtle](../../../assets/sprites/monsters/Two-headed_Turtle.webp)
+
 - **HP:** 5010
 - **Ataque:** 300 · **Defesa:** 108
 - **Experiência:** 2930
@@ -29,5 +31,3 @@
 | Cape | 1% |
 | Clay Lump | 0.66% |
 | White Gem | 0.42% |
-
-Fonte: TibiaWiki / Crystal Server.

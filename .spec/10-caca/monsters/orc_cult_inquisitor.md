@@ -1,5 +1,7 @@
 # Orc Cult Inquisitor
 
+![Orc Cult Inquisitor](../../../assets/sprites/monsters/Orc_Cult_Inquisitor.webp)
+
 - **HP:** 1500
 - **Ataque:** 400 · **Defesa:** 40
 - **Experiência:** 1150
@@ -24,5 +26,3 @@
 | Orc Tooth | 5.4% |
 | Orcish Gear | 15.5% |
 | Orc Leather | 7.7% |
-
-Fonte: TibiaWiki / Crystal Server.

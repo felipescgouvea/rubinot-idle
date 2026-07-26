@@ -1,5 +1,7 @@
 # Brain Squid
 
+![Brain Squid](../../../assets/sprites/monsters/Brain_Squid.webp)
+
 - **HP:** 18000
 - **Ataque:** 350 · **Defesa:** 78
 - **Experiência:** 17672
@@ -36,5 +38,3 @@
 | Ring of Red Plasma | 0.56% |
 | Ring of Blue Plasma | 0.56% |
 | Ring of Green Plasma | 0.56% |
-
-Fonte: TibiaWiki / Crystal Server.

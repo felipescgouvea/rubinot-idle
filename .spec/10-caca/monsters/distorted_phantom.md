@@ -1,5 +1,7 @@
 # Distorted Phantom
 
+![Distorted Phantom](../../../assets/sprites/monsters/Distorted_Phantom.webp)
+
 - **HP:** 26000
 - **Ataque:** 750 · **Defesa:** 162
 - **Experiência:** 18870
@@ -23,5 +25,3 @@
 | Ring of Green Plasma | 1.9% |
 | Glacial Rod | 1.3% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

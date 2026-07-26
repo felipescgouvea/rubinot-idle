@@ -1,5 +1,7 @@
 # Calamary
 
+![Calamary](../../../assets/sprites/monsters/Calamary.webp)
+
 - **HP:** 75
 - **Ataque:** 20 · **Defesa:** 13
 - **Experiência:** 0
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Shrimp | 10.7% |
-
-Fonte: TibiaWiki / Crystal Server.

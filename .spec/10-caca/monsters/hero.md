@@ -1,5 +1,7 @@
 # Hero
 
+![Hero](../../../assets/sprites/monsters/Hero.webp)
+
 - **HP:** 1400
 - **Ataque:** 240 · **Defesa:** 35
 - **Experiência:** 1200
@@ -35,5 +37,3 @@
 | Great Health Potion | 0.72% |
 | Small Notebook | 0.93% |
 | Scroll of Heroic Deeds | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Swamp Troll
 
+![Swamp Troll](../../../assets/sprites/monsters/Swamp_Troll.webp)
+
 - **HP:** 55
 - **Ataque:** 13 · **Defesa:** 6
 - **Experiência:** 25
@@ -20,5 +22,3 @@
 | Wood | 2.1% |
 | Swamp Grass | 3.1% |
 | Medicine Pouch | 2.2% |
-
-Fonte: TibiaWiki / Crystal Server.

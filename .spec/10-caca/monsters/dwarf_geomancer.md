@@ -1,5 +1,7 @@
 # Dwarf Geomancer
 
+![Dwarf Geomancer](../../../assets/sprites/monsters/Dwarf_Geomancer.webp)
+
 - **HP:** 380
 - **Ataque:** 100 · **Defesa:** 8
 - **Experiência:** 265
@@ -22,5 +24,3 @@
 | Terra Boots | 0.47% |
 | Geomancer's Robe | 8% |
 | Geomancer's Staff | 7% |
-
-Fonte: TibiaWiki / Crystal Server.

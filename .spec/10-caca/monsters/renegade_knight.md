@@ -1,5 +1,7 @@
 # Renegade Knight
 
+![Renegade Knight](../../../assets/sprites/monsters/Renegade_Knight.webp)
+
 - **HP:** 1450
 - **Ataque:** 245 · **Defesa:** 38
 - **Experiência:** 1200
@@ -27,5 +29,3 @@
 | Scroll of Heroic Deeds | 0.91% |
 | Small Notebook | 0.91% |
 | Wedding Ring | 0.51% |
-
-Fonte: TibiaWiki / Crystal Server.

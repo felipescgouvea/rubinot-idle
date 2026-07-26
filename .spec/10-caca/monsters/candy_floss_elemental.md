@@ -1,5 +1,7 @@
 # Candy Floss Elemental
 
+![Candy Floss Elemental](../../../assets/sprites/monsters/Candy_Floss_Elemental.webp)
+
 - **HP:** 3700
 - **Ataque:** 481 · **Defesa:** 86
 - **Experiência:** 3850
@@ -22,5 +24,3 @@
 | Springsprout Rod | 0.65% |
 | Club Ring | 0.31% |
 | Silver Amulet | 0.12% |
-
-Fonte: TibiaWiki / Crystal Server.

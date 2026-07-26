@@ -1,5 +1,7 @@
 # Poison Spider
 
+![Poison Spider](../../../assets/sprites/monsters/Poison_Spider.webp)
+
 - **HP:** 26
 - **Ataque:** 20 · **Defesa:** 38
 - **Experiência:** 22
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Poison Spider Shell | 1.1% |
-
-Fonte: TibiaWiki / Crystal Server.

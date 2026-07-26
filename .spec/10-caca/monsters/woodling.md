@@ -1,5 +1,7 @@
 # Woodling
 
+![Woodling](../../../assets/sprites/monsters/Woodling.webp)
+
 - **HP:** 80
 - **Ataque:** 15 · **Defesa:** 2
 - **Experiência:** 40
@@ -17,5 +19,3 @@
 | Studded Shield | 2.7% |
 | Swampling Moss | 20.3% |
 | White Mushroom | 18.2% |
-
-Fonte: TibiaWiki / Crystal Server.

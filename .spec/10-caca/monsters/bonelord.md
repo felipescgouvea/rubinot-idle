@@ -1,5 +1,7 @@
 # Bonelord
 
+![Bonelord](../../../assets/sprites/monsters/Bonelord.webp)
+
 - **HP:** 260
 - **Ataque:** 5 · **Defesa:** 28
 - **Experiência:** 170
@@ -20,5 +22,3 @@
 | Bonelord Eye | 1% |
 | Mana Potion | 0.3% |
 | Small Flask of Eyedrops | 5.1% |
-
-Fonte: TibiaWiki / Crystal Server.

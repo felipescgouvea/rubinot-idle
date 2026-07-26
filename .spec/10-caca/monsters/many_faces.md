@@ -1,5 +1,7 @@
 # Many Faces
 
+![Many Faces](../../../assets/sprites/monsters/Many_Faces.webp)
+
 - **HP:** 30000
 - **Ataque:** 1300 · **Defesa:** 162
 - **Experiência:** 18870
@@ -25,5 +27,3 @@
 | Gruesome Fan | 0.61% |
 | Glacial Rod | 0.61% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

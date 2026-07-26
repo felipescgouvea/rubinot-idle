@@ -1,5 +1,7 @@
 # Shadowthorn Templar
 
+![Shadowthorn Templar](../../../assets/sprites/monsters/Elf_Arcanist.webp)
+
 - **HP:** 140
 - **Ataque:** 28 · **Defesa:** 6
 - **Experiência:** 58
@@ -14,5 +16,3 @@
 | Elvish Talisman | 30% |
 | Studded Armor | 5% |
 | Bones | 30% |
-
-Fonte: TibiaWiki / Crystal Server.

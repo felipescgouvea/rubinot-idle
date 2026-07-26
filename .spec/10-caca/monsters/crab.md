@@ -1,5 +1,7 @@
 # Crab
 
+![Crab](../../../assets/sprites/monsters/Crab.webp)
+
 - **HP:** 55
 - **Ataque:** 20 · **Defesa:** 28
 - **Experiência:** 30
@@ -12,5 +14,3 @@
 |---|---|
 | Crab Pincers | 19.9% |
 | Fish | 19.8% |
-
-Fonte: TibiaWiki / Crystal Server.

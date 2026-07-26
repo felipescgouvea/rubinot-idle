@@ -1,5 +1,7 @@
 # Quara Hydromancer Scout
 
+![Quara Hydromancer Scout](../../../assets/sprites/monsters/Quara_Hydromancer_Scout.webp)
+
 - **HP:** 1100
 - **Ataque:** 34 · **Defesa:** 42
 - **Experiência:** 800
@@ -21,5 +23,3 @@
 | Ring of Healing | 0.96% |
 | Wand of Cosmic Energy | 0.88% |
 | Knight Armor | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

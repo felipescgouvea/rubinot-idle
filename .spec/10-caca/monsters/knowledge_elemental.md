@@ -1,5 +1,7 @@
 # Knowledge Elemental
 
+![Knowledge Elemental](../../../assets/sprites/monsters/Knowledge_Elemental.webp)
+
 - **HP:** 10500
 - **Ataque:** 600 · **Defesa:** 76
 - **Experiência:** 10603
@@ -24,5 +26,3 @@
 | Ultimate Mana Potion | 10% |
 | Ultimate Health Potion | 10% |
 | Wand of Cosmic Energy | 0.3% |
-
-Fonte: TibiaWiki / Crystal Server.

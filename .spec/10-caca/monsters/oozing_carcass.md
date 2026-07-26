@@ -1,5 +1,7 @@
 # Oozing Carcass
 
+![Oozing Carcass](../../../assets/sprites/monsters/Oozing_Carcass.webp)
+
 - **HP:** 27500
 - **Ataque:** 600 · **Defesa:** 175
 - **Experiência:** 20980
@@ -22,5 +24,3 @@
 | Bloody Edge | 12.3% |
 | Spellbook of Warding | 5.1% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

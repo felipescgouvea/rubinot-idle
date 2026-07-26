@@ -1,5 +1,7 @@
 # Midnight Asura
 
+![Midnight Asura](../../../assets/sprites/monsters/Midnight_Asura.webp)
+
 - **HP:** 3100
 - **Ataque:** 387 · **Defesa:** 55
 - **Experiência:** 4100
@@ -38,5 +40,3 @@
 | Tribal Mask | 2% |
 | Underworld Rod | 0.76% |
 | Yellow Gem | 0.87% |
-
-Fonte: TibiaWiki / Crystal Server.

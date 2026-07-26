@@ -1,5 +1,7 @@
 # Orclops Doomhauler
 
+![Orclops Doomhauler](../../../assets/sprites/monsters/Orclops_Doomhauler.webp)
+
 - **HP:** 1700
 - **Ataque:** 486 · **Defesa:** 35
 - **Experiência:** 1200
@@ -28,5 +30,3 @@
 | Berserk Potion | 0.91% |
 | Beetle Necklace | 0.91% |
 | Reinvigorating Seeds | 0.3% |
-
-Fonte: TibiaWiki / Crystal Server.

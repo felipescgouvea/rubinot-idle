@@ -1,5 +1,7 @@
 # Swarmer
 
+![Swarmer](../../../assets/sprites/monsters/Swarmer.webp)
+
 - **HP:** 460
 - **Ataque:** 100 · **Defesa:** 29
 - **Experiência:** 350
@@ -14,5 +16,3 @@
 | Epee | 0.45% |
 | Swarmer Antenna | 15.3% |
 | Compound Eye | 12.5% |
-
-Fonte: TibiaWiki / Crystal Server.

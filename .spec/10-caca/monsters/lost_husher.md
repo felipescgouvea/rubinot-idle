@@ -1,5 +1,7 @@
 # Lost Husher
 
+![Lost Husher](../../../assets/sprites/monsters/Lost_Husher.webp)
+
 - **HP:** 1600
 - **Ataque:** 512 · **Defesa:** 55
 - **Experiência:** 1100
@@ -29,5 +31,3 @@
 | Skull Shatterer | 12.3% |
 | Red Hair Dye | 8.5% |
 | Basalt Figurine | 8.6% |
-
-Fonte: TibiaWiki / Crystal Server.

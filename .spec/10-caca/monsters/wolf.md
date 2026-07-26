@@ -1,5 +1,7 @@
 # Wolf
 
+![Wolf](../../../assets/sprites/monsters/Wolf.webp)
+
 - **HP:** 25
 - **Ataque:** 17 · **Defesa:** 4
 - **Experiência:** 18
@@ -12,5 +14,3 @@
 |---|---|
 | Meat | 55% |
 | Wolf Paw | 0.98% |
-
-Fonte: TibiaWiki / Crystal Server.

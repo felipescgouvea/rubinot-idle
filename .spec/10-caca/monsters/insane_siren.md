@@ -1,5 +1,7 @@
 # Insane Siren
 
+![Insane Siren](../../../assets/sprites/monsters/Insane_Siren.webp)
+
 - **HP:** 6500
 - **Ataque:** 450 · **Defesa:** 105
 - **Experiência:** 6000
@@ -23,5 +25,3 @@
 | Sun Fruit | 2.6% |
 | Magma Legs | 1.2% |
 | Magma Monocle | 0.26% |
-
-Fonte: TibiaWiki / Crystal Server.

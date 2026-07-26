@@ -1,5 +1,7 @@
 # Darklight Construct
 
+![Darklight Construct](../../../assets/sprites/monsters/Darklight_Construct.webp)
+
 - **HP:** 32200
 - **Ataque:** 1050 · **Defesa:** 177
 - **Experiência:** 22050
@@ -18,5 +20,3 @@
 | Magma Amulet | 13.2% |
 | Small Ruby | 12.5% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

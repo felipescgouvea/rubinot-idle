@@ -1,5 +1,7 @@
 # Defiler
 
+![Defiler](../../../assets/sprites/monsters/Defiler.webp)
+
 - **HP:** 3650
 - **Ataque:** 240 · **Defesa:** 60
 - **Experiência:** 3700
@@ -23,5 +25,3 @@
 | Demonic Essence | 20.3% |
 | Glob of Acid Slime | 14.2% |
 | Glob of Tar | 12% |
-
-Fonte: TibiaWiki / Crystal Server.

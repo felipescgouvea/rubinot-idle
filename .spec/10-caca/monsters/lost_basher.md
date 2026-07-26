@@ -1,5 +1,7 @@
 # Lost Basher
 
+![Lost Basher](../../../assets/sprites/monsters/Lost_Basher.webp)
+
 - **HP:** 2600
 - **Ataque:** 710 · **Defesa:** 57
 - **Experiência:** 2300
@@ -32,5 +34,3 @@
 | Bonecarving Knife | 7.3% |
 | Basalt Fetish | 8.8% |
 | Basalt Figurine | 9.5% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Cult Believer
 
+![Cult Believer](../../../assets/sprites/monsters/Cult_Believer.webp)
+
 - **HP:** 975
 - **Ataque:** 200 · **Defesa:** 30
 - **Experiência:** 850
@@ -26,5 +28,3 @@
 | Guardian Shield | 0.33% |
 | Knight Legs | 0.23% |
 | Warrior Helmet | 0.2% |
-
-Fonte: TibiaWiki / Crystal Server.

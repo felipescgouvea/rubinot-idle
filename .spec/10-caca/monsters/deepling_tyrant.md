@@ -1,5 +1,7 @@
 # Deepling Tyrant
 
+![Deepling Tyrant](../../../assets/sprites/monsters/Deepling_Tyrant.webp)
+
 - **HP:** 4500
 - **Ataque:** 1090 · **Defesa:** 54
 - **Experiência:** 4200
@@ -23,5 +25,3 @@
 | Ornate Crossbow | 1.1% |
 | Deepling Backpack | 0.54% |
 | Foxtail | 0.03% |
-
-Fonte: TibiaWiki / Crystal Server.

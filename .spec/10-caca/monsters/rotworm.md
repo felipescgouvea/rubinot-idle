@@ -1,5 +1,7 @@
 # Rotworm
 
+![Rotworm](../../../assets/sprites/monsters/Rotworm.webp)
+
 - **HP:** 65
 - **Ataque:** 40 · **Defesa:** 2
 - **Experiência:** 40
@@ -16,5 +18,3 @@
 | Ham | 20.1% |
 | Worm | 3% |
 | Lump of Dirt | 10% |
-
-Fonte: TibiaWiki / Crystal Server.

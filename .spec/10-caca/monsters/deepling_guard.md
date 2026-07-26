@@ -1,5 +1,7 @@
 # Deepling Guard
 
+![Deepling Guard](../../../assets/sprites/monsters/Deepling_Guard.webp)
+
 - **HP:** 1900
 - **Ataque:** 56 · **Defesa:** 51
 - **Experiência:** 2100
@@ -23,5 +25,3 @@
 | Ornate Crossbow | 0.41% |
 | Deepling Backpack | 0.31% |
 | Foxtail | 0.02% |
-
-Fonte: TibiaWiki / Crystal Server.

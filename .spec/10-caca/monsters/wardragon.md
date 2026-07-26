@@ -1,5 +1,7 @@
 # Wardragon
 
+![Wardragon](../../../assets/sprites/monsters/Wardragon.webp)
+
 - **HP:** 6960
 - **Ataque:** 300 · **Defesa:** 80
 - **Experiência:** 5810
@@ -19,5 +21,3 @@
 | Black Pearl | 4% |
 | White Gem | 1% |
 | Dragonbone Staff | 0.74% |
-
-Fonte: TibiaWiki / Crystal Server.

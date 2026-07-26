@@ -1,5 +1,7 @@
 # Vibrant Phantom
 
+![Vibrant Phantom](../../../assets/sprites/monsters/Vibrant_Phantom.webp)
+
 - **HP:** 27000
 - **Ataque:** 800 · **Defesa:** 160
 - **Experiência:** 19700
@@ -25,5 +27,3 @@
 | Ring of Blue Plasma | 1.1% |
 | Green Gem | 1.1% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

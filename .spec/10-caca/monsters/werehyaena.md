@@ -1,5 +1,7 @@
 # Werehyaena
 
+![Werehyaena](../../../assets/sprites/monsters/Werehyaena.webp)
+
 - **HP:** 2700
 - **Ataque:** 300 · **Defesa:** 36
 - **Experiência:** 2200
@@ -26,5 +28,3 @@
 | Ratana | 4.3% |
 | Werehyaena Talisman | 0.75% |
 | Werehyaena Trophy | 0.19% |
-
-Fonte: TibiaWiki / Crystal Server.

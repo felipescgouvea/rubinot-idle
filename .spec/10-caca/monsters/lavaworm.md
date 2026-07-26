@@ -1,5 +1,7 @@
 # Lavaworm
 
+![Lavaworm](../../../assets/sprites/monsters/Lavaworm.webp)
+
 - **HP:** 7500
 - **Ataque:** 600 · **Defesa:** 60
 - **Experiência:** 6500
@@ -24,5 +26,3 @@
 | Wand of Voodoo | 1.6% |
 | Crusader Helmet | 1.6% |
 | Strange Helmet | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

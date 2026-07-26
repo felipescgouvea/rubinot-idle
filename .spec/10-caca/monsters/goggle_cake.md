@@ -1,5 +1,7 @@
 # Goggle Cake
 
+![Goggle Cake](../../../assets/sprites/monsters/Goggle_Cake.webp)
+
 - **HP:** 2700
 - **Ataque:** 481 · **Defesa:** 86
 - **Experiência:** 2700
@@ -28,5 +30,3 @@
 | Epee | 0.4% |
 | Ice Rapier | 0.21% |
 | Cream Cake | 0.14% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Druid's Apparition
 
+![Druid's Apparition](../../../assets/sprites/monsters/Druid's_Apparition.webp)
+
 - **HP:** 25000
 - **Ataque:** 850 · **Defesa:** 162
 - **Experiência:** 28600
@@ -23,5 +25,3 @@
 | Glacier Robe | 0.88% |
 | Collar of Red Plasma | 0.44% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

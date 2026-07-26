@@ -1,5 +1,7 @@
 # Retching Horror
 
+![Retching Horror](../../../assets/sprites/monsters/Retching_Horror.webp)
+
 - **HP:** 5300
 - **Ataque:** 500 · **Defesa:** 74
 - **Experiência:** 4100
@@ -24,5 +26,3 @@
 | Broken Dream | 3.7% |
 | Goosebump Leather | 16.4% |
 | Pool of Chitinous Glue | 14% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Carrion Worm
 
+![Carrion Worm](../../../assets/sprites/monsters/Carrion_Worm.webp)
+
 - **HP:** 145
 - **Ataque:** 45 · **Defesa:** 40
 - **Experiência:** 70
@@ -14,5 +16,3 @@
 | Worm | 2.1% |
 | Carrion Worm Fang | 10% |
 | Coal | 0.21% |
-
-Fonte: TibiaWiki / Crystal Server.

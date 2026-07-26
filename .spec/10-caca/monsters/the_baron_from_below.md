@@ -1,5 +1,7 @@
 # The Baron from Below
 
+![The Baron from Below](../../../assets/sprites/monsters/The_Baron_from_Below.webp)
+
 - **HP:** 350000
 - **Ataque:** 92 · **Defesa:** 22
 - **Experiência:** 50000
@@ -48,5 +50,3 @@
 | Gnome Sword | 4.2% |
 | Gnome Armor | 3.4% |
 | Gnomish Footwraps | 3.4% |
-
-Fonte: TibiaWiki / Crystal Server.

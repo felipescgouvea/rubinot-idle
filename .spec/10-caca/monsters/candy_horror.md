@@ -1,5 +1,7 @@
 # Candy Horror
 
+![Candy Horror](../../../assets/sprites/monsters/Candy_Horror.webp)
+
 - **HP:** 3100
 - **Ataque:** 481 · **Defesa:** 86
 - **Experiência:** 3000
@@ -19,5 +21,3 @@
 | Brigadeiro | 1.2% |
 | Violet Gem | 0.81% |
 | Dark Chocolate Coin | 0.51% |
-
-Fonte: TibiaWiki / Crystal Server.

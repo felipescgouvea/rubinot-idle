@@ -1,5 +1,7 @@
 # Spidris Elite
 
+![Spidris Elite](../../../assets/sprites/monsters/Spidris_Elite.webp)
+
 - **HP:** 5000
 - **Ataque:** 259 · **Defesa:** 76
 - **Experiência:** 4000
@@ -21,5 +23,3 @@
 | Calopteryx Cape | 1.3% |
 | Carapace Shield | 1.2% |
 | Hive Scythe | 1.4% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Deepling Scout
 
+![Deepling Scout](../../../assets/sprites/monsters/Deepling_Scout.webp)
+
 - **HP:** 240
 - **Ataque:** 56 · **Defesa:** 51
 - **Experiência:** 160
@@ -18,5 +20,3 @@
 | Fish Fin | 0.3% |
 | Small Emerald | 0.12% |
 | Flask of Rust Remover | 0.11% |
-
-Fonte: TibiaWiki / Crystal Server.

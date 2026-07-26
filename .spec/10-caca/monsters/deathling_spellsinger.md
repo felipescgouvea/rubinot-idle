@@ -1,5 +1,7 @@
 # Deathling Spellsinger
 
+![Deathling Spellsinger](../../../assets/sprites/monsters/Deathling_Spellsinger.webp)
+
 - **HP:** 7200
 - **Ataque:** 300 · **Defesa:** 107
 - **Experiência:** 6400
@@ -27,5 +29,3 @@
 | Small Enchanted Sapphire | 2.2% |
 | Life Ring | 2.1% |
 | Necklace of the Deep | 0.24% |
-
-Fonte: TibiaWiki / Crystal Server.

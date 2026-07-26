@@ -1,5 +1,7 @@
 # Mycobiontic Beetle
 
+![Mycobiontic Beetle](../../../assets/sprites/monsters/Mycobiontic_Beetle.webp)
+
 - **HP:** 30200
 - **Ataque:** 1600 · **Defesa:** 179
 - **Experiência:** 21175
@@ -23,5 +25,3 @@
 | Blue Gem | 15.9% |
 | Small Ruby | 24.6% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

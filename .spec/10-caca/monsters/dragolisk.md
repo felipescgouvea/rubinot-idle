@@ -1,5 +1,7 @@
 # Dragolisk
 
+![Dragolisk](../../../assets/sprites/monsters/Dragolisk.webp)
+
 - **HP:** 6180
 - **Ataque:** 280 · **Defesa:** 86
 - **Experiência:** 5050
@@ -16,5 +18,3 @@
 | Green Gem | 8.3% |
 | Dragon's Tail | 1% |
 | Dragon Shield | 0.4% |
-
-Fonte: TibiaWiki / Crystal Server.

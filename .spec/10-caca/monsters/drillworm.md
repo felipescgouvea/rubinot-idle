@@ -1,5 +1,7 @@
 # Drillworm
 
+![Drillworm](../../../assets/sprites/monsters/Drillworm.webp)
+
 - **HP:** 1500
 - **Ataque:** 300 · **Defesa:** 41
 - **Experiência:** 1200
@@ -24,5 +26,3 @@
 | Pulverized Ore | 5.4% |
 | Vein of Ore | 7.3% |
 | Drill Bolt | 4.9% |
-
-Fonte: TibiaWiki / Crystal Server.

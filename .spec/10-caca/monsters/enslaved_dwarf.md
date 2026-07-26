@@ -1,5 +1,7 @@
 # Enslaved Dwarf
 
+![Enslaved Dwarf](../../../assets/sprites/monsters/Enslaved_Dwarf.webp)
+
 - **HP:** 3800
 - **Ataque:** 1025 · **Defesa:** 60
 - **Experiência:** 2700
@@ -33,5 +35,3 @@
 | Brown Crystal Splinter | 5.6% |
 | Red Crystal Fragment | 3.7% |
 | Drill Bolt | 3.7% |
-
-Fonte: TibiaWiki / Crystal Server.

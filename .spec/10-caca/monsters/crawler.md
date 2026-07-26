@@ -1,5 +1,7 @@
 # Crawler
 
+![Crawler](../../../assets/sprites/monsters/Crawler.webp)
+
 - **HP:** 1450
 - **Ataque:** 120 · **Defesa:** 38
 - **Experiência:** 1000
@@ -19,5 +21,3 @@
 | Crawler Head Plating | 18.4% |
 | Compound Eye | 14.6% |
 | Grasshopper Legs | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

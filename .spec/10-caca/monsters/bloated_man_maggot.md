@@ -1,5 +1,7 @@
 # Bloated Man-maggot
 
+![Bloated Man-maggot](../../../assets/sprites/monsters/Bloated_Man-maggot.webp)
+
 - **HP:** 31700
 - **Ataque:** 1500 · **Defesa:** 179
 - **Experiência:** 21570
@@ -20,5 +22,3 @@
 | Blue Gem | 7.8% |
 | Violet Gem | 7.1% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

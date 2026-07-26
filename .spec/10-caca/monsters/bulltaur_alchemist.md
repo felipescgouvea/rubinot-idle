@@ -1,5 +1,7 @@
 # Bulltaur Alchemist
 
+![Bulltaur Alchemist](../../../assets/sprites/monsters/Bulltaur_Alchemist.webp)
+
 - **HP:** 5690
 - **Ataque:** 270 · **Defesa:** 67
 - **Experiência:** 4350
@@ -20,5 +22,3 @@
 | Encrypted Notes | 0.98% |
 | Ultimate Mana Potion | 1.3% |
 | Gold Ingot | 1.3% |
-
-Fonte: TibiaWiki / Crystal Server.

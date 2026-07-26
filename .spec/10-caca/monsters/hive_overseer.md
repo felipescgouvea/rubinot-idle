@@ -1,5 +1,7 @@
 # Hive Overseer
 
+![Hive Overseer](../../../assets/sprites/monsters/Hive_Overseer.webp)
+
 - **HP:** 7500
 - **Ataque:** 259 · **Defesa:** 76
 - **Experiência:** 5500
@@ -22,5 +24,3 @@
 | Hive Scythe | 1.7% |
 | Gooey Mass | 13% |
 | Hive Bow | 0.83% |
-
-Fonte: TibiaWiki / Crystal Server.

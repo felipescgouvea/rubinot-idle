@@ -1,5 +1,7 @@
 # Minotaur
 
+![Minotaur](../../../assets/sprites/monsters/Minotaur.webp)
+
 - **HP:** 100
 - **Ataque:** 45 · **Defesa:** 11
 - **Experiência:** 50
@@ -21,5 +23,3 @@
 | Meat | 5% |
 | Minotaur Leather | 0.99% |
 | Minotaur Horn | 2.1% |
-
-Fonte: TibiaWiki / Crystal Server.

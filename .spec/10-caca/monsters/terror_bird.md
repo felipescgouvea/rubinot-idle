@@ -1,5 +1,7 @@
 # Terror Bird
 
+![Terror Bird](../../../assets/sprites/monsters/Terror_Bird.webp)
+
 - **HP:** 300
 - **Ataque:** 90 · **Defesa:** 12
 - **Experiência:** 150
@@ -17,5 +19,3 @@
 | Health Potion | 0.8% |
 | Seeds | 0.29% |
 | Feather Headdress | 0.11% |
-
-Fonte: TibiaWiki / Crystal Server.

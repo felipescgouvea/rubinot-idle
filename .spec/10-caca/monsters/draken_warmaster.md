@@ -1,5 +1,7 @@
 # Draken Warmaster
 
+![Draken Warmaster](../../../assets/sprites/monsters/Draken_Warmaster.webp)
+
 - **HP:** 4150
 - **Ataque:** 350 · **Defesa:** 55
 - **Experiência:** 2400
@@ -23,5 +25,3 @@
 | Zaoan Armor | 0.6% |
 | Drakinata | 0.6% |
 | Ring of the Sky | 0.22% |
-
-Fonte: TibiaWiki / Crystal Server.

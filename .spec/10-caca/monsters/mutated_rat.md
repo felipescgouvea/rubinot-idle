@@ -1,5 +1,7 @@
 # Mutated Rat
 
+![Mutated Rat](../../../assets/sprites/monsters/Mutated_Rat.webp)
+
 - **HP:** 550
 - **Ataque:** 40 · **Defesa:** 3
 - **Experiência:** 450
@@ -21,5 +23,3 @@
 | Health Potion | 0.56% |
 | Spellbook of Enlightenment | 0.3% |
 | Mutated Rat Tail | 3.8% |
-
-Fonte: TibiaWiki / Crystal Server.

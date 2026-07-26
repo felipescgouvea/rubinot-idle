@@ -1,5 +1,7 @@
 # Dark Torturer
 
+![Dark Torturer](../../../assets/sprites/monsters/Dark_Torturer.webp)
+
 - **HP:** 7350
 - **Ataque:** 513 · **Defesa:** 45
 - **Experiência:** 4650
@@ -27,5 +29,3 @@
 | Great Mana Potion | 14.8% |
 | Great Health Potion | 10% |
 | Gold Ingot | 3.1% |
-
-Fonte: TibiaWiki / Crystal Server.

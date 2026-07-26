@@ -1,5 +1,7 @@
 # Devourer
 
+![Devourer](../../../assets/sprites/monsters/Devourer.webp)
+
 - **HP:** 1900
 - **Ataque:** 260 · **Defesa:** 45
 - **Experiência:** 1755
@@ -28,5 +30,3 @@
 | Glooth Spear | 0.37% |
 | Springsprout Rod | 0.25% |
 | Terra Rod | 0.26% |
-
-Fonte: TibiaWiki / Crystal Server.

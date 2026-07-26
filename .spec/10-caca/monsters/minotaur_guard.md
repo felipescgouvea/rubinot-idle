@@ -1,5 +1,7 @@
 # Minotaur Guard
 
+![Minotaur Guard](../../../assets/sprites/monsters/Minotaur_Guard.webp)
+
 - **HP:** 185
 - **Ataque:** 100 · **Defesa:** 15
 - **Experiência:** 160
@@ -20,5 +22,3 @@
 | Health Potion | 0.4% |
 | Minotaur Horn | 8.3% |
 | Piece of Warrior Armor | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

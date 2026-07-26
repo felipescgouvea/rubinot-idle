@@ -1,5 +1,7 @@
 # Draken Spellweaver
 
+![Draken Spellweaver](../../../assets/sprites/monsters/Draken_Spellweaver.webp)
+
 - **HP:** 5000
 - **Ataque:** 350 · **Defesa:** 25
 - **Experiência:** 3100
@@ -27,5 +29,3 @@
 | Bamboo Leaves | 0.18% |
 | Harness | 0.03% |
 | Draken Trophy | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

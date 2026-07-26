@@ -1,5 +1,7 @@
 # Orc Leader
 
+![Orc Leader](../../../assets/sprites/monsters/Orc_Leader.webp)
+
 - **HP:** 450
 - **Ataque:** 255 · **Defesa:** 20
 - **Experiência:** 270
@@ -27,5 +29,3 @@
 | Orc Tooth | 1% |
 | Orc Leather | 19.5% |
 | Skull Belt | 2% |
-
-Fonte: TibiaWiki / Crystal Server.

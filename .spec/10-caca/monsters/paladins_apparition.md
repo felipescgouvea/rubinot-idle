@@ -1,5 +1,7 @@
 # Paladin's Apparition
 
+![Paladin's Apparition](../../../assets/sprites/monsters/Paladin's_Apparition.webp)
+
 - **HP:** 25000
 - **Ataque:** 850 · **Defesa:** 162
 - **Experiência:** 28600
@@ -23,5 +25,3 @@
 | Collar of Blue Plasma | 1.3% |
 | Ring of Blue Plasma | 1.3% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Icecold Book
 
+![Icecold Book](../../../assets/sprites/monsters/Icecold_Book.webp)
+
 - **HP:** 21000
 - **Ataque:** 850 · **Defesa:** 82
 - **Experiência:** 12750
@@ -30,5 +32,3 @@
 | Ice Cube | 100% |
 | Glacial Rod | 0.15% |
 | Crystalline Armor | 0.25% |
-
-Fonte: TibiaWiki / Crystal Server.

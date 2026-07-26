@@ -1,5 +1,7 @@
 # Cobra Vizier
 
+![Cobra Vizier](../../../assets/sprites/monsters/Cobra_Vizier.webp)
+
 - **HP:** 8500
 - **Ataque:** 500 · **Defesa:** 82
 - **Experiência:** 7650
@@ -25,5 +27,3 @@
 | Violet Crystal Shard | 2.4% |
 | Green Gem | 1.6% |
 | Onyx Chip | 1.6% |
-
-Fonte: TibiaWiki / Crystal Server.

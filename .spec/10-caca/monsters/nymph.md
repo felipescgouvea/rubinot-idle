@@ -1,5 +1,7 @@
 # Nymph
 
+![Nymph](../../../assets/sprites/monsters/Nymph.webp)
+
 - **HP:** 900
 - **Ataque:** 244 · **Defesa:** 60
 - **Experiência:** 850
@@ -26,5 +28,3 @@
 | Butterfly Ring | 0.84% |
 | Fresh Fruit | 15% |
 | Strong Mana Potion | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

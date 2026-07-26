@@ -1,5 +1,7 @@
 # Orc Berserker
 
+![Orc Berserker](../../../assets/sprites/monsters/Orc_Berserker.webp)
+
 - **HP:** 210
 - **Ataque:** 200 · **Defesa:** 12
 - **Experiência:** 195
@@ -19,5 +21,3 @@
 | Orc Tooth | 3% |
 | Orcish Gear | 9.4% |
 | Orc Leather | 4% |
-
-Fonte: TibiaWiki / Crystal Server.

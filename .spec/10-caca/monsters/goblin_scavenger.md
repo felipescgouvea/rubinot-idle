@@ -1,5 +1,7 @@
 # Goblin Scavenger
 
+![Goblin Scavenger](../../../assets/sprites/monsters/Goblin_Scavenger.webp)
+
 - **HP:** 60
 - **Ataque:** 15 · **Defesa:** 7
 - **Experiência:** 37
@@ -20,5 +22,3 @@
 | Leather Armor | 7.7% |
 | Small Axe | 9.8% |
 | Fish | 13.6% |
-
-Fonte: TibiaWiki / Crystal Server.

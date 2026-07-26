@@ -1,5 +1,7 @@
 # Glooth Brigand
 
+![Glooth Brigand](../../../assets/sprites/monsters/Glooth_Brigand.webp)
+
 - **HP:** 2400
 - **Ataque:** 300 · **Defesa:** 51
 - **Experiência:** 1900
@@ -31,5 +33,3 @@
 | Glooth Spear | 0.5% |
 | Rubber Cap | 0.5% |
 | Terra Hood | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

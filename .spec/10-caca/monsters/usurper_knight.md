@@ -1,5 +1,7 @@
 # Usurper Knight
 
+![Usurper Knight](../../../assets/sprites/monsters/Usurper_Knight.webp)
+
 - **HP:** 8200
 - **Ataque:** 500 · **Defesa:** 83
 - **Experiência:** 6900
@@ -22,5 +24,3 @@
 | Green Gem | 2.2% |
 | Magma Legs | 0.61% |
 | Collar of Orange Plasma | 0.56% |
-
-Fonte: TibiaWiki / Crystal Server.

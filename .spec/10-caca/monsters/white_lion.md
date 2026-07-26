@@ -1,5 +1,7 @@
 # White Lion
 
+![White Lion](../../../assets/sprites/monsters/White_Lion.webp)
+
 - **HP:** 2700
 - **Ataque:** 350 · **Defesa:** 38
 - **Experiência:** 2300
@@ -21,5 +23,3 @@
 | Twin Hooks | 5% |
 | War Hammer | 1.5% |
 | Combat Knife | 1.5% |
-
-Fonte: TibiaWiki / Crystal Server.

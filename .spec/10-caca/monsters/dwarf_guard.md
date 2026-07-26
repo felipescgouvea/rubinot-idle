@@ -1,5 +1,7 @@
 # Dwarf Guard
 
+![Dwarf Guard](../../../assets/sprites/monsters/Dwarf_Guard.webp)
+
 - **HP:** 245
 - **Ataque:** 140 · **Defesa:** 18
 - **Experiência:** 165
@@ -22,5 +24,3 @@
 | Iron Ore | 0.51% |
 | Health Potion | 0.38% |
 | Coal | 0.28% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Golden Servant Replica
 
+![Golden Servant Replica](../../../assets/sprites/monsters/Golden_Servant_Replica.webp)
+
 - **HP:** 2000
 - **Ataque:** 540 · **Defesa:** 29
 - **Experiência:** 450
@@ -21,5 +23,3 @@
 | Golden Can of Oil | 0.04% |
 | Golden Armor | 0.01% |
 | Gold Ring | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

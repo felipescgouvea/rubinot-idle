@@ -1,5 +1,7 @@
 # Dwarf
 
+![Dwarf](../../../assets/sprites/monsters/Dwarf.webp)
+
 - **HP:** 90
 - **Ataque:** 30 · **Defesa:** 5
 - **Experiência:** 45
@@ -20,5 +22,3 @@
 | Leather Legs | 10% |
 | White Mushroom | 50% |
 | Iron Ore | 0.7% |
-
-Fonte: TibiaWiki / Crystal Server.

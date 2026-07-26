@@ -1,5 +1,7 @@
 # Spidris
 
+![Spidris](../../../assets/sprites/monsters/Spidris.webp)
+
 - **HP:** 3700
 - **Ataque:** 259 · **Defesa:** 76
 - **Experiência:** 2600
@@ -21,5 +23,3 @@
 | Calopteryx Cape | 0.37% |
 | Carapace Shield | 0.72% |
 | Hive Scythe | 0.69% |
-
-Fonte: TibiaWiki / Crystal Server.

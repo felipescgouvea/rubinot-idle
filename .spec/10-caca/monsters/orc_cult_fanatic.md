@@ -1,5 +1,7 @@
 # Orc Cult Fanatic
 
+![Orc Cult Fanatic](../../../assets/sprites/monsters/Orc_Cult_Fanatic.webp)
+
 - **HP:** 1300
 - **Ataque:** 350 · **Defesa:** 22
 - **Experiência:** 1100
@@ -24,5 +26,3 @@
 | Small Ruby | 11% |
 | Brown Mushroom | 15.8% |
 | Cultish Robe | 10.5% |
-
-Fonte: TibiaWiki / Crystal Server.

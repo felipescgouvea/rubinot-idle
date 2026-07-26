@@ -1,5 +1,7 @@
 # Dwarf Soldier
 
+![Dwarf Soldier](../../../assets/sprites/monsters/Dwarf_Soldier.webp)
+
 - **HP:** 135
 - **Ataque:** 70 · **Defesa:** 10
 - **Experiência:** 70
@@ -21,5 +23,3 @@
 | White Mushroom | 40% |
 | Iron Ore | 0.3% |
 | Piercing Bolt | 4% |
-
-Fonte: TibiaWiki / Crystal Server.

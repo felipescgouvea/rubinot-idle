@@ -1,5 +1,7 @@
 # Percht
 
+![Percht](../../../assets/sprites/monsters/Percht.webp)
+
 - **HP:** 620
 - **Ataque:** 168 · **Defesa:** 40
 - **Experiência:** 600
@@ -18,5 +20,3 @@
 | Magma Coat | 1.3% |
 | Magma Monocle | 0.95% |
 | Magma Legs | 0.51% |
-
-Fonte: TibiaWiki / Crystal Server.

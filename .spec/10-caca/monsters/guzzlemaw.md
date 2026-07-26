@@ -1,5 +1,7 @@
 # Guzzlemaw
 
+![Guzzlemaw](../../../assets/sprites/monsters/Guzzlemaw.webp)
+
 - **HP:** 6400
 - **Ataque:** 550 · **Defesa:** 74
 - **Experiência:** 6050
@@ -36,5 +38,3 @@
 | Cluster Of Solace | 8.9% |
 | Frazzle Tongue | 15% |
 | Frazzle Skin | 14% |
-
-Fonte: TibiaWiki / Crystal Server.

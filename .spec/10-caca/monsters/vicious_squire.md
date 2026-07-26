@@ -1,5 +1,7 @@
 # Vicious Squire
 
+![Vicious Squire](../../../assets/sprites/monsters/Vicious_Squire.webp)
+
 - **HP:** 1000
 - **Ataque:** 230 · **Defesa:** 30
 - **Experiência:** 900
@@ -26,5 +28,3 @@
 | Guardian Shield | 0.33% |
 | Knight Legs | 0.23% |
 | Warrior Helmet | 0.2% |
-
-Fonte: TibiaWiki / Crystal Server.

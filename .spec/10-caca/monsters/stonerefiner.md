@@ -1,5 +1,7 @@
 # Stonerefiner
 
+![Stonerefiner](../../../assets/sprites/monsters/Stonerefiner.webp)
+
 - **HP:** 800
 - **Ataque:** 115 · **Defesa:** 20
 - **Experiência:** 500
@@ -17,5 +19,3 @@
 | Poisonous Slime | 20% |
 | Half-Digested Stones | 15.2% |
 | Rat Cheese | 10.3% |
-
-Fonte: TibiaWiki / Crystal Server.

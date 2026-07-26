@@ -1,5 +1,7 @@
 # Quara Mantassin Scout
 
+![Quara Mantassin Scout](../../../assets/sprites/monsters/Quara_Mantassin_Scout.webp)
+
 - **HP:** 220
 - **Ataque:** 34 · **Defesa:** 42
 - **Experiência:** 100
@@ -17,5 +19,3 @@
 | Two Handed Sword | 0.8% |
 | Stealth Ring | 0.7% |
 | Fish Fin | 0.37% |
-
-Fonte: TibiaWiki / Crystal Server.

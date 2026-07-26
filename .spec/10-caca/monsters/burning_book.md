@@ -1,5 +1,7 @@
 # Burning Book
 
+![Burning Book](../../../assets/sprites/monsters/Burning_Book.webp)
+
 - **HP:** 18000
 - **Ataque:** 600 · **Defesa:** 82
 - **Experiência:** 11934
@@ -24,5 +26,3 @@
 | Death Ring | 1.2% |
 | Stealth Ring | 1.8% |
 | Shadow Sceptre | 9% |
-
-Fonte: TibiaWiki / Crystal Server.

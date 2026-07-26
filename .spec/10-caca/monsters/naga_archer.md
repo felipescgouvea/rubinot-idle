@@ -1,5 +1,7 @@
 # Naga Archer
 
+![Naga Archer](../../../assets/sprites/monsters/Naga_Archer.webp)
+
 - **HP:** 4640
 - **Ataque:** 300 · **Defesa:** 110
 - **Experiência:** 5150
@@ -24,5 +26,3 @@
 | Ice Cube | 0.63% |
 | Emerald Bangle | 0.93% |
 | Silver Brooch | 0.31% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Cyclops
 
+![Cyclops](../../../assets/sprites/monsters/Cyclops.webp)
+
 - **HP:** 260
 - **Ataque:** 105 · **Defesa:** 17
 - **Experiência:** 150
@@ -22,5 +24,3 @@
 | Health Potion | 0.21% |
 | Cyclops Toe | 4.9% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

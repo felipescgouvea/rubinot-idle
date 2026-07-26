@@ -1,5 +1,7 @@
 # Sibang
 
+![Sibang](../../../assets/sprites/monsters/Sibang.webp)
+
 - **HP:** 225
 - **Ataque:** 43 · **Defesa:** 15
 - **Experiência:** 105
@@ -17,5 +19,3 @@
 | Melon | 1% |
 | Ape Fur | 1% |
 | Banana Sash | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Amazon
 
+![Amazon](../../../assets/sprites/monsters/Amazon.webp)
+
 - **HP:** 110
 - **Ataque:** 45 · **Defesa:** 10
 - **Experiência:** 60
@@ -19,5 +21,3 @@
 | Torch | 1% |
 | Crystal Necklace | 0.26% |
 | Small Ruby | 0.13% |
-
-Fonte: TibiaWiki / Crystal Server.

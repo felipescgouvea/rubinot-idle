@@ -1,5 +1,7 @@
 # Soul-broken Harbinger
 
+![Soul-broken Harbinger](../../../assets/sprites/monsters/Soul-broken_Harbinger.webp)
+
 - **HP:** 6300
 - **Ataque:** 400 · **Defesa:** 105
 - **Experiência:** 5800
@@ -23,5 +25,3 @@
 | Ring of Blue Plasma | 1.4% |
 | Tower Shield | 0.68% |
 | Collar of Green Plasma | 0.68% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Twisted Pooka
 
+![Twisted Pooka](../../../assets/sprites/monsters/Twisted_Pooka.webp)
+
 - **HP:** 700
 - **Ataque:** 190 · **Defesa:** 41
 - **Experiência:** 600
@@ -21,5 +23,3 @@
 | Prismatic Quartz | 2.5% |
 | Crystal of Focus | 0.06% |
 | Small Enchanted Ruby | 3.4% |
-
-Fonte: TibiaWiki / Crystal Server.

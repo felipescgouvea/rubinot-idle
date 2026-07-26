@@ -1,5 +1,7 @@
 # Shadowthorn Deceiver
 
+![Shadowthorn Deceiver](../../../assets/sprites/monsters/Elf_Overseer.webp)
+
 - **HP:** 82
 - **Ataque:** 18 · **Defesa:** 4
 - **Experiência:** 33
@@ -13,5 +15,3 @@
 |---|---|
 | Elvish Talisman | 20% |
 | Bones | 30% |
-
-Fonte: TibiaWiki / Crystal Server.

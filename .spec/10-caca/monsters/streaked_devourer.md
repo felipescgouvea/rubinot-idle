@@ -1,5 +1,7 @@
 # Streaked Devourer
 
+![Streaked Devourer](../../../assets/sprites/monsters/Streaked_Devourer.webp)
+
 - **HP:** 7000
 - **Ataque:** 550 · **Defesa:** 62
 - **Experiência:** 6300
@@ -25,5 +27,3 @@
 | Warrior's Axe | 1.5% |
 | Giant Sword | 0.83% |
 | War Axe | 4.6% |
-
-Fonte: TibiaWiki / Crystal Server.

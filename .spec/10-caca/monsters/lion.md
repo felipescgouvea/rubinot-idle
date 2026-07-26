@@ -1,5 +1,7 @@
 # Lion
 
+![Lion](../../../assets/sprites/monsters/Lion.webp)
+
 - **HP:** 80
 - **Ataque:** 40 · **Defesa:** 6
 - **Experiência:** 30
@@ -13,5 +15,3 @@
 | Meat | 45% |
 | Ham | 18.4% |
 | Lion's Mane | 1.4% |
-
-Fonte: TibiaWiki / Crystal Server.

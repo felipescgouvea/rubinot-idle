@@ -1,5 +1,7 @@
 # Meadow Strider
 
+![Meadow Strider](../../../assets/sprites/monsters/Meadow_Strider.webp)
+
 - **HP:** 100
 - **Ataque:** 16 · **Defesa:** 1
 - **Experiência:** 50
@@ -20,5 +22,3 @@
 | Longsword | 7.6% |
 | Mace | 8.3% |
 | Hatchet | 6.7% |
-
-Fonte: TibiaWiki / Crystal Server.

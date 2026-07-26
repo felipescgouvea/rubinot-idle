@@ -1,5 +1,7 @@
 # Elephant
 
+![Elephant](../../../assets/sprites/monsters/Elephant.webp)
+
 - **HP:** 320
 - **Ataque:** 100 · **Defesa:** 20
 - **Experiência:** 160
@@ -14,5 +16,3 @@
 | Ham | 30% |
 | Tusk | 1% |
 | Tusk Shield | 0.14% |
-
-Fonte: TibiaWiki / Crystal Server.

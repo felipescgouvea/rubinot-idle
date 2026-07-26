@@ -1,5 +1,7 @@
 # Corym Charlatan
 
+![Corym Charlatan](../../../assets/sprites/monsters/Corym_Charlatan.webp)
+
 - **HP:** 250
 - **Ataque:** 100 · **Defesa:** 17
 - **Experiência:** 150
@@ -21,5 +23,3 @@
 | Soft Cheese | 12.5% |
 | Rat Cheese | 14.3% |
 | Leather Harness | 0.54% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Faun
 
+![Faun](../../../assets/sprites/monsters/Faun.webp)
+
 - **HP:** 900
 - **Ataque:** 244 · **Defesa:** 45
 - **Experiência:** 800
@@ -27,5 +29,3 @@
 | Small Stone | 0.49% |
 | Wood Cape | 0.49% |
 | Mandrake | 0.05% |
-
-Fonte: TibiaWiki / Crystal Server.

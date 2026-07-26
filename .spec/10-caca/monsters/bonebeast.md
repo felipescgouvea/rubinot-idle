@@ -1,5 +1,7 @@
 # Bonebeast
 
+![Bonebeast](../../../assets/sprites/monsters/Bonebeast.webp)
+
 - **HP:** 515
 - **Ataque:** 200 · **Defesa:** 22
 - **Experiência:** 580
@@ -20,5 +22,3 @@
 | Health Potion | 0.54% |
 | Bonebeast Trophy | 0.12% |
 | Bony Tail | 9.8% |
-
-Fonte: TibiaWiki / Crystal Server.

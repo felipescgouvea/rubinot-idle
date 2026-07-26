@@ -1,5 +1,7 @@
 # Lavafungus
 
+![Lavafungus](../../../assets/sprites/monsters/Lavafungus.webp)
+
 - **HP:** 7200
 - **Ataque:** 810 · **Defesa:** 70
 - **Experiência:** 6200
@@ -33,5 +35,3 @@
 | Wand of Starstorm | 2.3% |
 | Crystal Mace | 1.7% |
 | Dwarven Ring | 2.3% |
-
-Fonte: TibiaWiki / Crystal Server.

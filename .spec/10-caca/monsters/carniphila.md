@@ -1,5 +1,7 @@
 # Carniphila
 
+![Carniphila](../../../assets/sprites/monsters/Carniphila.webp)
+
 - **HP:** 255
 - **Ataque:** 230 · **Defesa:** 22
 - **Experiência:** 150
@@ -17,5 +19,3 @@
 | Seeds | 0.49% |
 | Carniphila Seeds | 4.2% |
 | Carrot on a Stick | 0.17% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Swan Maiden
 
+![Swan Maiden](../../../assets/sprites/monsters/Swan_Maiden.webp)
+
 - **HP:** 800
 - **Ataque:** 217 · **Defesa:** 54
 - **Experiência:** 700
@@ -27,5 +29,3 @@
 | Wild Flowers | 3.4% |
 | Boots of Haste | 0.05% |
 | Butterfly Ring | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Deepling Spellsinger
 
+![Deepling Spellsinger](../../../assets/sprites/monsters/Deepling_Spellsinger.webp)
+
 - **HP:** 850
 - **Ataque:** 56 · **Defesa:** 51
 - **Experiência:** 1000
@@ -21,5 +23,3 @@
 | Necklace of the Deep | 0.76% |
 | Fish Fin | 0.5% |
 | Ornate Crossbow | 0.21% |
-
-Fonte: TibiaWiki / Crystal Server.

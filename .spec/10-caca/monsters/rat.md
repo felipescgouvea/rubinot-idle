@@ -1,5 +1,7 @@
 # Rat
 
+![Rat](../../../assets/sprites/monsters/Rat.webp)
+
 - **HP:** 20
 - **Ataque:** 8 · **Defesa:** 2
 - **Experiência:** 5
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Cheese | 39.4% |
-
-Fonte: TibiaWiki / Crystal Server.

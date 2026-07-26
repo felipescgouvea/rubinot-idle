@@ -1,5 +1,7 @@
 # Sopping Carcass
 
+![Sopping Carcass](../../../assets/sprites/monsters/Sopping_Carcass.webp)
+
 - **HP:** 32700
 - **Ataque:** 1100 · **Defesa:** 175
 - **Experiência:** 23425
@@ -23,5 +25,3 @@
 | Skullcracker Armor | 7.3% |
 | Ring of Green Plasma | 3.1% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

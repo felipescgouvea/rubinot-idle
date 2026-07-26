@@ -1,5 +1,7 @@
 # Frazzlemaw
 
+![Frazzlemaw](../../../assets/sprites/monsters/Frazzlemaw.webp)
+
 - **HP:** 4100
 - **Ataque:** 450 · **Defesa:** 74
 - **Experiência:** 3740
@@ -37,5 +39,3 @@
 | Cluster Of Solace | 4.5% |
 | Frazzle Tongue | 18.8% |
 | Frazzle Skin | 16% |
-
-Fonte: TibiaWiki / Crystal Server.

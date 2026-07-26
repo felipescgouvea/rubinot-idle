@@ -1,5 +1,7 @@
 # Dragon
 
+![Dragon](../../../assets/sprites/monsters/Dragon.webp)
+
 - **HP:** 1000
 - **Ataque:** 120 · **Defesa:** 25
 - **Experiência:** 700
@@ -30,5 +32,3 @@
 | Dragonbone Staff | 0.17% |
 | Life Crystal | 0.17% |
 | Dragon Shield | 0.11% |
-
-Fonte: TibiaWiki / Crystal Server.

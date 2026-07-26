@@ -1,5 +1,7 @@
 # Guardian of Tales
 
+![Guardian of Tales](../../../assets/sprites/monsters/Guardian_Of_Tales.webp)
+
 - **HP:** 15000
 - **Ataque:** 600 · **Defesa:** 77
 - **Experiência:** 9204
@@ -23,5 +25,3 @@
 | Magma Legs | 0.25% |
 | Piece of Hellfire Armor | 0.5% |
 | Coal | 10% |
-
-Fonte: TibiaWiki / Crystal Server.

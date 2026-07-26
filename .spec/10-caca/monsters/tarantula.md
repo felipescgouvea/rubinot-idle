@@ -1,5 +1,7 @@
 # Tarantula
 
+![Tarantula](../../../assets/sprites/monsters/Tarantula.webp)
+
 - **HP:** 225
 - **Ataque:** 90 · **Defesa:** 20
 - **Experiência:** 120
@@ -17,5 +19,3 @@
 | Spider Fangs | 4.8% |
 | Tarantula Egg | 10% |
 | Monk Robe | 0.39% |
-
-Fonte: TibiaWiki / Crystal Server.

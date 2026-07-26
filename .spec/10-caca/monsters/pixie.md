@@ -1,5 +1,7 @@
 # Pixie
 
+![Pixie](../../../assets/sprites/monsters/Pixie.webp)
+
 - **HP:** 770
 - **Ataque:** 212 · **Defesa:** 52
 - **Experiência:** 700
@@ -27,5 +29,3 @@
 | Great Mana Potion | 0.59% |
 | Dandelion Seeds | 5.8% |
 | Fresh Fruit | 3.4% |
-
-Fonte: TibiaWiki / Crystal Server.

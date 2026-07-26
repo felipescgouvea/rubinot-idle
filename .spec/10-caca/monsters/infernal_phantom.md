@@ -1,5 +1,7 @@
 # Infernal Phantom
 
+![Infernal Phantom](../../../assets/sprites/monsters/Infernal_Phantom.webp)
+
 - **HP:** 26000
 - **Ataque:** 800 · **Defesa:** 165
 - **Experiência:** 15770
@@ -27,5 +29,3 @@
 | War Axe | 1.4% |
 | Warrior's Axe | 1.4% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

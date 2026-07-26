@@ -1,5 +1,7 @@
 # Minotaur Mage
 
+![Minotaur Mage](../../../assets/sprites/monsters/Minotaur_Mage.webp)
+
 - **HP:** 155
 - **Ataque:** 21 · **Defesa:** 18
 - **Experiência:** 150
@@ -20,5 +22,3 @@
 | Mana Potion | 0.49% |
 | Minotaur Horn | 3% |
 | Purple Robe | 6.4% |
-
-Fonte: TibiaWiki / Crystal Server.

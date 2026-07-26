@@ -1,5 +1,7 @@
 # Lost Thrower
 
+![Lost Thrower](../../../assets/sprites/monsters/Lost_Thrower.webp)
+
 - **HP:** 1700
 - **Ataque:** 464 · **Defesa:** 50
 - **Experiência:** 1500
@@ -22,5 +24,3 @@
 | Mad Froth | 11.8% |
 | Basalt Fetish | 6.2% |
 | Basalt Figurine | 7.9% |
-
-Fonte: TibiaWiki / Crystal Server.

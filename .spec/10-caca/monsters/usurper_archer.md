@@ -1,5 +1,7 @@
 # Usurper Archer
 
+![Usurper Archer](../../../assets/sprites/monsters/Usurper_Archer.webp)
+
 - **HP:** 7300
 - **Ataque:** 430 · **Defesa:** 82
 - **Experiência:** 6800
@@ -30,5 +32,3 @@
 | Emerald Bangle | 0.81% |
 | Wood Cape | 0.4% |
 | Elvish Bow | 0.27% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Grim Reaper
 
+![Grim Reaper](../../../assets/sprites/monsters/Grim_Reaper.webp)
+
 - **HP:** 3900
 - **Ataque:** 815 · **Defesa:** 30
 - **Experiência:** 5500
@@ -25,5 +27,3 @@
 | Underworld Rod | 0.91% |
 | Slightly Rusted Armor | 2.5% |
 | Mystical Hourglass | 5.3% |
-
-Fonte: TibiaWiki / Crystal Server.

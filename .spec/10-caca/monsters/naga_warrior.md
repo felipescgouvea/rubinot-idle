@@ -1,5 +1,7 @@
 # Naga Warrior
 
+![Naga Warrior](../../../assets/sprites/monsters/Naga_Warrior.webp)
+
 - **HP:** 5530
 - **Ataque:** 430 · **Defesa:** 110
 - **Experiência:** 5890
@@ -24,5 +26,3 @@
 | Relic Sword | 0.6% |
 | Knight Armor | 1.1% |
 | Ice Cube | 0.3% |
-
-Fonte: TibiaWiki / Crystal Server.

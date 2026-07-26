@@ -1,5 +1,7 @@
 # Massive Water Elemental
 
+![Massive Water Elemental](../../../assets/sprites/monsters/Massive_Water_Elemental.webp)
+
 - **HP:** 1250
 - **Ataque:** 538 · **Defesa:** 125
 - **Experiência:** 1100
@@ -19,5 +21,3 @@
 | Green Perch | 1.6% |
 | Great Mana Potion | 10.4% |
 | Great Health Potion | 10% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Bandit
 
+![Bandit](../../../assets/sprites/monsters/Bandit.webp)
+
 - **HP:** 245
 - **Ataque:** 45 · **Defesa:** 8
 - **Experiência:** 65
@@ -18,5 +20,3 @@
 | Brass Shield | 16.8% |
 | Leather Legs | 15.5% |
 | Tomato | 7.6% |
-
-Fonte: TibiaWiki / Crystal Server.

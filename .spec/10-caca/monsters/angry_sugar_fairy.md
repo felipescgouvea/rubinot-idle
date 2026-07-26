@@ -1,5 +1,7 @@
 # Angry Sugar Fairy
 
+![Angry Sugar Fairy](../../../assets/sprites/monsters/Angry_Sugar_Fairy.webp)
+
 - **HP:** 3000
 - **Ataque:** 481 · **Defesa:** 86
 - **Experiência:** 3100
@@ -27,5 +29,3 @@
 | Ring of Healing | 0.73% |
 | Hibiscus Dress | 0.36% |
 | Gold Nugget | 0.23% |
-
-Fonte: TibiaWiki / Crystal Server.

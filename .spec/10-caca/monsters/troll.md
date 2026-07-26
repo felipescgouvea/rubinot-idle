@@ -1,5 +1,7 @@
 # Troll
 
+![Troll](../../../assets/sprites/monsters/Troll.webp)
+
 - **HP:** 50
 - **Ataque:** 15 · **Defesa:** 6
 - **Experiência:** 20
@@ -21,5 +23,3 @@
 | Meat | 15% |
 | Bunch of Troll Hair | 1% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

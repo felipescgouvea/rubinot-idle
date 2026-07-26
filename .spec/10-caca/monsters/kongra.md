@@ -1,5 +1,7 @@
 # Kongra
 
+![Kongra](../../../assets/sprites/monsters/Kongra.webp)
+
 - **HP:** 340
 - **Ataque:** 60 · **Defesa:** 18
 - **Experiência:** 115
@@ -18,5 +20,3 @@
 | Ape Fur | 0.98% |
 | Health Potion | 0.57% |
 | Kongra's Shoulderpad | 4.9% |
-
-Fonte: TibiaWiki / Crystal Server.

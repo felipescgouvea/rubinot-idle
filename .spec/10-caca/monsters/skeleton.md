@@ -1,5 +1,7 @@
 # Skeleton
 
+![Skeleton](../../../assets/sprites/monsters/Skeleton.webp)
+
 - **HP:** 50
 - **Ataque:** 17 · **Defesa:** 6
 - **Experiência:** 35
@@ -19,5 +21,3 @@
 | Brass Shield | 2.1% |
 | Pelvis Bone | 9.9% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

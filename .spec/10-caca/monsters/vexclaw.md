@@ -1,5 +1,7 @@
 # Vexclaw
 
+![Vexclaw](../../../assets/sprites/monsters/Vexclaw.webp)
+
 - **HP:** 8500
 - **Ataque:** 550 · **Defesa:** 55
 - **Experiência:** 6248
@@ -43,5 +45,3 @@
 | Magic Plate Armor | 0.07% |
 | Golden Legs | 0.05% |
 | Demonrage Sword | 0.03% |
-
-Fonte: TibiaWiki / Crystal Server.

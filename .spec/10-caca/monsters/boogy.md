@@ -1,5 +1,7 @@
 # Boogy
 
+![Boogy](../../../assets/sprites/monsters/Boogy.webp)
+
 - **HP:** 1300
 - **Ataque:** 355 · **Defesa:** 35
 - **Experiência:** 950
@@ -26,5 +28,3 @@
 | Wooden Spellbook | 3.4% |
 | Leaf Star | 3.4% |
 | Wood Mushroom | 4.5% |
-
-Fonte: TibiaWiki / Crystal Server.

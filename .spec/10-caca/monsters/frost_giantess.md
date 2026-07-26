@@ -1,5 +1,7 @@
 # Frost Giantess
 
+![Frost Giantess](../../../assets/sprites/monsters/Frost_Giantess.webp)
+
 - **HP:** 275
 - **Ataque:** 150 · **Defesa:** 20
 - **Experiência:** 150
@@ -21,5 +23,3 @@
 | Norse Shield | 0.32% |
 | Mana Potion | 0.95% |
 | Frost Giant Pelt | 4.8% |
-
-Fonte: TibiaWiki / Crystal Server.

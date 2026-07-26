@@ -1,5 +1,7 @@
 # Orc
 
+![Orc](../../../assets/sprites/monsters/Orc.webp)
+
 - **HP:** 70
 - **Ataque:** 35 · **Defesa:** 4
 - **Experiência:** 25
@@ -19,5 +21,3 @@
 | Orc Tooth | 0.21% |
 | Orc Leather | 0.59% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

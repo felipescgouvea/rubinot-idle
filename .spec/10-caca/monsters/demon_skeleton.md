@@ -1,5 +1,7 @@
 # Demon Skeleton
 
+![Demon Skeleton](../../../assets/sprites/monsters/Demon_Skeleton.webp)
+
 - **HP:** 400
 - **Ataque:** 14 · **Defesa:** 19
 - **Experiência:** 240
@@ -23,5 +25,3 @@
 | Health Potion | 10.1% |
 | Mana Potion | 5.3% |
 | Demonic Skeletal Hand | 12.6% |
-
-Fonte: TibiaWiki / Crystal Server.

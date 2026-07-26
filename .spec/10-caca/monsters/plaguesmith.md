@@ -1,5 +1,7 @@
 # Plaguesmith
 
+![Plaguesmith](../../../assets/sprites/monsters/Plaguesmith.webp)
+
 - **HP:** 8250
 - **Ataque:** 400 · **Defesa:** 30
 - **Experiência:** 3800
@@ -34,5 +36,3 @@
 | Onyx Arrow | 7.7% |
 | Great Health Potion | 10% |
 | Slightly Rusted Armor | 0.54% |
-
-Fonte: TibiaWiki / Crystal Server.

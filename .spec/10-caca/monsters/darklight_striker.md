@@ -1,5 +1,7 @@
 # Darklight Striker
 
+![Darklight Striker](../../../assets/sprites/monsters/Darklight_Striker.webp)
+
 - **HP:** 29700
 - **Ataque:** 1200 · **Defesa:** 181
 - **Experiência:** 22200
@@ -18,5 +20,3 @@
 | Crystal Mace | 8.8% |
 | Zaoan Helmet | 5.6% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Dragon Lord
 
+![Dragon Lord](../../../assets/sprites/monsters/Dragon_Lord.webp)
+
 - **HP:** 1900
 - **Ataque:** 230 · **Defesa:** 34
 - **Experiência:** 2100
@@ -28,5 +30,3 @@
 | Dragon Slayer | 0.22% |
 | Dragon Lord Trophy | 0.13% |
 | Dragon Scale Mail | 0.09% |
-
-Fonte: TibiaWiki / Crystal Server.

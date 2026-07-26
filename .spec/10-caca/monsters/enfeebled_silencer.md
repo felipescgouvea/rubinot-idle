@@ -1,5 +1,7 @@
 # Enfeebled Silencer
 
+![Enfeebled Silencer](../../../assets/sprites/monsters/Enfeebled_Silencer.webp)
+
 - **HP:** 1100
 - **Ataque:** 79 · **Defesa:** 57
 - **Experiência:** 1100
@@ -21,5 +23,3 @@
 | Terra Boots | 0.48% |
 | Silencer Claws | 4% |
 | Fairy Wings | 12% |
-
-Fonte: TibiaWiki / Crystal Server.

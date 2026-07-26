@@ -1,5 +1,7 @@
 # Shadowthorn
 
+![Shadowthorn](../../../assets/sprites/monsters/Elf.webp)
+
 - **HP:** 55
 - **Ataque:** 12 · **Defesa:** 3
 - **Experiência:** 20
@@ -13,5 +15,3 @@
 |---|---|
 | Bones | 30% |
 | Small Stone | 20% |
-
-Fonte: TibiaWiki / Crystal Server.

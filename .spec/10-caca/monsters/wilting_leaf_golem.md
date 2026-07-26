@@ -1,5 +1,7 @@
 # Wilting Leaf Golem
 
+![Wilting Leaf Golem](../../../assets/sprites/monsters/Wilting_Leaf_Golem.webp)
+
 - **HP:** 380
 - **Ataque:** 170 · **Defesa:** 21
 - **Experiência:** 145
@@ -15,5 +17,3 @@
 | Small Emerald | 1.1% |
 | White Mushroom | 5% |
 | Swampling Club | 4.9% |
-
-Fonte: TibiaWiki / Crystal Server.

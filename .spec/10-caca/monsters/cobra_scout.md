@@ -1,5 +1,7 @@
 # Cobra Scout
 
+![Cobra Scout](../../../assets/sprites/monsters/Cobra_Scout.webp)
+
 - **HP:** 8500
 - **Ataque:** 350 · **Defesa:** 81
 - **Experiência:** 7310
@@ -24,5 +26,3 @@
 | Sacred Tree Amulet | 5.1% |
 | Green Crystal Shard | 2.1% |
 | Ring of Red Plasma | 0.74% |
-
-Fonte: TibiaWiki / Crystal Server.

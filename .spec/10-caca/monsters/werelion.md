@@ -1,5 +1,7 @@
 # Werelion
 
+![Werelion](../../../assets/sprites/monsters/Werelion.webp)
+
 - **HP:** 2800
 - **Ataque:** 325 · **Defesa:** 38
 - **Experiência:** 2200
@@ -31,5 +33,3 @@
 | Noble Axe | 0.5% |
 | White Silk Flower | 0.5% |
 | Lion Figurine | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

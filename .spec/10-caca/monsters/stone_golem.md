@@ -1,5 +1,7 @@
 # Stone Golem
 
+![Stone Golem](../../../assets/sprites/monsters/Stone_Golem.webp)
+
 - **HP:** 270
 - **Ataque:** 110 · **Defesa:** 36
 - **Experiência:** 160
@@ -21,5 +23,3 @@
 | Sulphurous Stone | 10.4% |
 | Piece of Marble Rock | 0.38% |
 | Coal | 0.55% |
-
-Fonte: TibiaWiki / Crystal Server.

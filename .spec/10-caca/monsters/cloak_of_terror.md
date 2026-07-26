@@ -1,5 +1,7 @@
 # Cloak Of Terror
 
+![Cloak Of Terror](../../../assets/sprites/monsters/Cloak_Of_Terror.webp)
+
 - **HP:** 28000
 - **Ataque:** 1000 · **Defesa:** 160
 - **Experiência:** 19700
@@ -24,5 +26,3 @@
 | Brooch of Embracement | 1.5% |
 | Wand of Defiance | 0.99% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

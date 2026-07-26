@@ -1,5 +1,7 @@
 # Capricious Phantom
 
+![Capricious Phantom](../../../assets/sprites/monsters/Capricious_Phantom.webp)
+
 - **HP:** 30000
 - **Ataque:** 900 · **Defesa:** 167
 - **Experiência:** 19360
@@ -23,5 +25,3 @@
 | Glacial Rod | 0.94% |
 | Ornate Crossbow | 0.94% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

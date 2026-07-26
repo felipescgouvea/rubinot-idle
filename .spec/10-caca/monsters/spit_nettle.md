@@ -1,5 +1,7 @@
 # Spit Nettle
 
+![Spit Nettle](../../../assets/sprites/monsters/Spit_Nettle.webp)
+
 - **HP:** 150
 - **Ataque:** 45 · **Defesa:** 12
 - **Experiência:** 20
@@ -14,5 +16,3 @@
 | Nettle Spit | 9.6% |
 | Sling Herb | 5.7% |
 | Nettle Blossom | 0.97% |
-
-Fonte: TibiaWiki / Crystal Server.

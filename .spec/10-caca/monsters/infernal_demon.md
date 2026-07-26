@@ -1,5 +1,7 @@
 # Infernal Demon
 
+![Infernal Demon](../../../assets/sprites/monsters/Infernal_Demon.webp)
+
 - **HP:** 32000
 - **Ataque:** 1450 · **Defesa:** 165
 - **Experiência:** 17430
@@ -26,5 +28,3 @@
 | Magma Boots | 2.3% |
 | Stone Skin Amulet | 0.57% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

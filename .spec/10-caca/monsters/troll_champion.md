@@ -1,5 +1,7 @@
 # Troll Champion
 
+![Troll Champion](../../../assets/sprites/monsters/Troll_Champion.webp)
+
 - **HP:** 75
 - **Ataque:** 35 · **Defesa:** 10
 - **Experiência:** 40
@@ -19,5 +21,3 @@
 | Meat | 9.7% |
 | Bunch of Troll Hair | 3% |
 | Trollroot | 0.75% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Werelioness
 
+![Werelioness](../../../assets/sprites/monsters/Werelioness.webp)
+
 - **HP:** 3000
 - **Ataque:** 350 · **Defesa:** 38
 - **Experiência:** 2300
@@ -29,5 +31,3 @@
 | Crown Helmet | 0.5% |
 | White Silk Flower | 0.2% |
 | Lion Figurine | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

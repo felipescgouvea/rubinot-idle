@@ -1,5 +1,7 @@
 # Undead Prospector
 
+![Undead Prospector](../../../assets/sprites/monsters/Undead_Prospector.webp)
+
 - **HP:** 100
 - **Ataque:** 50 · **Defesa:** 8
 - **Experiência:** 85
@@ -19,5 +21,3 @@
 | Scale Armor | 1% |
 | Worm | 92.3% |
 | Brown Piece of Cloth | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

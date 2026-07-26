@@ -1,5 +1,7 @@
 # Thanatursus
 
+![Thanatursus](../../../assets/sprites/monsters/Thanatursus.webp)
+
 - **HP:** 7200
 - **Ataque:** 450 · **Defesa:** 78
 - **Experiência:** 6300
@@ -29,5 +31,3 @@
 | Wand of Defiance | 0.4% |
 | Warrior's Axe | 0.4% |
 | Warrior's Shield | 0.4% |
-
-Fonte: TibiaWiki / Crystal Server.

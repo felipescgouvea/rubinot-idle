@@ -1,5 +1,7 @@
 # Grimeleech
 
+![Grimeleech](../../../assets/sprites/monsters/Grimeleech.webp)
+
 - **HP:** 9500
 - **Ataque:** 450 · **Defesa:** 65
 - **Experiência:** 7216
@@ -39,5 +41,3 @@
 | Abyss Hammer | 0.21% |
 | Vile Axe | 0.18% |
 | Magic Plate Armor | 0.06% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Courage Leech
 
+![Courage Leech](../../../assets/sprites/monsters/Courage_Leech.webp)
+
 - **HP:** 27000
 - **Ataque:** 700 · **Defesa:** 160
 - **Experiência:** 18900
@@ -24,5 +26,3 @@
 | Nightmare Blade | 1.2% |
 | Demonrage Sword | 0.6% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

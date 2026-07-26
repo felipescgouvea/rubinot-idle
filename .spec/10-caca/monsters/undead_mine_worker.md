@@ -1,5 +1,7 @@
 # Undead Mine Worker
 
+![Undead Mine Worker](../../../assets/sprites/monsters/Undead_Mine_Worker.webp)
+
 - **HP:** 65
 - **Ataque:** 18 · **Defesa:** 5
 - **Experiência:** 45
@@ -15,5 +17,3 @@
 | Mace | 26.9% |
 | White Mushroom | 15.4% |
 | Brown Mushroom | 3.9% |
-
-Fonte: TibiaWiki / Crystal Server.

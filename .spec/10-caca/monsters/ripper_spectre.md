@@ -1,5 +1,7 @@
 # Ripper Spectre
 
+![Ripper Spectre](../../../assets/sprites/monsters/Ripper_Spectre.webp)
+
 - **HP:** 3800
 - **Ataque:** 350 · **Defesa:** 69
 - **Experiência:** 3500
@@ -24,5 +26,3 @@
 | Assassin Dagger | 0.97% |
 | Spike Sword | 0.53% |
 | Wyvern Fang | 0.12% |
-
-Fonte: TibiaWiki / Crystal Server.

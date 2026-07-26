@@ -1,5 +1,7 @@
 # Crystalcrusher
 
+![Crystalcrusher](../../../assets/sprites/monsters/Crystalcrusher.webp)
+
 - **HP:** 570
 - **Ataque:** 156 · **Defesa:** 48
 - **Experiência:** 500
@@ -15,5 +17,3 @@
 | Brown Crystal Splinter | 5.3% |
 | Blue Crystal Splinter | 5% |
 | Crystalline Spikes | 3.7% |
-
-Fonte: TibiaWiki / Crystal Server.

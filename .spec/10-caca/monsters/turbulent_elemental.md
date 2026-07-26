@@ -1,5 +1,7 @@
 # Turbulent Elemental
 
+![Turbulent Elemental](../../../assets/sprites/monsters/Turbulent_Elemental.webp)
+
 - **HP:** 28000
 - **Ataque:** 900 · **Defesa:** 167
 - **Experiência:** 19360
@@ -25,5 +27,3 @@
 | Rubber Cap | 0.71% |
 | Stone Skin Amulet | 0.47% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

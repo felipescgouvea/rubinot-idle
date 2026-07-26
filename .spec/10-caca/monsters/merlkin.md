@@ -1,5 +1,7 @@
 # Merlkin
 
+![Merlkin](../../../assets/sprites/monsters/Merlkin.webp)
+
 - **HP:** 235
 - **Ataque:** 30 · **Defesa:** 16
 - **Experiência:** 145
@@ -19,5 +21,3 @@
 | Ape Fur | 1% |
 | Mana Potion | 0.66% |
 | Banana Sash | 1.8% |
-
-Fonte: TibiaWiki / Crystal Server.

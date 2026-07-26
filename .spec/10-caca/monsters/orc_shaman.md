@@ -1,5 +1,7 @@
 # Orc Shaman
 
+![Orc Shaman](../../../assets/sprites/monsters/Orc_Shaman.webp)
+
 - **HP:** 115
 - **Ataque:** 20 · **Defesa:** 8
 - **Experiência:** 110
@@ -19,5 +21,3 @@
 | Shamanic Hood | 6.9% |
 | Orc Leather | 4.3% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

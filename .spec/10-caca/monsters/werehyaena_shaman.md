@@ -1,5 +1,7 @@
 # Werehyaena Shaman
 
+![Werehyaena Shaman](../../../assets/sprites/monsters/Werehyaena_Shaman.webp)
+
 - **HP:** 2500
 - **Ataque:** 260 · **Defesa:** 38
 - **Experiência:** 2200
@@ -25,5 +27,3 @@
 | Werehyaena Talisman | 0.65% |
 | Moonlight Crystals | 0.61% |
 | Werehyaena Trophy | 0.14% |
-
-Fonte: TibiaWiki / Crystal Server.

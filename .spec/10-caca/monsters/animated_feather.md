@@ -1,5 +1,7 @@
 # Animated Feather
 
+![Animated Feather](../../../assets/sprites/monsters/Animated_Feather.webp)
+
 - **HP:** 13000
 - **Ataque:** 400 · **Defesa:** 79
 - **Experiência:** 9860
@@ -22,5 +24,3 @@
 | Golden Mug | 0.5% |
 | Quill | 0.25% |
 | Small Diamond | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

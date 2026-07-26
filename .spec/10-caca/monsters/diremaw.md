@@ -1,5 +1,7 @@
 # Diremaw
 
+![Diremaw](../../../assets/sprites/monsters/Diremaw.webp)
+
 - **HP:** 3600
 - **Ataque:** 0 · **Defesa:** 118
 - **Experiência:** 2770
@@ -24,5 +26,3 @@
 | Suspicious Device | 0.6% |
 | Mycological Bow | 0.2% |
 | Mushroom Backpack | 1.5% |
-
-Fonte: TibiaWiki / Crystal Server.

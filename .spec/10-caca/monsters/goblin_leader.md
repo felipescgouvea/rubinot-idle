@@ -1,5 +1,7 @@
 # Goblin Leader
 
+![Goblin Leader](../../../assets/sprites/monsters/Goblin_Leader.webp)
+
 - **HP:** 50
 - **Ataque:** 50 · **Defesa:** 7
 - **Experiência:** 75
@@ -19,5 +21,3 @@
 | Leather Armor | 5% |
 | Small Axe | 12.8% |
 | Fish | 15% |
-
-Fonte: TibiaWiki / Crystal Server.

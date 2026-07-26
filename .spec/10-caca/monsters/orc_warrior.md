@@ -1,5 +1,7 @@
 # Orc Warrior
 
+![Orc Warrior](../../../assets/sprites/monsters/Orc_Warrior.webp)
+
 - **HP:** 125
 - **Ataque:** 60 · **Defesa:** 8
 - **Experiência:** 50
@@ -20,5 +22,3 @@
 | Skull Belt | 0.98% |
 | Light Bandana | 0.56% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Rotten Man-maggot
 
+![Rotten Man-maggot](../../../assets/sprites/monsters/Rotten_Man-maggot.webp)
+
 - **HP:** 31100
 - **Ataque:** 900 · **Defesa:** 175
 - **Experiência:** 22625
@@ -19,5 +21,3 @@
 | Yellow Gem | 9.6% |
 | Blooded Worm | 5.1% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

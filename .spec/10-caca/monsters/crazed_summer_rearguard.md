@@ -1,5 +1,7 @@
 # Crazed Summer Rearguard
 
+![Crazed Summer Rearguard](../../../assets/sprites/monsters/Crazed_Summer_Rearguard.webp)
+
 - **HP:** 5300
 - **Ataque:** 450 · **Defesa:** 76
 - **Experiência:** 4700
@@ -26,5 +28,3 @@
 | Small Diamond | 0.6% |
 | Yellow Gem | 1% |
 | Crystal Crossbow | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

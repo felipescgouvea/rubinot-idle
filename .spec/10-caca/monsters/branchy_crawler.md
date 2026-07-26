@@ -1,5 +1,7 @@
 # Branchy Crawler
 
+![Branchy Crawler](../../../assets/sprites/monsters/Branchy_Crawler.webp)
+
 - **HP:** 27000
 - **Ataque:** 950 · **Defesa:** 164
 - **Experiência:** 17860
@@ -25,5 +27,3 @@
 | Crystalline Sword | 0.39% |
 | Ruthless Axe | 0.33% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

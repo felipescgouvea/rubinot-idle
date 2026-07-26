@@ -1,5 +1,7 @@
 # Hellspawn
 
+![Hellspawn](../../../assets/sprites/monsters/Hellspawn.webp)
+
 - **HP:** 3500
 - **Ataque:** 350 · **Defesa:** 44
 - **Experiência:** 2550
@@ -28,5 +30,3 @@
 | Black Skull (Item) | 0.15% |
 | Small Topaz | 5.9% |
 | Hellspawn Tail | 20% |
-
-Fonte: TibiaWiki / Crystal Server.

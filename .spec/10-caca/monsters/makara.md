@@ -1,5 +1,7 @@
 # Makara
 
+![Makara](../../../assets/sprites/monsters/Makara.webp)
+
 - **HP:** 5050
 - **Ataque:** 390 · **Defesa:** 110
 - **Experiência:** 5720
@@ -21,5 +23,3 @@
 | Blue Gem | 2% |
 | Small Diamond | 1.4% |
 | Sea Horse Figurine | 0.52% |
-
-Fonte: TibiaWiki / Crystal Server.

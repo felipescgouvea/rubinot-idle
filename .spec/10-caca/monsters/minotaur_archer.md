@@ -1,5 +1,7 @@
 # Minotaur Archer
 
+![Minotaur Archer](../../../assets/sprites/monsters/Minotaur_Archer.webp)
+
 - **HP:** 100
 - **Ataque:** 25 · **Defesa:** 6
 - **Experiência:** 65
@@ -20,5 +22,3 @@
 | Broken Crossbow | 15.4% |
 | Minotaur Horn | 2% |
 | Piece of Archer Armor | 8.3% |
-
-Fonte: TibiaWiki / Crystal Server.

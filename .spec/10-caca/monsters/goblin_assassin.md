@@ -1,5 +1,7 @@
 # Goblin Assassin
 
+![Goblin Assassin](../../../assets/sprites/monsters/Goblin_Assassin.webp)
+
 - **HP:** 75
 - **Ataque:** 15 · **Defesa:** 6
 - **Experiência:** 52
@@ -20,5 +22,3 @@
 | Leather Armor | 7.2% |
 | Small Axe | 9.8% |
 | Fish | 12.4% |
-
-Fonte: TibiaWiki / Crystal Server.

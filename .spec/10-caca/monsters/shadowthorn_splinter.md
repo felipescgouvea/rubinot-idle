@@ -1,5 +1,7 @@
 # Shadowthorn Splinter
 
+![Shadowthorn Splinter](../../../assets/sprites/monsters/Elf_Scout.webp)
+
 - **HP:** 68
 - **Ataque:** 15 · **Defesa:** 3
 - **Experiência:** 26
@@ -13,5 +15,3 @@
 |---|---|
 | Bones | 30% |
 | Small Stone | 20% |
-
-Fonte: TibiaWiki / Crystal Server.

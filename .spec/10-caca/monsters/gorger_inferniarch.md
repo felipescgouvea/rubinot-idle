@@ -1,5 +1,7 @@
 # Gorger Inferniarch
 
+![Gorger Inferniarch](../../../assets/sprites/monsters/Gorger_Inferniarch.webp)
+
 - **HP:** 9450
 - **Ataque:** 250 · **Defesa:** 74
 - **Experiência:** 7680
@@ -20,5 +22,3 @@
 | Gold Nugget | 5% |
 | Club Ring | 5% |
 | Gorger Inferniarch Soul Core | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Mutated Bat
 
+![Mutated Bat](../../../assets/sprites/monsters/Mutated_Bat.webp)
+
 - **HP:** 900
 - **Ataque:** 288 · **Defesa:** 19
 - **Experiência:** 750
@@ -23,5 +25,3 @@
 | Rusted Armor | 12.5% |
 | Batwing Hat | 0.08% |
 | Mutated Bat Ear | 4.9% |
-
-Fonte: TibiaWiki / Crystal Server.

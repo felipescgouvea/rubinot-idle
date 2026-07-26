@@ -1,5 +1,7 @@
 # Hydra
 
+![Hydra](../../../assets/sprites/monsters/Hydra.webp)
+
 - **HP:** 2350
 - **Ataque:** 270 · **Defesa:** 27
 - **Experiência:** 2100
@@ -24,5 +26,3 @@
 | Boots of Haste | 0.19% |
 | Medusa Shield | 0.19% |
 | Royal Helmet | 0.09% |
-
-Fonte: TibiaWiki / Crystal Server.

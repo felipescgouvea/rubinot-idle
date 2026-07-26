@@ -1,5 +1,7 @@
 # Schiach
 
+![Schiach](../../../assets/sprites/monsters/Schiach.webp)
+
 - **HP:** 600
 - **Ataque:** 162 · **Defesa:** 43
 - **Experiência:** 580
@@ -15,5 +17,3 @@
 | Bright Bell | 2.9% |
 | Glacier Kilt | 1.2% |
 | Glacier Robe | 0.63% |
-
-Fonte: TibiaWiki / Crystal Server.

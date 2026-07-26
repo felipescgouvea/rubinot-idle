@@ -1,5 +1,7 @@
 # Dawnfly
 
+![Dawnfly](../../../assets/sprites/monsters/Dawnfly.webp)
+
 - **HP:** 90
 - **Ataque:** 20 · **Defesa:** 3
 - **Experiência:** 35
@@ -18,5 +20,3 @@
 | Mana Potion | 3.8% |
 | Poison Arrow | 14.5% |
 | Simple Jo Staff | 4.1% |
-
-Fonte: TibiaWiki / Crystal Server.

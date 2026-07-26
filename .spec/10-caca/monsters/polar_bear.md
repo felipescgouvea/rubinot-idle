@@ -1,5 +1,7 @@
 # Polar Bear
 
+![Polar Bear](../../../assets/sprites/monsters/Polar_Bear.webp)
+
 - **HP:** 85
 - **Ataque:** 30 · **Defesa:** 7
 - **Experiência:** 28
@@ -13,5 +15,3 @@
 | Meat | 50.5% |
 | Ham | 50.3% |
 | Polar Bear Paw | 0.98% |
-
-Fonte: TibiaWiki / Crystal Server.

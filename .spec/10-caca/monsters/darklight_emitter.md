@@ -1,5 +1,7 @@
 # Darklight Emitter
 
+![Darklight Emitter](../../../assets/sprites/monsters/Darklight_Emitter.webp)
+
 - **HP:** 27500
 - **Ataque:** 1050 · **Defesa:** 177
 - **Experiência:** 20600
@@ -17,5 +19,3 @@
 | Amber Staff | 6.2% |
 | Red Gem | 8.5% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

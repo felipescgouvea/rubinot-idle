@@ -1,5 +1,7 @@
 # Baleful Bunny
 
+![Baleful Bunny](../../../assets/sprites/monsters/Baleful_Bunny.webp)
+
 - **HP:** 500
 - **Ataque:** 160 · **Defesa:** 35
 - **Experiência:** 450
@@ -17,5 +19,3 @@
 | Strange Talisman | 5.8% |
 | Sacred Tree Amulet | 2.7% |
 | Yetislippers | 0.45% |
-
-Fonte: TibiaWiki / Crystal Server.

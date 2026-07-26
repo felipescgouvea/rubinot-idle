@@ -1,5 +1,7 @@
 # Crazed Winter Rearguard
 
+![Crazed Winter Rearguard](../../../assets/sprites/monsters/Crazed_Winter_Rearguard.webp)
+
 - **HP:** 5200
 - **Ataque:** 400 · **Defesa:** 76
 - **Experiência:** 4700
@@ -29,5 +31,3 @@
 | Cyan Crystal Fragment | 2.1% |
 | Elven Amulet | 1.3% |
 | Blue Gem | 0.33% |
-
-Fonte: TibiaWiki / Crystal Server.

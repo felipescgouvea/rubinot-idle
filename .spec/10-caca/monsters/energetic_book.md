@@ -1,5 +1,7 @@
 # Energetic Book
 
+![Energetic Book](../../../assets/sprites/monsters/Energetic_Book.webp)
+
 - **HP:** 18500
 - **Ataque:** 500 · **Defesa:** 82
 - **Experiência:** 12034
@@ -24,5 +26,3 @@
 | Wand of Defiance | 0.35% |
 | Haunted Blade | 0.55% |
 | Lightning Legs | 0.35% |
-
-Fonte: TibiaWiki / Crystal Server.

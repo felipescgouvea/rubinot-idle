@@ -1,5 +1,7 @@
 # Brachiodemon
 
+![Brachiodemon](../../../assets/sprites/monsters/Brachiodemon.webp)
+
 - **HP:** 25000
 - **Ataque:** 950 · **Defesa:** 165
 - **Experiência:** 15770
@@ -29,5 +31,3 @@
 | Assassin Dagger | 0.34% |
 | Alloy Legs | 0.17% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

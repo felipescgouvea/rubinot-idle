@@ -1,5 +1,7 @@
 # Sopping Corpus
 
+![Sopping Corpus](../../../assets/sprites/monsters/Sopping_Corpus.webp)
+
 - **HP:** 33400
 - **Ataque:** 1600 · **Defesa:** 179
 - **Experiência:** 22465
@@ -23,5 +25,3 @@
 | Skullcracker Armor | 7.3% |
 | Ring of Green Plasma | 3.1% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

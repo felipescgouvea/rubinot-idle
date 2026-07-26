@@ -1,5 +1,7 @@
 # Orc Cult Priest
 
+![Orc Cult Priest](../../../assets/sprites/monsters/Orc_Cult_Priest.webp)
+
 - **HP:** 1300
 - **Ataque:** 358 · **Defesa:** 27
 - **Experiência:** 1000
@@ -21,5 +23,3 @@
 | Shamanic Hood | 14.4% |
 | Broken Shamanic Staff | 5.9% |
 | Heavy Old Tome | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

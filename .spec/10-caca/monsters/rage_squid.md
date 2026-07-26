@@ -1,5 +1,7 @@
 # Rage Squid
 
+![Rage Squid](../../../assets/sprites/monsters/Rage_Squid.webp)
+
 - **HP:** 17000
 - **Ataque:** 600 · **Defesa:** 78
 - **Experiência:** 14820
@@ -37,5 +39,3 @@
 | Platinum Amulet | 0.35% |
 | Wand of Everblazing | 0.3% |
 | Fire Axe | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

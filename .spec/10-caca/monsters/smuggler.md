@@ -1,5 +1,7 @@
 # Smuggler
 
+![Smuggler](../../../assets/sprites/monsters/Smuggler.webp)
+
 - **HP:** 130
 - **Ataque:** 60 · **Defesa:** 8
 - **Experiência:** 48
@@ -20,5 +22,3 @@
 | Ham | 10.2% |
 | Deer Trophy | 0.11% |
 | Raspberry | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

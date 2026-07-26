@@ -1,5 +1,7 @@
 # Mega Dragon
 
+![Mega Dragon](../../../assets/sprites/monsters/Mega_Dragon.webp)
+
 - **HP:** 7920
 - **Ataque:** 400 · **Defesa:** 76
 - **Experiência:** 7810
@@ -19,5 +21,3 @@
 | Mega Dragon Heart | 1.8% |
 | Violet Gem | 1.5% |
 | Dragon Slayer | 0.13% |
-
-Fonte: TibiaWiki / Crystal Server.

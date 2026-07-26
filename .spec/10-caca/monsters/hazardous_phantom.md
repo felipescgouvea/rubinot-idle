@@ -1,5 +1,7 @@
 # Hazardous Phantom
 
+![Hazardous Phantom](../../../assets/sprites/monsters/Hazardous_Phantom.webp)
+
 - **HP:** 70000
 - **Ataque:** 1100 · **Defesa:** 28
 - **Experiência:** 66000
@@ -24,5 +26,3 @@
 | Wand of Everblazing | 0.79% |
 | Collar of Blue Plasma | 0.79% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Deepling Warrior
 
+![Deepling Warrior](../../../assets/sprites/monsters/Deepling_Warrior.webp)
+
 - **HP:** 1600
 - **Ataque:** 56 · **Defesa:** 51
 - **Experiência:** 1500
@@ -24,5 +26,3 @@
 | Warrior's Shield | 0.61% |
 | Eye of a Deepling | 0.59% |
 | Warrior's Axe | 0.52% |
-
-Fonte: TibiaWiki / Crystal Server.

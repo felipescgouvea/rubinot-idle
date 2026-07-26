@@ -1,5 +1,7 @@
 # Walking Pillar
 
+![Walking Pillar](../../../assets/sprites/monsters/Walking_Pillar.webp)
+
 - **HP:** 38000
 - **Ataque:** 1500 · **Defesa:** 181
 - **Experiência:** 24300
@@ -22,5 +24,3 @@
 | Magma Legs | 14.5% |
 | White Gem | 9.9% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

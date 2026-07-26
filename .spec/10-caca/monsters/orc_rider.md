@@ -1,5 +1,7 @@
 # Orc Rider
 
+![Orc Rider](../../../assets/sprites/monsters/Orc_Rider.webp)
+
 - **HP:** 180
 - **Ataque:** 130 · **Defesa:** 9
 - **Experiência:** 110
@@ -20,5 +22,3 @@
 | Orc Tooth | 2% |
 | Warwolf Fur | 9.4% |
 | Orc Leather | 9.8% |
-
-Fonte: TibiaWiki / Crystal Server.

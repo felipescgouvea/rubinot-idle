@@ -1,5 +1,7 @@
 # Deepling Elite
 
+![Deepling Elite](../../../assets/sprites/monsters/Deepling_Elite.webp)
+
 - **HP:** 3200
 - **Ataque:** 625 · **Defesa:** 45
 - **Experiência:** 3000
@@ -24,5 +26,3 @@
 | Fish Fin | 2.3% |
 | Warrior's Shield | 1.1% |
 | Warrior's Axe | 0.88% |
-
-Fonte: TibiaWiki / Crystal Server.

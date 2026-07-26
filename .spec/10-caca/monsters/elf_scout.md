@@ -1,5 +1,7 @@
 # Elf Scout
 
+![Elf Scout](../../../assets/sprites/monsters/Elf_Scout.webp)
+
 - **HP:** 160
 - **Ataque:** 30 · **Defesa:** 7
 - **Experiência:** 75
@@ -20,5 +22,3 @@
 | Elvish Bow | 0.14% |
 | Elvish Talisman | 5.2% |
 | Elven Scouting Glass | 9.8% |
-
-Fonte: TibiaWiki / Crystal Server.

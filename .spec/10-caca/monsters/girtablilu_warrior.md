@@ -1,5 +1,7 @@
 # Girtablilu Warrior
 
+![Girtablilu Warrior](../../../assets/sprites/monsters/Girtablilu_Warrior.webp)
+
 - **HP:** 8500
 - **Ataque:** 400 · **Defesa:** 76
 - **Experiência:** 5800
@@ -37,5 +39,3 @@
 | Focus Cape | 1.1% |
 | Fur Armor | 0.82% |
 | Glacier Robe | 0.65% |
-
-Fonte: TibiaWiki / Crystal Server.

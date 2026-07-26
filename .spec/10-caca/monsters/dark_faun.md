@@ -1,5 +1,7 @@
 # Dark Faun
 
+![Dark Faun](../../../assets/sprites/monsters/Dark_Faun.webp)
+
 - **HP:** 1100
 - **Ataque:** 314 · **Defesa:** 50
 - **Experiência:** 900
@@ -25,5 +27,3 @@
 | Strong Health Potion | 6.8% |
 | Goat Grass | 5.2% |
 | Great Health Potion | 0.59% |
-
-Fonte: TibiaWiki / Crystal Server.

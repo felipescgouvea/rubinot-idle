@@ -1,5 +1,7 @@
 # Venerable Foam Stalker
 
+![Venerable Foam Stalker](../../../assets/sprites/monsters/Venerable_Foam_Stalker.webp)
+
 - **HP:** 5650
 - **Ataque:** 1554 · **Defesa:** 10
 - **Experiência:** 3740
@@ -31,5 +33,3 @@
 | White Pearl | 3% |
 | Flotsam | 3% |
 | Mercenary Sword | 3% |
-
-Fonte: TibiaWiki / Crystal Server.

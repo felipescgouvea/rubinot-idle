@@ -1,5 +1,7 @@
 # Crazed Winter Vanguard
 
+![Crazed Winter Vanguard](../../../assets/sprites/monsters/Crazed_Winter_Vanguard.webp)
+
 - **HP:** 5800
 - **Ataque:** 400 · **Defesa:** 77
 - **Experiência:** 5400
@@ -22,5 +24,3 @@
 | Glacier Robe | 2.5% |
 | Elven Amulet | 0.72% |
 | Blue Gem | 0.2% |
-
-Fonte: TibiaWiki / Crystal Server.

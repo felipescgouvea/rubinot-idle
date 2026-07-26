@@ -1,5 +1,7 @@
 # Weakened Frazzlemaw
 
+![Weakened Frazzlemaw](../../../assets/sprites/monsters/Weakened_Frazzlemaw.webp)
+
 - **HP:** 1200
 - **Ataque:** 79 · **Defesa:** 57
 - **Experiência:** 1000
@@ -26,5 +28,3 @@
 | Frazzle Tongue | 12% |
 | Frazzle Skin | 10.5% |
 | Fairy Wings | 15% |
-
-Fonte: TibiaWiki / Crystal Server.

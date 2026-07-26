@@ -1,5 +1,7 @@
 # Water Elemental
 
+![Water Elemental](../../../assets/sprites/monsters/Water_Elemental.webp)
+
 - **HP:** 550
 - **Ataque:** 235 · **Defesa:** 37
 - **Experiência:** 650
@@ -19,5 +21,3 @@
 | Green Perch | 1.1% |
 | Strong Health Potion | 10% |
 | Strong Mana Potion | 10% |
-
-Fonte: TibiaWiki / Crystal Server.

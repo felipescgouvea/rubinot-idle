@@ -1,5 +1,7 @@
 # Corym Vanguard
 
+![Corym Vanguard](../../../assets/sprites/monsters/Corym_Vanguard.webp)
+
 - **HP:** 700
 - **Ataque:** 140 · **Defesa:** 29
 - **Experiência:** 490
@@ -23,5 +25,3 @@
 | Rat God Doll | 0.01% |
 | Leather Harness | 1.6% |
 | Spiky Club | 3.2% |
-
-Fonte: TibiaWiki / Crystal Server.

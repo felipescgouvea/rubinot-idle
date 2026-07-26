@@ -1,5 +1,7 @@
 # Ancient Scarab
 
+![Ancient Scarab](../../../assets/sprites/monsters/Ancient_Scarab.webp)
+
 - **HP:** 1000
 - **Ataque:** 210 · **Defesa:** 30
 - **Experiência:** 720
@@ -23,5 +25,3 @@
 | Springsprout Rod | 1% |
 | Terra Hood | 0.49% |
 | Scarab Pincers | 7% |
-
-Fonte: TibiaWiki / Crystal Server.

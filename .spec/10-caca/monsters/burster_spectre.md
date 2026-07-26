@@ -1,5 +1,7 @@
 # Burster Spectre
 
+![Burster Spectre](../../../assets/sprites/monsters/Burster_Spectre.webp)
+
 - **HP:** 6500
 - **Ataque:** 400 · **Defesa:** 70
 - **Experiência:** 6000
@@ -30,5 +32,3 @@
 | Shockwave Amulet | 0.62% |
 | Strange Symbol | 0.72% |
 | Hexagonal Ruby | 0.48% |
-
-Fonte: TibiaWiki / Crystal Server.

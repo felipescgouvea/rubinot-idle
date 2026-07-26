@@ -1,5 +1,7 @@
 # Deepworm
 
+![Deepworm](../../../assets/sprites/monsters/Deepworm.webp)
+
 - **HP:** 3500
 - **Ataque:** 300 · **Defesa:** 118
 - **Experiência:** 2520
@@ -25,5 +27,3 @@
 | Springsprout Rod | 1.1% |
 | Sacred Tree Amulet | 2.4% |
 | Suspicious Device | 0.53% |
-
-Fonte: TibiaWiki / Crystal Server.

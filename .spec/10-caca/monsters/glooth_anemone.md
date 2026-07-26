@@ -1,5 +1,7 @@
 # Glooth Anemone
 
+![Glooth Anemone](../../../assets/sprites/monsters/Glooth_Anemone.webp)
+
 - **HP:** 2400
 - **Ataque:** 150 · **Defesa:** 42
 - **Experiência:** 1755
@@ -26,5 +28,3 @@
 | Glooth Club | 0.37% |
 | Glooth Axe | 0.24% |
 | Glooth Spear | 0.37% |
-
-Fonte: TibiaWiki / Crystal Server.

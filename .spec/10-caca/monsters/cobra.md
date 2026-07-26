@@ -1,5 +1,7 @@
 # Cobra
 
+![Cobra](../../../assets/sprites/monsters/Cobra.webp)
+
 - **HP:** 65
 - **Ataque:** 132 · **Defesa:** 38
 - **Experiência:** 30
@@ -11,5 +13,3 @@
 | Item | Chance |
 |---|---|
 | Cobra Tongue | 5% |
-
-Fonte: TibiaWiki / Crystal Server.

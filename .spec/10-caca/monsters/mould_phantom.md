@@ -1,5 +1,7 @@
 # Mould Phantom
 
+![Mould Phantom](../../../assets/sprites/monsters/Mould_Phantom.webp)
+
 - **HP:** 28000
 - **Ataque:** 900 · **Defesa:** 164
 - **Experiência:** 18330
@@ -24,5 +26,3 @@
 | Ornate Crossbow | 0.84% |
 | Crystal Crossbow | 0.62% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

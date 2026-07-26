@@ -1,5 +1,7 @@
 # Giant Spider
 
+![Giant Spider](../../../assets/sprites/monsters/Giant_Spider.webp)
+
 - **HP:** 1300
 - **Ataque:** 300 · **Defesa:** 30
 - **Experiência:** 900
@@ -22,5 +24,3 @@
 | Spider Silk | 2% |
 | Strong Health Potion | 3.5% |
 | Lightning Headband | 0.27% |
-
-Fonte: TibiaWiki / Crystal Server.

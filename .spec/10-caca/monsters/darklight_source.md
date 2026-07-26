@@ -1,5 +1,7 @@
 # Darklight Source
 
+![Darklight Source](../../../assets/sprites/monsters/Darklight_Source.webp)
+
 - **HP:** 31550
 - **Ataque:** 1200 · **Defesa:** 181
 - **Experiência:** 22465
@@ -17,5 +19,3 @@
 | Twiceslicer | 11.6% |
 | White Gem | 14% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Chakoya Toolshaper
 
+![Chakoya Toolshaper](../../../assets/sprites/monsters/Chakoya_Toolshaper.webp)
+
 - **HP:** 80
 - **Ataque:** 80 · **Defesa:** 7
 - **Experiência:** 40
@@ -20,5 +22,3 @@
 | Mammoth Whopper | 0.16% |
 | Ice Cube | 0.45% |
 | Fireproof Horn | 0.39% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Sorcerer's Apparition
 
+![Sorcerer's Apparition](../../../assets/sprites/monsters/Sorcerer's_Apparition.webp)
+
 - **HP:** 25000
 - **Ataque:** 900 · **Defesa:** 162
 - **Experiência:** 28600
@@ -25,5 +27,3 @@
 | Stone Skin Amulet | 1.3% |
 | Alloy Legs | 0.44% |
 | Bag You Desire | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

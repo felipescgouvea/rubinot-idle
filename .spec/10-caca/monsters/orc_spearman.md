@@ -1,5 +1,7 @@
 # Orc Spearman
 
+![Orc Spearman](../../../assets/sprites/monsters/Orc_Spearman.webp)
+
 - **HP:** 105
 - **Ataque:** 25 · **Defesa:** 6
 - **Experiência:** 38
@@ -18,5 +20,3 @@
 | Orc Tooth | 0.15% |
 | Orc Leather | 2.3% |
 | Heavy Old Tome | 1% |
-
-Fonte: TibiaWiki / Crystal Server.

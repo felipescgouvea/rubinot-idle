@@ -1,5 +1,7 @@
 # Diamond Servant Replica
 
+![Diamond Servant Replica](../../../assets/sprites/monsters/Diamond_Servant_Replica.webp)
+
 - **HP:** 2000
 - **Ataque:** 200 · **Defesa:** 25
 - **Experiência:** 700
@@ -25,5 +27,3 @@
 | Shockwave Amulet | 0.11% |
 | Crystalline Armor | 0.02% |
 | Bonebreaker | 0.01% |
-
-Fonte: TibiaWiki / Crystal Server.

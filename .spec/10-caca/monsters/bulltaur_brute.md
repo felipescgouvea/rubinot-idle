@@ -1,5 +1,7 @@
 # Bulltaur Brute
 
+![Bulltaur Brute](../../../assets/sprites/monsters/Bulltaur_Brute.webp)
+
 - **HP:** 6560
 - **Ataque:** 170 · **Defesa:** 78
 - **Experiência:** 4700
@@ -15,5 +17,3 @@
 | Mino Shield | 0.84% |
 | Dragon Hammer | 0.42% |
 | Blue Gem | 4.5% |
-
-Fonte: TibiaWiki / Crystal Server.

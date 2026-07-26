@@ -1,5 +1,7 @@
 # Ink Blob
 
+![Ink Blob](../../../assets/sprites/monsters/Ink_Blob.webp)
+
 - **HP:** 9500
 - **Ataque:** 550 · **Defesa:** 70
 - **Experiência:** 14450
@@ -26,5 +28,3 @@
 | Terra Mantle | 0.55% |
 | Clay Lump | 1.2% |
 | Terra Amulet | 1.2% |
-
-Fonte: TibiaWiki / Crystal Server.

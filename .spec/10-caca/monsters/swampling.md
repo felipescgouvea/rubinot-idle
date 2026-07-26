@@ -1,5 +1,7 @@
 # Swampling
 
+![Swampling](../../../assets/sprites/monsters/Swampling.webp)
+
 - **HP:** 80
 - **Ataque:** 8 · **Defesa:** 4
 - **Experiência:** 45
@@ -15,5 +17,3 @@
 | Swampling Club | 7.4% |
 | Swampling Moss | 19.9% |
 | Piece of Swampling Wood | 14.9% |
-
-Fonte: TibiaWiki / Crystal Server.

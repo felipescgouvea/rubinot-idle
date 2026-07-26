@@ -1,5 +1,7 @@
 # Choking Fear
 
+![Choking Fear](../../../assets/sprites/monsters/Choking_Fear.webp)
+
 - **HP:** 5800
 - **Ataque:** 500 · **Defesa:** 65
 - **Experiência:** 4700
@@ -30,5 +32,3 @@
 | Cluster Of Solace | 4.6% |
 | Dead Weight | 14.2% |
 | Hemp Rope | 14.2% |
-
-Fonte: TibiaWiki / Crystal Server.

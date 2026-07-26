@@ -1,5 +1,7 @@
 # Sineater Inferniarch
 
+![Sineater Inferniarch](../../../assets/sprites/monsters/Sineater_Inferniarch.webp)
+
 - **HP:** 9150
 - **Ataque:** 250 · **Defesa:** 68
 - **Experiência:** 7250
@@ -20,5 +22,3 @@
 | Demonic Matter | 1.5% |
 | Wooden Spellbook | 3.5% |
 | Broodrider Inferniarch Soul Core | 0.1% |
-
-Fonte: TibiaWiki / Crystal Server.

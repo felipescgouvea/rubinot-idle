@@ -1,5 +1,7 @@
 # Barkless Devotee
 
+![Barkless Devotee](../../../assets/sprites/monsters/Barkless_Devotee.webp)
+
 - **HP:** 2800
 - **Ataque:** 759 · **Defesa:** 30
 - **Experiência:** 2200
@@ -13,5 +15,3 @@
 | Bed of Nails | 1.5% |
 | Fig Leaf | 4% |
 | Torn Shirt | 0.97% |
-
-Fonte: TibiaWiki / Crystal Server.

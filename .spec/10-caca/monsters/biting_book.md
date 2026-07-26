@@ -1,5 +1,7 @@
 # Biting Book
 
+![Biting Book](../../../assets/sprites/monsters/Biting_Book.webp)
+
 - **HP:** 6500
 - **Ataque:** 1055 · **Defesa:** 76
 - **Experiência:** 9350
@@ -14,5 +16,3 @@
 | Book Page | 0.5% |
 | Glowing Rune | 0.5% |
 | Silken Bookmark | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Dawnfire Asura
 
+![Dawnfire Asura](../../../assets/sprites/monsters/Dawnfire_Asura.webp)
+
 - **HP:** 2900
 - **Ataque:** 252 · **Defesa:** 48
 - **Experiência:** 4100
@@ -32,5 +34,3 @@
 | Soul Orb | 14.6% |
 | Spellbook of Mind Control | 0.08% |
 | Wand of Inferno | 0.91% |
-
-Fonte: TibiaWiki / Crystal Server.

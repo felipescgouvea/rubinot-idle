@@ -1,5 +1,7 @@
 # Spitter
 
+![Spitter](../../../assets/sprites/monsters/Spitter.webp)
+
 - **HP:** 1500
 - **Ataque:** 259 · **Defesa:** 76
 - **Experiência:** 1100
@@ -24,5 +26,3 @@
 | Compound Eye | 15% |
 | Calopteryx Cape | 0.24% |
 | Grasshopper Legs | 0.13% |
-
-Fonte: TibiaWiki / Crystal Server.

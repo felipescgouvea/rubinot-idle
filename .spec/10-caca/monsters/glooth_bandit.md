@@ -1,5 +1,7 @@
 # Glooth Bandit
 
+![Glooth Bandit](../../../assets/sprites/monsters/Glooth_Bandit.webp)
+
 - **HP:** 2600
 - **Ataque:** 305 · **Defesa:** 46
 - **Experiência:** 2000
@@ -35,5 +37,3 @@
 | Glooth Amulet | 0.5% |
 | Terra Boots | 0.5% |
 | Terra Legs | 0.5% |
-
-Fonte: TibiaWiki / Crystal Server.

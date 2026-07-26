@@ -1,5 +1,7 @@
 # Goblin
 
+![Goblin](../../../assets/sprites/monsters/Goblin.webp)
+
 - **HP:** 50
 - **Ataque:** 10 · **Defesa:** 6
 - **Experiência:** 25
@@ -21,5 +23,3 @@
 | Small Axe | 9.7% |
 | Fish | 12.8% |
 | Goblin Ear | 0.91% |
-
-Fonte: TibiaWiki / Crystal Server.

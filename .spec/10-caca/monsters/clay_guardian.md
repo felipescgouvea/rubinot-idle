@@ -1,5 +1,7 @@
 # Clay Guardian
 
+![Clay Guardian](../../../assets/sprites/monsters/Clay_Guardian.webp)
+
 - **HP:** 625
 - **Ataque:** 180 · **Defesa:** 42
 - **Experiência:** 400
@@ -16,5 +18,3 @@
 | Small Topaz | 0.32% |
 | Lump of Earth | 25% |
 | Clay Lump | 1.1% |
-
-Fonte: TibiaWiki / Crystal Server.

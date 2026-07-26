@@ -1,5 +1,7 @@
 # Banshee
 
+![Banshee](../../../assets/sprites/monsters/Banshee.webp)
+
 - **HP:** 1000
 - **Ataque:** 100 · **Defesa:** 25
 - **Experiência:** 900
@@ -31,5 +33,3 @@
 | Petrified Scream | 4.2% |
 | Hair of a Banshee | 4.8% |
 | Sweet Smelling Bait | 0.04% |
-
-Fonte: TibiaWiki / Crystal Server.

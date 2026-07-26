@@ -1,5 +1,7 @@
 # Arachnophobica
 
+![Arachnophobica](../../../assets/sprites/monsters/Arachnophobica.webp)
+
 - **HP:** 5000
 - **Ataque:** 400 · **Defesa:** 70
 - **Experiência:** 4700
@@ -38,5 +40,3 @@
 | Strange Symbol | 2.6% |
 | Stone Skin Amulet | 2.6% |
 | Necklace of the Deep | 1.8% |
-
-Fonte: TibiaWiki / Crystal Server.

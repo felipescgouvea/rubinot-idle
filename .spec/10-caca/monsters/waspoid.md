@@ -1,5 +1,7 @@
 # Waspoid
 
+![Waspoid](../../../assets/sprites/monsters/Waspoid.webp)
+
 - **HP:** 1100
 - **Ataque:** 259 · **Defesa:** 76
 - **Experiência:** 830
@@ -19,5 +21,3 @@
 | Grasshopper Legs | 0.23% |
 | Carapace Shield | 0.12% |
 | Hive Scythe | 0.33% |
-
-Fonte: TibiaWiki / Crystal Server.

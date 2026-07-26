@@ -1,5 +1,7 @@
 # Darklight Matter
 
+![Darklight Matter](../../../assets/sprites/monsters/Darklight_Matter.webp)
+
 - **HP:** 30150
 - **Ataque:** 1100 · **Defesa:** 181
 - **Experiência:** 22250
@@ -18,5 +20,3 @@
 | Green Gem | 3.5% |
 | Shadow Sceptre | 3.5% |
 | Darklight Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

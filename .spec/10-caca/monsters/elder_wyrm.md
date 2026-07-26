@@ -1,5 +1,7 @@
 # Elder Wyrm
 
+![Elder Wyrm](../../../assets/sprites/monsters/Elder_Wyrm.webp)
+
 - **HP:** 2700
 - **Ataque:** 400 · **Defesa:** 48
 - **Experiência:** 2500
@@ -29,5 +31,3 @@
 | Lightning Boots | 0.15% |
 | Shockwave Amulet | 0.12% |
 | Legs of Wisdom | 0.7% |
-
-Fonte: TibiaWiki / Crystal Server.

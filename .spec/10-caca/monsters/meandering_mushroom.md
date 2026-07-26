@@ -1,5 +1,7 @@
 # Meandering Mushroom
 
+![Meandering Mushroom](../../../assets/sprites/monsters/Meandering_Mushroom.webp)
+
 - **HP:** 29100
 - **Ataque:** 950 · **Defesa:** 175
 - **Experiência:** 21980
@@ -21,5 +23,3 @@
 | Brown Mushroom | 6.4% |
 | Terra Amulet | 13.1% |
 | Tainted Heart | 0% |
-
-Fonte: TibiaWiki / Crystal Server.

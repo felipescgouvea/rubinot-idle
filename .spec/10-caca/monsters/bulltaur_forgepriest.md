@@ -1,5 +1,7 @@
 # Bulltaur Forgepriest
 
+![Bulltaur Forgepriest](../../../assets/sprites/monsters/Bulltaur_Forgepriest.webp)
+
 - **HP:** 6840
 - **Ataque:** 270 · **Defesa:** 73
 - **Experiência:** 5180
@@ -25,5 +27,3 @@
 | Stone Skin Amulet | 1.2% |
 | Spellbook of Mind Control | 1.2% |
 | Wand of Defiance | 1.2% |
-
-Fonte: TibiaWiki / Crystal Server.

@@ -1,5 +1,7 @@
 # Elf Arcanist
 
+![Elf Arcanist](../../../assets/sprites/monsters/Elf_Arcanist.webp)
+
 - **HP:** 220
 - **Ataque:** 35 · **Defesa:** 15
 - **Experiência:** 175
@@ -30,5 +32,3 @@
 | Health Potion | 4% |
 | Elvish Talisman | 10% |
 | Elven Astral Observer | 7.7% |
-
-Fonte: TibiaWiki / Crystal Server.

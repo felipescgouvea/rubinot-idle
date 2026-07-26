@@ -1,5 +1,7 @@
 # Bog Raider
 
+![Bog Raider](../../../assets/sprites/monsters/Bog_Raider.webp)
+
 - **HP:** 1300
 - **Ataque:** 180 · **Defesa:** 20
 - **Experiência:** 800
@@ -18,5 +20,3 @@
 | Paladin Armor | 0.14% |
 | Springsprout Rod | 1% |
 | Boggy Dreads | 9.9% |
-
-Fonte: TibiaWiki / Crystal Server.

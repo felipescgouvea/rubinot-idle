@@ -1,5 +1,7 @@
 # Pooka
 
+![Pooka](../../../assets/sprites/monsters/Pooka.webp)
+
 - **HP:** 500
 - **Ataque:** 135 · **Defesa:** 38
 - **Experiência:** 500
@@ -22,5 +24,3 @@
 | Shimmering Beetles | 0.59% |
 | Rainbow Quartz | 5.8% |
 | Small Enchanted Ruby | 3.4% |
-
-Fonte: TibiaWiki / Crystal Server.

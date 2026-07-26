@@ -1,5 +1,7 @@
 # Vile Grandmaster
 
+![Vile Grandmaster](../../../assets/sprites/monsters/Vile_Grandmaster.webp)
+
 - **HP:** 1700
 - **Ataque:** 260 · **Defesa:** 40
 - **Experiência:** 1500
@@ -30,5 +32,3 @@
 | Crown Shield | 0.21% |
 | Crown Legs | 0.11% |
 | Platinum Amulet | 0.21% |
-
-Fonte: TibiaWiki / Crystal Server.

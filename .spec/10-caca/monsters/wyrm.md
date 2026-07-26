@@ -1,5 +1,7 @@
 # Wyrm
 
+![Wyrm](../../../assets/sprites/monsters/Wyrm.webp)
+
 - **HP:** 1825
 - **Ataque:** 235 · **Defesa:** 34
 - **Experiência:** 1550
@@ -25,5 +27,3 @@
 | Lightning Pendant | 0.47% |
 | Shockwave Amulet | 0.47% |
 | Hibiscus Dress | 0.47% |
-
-Fonte: TibiaWiki / Crystal Server.
