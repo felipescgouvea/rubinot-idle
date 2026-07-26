@@ -1082,4 +1082,5 @@ export default {
   'boosted.boss': 'BOSS',
   'boosted.creatureTooltip': 'Double XP and loot when hunting this creature today',
   'boosted.bossTooltip': 'Double XP and loot when facing this boss today',
+  'boosted.goHunt': 'Click to open this creature\'s hunt',
 };

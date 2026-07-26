@@ -1083,4 +1083,5 @@ export default {
   'boosted.boss': 'BOSS',
   'boosted.creatureTooltip': 'Dobro de XP e loot ao caçar esta criatura hoje',
   'boosted.bossTooltip': 'Dobro de XP e loot ao enfrentar este boss hoje',
+  'boosted.goHunt': 'Clique para abrir a hunt desta criatura',
 };
