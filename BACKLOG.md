@@ -49,7 +49,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 - [ ] **P1.3 Onboarding do 1º minuto** · M — coach-mark de 3 passos (caçar → ver loot → gastar) + one-liner nas abas avançadas. Maior alavanca de retenção de jogador novo
 - [ ] **P1.4 Nível recomendado por zona + agrupar abas** · M — hint de nível no zone picker (derivável de HP/atk/xp); agrupar abas por seção e travar até o unlock. Reduz o cliff do level 8
 - [ ] **P1.5 Celebrar marcos** · M
-  - [ ] Badges de "resgatável" nas abas (BP/task/charm/promoção — hoje só Daily tem "!"). Reusa os flags de `notifyTitle.js`
+  - [x] Badges de "resgatável" nas abas **Tasks e Battle Pass** — ponto verde pulsante dirigido pelos mesmos sinais de claimable do `notifyTitle` (`setTabBadge`). Verificado em prod (probe-tab-badges: aparece/some, 0 erros). — `094902a9` · (charm/promoção ficam como follow-up: mesmo `setTabBadge`, falta o sinal de claimable de cada um)
   - [ ] Boosted-of-the-day sem CTA — clicar no card leva ao zone picker filtrado pela criatura
 
 ## P2 — Profundidade / conteúdo
