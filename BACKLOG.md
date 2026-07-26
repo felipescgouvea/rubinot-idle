@@ -74,7 +74,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 - [ ] **[test]** CI rodando o smoke set dos probes (`probe-smoke`/`probe-kill`/`audit:static`) pra gatear deploy · M
 - [ ] **[test]** Unit test das fórmulas de combate (monstro+gear conhecidos → dano conhecido) · M
 - [x] **[a11y]** Modais com `role="dialog"` + `aria-modal`, Escape fecha/dispensa (handler único), foco na caixa ao abrir e retorno ao opener ao fechar. Verificado (probe-modal-a11y). — `f6fbaf20`/`11a140ef` · (focus-trap completo fica como refino futuro)
-- [ ] **[a11y]** `role="tab"/tablist"` + `aria-selected` nas abas · M
+- [x] **[a11y]** Tablist ARIA nas abas: role tablist/tab/tabpanel + aria-controls/aria-labelledby + aria-selected que troca no clique (setado em JS no wireTabs). Verificado (probe-tablist-a11y). — `eec967be`
 - [ ] **[mobile]** Breakpoint único (900px) + fonte base 12px + alvos de toque não auditados · M–L
 - [ ] **[obs]** Log estruturado no servidor (wrapper level/ts/sessionId/event) · S–M
 
