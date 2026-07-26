@@ -35,7 +35,7 @@
 - [ ] **Bosstiary** · M · `[server]` — kills de boss → boss points → slots/prowess (fonte `io_bosstiary.cpp`)
 - [ ] **Onboarding do 1º minuto** · M — coach-mark de 3 passos (caçar → loot → gastar) + one-liner nas abas avançadas
 - [ ] **Nível recomendado por zona + agrupar abas** · M — hint de nível no zone picker; agrupar/travar abas até o unlock
-- [ ] **Celebrar marcos: badges de charm/promoção** — mesmo `setTabBadge`, falta o sinal de claimable de cada um (follow-up)
+- [x] **Celebrar marcos: badges de charm/promoção** — selo na aba Bestiário quando há charm point pra desbloquear um charm (atualiza com a aba fechada); promoção já sinaliza pelo botão habilitado no card — `342b1000`
 
 ## Profundidade / conteúdo (P2)
 - [ ] **Tiers de charm (Minor/Major) + expansão** · M · `[server]` — categorias + Charm Expansion (fonte `bestiary_charms.lua`)
