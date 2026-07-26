@@ -12,7 +12,7 @@
 
 **Estética**
 - [ ] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted)
-- [ ] Cores dos botões da Loja (Premium/Rubini/Equipamentos/Artigos) — paleta destoante, retrabalhar
+- [x] Cores dos botões da Loja — o único elemento berrante eram os botões "Buy" em verde saturado sobre o parchment navy/dourado; retematizados pra dourado/âmbar (combina com a aba ativa + tema de tesouro), escopado à Loja (Skills/zonas seguem verdes). Verificado em prod (screenshot). — `869cebe4`
 - [ ] Loja Premium: remover o texto "(Dinheiro Real)" do botão
 - [ ] Sprites cortadas em alguns monstros (ex.: Valkyrie, Smuggler Baron Silvertoe nos cards de Boss Zone)
 - [ ] Janela de detalhe do item está crua — melhorar visual e botões (Equipar/Vender/Fechar)
