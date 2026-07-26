@@ -10,3 +10,5 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — style(loja): botões de compra em dourado (era verde, destoava do tema) — `869cebe4` — ✅ testado 2026-07-26 (screenshot shot-shop: Loja coesa navy/dourado + smoke-prod)
 - 2026-07-26 — style(item): janela de detalhe temada (botões dourado/bronze/neutro) — `455dd0e5` — ✅ testado 2026-07-26 (screenshot item-modal 2 temas + smoke implícito)
 - 2026-07-26 — fix(inventário): Fechar/clique-fora no detalhe do item volta pra Bag (não fecha tudo) + relíquia temada — `fb386e67` — ✅ testado 2026-07-26 (probe-item-close: da Bag→Bag, Bag→fecha, fora→fecha, 0 erros)
+- 2026-07-26 — feat(a11y): modais com role=dialog, Escape fecha e gestão de foco — `f6fbaf20` — 🐛 BUG 2026-07-26 (defects.md: Escape double-fire fechava tudo) → corrigido por `11a140ef`
+- 2026-07-26 — fix(a11y): Escape usa dismissModal (handler único), remove listener duplicado — `11a140ef` — ✅ testado 2026-07-26 (probe-modal-a11y: role=dialog, Escape fecha, Escape no detalhe→Bag, 0 erros)
