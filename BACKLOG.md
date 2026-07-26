@@ -28,6 +28,27 @@
 - [x] **BUG: comprar munição em lote na Loja de Equipamentos compra só 1** — `confirmBuyShopItem` só multiplicava pra poção/runa; incluído `ammo` no cálculo de `count`. Verificado em prod (probe-shop-ammo: ammo qty 7 → compra 7, equipamento fica 1, 0 erros). — `fa3ae3ac`
 - [ ] **auto-sell** — não é bug: default `maxValue=50` baixo demais (junk vale 55–243). Decisão de economia do Felipe: subir default / presets ("vender lixo comum") / vender por valor ignorando `type`
 
+### 🔴 Revisão ao vivo 26/07 — Bugs
+- [ ] **BUG: exori (Berserk) não dispara pelo RTC** — knight lvl 35; exori é `level:35` e o gate (`isSpellAvailable`/UI) usa `>=` (correto) → investigar o disparo em combate (mana 125 nunca fecha no lvl 35? condição de área `square` exigindo >1 alvo? cooldown/seleção?). `src/domain/spells.js` + motor de caça
+- [ ] **BUG: imbuement só funciona em item EQUIPADO** — deveria aceitar item da mochila também. `src/application/imbuementUseCases.js` / `src/ui/imbuementPanel.js`
+- [ ] **BUG: Hunt Analyze não contabiliza suprimentos** — consumo de mana/health potion não entra no gasto/waste da sessão
+- [ ] Sprites de monstro ainda **cortadas** no card do Boosted (ex.: Valkyrie) — container recorta a sprite 64×64; ajustar `object-fit`/altura de `.boosted-sprite`
+
+### 🎨 Revisão ao vivo 26/07 — Estética
+- [ ] Fundo dos cards de **linked task** feio + botões de navegação da Loja (Rubini Store / Equipamentos / Artigos Mágicos) com fundo ruim — retematizar
+- [ ] **Cor do header + botão "Trocar Hunt"** deve ser a mesma do painel lateral esquerdo (`#app-aside` navy premium)
+- [ ] Sprite dos **imbuements** infiel — usar o ícone real do Tibia
+- [ ] Remover **animação extra** dos monstros no palco de batalha — deixar só a animação original de andar (passos)
+
+### 🧩 Revisão ao vivo 26/07 — Features / reformas
+- [ ] Remover o botão **Imbue** do card do personagem (redundante com a página dedicada de Imbuements)
+- [ ] **Botão Store no header** — botão "Store" estilo Tibia na barra superior (atalho pra Loja Premium)
+- [ ] **Highscores: indicar quem está online** — marcar jogadores online no ranking (já existe `/online` no servidor com contagem + topo)
+- [ ] **Treino unificado** · M — remover o treino offline separado; **1 treino só** rodando **online E offline ao mesmo tempo**; janela maior/melhor; **outfit fiel ao do personagem**. Editar `.spec/23-training.md` antes do código
+- [ ] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente Tibia), tirar da janela de combate (consolidar com o item aberto de HP/Mana estilo cliente)
+- [ ] **Prey fiel ao Tibia** · M · `[server]` — reformar mecânica + sprites do Prey pra bater com o original. Fonte: `reference/crystalserver/.../ioprey.cpp`
+- [ ] **Sistema de Quests (raids com prêmio real)** · L — cada quest = raid com começo/meio/fim; premiação **REAL de quest do Tibia** (item/acesso — NÃO inventar) entregue ao finalizar; **1 prêmio por quest** (não repetível). Editar `.spec/` antes. Exceção documentada à regra de prêmio não-material (quests reais do Tibia dão item)
+
 ---
 
 ## 🎯 Estratégico — por que o jogo "acaba"
