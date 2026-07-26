@@ -3769,3 +3769,33 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
 .ctx-menu .ctx-item:hover { background: #ffffff18; color: #fff; }
 .ctx-menu .ctx-item + .ctx-item { margin-top: 1px; }
 .ctx-menu .ctx-ico { width: 16px; text-align: center; font-size: 13px; }
+
+/* ===== Onboarding coach-mark (ui/onboarding.js) ===== */
+.onboard-overlay { position: fixed; inset: 0; z-index: 9998; pointer-events: none; }
+/* spotlight: o buraco iluminado é o próprio alvo; o box-shadow gigante escurece
+   o resto da tela. Não bloqueia clique (overlay é pointer-events:none). */
+.onboard-spot {
+  position: fixed; border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(8, 12, 20, 0.72);
+  outline: 2px solid var(--gold); outline-offset: 0;
+  transition: left .22s ease, top .22s ease, width .22s ease, height .22s ease;
+}
+.onboard-card {
+  position: fixed; width: 268px; pointer-events: auto; z-index: 9999;
+  background: linear-gradient(180deg, #16385f 0%, #0e2947 62%, #0a1d34 100%);
+  border: 2px solid var(--gold); border-radius: 10px; padding: 14px 15px;
+  box-shadow: inset 0 1px 0 #ffffff22, 0 10px 30px #000000aa;
+  color: #e9dcc4; font-size: 13.5px; line-height: 1.5;
+  transition: left .22s ease, top .22s ease;
+}
+.onboard-card .onboard-text b { color: #ffd97a; }
+.onboard-row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; gap: 8px; }
+.onboard-dots { color: #ffffff66; font-size: 11px; letter-spacing: 2px; }
+.onboard-skip { background: transparent; border: 0; color: #ffffff88; cursor: pointer; font-size: 12px; padding: 4px 6px; }
+.onboard-skip:hover { color: #fff; }
+.onboard-next {
+  background: linear-gradient(180deg, #ffe491, #f3b13a 55%, #e2871a);
+  color: #2a1a06; border: 1px solid #b5791f; border-radius: 6px;
+  font-weight: 700; cursor: pointer; padding: 6px 14px; font-size: 12.5px;
+}
+.onboard-next:hover { filter: brightness(1.06); }
