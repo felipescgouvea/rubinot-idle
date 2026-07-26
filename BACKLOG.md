@@ -50,7 +50,7 @@
 - [ ] **CI rodando o smoke set dos probes** pra gatear deploy · M · `[test]`
 - [x] **Unit test das fórmulas de combate** (gear+monstro conhecidos → dano conhecido) · M · `[test]` — scripts/test-combat-formulas.mjs, 18 asserts determinísticos (getMaxWeaponDamage/melee, reduceElemental+cap 80, reducePhysical bordas, fight modes, mana) — `6007b9df`
 - [x] **Mobile:** eliminada a rolagem lateral (char-skills estourava) + alvos de toque ≥40px (topbar/fight-mode/log) + fonte base já 12px; layout single-column ≤900px verificado em 390px — `a4d9c457`
-- [ ] **Log estruturado no servidor** (level/ts/sessionId/event) · S–M · `[obs]`
+- [x] **Log estruturado no servidor** (JSON level/ts/event/campos) — logger slog() em startup, listen e erro não-tratado (com method/path); grepável no railway logs — `e31ce9e2`
 
 ## Pendências de dados (manual, TibiaWiki — não sourceável automático)
 - [x] **404 na aba Spells**: `destroy_field_rune` sem sprite → 404. Convertida a canônica do item-catalog pra items/Destroy_Field_Rune.webp — `63dc23c0`
