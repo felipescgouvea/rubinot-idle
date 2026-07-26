@@ -1032,7 +1032,10 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
    deixar de incrementá-la — a cena congela onde está. */
 #dungeon-stage[data-biome]:not([data-biome=""])::before {
   inset: 0;
-  background: var(--scene) center var(--scene-y, 0px) / 560px 1024px repeat-y;
+  /* largura 100% do palco (não 560px fixos, que deixavam tarjas pretas nas
+     laterais — letterbox); altura `auto` preserva o aspecto do pixel art sem
+     distorcer. repeat-y mantém a rolagem contínua do piso. */
+  background: var(--scene) center var(--scene-y, 0px) / 100% auto repeat-y;
   opacity: 1; image-rendering: pixelated; z-index: 0;
 }
 /* vinheta: profundidade, escurece as bordas sem tapar o centro */
