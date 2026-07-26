@@ -24,3 +24,4 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — Hunt Analyzer passa a contabilizar suprimentos pelo preço de compra (poções sell=0 deixavam em 0) — `447bed32`
 - 2026-07-26 — imbuements: ícones reais dos 8 (wiki .png→webp) + auditoria (efeitos ligados, valores canônicos vs Crystal) — `8866fa6a`
 - 2026-07-26 — janela de imbuing redesenhada no estilo do cliente do Tibia (painel escuro, gems em soquete dourado) — `f6053a9d`
+- 2026-07-26 — auto-sell com presets (Desligado/Lixo barato/Lixo comum ≤250) — `b66e5ba8`
