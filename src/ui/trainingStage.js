@@ -15,13 +15,13 @@
 // trazidas pro projeto (assets/outfits-dir/, ver
 // scripts/fetch_outfit_directions.py), então aqui ele usa LESTE quando bate no
 // dummy à direita e SUL quando é o mago lançando magia de frente.
-import { G } from '../application/gameStore.js?v=327';
-import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=323';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=323';
-import { VOCATIONS } from '../domain/character.js?v=354';
-import { ITEMS } from '../domain/items.js?v=338';
-import { SPELLS } from '../domain/spells.js?v=325';
-import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=328';
+import { G } from '../application/gameStore.js?v=328';
+import { renderOutfitDirectionToCanvas } from '../infrastructure/outfitRenderer.js?v=324';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=324';
+import { VOCATIONS } from '../domain/character.js?v=355';
+import { ITEMS } from '../domain/items.js?v=339';
+import { SPELLS } from '../domain/spells.js?v=326';
+import { missileSpriteFile, effectSpriteFile, spriteUrl, TRAINING_DUMMY_FILE } from '../infrastructure/tibiaSprites.js?v=329';
 
 // Mesmo critério do retrato/cena de batalha: outfit escolhido, ou o padrão da
 // vocação.
@@ -65,15 +65,15 @@ export function trainingStageHtml(skillId, spell) {
 
   const dummy = semDummy ? '' : `
     <div class="tstage-dummy">
-      <img src="${spriteUrl(TRAINING_DUMMY_FILE)}" alt="" aria-hidden="true" />
+      <img decoding="async" src="${spriteUrl(TRAINING_DUMMY_FILE)}" alt="" aria-hidden="true" />
     </div>`;
-  const projetil = missileFile ? `<img class="tstage-missile" src="${spriteUrl(missileFile)}" alt="" aria-hidden="true" />` : '';
+  const projetil = missileFile ? `<img decoding="async" class="tstage-missile" src="${spriteUrl(missileFile)}" alt="" aria-hidden="true" />` : '';
   // Nasce escondido: quem acende é o pulso no ritmo do COOLDOWN da magia (ver
   // pulsarCast). Antes a animação era um laço infinito de 1,6s fixo, então o
   // efeito ficava aceso quase o tempo todo e não tinha relação nenhuma com o
   // cast — parecia uma magia grudada no personagem.
   const magia = efeito
-    ? `<img class="tstage-cast" src="${spriteUrl(efeito)}" alt="" aria-hidden="true" />`
+    ? `<img decoding="async" class="tstage-cast" src="${spriteUrl(efeito)}" alt="" aria-hidden="true" />`
     : (pulsoCura ? '<span class="tstage-cast tstage-cast-heal" aria-hidden="true"></span>' : '');
 
   return `
