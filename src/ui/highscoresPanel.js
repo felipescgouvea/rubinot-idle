@@ -1,10 +1,11 @@
-import { G } from '../application/gameStore.js?v=334';
-import { MONSTERS } from '../domain/bestiary.js?v=353';
-import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=331';
-import { on, EVENTS } from '../shared/eventBus.js?v=332';
-import { escapeHtml, notify, skillIconImg } from './shared.js?v=337';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=335';
-import { t } from '../i18n/i18n.js?v=350';
+import { G } from '../application/gameStore.js?v=335';
+import { MONSTERS } from '../domain/bestiary.js?v=354';
+import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=332';
+import { on, EVENTS } from '../shared/eventBus.js?v=333';
+import { escapeHtml, notify, skillIconImg } from './shared.js?v=338';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=336';
+import { getOnlineSnapshot } from '../application/onlineUseCases.js?v=105';
+import { t } from '../i18n/i18n.js?v=351';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 const TOTAL_BESTIARY = Object.keys(MONSTERS).length;
@@ -45,6 +46,19 @@ function rankCell(i) {
   return `${i + 1}${RANK_MEDAL[i] ? ' ' + RANK_MEDAL[i] : ''}`;
 }
 
+// Célula do nome com indicador "online" (ponto verde pulsante) pra quem esteve
+// ativo na janela do /online (ver server/src/index.js: onlineNames). Snapshot do
+// último poll (onlineUseCases) — não re-busca por linha.
+function nameCell(name) {
+  const set = onlineNameSet();
+  const dot = set.has(name) ? `<span class="hs-online-dot" title="${t('shell.online')}"></span>` : '';
+  return `${dot}<strong>${escapeHtml(name)}</strong>`;
+}
+function onlineNameSet() {
+  const snap = getOnlineSnapshot();
+  return new Set(Array.isArray(snap.names) ? snap.names : []);
+}
+
 // Tabela "completa" (categoria Level): o perfil geral do jogador, igual ao
 // ranking original. As demais categorias (skills/bestiário) usam uma tabela
 // mais enxuta — ver skillOrBestiaryTable() abaixo.
@@ -58,7 +72,7 @@ function levelTable(rows) {
         ${rows.map((r, i) => `
           <tr class="${r.name === G.playerName ? 'hs-me' : ''}">
             <td>${rankCell(i)}</td>
-            <td><strong>${escapeHtml(r.name)}</strong></td>
+            <td>${nameCell(r.name)}</td>
             <td>${VOC_LABEL[r.vocation] || r.vocation}</td>
             <td>${r.level}</td>
             <td>${Number(r.xp).toLocaleString()}</td>
@@ -81,7 +95,7 @@ function skillOrBestiaryTable(category, rows) {
         ${rows.map((r, i) => `
           <tr class="${r.name === G.playerName ? 'hs-me' : ''}">
             <td>${rankCell(i)}</td>
-            <td><strong>${escapeHtml(r.name)}</strong></td>
+            <td>${nameCell(r.name)}</td>
             <td>${VOC_LABEL[r.vocation] || r.vocation}</td>
             <td>${r.level}</td>
             <td class="hs-highlight-col">${categoryValue(category, r)}</td>

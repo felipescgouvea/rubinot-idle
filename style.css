@@ -324,7 +324,13 @@ body {
   box-shadow: 0 0 5px #2ecc71; animation: online-pulse 2s ease-in-out infinite;
 }
 @keyframes online-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
-@media (prefers-reduced-motion: reduce) { .online-dot { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .online-dot, .hs-online-dot { animation: none; } }
+/* Ponto "online" nas linhas do ranking (mesmo verde pulsante do cabeçalho). */
+.hs-online-dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #2ecc71;
+  box-shadow: 0 0 5px #2ecc71; margin-right: 6px; vertical-align: middle;
+  animation: online-pulse 2s ease-in-out infinite;
+}
 
 .btn-small {
   background: linear-gradient(180deg, var(--brown-btn), #6e5a42);

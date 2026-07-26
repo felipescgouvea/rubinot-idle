@@ -3,10 +3,10 @@
 // /online do servidor (público) a cada 60s. Falha de rede não faz barulho — o
 // pill só não atualiza; nunca some depois de ter aparecido uma vez, pra não
 // piscar 0 num soluço de rede.
-import { fetchOnline } from '../infrastructure/authClient.js?v=342';
-import { t } from '../i18n/i18n.js?v=350';
+import { fetchOnline } from '../infrastructure/authClient.js?v=343';
+import { t } from '../i18n/i18n.js?v=351';
 
-let ultimo = { online: 0, top: [] };
+let ultimo = { online: 0, top: [], names: [] };
 let iniciado = false;
 
 export function getOnlineSnapshot() {
@@ -28,7 +28,7 @@ async function tick() {
   try {
     const r = await fetchOnline();
     if (r && r.ok && typeof r.online === 'number') {
-      ultimo = { online: r.online, top: Array.isArray(r.top) ? r.top : [] };
+      ultimo = { online: r.online, top: Array.isArray(r.top) ? r.top : [], names: Array.isArray(r.onlineNames) ? r.onlineNames : [] };
       render();
     }
   } catch { /* silêncio: não derruba o cabeçalho por causa do contador */ }

@@ -329,11 +329,13 @@ const server = http.createServer(async (req, res) => {
       try {
         const desde = new Date(nowOn - 3 * 60 * 1000).toISOString();
         const filtro = `updated_at=gte.${encodeURIComponent(desde)}`;
-        const [online, top] = await Promise.all([
+        const [online, top, ativos] = await Promise.all([
           countWhere('rubinot_idle_scores', filtro),
           selectRaw('rubinot_idle_scores', 'select=name,level,vocation&order=level.desc,xp.desc&limit=5'),
+          // nomes dos jogadores ativos na janela (pra marcar "online" no ranking)
+          selectRaw('rubinot_idle_scores', `select=name&${filtro}&limit=500`),
         ]);
-        const payload = { ok: true, online, top: top.filter(t => t.name) };
+        const payload = { ok: true, online, top: top.filter(t => t.name), onlineNames: (ativos || []).map(r => r.name).filter(Boolean) };
         onlineCache = { at: nowOn, data: payload };
         return send(res, 200, payload);
       } catch (e) {
