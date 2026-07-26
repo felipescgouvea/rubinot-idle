@@ -2,77 +2,44 @@
 
 Regras que atravessam mais de uma área funcional do jogo.
 
-## Regras já em vigor (derivadas do comportamento atual do sistema)
+## Regras em vigor (comportamento atual do sistema)
 
-Estas regras já são seguidas pelo jogo hoje, mesmo sem terem sido escritas antes. Documentadas aqui para que continuem sendo respeitadas em qualquer evolução futura.
+Estas regras já são seguidas pelo jogo hoje. Documentadas aqui para que continuem valendo em qualquer evolução futura.
 
-1. **Fidelidade a Tibia é o princípio de design central.** Nomes de criaturas, palavras mágicas das spells, vocações, sistema de skills por uso e sprites de criaturas replicam o Tibia oficial.
-   **Por quê:** o jogo existe para dar aos fãs de Tibia/RubinOT uma versão idle nostálgica de um universo que já conhecem — não uma fantasia genérica.
-2. **Conteúdo exclusivo do RubinOT convive com o conteúdo do Tibia oficial.** As Linked Tasks e seus 5 bosses finais (Lothlorien, Executioner, Morgul, The Corrupted, N'Zoth) refletem um sistema real e exclusivo do servidor RubinOT, não do Tibia original.
-3. **O RTC replica o RTCaster real do RubinOT** — ataque automático (uma magia OU uma runa) e cura automática (uma magia E uma poção, cada uma com seu próprio limiar de % de HP), na segunda aba do jogo (ver [14-spells-e-rtc.md](14-spells-e-rtc.md)).
-4. **A progressão nunca trava de forma permanente.** Level cap existe (100), mas sempre há conteúdo acessível para o nível atual do personagem.
-5. **Apenas uma tarefa ativa por vez**, e a primeira conclusão de cada task vale o dobro da recompensa.
-6. **Criaturas escalam com o nível do personagem dentro da mesma zona**, para que uma zona continue relevante por mais tempo em vez de ficar obsoleta rapidamente.
-7. **A morte tem penalidade leve, nunca catastrófica** (5% de XP do nível atual, retorno com 30% do HP máximo) — mantém o tom "idle-friendly" do jogo.
+1. **Fidelidade a Tibia/RubinOT é o princípio de design central.** Nomes de criaturas, palavras mágicas das spells, vocações, fórmulas de combate, sistema de skills por uso e sprites de criaturas replicam o Tibia oficial (ou o RubinOT, no conteúdo exclusivo dele). O jogo existe para dar aos fãs uma versão idle de um universo que já conhecem — não uma fantasia genérica.
+2. **Crystal Server é a fonte canônica das fórmulas.** Dano, defesa, atributos, regeneração, custo de skill, penalidade de morte e efeitos de magia seguem à risca o source do Crystal Server. Em empate entre wiki e Crystal Server, o Crystal Server vence. Nunca aproximar de memória.
+3. **O combate é decidido no servidor.** Gold, XP, dano, cura, morte e loot são autoritativos do servidor; o cliente exibe um espelho fiel. Impede trapaça e mantém consistência entre abrir/fechar o jogo.
+4. **Login obrigatório e save na nuvem.** O acesso exige conta; o progresso vive na nuvem (fonte de verdade da conta) e localmente. Uma falha de leitura da nuvem nunca apaga o progresso.
+5. **Quatro vocações, com graduação e promoção.** Knight, Paladin, Sorcerer e Druid. A vocação é provisória até a graduação (nível 8) e definitiva depois; promove a partir do nível 20. Ver [02-personagem-e-vocacoes.md](02-personagem-e-vocacoes.md).
+6. **A progressão nunca trava de forma permanente.** O nível segue a fórmula do Tibia e não dead-endará; sempre há conteúdo acessível ao nível atual.
+7. **Criaturas usam valores reais do Tibia e não escalam com o nível do jogador.** Uma zona serve a uma faixa de nível, como no Tibia; o único multiplicador é o de tier do Boss Zone.
+8. **A morte tem penalidade leve, nunca catastrófica.** Segue a fórmula do Crystal Server (amenizada por bênçãos e promoção) e revive com HP parcial — mantém o tom idle-friendly.
+9. **Uma tarefa e uma presa por vez; cadeia Linked nas tasks.** As Linked Tasks desbloqueiam em cadeia (tarefa e sala). Ver [13-tasks/](13-tasks/tasks.md).
+10. **Prêmios de Arena e Battle Pass são não-materiais.** Só boost, charm, carta de presa e varinha de treino — nunca gold, Rubini Coins ou equipamento. Prêmio material atalharia a economia; prêmio de equipamento quebraria a progressão de loot. (Tarefas e recompensa diária, por outro lado, podem dar material.)
 
-## Novas regras — fidelidade ao universo Tibia/RubinOT
+## Princípios de fidelidade ao universo Tibia/RubinOT
 
-Estas 4 regras foram definidas para reforçar e formalizar o princípio de fidelidade já presente no jogo (regra 1 acima), cobrindo especificamente monstros, sprites, mecânicas e ícones.
+Quatro regras que formalizam o princípio 1 acima, cobrindo monstros, sprites, mecânicas e nomes/ícones.
 
 ### Regra 1 — Todo monstro deve existir no Tibia
-
-Toda criatura adicionada ao bestiário do jogo deve ser uma criatura que existe oficialmente no bestiário do Tibia.
-
-- **Por quê:** o valor do jogo é ser reconhecível por quem já jogou Tibia/RubinOT. Criaturas inventadas quebram essa promessa e transformam o jogo em uma fantasia genérica.
-- **Como aplicar:** antes de adicionar uma criatura nova, confirmar sua existência no bestiário oficial do Tibia (TibiaWiki ou fonte equivalente) — nome, aparência e papel devem corresponder ao original.
-- **Pendência de conformidade identificada:** os 5 bosses exclusivos das Linked Tasks (Lothlorien, Executioner, Morgul, The Corrupted, N'Zoth) **não existem no bestiário oficial do Tibia** — são conteúdo exclusivo do servidor RubinOT. Como esta regra, no texto que a originou, cita apenas "Tibia", essas 5 criaturas ficam em situação a resolver:
-  - **Opção A:** tratar monstros de conteúdo exclusivo de Linked Tasks como uma exceção documentada da Regra 1, desde que confirmados como bosses reais e reconhecidos do RubinOT (não inventados para este jogo idle).
-  - **Opção B:** substituir os 5 bosses por criaturas de altíssimo nível já existentes no bestiário oficial do Tibia.
-  - Até essa decisão ser tomada pelo dono do produto, os 5 bosses permanecem como *débito de conformidade conhecido*, não como violação silenciosa.
+Toda criatura do bestiário deve existir oficialmente no bestiário do Tibia.
+- **Por quê:** o valor do jogo é ser reconhecível por quem já jogou. Criaturas inventadas quebram a promessa.
+- **Pendência conhecida:** os 5 bosses exclusivos das Linked Tasks (Lothlorien, Executioner, Morgul, The Corrupted, N'Zoth) são conteúdo do RubinOT, não do Tibia oficial. Ou tratá-los como exceção documentada (bosses reais e reconhecidos do RubinOT), ou substituí-los por criaturas de altíssimo nível já existentes no Tibia — decisão pendente do dono.
 
 ### Regra 2 — Toda sprite deve existir em Tibia/RubinOT
-
-Toda sprite usada no jogo (criatura, item, cenário) deve vir de uma fonte real do Tibia ou do RubinOT — nunca inventada, desenhada do zero ou emprestada de outro jogo/franquia.
-
-- **Por quê:** mantém a identidade visual reconhecível — parte do mesmo motivo da Regra 1, aplicado à arte em vez do texto.
-- **Como aplicar:** sprites de criaturas já seguem esta regra, carregadas diretamente de uma fonte oficial de Tibia. Ao adicionar sprites novas (itens, cenários, efeitos), a mesma fonte/critério deve ser usado.
-- **Regra 2.1 — Sprite de monstro vem do CLIENTE do Tibia, sem fallback.** A sprite de toda criatura deve ser a arte real extraída do **cliente oficial do Tibia** (escala nativa 1:1). Fontes secundárias (TibiaWiki, `.gif`, arte de outra criatura como placeholder) e fallbacks (emoji) **não são permitidos** para monstros. *Por quê:* o motor exibe a criatura no combate e nos cards; usar arte de outra fonte quebra a fidelidade e aparece "cortada"/errada. *Como aplicar:* toda criatura real do Tibia usa a sprite do cliente; uma criatura custom do RubinOT que não existe no cliente **não deve usar arte de outra fonte** — deve ser reavaliada (usar a criatura real correspondente do Tibia ou ser removida), nunca "maquiada" com sprite emprestada.
-- **Pendência de conformidade identificada:**
-  - **[Regra 2.1]** Criaturas ainda com sprite de fonte NÃO-cliente (ex.: Valkyrie, Smuggler Baron Silvertoe — apareciam "cortadas") precisam ser re-extraídas do cliente. Auditar quais monstros não são client-sourced e corrigir (sem fallback).
-  - Os 5 bosses exclusivos do RubinOT usam, hoje, sprites de **outras criaturas do Tibia** como substituição temporária (ex.: o boss "Lothlorien" usa a sprite de "Elf Arcanist"). Pela Regra 2.1 isso **não é aceitável como estado final** — cada boss deve receber a sprite real da sua criatura no cliente, ou o boss deve ser trocado pela criatura real correspondente.
-  - Ícones de mundos ainda usam emojis genéricos (ver Regra 4) — "Mundos" é um sistema próprio deste jogo idle sem equivalente literal em Tibia (ver Regra 3), então não há um ícone real óbvio pra usar.
-  - "Rubini Coin" é uma moeda premium fictícia deste jogo (não existe em Tibia nem, até onde essa especificação confirma, no RubinOT) — usa a sprite real de Tibia Coin (a moeda premium oficial) como analogia visual mais próxima, já que não existe uma sprite real da própria "Rubini Coin".
-- **Resolvido:** ícones de itens de equipamento (incluindo runas e poções usadas no RTC), moedas (Gold Coin), skills (as 7 do Tibia real) e magias (uma sprite por spell) usam arte extraída do TibiaWiki. Outfits (incluindo cor por região e addons) usam sprites reais extraídas do cliente oficial do Tibia, recoloridas por região com o mesmo algoritmo do jogo original — ver [10-personagem-e-vocacoes.md](10-personagem-e-vocacoes.md).
+Toda sprite (criatura, item, cenário) vem de uma fonte real do Tibia/RubinOT — nunca inventada, desenhada do zero ou emprestada de outro jogo.
+- **Regra 2.1 — Sprite de monstro vem do CLIENTE do Tibia, sem fallback.** A sprite de toda criatura é a arte real extraída do **cliente oficial** (escala nativa 1:1). Fontes secundárias (TibiaWiki, `.gif`, arte de outra criatura como placeholder) e fallback (emoji) **não são permitidos** para monstros. Uma criatura custom do RubinOT que não existe no cliente **não deve usar arte emprestada** — deve virar a criatura real correspondente do Tibia ou ser removida.
+- **Pendências conhecidas:** criaturas ainda com sprite de fonte não-cliente (apareciam "cortadas") precisam ser re-extraídas; os 5 bosses do RubinOT usam sprite de outras criaturas como substituição temporária, o que a Regra 2.1 não aceita como estado final; "Rubini Coin" (moeda premium fictícia) usa a sprite real de Tibia Coin como analogia; ícones de mundos ainda usam emoji (sem equivalente real óbvio).
 
 ### Regra 3 — Toda mecânica deve existir em Tibia/RubinOT
+Todo sistema/fórmula/comportamento novo deve ter um equivalente real e identificável em Tibia/RubinOT — nada inventado só porque "funciona bem" como idle.
+- **Exceções deliberadas confirmadas** (não são pendência): o sistema de **Relíquias** (raridade de item — análogo aos Imbuements) e o sistema de **Mundos** com bônus fixo de XP/Gold. Pedidos explicitamente pelo dono como liberdades de design.
+- **A revisar:** Battle Pass sazonal, ranking de Highscores interno e **Boss Zone** (a analogia mais próxima é o Bosstiary do Tibia, sem correspondência exata confirmada). Convém confirmar com o dono se replicam algo real ou são liberdades de design deliberadas.
 
-Todo sistema, fórmula ou comportamento de jogo novo deve ter um equivalente real e identificável em Tibia ou RubinOT — nada deve ser inventado do zero só porque "funciona bem" como mecânica de jogo idle.
-
-- **Por quê:** o valor do produto é a fidelidade ao original. Mecânicas puramente genéricas de jogos idle (sem lastro no jogo real) diluem essa promessa.
-- **Como aplicar:** antes de propor uma mecânica nova, indicar explicitamente qual mecânica real de Tibia/RubinOT ela representa. Exemplos de mecânicas já corretamente lastreadas: Linked Tasks, skills que sobem por uso, Smart Healing, Rubini Store (Ctrl+S), divisões da Prestige Arena, escala de dano por skill/equipamento.
-- **Exceção deliberada confirmada:** o sistema de **Relíquias** (itens de equipamento com modificador de raridade — ver [20-itens-e-equipamento.md](20-itens-e-equipamento.md)) não tem um equivalente 1:1 no Tibia oficial nem no RubinOT. Foi pedido explicitamente pelo dono do produto como uma liberdade de design consciente para este jogo idle; a analogia real mais próxima é o sistema de **Imbuements** do Tibia, que também aplica um bônus de atributo a um item de equipamento já existente. Registrado aqui como exceção, não como pendência — não precisa de revisão futura.
-- **Pontos a revisar (correspondência com o real ainda não confirmada por esta especificação):** o sistema de "Mundos" com bônus fixos de XP/Gold por mundo, a progressão de Battle Pass sazonal, o ranking global de Highscores dentro do próprio jogo idle, e o **Boss Zone** (desafiar um boss já desbloqueado diretamente, fora do bestiário comum da zona — ver [35-boss-zone.md](35-boss-zone.md); a analogia mais próxima é o Bosstiary real do Tibia, mas a correspondência exata não foi confirmada). Convém confirmar com o dono do produto se esses sistemas replicam algo real do RubinOT/Tibia ou se são liberdades de design assumidas conscientemente para este jogo idle — e, neste segundo caso, registrá-los aqui como exceção deliberada em vez de deixá-los como pendência.
-
-### Regra 4.1 — Todo nome exibido de criatura/item/magia é o nome real do Tibia
-
-O texto do nome mostrado ao jogador (não só a existência da criatura/item, já coberta pela Regra 1) deve ser o nome oficial em inglês do Tibia — o mesmo em qualquer idioma da interface (ver [41-idioma-e-localizacao.md](41-idioma-e-localizacao.md)).
-
-- **Por quê:** um nome traduzido ou inventado (ex.: um item chamado "Elmo Real" em vez de "Royal Helmet") quebra o reconhecimento imediato por quem já jogou Tibia — mesmo que o item em si seja fiel ao original.
-- **Resolvido:** auditoria completa encontrou e corrigiu itens, moedas (Gold Coin, Platinum Coin) e Charms com nome em português em vez do nome real de Tibia — incluindo os Charms, que já guardavam o nome real do Tibia num campo interno não exibido (`tibia`) enquanto mostravam um nome inventado em português como principal. Passaram a mostrar sempre o nome real.
-- **Conteúdo original deste jogo (não canônico de Tibia)** — nomes de dungeon/zona de caça, categorias de loja, missões do Battle Pass e descrições — não é abrangido por esta regra (não tem "nome real de Tibia" pra seguir); esse texto muda de idioma normalmente, como qualquer outro texto de interface.
-
-### Regra 4 — Todo ícone deve existir em Tibia/RubinOT
-
-Todo ícone de interface (itens, slots de equipamento, moedas, skills, magias, configurações de RTC, mundos, outfits) deve usar arte extraída do Tibia ou do RubinOT — nunca emojis genéricos nem ícones de bibliotecas de terceiros.
-
-- **Por quê:** mesmo motivo da Regra 2 — a identidade visual do jogo deve parecer "o jogo de verdade", não uma interface genérica de jogo idle com emojis.
-- **Resolvido:** sprites de criaturas, ícones de itens de equipamento e outfits (com cor e addons reais) já usam arte extraída do Tibia. Ícones de zona de caça (galeria de escolha e barra da zona atual) usam a sprite real do monstro principal da zona (o primeiro do elenco), em vez de um emoji temático. Ícones de vitais (HP, Mana, XP), moedas (Gold Coin, Rubini Coin ≈ Tibia Coin), as 7 skills de combate e as magias (uma sprite por spell) usam a mesma fonte real (TibiaWiki). Ícones de tarefa e de sala das Linked Tasks usam a sprite real da criatura/boss-alvo daquela tarefa, em vez de um ícone genérico.
-- **Pendência de conformidade identificada:**
-  - Ícones de mundos ainda usam emoji — sem correspondência real óbvia (ver Regra 3).
-  - Ícones de Loot Boost e Supply Completo (Rubini Store) ainda usam emoji — não há sprite real de Tibia representando "chance de loot" ou "recarga instantânea" como conceito abstrato.
-  - Notificações toast (o aviso que aparece e some no canto da tela) ainda mostram emoji em vez de sprite — tecnicamente só suportam texto puro, não HTML/imagem, então não têm como exibir uma sprite sem uma mudança maior nesse mecanismo.
-  - Ícones de navegação/interface genéricos (abas, botões, marcadores de status como 🔒/✅/⚔️) não foram trocados — representam ações da interface, não uma criatura/item/magia específica do jogo, então ficam fora do escopo desta regra até haver uma decisão explícita do dono do produto sobre estender a regra também a esse tipo de ícone.
+### Regra 4 — Todo nome e ícone exibido é o real do Tibia
+O nome mostrado de criatura/item/magia é o nome oficial em inglês do Tibia — o mesmo em qualquer idioma. Todo ícone (itens, slots, moedas, skills, magias, outfits) usa arte extraída do Tibia/RubinOT, nunca emoji genérico nem biblioteca de terceiros.
+- **Conteúdo original deste jogo** (nomes de zona/dungeon, categorias de loja, missões, descrições) não tem "nome real de Tibia" e muda de idioma normalmente.
+- **Pendências conhecidas:** ícones de mundos, de Loot Boost e de Supply Completo ainda usam emoji (sem sprite real que represente o conceito abstrato); toasts e ícones genéricos de navegação (🔒/✅/⚔️) ficam fora do escopo até decisão do dono.
 
 ## Como tratar pendências de conformidade
-
-Nenhuma das 4 regras acima exige que o jogo pare de funcionar até ser 100% cumprida — mas toda pendência identificada deve ficar **visível e rastreada** aqui, nunca escondida ou resolvida "por decreto" sem decisão do dono do produto. Ao resolver uma pendência (trocar um ícone, confirmar um boss, substituir uma sprite), atualizar este arquivo removendo o item resolvido.
+Nenhuma regra exige que o jogo pare até ser 100% cumprida — mas toda pendência identificada fica **visível e rastreada aqui**, nunca escondida nem resolvida "por decreto" sem decisão do dono. Ao resolver uma pendência, atualizar este arquivo removendo o item.

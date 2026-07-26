@@ -1,0 +1,31 @@
+# Highscores (Ranking Global)
+
+## Objetivo
+Reproduzir os Highscores do Tibia: um ranking público global que compara todos os jogadores registrados por várias categorias. Dá um objetivo competitivo de longo prazo.
+
+## Quem usa
+Todo jogador. A aba **Highscores** mostra os rankings; a posição do próprio jogador é destacada.
+
+## O que o usuário precisa conseguir fazer
+- Escolher uma categoria e ver o ranking dos melhores jogadores.
+- Ver a própria posição e quem está **online** agora.
+
+## Regras de negócio
+- **Categorias:** nível do personagem, cada uma das sete skills reais do Tibia (Magic Level, Fist, Club, Sword, Axe, Distance, Shielding), progresso no bestiário e Boss Zone (soma dos tiers máximos derrotados).
+- **Comparação global entre jogadores registrados.** O ranking é autoritativo do servidor (não dá para forjar posição no cliente).
+- **Nomes únicos.** O ranking nunca aceita dois jogadores com o mesmo nome.
+- **Indicador de online.** O ranking marca quem está jogando agora (prova social ao vivo); o cabeçalho mostra quantos estão online.
+
+## Comportamento esperado
+- Trocar de categoria reordena o ranking por aquele critério.
+- A linha do próprio jogador é destacada onde ele estiver.
+- Jogadores online aparecem marcados.
+
+## Nota de fidelidade
+- Um ranking global dentro do próprio jogo idle é próximo dos Highscores do Tibia; registrado em [../90-regras-de-negocio-gerais.md](../90-regras-de-negocio-gerais.md) como sistema alinhado ao original.
+
+## Critérios de aceitação
+- [ ] Há rankings por nível, pelas sete skills, por bestiário e por Boss Zone.
+- [ ] O ranking é global, autoritativo do servidor, e a posição do jogador é destacada.
+- [ ] Não há dois jogadores com o mesmo nome.
+- [ ] Jogadores online são indicados e a contagem de online aparece no cabeçalho.
