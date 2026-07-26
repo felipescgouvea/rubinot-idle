@@ -26,7 +26,7 @@
 
 ## Features
 - [ ] **Sistema de Quests (raids com prêmio real)** · L — começar por quests simples (não-alavanca); cada quest = raid com começo/meio/fim; **1 prêmio real de quest do Tibia por quest** (não repetível). Editar `.spec/` antes
-- [ ] **Prey fiel ao Tibia** · M · `[server]` — reformar mecânica + sprites (fonte: `ioprey.cpp`)
+- [ ] `[decisão]` **Prey fiel ao Tibia** · M — AUDITADO 2026-07-26: a MECÂNICA já bate exatamente o `ioprey.cpp` (bônus damage 2r+5 / defense 2r+10 / xp+loot 3r+10; raridade `uniform_random(r+1,10)`; reroll de tipo na raridade 10) e os ícones usam sprites reais. A única divergência é a SELEÇÃO: Tibia dá uma lista aleatória de monstros por slot; aqui é escolha livre (simplificação idle). Decisão do Felipe: manter a escolha livre (recomendado, mais idle-friendly) OU adotar a lista aleatória do Tibia?
 
 ## Endgame — sink infinito (P0/P1)
 - [ ] **Wheel of Destiny** · L · `[server]` — grade de talentos pós-max; sink de pontos infinito (fonte `io_wheel.cpp`)
