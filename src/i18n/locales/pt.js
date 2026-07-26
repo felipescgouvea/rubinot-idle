@@ -6,6 +6,7 @@ export default {
   'shell.config': 'Config',
   'shell.daily': 'Diário',
   'shell.online': 'online',
+  'shell.store': 'Store',
   'shell.onlineTitle': '{n} jogadores online agora — clique pra ver o ranking',
   'shell.tabHunt': 'Caçada',
   'shell.tabTasks': 'Tarefas',

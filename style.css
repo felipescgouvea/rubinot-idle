@@ -548,6 +548,14 @@ body {
   box-shadow: inset 0 1px 0 #ffffff2a, 0 2px 8px #00000055; }
 #topbar .auth-user { font-size: 11px; opacity: 0.82; color: var(--cream); overflow: hidden; text-overflow: ellipsis; max-width: 180px; white-space: nowrap; }
 #topbar .auth-user:empty { display: none; }
+/* Botão Store (estilo Store oficial do Tibia): dourado, destaca-se dos demais
+   botões do topbar — atalho pra Loja Premium. */
+#topbar .store-btn {
+  background: linear-gradient(180deg, var(--gold-bright, #f0c14b) 0%, var(--gold, #c9a227) 55%, var(--gold-dim, #a9884f) 100%);
+  color: #2a1e05; border: 1px solid var(--gold-dim, #a9884f); font-weight: 700;
+  text-shadow: 0 1px 0 #ffffff55; box-shadow: inset 0 1px 0 #ffffff88, 0 1px 3px #00000055;
+}
+#topbar .store-btn:hover { filter: brightness(1.08); }
 
 #app-body { display: flex; gap: 14px; align-items: flex-start; }
 #panels { order: 1; flex: 1 1 auto; min-width: 0; }

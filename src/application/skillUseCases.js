@@ -1,8 +1,8 @@
-import { G } from './gameStore.js?v=330';
-import { applySkillGain, TIBIA_SKILLS } from '../domain/character.js?v=357';
-import { emit, EVENTS } from '../shared/eventBus.js?v=328';
-import { getSkillRate } from './adminUseCases.js?v=331';
-import { t } from '../i18n/i18n.js?v=346';
+import { G } from './gameStore.js?v=331';
+import { applySkillGain, TIBIA_SKILLS } from '../domain/character.js?v=358';
+import { emit, EVENTS } from '../shared/eventBus.js?v=329';
+import { getSkillRate } from './adminUseCases.js?v=332';
+import { t } from '../i18n/i18n.js?v=347';
 
 export function trainSkill(skillId, amount) {
   if (!G.vocation || !G.sk[skillId]) return;

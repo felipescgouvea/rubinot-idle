@@ -5,6 +5,7 @@ export default {
   'shell.config': 'Settings',
   'shell.daily': 'Daily',
   'shell.online': 'online',
+  'shell.store': 'Store',
   'shell.onlineTitle': '{n} players online now — click to see the ranking',
   'shell.tabHunt': 'Hunt',
   'shell.tabTasks': 'Tasks',
