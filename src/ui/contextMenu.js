@@ -2,8 +2,8 @@
 // navegador, para os alvos do jogo: criaturas da Battle List e itens da mochila.
 // Delegado (um listener no document) — não precisa re-wire a cada re-render dos
 // painéis. Fora desses alvos, o menu nativo do navegador continua normal.
-import { ITEMS } from '../domain/items.js?v=356';
-import { t } from '../i18n/i18n.js?v=361';
+import { ITEMS } from '../domain/items.js?v=357';
+import { t } from '../i18n/i18n.js?v=362';
 
 let menuEl = null;
 function ensureMenu() {
@@ -36,8 +36,8 @@ export function wireContextMenu() {
   document.addEventListener('contextmenu', (e) => {
     // criatura: tanto a da Battle List quanto a que está no palco (stage-monster)
     const creature = e.target.closest('.battle-list-entry:not(.dead), .stage-monster:not(.leaving):not(.dead)');
-    const cuid = creature && (creature.dataset.rawUid || creature.dataset.uid);
-    if (creature && cuid && cuid !== 'undefined') {
+    const cuid = creature && [creature.dataset.rawUid, creature.dataset.uid].find(v => v && v !== 'undefined');
+    if (creature && cuid) {
       e.preventDefault();
       const uid = cuid;
       openMenu(e.clientX, e.clientY, [
