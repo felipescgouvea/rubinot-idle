@@ -25,6 +25,7 @@
 - [ ] HP/Mana do personagem no estilo do cliente do Tibia + remover HP/Mana duplicados dentro do palco
 - [ ] Fechar o detalhe do item deve VOLTAR pra mochila (não fechar tudo)
 - [ ] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador
+- [ ] **BUG: comprar munição em lote na Loja de Equipamentos compra só 1** — a janela de trade mostra o seletor de quantidade pra ammo (`isBulkItem` inclui `'ammo'`, `shopPanel.js:194`) e o botão passa a qty selecionada (`shopPanel.js:269`), mas `confirmBuyShopItem` só multiplica pra poção/runa (`shopPanel.js:99`) → ammo cai no `count=1`: seleciona 50 flechas, o modal confirma "1x" e compra **1**. Fix: incluir `ammo` no cálculo de `count`. · S
 - [ ] **auto-sell** — não é bug: default `maxValue=50` baixo demais (junk vale 55–243). Decisão de economia do Felipe: subir default / presets ("vender lixo comum") / vender por valor ignorando `type`
 
 ---
@@ -66,6 +67,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 
 - [ ] **[a11y/perf] Sprites: `decoding="async"` + `alt`** no helper compartilhado — ⚠️ NUNCA `loading="lazy"` (já sumiu sprite na batalha, ver Concluído) · S
 - [ ] **[UX] #5 `KILL_COUNTERS` sem listener** (`huntUseCases.js`) — progresso de bestiário/charm só atualiza ao reabrir a aba. Cosmético; falta definir o refresh certo do painel
+- [ ] **[dívida] Código de outfit morto na Loja** — outfits saíram do catálogo (`shopCatalog.js:9-10`, nenhum `type:'outfit'` em `SHOP_ITEMS`), mas `shopPanel.js` ainda carrega os branches de outfit (owned/wearing + `background:#fdf4d7` hardcoded fora do tema) em ~94/114-115/145/147 — nunca renderiza; remover. · S
 
 ## P4 — Safety net / a11y / mobile
 
