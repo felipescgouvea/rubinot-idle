@@ -36,7 +36,7 @@
 
 ### 🎨 Revisão ao vivo 26/07 — Estética
 - [ ] Fundo dos cards de **linked task** feio + botões de navegação da Loja (Rubini Store / Equipamentos / Artigos Mágicos) com fundo ruim — retematizar
-- [ ] **Cor do header + botão "Trocar Hunt"** deve ser a mesma do painel lateral esquerdo (`#app-aside` navy premium)
+- [x] **Cor do header + botão "Trocar Hunt"** = navy profunda do painel lateral esquerdo (`#sidebar`). Verificado em prod (shot-header-navy: mesmo gradiente do sidebar). — `8afc5392`
 - [ ] Sprite dos **imbuements** infiel — usar o ícone real do Tibia
 - [ ] Remover **animação extra** dos monstros no palco de batalha — deixar só a animação original de andar (passos)
 
