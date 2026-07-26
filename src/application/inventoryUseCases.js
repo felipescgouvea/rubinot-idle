@@ -1,17 +1,17 @@
-import { G, ACCOUNT } from './gameStore.js?v=337';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=345';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=348';
-import { RARITY_TIERS } from '../domain/rarity.js?v=334';
-import { emit, EVENTS } from '../shared/eventBus.js?v=335';
-import { getMagic } from './stats.js?v=334';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=367';
-import { getCurrentMonster } from './huntUseCases.js?v=401';
-import { areaName } from '../domain/attackAreas.js?v=333';
-import { saveGame } from './saveGameUseCase.js?v=337';
-import { itemLogIcon } from './logIcons.js?v=336';
-import { t } from '../i18n/i18n.js?v=353';
+import { G, ACCOUNT } from './gameStore.js?v=338';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=346';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=349';
+import { RARITY_TIERS } from '../domain/rarity.js?v=335';
+import { emit, EVENTS } from '../shared/eventBus.js?v=336';
+import { getMagic } from './stats.js?v=335';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=368';
+import { getCurrentMonster } from './huntUseCases.js?v=402';
+import { areaName } from '../domain/attackAreas.js?v=334';
+import { saveGame } from './saveGameUseCase.js?v=338';
+import { itemLogIcon } from './logIcons.js?v=337';
+import { t } from '../i18n/i18n.js?v=354';
 
-export { addItemToInventory } from './inventoryCore.js?v=335';
+export { addItemToInventory } from './inventoryCore.js?v=336';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -32,6 +32,24 @@ export function setAutoSellMax(value) {
   G.autoSell = G.autoSell || { enabled: false, maxValue: 50 };
   G.autoSell.maxValue = Math.max(0, Math.floor(Number(value) || 0));
   emit(EVENTS.INVENTORY);
+  saveGame();
+  syncAutoSellToServer();
+}
+
+// Presets de auto-sell (decisão do Felipe: presets em vez de só o teto cru).
+// O servidor vende `misc` com valor de venda <= maxValue (ver huntEngine). O
+// "lixo comum" do jogo vale ~55–243, então o preset cobre até 250.
+export const AUTOSELL_PRESETS = {
+  off:   { enabled: false, maxValue: 50 },
+  cheap: { enabled: true,  maxValue: 50 },   // só o lixo bem barato
+  junk:  { enabled: true,  maxValue: 250 },  // lixo comum (55–243)
+};
+export function setAutoSellPreset(preset) {
+  const p = AUTOSELL_PRESETS[preset];
+  if (!p) return;
+  G.autoSell = { enabled: p.enabled, maxValue: p.maxValue };
+  emit(EVENTS.INVENTORY);
+  emit(EVENTS.NOTIFY, { msg: p.enabled ? t('inventory.autoSellOn') : t('inventory.autoSellOff') });
   saveGame();
   syncAutoSellToServer();
 }
