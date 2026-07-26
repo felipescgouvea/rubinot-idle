@@ -14,12 +14,12 @@
 
 ## Estética
 - [ ] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted)
-- [ ] Loja Premium: remover o texto "(Dinheiro Real)" do botão
+- [x] Loja Premium: remover o texto "(Dinheiro Real)" do botão — já satisfeito: nenhum botão exibe "(Dinheiro Real)"; aba = "💳 Loja Premium" e o preço mostra "R$ x,xx"
 - [ ] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto
 - [ ] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena
 
 ## Funcional / UX
-- [ ] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente) + remover os HP/Mana duplicados dentro do palco
+- [x] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente) + remover os HP/Mana duplicados dentro do palco — `466e7e22`
 - [ ] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador
 - [ ] **Imbuir item da MOCHILA** · `[server]` — hoje o imbuement mora por `eq_slot`; imbuir item da mochila exige guardar por instância de item (refactor de dados + persistência)
 - [ ] **Boss Zone com bosses REAIS** · `[CANON]` — cada zona usa o boss canônico da criatura (nome/sprite/stats/loot)

@@ -71,3 +71,5 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 **Infra / quick wins**
 - CI com os guards no deploy — `.github/workflows/guards.yml`
 - Já existiam: battle list coalesce via rAF · `:focus-visible` · `prefers-reduced-motion` · `window.onunhandledrejection`
+- 2026-07-26 — feat(hunt): barra de vida/mana FLUTUANTE sobre o boneco no palco (estilo cliente do Tibia) + remoção dos HP/Mana duplicados abaixo do palco (só XP resta) — `466e7e22`
+- 2026-07-26 — chore(shop): "(Dinheiro Real)" já não aparece em botão nenhum (verificado; aba = "💳 Loja Premium", preço em R$) — sem mudança de código
