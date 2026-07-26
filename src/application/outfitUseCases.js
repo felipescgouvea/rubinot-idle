@@ -1,12 +1,12 @@
 // Escolha de aparência: gênero, trocar pra um outfit já possuído, ou comprar
 // um novo com Rubini Coins — igual à tela de aparência do Tibia, só que sem
 // custo pros 4 outfits clássicos (ver domain/outfits.js).
-import { G, ACCOUNT } from './gameStore.js?v=344';
-import { findOutfit, isOutfitOwned } from '../domain/outfits.js?v=340';
-import { emit, EVENTS } from '../shared/eventBus.js?v=342';
-import { saveGame } from './saveGameUseCase.js?v=344';
-import { spendRubiniOnServer } from '../infrastructure/authClient.js?v=352';
-import { t } from '../i18n/i18n.js?v=360';
+import { G, ACCOUNT } from './gameStore.js?v=345';
+import { findOutfit, isOutfitOwned } from '../domain/outfits.js?v=341';
+import { emit, EVENTS } from '../shared/eventBus.js?v=343';
+import { saveGame } from './saveGameUseCase.js?v=345';
+import { spendRubiniOnServer } from '../infrastructure/authClient.js?v=353';
+import { t } from '../i18n/i18n.js?v=361';
 
 export function setOutfitGender(gender) {
   G.outfitGender = gender === 'female' ? 'female' : 'male';
