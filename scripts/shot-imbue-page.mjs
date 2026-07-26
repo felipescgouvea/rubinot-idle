@@ -5,8 +5,8 @@ import { dirname, join } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const acct = JSON.parse(readFileSync(join(ROOT, '.test-account.json'), 'utf8'));
 const site = acct.site.replace(/\/$/, '');
-// espera os ícones publicarem
-for (let i=0;i<25;i++){ try{ const r=await fetch(site+'/assets/sprites/imbuements/Vampirism.webp',{cache:'no-store'}); if(r.ok){break;} }catch{} await new Promise(r=>setTimeout(r,4000)); }
+// espera o style.css novo (com o painel de imbuing escuro) publicar
+for (let i=0;i<30;i++){ try{ const idx=await (await fetch(site+'/index.html',{cache:'no-store'})).text(); const m=idx.match(/style\.css\?v=(\d+)/); if(m){ const css=await (await fetch(site+'/style.css?v='+m[1],{cache:'no-store'})).text(); if(css.includes('--imb-panel-1')) break; } }catch{} await new Promise(r=>setTimeout(r,4000)); }
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
 const errs=[]; page.on('pageerror',e=>errs.push(e.message));
