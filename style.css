@@ -139,7 +139,13 @@ body {
   line-height: 1.6;
 }
 
-#app { max-width: 1440px; margin: 0 auto; padding: 12px 12px 40px; display: flex; align-items: flex-start; gap: 12px; }
+/* min-height de viewport + align-items:stretch: em abas de conteúdo curto
+   (Worlds/Highscores/Market/Shop) as colunas esticam até embaixo — o rail navy
+   emoldura a página inteira e o conteúdo não deixa ~40% de gradiente morto. Em
+   abas altas (Caça) o min-height não atrapalha (é mínimo, não fixo). */
+#app { max-width: 1440px; margin: 0 auto; padding: 12px 12px 40px; display: flex; align-items: stretch; gap: 12px; min-height: calc(100vh - 24px); }
+#app-content { display: flex; flex-direction: column; }
+#app-content > .tab-panel { flex: 1 1 auto; }
 /* ===== BARRA LATERAL ESQUERDA (nav + ações) — antes era o header/tabs no topo ===== */
 #sidebar {
   flex: 0 0 176px; position: sticky; top: 12px;
