@@ -33,7 +33,7 @@
 - [ ] **Forge + Item Tier** · L · `[server]` — funde equipamento duplicado → tier 1–10; sink de gold que escala (fonte `item_tiers.lua`)
 - [x] **Cyclopedia (Hunt/Loot/XP Analyser)** · M — painel de throughput (XP/h, gold/h, loot vs waste); dado quase todo já existe — Hunt Analyzer já tinha XP/h e gold/h; adicionadas taxas loot/h e suprimentos/h (loot vs desperdício) — `328cf405`
 - [ ] **Bosstiary** · M · `[server]` — kills de boss → boss points → slots/prowess (fonte `io_bosstiary.cpp`)
-- [ ] **Onboarding do 1º minuto** · M — coach-mark de 3 passos (caçar → loot → gastar) + one-liner nas abas avançadas
+- [x] **Onboarding do 1º minuto** · M — coach-mark de 3 passos (caçar → loot → gastar) com spotlight, mostrado 1x, skip + persistência — `f9df3a10`
 - [ ] **Nível recomendado por zona + agrupar abas** · M — hint de nível no zone picker; agrupar/travar abas até o unlock
 - [x] **Celebrar marcos: badges de charm/promoção** — selo na aba Bestiário quando há charm point pra desbloquear um charm (atualiza com a aba fechada); promoção já sinaliza pelo botão habilitado no card — `342b1000`
 
