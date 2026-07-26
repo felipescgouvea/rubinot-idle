@@ -40,7 +40,7 @@
 
 ## Profundidade / conteúdo (P2)
 - [ ] **Tiers de charm (Minor/Major) + expansão** · M · `[server]` — categorias + Charm Expansion (fonte `bestiary_charms.lua`)
-- [ ] **Tiers de imbuement + slot de armadura/skill** · M · `[server]` — hoje 3 weapon-only/1 tier; Tibia tem ~14 em 3 tiers
+- [ ] **Tiers de imbuement (Basic/Intricate/Powerful)** · M · `[server]` — valores canônicos JÁ SOURCEADOS do imbuements.xml (2026-07-26): Vampirism lifeleech 5/10/25% · Void manaleech 3/5/8% · Scorch fogo 10/25/50% · proteções (Cloud Fabric/Dragon Hide/Quara Scale/Snake Skin) 3/8/15% · Lich Shroud morte 2/5/10%. Restruturar IMBUEMENTS com `tiers`, UI pra escolher tier (custo escala), servidor grava o tier, combate lê o tier. RETROCOMPAT crítico: imbuement salvo sem tier lê no tier atual (protections=powerful 15%, weapons=basic). Merece turno focado (mexe em domain+combate+UI+servidor+save).
 - [ ] **Prey Wildcards + Concoctions** · S–M · `[server]` — wildcards pra rerolar/travar; concoctions = buffs temporizados
 - [ ] **Sink de gold que escala** · M · `[server]` · `[CANON]` — Exercise Weapons na loja e/ou house rent (se o Forge entrar, ele já é o sink)
 - [ ] **Aprofundar o sink de Rubini** · M — boosts mais longos, packs de wildcard, tentativas de arena, cosméticos
