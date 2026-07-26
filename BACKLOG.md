@@ -20,7 +20,7 @@
 
 ## Funcional / UX
 - [x] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente) + remover os HP/Mana duplicados dentro do palco — `466e7e22`
-- [ ] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador
+- [x] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador — criatura (Atacar/Bestiário) e item da mochila (Examinar/Vender); suprime o nativo nesses alvos — `1a4ddf73`
 - [ ] **Imbuir item da MOCHILA** · `[server]` — hoje o imbuement mora por `eq_slot`; imbuir item da mochila exige guardar por instância de item (refactor de dados + persistência)
 - [ ] **Boss Zone com bosses REAIS** · `[CANON]` — cada zona usa o boss canônico da criatura (nome/sprite/stats/loot)
 

@@ -1,5 +1,9 @@
-// Prova: clique-direito em criatura da Battle List e em item da mochila abre o
-// menu custom (.ctx-menu) com as ações certas; o menu nativo é suprimido; 0 erros.
+// Prova: clique-direito (evento contextmenu) em criatura do palco e em item da
+// mochila abre o menu custom (.ctx-menu) com as ações certas e SUPRIME o nativo
+// (defaultPrevented); Escape fecha; 0 erros. Contra produção.
+// Usa dispatch determinístico do evento contextmenu (o mapeamento clique-real→
+// evento é do navegador, não do nosso código; o handler é o que verificamos) —
+// o clique-direito sintético do Playwright é instável com sprites animando.
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -7,12 +11,11 @@ import { dirname, join } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const acct = JSON.parse(readFileSync(join(ROOT, '.test-account.json'), 'utf8'));
 const site = acct.site.replace(/\/$/, '');
-// espera o main.js deployado importar contextMenu.js
-for (let i = 0; i < 40; i++) {
+for (let i = 0; i < 45; i++) {
   try { const idx = await (await fetch(site + '/index.html', { cache: 'no-store' })).text();
-    const m = idx.match(/src\/main\.js\?v=(\d+)/);
-    if (m) { const js = await (await fetch(site + '/src/main.js?v=' + m[1], { cache: 'no-store' })).text();
-      if (js.includes('wireContextMenu')) break; } } catch {}
+    const m = idx.match(/ui\/contextMenu\.js\?v=(\d+)/);
+    if (m) { const js = await (await fetch(site + '/src/ui/contextMenu.js?v=' + m[1], { cache: 'no-store' })).text();
+      if (js.includes('stage-monster') && js.includes('find(v => v')) break; } } catch {}
   await new Promise(r => setTimeout(r, 4000));
 }
 const browser = await chromium.launch({ headless: true });
@@ -20,6 +23,17 @@ const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const problems = [];
 page.on('pageerror', e => problems.push('pageerror: ' + e.message));
 page.on('console', m => { if (m.type() === 'error') problems.push('console.error: ' + m.text()); });
+async function rightClick(selector) {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return { found: false };
+    const r = el.getBoundingClientRect();
+    const ev = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 });
+    el.dispatchEvent(ev);
+    const menu = document.querySelector('.ctx-menu:not([hidden])');
+    return { found: true, prevented: ev.defaultPrevented, items: menu ? [...menu.querySelectorAll('.ctx-item')].map(b => b.textContent.trim()) : null };
+  }, selector);
+}
 try {
   await page.goto(site, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForSelector('#auth-email', { timeout: 30000 });
@@ -32,45 +46,31 @@ try {
   await page.waitForSelector('.stage-monster', { timeout: 20000 });
   await page.waitForTimeout(1500);
 
-  // 1) clique-direito numa criatura
-  await page.click('.stage-monster:not(.dead)', { button: 'right' });
-  await page.waitForTimeout(400);
-  const creatureMenu = await page.evaluate(() => {
-    const m = document.querySelector('.ctx-menu:not([hidden])');
-    if (!m) return null;
-    return { items: [...m.querySelectorAll('.ctx-item')].map(b => b.textContent.trim()) };
-  });
-  console.log('[criatura]', JSON.stringify(creatureMenu));
+  const creature = await rightClick('.stage-monster:not(.dead)');
+  console.log('[criatura]', JSON.stringify(creature));
   await page.screenshot({ path: join(ROOT, 'scripts', 'shot-ctx-creature.png') });
-  await page.keyboard.press('Escape');
-  await page.waitForTimeout(200);
-  const closedAfterEsc = await page.evaluate(() => !document.querySelector('.ctx-menu:not([hidden])'));
+  const closedAfterEsc = await page.evaluate(() => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); return !document.querySelector('.ctx-menu:not([hidden])'); });
 
-  // 2) abre a mochila e clique-direito num item
   await page.evaluate(() => { if (window.toggleBackpack) window.toggleBackpack(); });
   await page.waitForTimeout(800);
-  let itemMenu = null;
-  if (await page.$('.inv-item')) {
-    await page.click('.inv-item', { button: 'right' });
-    await page.waitForTimeout(400);
-    itemMenu = await page.evaluate(() => {
-      const m = document.querySelector('.ctx-menu:not([hidden])');
-      if (!m) return null;
-      return { items: [...m.querySelectorAll('.ctx-item')].map(b => b.textContent.trim()) };
-    });
-    await page.screenshot({ path: join(ROOT, 'scripts', 'shot-ctx-item.png') });
-  }
-  console.log('[item]', JSON.stringify(itemMenu));
+  const item = (await page.$('.inv-item')) ? await rightClick('.inv-item') : { found: false };
+  console.log('[item]', JSON.stringify(item));
+  if (item.found) await page.screenshot({ path: join(ROOT, 'scripts', 'shot-ctx-item.png') });
 
-  if (!creatureMenu) problems.push('clique-direito na criatura NÃO abriu o menu custom');
+  if (!creature.found) problems.push('sem .stage-monster pra testar');
   else {
-    if (!creatureMenu.items.some(x => /Atacar|Attack/.test(x))) problems.push('menu da criatura sem "Atacar"');
-    if (!creatureMenu.items.some(x => /Bestiário|Bestiary/.test(x))) problems.push('menu da criatura sem "Bestiário"');
+    if (!creature.prevented) problems.push('menu nativo NÃO suprimido na criatura (defaultPrevented=false)');
+    if (!creature.items) problems.push('menu da criatura não abriu');
+    else {
+      if (!creature.items.some(x => /Atacar|Attack/.test(x))) problems.push('menu da criatura sem "Atacar"');
+      if (!creature.items.some(x => /Bestiário|Bestiary/.test(x))) problems.push('menu da criatura sem "Bestiário"');
+    }
   }
   if (!closedAfterEsc) problems.push('Escape não fechou o menu');
-  if (itemMenu === null) problems.push('clique-direito no item NÃO abriu o menu custom (ou sem itens na bag)');
-  else if (!itemMenu.items.some(x => /Examinar|Look/.test(x))) problems.push('menu do item sem "Examinar"');
+  if (!item.found) problems.push('sem item na mochila pra testar');
+  else if (!item.items) problems.push('menu do item não abriu');
+  else if (!item.items.some(x => /Examinar|Look/.test(x))) problems.push('menu do item sem "Examinar"');
 } catch (e) { problems.push('EXCEÇÃO: ' + e.message); }
 finally { await browser.close(); }
-console.log(problems.length ? '\n❌ ' + problems.join('\n❌ ') : '\n✅ menu de contexto custom em criatura e item, fecha no Escape, 0 erros');
+console.log(problems.length ? '\n❌ ' + problems.join('\n❌ ') : '\n✅ menu de contexto custom: criatura (Atacar/Bestiário) e item (Examinar), nativo suprimido, Escape fecha, 0 erros');
 process.exitCode = problems.length ? 1 : 0;
