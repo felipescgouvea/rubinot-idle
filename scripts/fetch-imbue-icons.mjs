@@ -36,7 +36,10 @@ if (!alvos.length) { console.log('nada a baixar'); process.exit(0); }
 const faltaram = [];
 let baixadas = 0;
 for (const nome of alvos) {
-  const url = await urlDoWiki(NOME_NO_WIKI[nome] || (nome + '.gif'));
+  // Alguns ícones de imbuement no wiki são .png (não .gif) — tenta os dois.
+  const baseNome = NOME_NO_WIKI[nome] || nome.replace(/ /g, '_');
+  let url = await urlDoWiki(baseNome + '.gif');
+  if (!url) url = await urlDoWiki(baseNome + '.png');
   if (!url) { faltaram.push(nome); continue; }
   const buf = Buffer.from(await fetch(url).then(r => r.arrayBuffer()));
   const webp = await sharp(buf, { animated: true }).webp({ quality: 90 }).toBuffer();
