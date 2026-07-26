@@ -1,13 +1,13 @@
 // Recompensa Diária (Reward Shrine) — não ocupa uma aba: é um botão no header
 // que abre um modal com o ciclo de 7 dias e o botão de resgate. Um "selo"
 // vermelho no botão avisa quando há recompensa disponível hoje.
-import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak, LONG_STREAK_MILESTONE, daysToNextMilestone } from '../domain/dailyReward.js?v=349';
-import { on, EVENTS } from '../shared/eventBus.js?v=350';
-import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=355';
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=353';
-import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=350';
-import { setTitleFlag } from './notifyTitle.js?v=350';
-import { t } from '../i18n/i18n.js?v=368';
+import { DAILY_REWARDS, DAILY_CYCLE, rewardForStreak, LONG_STREAK_MILESTONE, daysToNextMilestone } from '../domain/dailyReward.js?v=350';
+import { on, EVENTS } from '../shared/eventBus.js?v=351';
+import { openModal, goldIconImg, rubiniIconImg } from './shared.js?v=356';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=354';
+import { getDailyState, claimDailyReward } from '../application/dailyRewardUseCases.js?v=351';
+import { setTitleFlag } from './notifyTitle.js?v=351';
+import { t } from '../i18n/i18n.js?v=369';
 
 // Sprite REAL do Tibia por tipo de recompensa (nada inventado): gold/Rubini têm
 // dispatcher próprio; refill = Health Potion; boost de XP = Experience Icon.

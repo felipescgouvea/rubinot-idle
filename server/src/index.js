@@ -47,7 +47,7 @@ import { STARTER_KITS, STARTER_SUPPLIES, STARTER_AMMO_QTY, GRADUATE_KITS, GRADUA
 import { GRADUATION_LEVEL } from '../../src/domain/cities.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
-import { IMBUEMENTS } from '../../src/domain/imbuements.js?v=125';
+import { IMBUEMENTS, imbuementCost } from '../../src/domain/imbuements.js?v=125';
 import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
 import { PREY_SLOTS, PREY_MAX_RARITY, preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType, isPreyActive } from '../../src/domain/prey.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
@@ -1076,23 +1076,27 @@ const server = http.createServer(async (req, res) => {
       // é validação frágil que vale fechar na fonte.
       const def = Object.prototype.hasOwnProperty.call(IMBUEMENTS, body.imbuementId) ? IMBUEMENTS[body.imbuementId] : null;
       if (!def) return send(res, 400, { error: 'imbuement inválido' });
+      // Tier escolhido (Basic/Intricate/Powerful) — valida contra os tiers do
+      // imbuement; inválido/ausente cai no defaultTier. O custo é do tier.
+      const tier = (body.tier && def.tiers[body.tier]) ? body.tier : def.defaultTier;
+      const cost = imbuementCost(def, tier);
       const eqSlot = def.slot;
       const eqRow = await selectOne('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot });
       if (!eqRow || !eqRow.item_id) return send(res, 400, { error: 'equipe uma arma primeiro' });
       const stats = await selectOne('player_stats', { user_id: user.id, slot });
       const gold = stats ? Number(stats.gold) : 0;
-      if (gold < def.cost.gold) return send(res, 400, { error: 'gold insuficiente' });
-      for (const [itemId, qty] of def.cost.materials) {
+      if (gold < cost.gold) return send(res, 400, { error: 'gold insuficiente' });
+      for (const [itemId, qty] of cost.materials) {
         const inv = await selectOne('player_inventory', { user_id: user.id, slot, item_id: itemId });
         if (!inv || Number(inv.qty) < qty) return send(res, 400, { error: `falta material: ${itemId} x${qty}` });
       }
-      await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - def.cost.gold, updated_at: new Date().toISOString() }, 'user_id,slot');
-      for (const [itemId, qty] of def.cost.materials) await incrementInventory(user.id, slot, itemId, -qty);
-      const imbuement = { id: body.imbuementId, expiresAt: new Date(Date.now() + def.durationH * 3600 * 1000).toISOString() };
+      await upsertRow('player_stats', { user_id: user.id, slot, gold: gold - cost.gold, updated_at: new Date().toISOString() }, 'user_id,slot');
+      for (const [itemId, qty] of cost.materials) await incrementInventory(user.id, slot, itemId, -qty);
+      const imbuement = { id: body.imbuementId, tier, expiresAt: new Date(Date.now() + def.durationH * 3600 * 1000).toISOString() };
       await upsertRow('player_equipment', { user_id: user.id, slot, eq_slot: eqSlot, item_id: eqRow.item_id, imbuement, updated_at: new Date().toISOString() }, 'user_id,slot,eq_slot');
       const activeRow = await selectOne('hunt_sessions', { user_id: user.id, slot, active: true });
       if (activeRow) { const s = getLiveSession(activeRow.id); if (s) { s.imbuements = s.imbuements || {}; s.imbuements[eqSlot] = imbuement; } }
-      return send(res, 200, { ok: true, gold: gold - def.cost.gold, eqSlot, imbuement });
+      return send(res, 200, { ok: true, gold: gold - cost.gold, eqSlot, imbuement });
     }
 
     // Charm Points/desbloqueio AUTORITATIVO (achado de auditoria: /hunt/start

@@ -4,10 +4,10 @@
 // isoladamente (dado uma entrada, sempre a mesma saída, exceto pelo uso
 // deliberado de aleatoriedade do jogo em si: dano varia, monstro é sorteado).
 
-import { VOCATIONS, VOC_TRAINING } from './character.js?v=379';
-import { resolveEquippedItem } from './items.js?v=363';
-import { pickWeightedMonster } from './adminConfig.js?v=351';
-import { IMBUEMENTS, isImbuementActive } from './imbuements.js?v=349';
+import { VOCATIONS, VOC_TRAINING } from './character.js?v=380';
+import { resolveEquippedItem } from './items.js?v=364';
+import { pickWeightedMonster } from './adminConfig.js?v=352';
+import { IMBUEMENTS, isImbuementActive, imbuementPct } from './imbuements.js?v=350';
 
 // Qual skill de combate corpo-a-corpo/distância é treinada e usada no dano,
 // segundo a ARMA REALMENTE EQUIPADA — não a vocação. Sem arma (ou com uma arma
@@ -220,7 +220,7 @@ export function computePlayerAbsorb(equipment, relics, imbuements, now = Date.no
       if (!equipment[eqSlot] || !isImbuementActive(imb, now)) return;
       const def = IMBUEMENTS[imb.id];
       if (def && def.effect && def.effect.type === 'protection') {
-        totals[def.effect.element] = (totals[def.effect.element] || 0) + def.effect.pct;
+        totals[def.effect.element] = (totals[def.effect.element] || 0) + imbuementPct(def, imb.tier);
       }
     });
   }

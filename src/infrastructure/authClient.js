@@ -397,8 +397,8 @@ export function trainStopOnServer(slot, vocation) {
 
 // Aplicar um imbuement validado no servidor (gold + materiais conferidos lá —
 // ver server/src/index.js: /imbue). Retorna { ok, gold, eqSlot, imbuement }.
-export function imbueOnServer(slot, imbuementId) {
-  return huntFetch('/imbue', { method: 'POST', body: { slot, imbuementId } });
+export function imbueOnServer(slot, imbuementId, tier) {
+  return huntFetch('/imbue', { method: 'POST', body: { slot, imbuementId, tier } });
 }
 
 // Uso manual de item da Bag (poção bebida ou runa mirada por clique do

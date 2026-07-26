@@ -3821,3 +3821,20 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--gold); }
 .daily-ls-track { height: 8px; margin: 7px 0 5px; border-radius: 5px; background: #00000055; overflow: hidden; }
 .daily-ls-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, #f0b93a, #ffd97a); transition: width .3s ease; }
 .daily-ls-hint { font-size: 11px; margin: 0; }
+
+/* ===== Tiers de imbuement (Basic/Intricate/Powerful) — ui/imbuementPanel.js ===== */
+.imbue-tiers { display: flex; gap: 6px; margin-top: 8px; }
+.imbue-tier-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 7px 4px; border-radius: 7px; cursor: pointer;
+  background: var(--imb-panel-2, #241a10); border: 1px solid var(--imb-line, #6b4e23);
+  color: var(--imb-ink, #e9dcc4); font-size: 11px; transition: all .12s;
+}
+.imbue-tier-btn:hover:not(:disabled) { border-color: var(--gold, #c9a24a); background: #3a2a12; }
+.imbue-tier-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.imbue-tier-name { font-weight: 700; letter-spacing: .3px; }
+.imbue-tier-basic .imbue-tier-name { color: #cdb98b; }
+.imbue-tier-intricate .imbue-tier-name { color: #7fc3e8; }
+.imbue-tier-powerful .imbue-tier-name { color: #ffd97a; }
+.imbue-tier-pct { font-weight: 700; font-size: 13px; color: #6fcf6f; }
+.imbue-tier-gold { font-size: 10px; opacity: .85; display: flex; align-items: center; gap: 3px; }
