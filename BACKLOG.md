@@ -66,7 +66,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 ## P3 — Quick wins
 
 - [x] **[a11y/perf] Sprites: `decoding="async"` + `alt`** — o helper compartilhado já tinha os dois; adicionado `decoding="async"` também nos <img> avulsos (logo/ghost/outfit/treino/morte), que já tinham `alt`. NUNCA `loading=lazy`. Smoke OK. — `97984cd4`
-- [ ] **[UX] #5 `KILL_COUNTERS` sem listener** (`huntUseCases.js`) — progresso de bestiário/charm só atualiza ao reabrir a aba. Cosmético; falta definir o refresh certo do painel
+- [x] **[UX] #5 `KILL_COUNTERS` sem listener** — adicionado listener que re-renderiza o bestiário ao vivo, gated na aba Bestiário aberta (sem render à toa quando fechada). Smoke OK. — `b7e50342`
 - [x] **[dívida] Código de outfit morto na Loja** removido — os branches owned/wearing (incl. o `#fdf4d7` hardcoded) nunca executavam (sem outfit no catálogo); caminhos vivos idênticos. Verificado (probe-shop-ammo + smoke). — `f9f38733`
 
 ## P4 — Safety net / a11y / mobile
