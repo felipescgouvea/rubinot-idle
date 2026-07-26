@@ -1,193 +1,133 @@
 # Rubinot Idle — Backlog
 
-Backlog priorizado, consolidado de 4 auditorias (sistemas canônicos Tibia/Crystal · UX/onboarding/retenção · economia/progressão · polish/perf/dívida técnica).
-Regras permanentes: **nada inventado** (toda regra/valor/efeito rastreável ao Tibia/Crystal em `reference/crystalserver/`) · **prêmios não-materiais** (Arena/BP só dão boost/charm/carta de prey/varinha de treino, nunca gold/RC/equipamento) · combate = fonte de verdade no servidor.
+**Regras permanentes:** nada inventado (regra/valor/efeito rastreável ao Tibia/Crystal em `reference/crystalserver/`) · prêmios não-materiais (Arena/BP só dão boost/charm/carta de prey/varinha de treino) · combate = fonte de verdade no servidor.
 
-Tamanho: **S** < ½ dia · **M** 1–2 dias · **L** multi-dia. `[server]` = precisa mudar o servidor. `[CANON]` = mudança que é *mais* fiel ao Tibia, não menos.
+**Legenda:** `S` <½ dia · `M` 1–2 dias · `L` multi-dia · `[server]` precisa mudar o servidor · `[CANON]` mais fiel ao Tibia.
+
+> Registro do que já foi entregue fica no fim (`✅ Concluído`). Aqui em cima é só o que está **aberto**.
 
 ---
 
-## 📌 Punch-list do Felipe — revisão ao vivo (07-25)
-> Regra permanente: **todo pedido do Felipe entra aqui** pra não se perder.
+## 📌 Punch-list do Felipe (revisão ao vivo)
 
-**Estética / cosmético**
-- [x] Treino do Knight (melee): dummy no CENTRO, boneco colado, investida que conecta + animação de ataque — `efb3f2ed`
-- [x] Sprites de monstro **sumindo** na batalha (só a barra de vida aparecia) — regressão do `loading=lazy`, revertida — `0a7b60eb`
-- [x] Fontes escuras demais no tema noturno (nome da vocação / recursos do rail em navy-escuro) — `--navy-*` invertido no dark — `0a7b60eb`
-- [x] Boosted: monstros pequenos demais pra ver (24→40px) — `0a7b60eb`
-- [x] Dropdown do Market caindo no branco do SO / selects sem tema — `color-scheme` + `<select>` temado — `efb3f2ed`
-- [x] Texto da aba SELECIONADA do log invisível no dark (`--cream` não invertia) — `896ff386`
-- [x] Ícones da sidebar: Caçada=Map(envelope)→Target_Board; Spells duplicava RTC→Spellbook próprio; RTC→Wand — `896ff386`
-- [x] Ícone estranho no Boosted (rótulo CREATURE 🐗) — trocado por 🐾 (combina com o 💀 do Boosted Boss) — `c8db6cb4`
-- [x] Cards de **igual altura** independente do texto (Battle Pass + zonas de hunt) — `34e263ce`
-- [x] Texto da **aba selecionada** no log invisível no dark — `896ff386`
-- [ ] Ícone estranho no Boosted (rótulo CREATURE 🐗) + revisar contraste dark geral (voc name, muted)
-- [x] **Cor do painel lateral (sidebar)**: navy mais profundo/premium (escuro + brilho dourado no topo) — `511df44a`
-- [x] **Ícones dos custos de Imbuement**: gema-emoji → sprite real do Tibia (1ª fonte astral); fontes astrais já eram sprites reais (verificado no DOM) — `7c2a2a28`
-- [ ] **Cores ruins nos botões da Loja** (Premium/Rubini Store/Equipamentos/Artigos Mágicos): cada card com cor destoante/berrante, sem harmonia — retrabalhar a paleta — (screenshot anexada, salvar manualmente)
-- [ ] **Loja Premium**: remover o texto "(Dinheiro Real)" do botão — (screenshot anexada, salvar manualmente)
-- [ ] **Sprites cortadas ainda** em alguns monstros (ex.: Valkyrie e Smuggler Baron Silvertoe nos cards de Boss Zone) — cabeça/corpo saindo do frame — (screenshot anexada, salvar manualmente)
-- [ ] **Janela de detalhe do item está crua** — melhorar o visual geral e os botões (Equipar/Vender/Vender Todos/Fechar): tema, hierarquia, sprites do Tibia — (screenshot no report anterior, salvar manualmente)
-- [ ] **(auditoria design 07-25) Abas "leves" com viewport vazio**: Worlds/Highscores/Market/Shop deixam ~40% inferior da tela como gradiente azul morto — parece inacabado; preencher/centralizar melhor
-- [ ] **(auditoria design 07-25) Letterbox do palco de batalha**: tarjas pretas grossas em cima/embaixo, área jogável pequena e sprites minúsculos — aproveitar melhor o frame
-- [x] **(auditoria design 07-25) Mais "juice" no combate**: dano flutuante sobre o jogador (`c8db6cb4`) + flash de LEVEL UP no palco (`b01825fd`) + pop de drop raro (`e9788496`) — todos verificados no browser.
-- [x] **(auditoria design 07-25) Estado "parado" = tela morta**: palco parado agora escurece de leve + CTA dourado pulsante "▶ Retomar caçada" no centro — `cd6d8686`, verificado no browser.
-- [ ] **(auditoria design 07-25) Diferenciar HP/MP/XP no rail**: barras verde/azul/dourado parecidas e minúsculas — num relance não dá pra distinguir vida de experiência
-- [x] **(auditoria design 07-25) Trocar emojis de SO por sprites do tema** = "TODOS os ícones = Tibia real, nada inventado". ✅ FEITO nos renderizados prominentes, verificado no browser: Worlds (gemas), Achievements (16 itens reais), Boosted (Wolf Paw/Demon Skull), bonus dos Worlds (Reward Box), Daily (Health Potion/Experience Icon), Battle Pass (Medal/Crown + tier rewards), botão Retomar (play SVG do jogo). Commits `e8c8488c`/`0e1f9894`/`6bb1e5ed`. Restam só glifos MINÚSCULOS inline (⚡ do "2× XP", ⬆ do level-up, 🎁 do título do daily) e os marcadores universais de UI ✓/🔒 (mantidos de propósito — não são "ícone inventado").
-- [x] **(auditoria design 07-25) Padronizar formatação de número**: barra de XP do palco agora usa o mesmo formato abreviado do rail (105.2K/495.1K · 21%), era número cru — `d24b617a`
-- [x] **Trocar toda a tipografia** do jogo — decisão final do Felipe: usar a MESMA tipografia do site oficial `rubinot.com.br/news`, que é a **stack de fonte NATIVA do sistema** (system-ui/Segoe UI/Roboto...), sem webfont. (Fontes decorativas testadas antes — Grenze Gotisch, Metamorphous — foram rejeitadas: "ficou muito ruim".) Todo o jogo usa só `--serif`/`--body`; ícones do Tibia intactos. Verificado — `fba368ae`.
+**Estética**
+- [ ] Contraste geral no tema dark (nome da vocação, `muted`, rótulo CREATURE do Boosted)
+- [ ] Cores dos botões da Loja (Premium/Rubini/Equipamentos/Artigos) — paleta destoante, retrabalhar
+- [ ] Loja Premium: remover o texto "(Dinheiro Real)" do botão
+- [ ] Sprites cortadas em alguns monstros (ex.: Valkyrie, Smuggler Baron Silvertoe nos cards de Boss Zone)
+- [ ] Janela de detalhe do item está crua — melhorar visual e botões (Equipar/Vender/Fechar)
+- [ ] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto
+- [ ] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena
+- [ ] Diferenciar HP/MP/XP no rail — barras parecidas e minúsculas
 
 **Funcional / UX**
-- [x] **Página dedicada de Imbuements** (aba própria, máquina de imbuing do Tibia): seletor de item equipado (arma/elmo/armadura) + imbuements por slot. 5 imbuements novos de proteção (elmo/armadura via `computePlayerAbsorb`), server aplica por slot. VERIFICADO no browser. — `3e19d100`/`d858912c`
-- [x] Descrições dos imbuements PT→EN (`imbue.desc.*` i18n) — `3e19d100`
-- [~] **auto-sell "não funciona"** — 🔎 **NÃO é bug de código** (auditoria 07-25): client (`setAutoSell`/`setAutoSellMax`) salva + sincroniza (`updateHuntRtc`) e o snapshot de hunt-start manda `autoSell`; server vende no drop (`huntEngine.js:493-516`). O que falha é o **default `maxValue=50` baixo demais**: quase todo junk é `type:misc` com `sell` **55–243** (cyclops_toe=55, wolf_paw=70, minotaur_leather=80, rotten_meat=243) → com teto 50 só bat_wing(50)/≤50 vende, o resto acumula e "parece" desligado. **Decisão do Felipe** (tuning de economia): subir o default (ex.: 250) e/ou trocar o teto raw por presets ("vender lixo comum"), OU vender por valor independe de `type`. Não mexi sozinho por ser balanço de economia.
-- [x] Botão **Trocar Hunt** habilitado só quando NÃO está caçando — `34e263ce`
-- [x] **Janela de morte estilo Tibia** (OK bloqueante antes de continuar) — `f324754d`
-- [x] **Paladino — flecha fantasma (BUG)** ✅ FEITO + VERIFICADO em prod (`a4b03f6b`): toda magia/runa com projétil próprio voava o seu missile no cast E o applyServerPack disparava a flecha básica ADICIONAL pela mesma queda de HP (2ª flecha). Fix de menor risco (mantém a sincronia HP↔projétil): `pendingSpellFx.hasProjectile` marca quando a magia já voou o projétil; a flecha básica dos 2 caminhos (golpe normal + fatal) vira SILENCIOSA (`playProjectile silent:true`) — invisível mas ainda agenda o pouso que dispara a queda de HP. Basic attack e magias de área ficam inalterados. **Verificado**: paladino com Ethereal Spear em 30s → 7 lanças + 1 flecha (golpe básico real, sem mana), 0 duplos, 0 erros.
-- [x] **Imbuements**: janela recriada fiel ao shrine do Tibia (item no slot, fontes astrais em sprite, tema) — `4186835a`
-- [x] **Market recriado do zero** fiel ao Tibia: navegador de itens (busca + sprite) + detalhe com ofertas venda/compra + criar oferta, sem `<select>` nativo — `cedb8c18`
-- [ ] **Boss Zone com bosses REAIS, não monstros "promovidos" a boss** (CANON): cada zona de boss tem que usar o boss canônico do Tibia daquela criatura — ex.: **Rotworm Queen** é o boss dos rotworms, não um rotworm com stats inflados. **Rever TODOS os bosses** (nome/sprite/stats/loot do boss real, fonte Crystal/TibiaWiki)
-- [ ] **(auditoria design 07-25) Toasts de eventos importantes**: subiu de nível / dropou item raro / task concluída / charm desbloqueado — hoje tudo vira uma linha no log que passa batido; precisa de destaque
-- [x] **(auditoria design 07-25) Rotular/clarificar os 3 botões de ação do rail**: os 2 botões só-ícone (Imbuements/Achievements) ganharam label visível (Imbue/Titles) — `d24b617a`
-- [x] **Linked Task: tela de COLETAR recompensa** (não creditar automático): ao bater o alvo a task fica "pronta" (botão verde **Coletar Recompensa** no painel, não credita nada); o jogador clica pra coletar — como no Tibia. A coleta é **server-authoritative** (`/task/complete` agora CONCEDE xp/gold/item de fato via `grantTaskRewardsServer`, com recálculo de nível e ressincronia da sessão viva de caçada). **Resolve #1/#6** de vez: antes o cliente creditava local e o reconcile revertia (xp de task, dezenas de milhões, evaporava). taskCoin fica no cliente (não é revertido). Guard de clique único fecha o double-grant. VERIFICADO em prod (probe + Supabase: gold +10K/xp +9K persistem no player_stats, 0 erros) — `0f6e5dcf`
-- [x] **Barra de vida do monstro com números** — JÁ EXISTIA: `.monster-hp-label` mostra `hp / maxHp` (huntPanel.js:230)
-- [x] **Dano no personagem = número flutuante subindo**: dano recebido salta em vermelho sobre o boneco (COMBAT_DAMAGE onPlayer), verificado no browser — `c8db6cb4`
-- [ ] **HP/Mana do personagem no estilo do cliente do Tibia** (barras/valores como no client oficial) e **remover HP+Mana da janela de combate** (não duplicar dentro do palco)
-- [ ] **Fechar detalhe do item deve VOLTAR pra mochila** (não fechar tudo): ao clicar "Fechar" no modal do item (aberto de dentro da Bag), reabrir a mochila em vez de obrigar a abri-la de novo — (screenshot anexada, salvar manualmente)
-- [ ] **Menu de clique-direito customizado** (context menu próprio do jogo, tema Tibia) — substituir o menu nativo do navegador por um customizado com as ações do jogo
+- [ ] **Boss Zone com bosses REAIS** `[CANON]` — cada zona usa o boss canônico da criatura (ex.: Rotworm Queen, não rotworm inflado); rever nome/sprite/stats/loot de todos
+- [ ] HP/Mana do personagem no estilo do cliente do Tibia + remover HP/Mana duplicados dentro do palco
+- [ ] Fechar o detalhe do item deve VOLTAR pra mochila (não fechar tudo)
+- [ ] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador
+- [ ] **auto-sell** — não é bug: default `maxValue=50` baixo demais (junk vale 55–243). Decisão de economia do Felipe: subir default / presets ("vender lixo comum") / vender por valor ignorando `type`
 
 ---
 
-## 🐛 Loop "procure e ajuste bugs" (07-25) — corrigidos e deployados
+## 🎯 Estratégico — por que o jogo "acaba"
 
-- [x] **Monstros com `atk` placeholder gigante = INSTAKILL** (BUG severo). O `atk` do jogo é o dano MÁX por golpe (`normalRandom(0,atk)`). Um placeholder inflou o atk de centenas de monstros — de tier alto (Soul War/Podzilla/Darklight/Rotten Blood, **85106–273171**) até comuns de nível baixo/médio (black_cobra **2706**, nagas **2463**, librarian **2971**). Melee de dezenas de milhares = morte instantânea; zonas normais, task-rooms #85–94 e bosses ficavam injogáveis. **Fix (nada inventado):** `scripts/audit-monster-atk.mjs` casa cada monstro ao seu `.lua` no `reference/crystalserver` e deriva o dano real: melee com `maxDamage` → |maxDamage|; melee com `skill`/`attack` → fórmula real do Crystal `getMaxMeleeDamage = ceil(skill·attack·0.05 + attack·0.5)` (`weapons.cpp:107`); caster/distance sem melee → maior dano dos ataques `combat`. Ignora ataques comentados no `.lua`. **363 monstros corrigidos da fonte** (branchy 85106→950, oozing_carcass 181934→600, morshabaal 273171→2625, black_cobra 2706→150, nagas→300–430). Guard novo pra não regredir (`--thresh=N` configurável).
-  - ⏳ **Restam ~119** com `atk>1500`: **custom/evento RubinOT que NÃO existem no Crystal** (`*_creature`, `*_antibotter`, `timedisplaced_anomaly_*`, `radiant_*`, `harbinger_of_darkness`, `worker_imp`, grupos placeholder tipo crultor/despor/vengar=13750…) + 8 casters sem melee nem combat tabelado. Precisam de **TibiaWiki** (fora do Crystal) — é a auditoria-valores-monstros manual, não sourceável automático. `node scripts/audit-monster-atk.mjs --thresh=1500` lista.
-  - 📌 Gap de conteúdo relacionado: a maioria desses monstros **não tem `spells`** no jogo (só o knob `atk`) — perderam as magias elementais do Tibia. Follow-up: importar os `combat`/spells dos `.lua`.
-  - 📌 **Mesmo padrão placeholder existe em HP** (auditoria 07-25): ~136 monstros com `hp` maior que o `maxHealth` real do Crystal (ex.: stalking_stalk/sulphur_spouter/nighthunter/undertaker **1.870.062 vs ~17–20k real ≈ 100×**; headpecker 1.647.637 vs 16.300). **NÃO é instakill** (só deixa o monstro tanky demais e distorce XP/h) → é **balanceamento**, não bug urgente, e mexe em economia/progressão (ligado à sessão paralela). Método pronto pra corrigir (comparar `hp` do jogo vs `maxHealth` do `.lua`), mas precisa de decisão de balanceamento (baixar hp sem rebalancear xp dispara XP/h). Deixado de fora deste loop de propósito.
-- [x] **Arena "melhor de 2" quebrada** (BUG) — vencer o round 2 depois de perder o 1 dava 1-1 e `won = wins>losses` caía como **derrota** (round 2 era decorativo); e 2 rounds sem KO (0-0) também contava derrota. **Fix:** virou **melhor de 3** (1º a 2 rounds), round sem KO em 30 ticks decide por % de vida restante → nenhum empate, resultado sempre decisivo (2-0/2-1 vitória, 0-2/1-2 derrota). Verificado com sim de 100k (winrate 49.8% em odds 50/50, zero estados inválidos). `arenaUseCases.js`.
-- [x] **Task: recompensa concedida 2× num tick multi-kill** (BUG) — `MONSTER_KILLED` dispara em loop síncrono; `checkTaskProgress` (async) suspendia no `await` com `activeTask` ainda setado → 2ª entrada reconclui. XP/gold/inv voltam no reconcile, mas **taskCoins NÃO** (fora de `ECONOMY_FIELDS`) → dobravam de vez. **Fix:** guard de reentrância `completingTask`. `taskUseCases.js`.
+1. **O número central congela no 100** — já resolvido (cap subido pra 2000, ver Concluído).
+2. **Não existe sink infinito** — gold/charm/XP transbordam sem escoadouro; loot duplicado empilha sem propósito.
 
-**Achados do bug-hunt entregues a outra frente (não encostar aqui — servidor/economia):**
-- [x] ~~**#R1 Rubini gasto é REEMBOLSADO em toda daily/BP claim**~~ ✅ **FEITO + VERIFICADO em prod** (`3453525a`): gasto de Rubini (boost/outfit) virou server-authoritative via `/rubini/spend` (mutex ECON) — debita `player_stats.rubini` e devolve o saldo real; boost/outfit aplicam `res.rubini`; BP tier de rubini aplica `res.rubini` do `/bp/claim`. Probe: 50→48→47 (gasto persiste no servidor, daily/BP não reembolsa). Feito a versão "gastos server-side" (fecha o sangramento); migração completa da FONTE (player_stats no boot/reconcile + tirar rubini do save, pra blindar multi-dispositivo) fica como follow-up. Descrição original abaixo. — Rubini é debitado **só no cliente** (`shopUseCases.js:67` boosts, `outfitUseCases.js:37` outfits) e nunca comunicado ao servidor; `player_stats.rubini` só sobe (daily/BP) ou desce por BP-premium, nunca por boost/outfit. Aí `dailyRewardUseCases.js:39` (`if (result.rubini != null) G.rubini = result.rubini`) e `battlePassUseCases.js:132` **sobrescrevem `G.rubini`** com o valor stale do servidor. **Repro:** 100 RC → compra outfit de 100 (`G.rubini=0`, nuvem=0, mas `player_stats.rubini=100`) → claim de **qualquer** daily (até dia de gold; server sempre devolve `rubini`, `index.js:1850/1881`) → `G.rubini=100`. Outfit/boost sai **de graça**. Mesma raiz zera boost comprado (`dailyRewardUseCases.js:42` `G.boosts=result.boosts`). **Defeito de fundo:** Rubini/boosts são client-authoritative pra GASTO mas server-authoritative pra GANHO, sem ponte.
-  - 🔧 **Design da solução (validar com Felipe — economia sensível, NÃO deployar sozinho no loop autônomo):** tornar `player_stats.rubini` a ÚNICA fonte de verdade (server-authoritative pleno), espelhando o que já foi feito com gold/inventário (`invItem`). Passos: (1) **servidor** — endpoint `/rubini/spend {slot, amount}` dentro do mesmo **mutex ECON** dos outros endpoints (senão cai no #R2), valida `rubini >= amount`, debita, devolve o novo saldo; (2) **cliente** — `shopUseCases` (boost) e `outfitUseCases` (outfit) chamam `/rubini/spend` e aplicam `res.rubini` em vez de `G.rubini -= total`; (3) **migração de fonte** — no boot/reconcile, `G.rubini` passa a vir de `player_stats.rubini` (hoje vem do save); precisa de um **seed único** do valor do save→`player_stats` pra jogadores existentes não perderem/duplicarem saldo. ⚠️ o passo 3 é o delicado (migração de dado de moeda) — exige o Felipe presente. **Meia-correção (só cliente, delta) NÃO serve:** fecha o daily mas deixa o BP-premium inconsistente (valida saldo contra `player_stats` stale). → o mesmo endpoint resolve `#3 boosts` se estender pra debitar/creditar boost server-side.
-- [x] ~~🟠 **#R2 Perda silenciosa de gold: endpoints de economia escrevem gold absoluto sem serializar com o flush de hunt (delta)**~~ ✅ **FEITO + VERIFICADO em prod** (`5642946d`): o mutex por usuário virou módulo compartilhado (`server/src/econLock.js`) e o `flushVitals` da caçada passou a PEGAR o lock antes de gravar — agora serializa com as escritas absolutas de gold das rotas de economia, então o `+d_gold` da caça não some mais na janela do flush. Sem deadlock (o `/task/complete` e o `useItem` que já seguram o lock chamam `flushVitals(session, true)`). Diagnóstico em prod: gold sobe caçando (225.4K→225.5K), 0 erros. Descrição original abaixo. — `huntEngine.js` faz flush do gold de caça como **delta** (`gold = gold + d_gold`) num timer que ANTES rodava FORA do mutex ECON; todo endpoint (`/shop/buy`, `/imbue`, `/market/deposit`, `/daily-reward/claim`, `/buy-blessing`, `/promote`, `/prey/reroll`, `/bp/claim`, `/market/withdraw`) faz `gold = Number(stats.gold)` e upserta `gold - cost` **absoluto**. Se um `flushVitals` caía entre o `select` e o `upsert`, o `+d_gold` sumia. **É a "corrida da carteira" da auditoria noturna** — server, sessão de economia.
-- [x] ~~**#R4 Charm Points de Arena/Battle Pass são concedidos no cliente e DESCARTADOS**~~ ✅ **FEITO + VERIFICADO em prod** (`6bd007c0`): server-authoritative via `player_charms.state.bonus` (sem migration) — `/bp/claim` concede atômico, `/charm/grant-bonus` (Arena) no mutex ECON, cálculo soma o bonus, `/charm/unlock` preserva o state. Probe: bonus creditou (+1) e PERSISTIU após o sync (antes sumia). Descrição original abaixo. — charm points viraram server-derived (`server/src/index.js:1089-1098`: `charmPointsAvailable = Σ charmPointsForKills(kills) − Σ custo`); o cliente `G.charmPoints` é espelho puro (`bestiaryUseCases.js:31` `G.charmPoints = res.points` a cada `MONSTER_KILLED`, throttle 5s). Mas **Arena** (`arenaUseCases.js:143`, 25+ por vitória) e **Battle Pass** (`rewardGrants.js:36`, tiers 5/12 free + 3/12 premium) ainda creditam charm **localmente**; o servidor nunca soube. **Repro:** resgata BP tier com charm (ou ganha arena) → notifica "🎁 25 charm points", `G.charmPoints` sobe → **próxima morte de monstro (≤5s)** → `syncCharmState` sobrescreve → some. E nem dá pra gastar antes: `unlockCharm` valida contra o derivado no servidor → "insuficientes". O prêmio é marcado resgatado (consumido, não re-resgatável) mas o benefício evapora. **Mesmo padrão do #R1** (2 fontes, ganho local sem ponte pro servidor). **Fix (server-authoritative, validar c/ Felipe):** coluna `charm_bonus` em `player_stats` (default 0, aditiva — SEM migração de fonte, mais simples que o #R1), endpoint `/charm/grant-bonus {slot,amount}` com mutex ECON, somar `+ charm_bonus` no cálculo de `charmPointsAvailable`; cliente Arena/BP chamam o endpoint em vez de `G.charmPoints += local`. Prêmio de charm é não-material (regra OK, ver [[premios-nao-materiais]]).
-- [x] ~~🟡 **#R5 `/charm/unlock` read-modify-write sem lock**~~ ✅ **JÁ RESOLVIDO**: `/charm/unlock` está no `ECON_PATHS` e o ECON lock (index.js:300-306) envolve todo request de ECON_PATHS — unlocks concorrentes do mesmo user serializam. Fechado pelo lock do #R2.
-- [x] ~~**#R3 (latent, cliente) `shopUseCases.js` debita Rubini pra qualquer compra não-gold-item**~~ — ✅ **FEITO**: o débito agora escolhe a moeda certa (`if currency==='rubini' G.rubini -= total; else G.gold -= total`). Hoje idêntico (só boost em rubini chega ali), mas fecha o footgun de um boost/outfit precificado em gold cobrar Rubini. (quando o #R1 reescrever pra server-authoritative, isso é substituído)
-- [x] ~~**#1 Recompensa de task (xp/gold/item) só concedida no cliente**~~ ✅ **FEITO + VERIFICADO em prod** (`0f6e5dcf`): server-authoritative + coleta MANUAL (ver o item marcado na punch-list do Felipe). O `/task/complete` concede xp/gold/item de fato (`grantTaskRewardsServer`); probe + Supabase confirmam que o reward persiste no `player_stats` (não evapora no reconcile).
+A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills em metas infinitas (Wheel, Forge, Bosstiary) — é o P0 abaixo.
 
-- [x] ~~🟠 **#3 Boosts client-authoritative (exploit + UX)**~~ ✅ **FEITO + VERIFICADO em prod** (`c4bda7f1`): boosts viraram server-authoritative como prey/charms. Núcleo `grantBoostServer` (huntEngine) grava `player_stats.boosts` (acumula) + atualiza a sessão viva (boost vale NA HORA, sem rezonar). `/hunt/start` LÊ `player_stats.boosts` e ignora `body.boosts` (fecha o +50% permanente forjado; o cliente nem manda mais boosts no snapshot). 3 fontes migradas: **loja** `/shop/buy-boost` (valida SHOP_ITEMS, debita Rubini, concede atômico no mutex ECON — não forjável), **BP** `/bp/claim` (concede boost/trainWand server-side, como o charm no #R4), **arena** `/boost/grant` (client-trusted mas validado: 4 tipos, cap 120min). Cliente espelha `res.boosts`; `rewardGrants` não credita boost local. **Verificado:** probe+Supabase — loja debita Rubini 100→50 e grava `boosts.xp` em player_stats (ativo); `/boost/grant` concede loot E rejeita forja de 999999min e tipo inválido (400). daily já era server-authoritative. Fraqueza residual documentada: boost de arena/BP spammável (mesma classe do `/charm/grant-bonus`, já existente).
-- [x] ~~**#3 Boosts comprados no meio da caça não valem**~~ ✅ **RESOLVIDO** no #3 (`c4bda7f1`): `grantBoostServer` atualiza a sessão viva, o boost vale na hora.
-- [ ] **#5 `KILL_COUNTERS` emitido sem listener** (`huntUseCases.js:824`) — progresso de bestiário/charm não atualiza ao vivo, só ao reabrir a aba. Cosmético. (não toquei: precisa definir o refresh certo do painel)
-- [x] ~~**#6 Level-up "fantasma" durante reward de task**~~ ✅ **RESOLVIDO** pelo task collect (`0f6e5dcf`): sem `gainXp` local; aplica o level/xp autoritativo do `/task/complete`.
+## P0 — Define a próxima fase (encampar 1–2)
 
----
+- [ ] **P0.2 Wheel of Destiny** · L · `[server]` — grade de talentos pós-max; acumula e gasta pontos em stat/spell por vocação (+ wheel gems). Melhor encaixe idle: sink de pontos infinito. Fonte: `src/creatures/players/wheel/`, `src/io/io_wheel.cpp`
+- [ ] **P0.3 Forge + Item Tier** · L · `[server]` — funde equipamento duplicado → tier 1–10 com procs; consome dust + cores + muito gold. Dá propósito ao loot do AFK *e* é o sink de gold que escala com riqueza. Fonte: `data/scripts/systems/item_tiers.lua`
 
-## 🎯 A grande virada estratégica (o "porquê" do P0)
+## P1 — Alto valor
 
-Duas descobertas convergentes explicam por que o jogo "acaba":
+- [ ] **P1.1 Cyclopedia (Hunt/Loot/XP Analyser)** · M — painel de throughput (XP/h, gold/h, loot vs waste, sessão vs offline). Melhor valor:esforço; dado quase todo já existe
+- [ ] **P1.2 Bosstiary** · M · `[server]` — kills de boss → boss points → slots/prowess; reaproveita as kills do Boss Rush. Fonte: `src/io/io_bosstiary.cpp`
+- [ ] **P1.3 Onboarding do 1º minuto** · M — coach-mark de 3 passos (caçar → ver loot → gastar) + one-liner nas abas avançadas. Maior alavanca de retenção de jogador novo
+- [ ] **P1.4 Nível recomendado por zona + agrupar abas** · M — hint de nível no zone picker (derivável de HP/atk/xp); agrupar abas por seção e travar até o unlock. Reduz o cliff do level 8
+- [ ] **P1.5 Celebrar marcos** · M
+  - [ ] Badges de "resgatável" nas abas (BP/task/charm/promoção — hoje só Daily tem "!"). Reusa os flags de `notifyTitle.js`
+  - [ ] Boosted-of-the-day sem CTA — clicar no card leva ao zone picker filtrado pela criatura
 
-1. **O número central congela no level 100.** `huntEngine.js:445/830` travam em `< 100`; `XP_TABLE` tem 100 entradas (≈15,69M XP total). Depois disso a XP cai mas nunca converte — o principal medidor de progresso morre, e o leaderboard de level satura (todo mundo empata em 100).
-2. **Não existe sink infinito.** Gold, charm points e a própria XP transbordam sem escoadouro de longo prazo. Loot duplicado empilha sem propósito.
+## P2 — Profundidade / conteúdo
 
-A resposta canônica do Tibia/Crystal para os dois é a mesma: **subir o teto + adicionar os sistemas de endgame que transformam XP/loot/kills offline em metas infinitas** (Wheel, Forge, Bosstiary, Cyclopedia). É por isso que eles são P0.
+- [ ] **P2.1 Tiers de charm (Minor/Major) + expansão** · M · `[server]` — hoje 6 flat / 3 slots com set ótimo fixo; Crystal tem categorias + expansion. Absorve a inflação de charm points. Fonte: `bestiary_charms.lua`
+- [ ] **P2.2 Tiers de imbuement + armadura/skill** · M · `[server]` — hoje 3, weapon-only, 1 tier; Tibia tem ~14 em 3 tiers. Slot de armadura/helm + resistências = 1ª decisão defensivo-vs-ofensivo
+- [ ] **P2.3 Prey Wildcards + Concoctions** · S–M · `[server]` — wildcards pra rerolar/travar prey; concoctions = buffs temporizados com cooldown (gancho de re-log). Fonte: `ioprey.cpp`, `concoctions.lua`
+- [ ] **P2.4 Sink de gold que escala** · M · `[server]` `[CANON]` — Exercise Weapons na loja e/ou house rent. (Se o Forge entrar, ele já é o sink)
+- [ ] **P2.5 Aprofundar o sink de Rubini** · M — boosts mais longos, packs de wildcard, tentativas de arena, cosméticos. Premium compra velocidade, não poder
+- [ ] **P2.6 Rebalancear XP de task vs curva de level** · M — tasks pagam até 30M; total até o cap antigo era 15,69M. Amarrar à decisão do cap (cauda longa vs reescalar)
+- [ ] **P2.7 Streak de daily + cadência semanal** · S — ciclo de 7 dias raso; adicionar marco de streak longo (30 dias). Recompensa não-material
+- [ ] **P2.8 Funil de recompensa pras ladders infinitas** · M — Boss Rush/skill/bestiário são infinitos mas mal recompensados; dar payoff aos marcos (charm/imbue/wildcard). Ligado a P0.2 e P2.1
 
----
+## P3 — Quick wins
 
-## P0 — Estratégico (define a próxima fase; escolher 1–2 pra encampar)
+- [ ] **[a11y/perf] Sprites: `decoding="async"` + `alt`** no helper compartilhado — ⚠️ NUNCA `loading="lazy"` (já sumiu sprite na batalha, ver Concluído) · S
+- [ ] **[UX] #5 `KILL_COUNTERS` sem listener** (`huntUseCases.js`) — progresso de bestiário/charm só atualiza ao reabrir a aba. Cosmético; falta definir o refresh certo do painel
 
-### P0.1 — Subir/remover o cap de level 100 · S (código) · `[server]` `[CANON]` · ✅ FEITO (cap 2000, deploy 07-25)
-`tibiaTotalExp(level)` já produz valores corretos pra qualquer nível. Estender `XP_TABLE` (ex.: 500) e tirar o clamp `< 100` do loop de level-up e do loop de de-level na morte (`huntEngine.js:445,830`; `character.js:175`). **Maior alavanca do backlog por custo:** restaura curva canônica infinita, dessatura o leaderboard, e transforma o excesso de XP de task (P2.6) numa cauda longa saudável em vez de um desbalanceamento.
+## P4 — Safety net / a11y / mobile
 
-### P0.2 — Wheel of Destiny · L · `[server]`
-Grade de talentos pós-max: acumula pontos e gasta em fatias de stat/spell por vocação; Crystal adiciona **wheel gems** (lesser/greater/regular) pra modificadores extras. Fonte: `reference/crystalserver/src/creatures/players/wheel/`, `src/io/io_wheel.cpp`. **A resposta canônica pra "o que faço depois do level máximo"** — sink de pontos infinito que mantém a XP offline relevante muito depois da curva achatar. Melhor encaixe idle do catálogo inteiro.
+- [ ] **[test]** CI rodando o smoke set dos probes (`probe-smoke`/`probe-kill`/`audit:static`) pra gatear deploy · M
+- [ ] **[test]** Unit test das fórmulas de combate (monstro+gear conhecidos → dano conhecido) · M
+- [ ] **[a11y]** Semântica de `dialog` nos modais (role, focus trap, Escape, retorno de foco) · M
+- [ ] **[a11y]** `role="tab"/tablist"` + `aria-selected` nas abas · M
+- [ ] **[mobile]** Breakpoint único (900px) + fonte base 12px + alvos de toque não auditados · M–L
+- [ ] **[obs]** Log estruturado no servidor (wrapper level/ts/sessionId/event) · S–M
 
-### P0.3 — Forge (exaltation/fusion/transfer) + Item Tier · L · `[server]`
-Combina equipamento duplicado pra dar **tier 1–10** com procs (damage/onslaught/ruse); consome dust + exalted cores + **muito gold**. Fonte: `reference/crystalserver/data/scripts/systems/item_tiers.lua`. **Faz dois trabalhos:** dá propósito à enxurrada de loot duplicado do AFK *e* é o sink de gold que escala com riqueza (resolve P2.7).
+## 🧮 Pendências de dados (auditoria manual, não sourceável automático)
 
----
+- [ ] ~119 monstros custom/evento RubinOT com `atk>1500` (não existem no Crystal) — precisam de TibiaWiki. `node scripts/audit-monster-atk.mjs --thresh=1500`
+- [ ] ~136 monstros com `hp` placeholder (até ~100× o real) — balanceamento (baixar hp sem rebalancear XP dispara XP/h); ligado à economia/sessão paralela
+- [ ] Maioria dos monstros custom sem `spells` — perderam as magias elementais; importar os `combat` dos `.lua`
 
-## P1 — Features de alto valor
+## 🩹 Noutra frente (não encostar)
 
-### P1.1 — Cyclopedia: Hunt/Loot/XP Analyser · M · (quase todo client)
-Painel de throughput: XP/h, gold/h, loot vs waste, sessão atual vs offline. **Jogador idle é obcecado por número de rendimento** — é exatamente a dopamina do gênero, e a maior parte do dado já existe no servidor. Melhor valor:esforço do P1.
-
-### P1.2 — Bosstiary · M · `[server]`
-Contador de kills de boss paralelo ao bestiário → **boss points** → slots/prowess. Fonte: `reference/crystalserver/src/io/io_bosstiary.cpp`. Reaproveita as kills do Boss Rush que já existem; segunda grind infinita em cima de conteúdo pronto.
-
-### P1.3 — Onboarding do 1º minuto · M
-Depois de `createCharacter()` o jogador cai na Hunt com 15 abas opacas e ninguém diz "aperte Start Hunt". Adicionar: coach-mark de 3 passos (caçar → ver loot entrar → gastar em gear/skill) + one-liner nas abas avançadas. **Maior alavanca de retenção de jogador novo** (o jogo se ganha ou perde nos primeiros 5 min).
-
-### P1.4 — Nível recomendado por zona + agrupar/esconder abas · M
-Level 8 libera ~90 zonas de 20 cidades de uma vez (`cities.js:66`), sem `reqLevel` e sem dica de dificuldade — o caminho "certo" é invisível (monstros não escalam). Adicionar hint de **nível recomendado** (derivável de HP/atk/xp do monstro) no zone picker; agrupar abas por seção (Combate/Progressão/Economia/Social) e travar features até o nível de unlock. Reduz o "cliff" do level 8 e o overwhelm.
-
-### P1.5 — Celebrar marcos + badges de "tem coisa pra pegar" · M
-- **Level-up passa quase mudo** (só toast + log) — o beat de dopamina nº1 do RPG merece burst na tela + "HP/MP restaurados". Combate já é juicy; a meta-progressão não.
-- **Zero badge nas 15 abas** (só Daily tem "!"). Tier de BP resgatável, task completa, charm agora acessível, promoção disponível — tudo invisível até abrir a aba. Adicionar badge de "resgatável".
-- **Boosted-of-the-day sem CTA**: card mostra a criatura 2× XP mas não leva pra zona dela. Fazer clicar → zone picker filtrado.
-- [x] **Título da aba do browser** ("(N) Rubinot Idle") quando há algo pra resgatar — gancho de re-engajamento mais barato sem push. ✅ FEITO + VERIFICADO em prod (`e0727efa`): `notifyTitle.js` conta categorias resgatáveis (diária/task pronta/tier-missão de BP); cada subsistema reporta seu flag de onde já calcula o booleano (zero falso-positivo); avaliado no boot pelo estado salvo. Probe: base "Rubinot Idle" → (1) → (2) → limpo, 0 erros de boot.
+- [ ] Monk Harmony/Virtue (fase 2) — 5ª vocação, mecânica avançada (`fonte-monk-crystalserver`)
 
 ---
 
-## P2 — Profundidade / conteúdo (escolha de build + cadência)
+## ✅ Concluído
 
-### P2.1 — Tiers de charm (Minor/Major) + expansão · M · `[server]`
-Hoje 6 charms flat / 3 slots, e 3 deles são econômicos (scavenge/gut/divine), então o set ótimo de farm é fixo. Crystal tem categorias **CHARM_MINOR/MAJOR** + offensive/defensive + "charm expansion". Fonte: `reference/crystalserver/data/scripts/systems/bestiary_charms.lua`. Também **absorve a inflação de charm points** (P2.8).
+**Economia server-authoritative (exploits fechados)**
+- #R1 Rubini gasto era reembolsado em daily/BP → `/rubini/spend` no mutex ECON — `3453525a`
+- #R2 corrida da carteira (gold delta vs escrita absoluta) → `flushVitals` pega o lock — `5642946d`
+- #R3 débito na moeda errada (cliente) → escolhe gold/rubini certo
+- #R4 charm points de Arena/BP eram descartados → `player_charms.state.bonus` — `6bd007c0`
+- #R5 `/charm/unlock` sem lock → fechado pelo lock do #R2
+- #1 task reward só no cliente → server-authoritative + coleta manual — `0f6e5dcf`
+- #3 boosts client-authoritative → server (loja/BP/arena) — `c4bda7f1`
+- #6 level-up fantasma no reward de task → resolvido pelo task collect — `0f6e5dcf`
 
-### P2.2 — Tiers de imbuement + armadura/skill · M · `[server]`
-Só 3 imbuements, weapon-only, um tier — você sempre slota o único que ajuda, sem tradeoff. Tibia tem ~14 tipos em 3 tiers (basic/intricate/powerful): skill, resistência elemental, speed, capacity, leech. Adicionar slot de armadura/helm + 2–3 resistências já cria **a primeira decisão defensivo-vs-ofensivo** real.
+**Combate & conteúdo**
+- Cap de level 100 → 2000 (P0.1) — deploy 07-25
+- `atk` placeholder = instakill: 363 monstros corrigidos da fonte Crystal (`scripts/audit-monster-atk.mjs`)
+- Flecha fantasma do paladino (magia com projétil disparava flecha básica extra) — `a4b03f6b`
+- Arena "melhor de 2" quebrada → melhor de 3, sem empate
+- Task reward concedida 2× em multi-kill → guard de reentrância
+- Página dedicada de Imbuements + shrine fiel ao Tibia — `3e19d100`/`d858912c`/`4186835a`
+- Market recriado fiel ao Tibia (busca + ofertas, sem `<select>` nativo) — `cedb8c18`
+- Janela de morte estilo Tibia (OK bloqueante) — `f324754d`
 
-### P2.3 — Prey Wildcards + Concoctions · S–M · `[server]`
-- **Wildcards**: moeda de bestiário/task pra rerolar a *lista* de prey ou travar o bônus. Base de prey já é fiel (`ioprey.cpp`).
-- **Concoctions**: buffs temporizados com cooldown (extensão de stamina, XP boost, `BestiaryBetterment` 2×). Fonte: `concoctions.lua`. **Gancho de re-engajamento clássico** — recompensa logar pra reativar.
+**UI / estética / juice**
+- Tipografia = stack nativa do site oficial `rubinot.com.br/news` — `fba368ae`
+- Ícones = sprites reais do Tibia (Worlds/Achievements/Boosted/Daily/BP/Retomar), emojis trocados — `e8c8488c`/`6bb1e5ed`/`750b2b4b`
+- Ícones de custo de Imbuement = sprite real — `7c2a2a28`
+- Treino do Knight (melee): dummy central, investida que conecta — `efb3f2ed`
+- Sprites sumindo na batalha (regressão do `loading=lazy`) revertida — `0a7b60eb`
+- Dark: fontes navy invertidas + texto da aba selecionada do log — `0a7b60eb`/`896ff386`
+- Boosted 24→40px + ícone 🐾/💀 — `0a7b60eb`/`c8db6cb4`
+- Dropdown do Market temado (`color-scheme` + `<select>`) — `efb3f2ed`
+- Ícones da sidebar corrigidos (Caçada/Spells/RTC) — `896ff386`
+- Cards de igual altura (Battle Pass + zonas) + sidebar navy premium — `34e263ce`/`511df44a`
+- Juice no combate: dano flutuante no player + flash de LEVEL UP + pop de drop raro — `c8db6cb4`/`b01825fd`/`e9788496`
+- Palco parado escurece + CTA "▶ Retomar caçada" — `cd6d8686`
+- Formato de número abreviado na barra de XP + labels nos botões do rail — `d24b617a`
+- Título da aba "(N) Rubinot Idle" (re-engajamento) — `e0727efa`
+- Botão Trocar Hunt só fora da caça — `34e263ce`
+- Busca no bestiário — `1edf2a20`
 
-### P2.4 — Sink de gold que escala com riqueza · M · `[server]`
-Com autosell + charm Gut + boost, a renda supera todo sink recorrente → gold vira hoarding sem sentido. Duas opções **[CANON]** já latentes no código: (a) **vender Exercise Weapons na loja** (consumíveis, já existem como reward de task); (b) **house rent** (sink recorrente canônico). *Nota: se o Forge (P0.3) entrar, ele já é o grande sink de gold.*
-
-### P2.5 — Aprofundar o sink de Rubini · M
-Rubini só se gasta em boost de 30 min e unlock de BP (250). Pra moeda vendida por dinheiro real, o menu é raso. Adicionar sinks de conveniência (boosts mais longos, packs de wildcard, tentativas extra de arena, outfits/mounts cosméticos) — dentro da regra "premium compra velocidade, não poder".
-
-### P2.6 — Rebalancear XP de task vs curva de level · M
-Tasks repetíveis pagam até **30M XP** (rooms #91–94); total até o cap é 15,69M. Uma entrega vaulta o jogador quase até o teto → leveling é incidental. Amarrar à decisão do P0.1: com cap alto viram cauda longa; senão, reescalar. *(Os números de XP são dado do RubinOT, não canon de servidor — reescalar é legítimo.)*
-
-### P2.7 — Streak de daily + cadência semanal · S
-Daily reward tem só 7 entradas rasas que repetem pra sempre; sem milestone de streak longo. Alongar o ciclo / adicionar marco de 30 dias. Recompensas não-materiais mantêm a regra.
-
-### P2.8 — Funil de recompensa pras ladders infinitas · M
-Boss Rush tier, skill grind e bestiário são infinitos mas mal recompensados (só prestige/vanity, e bestiário satura em 6 charms). Dar payoff aos marcos (charm points / unlock de imbuement / wildcards — tudo dentro da regra não-material). Converte "o jogo acaba no 100" em "sempre tem um tier/skill/bestiário pra hoje". *Fortemente ligado a P0.2, P2.1.*
-
----
-
-## P3 — Quick wins (baixo risco, dá pra batelar já)
-
-- [x] ~~**[perf] Battle list re-renderiza 2× por evento de combate**~~ — ✅ **JÁ RESOLVIDO**: `renderBattleList()` (`huntPanel.js:435`) coalesce via `requestAnimationFrame` + guard `_battleListScheduled`, então 2 chamadas = 1 render/frame. Backlog estava desatualizado.
-- [x] ~~**[a11y] Foco de teclado invisível**~~ — ✅ **JÁ FEITO**: `:focus-visible` global já existe no `style.css` (2 regras). Backlog desatualizado.
-- **[a11y/perf] Sprites sem `loading`/`decoding`/`alt`** — `tibiaSprites.js:149`. ⚠️ **CUIDADO**: `loading="lazy"` já causou o bug de sprites sumindo na batalha (revertido, ver `0a7b60eb` / memory). Só adicionar `decoding="async"` + `alt`, **nunca lazy** no helper compartilhado. · S
-- [x] ~~**[a11y] Reduced-motion abrangente**~~ — ✅ **JÁ FEITO**: `style.css` tem 10 regras `prefers-reduced-motion`. Backlog desatualizado.
-- [x] ~~**[robustez] `window.onunhandledrejection`**~~ — ✅ **JÁ FEITO**: `index.html:631` captura TODA promise rejeitada (cura se for módulo, senão `console.error('[unhandledrejection]', msg)` com contexto). Backlog desatualizado.
-- [x] ~~**[i18n] Sobras de PT num jogo default-EN**~~ — ✅ **JÁ FEITO**: welcome usa `t('log.welcome')` (`main.js:199`); os "Missões Semanais/SEMANAIS" restantes são **comentários de código** (PT é ok em comentário), não string visível. Guard de paridade en/pt agora no CI (abaixo).
-- [x] ~~**[correção] Comentário mentiroso** — `bestiary.js:2649`~~ — ✅ **JÁ RESOLVIDO**: o comentário agora diz corretamente que as criaturas NÃO escalam com o nível (bate com `combatFormulas.js`).
-- [x] ~~**[UX] Busca no market e no bestiário**~~ — ✅ **FEITO**: market já tinha typeahead; bestiário agora tem campo de busca por nome (`#bestiary-search` + `bestiarySearchInput`, verificado no browser: 3→2 no match, 0 no não-match, restaura ao limpar). `1edf2a20`.
-- [x] ~~**[CI] Enforçar os guards no deploy**~~ — ✅ **FEITO**: `.github/workflows/guards.yml` roda `check-import-versions` + `check-imports-faltando` + `i18n-check` (paridade en/pt, agora com exit 1) em cada push/PR.
-
----
-
-## P4 — Safety net / acessibilidade / mobile (passe de polish)
-
-- **[test] CI rodando o smoke set dos ~130 probes** — `scripts/probe-*.mjs`/`audit-*.mjs` só rodam manualmente contra prod. Gatear deploy no set crítico (`probe-smoke`, `probe-kill`, `audit:static`). Hoje regressão só aparece se o Felipe reroda. · M
-- **[test] Unit test das fórmulas de combate** — `stats.js` + `huntEngine` só são exercitados por Playwright contra prod. Umas asserções puras (monstro+gear conhecidos → dano conhecido) pegam regressão em segundos. Memory exige TFS/Crystal exato. · M
-- **[a11y] Semântica de dialog nos modais** — 1 atributo aria no `index.html` inteiro. Modais sem `role="dialog"`, focus trap, Escape consistente, retorno de foco ao opener. · M
-- **[a11y] ARIA de tablist nas abas** — botões focáveis (bom) mas sem `role="tab"/tablist"`, `aria-selected`. · M
-- **[mobile] Breakpoint único + fonte base 12px** — shell de 3 colunas colapsa num breakpoint só (900px); `font-size:12px` é pequeno pra celular; alvos de toque não auditados. Idle pega muito tráfego mobile. · M–L
-- **[obs] Log estruturado no servidor** — ~13 `console.error` free-form só com `session.id`. Wrapper fino (level/ts/sessionId/event) paga na próxima incidência. · S–M
-
----
-
-## 🩹 Já mapeado noutra frente (não encostar aqui)
-
-- **Segurança de economia** (sessão paralela): boosts client-authoritative → servidor, rubini 2 fontes de verdade, gold → delta atômico.
-- **`/task/complete` registra mas NÃO concede a recompensa server-side** — flag pra outra sessão.
-- **Monk Harmony/Virtue (fase 2)** — 5ª vocação, mecânica avançada pendente (`fonte-monk-crystalserver`).
-
----
-
+**Infra / quick wins**
+- CI com os guards no deploy (import-versions, imports-faltando, paridade i18n en/pt) — `.github/workflows/guards.yml`
+- Já existiam (backlog desatualizado): battle list coalesce via rAF · `:focus-visible` global · `prefers-reduced-motion` · `window.onunhandledrejection`
