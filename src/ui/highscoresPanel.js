@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=336';
-import { MONSTERS } from '../domain/bestiary.js?v=355';
-import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=333';
-import { on, EVENTS } from '../shared/eventBus.js?v=334';
-import { escapeHtml, notify, skillIconImg } from './shared.js?v=339';
-import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=337';
-import { getOnlineSnapshot } from '../application/onlineUseCases.js?v=106';
-import { t } from '../i18n/i18n.js?v=352';
+import { G } from '../application/gameStore.js?v=337';
+import { MONSTERS } from '../domain/bestiary.js?v=356';
+import { HIGHSCORE_CATEGORIES, highscoreCategory } from '../domain/highscoreCategories.js?v=334';
+import { on, EVENTS } from '../shared/eventBus.js?v=335';
+import { escapeHtml, notify, skillIconImg } from './shared.js?v=340';
+import { fetchHighscores, submitScore, invalidateHighscoresCache } from '../application/highscoresUseCases.js?v=338';
+import { getOnlineSnapshot } from '../application/onlineUseCases.js?v=107';
+import { t } from '../i18n/i18n.js?v=353';
 
 const VOC_LABEL = { knight: '🛡️ Knight', paladin: '🏹 Paladin', sorcerer: '🔮 Sorcerer', druid: '🌿 Druid' };
 const TOTAL_BESTIARY = Object.keys(MONSTERS).length;

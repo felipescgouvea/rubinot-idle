@@ -2295,74 +2295,94 @@ hr { border: none; height: 1px; background: var(--line-soft); margin: 12px 14px 
 /* Imbuements — janela do shrine do Tibia: item no topo, fontes astrais em
    SPRITE (não texto). Usa as vars do tema (antes era um azul-escuro hardcoded
    que destoava do resto do app no claro/escuro — queixa do Felipe). */
-.imbue-window { display: flex; flex-direction: column; gap: 10px; }
+/* ===== JANELA DE IMBUING — estilo do cliente do Tibia (pedido do Felipe #8):
+   painel ESCURO/ardósia com molduras douradas e gems em soquete, COMMITADO num
+   único visual (a janela de imbuing do Tibia é escura em qualquer tema). Cores
+   fixas de propósito — não segue o parchment claro/escuro do resto do jogo. */
+.imbue-window {
+  display: flex; flex-direction: column; gap: 12px;
+  --imb-ink: #ece3cf; --imb-soft: #b6becb; --imb-faint: #8792a3;
+  --imb-panel-1: #262d3d; --imb-panel-2: #1a2030; --imb-socket: #0e1220;
+  --imb-line: #3a445a; --imb-gold: #c9a227; --imb-gold-lt: #e7c96a;
+  padding: 14px; border-radius: 12px;
+  background: radial-gradient(120% 80% at 50% 0%, #2f394f 0%, transparent 60%), linear-gradient(180deg, var(--imb-panel-1), var(--imb-panel-2));
+  border: 2px solid var(--imb-gold); box-shadow: inset 0 1px 0 #ffffff18, inset 0 0 24px #00000066, 0 4px 14px #00000055;
+  color: var(--imb-ink);
+}
 .imbue-title { font-family: var(--serif); }
 .imbue-item-slot {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 12px; border-radius: 10px;
-  background: var(--surface-2); border: 1px solid var(--line-soft);
+  background: var(--imb-panel-2); border: 1px solid var(--imb-line);
 }
 .imbue-slot-box {
   width: 46px; height: 46px; flex: none; display: flex; align-items: center; justify-content: center;
-  border-radius: 8px; background: var(--input-bg);
-  border: 1px solid var(--line-soft); box-shadow: inset 0 1px 3px #00000033;
+  border-radius: 8px; background: var(--imb-socket);
+  border: 1px solid var(--imb-gold); box-shadow: inset 0 2px 5px #000000aa, 0 0 0 1px #00000066;
 }
 .imbue-slot-img { width: 38px; height: 38px; image-rendering: pixelated; }
-.imbue-slot-empty { color: var(--ink-faint); font-size: 22px; }
+.imbue-slot-empty { color: var(--imb-faint); font-size: 22px; }
 .imbue-slot-info { min-width: 0; }
-.imbue-slot-name { font-weight: 800; color: var(--ink); font-size: 14px; }
+.imbue-slot-name { font-weight: 800; color: var(--imb-ink); font-size: 14px; }
 .imbue-active { font-size: 12.5px; margin-top: 3px; }
-.imbue-active.on { color: var(--gold-soft); font-weight: 700; }
-.imbue-active.muted { color: var(--ink-faint); }
-.imbue-hint { font-size: 12px; }
+.imbue-active.on { color: var(--imb-gold-lt); font-weight: 700; }
+.imbue-active.muted { color: var(--imb-faint); }
+.imbue-hint { font-size: 12px; color: var(--imb-soft); }
 
 /* Seletor de item da máquina de imbuing (arma/elmo/armadura) — cards clicáveis. */
 .imbue-slots { display: flex; gap: 10px; flex-wrap: wrap; }
 .imbue-slot {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   width: 128px; padding: 10px 8px; cursor: pointer; font: inherit; text-align: center;
-  background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 10px;
+  color: var(--imb-ink);
+  background: linear-gradient(180deg, #2b3346, #202739); border: 1px solid var(--imb-line); border-radius: 10px;
 }
-.imbue-slot:hover:not(.off) { border-color: var(--gold-soft); }
-.imbue-slot.sel { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; background: var(--surface-3); }
+.imbue-slot:hover:not(.off) { border-color: var(--imb-gold-lt); }
+.imbue-slot.sel { border-color: var(--imb-gold); box-shadow: 0 0 0 1px var(--imb-gold) inset, 0 0 10px #c9a2274d; background: linear-gradient(180deg, #34405a, #232c40); }
 .imbue-slot.off { opacity: .5; cursor: not-allowed; }
-.imbue-slot-cap { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-faint); font-weight: 700; }
-.imbue-slot-on { font-size: 10.5px; color: var(--gold-soft); font-weight: 700; }
+.imbue-slot-cap { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--imb-faint); font-weight: 700; }
+.imbue-slot-on { font-size: 10.5px; color: var(--imb-gold-lt); font-weight: 700; }
 .imbue-detail { min-height: 60px; }
-.imbue-detail-empty, .imbue-detail-empty.muted { display: flex; align-items: center; justify-content: center; min-height: 80px; font-size: 13px; }
+.imbue-detail-empty, .imbue-detail-empty.muted { display: flex; align-items: center; justify-content: center; min-height: 80px; font-size: 13px; color: var(--imb-faint); }
 .imbue-list { display: flex; flex-direction: column; gap: 9px; max-height: 46vh; overflow-y: auto; padding-right: 2px; }
 .imbue-row {
   padding: 10px 12px; border-radius: 10px;
-  background: var(--surface-1); border: 1px solid var(--line-soft);
-  box-shadow: 0 1px 3px #00000022;
+  background: linear-gradient(180deg, #232b3c, #1b2233); border: 1px solid var(--imb-line);
+  box-shadow: inset 0 1px 0 #ffffff12, 0 1px 3px #00000044;
 }
-.imbue-row-main { display: flex; align-items: center; gap: 9px; }
-.imbue-gem { font-size: 1.4rem; flex: none; display: inline-flex; align-items: center; }
+.imbue-row-main { display: flex; align-items: center; gap: 10px; }
+/* Gem no SOQUETE (moldura dourada + fundo escuro), como os slots de gem do Tibia. */
+.imbue-gem {
+  font-size: 1.4rem; flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 8px; background: var(--imb-socket);
+  border: 1px solid var(--imb-gold); box-shadow: inset 0 2px 5px #000000aa;
+}
 .imbue-gem-img { width: 30px; height: 30px; image-rendering: pixelated; }
 .imbue-row-txt { min-width: 0; flex: 1; }
-.imbue-row-txt b { color: var(--ink); display: block; }
-.imbue-row-txt small { color: var(--ink-soft); }
-.imbue-dur { font-size: 11.5px; color: var(--ink-faint); flex: none; white-space: nowrap; }
+.imbue-row-txt b { color: var(--imb-ink); display: block; }
+.imbue-row-txt small { color: var(--imb-soft); }
+.imbue-dur { font-size: 11.5px; color: var(--imb-faint); flex: none; white-space: nowrap; }
 .imbue-mats { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
 .imbue-mat {
   display: flex; align-items: center; gap: 5px;
   padding: 3px 7px 3px 4px; border-radius: 7px;
-  background: var(--input-bg); border: 1px solid var(--line-soft);
-  font-size: 11.5px; font-weight: 700;
+  background: var(--imb-socket); border: 1px solid var(--imb-line);
+  font-size: 11.5px; font-weight: 700; color: var(--imb-soft);
 }
 .imbue-mat-img { width: 22px; height: 22px; image-rendering: pixelated; flex: none; }
 .imbue-mat-count { font-variant-numeric: tabular-nums; }
-.imbue-mat.ok .imbue-mat-count { color: var(--green-badge, #2e8b57); }
-.imbue-mat.lack { border-color: #c0392b66; }
-.imbue-mat.lack .imbue-mat-count { color: var(--red-hot); }
+.imbue-mat.ok .imbue-mat-count { color: #6fd08a; }
+.imbue-mat.lack { border-color: #c0392b88; }
+.imbue-mat.lack .imbue-mat-count { color: #ff6b6b; }
 .imbue-row-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.imbue-gold { font-weight: 800; color: var(--ink); display: inline-flex; align-items: center; gap: 5px; }
+.imbue-gold { font-weight: 800; color: var(--imb-gold-lt); display: inline-flex; align-items: center; gap: 5px; }
 .imbue-btn {
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
-  border: 1px solid var(--gold-soft); color: #241a06;
+  background: linear-gradient(180deg, var(--imb-gold-lt), var(--imb-gold));
+  border: 1px solid #8a6f1f; color: #241a06;
   padding: 6px 18px; border-radius: 7px; cursor: pointer; font-weight: 800;
+  text-shadow: 0 1px 0 #ffffff55; box-shadow: inset 0 1px 0 #ffffff88, 0 1px 3px #00000066;
 }
-.imbue-btn:hover:not(:disabled) { filter: brightness(1.06); }
+.imbue-btn:hover:not(:disabled) { filter: brightness(1.08); }
 .imbue-btn:disabled { opacity: .4; cursor: not-allowed; }
 
 /* ============ MODAL DE BATALHA ============ */
