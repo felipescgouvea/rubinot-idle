@@ -22,7 +22,6 @@
   --parch-1: #f5e6c8;
   --parch-2: #efe0be;
   --parch-3: #e8d5ac;
-  --parch-deep: #dcc79a;
   /* superfícies internas claras (log de combate, linhas de tabela, mini-cards) —
      viraram vars pra o tema escuro poder invertê-las de uma vez. */
   --surface-1: #fdf6e3;
@@ -35,7 +34,6 @@
   --navy-1: #1e5799;
   --navy-2: #164070;
   --navy-deep: #0d2f54;
-  --steel: #3b5068;
   --gold: #b8860b;
   --gold-bright: #f1c40f;
   --gold-soft: #d4a017;
@@ -58,7 +56,6 @@
   --muted: #8a6f4d;
   --arcane: #8e44ad;
   --accent: #1e5799;
-  --green: #2e7d32;
 }
 
 /* ===== TEMA ESCURO — [data-theme="dark"] no <html> (toggle no topbar).
@@ -82,7 +79,6 @@
   --parch-1: #2d2721;
   --parch-2: #26211b;
   --parch-3: #201b15;
-  --parch-deep: #17130d;
   --surface-1: #221d16;
   --surface-2: #272019;
   --surface-3: #2c2418;
@@ -384,6 +380,7 @@ body {
   color: #b8cde4;
   padding: 9px 14px;
   cursor: pointer;
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -404,6 +401,24 @@ body {
   background: #ffffff0a;
   text-shadow: 0 1px 2px #00000088;
 }
+/* Selo de "tem coisa pra resgatar" na aba (Tasks/Battle Pass) — antes só a
+   Daily avisava; tier/task prontos ficavam invisíveis até abrir a aba. Ponto
+   verde pulsante no canto do botão, dirigido pelos mesmos sinais do título da
+   aba do navegador (ver ui/notifyTitle.js: setTabBadge). */
+.tab-badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #42d778;
+  box-shadow: 0 0 0 2px #0d1b2a, 0 0 6px #42d778cc;
+  pointer-events: none;
+  animation: tab-badge-pulse 1.6s ease-in-out infinite;
+}
+@keyframes tab-badge-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@media (prefers-reduced-motion: reduce) { .tab-badge { animation: none; } }
 
 /* ============ EQUIPAMENTO (card na aba Caçada) ============ */
 /* .panel-right é flex-column (align-items:stretch por padrão) — sem isto o

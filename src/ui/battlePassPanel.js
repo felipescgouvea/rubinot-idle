@@ -1,11 +1,11 @@
-import { G } from '../application/gameStore.js?v=315';
-import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=315';
-import { on, EVENTS } from '../shared/eventBus.js?v=313';
-import { rewardIcon, uiIcon } from './uiIcons.js?v=316';
-import { rubiniIconImg } from './shared.js?v=318';
-import { setTitleFlag } from './notifyTitle.js?v=313';
-import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=314';
-import { t, getLocale } from '../i18n/i18n.js?v=331';
+import { G } from '../application/gameStore.js?v=316';
+import { BP_REWARDS, BP_PREMIUM_REWARDS, BP_PREMIUM_COST_RUBINI, BP_XP_PER_TIER } from '../domain/progression.js?v=316';
+import { on, EVENTS } from '../shared/eventBus.js?v=314';
+import { rewardIcon, uiIcon } from './uiIcons.js?v=317';
+import { rubiniIconImg } from './shared.js?v=319';
+import { setTitleFlag, setTabBadge } from './notifyTitle.js?v=314';
+import { currentMissions, currentWeeklyMissions, ensureSeason } from '../application/battlePassUseCases.js?v=315';
+import { t, getLocale } from '../i18n/i18n.js?v=332';
 
 function bpRewardIcon(r) {
   return rewardIcon(r, 'bp-reward-sprite');
@@ -97,7 +97,9 @@ export function renderBattlePassPanel() {
   const premClaimable = G.bpPremium && BP_PREMIUM_REWARDS.some(r => G.bpTier >= r.tier && !claimedPremArr.includes(r.tier));
   const missionClaimable = currentMissions().some(m => (G.bpMissionProgress[m.track] || 0) >= m.goal && !G.bpMissionClaimed.includes(m.id))
     || currentWeeklyMissions().some(m => (G.bpWeeklyProgress[m.track] || 0) >= m.goal && !G.bpWeeklyClaimed.includes(m.id));
-  setTitleFlag('bp', !!(freeClaimable || premClaimable || missionClaimable));
+  const bpClaimable = !!(freeClaimable || premClaimable || missionClaimable);
+  setTitleFlag('bp', bpClaimable);
+  setTabBadge('battlepass', bpClaimable); // selo na aba Battle Pass
 }
 
 export function wireBattlePassPanelEvents() {

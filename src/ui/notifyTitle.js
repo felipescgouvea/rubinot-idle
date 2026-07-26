@@ -26,3 +26,20 @@ export function setTitleFlag(key, on) {
   if (on) flags.add(key); else flags.delete(key);
   if (flags.has(key) !== had) render();
 }
+
+// Selo "!" na ABA do jogo (Tasks/Battle Pass) quando há algo pra resgatar —
+// antes só a Daily avisava. Dirigido pelos MESMOS sinais do título (os painéis
+// chamam isto de onde já sabem o booleano). Cria/mostra/esconde o ponto sem
+// depender de nada (por isso mora aqui, num módulo sem imports — evita ciclo
+// com tabs.js, que já importa os painéis). `tabName` = o data-tab do botão.
+export function setTabBadge(tabName, on) {
+  const tab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+  if (!tab) return;
+  let badge = tab.querySelector('.tab-badge');
+  if (on) {
+    if (!badge) { badge = document.createElement('span'); badge.className = 'tab-badge'; tab.appendChild(badge); }
+    badge.style.display = '';
+  } else if (badge) {
+    badge.style.display = 'none';
+  }
+}

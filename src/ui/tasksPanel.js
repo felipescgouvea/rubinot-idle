@@ -1,12 +1,12 @@
-import { G } from '../application/gameStore.js?v=315';
-import { MONSTERS } from '../domain/bestiary.js?v=334';
-import { ITEMS } from '../domain/items.js?v=326';
-import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=314';
-import { on, EVENTS } from '../shared/eventBus.js?v=313';
-import { monsterSpriteImg } from './huntPanel.js?v=332';
-import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=318';
-import { setTitleFlag } from './notifyTitle.js?v=313';
-import { t } from '../i18n/i18n.js?v=331';
+import { G } from '../application/gameStore.js?v=316';
+import { MONSTERS } from '../domain/bestiary.js?v=335';
+import { ITEMS } from '../domain/items.js?v=327';
+import { TASK_ROOMS, isTaskUnlocked, isRoomUnlocked, taskKey } from '../domain/progression.js?v=315';
+import { on, EVENTS } from '../shared/eventBus.js?v=314';
+import { monsterSpriteImg } from './huntPanel.js?v=333';
+import { itemIconImg, taskCoinIconImg, formatNum } from './shared.js?v=319';
+import { setTitleFlag, setTabBadge } from './notifyTitle.js?v=314';
+import { t } from '../i18n/i18n.js?v=332';
 
 // sala N usa a sprite do próprio boss como ícone (o boss dá nome à sala e já
 // tem sprite real via SPRITE_OVERRIDE em tibiaSprites.js) — só "corrupted" (id
@@ -106,7 +106,7 @@ export function renderTasksPanel() {
 
 function renderActiveTask() {
   const el = document.getElementById('active-task-display');
-  if (!G.activeTask) { el.style.display = 'none'; setTitleFlag('task', false); return; }
+  if (!G.activeTask) { el.style.display = 'none'; setTitleFlag('task', false); setTabBadge('tasks', false); return; }
   el.style.display = 'block';
   const { roomId, taskIndex, key, required, monsters } = G.activeTask;
   const room = TASK_ROOMS.find(r => r.id === roomId);
@@ -119,6 +119,7 @@ function renderActiveTask() {
   // não completou, só dá pra cancelar.
   const ready = !!G.activeTask.ready;
   setTitleFlag('task', ready); // task pronta pra coletar → título da aba
+  setTabBadge('tasks', ready); // + selo na aba Tasks
   const actionBtn = ready
     ? `<button onclick="claimTaskReward()" style="margin-top:8px;background:#27ae60;border:none;color:#fff;padding:6px 18px;border-radius:4px;cursor:pointer;font-size:13px;font-weight:bold">✅ ${t('tasks.claimReward')}</button>`
     : `<button onclick="cancelTask()" style="margin-top:6px;background:#e74c3c;border:none;color:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px">${t('tasks.cancelTask')}</button>`;
