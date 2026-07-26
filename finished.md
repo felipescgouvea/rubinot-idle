@@ -21,3 +21,4 @@ Uma linha por entrega. `/test` lê as linhas sem carimbo, testa, e anexa `✅`/`
 - 2026-07-26 — cards de linked-task + botões de nav da Loja retematizados (pergaminho definido, theme-aware) — `5c8df271`
 - 2026-07-26 — removido o bob sintético dos monstros no palco (só a animação nativa da sprite) — `04ee0d26`
 - 2026-07-26 — highscores marca jogadores online (ponto verde); /online expõe onlineNames + deploy Railway — `376cef2d`
+- 2026-07-26 — Hunt Analyzer passa a contabilizar suprimentos pelo preço de compra (poções sell=0 deixavam em 0) — `447bed32`
