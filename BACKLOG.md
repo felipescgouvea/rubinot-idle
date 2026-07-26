@@ -84,7 +84,7 @@ A resposta canônica pra (2) é adicionar o endgame que transforma XP/loot/kills
 - [ ] **P2.3 Prey Wildcards + Concoctions** · S–M · `[server]` — wildcards pra rerolar/travar prey; concoctions = buffs temporizados com cooldown (gancho de re-log). Fonte: `ioprey.cpp`, `concoctions.lua`
 - [ ] **P2.4 Sink de gold que escala** · M · `[server]` `[CANON]` — Exercise Weapons na loja e/ou house rent. (Se o Forge entrar, ele já é o sink)
 - [ ] **P2.5 Aprofundar o sink de Rubini** · M — boosts mais longos, packs de wildcard, tentativas de arena, cosméticos. Premium compra velocidade, não poder
-- [ ] **P2.6 XP de task** — ✅ DECISÃO Felipe (4): recompensa **estática por task** (valor fixo definido em cada task), **NÃO escala** com level/curva. Conferir/ajustar o modelo de reward das tasks pra ser fixo por task
+- [x] **P2.6 XP de task** — ✅ DECISÃO Felipe (4): recompensa estática por task, não escala. **VERIFICADO que já é assim**: `firstReward`/`repeatReward` são valores fixos por task (`progression.js`) e `grantTaskRewardsServer` concede `r.amount` direto, SEM multiplicar por level. Nenhuma mudança necessária — o modelo atual já atende à decisão.
 - [ ] **P2.7 Streak de daily + cadência semanal** · S — ciclo de 7 dias raso; adicionar marco de streak longo (30 dias). Recompensa não-material
 - [ ] **P2.8 Funil de recompensa pras ladders infinitas** · M — Boss Rush/skill/bestiário são infinitos mas mal recompensados; dar payoff aos marcos (charm/imbue/wildcard). Ligado a P0.2 e P2.1
 
