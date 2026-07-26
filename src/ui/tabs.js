@@ -1,23 +1,23 @@
 // Navegação por abas: troca qual painel está visível e dispara o render
 // daquela aba (a maioria dos painéis só precisa renderizar ao ser aberta —
 // os que mudam durante a caçada em segundo plano já escutam eventos próprios).
-import { renderTasksPanel } from './tasksPanel.js?v=331';
-import { renderSpellsPanel } from './spellsPanel.js?v=239';
-import { renderSkillsPanel } from './skillsPanel.js?v=325';
-import { renderArenaPanel } from './arenaPanel.js?v=324';
-import { renderWorldsPanel } from './worldsPanel.js?v=323';
-import { renderBattlePassPanel } from './battlePassPanel.js?v=323';
-import { renderRtcPanel } from './rtcPanel.js?v=358';
-import { renderShopPanel } from './shopPanel.js?v=331';
-import { renderMarketPanel } from './marketPanel.js?v=327';
-import { renderHighscoresPanel } from './highscoresPanel.js?v=328';
-import { renderBossRushPanel } from './bossRushPanel.js?v=329';
-import { renderBestiaryTab } from './bestiaryPanel.js?v=329';
-import { renderTrainingSection } from './trainingPanel.js?v=332';
-import { renderImbuePanel } from './imbuementPanel.js?v=323';
-import { renderAdminPanel } from './adminPanel.js?v=333';
-import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=327';
-import { on, EVENTS } from '../shared/eventBus.js?v=324';
+import { renderTasksPanel } from './tasksPanel.js?v=332';
+import { renderSpellsPanel } from './spellsPanel.js?v=240';
+import { renderSkillsPanel } from './skillsPanel.js?v=326';
+import { renderArenaPanel } from './arenaPanel.js?v=325';
+import { renderWorldsPanel } from './worldsPanel.js?v=324';
+import { renderBattlePassPanel } from './battlePassPanel.js?v=324';
+import { renderRtcPanel } from './rtcPanel.js?v=359';
+import { renderShopPanel } from './shopPanel.js?v=332';
+import { renderMarketPanel } from './marketPanel.js?v=328';
+import { renderHighscoresPanel } from './highscoresPanel.js?v=329';
+import { renderBossRushPanel } from './bossRushPanel.js?v=330';
+import { renderBestiaryTab } from './bestiaryPanel.js?v=330';
+import { renderTrainingSection } from './trainingPanel.js?v=333';
+import { renderImbuePanel } from './imbuementPanel.js?v=324';
+import { renderAdminPanel } from './adminPanel.js?v=334';
+import { isMarketEnabled, isAdminUser } from '../application/adminUseCases.js?v=328';
+import { on, EVENTS } from '../shared/eventBus.js?v=325';
 
 const RENDER_BY_TAB = {
   tasks: renderTasksPanel,
@@ -66,11 +66,26 @@ export function applyAdminTabVisibility() {
 export function wireTabs() {
   on(EVENTS.MARKET_VISIBILITY, applyMarketVisibility);
 
+  // a11y: a navegação é um tablist (ARIA setado em JS pra não editar 15+
+  // elementos estáticos). Cada aba é um role=tab que controla seu painel
+  // (role=tabpanel), com aria-selected refletindo a aba ativa.
+  const tablist = document.getElementById('tabs');
+  if (tablist) tablist.setAttribute('role', 'tablist');
+
   document.querySelectorAll('.tab').forEach(tab => {
+    const name = tab.dataset.tab;
+    if (!tab.id) tab.id = `tabbtn-${name}`;
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-controls', `tab-${name}`);
+    tab.setAttribute('aria-selected', tab.classList.contains('active') ? 'true' : 'false');
+    const panel = document.getElementById(`tab-${name}`);
+    if (panel) { panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id); }
+
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
       document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
       document.body.dataset.tab = tab.dataset.tab;
 

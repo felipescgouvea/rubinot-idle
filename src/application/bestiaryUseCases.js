@@ -7,12 +7,12 @@
 // de mortes por espécie) é gravado pelo PRÓPRIO servidor a cada kill (ver
 // huntEngine.js: settleKill/flushBestiaryKills) — o cliente não escreve mais
 // nisso, só espelha o que o servidor devolve.
-import { G, ACCOUNT } from './gameStore.js?v=326';
-import { CHARMS, CHARM_EQUIP_SLOTS } from '../domain/charms.js?v=323';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=324';
-import { saveGame } from './saveGameUseCase.js?v=326';
-import { fetchCharmState, unlockCharmOnServer, grantCharmBonusOnServer } from '../infrastructure/authClient.js?v=334';
-import { t } from '../i18n/i18n.js?v=342';
+import { G, ACCOUNT } from './gameStore.js?v=327';
+import { CHARMS, CHARM_EQUIP_SLOTS } from '../domain/charms.js?v=324';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=325';
+import { saveGame } from './saveGameUseCase.js?v=327';
+import { fetchCharmState, unlockCharmOnServer, grantCharmBonusOnServer } from '../infrastructure/authClient.js?v=335';
+import { t } from '../i18n/i18n.js?v=343';
 
 let lastSyncAt = 0;
 
