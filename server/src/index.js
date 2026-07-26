@@ -79,8 +79,18 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// Log estruturado: uma linha JSON por evento com { level, ts, event, ...campos }.
+// Fácil de filtrar/grepar no Railway (`railway logs`) e de ingerir depois num
+// coletor — melhor que string solta. Nunca deixa o log derrubar a request.
+function slog(level, event, fields = {}) {
+  try {
+    const line = JSON.stringify({ level, ts: new Date().toISOString(), event, ...fields });
+    (level === 'error' ? process.stderr : process.stdout).write(line + '\n');
+  } catch { /* ignore */ }
+}
+
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Faltando SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY nas env vars do serviço.');
+  slog('error', 'startup_config_missing', { missing: ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY'].filter(k => !process.env[k]) });
 }
 
 // Default de quem ainda não tem linha em player_skills (personagem recém-
@@ -1992,7 +2002,10 @@ const server = http.createServer(async (req, res) => {
 
     send(res, 404, { error: 'not found' });
   } catch (err) {
-    console.error('erro não tratado numa requisição', err);
+    slog('error', 'request_unhandled', {
+      method: req.method, path: (() => { try { return new URL(req.url, `http://${req.headers.host}`).pathname; } catch { return req.url; } })(),
+      err: err && err.message, stack: err && err.stack && err.stack.split('\n').slice(0, 4).join(' | '),
+    });
     send(res, 500, { error: 'erro interno' });
   }
 });
@@ -2004,6 +2017,6 @@ iniciarRealtime(server, verifySupabaseToken);
 
 reapStaleSessionsOnBoot().finally(() => {
   server.listen(PORT, () => {
-    console.log(`rubinot-idle-hunt-server (marco 6 + tempo real) ouvindo na porta ${PORT}`);
+    slog('info', 'server_listen', { port: Number(PORT), service: 'rubinot-idle-hunt-server' });
   });
 });
