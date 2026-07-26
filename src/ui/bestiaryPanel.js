@@ -4,23 +4,23 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=329';
-import { MONSTERS } from '../domain/bestiary.js?v=348';
+import { G } from '../application/gameStore.js?v=330';
+import { MONSTERS } from '../domain/bestiary.js?v=349';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
-} from '../domain/prey.js?v=325';
+} from '../domain/prey.js?v=326';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=326';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=325';
-import { on, EVENTS } from '../shared/eventBus.js?v=327';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=332';
-import { monsterSpriteImg } from './huntPanel.js?v=346';
-import { uiIcon } from './uiIcons.js?v=330';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=328';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=328';
-import { t } from '../i18n/i18n.js?v=345';
+} from '../domain/charms.js?v=327';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=326';
+import { on, EVENTS } from '../shared/eventBus.js?v=328';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=333';
+import { monsterSpriteImg } from './huntPanel.js?v=347';
+import { uiIcon } from './uiIcons.js?v=331';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=329';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=329';
+import { t } from '../i18n/i18n.js?v=346';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.
@@ -193,4 +193,10 @@ export function renderBestiaryTab() {
 export function wireBestiaryPanelEvents() {
   on(EVENTS.PREY_PANEL, renderBestiaryTab);
   on(EVENTS.BESTIARY_PANEL, renderBestiaryTab);
+  // Progresso de bestiário/charm ao vivo durante a caçada: KILL_COUNTERS dispara
+  // a cada kill (huntUseCases). Só re-renderiza se a aba Bestiário estiver ABERTA
+  // — senão é render à toa (o painel já refaz tudo ao ser reaberto).
+  on(EVENTS.KILL_COUNTERS, () => {
+    if (document.body.dataset.tab === 'bestiary') renderBestiaryTab();
+  });
 }
