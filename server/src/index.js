@@ -48,7 +48,7 @@ import { GRADUATION_LEVEL } from '../../src/domain/cities.js?v=139';
 import { XP_TABLE, VOCATIONS, PROMOTION } from '../../src/domain/character.js?v=157';
 import { highscoreCategory } from '../../src/domain/highscoreCategories.js?v=126';
 import { IMBUEMENTS, imbuementCost } from '../../src/domain/imbuements.js?v=125';
-import { QUESTS, questEnemySequence } from '../../src/domain/quests.js?v=1';
+import { QUESTS, questZone } from '../../src/domain/quests.js?v=1';
 import { CHARMS, charmPointsForKills } from '../../src/domain/charms.js?v=128';
 import { PREY_SLOTS, PREY_MAX_RARITY, preyBonusPct, preyRerollCost, rollPreyRarity, rollPreyBonusType, isPreyActive } from '../../src/domain/prey.js?v=125';
 import { MARKET_LISTING_DAYS, MARKET_FEE_PCT, marketFee, sellerProceeds } from '../../src/domain/marketConfig.js?v=125';
@@ -102,20 +102,6 @@ function defaultSkills() {
   return out;
 }
 
-// Zona SINTÉTICA de uma Quest (não está em ZONES): a raid roda como uma caçada
-// cujo pool de monstros é a sequência de inimigos da quest (ondas + chefe), e o
-// `quest` marca a sessão pra conceder o prêmio ao vencer o chefe. Ver
-// domain/quests.js e huntEngine.js (session.questId / session.zoneObj).
-function questZone(zoneId) {
-  if (typeof zoneId !== 'string' || !zoneId.startsWith('quest:')) return null;
-  const q = QUESTS[zoneId.slice(6)];
-  if (!q) return null;
-  return {
-    city: 'quest', name: q.name, icon: q.icon, worldReq: null,
-    monsters: questEnemySequence(q), boss: q.boss,
-    theme: ['#3a2a4a', '#1a1226'], biome: 'ruins', quest: q.id,
-  };
-}
 
 // Devolve o gold RESERVADO de uma buy offer à carteira do comprador (o poster).
 // Numa buy offer, o "seller_*" da linha guarda o COMPRADOR (quem quer comprar) e

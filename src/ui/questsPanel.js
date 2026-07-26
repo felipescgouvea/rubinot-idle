@@ -2,15 +2,15 @@
 // real do Tibia; iniciar entra na raid (caça na zona sintética da quest). A
 // conclusão e o prêmio são concedidos pelo servidor ao vencer o chefe (ver
 // server/huntEngine.js) — aqui só mostramos o estado e disparamos a raid.
-import { G, ACCOUNT } from '../application/gameStore.js?v=354';
-import { QUESTS, QUEST_IDS, questTotalEnemies } from '../domain/quests.js?v=2';
-import { MONSTERS } from '../domain/bestiary.js?v=373';
-import { ITEMS } from '../domain/items.js?v=365';
-import { t } from '../i18n/i18n.js?v=370';
-import { monsterSpriteImg } from './huntPanel.js?v=371';
-import { itemIconImg } from './shared.js?v=357';
-import { selectZone, startHunt } from '../application/huntUseCases.js?v=418';
-import { fetchQuestState } from '../infrastructure/authClient.js?v=362';
+import { G, ACCOUNT } from '../application/gameStore.js?v=355';
+import { QUESTS, QUEST_IDS, questTotalEnemies } from '../domain/quests.js?v=3';
+import { MONSTERS } from '../domain/bestiary.js?v=374';
+import { ITEMS } from '../domain/items.js?v=366';
+import { t } from '../i18n/i18n.js?v=371';
+import { monsterSpriteImg } from './huntPanel.js?v=372';
+import { itemIconImg } from './shared.js?v=358';
+import { selectZone, startHunt, stopHunt } from '../application/huntUseCases.js?v=419';
+import { fetchQuestState } from '../infrastructure/authClient.js?v=363';
 
 let completedCache = [];
 
@@ -55,10 +55,13 @@ export async function renderQuestsPanel() {
   el.innerHTML = questsBodyHtml();
 }
 
-// Inicia a raid da quest: seleciona a zona sintética e vai pra aba Caça.
+// Inicia a raid da quest: para qualquer caça atual (evita a corrida com o
+// auto-resume do login), seleciona a zona sintética da quest e inicia. Robusto
+// ao estado de G.hunting — sempre arranca a raid na zona certa.
 export function startQuestClick(id) {
   if (!QUESTS[id]) return;
-  selectZone('quest:' + id);
+  if (G.hunting) stopHunt();
+  selectZone('quest:' + id);   // sem hunting ativo, só seta a zona (não re-inicia)
   document.querySelector('.tab[data-tab="hunt"]')?.click();
-  if (!G.hunting) startHunt();
+  startHunt();
 }

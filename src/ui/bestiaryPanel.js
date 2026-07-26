@@ -4,24 +4,24 @@
 //  3) Charms: bônus passivos comprados com Charm Points.
 // Concentrar os três aqui (em vez de 3 abas novas) é de propósito — evita
 // inchar ainda mais a barra de abas (ver o reagrupamento do header).
-import { G } from '../application/gameStore.js?v=354';
-import { MONSTERS } from '../domain/bestiary.js?v=373';
+import { G } from '../application/gameStore.js?v=355';
+import { MONSTERS } from '../domain/bestiary.js?v=374';
 import {
   PREY_SLOTS, PREY_BONUS_TYPES, PREY_DURATION_MS, PREY_MAX_RARITY, preyRerollCost, isPreyActive,
-} from '../domain/prey.js?v=350';
+} from '../domain/prey.js?v=351';
 import {
   CHARMS, CHARM_EQUIP_SLOTS, BESTIARY_STAGES,
   bestiaryStagesCompleted, nextBestiaryStage,
-} from '../domain/charms.js?v=351';
-import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=350';
-import { on, EVENTS } from '../shared/eventBus.js?v=352';
-import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=357';
-import { setTabBadge } from './notifyTitle.js?v=352';
-import { monsterSpriteImg } from './huntPanel.js?v=371';
-import { uiIcon } from './uiIcons.js?v=355';
-import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=353';
-import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=353';
-import { t } from '../i18n/i18n.js?v=370';
+} from '../domain/charms.js?v=352';
+import { monsterElementProfile, ELEMENT_ICON, ELEMENT_LABEL } from '../domain/elements.js?v=351';
+import { on, EVENTS } from '../shared/eventBus.js?v=353';
+import { openModal, closeModal, charmPointsIconImg } from './shared.js?v=358';
+import { setTabBadge } from './notifyTitle.js?v=353';
+import { monsterSpriteImg } from './huntPanel.js?v=372';
+import { uiIcon } from './uiIcons.js?v=356';
+import { activatePrey, rerollPrey, clearPrey } from '../application/preyUseCases.js?v=354';
+import { unlockCharm, toggleCharmEquipped } from '../application/bestiaryUseCases.js?v=354';
+import { t } from '../i18n/i18n.js?v=371';
 
 // Criaturas que o jogador já enfrentou (têm entrada em killCounters) — a base
 // tanto pra escolher presa quanto pra listar o bestiário.

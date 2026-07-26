@@ -605,6 +605,9 @@ async function settleKill(session, mon, cfg) {
     session.prog.goldEarned += autoSellGold;
   }
 
+  // Conta os abates da raid (gate do spawn: ondas comuns primeiro, chefe depois).
+  if (session.questId) session.questKills = (session.questKills || 0) + 1;
+
   // Quest: vencer o CHEFE da quest concede o prêmio real do Tibia UMA vez só.
   // Server-authoritative (não confia no cliente) e não-repetível (checa a lista
   // de concluídas). Persiste a conclusão na hora — evento raro e importante.
@@ -1093,7 +1096,16 @@ async function tick(session) {
     // Boss Rush: restringe o pool de spawn só ao boss da zona (mesma regra do
     // antigo doHuntTick do cliente, agora única fonte de verdade — ver
     // application/huntUseCases.js: setBossOnlyMode).
-    const spawnZone = session.bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
+    let spawnZone = session.bossOnly && zone.boss ? { ...zone, monsters: [zone.boss] } : zone;
+    // Quest (raid com começo/meio/fim): primeiro as ONDAS de criaturas comuns;
+    // depois de abatê-las todas, o CHEFE aparece GARANTIDO (culminância). Sem
+    // isto o chefe era só 1/N do pool e podia nunca spawnar (raid intravável).
+    if (session.questId && QUESTS[session.questId]) {
+      const commons = (QUESTS[session.questId].waves || []).flat();
+      spawnZone = (session.questKills || 0) < commons.length && commons.length
+        ? { ...zone, monsters: commons }
+        : { ...zone, monsters: [zone.boss] };
+    }
     // Boss Zone: o tier ESCALA a dificuldade do boss (HP/atk/xp/gold) pela
     // escada bossTierMultiplier — antes ficava fixo em 1 (mesmo boss em todo
     // tier). O tier vem do cliente no hunt-start (session.bossTier).
