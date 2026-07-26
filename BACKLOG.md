@@ -41,8 +41,8 @@
 - [ ] Remover **animação extra** dos monstros no palco de batalha — deixar só a animação original de andar (passos)
 
 ### 🧩 Revisão ao vivo 26/07 — Features / reformas
-- [ ] Remover o botão **Imbue** do card do personagem (redundante com a página dedicada de Imbuements)
-- [ ] **Botão Store no header** — botão "Store" estilo Tibia na barra superior (atalho pra Loja Premium)
+- [x] Remover o botão **Imbue** do card do personagem (redundante com a aba/página de Imbuements). Verificado em prod (probe-store-header: Imbue fora do card, 0 erros). — `9706a4c5`
+- [x] **Botão Store no header** — botão "Store" dourado estilo Tibia no topbar; abre a aba Shop (Loja Premium é a 1ª). Verificado em prod (probe-store-header: existe, rótulo "Store", abre a aba, 0 erros). — `9706a4c5`
 - [ ] **Highscores: indicar quem está online** — marcar jogadores online no ranking (já existe `/online` no servidor com contagem + topo)
 - [ ] **Treino unificado** · M — remover o treino offline separado; **1 treino só** rodando **online E offline ao mesmo tempo**; janela maior/melhor; **outfit fiel ao do personagem**. Editar `.spec/23-training.md` antes do código
 - [ ] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente Tibia), tirar da janela de combate (consolidar com o item aberto de HP/Mana estilo cliente)
