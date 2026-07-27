@@ -22,7 +22,9 @@ Todo jogador. Começa pelas quests **simples** (sem alavanca/puzzle) — entrar,
 - **Sem trava de alavanca nas simples.** As primeiras quests não exigem itens/puzzle — só derrotar a sequência. (Quests mais elaboradas podem vir depois.)
 
 ## Comportamento esperado
-- Iniciar uma Quest já concluída deixa entrar de novo (rejogar a raid), mas **não** concede o prêmio outra vez.
+- **Vencer o chefe ENCERRA a raid** — a raid tem fim de verdade: o chefe **não** reaparece depois de derrotado; a sessão da raid termina sozinha (não vira uma caça infinita do chefe).
+- **Ao concluir, o jogo anuncia a conclusão e devolve o jogador à zona em que ele estava antes de entrar na raid** (volta pra caça normal), sem prender a interface na quest.
+- Iniciar uma Quest já concluída deixa entrar de novo (rejogar a raid), mas **não** concede o prêmio outra vez — e a mensagem de conclusão da rejogada **não** promete prêmio (deixa claro que já foi concluída).
 - Sair/pausar a raid no meio não concede prêmio; o progresso da raid é da sessão (recomeça ao reentrar), a **conclusão** é permanente.
 - Morrer na raid interrompe a Quest (mesma penalidade de morte da caça); pode tentar de novo.
 
@@ -30,6 +32,8 @@ Todo jogador. Começa pelas quests **simples** (sem alavanca/puzzle) — entrar,
 - [ ] Existe uma lista de Quests, cada uma com chefe final e prêmio real do Tibia visíveis.
 - [ ] Iniciar uma Quest entra numa raid (sequência de inimigos → chefe).
 - [ ] Derrotar o chefe final concede o prêmio **uma única vez** (segunda vez não repete).
+- [ ] Vencer o chefe **encerra a raid**: o chefe não respawna e a sessão termina (não vira caça infinita).
+- [ ] Ao concluir, o jogador **volta pra zona anterior** (caça normal) e vê o anúncio de conclusão.
 - [ ] A conclusão e o prêmio são validados no servidor; o cliente não consegue forjá-los.
 - [ ] O prêmio é sempre um item real do Tibia; nada inventado.
-- [ ] Rejogar uma Quest concluída é permitido, mas sem novo prêmio.
+- [ ] Rejogar uma Quest concluída é permitido, mas sem novo prêmio (a mensagem não promete prêmio na rejogada).
