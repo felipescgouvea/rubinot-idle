@@ -24,6 +24,7 @@
 - [x] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador — criatura (Atacar/Bestiário) e item da mochila (Examinar/Vender); suprime o nativo nesses alvos — `1a4ddf73`
 - [ ] **Imbuir item da MOCHILA** · `[server]` — hoje o imbuement mora por `eq_slot`; imbuir item da mochila exige guardar por instância de item (refactor de dados + persistência)
 - [ ] **Boss Zone com bosses REAIS** · `[CANON]` — cada zona usa o boss canônico da criatura (nome/sprite/stats/loot)
+- [ ] **BUG: "Vender todos" ignora o item equipado** — a venda em lote na janela de venda não pode considerar o item que está equipado (só vende os da mochila)
 
 ## Features
 - [ ] **Sistema de Quests (raids com prêmio real)** · L — começar por quests simples (não-alavanca); cada quest = raid com começo/meio/fim; **1 prêmio real de quest do Tibia por quest** (não repetível). Editar `.spec/` antes

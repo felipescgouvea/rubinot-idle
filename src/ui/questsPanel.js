@@ -2,15 +2,15 @@
 // real do Tibia; iniciar entra na raid (caça na zona sintética da quest). A
 // conclusão e o prêmio são concedidos pelo servidor ao vencer o chefe (ver
 // server/huntEngine.js) — aqui só mostramos o estado e disparamos a raid.
-import { G, ACCOUNT } from '../application/gameStore.js?v=355';
-import { QUESTS, QUEST_IDS, questTotalEnemies } from '../domain/quests.js?v=3';
-import { MONSTERS } from '../domain/bestiary.js?v=374';
-import { ITEMS } from '../domain/items.js?v=366';
-import { t } from '../i18n/i18n.js?v=371';
-import { monsterSpriteImg } from './huntPanel.js?v=372';
-import { itemIconImg } from './shared.js?v=358';
-import { selectZone, startHunt, stopHunt } from '../application/huntUseCases.js?v=419';
-import { fetchQuestState } from '../infrastructure/authClient.js?v=363';
+import { G, ACCOUNT } from '../application/gameStore.js?v=356';
+import { QUESTS, QUEST_IDS, questTotalEnemies } from '../domain/quests.js?v=4';
+import { MONSTERS } from '../domain/bestiary.js?v=375';
+import { ITEMS } from '../domain/items.js?v=367';
+import { t } from '../i18n/i18n.js?v=372';
+import { monsterSpriteImg } from './huntPanel.js?v=373';
+import { itemIconImg } from './shared.js?v=359';
+import { selectZone, startHunt } from '../application/huntUseCases.js?v=420';
+import { fetchQuestState } from '../infrastructure/authClient.js?v=364';
 
 let completedCache = [];
 
@@ -55,13 +55,13 @@ export async function renderQuestsPanel() {
   el.innerHTML = questsBodyHtml();
 }
 
-// Inicia a raid da quest: para qualquer caça atual (evita a corrida com o
-// auto-resume do login), seleciona a zona sintética da quest e inicia. Robusto
-// ao estado de G.hunting — sempre arranca a raid na zona certa.
+// Inicia a raid da quest — mesmo padrão do seletor de zona normal (pickZone):
+// selectZone troca a zona (parando+reiniciando a caça se já estava caçando) e,
+// se não estava, o startHunt abaixo arranca. Vai pra aba Caça pra ver a raid.
 export function startQuestClick(id) {
   if (!QUESTS[id]) return;
-  if (G.hunting) stopHunt();
-  selectZone('quest:' + id);   // sem hunting ativo, só seta a zona (não re-inicia)
+  const wasHunting = G.hunting;
+  selectZone('quest:' + id);
   document.querySelector('.tab[data-tab="hunt"]')?.click();
-  startHunt();
+  if (!wasHunting) startHunt();
 }
