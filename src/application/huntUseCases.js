@@ -3,32 +3,32 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=356';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=364';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=361';
-import { ZONES } from '../domain/bestiary.js?v=375';
-import { questZone } from '../domain/quests.js?v=4';
+import { G, ACCOUNT } from './gameStore.js?v=357';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=365';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=362';
+import { ZONES } from '../domain/bestiary.js?v=376';
+import { questZone } from '../domain/quests.js?v=5';
 // Resolve a zona ATIVA — inclui as zonas sintéticas de Quest (quest:<id>), que
 // não estão em ZONES. Zona normal continua vindo do catálogo.
 const zoneDef = id => ZONES[id] || questZone(id);
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=383';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=354';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=386';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=385';
-import { elementMod } from '../domain/elements.js?v=352';
-import { STAMINA_MAX } from '../domain/stamina.js?v=352';
-import { ITEMS } from '../domain/items.js?v=367';
-import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=355';
-import { MONSTERS } from '../domain/bestiary.js?v=375';
-import { RARITY_TIERS } from '../domain/rarity.js?v=353';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=355';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=354';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=353';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=353';
-import { saveGame } from './saveGameUseCase.js?v=356';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=357';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=355';
-import { t } from '../i18n/i18n.js?v=372';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=384';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=355';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=387';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=386';
+import { elementMod } from '../domain/elements.js?v=353';
+import { STAMINA_MAX } from '../domain/stamina.js?v=353';
+import { ITEMS } from '../domain/items.js?v=368';
+import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=356';
+import { MONSTERS } from '../domain/bestiary.js?v=376';
+import { RARITY_TIERS } from '../domain/rarity.js?v=354';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=356';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=355';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=354';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=354';
+import { saveGame } from './saveGameUseCase.js?v=357';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=358';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=356';
+import { t } from '../i18n/i18n.js?v=373';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -172,6 +172,20 @@ export function selectZone(zoneId) {
 
 export function toggleHunt() {
   if (G.hunting) stopHunt(); else startHunt();
+}
+
+// Inicia a RAID de uma quest, à prova da corrida com o reconcile do auto-resume.
+// stopHuntLocalOnly() é SÍNCRONO: zera hunting/starting e mata o loop de
+// reconcile (que fica reescrevendo G.activeZone com a zona do servidor). Só
+// então setamos a zona sintética da quest e arrancamos — sem um reconcile
+// stale sobrescrever a zona de volta pra caçada anterior.
+export function startQuestRaid(questId) {
+  stopHuntLocalOnly();                     // síncrono: hunting=false, starting=false, para o reconcile
+  stopHuntSession(ACCOUNT.activeSlot);     // fecha a sessão anterior no servidor (sem reconcile encadeado)
+  bossOnly = false;
+  G.activeZone = 'quest:' + questId;
+  emit(EVENTS.ZONE_PICKER);
+  startHunt();                             // hunting=false → arranca a raid na zona da quest
 }
 
 // ---- reconciliação com o servidor de caçada autoritativo (ver

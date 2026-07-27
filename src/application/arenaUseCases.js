@@ -4,20 +4,20 @@
 // log da luta pertencem só a esta ação — um re-render cego do shell do painel
 // apagaria o log antes do jogador ver (era exatamente isso que acontecia na
 // versão anterior do jogo, e é o que este desenho corrige).
-import { G, ACCOUNT } from './gameStore.js?v=356';
-import { emit, EVENTS } from '../shared/eventBus.js?v=354';
-import { getMagic, getMaxHp } from './stats.js?v=353';
-import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=385';
-import { selectRequest } from '../infrastructure/supabaseClient.js?v=353';
-import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=355';
-import { grantReward } from './rewardGrants.js?v=193';
-import { grantCharmBonus } from './bestiaryUseCases.js?v=354';
-import { grantBoostOnServer } from '../infrastructure/authClient.js?v=364';
-import { bumpMissionProgress } from './battlePassUseCases.js?v=353';
-import { addItemToInventory } from './inventoryCore.js?v=354';
-import { ITEMS } from '../domain/items.js?v=367';
-import { saveGame } from './saveGameUseCase.js?v=356';
-import { t } from '../i18n/i18n.js?v=372';
+import { G, ACCOUNT } from './gameStore.js?v=357';
+import { emit, EVENTS } from '../shared/eventBus.js?v=355';
+import { getMagic, getMaxHp } from './stats.js?v=354';
+import { rollPlayerAttack, reducePhysical, computePlayerArmor, computePlayerDefense, computeAtk, normalRandom } from '../domain/combatFormulas.js?v=386';
+import { selectRequest } from '../infrastructure/supabaseClient.js?v=354';
+import { ARENA_DAILY_LIMIT, ARENA_DIVISIONS, ARENA_DIVISION_REWARDS, arenaDivisionForPoints } from '../domain/progression.js?v=356';
+import { grantReward } from './rewardGrants.js?v=194';
+import { grantCharmBonus } from './bestiaryUseCases.js?v=355';
+import { grantBoostOnServer } from '../infrastructure/authClient.js?v=365';
+import { bumpMissionProgress } from './battlePassUseCases.js?v=354';
+import { addItemToInventory } from './inventoryCore.js?v=355';
+import { ITEMS } from '../domain/items.js?v=368';
+import { saveGame } from './saveGameUseCase.js?v=357';
+import { t } from '../i18n/i18n.js?v=373';
 
 const NPC_NAMES = ['Zothrak', 'Sylvara', 'Drakonis', 'Morghul', 'Velindra', 'Thordak', 'Nyxara'];
 
