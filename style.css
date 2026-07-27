@@ -1088,12 +1088,20 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .stage-monster { position: relative; flex: 0 0 auto; cursor: pointer; }
 .stage-monster.leaving { cursor: default; pointer-events: none; }
 .stage-monster.spawning { animation: monster-rise 0.55s cubic-bezier(0.18, 0.9, 0.3, 1.2); }
-/* barrinha de vida sob cada criatura da sala — compacta, sem número, só a
-   proporção (o valor exato já mora na Battle List ao lado). */
+/* nome da criatura acima da cabeça, estilo cliente do Tibia — pequeno, salmão,
+   com sombra pra ler sobre qualquer piso. */
+.stage-monster-name {
+  font-family: var(--serif); font-size: 9px; font-weight: 700;
+  color: #ffb3a6; text-shadow: 0 1px 2px #000000cc; letter-spacing: 0.3px;
+  text-align: center; line-height: 1.1; margin: 0 auto 1px; max-width: 88px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* barrinha de vida sob o nome — compacta, sem número, só a proporção
+   (o valor exato já mora na Battle List ao lado). */
 .stage-monster-hp {
   width: 40px;
   height: 5px;
-  margin: 3px auto 0;
+  margin: 0 auto 3px;
   background: #00000055;
   border-radius: 3px;
   overflow: hidden;
@@ -1217,12 +1225,18 @@ input[type="text"]:focus { outline: none; border-color: var(--navy-1); box-shado
 .player-overhead {
   position: absolute; left: 50%; top: 72%;
   transform: translate(-50%, calc(-100% - 34px));
-  width: 100px; z-index: 4; pointer-events: none;
-  display: flex; flex-direction: column; gap: 2px;
+  width: 92px; z-index: 4; pointer-events: none;
+  display: flex; flex-direction: column; gap: 1px;
 }
-.player-overhead .player-battle-name { font-size: 10px; letter-spacing: 0.3px; margin: 0 0 1px; }
-.player-overhead-bar { height: 9px; margin-top: 0; border-radius: 5px; }
-.player-overhead-bar .player-hp-label { font-size: 8px; }
+.player-overhead .player-battle-name { font-size: 10px; letter-spacing: 0.3px; margin: 0 0 2px; }
+/* Barras FINAS estilo cliente do Tibia: só a cor/proporção (HP verde, Mana azul),
+   sem número — o valor exato mora no rail à esquerda. Sobrescreve o trilho com
+   borda-imagem (que fica estranho num bar de 5px) por um trilho escuro simples. */
+.player-overhead-bar {
+  height: 5px; margin-top: 0; border-radius: 3px;
+  background: #00000055; border: 1px solid #00000055;
+}
+.player-overhead-bar .player-hp-label { display: none; }
 
 /* ---- monstro atual ---- */
 /* monstro no palco: aparece à frente do boneco (mais abaixo), sobre o piso da

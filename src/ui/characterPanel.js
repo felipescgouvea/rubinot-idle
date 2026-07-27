@@ -1,24 +1,24 @@
 // Painel do personagem: seleção de vocação, barras de HP/MP/XP, atributos e
 // o retrato do jogador no card de Batalha (com sprite real + fallback).
-import { G } from '../application/gameStore.js?v=359';
-import { VOCATIONS, XP_TABLE, MAX_LEVEL, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=386';
-import { getEquippedWeaponSkillId } from '../application/stats.js?v=356';
-import { skillIconImg, itemIconImg } from './shared.js?v=362';
-import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=355';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=355';
-import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=355';
-import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=355';
-import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=356';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=357';
-import { formatNum, applyHpState } from './shared.js?v=362';
-import { renderZonePicker, fmtDuration } from './huntPanel.js?v=376';
-import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=423';
-import { isStaminaEnabled } from '../application/adminUseCases.js?v=360';
-import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=355';
-import { selectVocation } from '../application/characterUseCases.js?v=360';
-import { registerPlayerName } from '../application/highscoresUseCases.js?v=360';
-import { t } from '../i18n/i18n.js?v=375';
-import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=196';
+import { G } from '../application/gameStore.js?v=360';
+import { VOCATIONS, XP_TABLE, MAX_LEVEL, TIBIA_SKILLS, VOC_TRAINING, MANA_MULTIPLIER, triesForNext, PROMOTION, vocationDisplayName } from '../domain/character.js?v=387';
+import { getEquippedWeaponSkillId } from '../application/stats.js?v=357';
+import { skillIconImg, itemIconImg } from './shared.js?v=363';
+import { VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=356';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=356';
+import { outfitWalkAtlasPath } from '../infrastructure/outfitAssets.js?v=356';
+import { buildWalkFrames } from '../infrastructure/outfitWalkRenderer.js?v=356';
+import { getAtk, getDef, getSpd, getMagic, getMaxHp, getMaxMana } from '../application/stats.js?v=357';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=358';
+import { formatNum, applyHpState } from './shared.js?v=363';
+import { renderZonePicker, fmtDuration } from './huntPanel.js?v=377';
+import { getCurrentMonster, getHuntStats } from '../application/huntUseCases.js?v=424';
+import { isStaminaEnabled } from '../application/adminUseCases.js?v=361';
+import { formatStamina, staminaXpMult, staminaTier } from '../domain/stamina.js?v=356';
+import { selectVocation } from '../application/characterUseCases.js?v=361';
+import { registerPlayerName } from '../application/highscoresUseCases.js?v=361';
+import { t } from '../i18n/i18n.js?v=376';
+import { stageWalkPhase, isStageWalking } from './stageWalk.js?v=197';
 
 // Outfit escolhido pelo jogador, ou a aparência padrão da vocação enquanto
 // ele não escolhe nenhum (ver domain/outfits.js e ui/outfitPicker.js).
@@ -448,7 +448,10 @@ export function renderPlayerBattleSide(hit = false, attacking = false, healing =
 
   const maxHp = getMaxHp();
   const pct = Math.max(0, Math.round((G.hp / maxHp) * 100));
-  document.getElementById('player-battle-name').textContent = t('character.battleNameLevel', { name: VOCATIONS[G.vocation].name, level: G.level });
+  // Overhead estilo cliente do Tibia: só o NICK do personagem sobre a cabeça —
+  // sem vocação nem nível (esses já aparecem no retrato/rail). Fallback pro nome
+  // da vocação em saves antigos sem nick.
+  document.getElementById('player-battle-name').textContent = G.playerName || VOCATIONS[G.vocation].name;
   const hpFill = document.getElementById('player-hp-fill');
   hpFill.style.width = pct + '%';
   applyHpState(hpFill, pct);

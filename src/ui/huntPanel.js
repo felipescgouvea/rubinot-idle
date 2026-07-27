@@ -1,23 +1,23 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=359';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=378';
-import { MONSTERS } from '../domain/bestiary.js?v=378';
-import { questZone } from '../domain/quests.js?v=7';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=386';
-import { cityName } from '../domain/cities.js?v=362';
-import { ITEMS } from '../domain/items.js?v=370';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=360';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=355';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=357';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=362';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=360';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=423';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=355';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=360';
-import { t } from '../i18n/i18n.js?v=375';
-import { setStageWalking } from './stageWalk.js?v=196';
+import { G } from '../application/gameStore.js?v=360';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=379';
+import { MONSTERS } from '../domain/bestiary.js?v=379';
+import { questZone } from '../domain/quests.js?v=8';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=387';
+import { cityName } from '../domain/cities.js?v=363';
+import { ITEMS } from '../domain/items.js?v=371';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=361';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=356';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=358';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=363';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=361';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=424';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=356';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=361';
+import { t } from '../i18n/i18n.js?v=376';
+import { setStageWalking } from './stageWalk.js?v=197';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -538,8 +538,12 @@ function renderStagePack(stage) {
       el.dataset.rawUid = String(m.uid);
       el.style.pointerEvents = 'auto'; // .stage-pack tem pointer-events:none; sem isso o clique não chega no monstro
       el.setAttribute('onclick', `selectTarget('${m.uid}')`);
-      el.innerHTML = `<div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>
-        <div class="stage-monster-hp"><div class="stage-monster-hp-fill hp-state-high" style="width:100%"></div></div>`;
+      // Estilo cliente do Tibia: nome + barrinha de vida ACIMA da cabeça da
+      // criatura (o valor exato mora na Battle List; aqui é só nome + proporção).
+      const mName = (MONSTERS[m.defKey] && MONSTERS[m.defKey].name) || m.name || m.defKey;
+      el.innerHTML = `<div class="stage-monster-name">${mName}</div>
+        <div class="stage-monster-hp"><div class="stage-monster-hp-fill hp-state-high" style="width:100%"></div></div>
+        <div class="monster-sprite-wrap">${monsterSpriteImg(m.defKey, 'monster-sprite')}</div>`;
     }
     // vida atualizada a cada tick, inclusive nos que já estavam na tela.
     const fill = el.querySelector('.stage-monster-hp-fill');

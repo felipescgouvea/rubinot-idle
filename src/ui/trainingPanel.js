@@ -1,15 +1,15 @@
 // Aba Training — TREINO UNIFICADO (decisão do Felipe): UM só painel/treino, que
 // roda acelerado com o jogo aberto e continua no ritmo de descanso enquanto
 // fechado. Sem escolha online/offline. Ver application/trainingUseCases.js.
-import { G } from '../application/gameStore.js?v=359';
-import { TIBIA_SKILLS, VOCATIONS, triesForNext } from '../domain/character.js?v=386';
-import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=357';
-import { SPELLS } from '../domain/spells.js?v=357';
-import { on, EVENTS } from '../shared/eventBus.js?v=357';
-import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=362';
-import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=363';
-import { t } from '../i18n/i18n.js?v=375';
-import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=190';
+import { G } from '../application/gameStore.js?v=360';
+import { TIBIA_SKILLS, VOCATIONS, triesForNext } from '../domain/character.js?v=387';
+import { TRAINABLE_SKILLS, ONLINE_RATE_MULTIPLIER, triesPerMinuteFor, manaSpentPerMinute } from '../domain/training.js?v=358';
+import { SPELLS } from '../domain/spells.js?v=358';
+import { on, EVENTS } from '../shared/eventBus.js?v=358';
+import { skillIconImg, spellIconImg, trainingDummyImg } from './shared.js?v=363';
+import { startTraining, stopTraining } from '../application/trainingUseCases.js?v=364';
+import { t } from '../i18n/i18n.js?v=376';
+import { trainingStageHtml, mountTrainingStagePlayer, iniciarPulsoCast, pararPulsoCast } from './trainingStage.js?v=191';
 
 // Magia escolhida no picker do treino online de mago, antes de confirmar
 // (estado só de UI — só vira G.trainingSpell quando o treino começa de fato).
