@@ -49,7 +49,7 @@
 - [ ] **Funil de recompensa pras ladders infinitas** · M — Boss Rush/skill/bestiário dão payoff nos marcos (charm/imbue/wildcard)
 
 ## Infra / a11y / mobile (P4)
-- [ ] **CI rodando o smoke set dos probes** pra gatear deploy · M · `[test]`
+- [ ] **CI rodando os guards no push/PR** · M · `[test]` — PRONTO, falta só o Felipe pushar: o workflow `.github/workflows/guards.yml` já está escrito (roda check-import-versions + check-imports-faltando + i18n-check + audit-static) e **os 4 guards passam hoje** (CI nasceria verde). Bloqueio ÚNICO: o token desta sessão não tem o `workflow` scope do GitHub, então não consigo commitar/pushar arquivos em `.github/workflows/`. AÇÃO DO FELIPE: `git add .github/workflows/guards.yml && git commit && git push` da sua máquina (auth normal) — pronto. (O smoke-set completo dos probes de browser pode entrar depois num 2º job, mas exige runner com Playwright.)
 - [x] **Unit test das fórmulas de combate** (gear+monstro conhecidos → dano conhecido) · M · `[test]` — scripts/test-combat-formulas.mjs, 18 asserts determinísticos (getMaxWeaponDamage/melee, reduceElemental+cap 80, reducePhysical bordas, fight modes, mana) — `6007b9df`
 - [x] **Mobile:** eliminada a rolagem lateral (char-skills estourava) + alvos de toque ≥40px (topbar/fight-mode/log) + fonte base já 12px; layout single-column ≤900px verificado em 390px — `a4d9c457`
 - [x] **Log estruturado no servidor** (JSON level/ts/event/campos) — logger slog() em startup, listen e erro não-tratado (com method/path); grepável no railway logs — `e31ce9e2`
