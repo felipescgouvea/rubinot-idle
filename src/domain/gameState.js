@@ -3,10 +3,10 @@
 // passado para a camada application — o domínio só descreve o SHAPE e como
 // criar um estado novo, nunca guarda a instância viva.
 
-import { createDefaultSkills } from './character.js?v=387';
-import { createDefaultRtc } from './rtcConfig.js?v=390';
-import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=356';
-import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=359';
+import { createDefaultSkills } from './character.js?v=388';
+import { createDefaultRtc } from './rtcConfig.js?v=391';
+import { DEFAULT_OUTFIT_COLORS } from './outfitColors.js?v=357';
+import { DEFAULT_ADMIN_CONFIG } from './adminConfig.js?v=360';
 
 // Quantos personagens cabem numa conta. Mora no domínio porque é regra de
 // negócio, não detalhe de tela: o servidor recusa slot fora dessa faixa e cada

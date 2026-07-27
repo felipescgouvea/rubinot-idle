@@ -2,15 +2,15 @@
 // real do Tibia; iniciar entra na raid (caça na zona sintética da quest). A
 // conclusão e o prêmio são concedidos pelo servidor ao vencer o chefe (ver
 // server/huntEngine.js) — aqui só mostramos o estado e disparamos a raid.
-import { G, ACCOUNT } from '../application/gameStore.js?v=360';
-import { QUESTS, QUEST_IDS, questTotalEnemies } from '../domain/quests.js?v=8';
-import { MONSTERS } from '../domain/bestiary.js?v=379';
-import { ITEMS } from '../domain/items.js?v=371';
-import { t } from '../i18n/i18n.js?v=376';
-import { monsterSpriteImg } from './huntPanel.js?v=377';
-import { itemIconImg } from './shared.js?v=363';
-import { startQuestRaid } from '../application/huntUseCases.js?v=424';
-import { fetchQuestState } from '../infrastructure/authClient.js?v=368';
+import { G, ACCOUNT } from '../application/gameStore.js?v=361';
+import { QUESTS, QUEST_IDS, questTotalEnemies } from '../domain/quests.js?v=9';
+import { MONSTERS } from '../domain/bestiary.js?v=380';
+import { ITEMS } from '../domain/items.js?v=372';
+import { t } from '../i18n/i18n.js?v=377';
+import { monsterSpriteImg } from './huntPanel.js?v=378';
+import { itemIconImg } from './shared.js?v=364';
+import { startQuestRaid } from '../application/huntUseCases.js?v=425';
+import { fetchQuestState } from '../infrastructure/authClient.js?v=369';
 
 let completedCache = [];
 

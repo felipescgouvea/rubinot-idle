@@ -1,13 +1,13 @@
 // Inventário, modal de detalhe do item, Relíquias e os slots de equipamento
 // no card da Caçada — ficam juntos porque compartilham o mesmo modelo de item
 // (Relíquia é uma variação de item — ver domain/items.js: isRelicId).
-import { G } from '../application/gameStore.js?v=360';
-import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=371';
-import { RARITY_TIERS } from '../domain/rarity.js?v=357';
-import { on, EVENTS } from '../shared/eventBus.js?v=358';
-import { saveGame } from '../application/saveGameUseCase.js?v=360';
-import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=363';
-import { t } from '../i18n/i18n.js?v=376';
+import { G } from '../application/gameStore.js?v=361';
+import { ITEMS, EQUIPMENT_SLOTS, EQUIPPABLE_TYPES, CONSUMABLE_TYPES, isRelicId, resolveEquippedItem } from '../domain/items.js?v=372';
+import { RARITY_TIERS } from '../domain/rarity.js?v=358';
+import { on, EVENTS } from '../shared/eventBus.js?v=359';
+import { saveGame } from '../application/saveGameUseCase.js?v=361';
+import { openModal, closeModal, itemIconImg, goldIconImg } from './shared.js?v=364';
+import { t } from '../i18n/i18n.js?v=377';
 
 let dragId = null; // itemId sendo arrastado no inventário
 
@@ -195,6 +195,9 @@ export function openItemModal(itemId, fromBag = false) {
   const isEquippable = EQUIPPABLE_TYPES.includes(item.type);
   const isConsumable = CONSUMABLE_TYPES.includes(item.type);
   const equipped = Object.values(G.equipment).includes(itemId);
+  // Cópias VENDÁVEIS = as da mochila (a equipada mora no corpo, não na Bag). Os
+  // botões de venda usam bagQty pra nunca vender a peça equipada por engano.
+  const bagQty = qty - (equipped ? 1 : 0);
   // Equipável: mostra o COMPARATIVO de status com o que está no slot. Demais
   // itens (consumíveis/materiais): só a lista simples de atributos.
   const simpleStats = ['heal', 'mana', 'dmg'].filter(s => item[s]).map(s => `<span>${statLabel(s)} +${item[s]}</span>`).join(' | ');
@@ -208,8 +211,8 @@ export function openItemModal(itemId, fromBag = false) {
     ${isConsumable ? `<button onclick="useItem('${itemId}')" class="item-modal-btn primary">${t('inventory.use')}</button>` : ''}
     ${isEquippable && !equipped ? `<button onclick="equipItem('${itemId}')" class="item-modal-btn primary">${t('inventory.equip')}</button>` : ''}
     ${equipped ? `<button onclick="unequipItem('${itemId}')" class="item-modal-btn neutral">${t('inventory.unequip')}</button>` : ''}
-    <button onclick="sellItem('${itemId}')" class="item-modal-btn sell">${t('inventory.sellFor', { price: item.sell, icon: goldIconImg('inline-icon') })}</button>
-    ${qty > 1 ? `<button onclick="sellAllItem('${itemId}')" class="item-modal-btn sell">${t('inventory.sellAllFor', { qty, total: item.sell * qty, icon: goldIconImg('inline-icon') })}</button>` : ''}
+    ${bagQty >= 1 ? `<button onclick="sellItem('${itemId}')" class="item-modal-btn sell">${t('inventory.sellFor', { price: item.sell, icon: goldIconImg('inline-icon') })}</button>` : ''}
+    ${bagQty > 1 ? `<button onclick="sellAllItem('${itemId}')" class="item-modal-btn sell">${t('inventory.sellAllFor', { qty: bagQty, total: item.sell * bagQty, icon: goldIconImg('inline-icon') })}</button>` : ''}
   `, fromBag ? handleItemModalDone : null);
 }
 

@@ -1537,7 +1537,16 @@ export async function sellItemStandalone(userId, slot, itemId, qty) {
   const row = await selectOne('player_inventory', { user_id: userId, slot, item_id: itemId });
   const owned = row ? Number(row.qty) : 0;
   if (owned <= 0) return { error: 'item não pertence a esta conta/personagem' };
-  const count = qty != null ? Math.max(1, Math.min(owned, Math.floor(Number(qty) || 1))) : owned;
+  // A cópia EQUIPADA nunca é vendida pela Bag: equipar NÃO tira o item de
+  // player_inventory (só grava em player_equipment), então a linha do inventário
+  // ainda conta a peça que está no corpo. Sem esta proteção, "Vender todos"
+  // zerava o inventário e desequipava o item (bug do backlog). Vendável = posse
+  // menos as cópias equipadas.
+  const eqRows = await selectMany('player_equipment', { user_id: userId, slot });
+  const equippedCount = eqRows.filter(r => r.item_id === itemId).length;
+  const sellable = owned - equippedCount;
+  if (sellable <= 0) return { error: 'item equipado — desequipe antes de vender' };
+  const count = qty != null ? Math.max(1, Math.min(sellable, Math.floor(Number(qty) || 1))) : sellable;
   const total = item.sell * count;
 
   const stats = await selectOne('player_stats', { user_id: userId, slot });

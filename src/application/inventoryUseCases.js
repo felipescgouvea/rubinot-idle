@@ -1,17 +1,17 @@
-import { G, ACCOUNT } from './gameStore.js?v=360';
-import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=368';
-import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=371';
-import { RARITY_TIERS } from '../domain/rarity.js?v=357';
-import { emit, EVENTS } from '../shared/eventBus.js?v=358';
-import { getMagic } from './stats.js?v=357';
-import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=390';
-import { getCurrentMonster } from './huntUseCases.js?v=424';
-import { areaName } from '../domain/attackAreas.js?v=356';
-import { saveGame } from './saveGameUseCase.js?v=360';
-import { itemLogIcon } from './logIcons.js?v=359';
-import { t } from '../i18n/i18n.js?v=376';
+import { G, ACCOUNT } from './gameStore.js?v=361';
+import { syncEquipment, useItemOnServer, sellItemOnServer, sellRelicOnServer, updateHuntRtc } from '../infrastructure/authClient.js?v=369';
+import { ITEMS, resolveEquippedItem, potionUseBlockReason, equipBlockReason } from '../domain/items.js?v=372';
+import { RARITY_TIERS } from '../domain/rarity.js?v=358';
+import { emit, EVENTS } from '../shared/eventBus.js?v=359';
+import { getMagic } from './stats.js?v=358';
+import { canUseAttackRune, runeMinMl } from '../domain/rtcConfig.js?v=391';
+import { getCurrentMonster } from './huntUseCases.js?v=425';
+import { areaName } from '../domain/attackAreas.js?v=357';
+import { saveGame } from './saveGameUseCase.js?v=361';
+import { itemLogIcon } from './logIcons.js?v=360';
+import { t } from '../i18n/i18n.js?v=377';
 
-export { addItemToInventory } from './inventoryCore.js?v=358';
+export { addItemToInventory } from './inventoryCore.js?v=359';
 
 // Auto-vender lixo (loot): liga/desliga e define o valor máximo do que é "lixo".
 // Aplicado no loot em application/huntUseCases.js.
@@ -186,12 +186,18 @@ function clearEquipSlotIfEmpty(itemId, type) {
 
 export async function sellAllItem(itemId) {
   const item = ITEMS[itemId];
-  const qty = G.inventory[itemId] || 0;
-  if (qty <= 0) return;
-  const res = await sellItemOnServer(ACCOUNT.activeSlot, itemId);
+  // "Vender todos" vende só as cópias da MOCHILA — a peça equipada mora no corpo
+  // (o servidor também protege isso, ver sellItemStandalone). Sem excluir a
+  // equipada aqui, o clique zerava a pilha e desequipava o item.
+  const equipped = Object.values(G.equipment).includes(itemId);
+  const bagQty = (G.inventory[itemId] || 0) - (equipped ? 1 : 0);
+  if (bagQty <= 0) return;
+  const res = await sellItemOnServer(ACCOUNT.activeSlot, itemId); // qty omitido = tudo VENDÁVEL (servidor exclui a equipada)
   if (!res.ok) { emit(EVENTS.NOTIFY, { msg: res.error || t('inventory.useBlocked', { item: item.name, reason: '' }), type: 'error' }); return; }
   G.gold = res.gold;
-  delete G.inventory[itemId];
+  // Remove só o que o servidor vendeu; a cópia equipada permanece na pilha.
+  G.inventory[itemId] = (G.inventory[itemId] || 0) - (res.sold || bagQty);
+  if (G.inventory[itemId] <= 0) delete G.inventory[itemId];
   clearEquipSlotIfEmpty(itemId, item.type);
   emit(EVENTS.ITEM_MODAL_DONE);
   emit(EVENTS.INVENTORY);
