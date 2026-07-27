@@ -3,7 +3,7 @@
 // passo. Não bloqueia o jogo (pointer-events:none no overlay) — o jogador pode
 // clicar no próprio botão destacado; o card tem Pular/Próximo. Persiste em
 // localStorage pra não repetir.
-import { t } from '../i18n/i18n.js?v=373';
+import { t } from '../i18n/i18n.js?v=374';
 
 const KEY = 'rubinot_onboarded_v1';
 const STEPS = [
