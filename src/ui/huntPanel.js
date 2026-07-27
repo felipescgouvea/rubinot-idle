@@ -1,22 +1,23 @@
 // Tudo da aba Caçada relacionado à zona/monstro atual: sprite do monstro,
 // seletor de zona, contadores de mortes, loot recente e o botão de
 // iniciar/parar caçada. (O retrato do jogador mora em characterPanel.js.)
-import { G } from '../application/gameStore.js?v=358';
-import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=377';
-import { MONSTERS } from '../domain/bestiary.js?v=377';
-import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=385';
-import { cityName } from '../domain/cities.js?v=361';
-import { ITEMS } from '../domain/items.js?v=369';
-import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=359';
-import { areaMaxTargets } from '../domain/attackAreas.js?v=354';
-import { on, emit, EVENTS } from '../shared/eventBus.js?v=356';
-import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=361';
-import { uiIcon, huntToggleIcon } from './uiIcons.js?v=359';
-import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=422';
-import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=354';
-import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=359';
-import { t } from '../i18n/i18n.js?v=374';
-import { setStageWalking } from './stageWalk.js?v=195';
+import { G } from '../application/gameStore.js?v=359';
+import { ZONES, isZoneUnlocked, boostedZoneForDate } from '../domain/bestiary.js?v=378';
+import { MONSTERS } from '../domain/bestiary.js?v=378';
+import { questZone } from '../domain/quests.js?v=7';
+import { XP_TABLE, MAX_LEVEL } from '../domain/character.js?v=386';
+import { cityName } from '../domain/cities.js?v=362';
+import { ITEMS } from '../domain/items.js?v=370';
+import { monsterSpriteFile, spriteUrl, effectSpriteFile, missileSpriteFile, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=360';
+import { areaMaxTargets } from '../domain/attackAreas.js?v=355';
+import { on, emit, EVENTS } from '../shared/eventBus.js?v=357';
+import { openModal, itemIconImg, vitalIconImg, goldIconImg, formatNum, applyHpState, hpStateClass } from './shared.js?v=362';
+import { uiIcon, huntToggleIcon } from './uiIcons.js?v=360';
+import { getCurrentMonster, getCurrentPack, getRecentDead, getHuntStats, isBossOnlyHunt } from '../application/huntUseCases.js?v=423';
+import { MAX_BLESSINGS, blessingCost, deathXpLossPct, reviveHpPct } from '../domain/blessings.js?v=355';
+import { getProjectileSpeedMs } from '../application/adminUseCases.js?v=360';
+import { t } from '../i18n/i18n.js?v=375';
+import { setStageWalking } from './stageWalk.js?v=196';
 
 // O tamanho PADRONIZADO de cada monstro (52px na cena, 34px na Battle List)
 // já vem do próprio sprite agora — os WebP em assets/sprites/monsters/ foram
@@ -250,6 +251,10 @@ export function renderMonsterDisplay(hit = false, killed = null, spellElement = 
 // mundo, save antigo, primeira vez) — preserva a escolha manual do jogador
 // entre level-ups (a versão anterior resetava pra 1ª zona toda vez).
 function pickDefaultZoneIfNeeded() {
+  // Zona sintética de Quest (raid) NÃO está em ZONES — é sempre válida, nunca
+  // resetada (senão o render da barra derrubava a raid recém-iniciada pra zona
+  // padrão logo após startQuestRaid setar 'quest:<id>').
+  if (typeof G.activeZone === 'string' && G.activeZone.startsWith('quest:')) return;
   const stillValid = G.activeZone && isZoneUnlocked(G.activeZone, G.level, G.currentWorld, G.defeatedZoneBosses);
   if (stillValid) return;
   const valid = Object.keys(ZONES).find(id => isZoneUnlocked(id, G.level, G.currentWorld, G.defeatedZoneBosses));
@@ -263,7 +268,7 @@ function todayStr() {
 export function renderZonePicker() {
   pickDefaultZoneIfNeeded();
 
-  const zone = ZONES[G.activeZone];
+  const zone = ZONES[G.activeZone] || questZone(G.activeZone);
   const isBoostedToday = G.activeZone && G.activeZone === boostedZoneForDate(todayStr());
   const boostedBadge = isBoostedToday ? ` <span class="zone-boosted-badge" title="${t('zonePicker.bonusZoneTooltipFull')}">🔥 ${t('zonePicker.bonusZoneBadge')}</span>` : '';
   const iconEl = document.getElementById('zone-current-icon');
@@ -304,7 +309,7 @@ function renderHuntStatusButton() {
 function renderZoneTheme() {
   const scene = document.getElementById('battle-scene');
   if (!scene) return;
-  const zone = ZONES[G.activeZone];
+  const zone = ZONES[G.activeZone] || questZone(G.activeZone);
   if (zone && zone.theme) {
     scene.style.setProperty('--zone-color-1', zone.theme[0]);
     scene.style.setProperty('--zone-color-2', zone.theme[1]);
