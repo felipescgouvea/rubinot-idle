@@ -19,6 +19,7 @@ Todo jogador. O painel do personagem mostra a mochila e os slots de equipamento.
 - **Itens reais do Tibia, com nome real.** Nome, tipo, atributos e valor de venda (npcvalue) vêm da fonte oficial. Nome exibido sempre em inglês, em qualquer idioma.
 - **Relíquias (raridade).** Variação de item que **só cai de boss**, reforçando o atributo principal por uma % conforme a raridade (Uncommon → Legendary). Várias raridades podem cair no mesmo golpe (cada uma vira uma relíquia separada). É **liberdade de design** deste jogo (não existe raridade de item no Tibia; a analogia mais próxima é o Imbuement) — registrada como exceção em [90-regras-de-negocio-gerais.md](90-regras-de-negocio-gerais.md).
 - **Venda automática.** Presets de venda de loot barato (por valor) para não entupir a mochila.
+- **A peça equipada nunca é vendida em lote.** "Vender todos" e a venda de um item vendem apenas as cópias da **mochila** — a peça que está **equipada** (no corpo) fica protegida; para vendê-la é preciso **desequipar antes**. Evita perder o equipamento por engano num clique de venda em massa.
 - Itens equipados/vendidos nunca duplicam nem somem sem uma ação do jogador que os explique.
 
 ## Comportamento esperado
@@ -33,3 +34,4 @@ Todo jogador. O painel do personagem mostra a mochila e os slots de equipamento.
 - [ ] Itens têm nome/valor reais do Tibia; o nome não muda por idioma.
 - [ ] Relíquias caem só de boss e reforçam o atributo principal por raridade.
 - [ ] A venda (manual e automática) nunca duplica nem some item sem ação do jogador.
+- [ ] "Vender todos"/venda vende só as cópias da mochila; a peça equipada não é vendida (desequipar antes).
