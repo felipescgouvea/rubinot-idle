@@ -17,7 +17,7 @@
 - [x] Loja Premium: remover o texto "(Dinheiro Real)" do botão — já satisfeito: nenhum botão exibe "(Dinheiro Real)"; aba = "💳 Loja Premium" e o preço mostra "R$ x,xx"
 - [x] Abas "leves" (Worlds/Highscores/Market/Shop) deixam ~40% inferior da tela como gradiente morto — `#app` estica as colunas até embaixo (rail navy + aside emolduram a página); gradiente morto abaixo do conteúdo 40%→7% — `0b81c23b`
 - [x] Letterbox do palco de batalha — tarjas pretas grossas, área jogável pequena — cena agora preenche 100% da largura (era 560px fixos) — `2ba4e122`
-- [ ] **Barras de vida/mana overhead estilo cliente Tibia** — deixar as barras sobre o personagem iguais à screenshot (HP verde + Mana azul finas); mostrar só o **nick** do personagem (sem nível nem vocação); nos **monstros**, só barra de vida + nome — (screenshot anexada, salvar manualmente)
+- [x] **Barras de vida/mana overhead estilo cliente Tibia** — barras finas HP verde + Mana azul sobre o boneco, sem número (o valor mora no rail); player mostra só o **nick** (sem nível/vocação); cada monstro no palco ganhou o **nome** sobre a barra de vida. Verificado em prod (nick "ClaudePala", 4 Rats nomeados, labels ocultas, barra 5px) — `2e90298e`
 
 ## Funcional / UX
 - [x] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente) + remover os HP/Mana duplicados dentro do palco — `466e7e22`
