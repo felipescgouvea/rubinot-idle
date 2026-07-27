@@ -68,6 +68,11 @@ try {
   if (!ended) problems.push('a raid NÃO encerrou em ~180s (sem log de conclusão) — pode estar respawnando o chefe (hunt infinita)');
   else {
     console.log('[fim] log de conclusão =', JSON.stringify(endLog));
+    // orc_fortress já está concluída (completed_quests) → é REJOGADA: a mensagem
+    // NÃO pode prometer prêmio ("Reward:"/"Prêmio:"), tem que ser a variante de
+    // rejogada ("already completed"/"já concluída — sem novo prêmio").
+    if (/reward:|prêmio:/i.test(endLog)) problems.push('rejogada ainda promete prêmio na mensagem: ' + endLog);
+    if (!/already completed|já concluída/i.test(endLog)) problems.push('rejogada não usou a variante "já concluída": ' + endLog);
     // dá um tempinho pro handler encerrar/voltar a zona
     await page.waitForTimeout(4000);
     const post = await page.evaluate(() => {
