@@ -9,6 +9,7 @@
 ---
 
 ## Decisões pendentes (precisam do Felipe)
+- **✅ APROVAÇÃO EM LOTE 2026-07-27:** o Felipe aprovou TODO o backlog aberto EXCETO **Monk** e **Imbuir item da mochila** (esses ficam **OFF/parados**). Ou seja, estão liberados pra implementar: spells dos monstros · Boss Zone bosses reais · Wheel · Forge · Bosstiary · tiers de charm · Prey Wildcards · sink de gold · sink de Rubini · funil de recompensa · Prey fiel (decido eu) · nível recomendado/travar abas (decido eu). Economia sensível: implementar **conservador** e medir. CI = push do Felipe.
 - [x] **exori quase não dispara pelo RTC** — DECIDIDO+FEITO: a reserva de mana de cura agora só vale quando a cura é iminente (HP < gatilho); com HP alto o exori (125) dispara livre. Não muda o custo canônico. — `a1463034`
 - [x] **Sprites de monstro "cortadas"** (zone picker + boss zone) — DECIDIDO+FEITO: respiro leve (scale .86) nos previews pequenos; criatura aparece inteira e centrada. Palco de batalha mantém o 1:1 nativo. — `20130fc9`
 
