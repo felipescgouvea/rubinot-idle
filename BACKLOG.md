@@ -24,7 +24,7 @@
 - [x] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador — criatura (Atacar/Bestiário) e item da mochila (Examinar/Vender); suprime o nativo nesses alvos — `1a4ddf73`
 - [ ] **Imbuir item da MOCHILA** · `[server]` — hoje o imbuement mora por `eq_slot`; imbuir item da mochila exige guardar por instância de item (refactor de dados + persistência)
 - [ ] **Boss Zone com bosses REAIS** · `[CANON]` — cada zona usa o boss canônico da criatura (nome/sprite/stats/loot)
-- [ ] **BUG: "Vender todos" ignora o item equipado** — a venda em lote na janela de venda não pode considerar o item que está equipado (só vende os da mochila)
+- [x] **BUG: "Vender todos" ignora o item equipado** — equipar não tira o item de `player_inventory` (só grava em `player_equipment`), então "Vender todos" vendia a cópia equipada e desequipava. Servidor agora exclui as cópias equipadas do total vendável (recusa se for equipado-sem-sobra); cliente conta só a bag (`bagQty`) e esconde os botões de venda quando não há sobra. Verificado em prod: banco mostra toda peça equipada com `inv_qty≥1` após sell-all; probe cliente PASSOU — `478981b2`
 
 ## Features
 - [x] **Sistema de Quests (raids com prêmio real)** · L — spec + 3 quests reais (ondas → chefe → prêmio real do Tibia, não-repetível); aba Quests; servidor concede o prêmio server-authoritative + rastreia conclusão (coluna completed_quests) — `d0578cbd` — ✅ e2e prod: raid roda, chefe cai, Knight Armor concedido, completed_quests=[orc_fortress]
