@@ -56,7 +56,7 @@
 
 ## Pendências de dados (manual, TibiaWiki — não sourceável automático)
 - [x] **404 na aba Spells**: `destroy_field_rune` sem sprite → 404. Convertida a canônica do item-catalog pra items/Destroy_Field_Rune.webp — `63dc23c0`
-- [ ] ~119 monstros custom/evento com `atk>1500` (não existem no Crystal) — `scripts/audit-monster-atk.mjs --thresh=1500`
+- [x] ~~monstros com `atk>1500`~~ — INVESTIGADO 2026-07-27: **não é bug de gameplay**. Dos 171 com atk>1500, **167 são dados mortos** (não estão em zona nenhuma → não afetam jogo). Dos **4 alcançáveis**, 3 (mycobiontic_beetle/oozing_corpus/sopping_corpus) têm `atk=1600` = **exatamente o melee maxDamage canônico do Crystal** (endgame real, hp 28-33k); o venerable_foam_stalker (atk 1554) é variante forte fora do Crystal (plausível). Nenhum placeholder instakill alcançável. Dado morto pode ser limpo depois, mas é inócuo. — `014bd3ef`
 - [ ] ~136 monstros com `hp` placeholder (até ~100× o real) — baixar hp exige rebalancear XP junto
 - [ ] Maioria dos monstros custom sem `spells` — importar os `combat` dos `.lua`
 
