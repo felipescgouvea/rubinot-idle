@@ -711,6 +711,7 @@ const server = http.createServer(async (req, res) => {
         combatEvents: liveSession ? (liveSession.combatEvents || []) : [], // log server-truth (dano/cura por ação, ver huntEngine: pushCombat)
         killEvents: liveSession ? (liveSession.killEvents || []) : [], // TODAS as mortes do tick (crédito server-truth — cobre multi-kill de área, ver huntEngine: pushKill)
         questEnded: liveSession ? (liveSession.questEnded || null) : null, // raid concluída: chefe caiu, cliente encerra e volta pra zona anterior
+        questReward: liveSession ? (liveSession.questReward || null) : null, // item concedido (só na 1ª conclusão; null na rejogada)
       });
     }
 

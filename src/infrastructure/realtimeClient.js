@@ -59,6 +59,7 @@ function abrir(slot) {
       inventory: msg.inventory,
       skills: msg.skills,
       questEnded: msg.questEnded || null, // fim da raid: cliente encerra e volta pra zona anterior
+      questReward: msg.questReward || null, // item concedido (só na 1ª conclusão; null na rejogada)
     });
   };
   ws.onerror = () => {};

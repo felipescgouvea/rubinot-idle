@@ -19,6 +19,7 @@ export default {
   'quest.replay': '↻ Replay',
   'quest.completed': 'Completed',
   'quest.done': '🏆 Quest complete: {name}! Reward: {reward}',
+  'quest.doneReplay': '🏆 Quest complete: {name}! (already completed — no new reward)',
   'quest.desc.orcFortress': 'Storm the orc fortress and cut down the Warlord.',
   'quest.desc.serpentsLair': 'Descend into the serpent\'s lair and slay the Hydra.',
   'quest.desc.demonsPact': 'Break the demon\'s pact — face the Demon itself.',

@@ -622,6 +622,7 @@ async function settleKill(session, mon, cfg) {
       const rewardItem = QUESTS[session.questId].reward.item;
       const captured = await changeSessionInv(session, rewardItem, 1);
       if (captured) lootGained.push(rewardItem); // aparece na linha de loot
+      session.questReward = rewardItem; // só na 1ª vez: o cliente mostra "Prêmio: X" (rejogada não promete prêmio)
       try {
         await upsertRow('player_stats', { user_id: session.userId, slot: session.slot, completed_quests: done, updated_at: new Date().toISOString() }, 'user_id,slot');
       } catch (e) { console.error('falha ao persistir quest concluída', session.questId, e.message); }
@@ -1057,6 +1058,7 @@ function empurrarEstado(session) {
     killEvents: session.killEvents || [],
     inventory: { ...(session.inv || {}) },
     questEnded: session.questEnded || null, // raid concluída: cliente encerra e volta pra zona anterior
+    questReward: session.questReward || null, // item concedido (só na 1ª conclusão; null na rejogada)
   });
 }
 

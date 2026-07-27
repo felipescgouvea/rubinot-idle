@@ -20,6 +20,7 @@ export default {
   'quest.replay': '↻ Rejogar',
   'quest.completed': 'Concluída',
   'quest.done': '🏆 Quest concluída: {name}! Prêmio: {reward}',
+  'quest.doneReplay': '🏆 Quest concluída: {name}! (já concluída — sem novo prêmio)',
   'quest.desc.orcFortress': 'Invada a fortaleza orc e derrube o Warlord.',
   'quest.desc.serpentsLair': 'Desça ao covil da serpente e abata a Hydra.',
   'quest.desc.demonsPact': 'Quebre o pacto do demônio — encare o próprio Demon.',

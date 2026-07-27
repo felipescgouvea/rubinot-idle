@@ -3,32 +3,32 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=362';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=370';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=367';
-import { ZONES } from '../domain/bestiary.js?v=381';
-import { questZone, QUESTS } from '../domain/quests.js?v=10';
+import { G, ACCOUNT } from './gameStore.js?v=363';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=371';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=368';
+import { ZONES } from '../domain/bestiary.js?v=382';
+import { questZone, QUESTS } from '../domain/quests.js?v=11';
 // Resolve a zona ATIVA — inclui as zonas sintéticas de Quest (quest:<id>), que
 // não estão em ZONES. Zona normal continua vindo do catálogo.
 const zoneDef = id => ZONES[id] || questZone(id);
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=389';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=360';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=392';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=391';
-import { elementMod } from '../domain/elements.js?v=358';
-import { STAMINA_MAX } from '../domain/stamina.js?v=358';
-import { ITEMS } from '../domain/items.js?v=373';
-import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=361';
-import { MONSTERS } from '../domain/bestiary.js?v=381';
-import { RARITY_TIERS } from '../domain/rarity.js?v=359';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=361';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=360';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=359';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=359';
-import { saveGame } from './saveGameUseCase.js?v=362';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=363';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=361';
-import { t } from '../i18n/i18n.js?v=378';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=390';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=361';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=393';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=392';
+import { elementMod } from '../domain/elements.js?v=359';
+import { STAMINA_MAX } from '../domain/stamina.js?v=359';
+import { ITEMS } from '../domain/items.js?v=374';
+import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=362';
+import { MONSTERS } from '../domain/bestiary.js?v=382';
+import { RARITY_TIERS } from '../domain/rarity.js?v=360';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=362';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=361';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=360';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=360';
+import { saveGame } from './saveGameUseCase.js?v=363';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=364';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=362';
+import { t } from '../i18n/i18n.js?v=379';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -540,9 +540,13 @@ function aplicarEstadoDoServidor(res, myEpoch) {
     questEndSeen = res.questEnded;
     const q = QUESTS[res.questEnded];
     const nome = q ? q.name : res.questEnded;
-    const premio = q && ITEMS[q.reward.item] ? ITEMS[q.reward.item].name : (q ? q.reward.item : '');
-    emit(EVENTS.LOG, t('quest.done', { name: nome, reward: premio }));
-    emit(EVENTS.NOTIFY, { msg: t('quest.done', { name: nome, reward: premio }), type: 'success' });
+    // Só promete PRÊMIO se o servidor de fato concedeu (1ª conclusão). Na
+    // rejogada (quest não-repetível já concluída) a mensagem não promete item.
+    const msg = res.questReward && ITEMS[res.questReward]
+      ? t('quest.done', { name: nome, reward: ITEMS[res.questReward].name })
+      : t('quest.doneReplay', { name: nome });
+    emit(EVENTS.LOG, msg);
+    emit(EVENTS.NOTIFY, { msg, type: 'success' });
     stopHuntLocalOnly();                     // encerra o loop local (raid acabou)
     stopHuntSession(ACCOUNT.activeSlot);     // fecha a sessão ociosa no servidor
     // Volta pra zona anterior (caçada normal) pra a UI não ficar presa na quest.

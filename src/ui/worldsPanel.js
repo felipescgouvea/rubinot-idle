@@ -1,9 +1,9 @@
-import { G } from '../application/gameStore.js?v=362';
-import { WORLDS } from '../domain/progression.js?v=361';
-import { on, EVENTS } from '../shared/eventBus.js?v=360';
-import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=363';
-import { uiIcon } from './uiIcons.js?v=363';
-import { t } from '../i18n/i18n.js?v=378';
+import { G } from '../application/gameStore.js?v=363';
+import { WORLDS } from '../domain/progression.js?v=362';
+import { on, EVENTS } from '../shared/eventBus.js?v=361';
+import { spriteUrl, spriteImgOrFallback } from '../infrastructure/tibiaSprites.js?v=364';
+import { uiIcon } from './uiIcons.js?v=364';
+import { t } from '../i18n/i18n.js?v=379';
 
 export function renderWorldsPanel() {
   const grid = document.getElementById('worlds-grid');
