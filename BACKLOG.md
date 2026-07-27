@@ -27,7 +27,7 @@
 - [ ] **BUG: "Vender todos" ignora o item equipado** — a venda em lote na janela de venda não pode considerar o item que está equipado (só vende os da mochila)
 
 ## Features
-- [ ] **Sistema de Quests (raids com prêmio real)** · L — começar por quests simples (não-alavanca); cada quest = raid com começo/meio/fim; **1 prêmio real de quest do Tibia por quest** (não repetível). Editar `.spec/` antes
+- [x] **Sistema de Quests (raids com prêmio real)** · L — spec + 3 quests reais (ondas → chefe → prêmio real do Tibia, não-repetível); aba Quests; servidor concede o prêmio server-authoritative + rastreia conclusão (coluna completed_quests) — `d0578cbd` — ✅ e2e prod: raid roda, chefe cai, Knight Armor concedido, completed_quests=[orc_fortress]
 - [ ] `[decisão]` **Prey fiel ao Tibia** · M — AUDITADO 2026-07-26: a MECÂNICA já bate exatamente o `ioprey.cpp` (bônus damage 2r+5 / defense 2r+10 / xp+loot 3r+10; raridade `uniform_random(r+1,10)`; reroll de tipo na raridade 10) e os ícones usam sprites reais. A única divergência é a SELEÇÃO: Tibia dá uma lista aleatória de monstros por slot; aqui é escolha livre (simplificação idle). Decisão do Felipe: manter a escolha livre (recomendado, mais idle-friendly) OU adotar a lista aleatória do Tibia?
 
 ## Endgame — sink infinito (P0/P1)
