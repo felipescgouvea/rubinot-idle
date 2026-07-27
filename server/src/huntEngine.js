@@ -612,6 +612,10 @@ async function settleKill(session, mon, cfg) {
   // Server-authoritative (não confia no cliente) e não-repetível (checa a lista
   // de concluídas). Persiste a conclusão na hora — evento raro e importante.
   if (session.questId && QUESTS[session.questId] && mon.defKey === QUESTS[session.questId].boss) {
+    // A raid TEM FIM: derrotar o chefe encerra a quest (para o respawn do chefe
+    // e sinaliza o cliente pra voltar à zona anterior). Vale mesmo numa rejogada
+    // (o prêmio abaixo é que é não-repetível).
+    session.questEnded = session.questId;
     const done = session.completedQuests || (session.completedQuests = []);
     if (!done.includes(session.questId)) {
       done.push(session.questId);
@@ -1052,6 +1056,7 @@ function empurrarEstado(session) {
     combatEvents: session.combatEvents || [],
     killEvents: session.killEvents || [],
     inventory: { ...(session.inv || {}) },
+    questEnded: session.questEnded || null, // raid concluída: cliente encerra e volta pra zona anterior
   });
 }
 
@@ -1086,6 +1091,10 @@ async function tick(session) {
   // quest, que não estão em ZONES). Cai no catálogo pras zonas normais.
   const zone = session.zoneObj || ZONES[session.zoneId];
   if (!zone) return;
+  // Quest concluída (chefe caiu): a raid tem FIM. Não repõe a sala — o chefe não
+  // respawna. A sessão fica ociosa/vazia reportando questEnded no /hunt/state até
+  // o cliente encerrar e voltar pra zona anterior (ver huntUseCases: reconcile).
+  if (session.questEnded) { session.currentPack = []; return; }
   if (!session.currentPack || !session.currentPack.length) {
     if (Date.now() < session.nextSpawnAt) return;
     const cfg = await getGameConfig();

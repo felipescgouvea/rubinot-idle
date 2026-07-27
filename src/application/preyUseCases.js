@@ -6,13 +6,13 @@
 // nem jogar o minigame). rollPreyRarity/rollPreyBonusType/preyBonusPct agora
 // só rodam no servidor; aqui só chamamos os endpoints e espelhamos G.prey com
 // a resposta autoritativa.
-import { G, ACCOUNT } from './gameStore.js?v=361';
-import { MONSTERS } from '../domain/bestiary.js?v=380';
-import { PREY_SLOTS, PREY_BONUS_TYPES, preyRerollCost } from '../domain/prey.js?v=357';
-import { emit, EVENTS } from '../shared/eventBus.js?v=359';
-import { saveGame } from './saveGameUseCase.js?v=361';
-import { fetchPreyState, activatePreyOnServer, rerollPreyOnServer, clearPreyOnServer } from '../infrastructure/authClient.js?v=369';
-import { t } from '../i18n/i18n.js?v=377';
+import { G, ACCOUNT } from './gameStore.js?v=362';
+import { MONSTERS } from '../domain/bestiary.js?v=381';
+import { PREY_SLOTS, PREY_BONUS_TYPES, preyRerollCost } from '../domain/prey.js?v=358';
+import { emit, EVENTS } from '../shared/eventBus.js?v=360';
+import { saveGame } from './saveGameUseCase.js?v=362';
+import { fetchPreyState, activatePreyOnServer, rerollPreyOnServer, clearPreyOnServer } from '../infrastructure/authClient.js?v=370';
+import { t } from '../i18n/i18n.js?v=378';
 
 const PREY_BONUS_NAME_KEY = { damage: 'bestiary.bonusDamage', defense: 'bestiary.bonusDefense', xp: 'bestiary.bonusXp', loot: 'bestiary.bonusLoot' };
 

@@ -3,14 +3,14 @@
 // customização do jogo real — 2 addons (toggle) e cor por região (cabeça,
 // corpo, pernas, pés) escolhida na paleta oficial de 133 cores — com preview
 // ao vivo, recolorido de verdade por região (ver infrastructure/outfitRenderer.js).
-import { G } from '../application/gameStore.js?v=361';
-import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=357';
-import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=357';
-import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=357';
-import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=357';
-import { on, EVENTS } from '../shared/eventBus.js?v=359';
-import { openModal, rubiniIconImg } from './shared.js?v=364';
-import { t } from '../i18n/i18n.js?v=377';
+import { G } from '../application/gameStore.js?v=362';
+import { OUTFITS, VOCATION_DEFAULT_OUTFIT } from '../domain/outfits.js?v=358';
+import { TIBIA_COLOR_PALETTE } from '../domain/outfitColors.js?v=358';
+import { outfitAssetPath } from '../infrastructure/outfitAssets.js?v=358';
+import { renderOutfitToCanvas } from '../infrastructure/outfitRenderer.js?v=358';
+import { on, EVENTS } from '../shared/eventBus.js?v=360';
+import { openModal, rubiniIconImg } from './shared.js?v=365';
+import { t } from '../i18n/i18n.js?v=378';
 
 // Qual canal de cor está "selecionado" na paleta — estado só de UI, não faz
 // parte do save (não é uma decisão de jogo, é só onde o clique da paleta vai).

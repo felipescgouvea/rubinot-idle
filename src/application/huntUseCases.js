@@ -3,32 +3,32 @@
 // jogo — mantém o estado efêmero de combate (monstro atual, intervalos)
 // encapsulado aqui, exposto só por getCurrentMonster() pra quem precisar
 // (ex.: usar uma runa de ataque no inventário).
-import { G, ACCOUNT } from './gameStore.js?v=361';
-import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=369';
-import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=366';
-import { ZONES } from '../domain/bestiary.js?v=380';
-import { questZone } from '../domain/quests.js?v=9';
+import { G, ACCOUNT } from './gameStore.js?v=362';
+import { startHuntSession, stopHuntSession, getHuntState, idleHealOnServer, setHuntTarget, updateHuntRtc, getAccessToken } from '../infrastructure/authClient.js?v=370';
+import { conectarRealtime, desconectarRealtime, realtimeAtivo } from '../infrastructure/realtimeClient.js?v=367';
+import { ZONES } from '../domain/bestiary.js?v=381';
+import { questZone, QUESTS } from '../domain/quests.js?v=10';
 // Resolve a zona ATIVA — inclui as zonas sintéticas de Quest (quest:<id>), que
 // não estão em ZONES. Zona normal continua vindo do catálogo.
 const zoneDef = id => ZONES[id] || questZone(id);
-import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=388';
-import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=359';
-import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=391';
-import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=390';
-import { elementMod } from '../domain/elements.js?v=357';
-import { STAMINA_MAX } from '../domain/stamina.js?v=357';
-import { ITEMS } from '../domain/items.js?v=372';
-import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=360';
-import { MONSTERS } from '../domain/bestiary.js?v=380';
-import { RARITY_TIERS } from '../domain/rarity.js?v=358';
-import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=360';
-import { emit, on, EVENTS } from '../shared/eventBus.js?v=359';
-import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=358';
-import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=358';
-import { saveGame } from './saveGameUseCase.js?v=361';
-import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=362';
-import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=360';
-import { t } from '../i18n/i18n.js?v=377';
+import { VOCATIONS, VOC_TRAINING, XP_TABLE, MAX_LEVEL, PROMOTION } from '../domain/character.js?v=389';
+import { SPELLS, isSpellAvailable, defaultHealSpellId } from '../domain/spells.js?v=360';
+import { canUseAttackRune, normalizeAttackSpells, isRuneEntry, runeEntryId } from '../domain/rtcConfig.js?v=392';
+import { monsterAttack, equippedWeaponSkillId } from '../domain/combatFormulas.js?v=391';
+import { elementMod } from '../domain/elements.js?v=358';
+import { STAMINA_MAX } from '../domain/stamina.js?v=358';
+import { ITEMS } from '../domain/items.js?v=373';
+import { ITEM_BUY_PRICE } from '../domain/shopCatalog.js?v=361';
+import { MONSTERS } from '../domain/bestiary.js?v=381';
+import { RARITY_TIERS } from '../domain/rarity.js?v=359';
+import { spellEffectName, spellMissileName, runeEffectName, runeMissileName, basicAttackMissile, meleeSwingName } from '../domain/combatFx.js?v=361';
+import { emit, on, EVENTS } from '../shared/eventBus.js?v=360';
+import { getDef, getMagic, getMaxHp, getMaxMana, getSpd } from './stats.js?v=359';
+import { checkBpTier, bumpMissionProgress } from './battlePassUseCases.js?v=359';
+import { saveGame } from './saveGameUseCase.js?v=362';
+import { isStaminaEnabled, isConsumeAmmo, getProjectileSpeedMs } from './adminUseCases.js?v=363';
+import { itemLogIcon, monsterLogIcon } from './logIcons.js?v=361';
+import { t } from '../i18n/i18n.js?v=378';
 
 // Rótulo (chave i18n) do elemento da magia do monstro, pro log de combate.
 const MONSTER_ELEMENT_KEYS = { fire: 'log.elementFire', energy: 'log.elementEnergy', ice: 'log.elementIce', earth: 'log.elementEarth', death: 'log.elementDeath', holy: 'log.elementHoly', physical: 'log.elementPhysical' };
@@ -183,10 +183,18 @@ export function startQuestRaid(questId) {
   stopHuntLocalOnly();                     // síncrono: hunting=false, starting=false, para o reconcile
   stopHuntSession(ACCOUNT.activeSlot);     // fecha a sessão anterior no servidor (sem reconcile encadeado)
   bossOnly = false;
+  // Zona pra onde VOLTAR quando a raid terminar (fim da quest). Só grava se a
+  // atual não for outra quest (nunca guarda 'quest:...').
+  if (typeof G.activeZone === 'string' && !G.activeZone.startsWith('quest:')) G.questReturnZone = G.activeZone;
+  questEndSeen = null;                      // libera o handler de FIM pra esta nova raid
   G.activeZone = 'quest:' + questId;
   emit(EVENTS.ZONE_PICKER);
   startHunt();                             // hunting=false → arranca a raid na zona da quest
 }
+
+// Guard: o servidor reporta questEnded em vários polls até a sessão ociosa
+// fechar; o handler de fim (aplicarEstadoDoServidor) só roda 1x por raid.
+let questEndSeen = null;
 
 // ---- reconciliação com o servidor de caçada autoritativo (ver
 // infrastructure/authClient.js: startHuntSession/stopHuntSession/getHuntState
@@ -522,6 +530,27 @@ function aplicarEstadoDoServidor(res, myEpoch) {
       // recria a sessão em silêncio e segue caçando de onde parou.
       tryResumeServerSession();
     }
+  }
+  // FIM da raid de quest: a quest tem começo/meio/FIM. Quando o CHEFE cai, o
+  // servidor sinaliza questEnded e PARA de repor a sala (não vira hunt infinita).
+  // Aqui encerramos a raid, avisamos com o prêmio e voltamos pra zona anterior —
+  // guardado por questEndSeen pra rodar 1x (o servidor reporta em vários polls
+  // até a sessão ociosa fechar).
+  if (res.questEnded && res.questEnded !== questEndSeen) {
+    questEndSeen = res.questEnded;
+    const q = QUESTS[res.questEnded];
+    const nome = q ? q.name : res.questEnded;
+    const premio = q && ITEMS[q.reward.item] ? ITEMS[q.reward.item].name : (q ? q.reward.item : '');
+    emit(EVENTS.LOG, t('quest.done', { name: nome, reward: premio }));
+    emit(EVENTS.NOTIFY, { msg: t('quest.done', { name: nome, reward: premio }), type: 'success' });
+    stopHuntLocalOnly();                     // encerra o loop local (raid acabou)
+    stopHuntSession(ACCOUNT.activeSlot);     // fecha a sessão ociosa no servidor
+    // Volta pra zona anterior (caçada normal) pra a UI não ficar presa na quest.
+    G.activeZone = (G.questReturnZone && ZONES[G.questReturnZone]) ? G.questReturnZone : 'rat_cave';
+    emit(EVENTS.ZONE_PICKER);
+    saveGame();
+    // NÃO retorna: deixa o inventário/relíquias (o PRÊMIO) deste mesmo estado
+    // aplicarem logo abaixo; o pack/combate já é guardado por G.hunting (false).
   }
   // Inventário e relíquias (Marco 3) — mesma troca de fonte de verdade: o
   // servidor decide o loot/relic drop, o cliente só espelha. inventoryOrder

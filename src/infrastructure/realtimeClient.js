@@ -58,6 +58,7 @@ function abrir(slot) {
       killEvents: msg.killEvents,
       inventory: msg.inventory,
       skills: msg.skills,
+      questEnded: msg.questEnded || null, // fim da raid: cliente encerra e volta pra zona anterior
     });
   };
   ws.onerror = () => {};
