@@ -22,8 +22,8 @@
 ## Funcional / UX
 - [x] **HP/Mana em cima do personagem** · M — barra de vida/mana sobre o boneco no palco (estilo cliente) + remover os HP/Mana duplicados dentro do palco — `466e7e22`
 - [x] Menu de clique-direito customizado (tema Tibia) no lugar do nativo do navegador — criatura (Atacar/Bestiário) e item da mochila (Examinar/Vender); suprime o nativo nesses alvos — `1a4ddf73`
-- [ ] **Imbuir item da MOCHILA** · `[server]` — hoje o imbuement mora por `eq_slot`; imbuir item da mochila exige guardar por instância de item (refactor de dados + persistência)
-- [ ] **Boss Zone com bosses REAIS** · `[CANON]` — cada zona usa o boss canônico da criatura (nome/sprite/stats/loot)
+- [ ] **Imbuir item da MOCHILA** · `[server]` — hoje o imbuement mora por `eq_slot`; imbuir item da mochila exige guardar por instância de item (refactor de dados + persistência). PARADO (risco de save): o `player_inventory` guarda pilhas fungíveis (item_id + qty), sem identidade por instância. Imbuir um item específico da bag exige migrar o inventário de pilhas → instâncias, o que reescreve equip/venda/sell-all/loot/market/auto-sell/drag e MIGRA todo save existente. Alto risco de corromper progresso — merece sessão isolada com migração aditiva/reversível e teste dedicado, não um dreno amplo.
+- [ ] **Boss Zone com bosses REAIS** · `[CANON]` · `[server]` — cada zona usa o boss canônico da criatura (nome/sprite/stats/loot). PARADO (economia + escala + sprite): hoje `zone.boss` é uma criatura mais forte da zona (ex.: `wolf_den`→`wolf`), não o boss nomeado real. Trocar por bosses reais em 48 zonas (a) muda **loot = economia** em massa (drop valioso → gold; merece aval do Felipe), (b) exige **sprite do cliente sem fallback** por boss (Regra 2.1) — auditoria de disponibilidade por criatura, e (c) é conteúdo grande (48 bosses canônicos com stats/loot da fonte). Fazer conservador + com o aval do loot.
 - [x] **BUG: "Vender todos" ignora o item equipado** — equipar não tira o item de `player_inventory` (só grava em `player_equipment`), então "Vender todos" vendia a cópia equipada e desequipava. Servidor agora exclui as cópias equipadas do total vendável (recusa se for equipado-sem-sobra); cliente conta só a bag (`bagQty`) e esconde os botões de venda quando não há sobra. Verificado em prod: banco mostra toda peça equipada com `inv_qty≥1` após sell-all; probe cliente PASSOU — `478981b2`
 
 ## Features
@@ -36,7 +36,7 @@
 - [x] **Cyclopedia (Hunt/Loot/XP Analyser)** · M — painel de throughput (XP/h, gold/h, loot vs waste); dado quase todo já existe — Hunt Analyzer já tinha XP/h e gold/h; adicionadas taxas loot/h e suprimentos/h (loot vs desperdício) — `328cf405`
 - [ ] **Bosstiary** · M · `[server]` — kills de boss → boss points → slots/prowess (fonte `io_bosstiary.cpp`)
 - [x] **Onboarding do 1º minuto** · M — coach-mark de 3 passos (caçar → loot → gastar) com spotlight, mostrado 1x, skip + persistência — `f9df3a10`
-- [ ] **Nível recomendado por zona + agrupar abas** · M — hint de nível no zone picker; agrupar/travar abas até o unlock
+- [ ] **Nível recomendado por zona + agrupar abas** · M · `[decisão]`/dados — hint de nível no zone picker; agrupar/travar abas até o unlock. PARADO: (1) "nível recomendado" numérico não tem fonte canônica — os monstros só têm hp/atk/def/xp, sem nível; exigiria auditoria manual dos níveis sugeridos por zona na TibiaWiki (vira pendência de dados). (2) "travar abas até o unlock" é decisão de produto (quais abas, quando) que muda o fluxo — precisa do Felipe. Zone picker já poderia mostrar o gate real (`requiresBossOf`/`worldReq`) como hint factual.
 - [x] **Celebrar marcos: badges de charm/promoção** — selo na aba Bestiário quando há charm point pra desbloquear um charm (atualiza com a aba fechada); promoção já sinaliza pelo botão habilitado no card — `342b1000`
 
 ## Profundidade / conteúdo (P2)
